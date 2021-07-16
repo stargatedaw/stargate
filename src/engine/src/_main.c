@@ -168,7 +168,9 @@ int _main(int argc, char** argv){
     }
 
     set_thread_params();
+#if defined(__linux__) && !defined(SG_DLL)
     setup_signal_handling();
+#endif
     start_ui_thread(ui_pid);
     start_osc_thread();
 
@@ -274,7 +276,7 @@ NO_OPTIMIZATION void init_master_vol(){
     printf("MASTER_VOL = %f\n", MASTER_VOL);
 }
 
-#if defined(__linux__) && !defined(SG_DLL)
+#ifndef SG_DLL
     NO_OPTIMIZATION void start_osc_thread(){
         printf("Starting OSC server thread\n");
         serverThread = lo_server_thread_new("19271", osc_error);
@@ -315,6 +317,7 @@ NO_OPTIMIZATION void init_master_vol(){
         );
     }
 
+#if defined(__linux__) && !defined(SG_DLL)
     NO_OPTIMIZATION void setup_signal_handling(){
         printf("Setting up signal handling\n");
         setsid();
@@ -344,8 +347,11 @@ NO_OPTIMIZATION void init_master_vol(){
     }
 #endif
 
+#endif
+
 NO_OPTIMIZATION void set_thread_params(){
     printf("Setting thread params\n");
+ #ifdef __linux__
     if(setpriority(PRIO_PROCESS, 0, -20))
     {
         printf(
@@ -353,6 +359,7 @@ NO_OPTIMIZATION void set_thread_params(){
             "the process is not running as root)\n"
         );
     }
+#endif
 
     int f_current_proc_sched = sched_getscheduler(0);
 

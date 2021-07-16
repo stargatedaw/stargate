@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "ds/list.h"
 
 void * shds_alloc(size_t size)

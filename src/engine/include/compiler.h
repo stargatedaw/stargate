@@ -63,7 +63,7 @@
 
 #endif
 
-#if defined(__linux__) && !defined(SG_DLL)
+#if !defined(SG_DLL)
     #include <lo/lo.h>
     #define WITH_LIBLO
 #endif
