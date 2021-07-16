@@ -1,0 +1,110 @@
+#!/usr/bin/make -f
+
+PREFIX ?= /usr
+VERSION := $(shell jq -r .version.major meta.json || echo stargate)
+DESTDIR ?=
+SBSMS_PREFIX = $(PREFIX)/lib/$(VERSION)/sbsms
+SG_DIR = $(DESTDIR)$(PREFIX)/lib/$(VERSION)
+PIP ?= pip3
+
+# --------------------------------------------------------------
+
+all: deps py_vendor
+	make -C engine
+
+clean: clean_pyc
+	rm -rf htmlcov/ .pytest_cache/ .eggs/ .coverage \
+		*.pyc *.egg-info build/ dist/
+	make -C engine clean
+	make -C vendor/sbsms clean
+
+clean_pyc:
+	find . -type d -name __pycache__ -exec rm -rf {} \; ; true
+
+deps:
+	make mingw_deps
+
+deps_clean:
+	make mingw_deps_clean
+	rm -f sgui/vendor/*.so
+
+install: clean_pyc
+	install -d $(SG_DIR)
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -m 755 \
+		vendor/sbsms/cli/sbsms \
+		$(DESTDIR)$(PREFIX)/bin/$(VERSION)-sbsms
+	cp scripts/* $(DESTDIR)$(PREFIX)/bin
+	install -d $(SG_DIR)/stargate
+	install -m 755 engine/$(VERSION)-engine-dbg $(DESTDIR)$(PREFIX)/bin
+	install -s -m 4755 engine/$(VERSION)-engine $(DESTDIR)$(PREFIX)/bin
+	install -s -m 755 engine/$(VERSION)-engine \
+		$(DESTDIR)$(PREFIX)/bin/$(VERSION)-engine-no-root
+	cp -r sg_py_vendor sglib sgui $(SG_DIR)/stargate
+	install -d $(SG_DIR)/stargate/engine
+	install -m 555 engine/$(VERSION)-engine.dll \
+		$(SG_DIR)/stargate/engine || \
+	install -m 555 engine/$(VERSION)-engine.so \
+		$(SG_DIR)/stargate/engine
+	cp -r files/themes files/presets $(SG_DIR)
+	cp -r files/share $(DESTDIR)/$(PREFIX)
+	install -m 644 meta.json $(SG_DIR)
+
+install_non_linux: clean_pyc
+	install -d $(SG_DIR)
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -m 755 \
+		vendor/sbsms/cli/sbsms \
+		$(DESTDIR)$(PREFIX)/bin/$(VERSION)-sbsms
+	cp scripts/* $(DESTDIR)$(PREFIX)/bin
+	install -s -m 755 engine/$(VERSION)-engine $(DESTDIR)$(PREFIX)/bin
+	install -d $(SG_DIR)
+	install -d $(SG_DIR)/stargate
+	cp -r sg_py_vendor sglib sgui $(SG_DIR)/stargate
+	install -d $(SG_DIR)/stargate/engine
+	install -m 555 engine/$(VERSION)-engine.dll \
+		$(SG_DIR)/stargate/engine || \
+	install -m 555 engine/$(VERSION)-engine.so \
+		$(SG_DIR)/stargate/engine || \
+	install -m 555 engine/$(VERSION)-engine.dylib \
+		$(SG_DIR)/stargate/engine
+	cp -r files/themes files/presets $(SG_DIR)
+	cp -r files/share  $(DESTDIR)/$(PREFIX)
+	install -m 644 meta.json $(SG_DIR)
+
+install_mac_osx:
+	PREFIX=/usr/local make install_non_linux
+
+lines-of-code:
+	./loc.sh
+
+mac_osx:
+	OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make deps
+	OPTIMIZE_FLAGS= CC=clang make -C stargate mac_osx
+
+mingw:
+	CFLAGS+=" -static-libgcc " make -C stargate mingw
+
+mingw_deps:
+	cd vendor/sbsms && ( ./configure || ./configure --enable-sse=no ) && make
+	cd vendor/sbsms/cli && make
+
+mingw_deps_clean:
+	make -C vendor/sbsms clean
+	make -C vendor/sbsms/cli clean
+
+py_vendor:
+	mkdir -p ./sg_py_vendor
+	$(PIP) install --ignore-installed --target=./sg_py_vendor pymarshal
+	$(PIP) install --ignore-installed --target=./sg_py_vendor --no-deps wavefile
+
+test:
+	make -C engine test
+	pytest test/
+
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/bin/$(VERSION)*
+	rm -rf $(SG_DIR)
+	rm -rf $(DESTDOR)$(PREFIX)/share/*/stargate*
+
+

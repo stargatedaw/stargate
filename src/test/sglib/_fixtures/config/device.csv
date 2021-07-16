@@ -1,0 +1,10 @@
+host_api,ALSA
+name,Apogee One
+buffer_size,128
+sample_rate,44100
+audio_engine,0
+threads,16
+thread_lock,0
+huge_pages,0
+audio_inputs,0
+audio_outputs,"2,0,1"

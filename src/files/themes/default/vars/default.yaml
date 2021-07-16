@@ -1,0 +1,10 @@
+background_color: "#282828"
+background_color_alt: "#232323"
+background_color_disabled: "#181818"
+border_color: "#1e1e1e"
+text_background_color: "#5f5f61"
+text_color: "#f0f0f0"
+text_color_dark: "#1e1e1e"
+text_color_disabled: "#d0d0d0"
+track_panel_background: "#292929"
+transport_button_size: 36px

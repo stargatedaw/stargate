@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+
+import os
+import signal
+import subprocess
+import sys
+
+stargate_version = "stargate"
+
+print("sys.argv == {}".format(sys.argv))
+
+# When respawning, give the old process a chance to garbage collect first
+if "--delay" in sys.argv:
+    sys.argv.remove("--delay")
+    import time
+    time.sleep(2)
+
+# Run the engine
+if len(sys.argv) > 1:
+    def sig_handle(a_1=None, a_2=None):
+        try:
+            f_proc.kill()
+        except Exception as ex:
+            print("Exception while trying to kill engine from "
+                "helper script: {}".format(ex))
+
+    signal.signal(signal.SIGTERM, sig_handle)
+    signal.signal(signal.SIGINT, sig_handle)
+    signal.signal(signal.SIGABRT, sig_handle)
+
+    engine_exe = f"{stargate_version}-engine"
+    # local development
+    f_path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "engine",
+        engine_exe
+    )
+    if not os.path.exists(f_path):
+        # system
+        print(
+            "Could not detect local development engine, trying system engine"
+        )
+        f_path = os.path.join(
+            os.path.dirname(__file__),
+            engine_exe
+        )
+    f_path = os.path.abspath(f_path)
+    print(f_path)
+    f_proc = subprocess.Popen([f_path] + sys.argv[1:])
+    f_proc.wait()
+    print("helper script:  f_proc returned with {}".format(f_proc.returncode))
+    sys.exit(f_proc.returncode)
+else:  # Run the UI, which will run the engine
+    f_prefix_dir = os.path.dirname(__file__)
+    f_path = os.path.join(
+        f_prefix_dir,
+        "..",
+    )
+    f_path = os.path.abspath(f_path)
+    print(f_path)
+    sys.path.insert(0, f_path)
+    try:
+        from sgui.main import main
+    except ImportError:
+        print("Could not detect local development UI, trying system UI")
+        f_path = os.path.join(
+            f_prefix_dir,
+            "..",
+            "lib",
+            stargate_version,
+            "stargate",
+        )
+        f_path = os.path.abspath(f_path)
+        print(f_path)
+        sys.path.insert(0, f_path)
+        from sgui.main import main
+    main()

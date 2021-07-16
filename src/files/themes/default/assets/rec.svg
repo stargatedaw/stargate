@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="114px" height="86px" viewBox="0 0 114 86" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.4.1 (15681) - http://www.bohemiancoding.com/sketch -->
+    <title>buttons</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#5C6369" offset="24.5097258%"></stop>
+            <stop stop-color="#4B5257" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="112" height="84" rx="4"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Rec" sketch:type="MSLayerGroup" transform="translate(1.000000, 1.000000)">
+            <g id="Rectangle-1">
+                <use stroke="#212326" stroke-width="2" fill="url(#linearGradient-1)" fill-rule="evenodd" sketch:type="MSShapeGroup" xlink:href="#path-2"></use>
+                <use stroke="#292B2E" stroke-width="1" fill="none" xlink:href="#path-2"></use>
+                <use stroke="none" fill="none" xlink:href="#path-2"></use>
+            </g>
+            <circle id="Oval-1" fill="#C5D4D9" sketch:type="MSShapeGroup" cx="58" cy="43" r="15"></circle>
+            <path d="M7,2 L107,2" id="Line" stroke-opacity="0.497763813" stroke="#82878C" stroke-width="2" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+            <path d="M2,5 L2,79" id="Line" stroke-opacity="0.497763813" stroke="#82878C" stroke-width="2" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
+</svg>

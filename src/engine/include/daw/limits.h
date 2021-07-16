@@ -1,0 +1,7 @@
+#ifndef UTIL_DAW_LIMITS_H
+#define UTIL_DAW_LIMITS_H
+
+#define DN_MAX_ITEM_COUNT 5000
+#define DN_TRACK_COUNT 32
+
+#endif

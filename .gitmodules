@@ -1,0 +1,3 @@
+[submodule "src/vendor/libcds"]
+	path = src/vendor/libcds
+	url = https://github.com/stargateaudio/libcds.git

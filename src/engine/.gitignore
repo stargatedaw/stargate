@@ -1,0 +1,13 @@
+*.gcda
+*.gcno
+*.rpm
+*.so
+*.swp
+/tmp/
+bench.out
+coverage*.html
+gmon.out
+pahole.txt
+profile.txt
+stargate-engine*
+vgcore*

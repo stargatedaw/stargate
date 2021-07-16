@@ -1,0 +1,108 @@
+#include <lo/lo.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#include "audiodsp/lib/lmalloc.h"
+#include "stargate.h"
+#include "compiler.h"
+#include "osc.h"
+
+
+void* v_osc_send_thread(void* a_arg){
+    t_osc_send_data f_send_data;
+    int f_i;
+
+    for(f_i = 0; f_i < OSC_SEND_QUEUE_SIZE; ++f_i){
+        hpalloc(
+            (void**)&f_send_data.osc_queue_vals[f_i],
+            sizeof(char) * OSC_MAX_MESSAGE_SIZE
+        );
+    }
+
+    hpalloc(
+        (void**)&f_send_data.f_tmp1,
+        sizeof(char) * OSC_MAX_MESSAGE_SIZE
+    );
+    hpalloc(
+        (void**)&f_send_data.f_tmp2,
+        sizeof(char) * OSC_MAX_MESSAGE_SIZE
+    );
+    hpalloc(
+        (void**)&f_send_data.f_msg,
+        sizeof(char) * OSC_MAX_MESSAGE_SIZE
+    );
+
+    f_send_data.f_tmp1[0] = '\0';
+    f_send_data.f_tmp2[0] = '\0';
+    f_send_data.f_msg[0] = '\0';
+
+    while(!STARGATE->audio_recording_quit_notifier){
+        STARGATE->current_host->osc_send(&f_send_data);
+
+        usleep(30000);
+    }
+
+    printf("osc send thread exiting\n");
+
+    return (void*)1;
+}
+
+/* Send an OSC message to the UI.  The UI will have a handler that accepts
+ * key/value pairs as commands.  This is safe to use while processing audio
+ * , as it will not context switch.
+ *
+ * a_key:   A key that the UI host will recognize
+ * a_value: The value, or an empty string if not value is required
+ */
+void v_queue_osc_message(
+    char* a_key,
+    char * a_val
+){
+    if(STARGATE->osc_queue_index >= OSC_SEND_QUEUE_SIZE){
+        printf(
+            "Dropping OSC event to prevent buffer overrun:\n%s|%s\n\n",
+            a_key,
+            a_val
+        );
+    } else {
+        pthread_spin_lock(&STARGATE->ui_spinlock);
+        sprintf(
+            STARGATE->osc_queue_keys[STARGATE->osc_queue_index],
+            "%s",
+            a_key
+        );
+        sprintf(
+            STARGATE->osc_queue_vals[STARGATE->osc_queue_index],
+            "%s",
+            a_val
+        );
+        ++STARGATE->osc_queue_index;
+        pthread_spin_unlock(&STARGATE->ui_spinlock);
+    }
+}
+
+#ifdef WITH_LIBLO
+void v_activate_osc_thread(lo_method_handler osc_message_handler){
+    lo_server_thread_add_method(
+        STARGATE->serverThread,
+        NULL,
+        NULL,
+        osc_message_handler,
+        NULL
+    );
+    lo_server_thread_start(STARGATE->serverThread);
+}
+#endif
+
+void osc_error(int num, const char *msg, const char *path){
+    fprintf(
+        stderr,
+        "liblo server error %d in path %s: %s\n",
+        num,
+        path,
+        msg
+    );
+}
+

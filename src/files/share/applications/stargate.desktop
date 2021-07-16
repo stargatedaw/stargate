@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Stargate
+GenericName=Stargate
+Comment=A suite of audio hosts and plugins
+Comment[fr]=Un ensemble d'hôtes audio et de greffons
+Exec=/usr/bin/stargate
+Icon=stargate
+Terminal=false
+Type=Application
+Categories=Qt;AudioVideo;Audio;

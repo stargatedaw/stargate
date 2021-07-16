@@ -1,0 +1,54 @@
+daw:
+  item_atm_point: "#f00e0e"
+  item_atm_point_pen: "#d00e0e"
+  item_atm_point_selected: "#f0f0f0"
+  item_audio_handle: "#ffffff"
+  item_audio_handle_selected: "#181818"
+  item_audio_vol_line: "#ff0000"
+  item_audio_label: "{{ text_color }}"
+  item_audio_label_selected: "{{ text_color_dark }}"
+  item_audio_waveform: "{{ background_color_alt }}"
+  note_black_background: "#1e1e1e"
+  note_root_background: "#5f1e1e"
+  note_white_background: "#5f5f61"
+  note_snap_line: "#000000"
+  note_beat_line: "#000000"
+  playback_cursor: "#ff0000"
+  seq_16th_line: "#090909"
+  seq_atm_item: '#ffffff'
+  seq_atm_item_selected: '#000000'
+  seq_atm_line: '#ffffff'
+  seq_background: "{{ background_color }}"
+  seq_item_background: "{{ background_color }}"
+  seq_bar_line: "#787878"
+  seq_bar_line: "#d2d2d2"
+  seq_beat_line: "#090909"
+  seq_header: "#1d1e22"
+  seq_header_sequence_end: "#ff3c3c"
+  seq_header_sequence_start: "#7878ff"
+  seq_header_text: "#ffffff"
+  seq_item_audio: "#969696"
+  seq_item_note: "#a5a5a5"
+  seq_item_text: "#ffffff"
+  seq_item_text_selected: "#000000"
+  seq_selected_item: "#eeeeee"
+  seq_tempo_marker: "#ffffff"
+  seq_track_line: "#090909"
+  track_default_colors: [
+      "#b00fb8",
+      "#0f1cb8",
+      "#62b80f",
+      "#b3b80f",
+      "#b80f0f",
+  ]
+widgets:
+  default_scene_background: "{{ background_color  }}"
+  knob_arc_pen: "#ffffff"
+  knob_background_pen: "#5a5a5a"
+  knob_bg_image: "knob-bg.png"
+  knob_fg_image: "knob-fg.png"
+  playback_cursor: "#ff0000"
+  rout_graph_node: "#e7e700"
+  rout_graph_to: "#e7a0a0"
+  rout_graph_from: "#a0a0e7"
+  rout_graph_lines: "#696969"

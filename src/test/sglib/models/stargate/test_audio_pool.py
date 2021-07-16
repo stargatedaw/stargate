@@ -1,0 +1,54 @@
+from sglib.models.stargate.audio_pool import *
+import copy
+
+POOL_STR = """\
+0|0.0|/path/to/file.wav
+1|-6.0|/path/to/file2.wav
+f|0|64|64|64|0|64|64|64|0|64|64|64|0|64|64|64|0|64|64|64|0|64|64|64|0\
+|64|64|64|0|64|64|64|0
+\\"""
+
+POOL_STR_NO_FILE_FX = """\
+0|0.0|/path/to/file.wav
+1|-6.0|/path/to/file2.wav
+\\"""
+
+def test_pool_from_str_to_str():
+    pool = AudioPool.from_str(POOL_STR)
+    assert len(pool.pool) == 2, pool.pool
+    assert str(pool) == POOL_STR
+    fx_by_uid = pool.per_file_fx_by_uid()
+    assert 0 in fx_by_uid, fx_by_uid
+
+def test_pool_no_fx_from_str_to_str():
+    pool = AudioPool.from_str(POOL_STR_NO_FILE_FX)
+    assert len(pool.pool) == 2, pool.pool
+    assert str(pool) == POOL_STR_NO_FILE_FX
+
+def test_pool_new_str_empty():
+    pool = AudioPool.new()
+    assert str(pool) == "\\", str(pool)
+
+def test_pool_entry_repr():
+    entry = AudioPoolEntry(0, 0., '/path/to')
+    assert '/path/to' in repr(entry), repr(entry)
+
+def test_add_remove():
+    pool = AudioPool.new()
+    entry = pool.add_entry(__file__)
+    assert len(pool.pool) == 1
+    assert entry.uid == 0, entry
+    assert pool.next_uid() == 1
+    pool.remove_by_uid([entry.uid])
+    assert len(pool.pool) == 0
+
+def test_set_per_file_fx():
+    pool = AudioPool.from_str(POOL_STR)
+    fx = copy.deepcopy(pool.per_file_fx[0])
+    fx.uid = 2
+    pool.set_per_file_fx(fx)
+    assert len(pool.per_file_fx) == 2, pool.per_file_fx
+    fx = copy.deepcopy(fx)
+    pool.set_per_file_fx(fx)
+    assert len(pool.per_file_fx) == 2, pool.per_file_fx
+

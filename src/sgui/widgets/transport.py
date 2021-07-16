@@ -1,0 +1,4 @@
+
+class AbstractTransportWidget:
+    """ TODO """
+    pass

@@ -1,0 +1,16 @@
+# Required for pyliblo, can be removed after pyliblo is deprecated
+# Currently install fails because Cython is needed before attempting
+# to install pyliblo, so it is only here for reference.
+#Cython
+jinja2
+mido
+mutagen
+#numpy
+psutil
+# Note that the package pyliblo3 conflicts with this, but setuptools
+# does not offer a way to make this package conflict with it
+pyliblo
+pymarshal
+#PyQt5
+PyYAML
+wavefile
