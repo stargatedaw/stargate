@@ -83,7 +83,7 @@ mac_osx:
 	OPTIMIZE_FLAGS= CC=clang make -C stargate mac_osx
 
 mingw:
-	CFLAGS+=" -static-libgcc " make -C stargate mingw
+	CFLAGS+=" -static-libgcc " make -C engine mingw
 
 mingw_deps:
 	cd vendor/sbsms && ( ./configure || ./configure --enable-sse=no ) && make
