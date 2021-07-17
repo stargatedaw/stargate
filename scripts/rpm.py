@@ -107,7 +107,6 @@ BuildRequires: \
     fftw-devel \
     gcc \
     gcc-c++ \
-    liblo-devel \
     libsndfile-devel \
     portaudio-devel \
     portmidi-devel \
@@ -117,7 +116,6 @@ Requires: \
     alsa-lib \
     fftw \
     lame \
-    liblo \
     libsndfile \
     portaudio \
     portmidi \
@@ -127,7 +125,6 @@ Requires: \
     python3-mutagen \
     python3-numpy \
     python3-psutil \
-    python3-pyliblo \
     python3-pyyaml \
     python3-qt5 \
     rubberband \

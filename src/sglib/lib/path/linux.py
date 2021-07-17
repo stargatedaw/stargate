@@ -1,4 +1,6 @@
+from sglib.constants import MAJOR_VERSION
 import os
+
 
 # Running from the source repo
 if os.path.join("src", "sglib") in os.path.abspath(__file__):

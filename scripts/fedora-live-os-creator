@@ -144,7 +144,6 @@ kickstart_template = \
 alsa-lib-devel
 fftw-devel
 lame
-liblo-devel
 libsndfile-devel
 portaudio-devel
 portmidi-devel

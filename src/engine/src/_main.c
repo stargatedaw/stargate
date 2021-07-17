@@ -37,6 +37,8 @@ GNU General Public License for more details.
 #include "file/path.h"
 #include "file/pidfile.h"
 #include "files.h"
+#include "globals.h"
+#include "ipc.h"
 #include "plugin.h"
 #include "hardware/audio.h"
 #include "hardware/config.h"
@@ -58,8 +60,8 @@ GNU General Public License for more details.
     PmError f_midi_err;
 #endif
 
-#ifdef WITH_LIBLO
-    lo_server_thread serverThread;
+#ifdef WITH_SOCKET_IPC
+    pthread_t SOCKET_SERVER_THREAD;
 #endif
 
 // Insert a brief sleep between loop runs when running without hardware
@@ -278,16 +280,19 @@ NO_OPTIMIZATION void init_master_vol(){
 
 #ifndef SG_DLL
     NO_OPTIMIZATION void start_osc_thread(){
-        printf("Starting OSC server thread\n");
-        serverThread = lo_server_thread_new("19271", osc_error);
-        lo_server_thread_add_method(
-            serverThread,
-            NULL,
-            NULL,
-            osc_message_handler,
-            NULL
+        printf("Starting socket server thread\n");
+        struct IpcServerThreadArgs* args = (struct IpcServerThreadArgs*)malloc(
+            sizeof(struct IpcServerThreadArgs)
         );
-        lo_server_thread_start(serverThread);
+        args->callback = v_configure;
+
+        int result = pthread_create(
+            &SOCKET_SERVER_THREAD,
+            NULL,
+            &ipc_server_thread,
+            (void*)args
+        );
+        assert(result == 0);
     }
 
     NO_OPTIMIZATION void start_ui_thread(int pid){
@@ -441,7 +446,7 @@ int start_engine(char* project_dir){
         retcode = init_hardware(hardware_config);
     }
 
-#ifdef WITH_LIBLO
+#ifdef WITH_SOCKET_IPC
     printf("Sending ready message to the UI\n");
     v_queue_osc_message("ready", "");
 #endif
@@ -520,9 +525,9 @@ NO_OPTIMIZATION int main_loop(){
 }
 
 int v_configure(
-    const char * path,
-    const char * key,
-    const char * value
+    char* path,
+    char* key,
+    char* value
 ){
     if(!READY){
         int i;
@@ -540,67 +545,17 @@ int v_configure(
         }
     }
 
-    if(!strcmp(path, "/stargate/wave_edit"))
-    {
+    if(!strcmp(path, "/stargate/wave_edit")){
         v_we_configure(key, value);
         return 0;
-    }
-    else if(!strcmp(path, "/stargate/daw"))
-    {
+    } else if(!strcmp(path, "/stargate/daw")){
         v_daw_configure(key, value);
         return 0;
-    }
-    else if(!strcmp(path, "/stargate/master"))
-    {
+    } else if(!strcmp(path, "/stargate/master")){
         v_sg_configure(key, value);
         return 0;
     }
 
     return 1;
 }
-
-#ifdef WITH_LIBLO
-
-int osc_debug_handler(
-    const char *path,
-    const char *types,
-    lo_arg **argv,
-    int argc,
-    void *data,
-    void *user_data
-){
-    int i;
-
-    printf("got unhandled OSC message:\npath: <%s>\n", path);
-    for(i = 0; i < argc; ++i){
-        printf("arg %d '%c' ", i, types[i]);
-        lo_arg_pp((lo_type)types[i], argv[i]);
-        printf("\n");
-    }
-
-    return 1;
-}
-
-int osc_message_handler(
-    const char *path,
-    const char *types,
-    lo_arg **argv,
-    int argc,
-    void *data,
-    void *user_data
-){
-    const char *key = (const char *)&argv[0]->s;
-    const char *value = (const char *)&argv[1]->s;
-
-    printf("types: '%s'\n", types);
-    assert(!strcmp(types, "ss"));
-
-    if(v_configure(path, key, value)){
-        return osc_debug_handler(path, types, argv, argc, data, user_data);
-    } else {
-        return 0;
-    }
-}
-
-#endif
 

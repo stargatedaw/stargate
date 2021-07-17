@@ -8,29 +8,6 @@
 #define CLOCKID CLOCK_REALTIME
 #define SIG SIGRTMIN
 
-#ifdef WITH_LIBLO
-    extern lo_server_thread serverThread;
-
-    void osc_error(int num, const char *m, const char *path);
-
-    int osc_message_handler(
-        const char *path,
-        const char *types,
-        lo_arg **argv,
-        int argc,
-        void *data,
-        void *user_data
-    );
-    int osc_debug_handler(
-        const char *path,
-        const char *types,
-        lo_arg **argv,
-        int argc,
-        void *data,
-        void *user_data
-    );
-#endif
-
 #ifndef SG_DLL
     int _main(int argc, char** argv);
     void start_osc_thread();
@@ -38,7 +15,11 @@
     void setup_signal_handling();
 #endif
 
-int v_configure(const char * path, const char * key, const char* value);
+int v_configure(
+    char* path,
+    char* key,
+    char* value
+);
 int daw_render(int argc, char** argv);
 void print_help();
 int main_loop();

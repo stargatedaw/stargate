@@ -2,6 +2,8 @@
 #include <string.h>
 #include <time.h>
 
+#include "globals.h"
+#include "ipc.h"
 #include "audiodsp/lib/amp.h"
 #include "audiodsp/lib/lmalloc.h"
 #include "plugin.h"
@@ -28,7 +30,6 @@
 
 int SG_OFFLINE_RENDER = 0;
 
-volatile int exiting = 0;
 SGFLT MASTER_VOL = 1.0f;
 SGFLT **pluginOutputBuffers;
 t_stargate * STARGATE = NULL;
@@ -45,10 +46,13 @@ int ZERO = 0;
         assert(UI_SEND_CALLBACK);
         UI_SEND_CALLBACK(a_path, a_msg);
     }
-#elif defined(WITH_LIBLO)
+#elif defined(WITH_SOCKET_IPC)
 
     void v_ui_send(char * a_path, char * a_msg){
-        lo_send(STARGATE->uiTarget, a_path, "s", a_msg);
+        assert(strlen(a_path) + strlen(a_msg) < 8192);
+        char msg[8192];
+        sprintf(msg, "%s\n%s", a_path, a_msg);
+        ipc_client_send(msg);
     }
 
 #else
@@ -375,13 +379,6 @@ void g_stargate_get(SGFLT a_sr, t_midi_device_list * a_midi_devices)
     pthread_spin_init(&STARGATE->ui_spinlock, 0);
     STARGATE->osc_queue_index = 0;
     STARGATE->osc_cursor_message = (char*)malloc(sizeof(char) * 1024);
-
-#ifdef WITH_LIBLO
-    STARGATE->serverThread = lo_server_thread_new(NULL, osc_error);
-    STARGATE->uiTarget = lo_address_new_from_url(
-        "osc.udp://localhost:30321/"
-    );
-#endif
 
     for(f_i = 0; f_i < MAX_PLUGIN_POOL_COUNT; ++f_i){
         STARGATE->plugin_pool[f_i].active = 0;

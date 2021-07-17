@@ -526,11 +526,11 @@ class MainWindow(QScrollArea):
     def on_offline_render(self, a_val=None):
         WAVE_EDITOR.on_export()
 
-    def configure_callback(self, path, arr):
+    def configure_callback(self, arr):
         f_pc_dict = {}
         f_ui_dict = {}
         f_cc_dict = {}
-        for f_line in arr[0].split("\n"):
+        for f_line in arr.split("\n"):
             if f_line == "":
                 break
             a_key, a_val = f_line.split("|", 1)

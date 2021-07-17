@@ -540,11 +540,11 @@ class MainWindow(QScrollArea):
         f_y = self.midi_scroll_area.verticalScrollBar().value()
         shared.SEQUENCER.set_header_y_pos(f_y)
 
-    def configure_callback(self, path, arr):
+    def configure_callback(self, arr):
         f_pc_dict = {}
         f_ui_dict = {}
         f_cc_dict = {}
-        for f_line in arr[0].split("\n"):
+        for f_line in arr.split("\n"):
             if f_line == "":
                 break
             a_key, a_val = f_line.split("|", 1)

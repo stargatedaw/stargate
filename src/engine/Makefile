@@ -33,16 +33,15 @@ DEFINES ?= \
 	-D__USE_GNU \
 	$(THREAD_LOCAL)
 
-BASE_FLAGS ?= $(OPTIMIZE_FLAGS) $(DEFINES) 
+BASE_FLAGS ?= $(OPTIMIZE_FLAGS) $(DEFINES)
 
 BUILD_FLAGS ?= -std=gnu89 $(PLAT_FLAGS) $(BASE_FLAGS) $(CFLAGS) $(INC) $(SRC)
 
 MATH_LIB_FLAG ?= -lm
 ALSA_FLAG ?= $(shell pkg-config --libs alsa)
-LIBLO_FLAG ?= $(shell pkg-config --libs liblo)
 PORTMIDI_FLAG ?= -lportmidi
 
-PLAT_LINK_CFLAGS ?= $(ALSA_FLAG) $(LIBLO_FLAG)
+PLAT_LINK_CFLAGS ?= $(ALSA_FLAG)
 
 LINK_FLAGS  ?= \
 	-lpthread $(PORTMIDI_FLAG) -lportaudio $(LDFLAGS) \

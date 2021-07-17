@@ -86,7 +86,6 @@
 
 
 extern int SG_OFFLINE_RENDER;
-extern volatile int exiting;
 extern SGFLT MASTER_VOL;
 extern SGFLT **pluginOutputBuffers;
 extern int ZERO;
@@ -205,8 +204,7 @@ typedef struct
     char padding[CACHE_LINE_SIZE - sizeof(SGFLT) - sizeof(int)];
 }t_sg_thread_storage ;
 
-typedef struct
-{
+typedef struct{
     t_sg_thread_storage thread_storage[MAX_WORKER_THREADS];
     t_sg_host * current_host;
     t_sg_host hosts[SG_HOST_COUNT];
@@ -238,12 +236,6 @@ typedef struct
     pthread_t audio_recording_thread;
     int audio_recording_quit_notifier ;
     int playback_mode;  //0 == Stop, 1 == Play, 2 == Rec
-
-#ifdef WITH_LIBLO
-    lo_server_thread serverThread;
-    lo_address uiTarget;
-#endif
-
     char * osc_cursor_message;
     int osc_queue_index;
     char osc_queue_keys[OSC_SEND_QUEUE_SIZE][12];

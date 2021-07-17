@@ -19,7 +19,6 @@ sudo apt-get install -y \
     lame \
     libasound2-dev \
     libfftw3-dev \
-    liblo-dev \
     libportmidi-dev \
     libsbsms-dev \
     libsndfile1-dev \

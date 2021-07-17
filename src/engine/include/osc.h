@@ -26,5 +26,4 @@ void v_queue_osc_message(
     char * a_val
 );
 
-void osc_error(int num, const char *msg, const char *path);
 #endif

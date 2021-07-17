@@ -341,10 +341,6 @@ void v_destructor(){
 
     usleep(300000);
 
-#ifdef WITH_LIBLO
-    lo_address_free(STARGATE->uiTarget);
-#endif
-
     //abort the application rather than hang indefinitely
     for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
         assert(STARGATE->track_thread_quit_notifier[f_i] == 2);

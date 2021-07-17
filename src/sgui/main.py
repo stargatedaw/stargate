@@ -49,12 +49,8 @@ import sys
 import time
 import traceback
 
-if (
-	util.IS_LINUX
-	and
-	not util.IS_ENGINE_LIB
-):
-    import liblo
+if not util.IS_ENGINE_LIB:
+    from sgui.ipc.socket import SocketIPCServer, SocketIPCTransport
 
 HOST_INDEX_DAW = 0
 HOST_INDEX_WAVE_EDIT = 1
@@ -149,20 +145,8 @@ class SgMainWindow(QMainWindow):
             from sgui.ipc.enginelib import EngineLibIPCTransport
             constants.IPC_TRANSPORT = EngineLibIPCTransport()
         elif util.IS_LINUX:
-            try:
-                from sgui.ipc.socket import SocketIPCTransport
-                constants.IPC_TRANSPORT = SocketIPCTransport.new(19271)
-            except liblo.AddressError as err:
-                LOG.exception(err)
-                sys.exit()
-            except Exception as ex:
-                LOG.error("Unable to create IPC send on port 19271")
-                LOG.exception(ex)
-                constants.IPC_TRANSPORT = None
-        if not constants.IPC_TRANSPORT:
-            from sgui.ipc.null import NullIPCTransport
-            constants.IPC_TRANSPORT = NullIPCTransport()
-
+            from sgui.ipc.socket import SocketIPCTransport
+            constants.IPC_TRANSPORT = SocketIPCTransport()
         with_audio = constants.IPC_TRANSPORT is not None
         constants.IPC = StargateIPC(
             constants.IPC_TRANSPORT,
@@ -414,29 +398,11 @@ class SgMainWindow(QMainWindow):
             #LOG.info("Initializing engine python module")
             #stargateengine.init(engine_lib_callback)
         else:
-            try:
-                self.osc_server = liblo.Server(30321)
-            except liblo.ServerError as err:
-                LOG.error("Error creating socket: {}".format(err))
-                LOG.exception(err)
-                self.osc_server = None
-            if self.osc_server is not None:
-                LOG.info(self.osc_server.get_url())
-                self.osc_server.add_method(
-                    "stargate/wave_edit",
-                    's',
-                    wave_edit.MAIN_WINDOW.configure_callback,
-                )
-                self.osc_server.add_method(
-                    "stargate/daw",
-                    's',
-                    daw.MAIN_WINDOW.configure_callback,
-                )
-                self.osc_server.add_method(None, None, self.osc_fallback)
-                self.osc_timer = QtCore.QTimer(self)
-                self.osc_timer.setSingleShot(False)
-                self.osc_timer.timeout.connect(self.osc_time_callback)
-                self.osc_timer.start(24)
+            self.osc_server = SocketIPCServer(
+                daw.MAIN_WINDOW.configure_callback,
+                wave_edit.MAIN_WINDOW.configure_callback,
+            )
+            self.osc_server.start()
 
             if util.WITH_AUDIO:
                 self.subprocess_timer = QtCore.QTimer(self)
@@ -658,9 +624,6 @@ class SgMainWindow(QMainWindow):
             LOG.error("subprocess_monitor: {}".format(ex))
             LOG.exception(ex)
 
-    def osc_time_callback(self):
-        self.osc_server.recv(0)
-
     def osc_fallback(self, path, args, types, src):
         LOG.warning("got unknown message '{}' from '{}'".format(path, src))
         for a, t in zip(args, types):
@@ -781,7 +744,6 @@ class SgMainWindow(QMainWindow):
             close_engine()
             shared.PLUGIN_UI_DICT.close_all_plugin_windows()
             if self.osc_server is not None:
-                self.osc_timer.stop()
                 self.osc_server.free()
             for f_host in self.host_windows:
                 f_host.prepare_to_quit()

@@ -1,4 +1,3 @@
-#include <lo/lo.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,7 +39,6 @@ void* v_osc_send_thread(void* a_arg){
 
     while(!STARGATE->audio_recording_quit_notifier){
         STARGATE->current_host->osc_send(&f_send_data);
-
         usleep(30000);
     }
 
@@ -81,28 +79,5 @@ void v_queue_osc_message(
         ++STARGATE->osc_queue_index;
         pthread_spin_unlock(&STARGATE->ui_spinlock);
     }
-}
-
-#ifdef WITH_LIBLO
-void v_activate_osc_thread(lo_method_handler osc_message_handler){
-    lo_server_thread_add_method(
-        STARGATE->serverThread,
-        NULL,
-        NULL,
-        osc_message_handler,
-        NULL
-    );
-    lo_server_thread_start(STARGATE->serverThread);
-}
-#endif
-
-void osc_error(int num, const char *msg, const char *path){
-    fprintf(
-        stderr,
-        "liblo server error %d in path %s: %s\n",
-        num,
-        path,
-        msg
-    );
 }
 

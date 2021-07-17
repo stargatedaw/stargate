@@ -13,7 +13,6 @@ sudo dnf install \
     gettext \
     git \
     lame \
-    liblo-devel \
     libsndfile-devel \
     livecd-tools \
     portaudio-devel \

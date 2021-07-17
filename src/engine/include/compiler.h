@@ -64,8 +64,7 @@
 #endif
 
 #if !defined(SG_DLL)
-    #include <lo/lo.h>
-    #define WITH_LIBLO
+    #define WITH_SOCKET_IPC
 #endif
 
 #if !defined(CACHE_LINE_SIZE)
@@ -97,6 +96,9 @@
 
 char * get_home_dir();
 
+#if defined(_WIN64) && !defined(_WIN32)
+    #define _WIN32
+#endif
 #if defined(__MINGW32__) && !defined(_WIN32)
     #define _WIN32
 #endif

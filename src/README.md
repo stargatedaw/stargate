@@ -5,8 +5,7 @@
 # Architecture
 The UI is written in Python and PyQt.  The audio/dsp engine is written in C
 and can be run one of 2 ways:
-- A separate process, communicating OSC over UDP sockets using
-  liblo OSC library (default on Linux)
+- A separate process, communicating OSC over TCP sockets (default on Linux)
 - A shared library (.so, .dll, .dylib) (default on Windows and Mac)
 
 The separate process has the following advantages:
