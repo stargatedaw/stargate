@@ -1,7 +1,3 @@
-try:
-    from sg_py_vendor.pymarshal import pm_assert
-except ImportError:
-    from pymarshal import pm_assert
 from sglib.log import LOG
 from subprocess import getstatusoutput
 import os
@@ -14,10 +10,11 @@ __all__ = [
 ]
 
 def gpu_mem(
-    cmd: str= 'vcgencmd get_mem gpu',
+    cmd: str='vcgencmd get_mem gpu',
     minimum: int=256,
 ) -> bool:
-    """ Check that Raspberry Pi has allocated enough GPU memory
+    """ Check that Raspberry Pi has allocated enough GPU memory to run a
+        desktop smoothly
     """
     status, output = getstatusoutput(cmd)
     if status != 0:
@@ -26,11 +23,9 @@ def gpu_mem(
         )
         return True
     numbers = re.findall(r'\d+', output)
-    pm_assert(
-        len(numbers) == 1,
-        ValueError,
-        (numbers, output)
-    )
+    if len(numbers) != 1:
+        LOG.warning(f"Could not detect GPU memory: '{output}'")
+        return True
     gpu_mem = int(numbers[0])
     if gpu_mem < minimum:
         LOG.warning(f"Detected {gpu_mem} GPU memory")
@@ -40,7 +35,10 @@ def gpu_mem(
 def desktop(
     cmd: str='wmctrl -m',
     allow: tuple=('fluxbox',),
-):
+) -> bool:
+    """ Check that the Raspberry Pi is running a desktop environment known
+        to be able to adequately run a complex UI application
+    """
     status, output = getstatusoutput(cmd)
     if status != 0:
         LOG.warning(
