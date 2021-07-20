@@ -163,6 +163,8 @@ int _main(int argc, char** argv){
                 NO_HARDWARE = 1;
             } else if(!strcmp(argv[j], "--no-hardware")){
                 NO_HARDWARE = 1;
+            } else if(!strcmp(argv[j], "--single-thread")){
+                SINGLE_THREAD = 1;
             } else {
                 printf("Invalid argument [%i] %s\n", j, argv[j]);
             }

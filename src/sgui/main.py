@@ -427,7 +427,9 @@ class SgMainWindow(QMainWindow):
         self._copy_to_clipboard(text)
 
     def copy_valgrind_cmd(self):
-        text = "valgrind '{}'-dbg '{}' '{}' {} 0 --no-hardware".format(
+        text = (
+            "valgrind '{}-dbg' '{}' '{}' {} 0 --no-hardware --single-thread"
+        ).format(
             util.BIN_PATH,
             util.INSTALL_PREFIX,
             constants.PROJECT_DIR,

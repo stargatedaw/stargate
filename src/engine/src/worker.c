@@ -12,6 +12,7 @@
 #include "compiler.h"
 #include "daw.h"
 #include "files.h"
+#include "globals.h"
 #include "osc.h"
 #include "project.h"
 #include "stargate.h"
@@ -100,7 +101,9 @@ void v_init_worker_threads(
         f_cpu_count = 1;
     }
 
-    if(a_thread_count == 0){  // auto, select for the user
+    if(SINGLE_THREAD){
+        STARGATE->worker_thread_count = 1;
+    } else if(a_thread_count == 0){  // auto, select for the user
         // 2 thread SMT is assumed now
         // Stargate is very CPU efficient, it is unlikely that anybody needs
         // so much processing power.
