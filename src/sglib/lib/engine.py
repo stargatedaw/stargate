@@ -176,7 +176,7 @@ def _log_fd(log_func, fd):
             line = line.strip()
             if line:
                 log_func(f'ENGINE PROC: "{line}"')
-        LOG.info(f"Engine finished writing to {fd}")
+        LOG.info(f"Engine finished writing to {log_func}")
     except Exception as ex:
         LOG.exception(ex)
 
