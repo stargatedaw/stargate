@@ -5,7 +5,7 @@ from sglib.lib.translate import _
 from sgui.sgqt import *
 
 
-class master_widget:
+class main_widget:
     def __init__(
         self,
         a_size,
@@ -15,7 +15,7 @@ class master_widget:
         a_glide_port,
         a_pitchbend_port,
         a_port_dict,
-        a_title=_("Master"),
+        a_title=_("Main"),
         a_uni_voices_port=None,
         a_uni_spread_port=None,
         a_preset_mgr=None,

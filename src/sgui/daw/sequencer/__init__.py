@@ -319,7 +319,7 @@ class SequencerWidget:
         )
         if f_result:
             f_result = {f_result[x]:x + 1 for x in range(len(f_result))}
-            f_result[0] = 0 # master track
+            f_result[0] = 0 # main track
             constants.DAW_PROJECT.reorder_tracks(f_result)
             shared.TRACK_PANEL.open_tracks()
             self.open_sequence()

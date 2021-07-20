@@ -18,11 +18,11 @@ class ItemEditorWidget:
         self.events_follow_default = True
 
         self.widget = QWidget()
-        self.master_vlayout = QVBoxLayout()
-        self.widget.setLayout(self.master_vlayout)
+        self.main_vlayout = QVBoxLayout()
+        self.widget.setLayout(self.main_vlayout)
 
         self.tab_widget = QTabWidget()
-        self.master_vlayout.addWidget(self.tab_widget)
+        self.main_vlayout.addWidget(self.tab_widget)
 
         shared.AUDIO_SEQ_WIDGET.hsplitter.insertWidget(
             0,

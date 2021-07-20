@@ -853,7 +853,7 @@ class MixerWidget:
         self.track_count = a_track_count
         for f_i in range(a_track_count):
             f_channel = MixerChannel(
-                "Master" if f_i == 0 else "track{}".format(f_i), f_i)
+                "Main" if f_i == 0 else "track{}".format(f_i), f_i)
             self.tracks[f_i] = f_channel
             self.grid_layout.addWidget(f_channel.widget, 0, f_i)
 

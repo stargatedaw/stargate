@@ -40,7 +40,7 @@ class SeqTrack:
         self.group_box.setLayout(self.main_hlayout)
         self.track_name_lineedit = QLineEdit()
         if a_track_num == 0:
-            self.track_name_lineedit.setText("Master")
+            self.track_name_lineedit.setText("Main")
             self.track_name_lineedit.setDisabled(True)
         else:
             self.track_name_lineedit.setText(a_track_text)

@@ -440,13 +440,13 @@ FM1_ADSR_LIN_MAIN = 372
 
 
 FM1_PORT_MAP = {
-    "Master Attack": FM1_ATTACK_MAIN,
-    "Master Hold": FM1_HOLD_MAIN,
-    "Master Decay": FM1_DECAY_MAIN,
-    "Master Sustain": FM1_SUSTAIN_MAIN,
-    "Master Release": FM1_RELEASE_MAIN,
+    "Main Attack": FM1_ATTACK_MAIN,
+    "Main Hold": FM1_HOLD_MAIN,
+    "Main Decay": FM1_DECAY_MAIN,
+    "Main Sustain": FM1_SUSTAIN_MAIN,
+    "Main Release": FM1_RELEASE_MAIN,
     "Noise Amp": FM1_OSC1_TYPE,
-    "Master Glide": 18,
+    "Main Glide": 18,
     "Osc1 Attack": FM1_ATTACK1,
     "Osc1 Decay": FM1_DECAY1,
     "Osc1 Sustain": FM1_SUSTAIN1,
@@ -867,9 +867,9 @@ class fm1_plugin_ui(AbstractPluginUI):
 
         self.modulation_vlayout = QVBoxLayout(self.modulation_tab)
 
-        self.hlayout_master = QHBoxLayout()
-        self.modulation_vlayout.addLayout(self.hlayout_master)
-        self.master = master_widget(
+        self.hlayout_main = QHBoxLayout()
+        self.modulation_vlayout.addLayout(self.hlayout_main)
+        self.main = main_widget(
             f_knob_size, self.plugin_rel_callback,
             self.plugin_val_callback, FM1_MASTER_VOLUME,
             FM1_MASTER_GLIDE, FM1_MASTER_PITCHBEND_AMT,
@@ -878,18 +878,18 @@ class fm1_plugin_ui(AbstractPluginUI):
             a_min_note_port=FM1_MIN_NOTE, a_max_note_port=FM1_MAX_NOTE,
             a_pitch_port=FM1_MASTER_PITCH)
 
-        self.hlayout_master.addWidget(self.master.group_box)
+        self.hlayout_main.addWidget(self.main.group_box)
 
         self.adsr_amp_main = adsr_widget(
             f_knob_size, True, FM1_ATTACK_MAIN,
             FM1_DECAY_MAIN, FM1_SUSTAIN_MAIN,
-            FM1_RELEASE_MAIN, _("AHDSR Master"),
+            FM1_RELEASE_MAIN, _("AHDSR Main"),
             self.plugin_rel_callback, self.plugin_val_callback,
             self.port_dict, self.preset_manager,
             a_prefx_port=FM1_ADSR_PREFX,
             a_knob_type=KC_LOG_TIME, a_hold_port=FM1_HOLD_MAIN,
             a_lin_port=FM1_ADSR_LIN_MAIN)
-        self.hlayout_master.addWidget(self.adsr_amp_main.groupbox)
+        self.hlayout_main.addWidget(self.adsr_amp_main.groupbox)
 
         self.perc_env = perc_env_widget(
             f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
@@ -898,9 +898,9 @@ class fm1_plugin_ui(AbstractPluginUI):
             FM1_PERC_ENV_PITCH2, FM1_PERC_ENV_ON,
             a_preset_mgr=self.preset_manager)
 
-        self.hlayout_master2 = QHBoxLayout()
-        self.modulation_vlayout.addLayout(self.hlayout_master2)
-        self.hlayout_master2.addWidget(self.perc_env.groupbox)
+        self.hlayout_main2 = QHBoxLayout()
+        self.modulation_vlayout.addLayout(self.hlayout_main2)
+        self.hlayout_main2.addWidget(self.perc_env.groupbox)
 
         self.adsr_noise = adsr_widget(
             f_knob_size, True, FM1_ATTACK_NOISE,
@@ -910,7 +910,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.port_dict, self.preset_manager,
             a_knob_type=KC_LOG_TIME, a_hold_port=FM1_HOLD_NOISE,
             a_delay_port=FM1_DELAY_NOISE)
-        self.hlayout_master2.addWidget(self.adsr_noise.groupbox)
+        self.hlayout_main2.addWidget(self.adsr_noise.groupbox)
         self.adsr_noise_on = checkbox_control(
             "On", FM1_ADSR_NOISE_ON,
             self.plugin_rel_callback, self.plugin_val_callback,
@@ -920,7 +920,7 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.groupbox_noise = QGroupBox(_("Noise"))
         self.groupbox_noise.setObjectName("plugin_groupbox")
         self.groupbox_noise_layout = QGridLayout(self.groupbox_noise)
-        self.hlayout_master2.addWidget(self.groupbox_noise)
+        self.hlayout_main2.addWidget(self.groupbox_noise)
         self.noise_amp = knob_control(
             f_knob_size, _("Vol"), FM1_NOISE_AMP,
             self.plugin_rel_callback, self.plugin_val_callback,
@@ -945,11 +945,11 @@ class fm1_plugin_ui(AbstractPluginUI):
             QSpacerItem(1, 1, vPolicy=QSizePolicy.Policy.Expanding),
         )
 
-        self.hlayout_master.addItem(
+        self.hlayout_main.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
 
-        self.hlayout_master2.addItem(
+        self.hlayout_main2.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
 

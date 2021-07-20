@@ -43,7 +43,7 @@ class MidiDevice:
             self.index,
             track_index,
         )
-        if track_index:  # not master
+        if track_index:  # not main
             constants.DAW_PROJECT.check_output(track_index)
         self.save_callback()
 

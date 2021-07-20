@@ -56,11 +56,11 @@ class TransportWidget:
             shared.MAIN_WINDOW.set_host,
         )
 
-        self.master_vol_knob = widgets.pixmap_knob(42, -480, 0)
-        self.load_master_vol()
-        self.hlayout1.addWidget(self.master_vol_knob)
-        self.master_vol_knob.valueChanged.connect(self.master_vol_changed)
-        self.master_vol_knob.sliderReleased.connect(self.master_vol_released)
+        self.main_vol_knob = widgets.pixmap_knob(42, -480, 0)
+        self.load_main_vol()
+        self.hlayout1.addWidget(self.main_vol_knob)
+        self.main_vol_knob.valueChanged.connect(self.main_vol_changed)
+        self.main_vol_knob.sliderReleased.connect(self.main_vol_released)
         self.suppress_osc = False
 
         self.controls_to_disable = (self.menu_button, self.host_combobox)
@@ -69,27 +69,27 @@ class TransportWidget:
         for f_control in self.controls_to_disable:
             f_control.setEnabled(a_enabled)
 
-    def master_vol_released(self):
+    def main_vol_released(self):
         util.set_file_setting(
-            "master_vol",
-            self.master_vol_knob.value()
+            "main_vol",
+            self.main_vol_knob.value()
         )
 
-    def load_master_vol(self):
-        self.master_vol_knob.setValue(
+    def load_main_vol(self):
+        self.main_vol_knob.setValue(
             util.get_file_setting(
-                "master_vol",
+                "main_vol",
                 int,
                 0,
             ),
         )
 
-    def master_vol_changed(self, a_val):
+    def main_vol_changed(self, a_val):
         if a_val == 0:
             f_result = 1.0
         else:
             f_result = db_to_lin(float(a_val) * 0.1)
-        constants.IPC.master_vol(f_result)
+        constants.IPC.main_vol(f_result)
 
     def set_time(self, a_text):
         self.clock.display(a_text)

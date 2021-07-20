@@ -83,7 +83,7 @@ TAB_NOTES = 6
 SEQUENCE_EDITOR_TRACK_HEIGHT = 64
 constants.DAW_PROJECT = DawProject(util.WITH_AUDIO)
 TRACK_NAMES = [
-    "Master" if x == 0 else "track{}".format(x)
+    "Audio Output" if x == 0 else "track{}".format(x)
     for x in range(TRACK_COUNT_ALL)
 ]
 

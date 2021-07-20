@@ -295,17 +295,17 @@ SAMPLER1_ADSR_LIN_MAIN = SAMPLER1_MASTER_PITCH + 1
 
 
 SAMPLER1_PORT_MAP = {
-    "Master Attack": "3",
-    "Master Decay": "4",
-    "Master Sustain": "5",
-    "Master Release": "6",
+    "Main Attack": "3",
+    "Main Decay": "4",
+    "Main Sustain": "5",
+    "Main Release": "6",
     "ADSR2 Attack": "7",
     "ADSR2 Decay": "8",
     "ADSR2 Sustain": "9",
     "ADSR2 Release": "10",
     "LFO Pitch": "11",
     "LFO Pitch Fine": SAMPLER1_LFO_PITCH_FINE,
-    "Master Glide": "13",
+    "Main Glide": "13",
     "Pitch Env Time": "15",
     "LFO Freq": "16",
     "FX0 Knob0": "18",
@@ -1221,15 +1221,15 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.last_monofx_group = None
         self.set_monofx_knob_callbacks(0)
 
-        self.master = master_widget(
+        self.main = main_widget(
             f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
             SAMPLER1_MASTER_VOLUME, SAMPLER1_MASTER_GLIDE,
-            SAMPLER1_MASTER_PITCHBEND_AMT, self.port_dict, _("Master"),
+            SAMPLER1_MASTER_PITCHBEND_AMT, self.port_dict, _("Main"),
             a_min_note_port=SAMPLER1_MIN_NOTE,
             a_max_note_port=SAMPLER1_MAX_NOTE,
             a_pitch_port=SAMPLER1_MASTER_PITCH)
-        self.monofx_sub_tab_fx_layout.addWidget(self.master.group_box)
-        self.master.vol_knob.control.setRange(-24, 24)
+        self.monofx_sub_tab_fx_layout.addWidget(self.main.group_box)
+        self.main.vol_knob.control.setRange(-24, 24)
 
         glbl_shared.APP.processEvents()
 

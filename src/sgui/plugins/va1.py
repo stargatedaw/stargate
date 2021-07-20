@@ -91,7 +91,7 @@ VA1_PORT_MAP = {
     "Noise Amp": "13",
     "Filter Env Amt": "14",
     "Dist Wet": "15",
-    "Master Glide": "27",
+    "Main Glide": "27",
     "Pitch Env Time": "29",
     "Pitch Env Amt": "30",
     "LFO Freq": "31",
@@ -232,15 +232,15 @@ class va1_plugin_ui(AbstractPluginUI):
         self.noise_type.add_to_grid_layout(self.noise_layout, 1)
 
 
-        self.master = master_widget(
+        self.main = main_widget(
             f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
             VA1_MASTER_VOLUME, VA1_MASTER_GLIDE,
-            VA1_MASTER_PITCHBEND_AMT, self.port_dict, _("Master"),
+            VA1_MASTER_PITCHBEND_AMT, self.port_dict, _("Main"),
             None, None,
             self.preset_manager, a_poly_port=VA1_MONO_MODE,
             a_min_note_port=VA1_MIN_NOTE, a_max_note_port=VA1_MAX_NOTE,
             a_pitch_port=VA1_MASTER_PITCH, a_pb_min=0)
-        self.hlayout3.addWidget(self.master.group_box)
+        self.hlayout3.addWidget(self.main.group_box)
 
         self.lfo = lfo_widget(
             f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
