@@ -53,6 +53,7 @@ from sgui.daw.lib import undo as undo_lib
 from sglib.lib import *
 from sglib.lib import strings as sg_strings
 from sglib.lib.translate import _
+from sglib.log import LOG
 
 import datetime
 import math

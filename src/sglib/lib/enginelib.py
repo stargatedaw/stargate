@@ -18,6 +18,7 @@ elif util.IS_LINUX:
 elif util.IS_MAC_OSX:
     DLL_EXT = ".dylib"
 
+# Path is applicable in both local development and also when installed
 SGENGINE_DIR = os.path.abspath(
     os.path.join(
         os.path.dirname(__file__),
@@ -34,7 +35,8 @@ def load_engine_lib(a_engine_callback):
         DLL_EXT,
     )
     f_dll = os.path.join(SGENGINE_DIR, f_dll_name)
-    LOG.info("Using {}".format(f_dll))
+    LOG.info(f"Using engine lib path {f_dll}")
+    assert os.path.isfile(f_dll), "{f_dll} does not exist"
     ENGINE_LIB = ctypes.CDLL(f_dll)
     ENGINE_LIB.start_engine.restype = None
     ENGINE_LIB.start_engine.argstype = [ctypes.c_char_p]

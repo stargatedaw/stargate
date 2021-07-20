@@ -132,8 +132,8 @@ def engine_lib_callback(a_path, a_msg):
 
 
 class SgMainWindow(QMainWindow):
-    daw_callback = Signal(str, list)
-    wave_edit_callback = Signal(str, list)
+    daw_callback = Signal(str)
+    wave_edit_callback = Signal(str)
 
     def __init__(self):
         QMainWindow.__init__(self)
@@ -443,8 +443,8 @@ class SgMainWindow(QMainWindow):
 
     def engine_lib_callback(self, a_path, a_msg):
         f_path = a_path.decode("utf-8")
-        f_msg = [a_msg.decode("utf-8")]
-        self.engine_callback_dict[f_path].emit(f_path, f_msg)
+        f_msg = a_msg.decode("utf-8")
+        self.engine_callback_dict[f_path].emit(f_msg)
 
     def resizeEvent(self, a_event):
         if self.suppress_resize_events:
