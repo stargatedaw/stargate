@@ -34,7 +34,7 @@ void ipc_client_send(
     servaddr.sin_port = htons(30321);
     servaddr.sin_addr.s_addr = INADDR_ANY;
 
-    //len = (socklen_t)sizeof(cliaddr); //len is value/resuslt
+    len = (socklen_t)sizeof(servaddr);
 
     sendto(
         sockfd,
@@ -49,7 +49,7 @@ void ipc_client_send(
         (char*)buffer,
         1024,
         MSG_WAITALL,
-        (struct sockaddr*) &servaddr,
+        (struct sockaddr*)&servaddr,
         &len
     );
     buffer[n] = '\0';
