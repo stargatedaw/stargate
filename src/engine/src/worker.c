@@ -289,7 +289,7 @@ NO_OPTIMIZATION void v_activate(
 
     v_set_host(f_host);
 
-    printf("Initializing worker threads");
+    printf("Initializing worker threads\n");
     v_init_worker_threads(
         a_thread_count,
         a_set_thread_affinity,
