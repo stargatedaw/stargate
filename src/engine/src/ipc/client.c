@@ -18,7 +18,7 @@ void ipc_client_send(
     char* message
 ){
     int sockfd;
-    char buffer[8192];
+    char buffer[IPC_MAX_MESSAGE_SIZE];
     struct sockaddr_in servaddr;
     int n;
     socklen_t len;

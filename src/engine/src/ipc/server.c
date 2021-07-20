@@ -23,7 +23,7 @@ void* ipc_server_thread(void* _arg){
     int sockfd;
     int n;
     socklen_t len;
-    char buffer[8192];
+    char buffer[IPC_MAX_MESSAGE_SIZE];
     char *response = "Message processed";
     int response_len = strlen(response);
     struct sockaddr_in servaddr, cliaddr;
