@@ -10,9 +10,18 @@ class RoutingGraphNode(QGraphicsRectItem):
     def __init__(self, a_text, a_width, a_height):
         QGraphicsRectItem.__init__(self, 0, 0, a_width, a_height)
         self.text = QGraphicsSimpleTextItem(a_text, self)
+        self.setToolTip(a_text)
         self.text.setPos(3.0, 3.0)
-        self.setPen(QtCore.Qt.GlobalColor.black)
+        self.setPen(
+            QColor(
+                theme.SYSTEM_COLORS.widgets.rout_graph_node_text,
+            ),
+        )
         self.set_brush()
+        self.setFlag(
+            QGraphicsItem.GraphicsItemFlag.ItemClipsChildrenToShape,
+            False,
+        )
 
     def set_brush(self, a_to=False, a_from=False):
         if a_to:
@@ -86,9 +95,26 @@ class RoutingGraphWidget(QGraphicsView):
         for v in self.node_dict.values():
             v.set_brush()
 
+    def resizeEvent(self, event):
+        QGraphicsView.resizeEvent(self, event)
+        self.draw()
+
     def draw_graph(self, a_graph, a_track_names):
+        self.graph = a_graph
+        self.track_names = a_track_names
+        self.draw()
+
+    def draw(self):
+        a_graph = self.graph
+        a_track_names = self.track_names
         self.graph_height = self.height() - 36.0
         self.graph_width = self.width() - 36.0
+        self.scene.setSceneRect(
+            0.0,
+            0.0,
+            self.width(),
+            self.height(),
+        )
         self.node_width = self.graph_width / 32.0
         self.node_height = self.graph_height / 32.0
         self.wire_width = self.node_height / 4.0  #max conns

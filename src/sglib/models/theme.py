@@ -283,6 +283,7 @@ class WidgetColors:
         knob_fg_image="knob-fg.png",
         playback_cursor="#ff0000",
         rout_graph_node="#e7e700",
+        rout_graph_node_text="#e7e7e7",
         rout_graph_to="#e7a0a0",
         rout_graph_from="#a0a0e7",
         rout_graph_lines="#696969",
@@ -326,6 +327,11 @@ class WidgetColors:
             rout_graph_node,
             str,
             desc="Routing graph widget node",
+        )
+        self.rout_graph_node_text = type_assert(
+            rout_graph_node_text,
+            str,
+            desc="Routing graph widget node text",
         )
         self.rout_graph_to = type_assert(
             rout_graph_to,
