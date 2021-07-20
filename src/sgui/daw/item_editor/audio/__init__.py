@@ -136,7 +136,8 @@ class AudioItemSeq(AbstractItemEditor):
     def get_scene_pos(self):
         return QtCore.QPointF(
             self.horizontalScrollBar().value(),
-            self.verticalScrollBar().value())
+            self.verticalScrollBar().value(),
+        )
 
     def get_selected(self):
         return [x for x in self.audio_items if x.isSelected()]
@@ -857,4 +858,10 @@ def set_audio_seq_zoom(a_horizontal, a_vertical):
     shared.AUDIO_SEQ.px_per_beat = shared.AUDIO_PX_PER_BEAT
     set_audio_snap(shared.AUDIO_SNAP_VAL)
     shared.AUDIO_ITEM_HEIGHT = 75.0 * a_vertical
+    shared.AUDIO_SEQ.scene.setSceneRect(
+        0.0,
+        0.0,
+        shared.AUDIO_PX_PER_BEAT * f_sequence_length,
+        shared.AUDIO_ITEM_HEIGHT * shared.AUDIO_ITEM_MAX_LANE,
+    )
 
