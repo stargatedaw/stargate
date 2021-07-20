@@ -19,7 +19,7 @@ void ipc_client_send(
 ){
     int sockfd;
     char buffer[8192];
-    struct sockaddr_in     servaddr;
+    struct sockaddr_in servaddr;
     int n;
     socklen_t len;
 
