@@ -156,6 +156,9 @@ class pixmap_knob(QDial):
         QApplication.setOverrideCursor(QtCore.Qt.CursorShape.BlankCursor)
 
     def mouseMoveEvent(self, a_event):
+        if a_event.button() != QtCore.Qt.MouseButton.LeftButton:
+            QDial.mouseMoveEvent(self, a_event)
+            return
         f_pos = qt_event_pos(a_event)
         f_x = f_pos.x()
         f_diff_x = f_x - self.orig_x
