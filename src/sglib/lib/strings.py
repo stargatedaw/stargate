@@ -249,7 +249,7 @@ track combobox, and select it's plugins within the rack.
 
 Mixer = _("""\
 This is the mixer.  Route tracks between each other and the
-master track using the "Routing" tab.  When you create a route,
+main track using the "Routing" tab.  When you create a route,
 it will show a channel on the mixer, where you can select a
 mixer plugin to control the channel with.
 """)

@@ -145,8 +145,8 @@ void v_va1_connect_port(
         case VA1_FILTER_ENV_AMT:
             plugin->filter_env_amt = data;
             break;
-        case VA1_MASTER_VOLUME:
-            plugin->master_vol = data;
+        case VA1_MAIN_VOLUME:
+            plugin->main_vol = data;
             break;
         case VA1_OSC1_PITCH:
             plugin->osc1pitch = data;
@@ -184,11 +184,11 @@ void v_va1_connect_port(
         case VA1_UNISON_SPREAD2:
             plugin->uni_spread2 = data;
             break;
-        case VA1_MASTER_GLIDE:
-            plugin->master_glide = data;
+        case VA1_MAIN_GLIDE:
+            plugin->main_glide = data;
             break;
-        case VA1_MASTER_PITCHBEND_AMT:
-            plugin->master_pb_amt = data;
+        case VA1_MAIN_PITCHBEND_AMT:
+            plugin->main_pb_amt = data;
             break;
         case VA1_PITCH_ENV_AMT:
             plugin->pitch_env_amt = data;
@@ -238,8 +238,8 @@ void v_va1_connect_port(
         case VA1_MAX_NOTE:
             plugin->max_note = data;
             break;
-        case VA1_MASTER_PITCH:
-            plugin->master_pitch = data;
+        case VA1_MAIN_PITCH:
+            plugin->main_pitch = data;
             break;
         case VA1_NOISE_TYPE:
             plugin->noise_type = data;
@@ -379,24 +379,24 @@ void v_va1_process_midi_event(
             f_voice->adsr_run_func = FP_ADSR_RUN[f_adsr_main_lin];
 
             f_voice->amp = f_db_to_linear_fast(
-                //-20db to 0db, + master volume (0 to -60)
+                //-20db to 0db, + main volume (0 to -60)
                 ((a_event->velocity * 0.094488) - 12.0f));
             v_nosvf_velocity_mod(&f_voice->svf_filter,
                 a_event->velocity, (*plugin_data->filter_vel) * 0.01f);
 
-            SGFLT f_master_pitch = (*plugin_data->master_pitch);
+            SGFLT f_main_pitch = (*plugin_data->main_pitch);
 
-            f_voice->note_f = (SGFLT)a_event->note + f_master_pitch;
-            f_voice->note = a_event->note + (int)(f_master_pitch);
+            f_voice->note_f = (SGFLT)a_event->note + f_main_pitch;
+            f_voice->note = a_event->note + (int)(f_main_pitch);
 
             f_voice->filter_keytrk =
                 (*plugin_data->filter_keytrk) * 0.01f * (f_voice->note_f);
 
             f_voice->target_pitch = (f_voice->note_f);
             f_voice->osc1pb =
-                (*plugin_data->master_pb_amt) + (*plugin_data->osc1pb);
+                (*plugin_data->main_pb_amt) + (*plugin_data->osc1pb);
             f_voice->osc2pb =
-                (*plugin_data->master_pb_amt) + (*plugin_data->osc2pb);
+                (*plugin_data->main_pb_amt) + (*plugin_data->osc2pb);
 
             f_voice->dist_out_gain = f_db_to_linear_fast(
                 (*plugin_data->dist_out_gain) * 0.01f);
@@ -418,7 +418,7 @@ void v_va1_process_midi_event(
                 (*plugin_data->osc2pitch) + ((*plugin_data->osc2tune) * 0.01f);
 
             v_rmp_retrigger_glide_t(&f_voice->glide_env,
-                (*(plugin_data->master_glide) * 0.01f),
+                (*(plugin_data->main_glide) * 0.01f),
                 (f_voice->last_pitch), (f_voice->target_pitch));
 
             f_voice->osc1_linamp =
@@ -593,7 +593,7 @@ void v_run_va1(
             ev_tmp->tick, ev_tmp->value, ev_tmp->port);
     }
 
-    plugin_data->master_vol_lin = f_db_to_linear_fast(*plugin_data->master_vol);
+    plugin_data->main_vol_lin = f_db_to_linear_fast(*plugin_data->main_vol);
 
     int f_i2, f_i3;
     t_plugin_event_queue_item * f_midi_item;
@@ -821,7 +821,7 @@ void v_run_va1_voice(
     );
 
     current_sample = current_sample * a_voice->amp * a_voice->lfo_amp_output *
-        plugin_data->master_vol_lin;
+        plugin_data->main_vol_lin;
 
     if(!a_voice->adsr_prefx){
         current_sample *= a_voice->adsr_amp.output;
@@ -855,13 +855,13 @@ PluginDescriptor *va1_plugin_descriptor(){
     set_pyfx_port(f_result, VA1_OSC2_PITCH, 0.0f, -36.0f, 36.0f);
     set_pyfx_port(f_result, VA1_OSC2_TUNE, 0.0f, -100.0f, 100.0f);
     set_pyfx_port(f_result, VA1_OSC2_VOLUME, -6.0f, -30.0f, 0.0f);
-    set_pyfx_port(f_result, VA1_MASTER_VOLUME, -6.0f, -30.0f, 12.0f);
+    set_pyfx_port(f_result, VA1_MAIN_VOLUME, -6.0f, -30.0f, 12.0f);
     set_pyfx_port(f_result, VA1_UNISON_VOICES1, 1.0f, 1.0f, 7.0f);
     set_pyfx_port(f_result, VA1_UNISON_VOICES2, 1.0f, 1.0f, 7.0f);
     set_pyfx_port(f_result, VA1_UNISON_SPREAD1, 50.0f, 0.0f, 100.0f);
     set_pyfx_port(f_result, VA1_UNISON_SPREAD2, 50.0f, 0.0f, 100.0f);
-    set_pyfx_port(f_result, VA1_MASTER_GLIDE, 0.0f,  0.0f, 200.0f);
-    set_pyfx_port(f_result, VA1_MASTER_PITCHBEND_AMT, 18.0f, 0.0f,  36.0f);
+    set_pyfx_port(f_result, VA1_MAIN_GLIDE, 0.0f,  0.0f, 200.0f);
+    set_pyfx_port(f_result, VA1_MAIN_PITCHBEND_AMT, 18.0f, 0.0f,  36.0f);
     set_pyfx_port(f_result, VA1_PITCH_ENV_AMT, 0.0f, -36.0f, 36.0f);
     set_pyfx_port(f_result, VA1_PITCH_ENV_TIME, 100.0f, 1.0f, 600.0f);
     set_pyfx_port(f_result, VA1_LFO_FREQ, 200.0f, 10.0f, 1600.0f);
@@ -878,7 +878,7 @@ PluginDescriptor *va1_plugin_descriptor(){
     set_pyfx_port(f_result, VA1_ADSR_PREFX, 0.0f, 0.0f, 1.0f);
     set_pyfx_port(f_result, VA1_MIN_NOTE, 0.0f, 0.0f, 120.0f);
     set_pyfx_port(f_result, VA1_MAX_NOTE, 120.0f, 0.0f, 120.0f);
-    set_pyfx_port(f_result, VA1_MASTER_PITCH, 0.0f, -36.0f, 36.0f);
+    set_pyfx_port(f_result, VA1_MAIN_PITCH, 0.0f, -36.0f, 36.0f);
     set_pyfx_port(f_result, VA1_NOISE_TYPE, 0.0f, 0.0f, 2.0f);
     set_pyfx_port(f_result, VA1_FILTER_TYPE, 0.0f, 0.0f, 8.0f);
     set_pyfx_port(f_result, VA1_FILTER_VELOCITY, 0.0f, 0.0f, 100.0f);

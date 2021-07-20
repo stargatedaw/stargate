@@ -30,7 +30,7 @@
 
 int SG_OFFLINE_RENDER = 0;
 
-SGFLT MASTER_VOL = 1.0f;
+SGFLT MAIN_VOL = 1.0f;
 SGFLT **pluginOutputBuffers;
 t_stargate * STARGATE = NULL;
 int ZERO = 0;
@@ -84,8 +84,8 @@ void v_default_mix()
 
         for(f_i = 0; f_i < framesPerBuffer; ++f_i)
         {
-            out[f_i2 + MASTER_OUT_L] = (float)pluginOutputBuffers[0][f_i];
-            out[f_i2 + MASTER_OUT_R] = (float)pluginOutputBuffers[1][f_i];
+            out[f_i2 + MAIN_OUT_L] = (float)pluginOutputBuffers[0][f_i];
+            out[f_i2 + MAIN_OUT_R] = (float)pluginOutputBuffers[1][f_i];
             f_i2 += OUTPUT_CH_COUNT;
         }
     }
@@ -1186,8 +1186,8 @@ void v_sg_configure(const char* a_key, const char* a_value){
         }
 
         g_free_1d_char_array(f_val_arr);
-    } else if(!strcmp(a_key, SG_CONFIGURE_KEY_MASTER_VOL)){
-        MASTER_VOL = atof(a_value);
+    } else if(!strcmp(a_key, SG_CONFIGURE_KEY_MAIN_VOL)){
+        MAIN_VOL = atof(a_value);
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_AUDIO_IN_VOL)){
         t_1d_char_array * f_val_arr = c_split_str(
             a_value,
@@ -1572,11 +1572,11 @@ void v_run_main_loop(
         }
     }
 
-    if(!STARGATE->is_offline_rendering && MASTER_VOL != 1.0f){
+    if(!STARGATE->is_offline_rendering && MAIN_VOL != 1.0f){
         int f_i;
         for(f_i = 0; f_i < sample_count; ++f_i){
-            a_buffers[0][f_i] *= MASTER_VOL;
-            a_buffers[1][f_i] *= MASTER_VOL;
+            a_buffers[0][f_i] *= MAIN_VOL;
+            a_buffers[1][f_i] *= MAIN_VOL;
         }
     }
 

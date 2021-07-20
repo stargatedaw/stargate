@@ -269,15 +269,15 @@ int daw_render(int argc, char** argv){
     return 0;
 }
 
-NO_OPTIMIZATION void init_master_vol(){
-    printf("Setting master volume\n");
-    char * f_master_vol_str = (char*)malloc(sizeof(char) * TINY_STRING);
-    get_file_setting(f_master_vol_str, "master_vol", "0.0");
-    SGFLT f_master_vol = atof(f_master_vol_str);
-    free(f_master_vol_str);
+NO_OPTIMIZATION void init_main_vol(){
+    printf("Setting main volume\n");
+    char * f_main_vol_str = (char*)malloc(sizeof(char) * TINY_STRING);
+    get_file_setting(f_main_vol_str, "main_vol", "0.0");
+    SGFLT f_main_vol = atof(f_main_vol_str);
+    free(f_main_vol_str);
 
-    MASTER_VOL = f_db_to_linear(f_master_vol * 0.1);
-    printf("MASTER_VOL = %f\n", MASTER_VOL);
+    MAIN_VOL = f_db_to_linear(f_main_vol * 0.1);
+    printf("MAIN_VOL = %f\n", MAIN_VOL);
 }
 
 #ifndef SG_DLL
@@ -422,7 +422,7 @@ int start_engine(char* project_dir){
         default_device_file_path()
     );
     alloc_output_buffers();
-    init_master_vol();
+    init_main_vol();
     printf("Activating\n");
 #ifdef NO_MIDI
     v_activate(
@@ -553,7 +553,7 @@ int v_configure(
     } else if(!strcmp(path, "/stargate/daw")){
         v_daw_configure(key, value);
         return 0;
-    } else if(!strcmp(path, "/stargate/master")){
+    } else if(!strcmp(path, "/stargate/main")){
         v_sg_configure(key, value);
         return 0;
     }

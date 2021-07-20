@@ -42,11 +42,11 @@ VA1_OSC2_TYPE = 20
 VA1_OSC2_PITCH = 21
 VA1_OSC2_TUNE = 22
 VA1_OSC2_VOLUME = 23
-VA1_MASTER_VOLUME = 24
+VA1_MAIN_VOLUME = 24
 VA1_UNISON_VOICES1 = 25
 VA1_UNISON_SPREAD1 = 26
-VA1_MASTER_GLIDE = 27
-VA1_MASTER_PITCHBEND_AMT = 28
+VA1_MAIN_GLIDE = 27
+VA1_MAIN_PITCHBEND_AMT = 28
 VA1_PITCH_ENV_TIME = 29
 VA1_PITCH_ENV_AMT = 30
 VA1_LFO_FREQ = 31
@@ -63,7 +63,7 @@ VA1_LFO_PITCH_FINE = 41
 VA1_ADSR_PREFX = 42
 VA1_MIN_NOTE = 43
 VA1_MAX_NOTE = 44
-VA1_MASTER_PITCH = 45
+VA1_MAIN_PITCH = 45
 VA1_UNISON_VOICES2 = 46
 VA1_UNISON_SPREAD2 = 47
 VA1_NOISE_TYPE = 48
@@ -234,12 +234,12 @@ class va1_plugin_ui(AbstractPluginUI):
 
         self.main = main_widget(
             f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
-            VA1_MASTER_VOLUME, VA1_MASTER_GLIDE,
-            VA1_MASTER_PITCHBEND_AMT, self.port_dict, _("Main"),
+            VA1_MAIN_VOLUME, VA1_MAIN_GLIDE,
+            VA1_MAIN_PITCHBEND_AMT, self.port_dict, _("Main"),
             None, None,
             self.preset_manager, a_poly_port=VA1_MONO_MODE,
             a_min_note_port=VA1_MIN_NOTE, a_max_note_port=VA1_MAX_NOTE,
-            a_pitch_port=VA1_MASTER_PITCH, a_pb_min=0)
+            a_pitch_port=VA1_MAIN_PITCH, a_pb_min=0)
         self.hlayout3.addWidget(self.main.group_box)
 
         self.lfo = lfo_widget(

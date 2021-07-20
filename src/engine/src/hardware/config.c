@@ -10,8 +10,8 @@
 #include "hardware/config.h"
 
 int OUTPUT_CH_COUNT = 2;
-int MASTER_OUT_L = 0;
-int MASTER_OUT_R = 1;
+int MAIN_OUT_L = 0;
+int MAIN_OUT_R = 1;
 int THREAD_AFFINITY = 0;
 int THREAD_AFFINITY_SET = 0;
 int AUDIO_INPUT_TRACK_COUNT = 0;
@@ -160,17 +160,17 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
                 result->audio_output_count <= 128
             );
             OUTPUT_CH_COUNT = result->audio_output_count;
-            MASTER_OUT_L = atoi(f_line->str_arr[1]);
-            MASTER_OUT_R = atoi(f_line->str_arr[2]);
+            MAIN_OUT_L = atoi(f_line->str_arr[1]);
+            MAIN_OUT_R = atoi(f_line->str_arr[2]);
             assert(
-                MASTER_OUT_L >= 0
+                MAIN_OUT_L >= 0
                 &&
-                MASTER_OUT_L < result->audio_output_count
+                MAIN_OUT_L < result->audio_output_count
             );
             assert(
-                MASTER_OUT_R >= 0
+                MAIN_OUT_R >= 0
                 &&
-                MASTER_OUT_R < result->audio_output_count
+                MAIN_OUT_R < result->audio_output_count
             );
 
             v_free_split_line(f_line);

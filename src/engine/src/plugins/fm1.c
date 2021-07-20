@@ -168,8 +168,8 @@ void v_fm1_connect_port(PluginHandle instance, int port,
         case FM1_NOISE_AMP:
             plugin->noise_amp = data;
             break;
-        case FM1_MASTER_VOLUME:
-            plugin->master_vol = data;
+        case FM1_MAIN_VOLUME:
+            plugin->main_vol = data;
             break;
         case FM1_OSC1_PITCH:
             plugin->osc_pitch[0] = data;
@@ -209,11 +209,11 @@ void v_fm1_connect_port(PluginHandle instance, int port,
         case FM1_OSC3_UNISON_SPREAD:
             plugin->osc_uni_spread[2] = data;
             break;
-        case FM1_MASTER_GLIDE:
-            plugin->master_glide = data;
+        case FM1_MAIN_GLIDE:
+            plugin->main_glide = data;
             break;
-        case FM1_MASTER_PITCHBEND_AMT:
-            plugin->master_pb_amt = data;
+        case FM1_MAIN_PITCHBEND_AMT:
+            plugin->main_pb_amt = data;
             break;
 
 
@@ -634,7 +634,7 @@ void v_fm1_connect_port(PluginHandle instance, int port,
 
         case FM1_MIN_NOTE: plugin->min_note = data; break;
         case FM1_MAX_NOTE: plugin->max_note = data; break;
-        case FM1_MASTER_PITCH: plugin->master_pitch = data; break;
+        case FM1_MAIN_PITCH: plugin->main_pitch = data; break;
 
         case FM1_ADSR_LIN_MAIN: plugin->adsr_lin_main = data; break;
     }
@@ -725,17 +725,17 @@ void v_fm1_process_midi_event(
             int f_adsr_main_lin = (int)(*plugin_data->adsr_lin_main);
             f_fm1_voice->adsr_run_func = FP_ADSR_RUN[f_adsr_main_lin];
 
-            SGFLT f_master_pitch = (*plugin_data->master_pitch);
+            SGFLT f_main_pitch = (*plugin_data->main_pitch);
 
-            f_fm1_voice->note_f = (SGFLT)a_event->note + f_master_pitch;
-            f_fm1_voice->note = a_event->note + (int)(f_master_pitch);
+            f_fm1_voice->note_f = (SGFLT)a_event->note + f_main_pitch;
+            f_fm1_voice->note = a_event->note + (int)(f_main_pitch);
 
             f_fm1_voice->amp = f_db_to_linear_fast(
                 ((a_event->velocity * 0.094488) - 12)
             ); //-12db to 0db
 
-            f_fm1_voice->master_vol_lin = f_db_to_linear_fast(
-                *(plugin_data->master_vol)
+            f_fm1_voice->main_vol_lin = f_db_to_linear_fast(
+                *(plugin_data->main_vol)
             );
 
             f_fm1_voice->keyboard_track = f_fm1_voice->note_f * 0.007874016f;
@@ -753,7 +753,7 @@ void v_fm1_process_midi_event(
 
             v_rmp_retrigger_glide_t(
                 &f_fm1_voice->glide_env,
-                *(plugin_data->master_glide) * 0.01f,
+                *(plugin_data->main_glide) * 0.01f,
                 f_fm1_voice->last_pitch,
                 f_fm1_voice->target_pitch
             );
@@ -1285,7 +1285,7 @@ void v_run_fm1_voice(t_fm1 *plugin_data,
             ((a_voice->ramp_env.output_multiplied) *
             (*plugin_data->pitch_env_amt))
             + (plugin_data->mono_modules->pitchbend_smoother.last_value  *
-            (*(plugin_data->master_pb_amt))) + (a_voice->last_pitch) +
+            (*(plugin_data->main_pb_amt))) + (a_voice->last_pitch) +
             (a_voice->lfo_pitch_output);
     }
 
@@ -1493,16 +1493,16 @@ void v_run_fm1_voice(t_fm1 *plugin_data,
     if(a_voice->adsr_prefx)
     {
         out0[(i_voice)] += (a_voice->multifx_current_sample[0]) *
-            (a_voice->master_vol_lin);
+            (a_voice->main_vol_lin);
         out1[(i_voice)] += (a_voice->multifx_current_sample[1]) *
-            (a_voice->master_vol_lin);
+            (a_voice->main_vol_lin);
     }
     else
     {
         out0[(i_voice)] += (a_voice->multifx_current_sample[0]) *
-            (a_voice->adsr_main.output) * (a_voice->master_vol_lin);
+            (a_voice->adsr_main.output) * (a_voice->main_vol_lin);
         out1[(i_voice)] += (a_voice->multifx_current_sample[1]) *
-            (a_voice->adsr_main.output) * (a_voice->master_vol_lin);
+            (a_voice->adsr_main.output) * (a_voice->main_vol_lin);
     }
 }
 
@@ -1584,11 +1584,11 @@ PluginDescriptor *fm1_plugin_descriptor(){
     set_pyfx_port(f_result, FM1_OSC2_PITCH, 0.0f, -72.0f, 72.0f);
     set_pyfx_port(f_result, FM1_OSC2_TUNE, 0.0f, -100.0f, 100.0f);
     set_pyfx_port(f_result, FM1_OSC2_VOLUME, -6.0f, -30.0f, 0.0f);
-    set_pyfx_port(f_result, FM1_MASTER_VOLUME, -6.0f, -30.0f, 12.0f);
+    set_pyfx_port(f_result, FM1_MAIN_VOLUME, -6.0f, -30.0f, 12.0f);
     set_pyfx_port(f_result, FM1_OSC1_UNISON_VOICES, 1.0f, 1.0f, 7.0f);
     set_pyfx_port(f_result, FM1_OSC1_UNISON_SPREAD, 50.0f, 0.0f, 100.0f);
-    set_pyfx_port(f_result, FM1_MASTER_GLIDE, 0.0f, 0.0f, 200.0f);
-    set_pyfx_port(f_result, FM1_MASTER_PITCHBEND_AMT, 18.0f, 1.0f, 36.0f);
+    set_pyfx_port(f_result, FM1_MAIN_GLIDE, 0.0f, 0.0f, 200.0f);
+    set_pyfx_port(f_result, FM1_MAIN_PITCHBEND_AMT, 18.0f, 1.0f, 36.0f);
     set_pyfx_port(f_result, FM1_ATTACK_PFX1, 10.0f, 0.0f, 200.0f);
     set_pyfx_port(f_result, FM1_DECAY_PFX1, 50.0f, 10.0f, 200.0f);
     set_pyfx_port(f_result, FM1_SUSTAIN_PFX1, 0.0f, -30.0f, 0.0f);
@@ -1789,7 +1789,7 @@ PluginDescriptor *fm1_plugin_descriptor(){
     set_pyfx_port(f_result, FM1_ADSR6_CHECKBOX, 0.0f, 0, 1);
     set_pyfx_port(f_result, FM1_MIN_NOTE, 0.0f, 0.0f, 120.0f);
     set_pyfx_port(f_result, FM1_MAX_NOTE, 120.0f, 0.0f, 120.0f);
-    set_pyfx_port(f_result, FM1_MASTER_PITCH, 0.0f, -36.0f, 36.0f);
+    set_pyfx_port(f_result, FM1_MAIN_PITCH, 0.0f, -36.0f, 36.0f);
     set_pyfx_port(f_result, FM1_ADSR_LIN_MAIN, 1.0f, 0.0f, 1.0f);
 
     f_port = FM1_FM_MACRO1_OSC1_FM5;

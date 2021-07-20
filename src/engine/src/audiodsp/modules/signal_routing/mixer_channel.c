@@ -37,8 +37,8 @@ void v_mxc_run_smoothers(
         (a_mxc->amp_smoother->last_value)
     );
 
-    a_mxc->master_gain0 = (a_mxc->amp_linear) * (a_mxc->pan0);
-    a_mxc->master_gain1 = (a_mxc->amp_linear) * (a_mxc->pan1);
+    a_mxc->main_gain0 = (a_mxc->amp_linear) * (a_mxc->pan0);
+    a_mxc->main_gain1 = (a_mxc->amp_linear) * (a_mxc->pan1);
 }
 
 void v_mxc_mix_stereo_to_stereo(
@@ -52,8 +52,8 @@ void v_mxc_mix_stereo_to_stereo(
 ){
     v_mxc_run_smoothers(a_mxc, a_amp, a_pan, a_pan_law);
 
-    a_mxc->out0 = (a_mxc->master_gain0) * a_in0;
-    a_mxc->out1 = (a_mxc->master_gain1) * a_in1;
+    a_mxc->out0 = (a_mxc->main_gain0) * a_in0;
+    a_mxc->out1 = (a_mxc->main_gain1) * a_in1;
 }
 
 void v_mxc_mix_stereo_to_mono(
@@ -70,8 +70,8 @@ void v_mxc_mix_stereo_to_mono(
     a_mxc->in0 = (a_in0 + a_in1) * 0.5f;
     a_mxc->in1 = (a_mxc->in0);
 
-    a_mxc->out0 = (a_mxc->master_gain0) * a_mxc->in0;
-    a_mxc->out1 = (a_mxc->master_gain1) * a_mxc->in1;
+    a_mxc->out0 = (a_mxc->main_gain0) * a_mxc->in0;
+    a_mxc->out1 = (a_mxc->main_gain1) * a_mxc->in1;
 }
 
 t_mxc_mixer_channel * g_mxc_get(SGFLT a_sr){
@@ -85,8 +85,8 @@ t_mxc_mixer_channel * g_mxc_get(SGFLT a_sr){
     f_result->gain_linear = 1;
     f_result->out0 = 0;
     f_result->out1 = 0;
-    f_result->master_gain0 = 1;
-    f_result->master_gain1 = 1;
+    f_result->main_gain0 = 1;
+    f_result->main_gain1 = 1;
     f_result->amp_smoother = g_sml_get_smoother_linear(a_sr, 0, -48, 0.5f);
     f_result->pan_smoother = g_sml_get_smoother_linear(a_sr, 1.0f, -1.0f, 0.5f);
     f_result->pan_law_gain_linear = 3.0f;

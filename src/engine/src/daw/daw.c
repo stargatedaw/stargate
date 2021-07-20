@@ -562,8 +562,8 @@ void v_daw_run_engine(
 
         v_daw_process((t_thread_args*)STARGATE->main_thread_args);
 
-        t_pytrack * f_master_track = self->track_pool[0];
-        SGFLT ** f_master_buff = f_master_track->buffers;
+        t_pytrack * f_main_track = self->track_pool[0];
+        SGFLT ** f_main_buff = f_main_track->buffers;
 
         //wait for the other threads to finish
         v_wait_for_threads();
@@ -573,11 +573,11 @@ void v_daw_run_engine(
 
         for(f_i = 0; f_i < sample_count; ++f_i)
         {
-            output[0][f_i] = f_master_buff[0][f_i];
-            output[1][f_i] = f_master_buff[1][f_i];
+            output[0][f_i] = f_main_buff[0][f_i];
+            output[1][f_i] = f_main_buff[1][f_i];
         }
 
-        v_zero_buffer(f_master_buff, sample_count);
+        v_zero_buffer(f_main_buff, sample_count);
 
         DAW->ts[0].current_sample = f_next_current_sample;
         DAW->ts[0].is_first_period = 0;

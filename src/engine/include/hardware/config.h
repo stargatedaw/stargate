@@ -4,8 +4,8 @@
 #define DEFAULT_FRAMES_PER_BUFFER 512
 
 extern int OUTPUT_CH_COUNT;
-extern int MASTER_OUT_L;
-extern int MASTER_OUT_R;
+extern int MAIN_OUT_L;
+extern int MAIN_OUT_R;
 extern int THREAD_AFFINITY;
 extern int THREAD_AFFINITY_SET;
 extern int AUDIO_INPUT_TRACK_COUNT;

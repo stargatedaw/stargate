@@ -44,11 +44,11 @@ FM1_OSC2_TYPE = 11
 FM1_OSC2_PITCH = 12
 FM1_OSC2_TUNE = 13
 FM1_OSC2_VOLUME = 14
-FM1_MASTER_VOLUME = 15
+FM1_MAIN_VOLUME = 15
 FM1_OSC1_UNISON_VOICES = 16
 FM1_OSC1_UNISON_SPREAD = 17
-FM1_MASTER_GLIDE = 18
-FM1_MASTER_PITCHBEND_AMT = 19
+FM1_MAIN_GLIDE = 18
+FM1_MAIN_PITCHBEND_AMT = 19
 FM1_ATTACK1 = 20
 FM1_DECAY1 = 21
 FM1_SUSTAIN1 = 22
@@ -434,7 +434,7 @@ WAVV_PFXMATRIX_GRP0DST3SRC7CTRL2 = 368
 
 FM1_MIN_NOTE = 369
 FM1_MAX_NOTE = 370
-FM1_MASTER_PITCH = 371
+FM1_MAIN_PITCH = 371
 
 FM1_ADSR_LIN_MAIN = 372
 
@@ -871,12 +871,12 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.modulation_vlayout.addLayout(self.hlayout_main)
         self.main = main_widget(
             f_knob_size, self.plugin_rel_callback,
-            self.plugin_val_callback, FM1_MASTER_VOLUME,
-            FM1_MASTER_GLIDE, FM1_MASTER_PITCHBEND_AMT,
+            self.plugin_val_callback, FM1_MAIN_VOLUME,
+            FM1_MAIN_GLIDE, FM1_MAIN_PITCHBEND_AMT,
             self.port_dict, a_preset_mgr=self.preset_manager,
             a_poly_port=FM1_MONO_MODE,
             a_min_note_port=FM1_MIN_NOTE, a_max_note_port=FM1_MAX_NOTE,
-            a_pitch_port=FM1_MASTER_PITCH)
+            a_pitch_port=FM1_MAIN_PITCH)
 
         self.hlayout_main.addWidget(self.main.group_box)
 

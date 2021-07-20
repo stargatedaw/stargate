@@ -198,7 +198,7 @@ class DawProject(AbstractProject):
         for i in range(_shared.TRACK_COUNT_ALL):
             f_tracks.add_track(i, track(
                 a_track_uid=i, a_track_pos=i,
-                a_name="Master" if i == 0 else "track{}".format(i)))
+                a_name="Main" if i == 0 else "track{}".format(i)))
             plugins = track_plugins()
             for i2 in range(constants.TOTAL_PLUGINS_PER_TRACK):
                 plugins.plugins.append(
@@ -259,7 +259,7 @@ class DawProject(AbstractProject):
             constants.DAW_IPC.update_track_send()
 
     def check_output(self, a_track=None):
-        """ Ensure that any track with items or plugins is routed to master
+        """ Ensure that any track with items or plugins is routed to main
             if it does not have any routings
         """
         if a_track is not None and a_track <= 0:

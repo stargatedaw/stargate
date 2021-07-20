@@ -215,7 +215,7 @@ typedef struct st_sampler1
     PluginData *mfx_comboboxes[SAMPLER1_MONO_FX_GROUPS_COUNT][
         SAMPLER1_MONO_FX_COUNT];
 
-    PluginData *master_pitch;
+    PluginData *main_pitch;
     PluginData *adsr_lin_main;
     PluginData *attack;
     PluginData *decay;
@@ -227,10 +227,10 @@ typedef struct st_sampler1
     PluginData *sustain_f;
     PluginData *release_f;
 
-    PluginData *master_vol;
+    PluginData *main_vol;
 
-    PluginData *master_glide;
-    PluginData *master_pb_amt;
+    PluginData *main_glide;
+    PluginData *main_pb_amt;
 
     PluginData *pitch_env_time;
 
@@ -288,7 +288,7 @@ typedef struct st_sampler1
     //For indexing operations that don't need to track realtime events closely
     int i_slow_index;
 
-    SGFLT amp;  //linear amplitude, from the master volume knob
+    SGFLT amp;  //linear amplitude, from the main volume knob
 
     SGFLT sv_pitch_bend_value;
     SGFLT sv_last_note;  //For glide
@@ -327,9 +327,9 @@ PluginDescriptor *sampler1_plugin_descriptor();
 #define SAMPLER1_FILTER_SUSTAIN 9
 #define SAMPLER1_FILTER_RELEASE 10
 #define SAMPLER1_LFO_PITCH 11
-#define SAMPLER1_MASTER_VOLUME 12
-#define SAMPLER1_MASTER_GLIDE 13
-#define SAMPLER1_MASTER_PITCHBEND_AMT 14
+#define SAMPLER1_MAIN_VOLUME 12
+#define SAMPLER1_MAIN_GLIDE 13
+#define SAMPLER1_MAIN_PITCHBEND_AMT 14
 #define SAMPLER1_PITCH_ENV_TIME 15
 #define SAMPLER1_LFO_FREQ 16
 #define SAMPLER1_LFO_TYPE 17
@@ -566,8 +566,8 @@ PluginDescriptor *sampler1_plugin_descriptor();
 #define SAMPLER1_LFO_PITCH_FINE SAMPLER1_LAST_EQ_PORT
 #define SAMPLER1_MIN_NOTE (SAMPLER1_LFO_PITCH_FINE + 1)
 #define SAMPLER1_MAX_NOTE (SAMPLER1_MIN_NOTE + 1)
-#define SAMPLER1_MASTER_PITCH (SAMPLER1_MAX_NOTE + 1)
-#define SAMPLER1_ADSR_LIN_MAIN (SAMPLER1_MASTER_PITCH + 1)
+#define SAMPLER1_MAIN_PITCH (SAMPLER1_MAX_NOTE + 1)
+#define SAMPLER1_ADSR_LIN_MAIN (SAMPLER1_MAIN_PITCH + 1)
 
 #define SAMPLER1_PORT_COUNT (SAMPLER1_ADSR_LIN_MAIN + 1)
 

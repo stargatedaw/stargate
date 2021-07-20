@@ -100,7 +100,7 @@ class RoutingGraph:
         a_track_num,
         a_output=0,
     ):
-        """ Set a track to the default output (by default, track:0, master),
+        """ Set a track to the default output (by default, track:0, main),
             only if the track has no other connections.
 
             @a_track_num: int, The track number to set a default output for

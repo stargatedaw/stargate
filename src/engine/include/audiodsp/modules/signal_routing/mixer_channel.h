@@ -26,8 +26,8 @@ typedef struct st_mxc_mixer_channel
     t_smoother_linear * amp_smoother;
     SGFLT gain_db;
     SGFLT gain_linear;
-    SGFLT master_gain0;
-    SGFLT master_gain1;
+    SGFLT main_gain0;
+    SGFLT main_gain1;
     t_smoother_linear * pan_smoother;
     SGFLT pan0;
     SGFLT pan1;

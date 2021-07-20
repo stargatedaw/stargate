@@ -52,11 +52,11 @@ GNU General Public License for more details.
 #define VA1_OSC2_PITCH 21
 #define VA1_OSC2_TUNE 22
 #define VA1_OSC2_VOLUME 23
-#define VA1_MASTER_VOLUME 24
+#define VA1_MAIN_VOLUME 24
 #define VA1_UNISON_VOICES1 25
 #define VA1_UNISON_SPREAD1 26
-#define VA1_MASTER_GLIDE 27
-#define VA1_MASTER_PITCHBEND_AMT 28
+#define VA1_MAIN_GLIDE 27
+#define VA1_MAIN_PITCHBEND_AMT 28
 #define VA1_PITCH_ENV_TIME 29
 #define VA1_PITCH_ENV_AMT 30
 #define VA1_LFO_FREQ 31
@@ -73,7 +73,7 @@ GNU General Public License for more details.
 #define VA1_ADSR_PREFX 42
 #define VA1_MIN_NOTE 43
 #define VA1_MAX_NOTE 44
-#define VA1_MASTER_PITCH 45
+#define VA1_MAIN_PITCH 45
 #define VA1_UNISON_VOICES2 46
 #define VA1_UNISON_SPREAD2 47
 #define VA1_NOISE_TYPE 48
@@ -170,7 +170,7 @@ typedef struct {
     PluginData *dist_out_gain;
     PluginData *dist_wet;
     PluginData *dist_type;
-    PluginData *master_pitch;
+    PluginData *main_pitch;
 
     PluginData *attack_f;
     PluginData *decay_f;
@@ -191,7 +191,7 @@ typedef struct {
 
     PluginData *filter_env_amt;
     PluginData *filter_keytrk;
-    PluginData *master_vol;
+    PluginData *main_vol;
 
     PluginData *noise_amp;
     PluginData *noise_type;
@@ -200,8 +200,8 @@ typedef struct {
     PluginData *uni_voice2;
     PluginData *uni_spread1;
     PluginData *uni_spread2;
-    PluginData *master_glide;
-    PluginData *master_pb_amt;
+    PluginData *main_glide;
+    PluginData *main_pb_amt;
 
     PluginData *pitch_env_amt;
     PluginData *pitch_env_time;
@@ -230,7 +230,7 @@ typedef struct {
 
     SGFLT sv_pitch_bend_value;
     SGFLT sv_last_note;  //For glide
-    SGFLT master_vol_lin;
+    SGFLT main_vol_lin;
 
     t_plugin_event_queue midi_queue;
     t_plugin_event_queue atm_queue;

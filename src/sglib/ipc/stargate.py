@@ -11,7 +11,7 @@ class StargateIPC(AbstractIPC):
         self,
         transport,
         with_audio,
-        path="/stargate/master",
+        path="/stargate/main",
     ):
         AbstractIPC.__init__(
             self,
@@ -29,7 +29,7 @@ class StargateIPC(AbstractIPC):
     def kill_engine(self):
         self.send_configure("abort", "")
 
-    def master_vol(self, a_vol):
+    def main_vol(self, a_vol):
         self.send_configure("mvol", str(round(a_vol, 8)))
 
     def update_plugin_control(self, a_plugin_uid, a_port, a_val):

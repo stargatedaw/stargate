@@ -226,14 +226,14 @@ void connectPortSampler(PluginHandle instance, int port,
             case SAMPLER1_FILTER_RELEASE:
                 plugin->release_f = data;
                 break;
-            case SAMPLER1_MASTER_VOLUME:
-                plugin->master_vol = data;
+            case SAMPLER1_MAIN_VOLUME:
+                plugin->main_vol = data;
                 break;
-            case SAMPLER1_MASTER_GLIDE:
-                plugin->master_glide = data;
+            case SAMPLER1_MAIN_GLIDE:
+                plugin->main_glide = data;
                 break;
-            case SAMPLER1_MASTER_PITCHBEND_AMT:
-                plugin->master_pb_amt = data;
+            case SAMPLER1_MAIN_PITCHBEND_AMT:
+                plugin->main_pb_amt = data;
                 break;
             case SAMPLER1_PITCH_ENV_TIME:
                 plugin->pitch_env_time = data;
@@ -551,9 +551,9 @@ void connectPortSampler(PluginHandle instance, int port,
     {
         plugin->max_note = data;
     }
-    else if(port == SAMPLER1_MASTER_PITCH)
+    else if(port == SAMPLER1_MAIN_PITCH)
     {
-        plugin->master_pitch = data;
+        plugin->main_pitch = data;
     }
     else if(port == SAMPLER1_ADSR_LIN_MAIN)
     {
@@ -793,7 +793,7 @@ void add_sample_sg_sampler1(t_sampler1 * plugin_data, int n)
 
     f_voice->base_pitch = (f_voice->glide_env.output_multiplied)
             +  (plugin_data->mono_modules->pitchbend_smoother.last_value *
-            (*(plugin_data->master_pb_amt)))
+            (*(plugin_data->main_pb_amt)))
             + (f_voice->last_pitch) + ((f_voice->lfo1.output) *
             (*plugin_data->lfo_pitch + (*plugin_data->lfo_pitch_fine * 0.01f)));
 
@@ -1260,10 +1260,10 @@ void v_sampler1_process_midi_event(
                 plugin_data->mono_modules->noise_current_index = 0;
             }
 
-            plugin_data->amp = f_db_to_linear_fast(*(plugin_data->master_vol));
+            plugin_data->amp = f_db_to_linear_fast(*(plugin_data->main_vol));
 
             f_voice->note_f =
-                (SGFLT)f_note + (SGFLT)(*plugin_data->master_pitch);
+                (SGFLT)f_note + (SGFLT)(*plugin_data->main_pitch);
 
             f_voice->target_pitch = f_voice->note_f;
 
@@ -1277,7 +1277,7 @@ void v_sampler1_process_midi_event(
             }
 
             v_rmp_retrigger_glide_t(
-                &f_voice->glide_env, (*(plugin_data->master_glide) * .01),
+                &f_voice->glide_env, (*(plugin_data->main_glide) * .01),
                 (f_voice->last_pitch), (f_voice->target_pitch));
 
             /*Retrigger ADSR envelopes and LFO*/
@@ -1599,9 +1599,9 @@ PluginDescriptor *sampler1_plugin_descriptor(){
     set_pyfx_port(f_result, SAMPLER1_FILTER_DECAY, 50.0f, 10.0f, 200.0f);
     set_pyfx_port(f_result, SAMPLER1_FILTER_SUSTAIN, 100.0f, 0.0f, 100.0f);
     set_pyfx_port(f_result, SAMPLER1_FILTER_RELEASE, 50.0f, 10.0f, 400.0f);
-    set_pyfx_port(f_result, SAMPLER1_MASTER_VOLUME, -6.0f, -24, 24);
-    set_pyfx_port(f_result, SAMPLER1_MASTER_GLIDE, 0.0f, 0.0f, 200.0f);
-    set_pyfx_port(f_result, SAMPLER1_MASTER_PITCHBEND_AMT, 18.0f, 1, 36);
+    set_pyfx_port(f_result, SAMPLER1_MAIN_VOLUME, -6.0f, -24, 24);
+    set_pyfx_port(f_result, SAMPLER1_MAIN_GLIDE, 0.0f, 0.0f, 200.0f);
+    set_pyfx_port(f_result, SAMPLER1_MAIN_PITCHBEND_AMT, 18.0f, 1, 36);
     set_pyfx_port(f_result, SAMPLER1_PITCH_ENV_TIME, 100.0f, 1.0f, 600.0f);
     set_pyfx_port(f_result, SAMPLER1_LFO_FREQ, 200.0f, 10, 1600);
     set_pyfx_port(f_result, SAMPLER1_LFO_TYPE, 0.0f, 0, 2);
@@ -1621,7 +1621,7 @@ PluginDescriptor *sampler1_plugin_descriptor(){
     set_pyfx_port(f_result, SAMPLER1_FX3_KNOB1, 64.0f, 0, 127);
     set_pyfx_port(f_result, SAMPLER1_FX3_KNOB2, 64.0f, 0, 127);
     set_pyfx_port(f_result, SAMPLER1_FX3_COMBOBOX, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
-    set_pyfx_port(f_result, SAMPLER1_MASTER_PITCH, 0.0f, -36.0f, 36.0f);
+    set_pyfx_port(f_result, SAMPLER1_MAIN_PITCH, 0.0f, -36.0f, 36.0f);
 
     int f_i = SAMPLER1_PFXMATRIX_GRP0DST0SRC0CTRL0;
 

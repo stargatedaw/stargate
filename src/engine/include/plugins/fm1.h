@@ -69,11 +69,11 @@ GNU General Public License for more details.
 #define FM1_OSC2_PITCH 12
 #define FM1_OSC2_TUNE 13
 #define FM1_OSC2_VOLUME 14
-#define FM1_MASTER_VOLUME 15
+#define FM1_MAIN_VOLUME 15
 #define FM1_OSC1_UNISON_VOICES 16
 #define FM1_OSC1_UNISON_SPREAD 17
-#define FM1_MASTER_GLIDE 18
-#define FM1_MASTER_PITCHBEND_AMT 19
+#define FM1_MAIN_GLIDE 18
+#define FM1_MAIN_PITCHBEND_AMT 19
 #define FM1_ATTACK1  20
 #define FM1_DECAY1   21
 #define FM1_SUSTAIN1 22
@@ -464,7 +464,7 @@ GNU General Public License for more details.
 
 #define FM1_MIN_NOTE 369
 #define FM1_MAX_NOTE 370
-#define FM1_MASTER_PITCH 371
+#define FM1_MAIN_PITCH 371
 #define FM1_ADSR_LIN_MAIN 372
 
 /* must be 1 + highest value above
@@ -558,7 +558,7 @@ typedef struct
     SGFLT * modulator_outputs[FM1_MODULATOR_COUNT];
 
     SGFLT amp;
-    SGFLT master_vol_lin;
+    SGFLT main_vol_lin;
 
     int active_polyfx[FM1_MODULAR_POLYFX_COUNT];
     int active_polyfx_count;
@@ -608,7 +608,7 @@ typedef struct
 
     PluginData *osc_fm[FM1_OSC_COUNT][FM1_OSC_COUNT];
 
-    PluginData *master_vol;
+    PluginData *main_vol;
 
     PluginData *pfx_delay;
     PluginData *pfx_attack;
@@ -639,8 +639,8 @@ typedef struct
     PluginData *osc_uni_voice[FM1_OSC_COUNT];
     PluginData *osc_uni_spread[FM1_OSC_COUNT];
 
-    PluginData *master_glide;
-    PluginData *master_pb_amt;
+    PluginData *main_glide;
+    PluginData *main_pb_amt;
 
     PluginData *pitch_env_time;
     PluginData *pitch_env_amt;
@@ -678,7 +678,7 @@ typedef struct
 
     PluginData *min_note;
     PluginData *max_note;
-    PluginData *master_pitch;
+    PluginData *main_pitch;
 
     //Corresponds to the actual knobs on the effects themselves,
     //not the mod matrix

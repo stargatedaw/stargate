@@ -59,7 +59,7 @@
 #define SG_CONFIGURE_KEY_PREVIEW_SAMPLE "preview"
 #define SG_CONFIGURE_KEY_STOP_PREVIEW "spr"
 #define SG_CONFIGURE_KEY_KILL_ENGINE "abort"
-#define SG_CONFIGURE_KEY_MASTER_VOL "mvol"
+#define SG_CONFIGURE_KEY_MAIN_VOL "mvol"
 #define SG_CONFIGURE_KEY_LOAD_CC_MAP "cm"
 #define SG_CONFIGURE_KEY_MIDI_LEARN "ml"
 #define SG_CONFIGURE_KEY_ADD_TO_AUDIO_POOL "wp"
@@ -86,7 +86,7 @@
 
 
 extern int SG_OFFLINE_RENDER;
-extern SGFLT MASTER_VOL;
+extern SGFLT MAIN_VOL;
 extern SGFLT **pluginOutputBuffers;
 extern int ZERO;
 
