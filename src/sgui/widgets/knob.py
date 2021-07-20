@@ -92,6 +92,7 @@ class pixmap_knob(QDial):
         self.pixmap_bg = self.pixmap_bg_cache.get_scaled_pixmap_knob(
             self.pixmap_size)
         self.setFixedSize(a_size, a_size)
+        self._button = QtCore.Qt.MouseButton.NoButton
 
     def keyPressEvent(self, a_event):
         QDial.keyPressEvent(self, a_event)
@@ -142,8 +143,9 @@ class pixmap_knob(QDial):
             p.drawPixmap(rx, ry, self.pixmap_fg)
 
     def mousePressEvent(self, a_event):
+        self._button = a_event.button()
         self.mouse_pos = QCursor.pos()
-        if a_event.button() == QtCore.Qt.MouseButton.RightButton:
+        if self._button == QtCore.Qt.MouseButton.RightButton:
             QDial.mousePressEvent(self, a_event)
             return
         f_pos = qt_event_pos(a_event)
@@ -156,7 +158,7 @@ class pixmap_knob(QDial):
         QApplication.setOverrideCursor(QtCore.Qt.CursorShape.BlankCursor)
 
     def mouseMoveEvent(self, a_event):
-        if a_event.button() != QtCore.Qt.MouseButton.LeftButton:
+        if self._button != QtCore.Qt.MouseButton.LeftButton:
             QDial.mouseMoveEvent(self, a_event)
             return
         f_pos = qt_event_pos(a_event)
@@ -179,6 +181,7 @@ class pixmap_knob(QDial):
     def mouseReleaseEvent(self, a_event):
         # Does not work on Wayland
         #QCursor.setPos(self.mouse_pos)
+        self._button = QtCore.Qt.MouseButton.NoButton
         QApplication.restoreOverrideCursor()
         self.sliderReleased.emit()
 
