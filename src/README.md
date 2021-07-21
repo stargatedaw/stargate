@@ -3,9 +3,16 @@
 [See the building instructions](../docs/building.md "Building")
 
 # Architecture
-The UI is written in Python and PyQt.  The audio/dsp engine is written in C
-and can be run one of 2 ways:
-- A separate process, communicating OSC over TCP sockets (default on Linux)
+The UI is written in Python and PyQt.  PyQt5 and PyQt6 are both supported,
+presently the default is PyQt5 because most package managers do not have PyQt6
+at the time of this writing.  You can specify PyQt6 by passing in the
+environment variable `_USE_PYQT6=1`.  If PyQt6 is available, and PyQt5 is not,
+then PyQt6 will be used without any additional configuration.  Once PyQt6 is
+available in Debian stable, Fedora, MinGW and Homebrew, PyQt5 will be
+deprecated and removed.
+
+The audio/dsp engine is written in C and can be run one of 2 ways:
+- A separate process, communicating over UDP sockets (default on Linux)
 - A shared library (.so, .dll, .dylib) (default on Windows and Mac)
 
 The separate process has the following advantages:
@@ -30,9 +37,9 @@ All new code should try to refactor anything it touches to comply with these
 standards.
 
 ## engine/
-The audio/dsp engine that interacts with audio and MIDI hardware,
-generates/records/processes/plays audio.  Written in GNU89 C for
-portable, stable, real-time performance.
+The engine that interacts with audio and MIDI hardware,
+generates/records/processes/plays audio.  Written in GNU89 C for portable,
+stable, real-time performance.
 
 ## files/
 Various non-source-code files that are distributed with Stargate, including
