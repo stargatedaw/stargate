@@ -1,7 +1,6 @@
 """
     Preflight checks
 """
-from sgui import shared
 from sgui.sgqt import QMessageBox
 from sglib.hardware import rpi
 from sglib.lib.translate import _
@@ -16,7 +15,7 @@ def _preflight_rpi():
             rpi.desktop()
         ):
             QMessageBox.warning(
-                shared.MAIN_WINDOW.widget,
+                None,
                 "Warning",
                 _(
                     "Detected a Raspberry Pi with suboptimal settings.  "
