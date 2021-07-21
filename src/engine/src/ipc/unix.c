@@ -12,9 +12,58 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "ipc.h"
 #include "globals.h"
+#include "ipc.h"
 
+void ipc_init(){
+
+}
+
+void ipc_dtor(){
+
+}
+
+void ipc_client_send(
+    char* message
+){
+    int sockfd;
+    char buffer[IPC_MAX_MESSAGE_SIZE];
+    struct sockaddr_in servaddr;
+    int n;
+    socklen_t len;
+
+    if((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ){
+        perror("socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    memset(&servaddr, 0, sizeof(servaddr));
+
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port = htons(30321);
+    servaddr.sin_addr.s_addr = INADDR_ANY;
+
+    len = (socklen_t)sizeof(servaddr);
+
+    sendto(
+        sockfd,
+        (const char*)message,
+        strlen(message),
+        MSG_CONFIRM,
+        (const struct sockaddr*)&servaddr,
+        sizeof(servaddr)
+    );
+    n = recvfrom(
+        sockfd,
+        (char*)buffer,
+        1024,
+        MSG_WAITALL,
+        (struct sockaddr*)&servaddr,
+        &len
+    );
+    buffer[n] = '\0';
+    close(sockfd);
+}
 
 void* ipc_server_thread(void* _arg){
     struct IpcServerThreadArgs* args = (struct IpcServerThreadArgs*)_arg;
