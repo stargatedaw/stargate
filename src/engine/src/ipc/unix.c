@@ -15,54 +15,57 @@
 #include "globals.h"
 #include "ipc.h"
 
-void ipc_init(){
+struct SocketData{
+    int sockfd;
+    struct sockaddr_in servaddr;
+    socklen_t len;
+};
 
+static struct SocketData SOCKET_DATA;
+
+void ipc_init(){
+    if((SOCKET_DATA.sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ){
+        perror("socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+    memset(
+        &SOCKET_DATA.servaddr,
+        0,
+        sizeof(SOCKET_DATA.servaddr)
+    );
+    SOCKET_DATA.servaddr.sin_family = AF_INET;
+    SOCKET_DATA.servaddr.sin_port = htons(30321);
+    SOCKET_DATA.servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    SOCKET_DATA.len = (socklen_t)sizeof(SOCKET_DATA.servaddr);
 }
 
 void ipc_dtor(){
-
+    close(SOCKET_DATA.sockfd);
 }
 
 void ipc_client_send(
     char* message
 ){
-    int sockfd;
-    char buffer[IPC_MAX_MESSAGE_SIZE];
-    struct sockaddr_in servaddr;
     int n;
-    socklen_t len;
-
-    if((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ){
-        perror("socket creation failed");
-        exit(EXIT_FAILURE);
-    }
-
-    memset(&servaddr, 0, sizeof(servaddr));
-
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(30321);
-    servaddr.sin_addr.s_addr = INADDR_ANY;
-
-    len = (socklen_t)sizeof(servaddr);
+    char buffer[1024];
 
     sendto(
-        sockfd,
+        SOCKET_DATA.sockfd,
         (const char*)message,
         strlen(message),
         MSG_CONFIRM,
-        (const struct sockaddr*)&servaddr,
-        sizeof(servaddr)
+        (const struct sockaddr*)&SOCKET_DATA.servaddr,
+        sizeof(SOCKET_DATA.servaddr)
     );
     n = recvfrom(
-        sockfd,
+        SOCKET_DATA.sockfd,
         (char*)buffer,
         1024,
         MSG_WAITALL,
-        (struct sockaddr*)&servaddr,
-        &len
+        (struct sockaddr*)&SOCKET_DATA.servaddr,
+        &SOCKET_DATA.len
     );
     buffer[n] = '\0';
-    close(sockfd);
 }
 
 void* ipc_server_thread(void* _arg){
