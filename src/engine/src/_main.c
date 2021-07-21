@@ -282,6 +282,7 @@ NO_OPTIMIZATION void init_main_vol(){
 
 #ifndef SG_DLL
     NO_OPTIMIZATION void start_osc_thread(){
+        ipc_init();
         printf("Starting socket server thread\n");
         struct IpcServerThreadArgs* args = (struct IpcServerThreadArgs*)malloc(
             sizeof(struct IpcServerThreadArgs)
@@ -469,6 +470,9 @@ void stop_engine(){
 
 #if defined(__linux__) && !defined(SG_DLL)
     destruct_signal_handling();
+#endif
+#ifndef SG_DLL
+    ipc_dtor();
 #endif
 }
 

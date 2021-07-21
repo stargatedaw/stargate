@@ -48,6 +48,11 @@ LINK_FLAGS  ?= \
 	$(shell pkg-config --libs sndfile fftw3f fftw3) $(MATH_LIB_FLAG) \
 	$(PLAT_LINK_CFLAGS)
 
+MINGW_LINK_FLAGS ?= \
+	-I/mingw64/include -lpthread $(PORTMIDI_FLAG) -lportaudio $(LDFLAGS) \
+	-lsndfile -lfftw3f -lfftw3 $(MATH_LIB_FLAG) -lws2_32
+
+
 # Debugging flags
 # Use -g used for tools other than gdb.
 DEBUG_FLAGS ?= -O0 -g -ggdb3
@@ -167,8 +172,8 @@ mac_osx:
 	make engine
 
 mingw:
-	make shared
-	make engine
+	LINK_FLAGS="$(MINGW_LINK_FLAGS)" make shared
+	LINK_FLAGS="$(MINGW_LINK_FLAGS)" make engine
 
 pahole:
 	# Check struct alignnment using pahole

@@ -18,6 +18,25 @@
 #pragma comment (lib, "Ws2_32.lib")
 // #pragma comment (lib, "Mswsock.lib")
 
+#define PORT 8888
+
+int __cdecl main(void){
+    WSADATA wsa;
+    //Initialise winsock
+    printf("\nInitialising Winsock...");
+    if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
+    {
+        printf("Failed. Error Code : %d",WSAGetLastError());
+        exit(EXIT_FAILURE);
+    }
+    printf("Initialised.\n");
+    
+    ipc_server_thread(NULL);
+    WSACleanup();
+    
+    return 0;
+}
+
 void* ipc_server_thread(void* _arg){
     SOCKET s;
     struct sockaddr_in server, si_other;
@@ -35,7 +54,7 @@ void* ipc_server_thread(void* _arg){
     //Prepare the sockaddr_in structure
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = inet_addr("127.0.0.1");
-    server.sin_port = htons(19271);
+    server.sin_port = htons( PORT );
     
     //Bind
     if(

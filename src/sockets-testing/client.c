@@ -13,28 +13,38 @@
 
 #include "ipc.h"
 
+#define PORT 8888
+
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
 
-void ipc_init(){
+int __cdecl main(int argc, char** argv){
+    if(argc != 4){
+        printf("Usage: %s path key value\n", argv[0]);
+        return 1;
+    }
+    char message[IPC_MAX_MESSAGE_SIZE];
+    memset(message, 0, sizeof(message));
+    sprintf(message, "%s\n%s\n%s", argv[1], argv[2], argv[3]);
+    printf("Sending message:\n%s\n", message);
     WSADATA wsa;
 
-    printf("Initializing Winsock...\n");
-    if(WSAStartup(MAKEWORD(2,2), &wsa) != 0){
-        fprintf(
-            stderr, 
-            "Failed to initialize winsock. Error Code : %d", 
-            WSAGetLastError()
-        );
+    //Initialise winsock
+    printf("\nInitialising Winsock...");
+    if(WSAStartup(MAKEWORD(2,2),&wsa) != 0){
+        printf("Failed. Error Code : %d",WSAGetLastError());
         exit(EXIT_FAILURE);
     }
-    printf("Initialised winsock.\n");
-}
-
-void ipc_dtor(){
+    printf("Initialised.\n");
+    while(1){
+        ipc_client_send(message);
+        fflush(stdout);
+        sleep(1);
+    }
     WSACleanup();
+    return 0;
 }
 
 void ipc_client_send(char* message){
@@ -55,7 +65,7 @@ void ipc_client_send(char* message){
     
     memset((char *) &si_other, 0, sizeof(si_other));
     si_other.sin_family = AF_INET;
-    si_other.sin_port = htons(30321);
+    si_other.sin_port = htons(PORT);
     si_other.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
     
     if (

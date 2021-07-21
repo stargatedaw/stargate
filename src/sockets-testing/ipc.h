@@ -34,13 +34,7 @@ void encode_ui_message(
     char* data
 );
 
-// Send an IPC message to the UI
 void ipc_client_send(char* message);
-// Receive IPC messages from the UI
 void* ipc_server_thread(void*);
-// Initialize networking
-void ipc_init();
-// Shutdown networking
-void ipc_dtor();
 
 #endif
