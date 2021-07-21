@@ -6,6 +6,7 @@
 import argparse
 import json
 import os
+import platform
 import shutil
 import subprocess
 import tempfile
@@ -77,7 +78,7 @@ build_depends = ", ".join([
     "python3-pip",
 ])
 
-depends = ", ".join([
+depends = [
     "ffmpeg",
     "fftw3",
     "lame",
@@ -95,7 +96,14 @@ depends = ", ".join([
     "python3-pyqt5",
     "rubberband-cli",
     "vorbis-tools",
-])
+]
+
+if arch.lower().startswith("arm"):
+    # Used to detect if a Raspberry Pi is running a sufficiently lightweight
+    # desktop to be able to render the UI
+    depends.append("wmctrl")
+    depends.sort()
+depends = ", ".join(depends)
 
 CONTROL_FILE = f"""\
 Package: stargate
@@ -103,8 +111,8 @@ Version: {minor_version}
 Architecture: {arch}
 Maintainer: stargateaudio@noreply.github.com
 Description: A holistic audio production solution.
-  Stargate is DAW, instruments, effects and a wave editor.  Everything you
-  need to create music.
+  Stargate is a DAW, instruments, effects and a wave editor.
+  Everything you need to create music on a computer.
 Build-Depends: {build_depends}
 Depends: {depends}
 """

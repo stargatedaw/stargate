@@ -1,7 +1,8 @@
 """
     Preflight checks
 """
-from . import shared
+from sgui import shared
+from sgui.sgqt import QMessageBox
 from sglib.hardware import rpi
 from sglib.lib.translate import _
 
