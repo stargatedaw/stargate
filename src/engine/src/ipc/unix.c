@@ -99,7 +99,8 @@ void* ipc_server_thread(void* _arg){
         setsockopt(
             sockfd,
             SOL_SOCKET,
-            SO_RCVTIMEO,&tv,
+            SO_RCVTIMEO,
+            &tv,
             sizeof(tv)
         ) < 0
     ){

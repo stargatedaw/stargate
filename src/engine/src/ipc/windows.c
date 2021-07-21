@@ -42,7 +42,7 @@ void ipc_dtor(){
 void ipc_client_send(char* message){
     struct sockaddr_in si_other;
     int s, slen=sizeof(si_other);
-    char buf[IPC_MAX_MESSAGE_SIZE];
+    char buffer[IPC_MAX_MESSAGE_SIZE];
 
     if(
         (s=socket(
@@ -76,12 +76,12 @@ void ipc_client_send(char* message){
 
     //receive a reply and print it
     //clear the buffer by filling null, it might have previously received data
-    memset(buf,'\0', IPC_MAX_MESSAGE_SIZE);
+    memset(buffer,'\0', IPC_MAX_MESSAGE_SIZE);
     //try to receive some data, this is a blocking call
     if(
         recvfrom(
             s,
-            buf,
+            buffer,
             IPC_MAX_MESSAGE_SIZE,
             0,
             (struct sockaddr*)&si_other,
@@ -92,16 +92,21 @@ void ipc_client_send(char* message){
         exit(EXIT_FAILURE);
     }
 
-    printf("%s\n", buf);
+    printf("%s\n", buffer);
 
     closesocket(s);
 }
 
 void* ipc_server_thread(void* _arg){
+    struct IpcServerThreadArgs* args = (struct IpcServerThreadArgs*)_arg;
+    struct EngineMessage engine_message;
+
     SOCKET s;
     struct sockaddr_in server, si_other;
     int slen , recv_len;
-    char buf[IPC_MAX_MESSAGE_SIZE];
+    char buffer[IPC_MAX_MESSAGE_SIZE];
+    char *response = "Message processed";
+    int response_len = strlen(response);
 
     slen = sizeof(si_other) ;
 
@@ -132,13 +137,13 @@ void* ipc_server_thread(void* _arg){
     //keep listening for data
     while(1){
         //clear the buffer by filling null, it might have previously received data
-        memset(buf,'\0', IPC_MAX_MESSAGE_SIZE);
+        memset(buffer,'\0', IPC_MAX_MESSAGE_SIZE);
 
         //try to receive some data, this is a blocking call
         if (
             (recv_len = recvfrom(
                 s,
-                buf,
+                buffer,
                 IPC_MAX_MESSAGE_SIZE,
                 0,
                 (struct sockaddr*)&si_other,
@@ -149,21 +154,29 @@ void* ipc_server_thread(void* _arg){
             exit(EXIT_FAILURE);
         }
 
-        //print details of the client/peer and the data received
-        printf(
-            "Received packet from %s:%d\n",
-            inet_ntoa(si_other.sin_addr),
-            ntohs(si_other.sin_port)
-        );
-        printf("Data: %s\n" , buf);
-	fflush(stdout);
 
+        buffer[recv_len] = '\0';
+        decode_engine_message(
+            &engine_message,
+            buffer
+        );
+        printf(
+            "path: %s\nkey: %s\nvalue: %s\n",
+            engine_message.path,
+            engine_message.key,
+            engine_message.value
+        );
+        args->callback(
+            engine_message.path,
+            engine_message.key,
+            engine_message.value
+        );
         //now reply the client with the same data
         if (
             sendto(
                 s,
-                buf,
-                recv_len,
+                response,
+                response_len,
                 0,
                 (struct sockaddr*)&si_other,
                 slen
