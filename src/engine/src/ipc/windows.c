@@ -20,6 +20,14 @@
 #pragma comment (lib, "AdvApi32.lib")
 #pragma comment (lib, "Ws2_32.lib")
 
+struct SocketData{
+    struct sockaddr_in si_other;
+    int s;
+    int slen;
+};
+
+static struct SocketData SOCKET_DATA;
+
 void ipc_init(){
     WSADATA wsa;
 
@@ -33,19 +41,10 @@ void ipc_init(){
         exit(EXIT_FAILURE);
     }
     printf("Initialised winsock.\n");
-}
 
-void ipc_dtor(){
-    WSACleanup();
-}
-
-void ipc_client_send(char* message){
-    struct sockaddr_in si_other;
-    int s, slen=sizeof(si_other);
-    char buffer[IPC_MAX_MESSAGE_SIZE];
-
+    SOCKET_DATA.slen=sizeof(SOCKET_DATA.si_other);
     if(
-        (s=socket(
+        (SOCKET_DATA.s=socket(
             AF_INET,
             SOCK_DGRAM,
             IPPROTO_UDP
@@ -55,19 +54,27 @@ void ipc_client_send(char* message){
         exit(EXIT_FAILURE);
     }
 
-    memset((char *) &si_other, 0, sizeof(si_other));
-    si_other.sin_family = AF_INET;
-    si_other.sin_port = htons(30321);
-    si_other.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+    memset((char *) &SOCKET_DATA.si_other, 0, sizeof(SOCKET_DATA.si_other));
+    SOCKET_DATA.si_other.sin_family = AF_INET;
+    SOCKET_DATA.si_other.sin_port = htons(30321);
+    SOCKET_DATA.si_other.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+}
 
+void ipc_dtor(){
+    closesocket(SOCKET_DATA.s);
+    WSACleanup();
+}
+
+void ipc_client_send(char* message){
+    char buffer[IPC_MAX_MESSAGE_SIZE];
     if (
         sendto(
-            s,
+            SOCKET_DATA.s,
             message,
             strlen(message),
             0,
-            (struct sockaddr*)&si_other,
-            slen
+            (struct sockaddr*)&SOCKET_DATA.si_other,
+            SOCKET_DATA.slen
         ) == SOCKET_ERROR
     ){
         printf("sendto() failed with error code : %d" , WSAGetLastError());
@@ -80,12 +87,12 @@ void ipc_client_send(char* message){
     //try to receive some data, this is a blocking call
     if(
         recvfrom(
-            s,
+            SOCKET_DATA.s,
             buffer,
             IPC_MAX_MESSAGE_SIZE,
             0,
-            (struct sockaddr*)&si_other,
-            &slen
+            (struct sockaddr*)&SOCKET_DATA.si_other,
+            &SOCKET_DATA.slen
         ) == SOCKET_ERROR
     ){
         printf("recvfrom() failed with error code : %d" , WSAGetLastError());
@@ -94,7 +101,6 @@ void ipc_client_send(char* message){
 
     printf("%s\n", buffer);
 
-    closesocket(s);
 }
 
 void* ipc_server_thread(void* _arg){
