@@ -90,11 +90,9 @@ NO_OPTIMIZATION void * ui_process_monitor_thread(
     struct stat sts;
     int f_exited = 0;
 
-    while(!exiting)
-    {
+    while(!exiting){
         sleep(1);
-        if (stat(f_proc_path, &sts) == -1 && errno == ENOENT)
-        {
+        if (stat(f_proc_path, &sts) == -1 && errno == ENOENT){
             printf("UI process doesn't exist, exiting.\n");
             pthread_mutex_lock(&STARGATE->exit_mutex);
             exiting = 1;

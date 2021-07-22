@@ -35,7 +35,7 @@ void ipc_init(){
     if(WSAStartup(MAKEWORD(2,2), &wsa) != 0){
         fprintf(
             stderr,
-            "Failed to initialize winsock. Error Code : %d",
+            "Failed to initialize winsock. Error Code : %d\n",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
@@ -50,7 +50,11 @@ void ipc_init(){
             IPPROTO_UDP
         )) == SOCKET_ERROR
     ){
-        printf("socket() failed with error code : %d" , WSAGetLastError());
+        fprintf(
+            stderr,
+            "socket() failed with error code : %d\n" ,
+            WSAGetLastError()
+        );
         exit(EXIT_FAILURE);
     }
 
@@ -67,7 +71,7 @@ void ipc_dtor(){
 
 void ipc_client_send(char* message){
     char buffer[IPC_MAX_MESSAGE_SIZE];
-    if (
+    if(
         sendto(
             SOCKET_DATA.s,
             message,
@@ -77,7 +81,11 @@ void ipc_client_send(char* message){
             SOCKET_DATA.slen
         ) == SOCKET_ERROR
     ){
-        printf("sendto() failed with error code : %d" , WSAGetLastError());
+        fprintf(
+            stderr,
+            "UDP Client: sendto() failed with error code : %d\n",
+            WSAGetLastError()
+        );
         exit(EXIT_FAILURE);
     }
 
@@ -95,11 +103,15 @@ void ipc_client_send(char* message){
             &SOCKET_DATA.slen
         ) == SOCKET_ERROR
     ){
-        printf("recvfrom() failed with error code : %d" , WSAGetLastError());
+        fprintf(
+            stderr,
+            "recvfrom() failed with error code : %d\n",
+            WSAGetLastError()
+        );
         exit(EXIT_FAILURE);
     }
 
-    printf("%s\n", buffer);
+    //printf("%s\n", buffer);
 
 }
 
@@ -118,7 +130,12 @@ void* ipc_server_thread(void* _arg){
 
     //Create a socket
     if((s = socket(AF_INET , SOCK_DGRAM , 0 )) == INVALID_SOCKET){
-        printf("Could not create socket : %d" , WSAGetLastError());
+        fprintf(
+            stderr,
+            "Could not create socket : %d\n",
+            WSAGetLastError()
+        );
+        exit(EXIT_FAILURE);
     }
     printf("Socket created.\n");
 
@@ -135,10 +152,14 @@ void* ipc_server_thread(void* _arg){
             sizeof(server)
         ) == SOCKET_ERROR
     ){
-        printf("Bind failed with error code : %d" , WSAGetLastError());
+        fprintf(
+            stderr,
+            "Bind failed with error code : %d\n",
+            WSAGetLastError()
+        );
         exit(EXIT_FAILURE);
     }
-    printf("Bind finished\n");
+    printf("UDP server bind finished\n");
 
     //keep listening for data
     while(1){
@@ -156,10 +177,13 @@ void* ipc_server_thread(void* _arg){
                 &slen
             )) == SOCKET_ERROR
         ){
-            printf("recvfrom() failed with error code : %d" , WSAGetLastError());
+            fprintf(
+                stderr,
+                "recvfrom() failed with error code : %d\n",
+                WSAGetLastError()
+            );
             exit(EXIT_FAILURE);
         }
-
 
         buffer[recv_len] = '\0';
         decode_engine_message(
@@ -188,7 +212,11 @@ void* ipc_server_thread(void* _arg){
                 slen
             ) == SOCKET_ERROR
         ){
-            printf("sendto() failed with error code : %d" , WSAGetLastError());
+            fprintf(
+                stderr,
+                "UDP Server: sendto() failed with error code : %d\n",
+                WSAGetLastError()
+            );
             exit(EXIT_FAILURE);
         }
     }
