@@ -215,6 +215,8 @@ def set_bin_path():
             f"{MAJOR_VERSION}-engine",
         )
     )
+    if IS_WINDOWS:
+        BIN_PATH += '.exe'
     if not os.path.exists(BIN_PATH):
         # Otherwise, use the system binary
         BIN_PATH = f"{MAJOR_VERSION}-engine"
@@ -591,30 +593,28 @@ def read_device_config():
                     LOG.info("SELinux detected, not using any setuid "
                         "binaries to prevent lockups.")
 
-            if not IS_LINUX:
-                DEVICE_SETTINGS["audioEngine"] = 4
+            audio_engine = int(DEVICE_SETTINGS["audioEngine"])
+
+            if audio_engine == 0:
+                if os.path.exists(BIN_PATH + 'no-root'):
+                    BIN_PATH += "-no-root"
+            elif audio_engine <= 2:
+                # The setuid binaries will get blocked by
+                # SELinux, so don't use
+                if (
+                    f_selinux
+                    and
+                    os.path.exists(BIN_PATH + 'no-root')
+                ):
+                    BIN_PATH += "-no-root"
+            elif audio_engine == 2:
+                BIN_PATH += "-dbg"
+            elif audio_engine == 3:
+                WITH_AUDIO = False
+                BIN_PATH = None
+            elif audio_engine == 4:
                 IS_ENGINE_LIB = True
-            else:
-                audio_engine = int(DEVICE_SETTINGS["audioEngine"])
-                if audio_engine == 0:
-                    if os.path.exists(BIN_PATH + 'no-root'):
-                        BIN_PATH += "-no-root"
-                elif audio_engine <= 2:
-                    # The setuid binaries will get blocked by
-                    # SELinux, so don't use
-                    if (
-                        f_selinux
-                        and
-                        os.path.exists(BIN_PATH + 'no-root')
-                    ):
-                        BIN_PATH += "-no-root"
-                elif audio_engine == 2:
-                    BIN_PATH += "-dbg"
-                elif audio_engine == 3:
-                    WITH_AUDIO = False
-                    BIN_PATH = None
-                elif audio_engine == 4:
-                    IS_ENGINE_LIB = True
+
             global SAMPLE_RATE, NYQUIST_FREQ
             SAMPLE_RATE = int(DEVICE_SETTINGS["sampleRate"])
             NYQUIST_FREQ = SAMPLE_RATE / 2

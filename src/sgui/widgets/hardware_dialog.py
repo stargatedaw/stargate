@@ -360,18 +360,17 @@ class hardware_dialog:
         f_latency_label = QLabel("")
         f_window_layout.addWidget(f_latency_label, 20, 2)
 
-        if util.IS_LINUX:
-            f_window_layout.addWidget(QLabel(_("Audio Engine")), 40, 0)
-            f_audio_engine_combobox = QComboBox()
-            f_audio_engine_combobox.addItems([
-                _("Normal"),
-                _("Elevated"),
-                _("Debug"),
-                _("GUI Only"),
-                _("Module")
-            ])
-            f_audio_engine_combobox.setToolTip(f_device_tooltip)
-            f_window_layout.addWidget(f_audio_engine_combobox, 40, 1)
+        f_window_layout.addWidget(QLabel(_("Audio Engine")), 40, 0)
+        f_audio_engine_combobox = QComboBox()
+        f_audio_engine_combobox.addItems([
+            _("Normal"),
+            _("Elevated"),
+            _("Debug"),
+            _("GUI Only"),
+            _("Module")
+        ])
+        f_audio_engine_combobox.setToolTip(f_device_tooltip)
+        f_window_layout.addWidget(f_audio_engine_combobox, 40, 1)
 
         f_window_layout.addWidget(QLabel(_("Worker Threads")), 30, 0)
         f_worker_threads_combobox = QComboBox()
@@ -606,10 +605,8 @@ class hardware_dialog:
                     "please de-select some devices"))
                 return
             f_worker_threads = f_worker_threads_combobox.currentIndex()
-            if util.IS_WINDOWS or util.IS_MAC_OSX:
-                f_audio_engine = 4
-            elif util.IS_LINUX:
-                f_audio_engine = f_audio_engine_combobox.currentIndex()
+            f_audio_engine = f_audio_engine_combobox.currentIndex()
+            if util.IS_LINUX:
                 f_thread_affinity = \
                     1 if f_thread_affinity_checkbox.isChecked() else 0
                 f_hugepages = 1 if f_hugepages_checkbox.isChecked() else 0
@@ -664,8 +661,8 @@ class hardware_dialog:
                 f_file.write("sampleRate|{}\n".format(f_samplerate))
                 f_file.write("threads|{}\n".format(f_worker_threads))
 
+                f_file.write("audioEngine|{}\n".format(f_audio_engine))
                 if util.IS_LINUX:
-                    f_file.write("audioEngine|{}\n".format(f_audio_engine))
                     f_file.write("threadAffinity|{}\n".format(
                         f_thread_affinity))
                     f_file.write("hugePages|{}\n".format(f_hugepages))

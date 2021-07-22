@@ -144,7 +144,7 @@ class SgMainWindow(QMainWindow):
         if util.IS_ENGINE_LIB:
             from sgui.ipc.enginelib import EngineLibIPCTransport
             constants.IPC_TRANSPORT = EngineLibIPCTransport()
-        elif util.IS_LINUX:
+        else:
             from sgui.ipc.socket import SocketIPCTransport
             constants.IPC_TRANSPORT = SocketIPCTransport()
         with_audio = constants.IPC_TRANSPORT is not None

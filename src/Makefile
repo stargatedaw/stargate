@@ -22,11 +22,12 @@ clean_pyc:
 	find . -type d -name __pycache__ -exec rm -rf {} \; ; true
 
 deps:
-	make mingw_deps
+	cd vendor/sbsms && ( ./configure || ./configure --enable-sse=no ) && make
+	cd vendor/sbsms/cli && make
 
 deps_clean:
-	make mingw_deps_clean
-	rm -f sgui/vendor/*.so
+	make -C vendor/sbsms clean
+	make -C vendor/sbsms/cli clean
 
 install: clean_pyc
 	install -d $(SG_DIR)
@@ -86,12 +87,25 @@ mingw:
 	CFLAGS+=" -static-libgcc " make -C engine mingw
 
 mingw_deps:
-	cd vendor/sbsms && ( ./configure || ./configure --enable-sse=no ) && make
-	cd vendor/sbsms/cli && make
+	cp /mingw64/bin/libportaudio-2.dll scripts/libportaudio-2.dll
+	cp /mingw64/bin/libportmidi.dll scripts/libportmidi.dll
+	cp /mingw64/bin/rubberband.exe scripts/rubberband.exe
+	cp \
+		 /mingw64/bin/libFLAC-8.dll \
+		 /mingw64/bin/libfftw3f-3.dll \
+		 /mingw64/bin/libogg-0.dll \
+		 /mingw64/bin/libopus-0.dll \
+		 /mingw64/bin/libportaudio-2.dll \
+		 /mingw64/bin/libportmidi.dll \
+		 /mingw64/bin/libsndfile-1.dll \
+		 /mingw64/bin/libssp-0.dll \
+		 /mingw64/bin/libwinpthread-1.dll \
+		 /mingw64/bin/libvorbis-0.dll \
+		 /mingw64/bin/libvorbisenc-2.dll \
+		 engine/
 
 mingw_deps_clean:
-	make -C vendor/sbsms clean
-	make -C vendor/sbsms/cli clean
+	rm -rf scripts/*.{dll,exe}
 
 py_vendor:
 	mkdir -p ./sg_py_vendor
