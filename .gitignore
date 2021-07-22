@@ -15,7 +15,7 @@
 *.pyc
 *.qm
 *.rpm
-*.spec
+/*.spec
 *.swp
 *.tar.gz
 */build/*

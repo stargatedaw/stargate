@@ -97,11 +97,13 @@ mingw_deps:
 		 /mingw64/bin/libopus-0.dll \
 		 /mingw64/bin/libportaudio-2.dll \
 		 /mingw64/bin/libportmidi.dll \
+		 /mingw64/bin/librubberband-2.dll \
 		 /mingw64/bin/libsndfile-1.dll \
 		 /mingw64/bin/libssp-0.dll \
 		 /mingw64/bin/libwinpthread-1.dll \
 		 /mingw64/bin/libvorbis-0.dll \
 		 /mingw64/bin/libvorbisenc-2.dll \
+		 /mingw64/bin/rubberband.exe \
 		 engine/
 
 mingw_deps_clean:

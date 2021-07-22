@@ -150,9 +150,9 @@ class hardware_dialog:
             f_pm_dll = "libportmidi.dylib"
         elif util.IS_WINDOWS:
             f_pm_dll = os.path.join(
-                util.BIN_DIR, "libportmidi.dll")
+                util.ENGINE_DIR, "libportmidi.dll")
             f_portaudio_so_path = os.path.join(
-                util.BIN_DIR, "libportaudio-2.dll")
+                util.ENGINE_DIR, "libportaudio-2.dll")
         else:
             LOG.error(
                 "Unsupported platform {}, don't know where to look "

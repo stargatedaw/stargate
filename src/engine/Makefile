@@ -8,6 +8,7 @@ CC_ARGS ?= -Wall -Wformat-truncation=0
 OPT_LVL ?= -O2 -g -ggdb3
 # These assume a modern x86 CPU, change or remove for other platforms
 PLAT_FLAGS ?= -mfpmath=sse -mssse3 -mtune=generic -mstackrealign
+LIBEXT ?= so
 
 INC = -Iinclude -I../vendor/libcds/include
 SRC = $(shell find src/ ../vendor/libcds/src -type f -name '*.c')
@@ -167,12 +168,11 @@ lines-of-code:
 	find benchmark -name '*.c' -exec cat {} \; | wc -l
 
 mac_osx:
-	OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make shared
-	mv $(VERSION).so $(VERSION).dylib
+	LIBEXT=dylib OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make shared
 	make engine
 
 mingw:
-	LINK_FLAGS="$(MINGW_LINK_FLAGS)" make shared
+	LIBEXT=dll LINK_FLAGS="$(MINGW_LINK_FLAGS)" make shared
 	LINK_FLAGS="$(MINGW_LINK_FLAGS)" make engine
 
 pahole:
@@ -198,7 +198,7 @@ pymod:
 		-fpic $(CC_ARGS) $(OPT_LVL) $(BUILD_FLAGS) \
 		-shared -DSG_DLL python/stargateenginemodule.c \
 		$(shell pkg-config --cflags --libs python3) \
-		$(LINK_FLAGS) -o stargateengine.so
+		$(LINK_FLAGS) -o stargateengine.$(LIBEXT)
 
 pymod-debug:
 	# Compile the experimental Python module with debug symbols and
@@ -207,19 +207,19 @@ pymod-debug:
 		-fpic $(CC_ARGS) $(DEBUG_FLAGS) $(BUILD_FLAGS) \
 		-shared -DSG_DLL python/stargateenginemodule.c \
 		$(shell pkg-config --cflags --libs python3) \
-		$(LINK_FLAGS) -o stargateengine.so
+		$(LINK_FLAGS) -o stargateengine.$(LIBEXT)
 
 shared:
 	# Compile the shared library
 	$(CC) \
 		-fpic $(CC_ARGS) $(OPT_LVL) $(BUILD_FLAGS) \
-		-shared -DSG_DLL $(LINK_FLAGS) -o $(NAME).so
+		-shared -DSG_DLL $(LINK_FLAGS) -o $(NAME).$(LIBEXT)
 
 shared-debug:
 	# Compile the shared library with debug symbols and no optimization
 	$(CC) \
 		-fpic $(CC_ARGS) $(DEBUG_FLAGS) $(BUILD_FLAGS) \
-		-shared -DSG_DLL $(LINK_FLAGS) -o $(NAME).so
+		-shared -DSG_DLL $(LINK_FLAGS) -o $(NAME).$(LIBEXT)
 
 test:
 	# Compile and run the test suite through Valgrind to check for
