@@ -154,6 +154,7 @@ def run_engine(cmd):
     LOG.info(f"Starting engine subprocess with: {cmd}")
     ENGINE_SUBPROCESS = subprocess.Popen(
         cmd,
+        bufsize=1024*1024,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=isinstance(cmd, str),
