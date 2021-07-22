@@ -538,7 +538,14 @@ def setup_globals():
 
     LOG.info(f"Using stylesheet {THEME_FILE}")
     STYLESHEET_DIR = os.path.dirname(THEME_FILE)
-    ASSETS_DIR = os.path.join(STYLESHEET_DIR, 'assets')
+    if IS_WINDOWS:
+        STYLESHEET_DIR = STYLESHEET_DIR.replace("\\", "/")
+
+    # In QSS, backslashes are not valid
+    ASSETS_DIR = "/".join([
+        STYLESHEET_DIR,
+        'assets',
+    ])
 
 def load_theme():
     """ Load the QSS theme and system colors.  Do this before creating any
