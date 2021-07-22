@@ -79,9 +79,10 @@ typedef struct
     int pid;
 }ui_thread_args;
 
+#if defined(__linux__) && !defined(SG_DLL)
 NO_OPTIMIZATION void * ui_process_monitor_thread(
-    void * a_thread_args)
-{
+    void * a_thread_args
+){
     char f_proc_path[256];
     f_proc_path[0] = '\0';
     ui_thread_args * f_thread_args = (ui_thread_args*)(a_thread_args);
@@ -112,7 +113,7 @@ NO_OPTIMIZATION void * ui_process_monitor_thread(
 
     return (void*)0;
 }
-
+#endif
 
 void print_help(){
     printf("Usage:\n\nStart the engine:\n");
@@ -174,8 +175,8 @@ int _main(int argc, char** argv){
     set_thread_params();
 #if defined(__linux__) && !defined(SG_DLL)
     setup_signal_handling();
-#endif
     start_ui_thread(ui_pid);
+#endif
     start_osc_thread();
 
     char* _pidfile_path = pidfile_path();
@@ -298,16 +299,15 @@ NO_OPTIMIZATION void init_main_vol(){
         assert(result == 0);
     }
 
+#if defined(__linux__) && !defined(SG_DLL)
     NO_OPTIMIZATION void start_ui_thread(int pid){
         printf("Starting UI monitor thread\n");
         pthread_attr_t f_ui_threadAttr;
         pthread_attr_init(&f_ui_threadAttr);
 
-#ifdef __linux__
         struct sched_param param;
         param.__sched_priority = 1; //90;
         pthread_attr_setschedparam(&f_ui_threadAttr, &param);
-#endif
 
         pthread_attr_setstacksize(&f_ui_threadAttr, 1000000); //8388608);
         pthread_attr_setdetachstate(&f_ui_threadAttr, PTHREAD_CREATE_DETACHED);
@@ -324,6 +324,7 @@ NO_OPTIMIZATION void init_main_vol(){
             (void*)f_ui_thread_args
         );
     }
+#endif
 
 #if defined(__linux__) && !defined(SG_DLL)
     NO_OPTIMIZATION void setup_signal_handling(){
