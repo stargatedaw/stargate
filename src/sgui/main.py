@@ -1465,18 +1465,18 @@ def main():
     # Workaround for weird stuff happening in Windows during initialization
     constants.IPC_ENABLED = True
 
-    shared.APP.exec()
-    time.sleep(0.6)
+    exit_code = shared.APP.exec()
+    # Work around PyQt SEGFAULT-on-exit issues
+    for w in QApplication.topLevelWindows():
+        del w
+    time.sleep(0.3)
     flush_events()
+    del shared.APP
     final_gc(False)
-    shared.APP.deleteLater()
-    time.sleep(0.6)
-    shared.APP = None
-    time.sleep(0.6)
+    time.sleep(0.3)
     final_gc()
-
 
     if RESPAWN:
         respawn()
 
-    #sys.exit(0)
+    sys.exit(exit_code)
