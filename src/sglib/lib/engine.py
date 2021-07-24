@@ -152,13 +152,22 @@ def reopen_engine():
 def run_engine(cmd):
     global ENGINE_SUBPROCESS
     LOG.info(f"Starting engine subprocess with: {cmd}")
+    kwargs = {
+        "bufsize": 1024*1024,
+        "stdout": subprocess.PIPE,
+        "stderr": subprocess.PIPE,
+        "shell": isinstance(cmd, str),
+        "universal_newlines": True,
+    }
+    if util.IS_WINDOWS:
+        kwargs["creationflags"] = (
+            subprocess.REALTIME_PRIORITY_CLASS
+            |
+            subprocess.CREATE_NO_WINDOW
+        )
     ENGINE_SUBPROCESS = subprocess.Popen(
         cmd,
-        bufsize=1024*1024,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        shell=isinstance(cmd, str),
-        universal_newlines=True,
+        **kwargs
     )
     for log_func, fd in (
         (LOG.info, ENGINE_SUBPROCESS.stdout),
