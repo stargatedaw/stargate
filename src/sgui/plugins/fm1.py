@@ -802,6 +802,15 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.fm_macro_knobs.append(f_macro)
 
             f_fm_macro_matrix = QTableWidget()
+            self.fm_matrix.setEditTriggers(
+                QAbstractItemView.EditTrigger.NoEditTriggers,
+            )
+            self.fm_matrix.setFocusPolicy(
+                QtCore.Qt.FocusPolicy.NoFocus
+            )
+            self.fm_matrix.setSelectionMode(
+                QAbstractItemView.SelectionMode.NoSelection
+            )
             self.fm_macro_labels_hlayout.addWidget(
                 QLabel("Macro {}".format(f_i + 1),
                 f_fm_macro_matrix), -1)

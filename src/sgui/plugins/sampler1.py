@@ -388,7 +388,19 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.noise_types_list = [_("Off"), _("White"), _("Pink")]
 
         self.sample_table = QTableWidget(
-            SAMPLER1_MAX_SAMPLE_COUNT, len(f_sample_table_columns))
+            SAMPLER1_MAX_SAMPLE_COUNT,
+            len(f_sample_table_columns),
+        )
+        self.sample_table.setEditTriggers(
+            QAbstractItemView.EditTrigger.NoEditTriggers,
+        )
+        self.sample_table.setFocusPolicy(
+            QtCore.Qt.FocusPolicy.NoFocus,
+        )
+        self.sample_table.setSelectionMode(
+            QAbstractItemView.SelectionMode.NoSelection
+        )
+
         self.sample_table.setAlternatingRowColors(True)
         self.sample_table.setHorizontalScrollMode(
             QAbstractItemView.ScrollMode.ScrollPerPixel,
