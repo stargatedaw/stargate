@@ -549,8 +549,7 @@ QGroupBox:focus, QTextEdit::focus
 
 QWidget:item:hover
 {
-    background-color : QLinearGradient(
-        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffffff, stop: 1 #ffffff);
+    background-color: #ffffff;
     color: #000000;
 }
 
@@ -682,7 +681,7 @@ QScrollBar:horizontal
     border: 1px solid #222222;
     background: QLinearGradient(
         x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #fafafa, stop: 0.1 #ffffff,
-        stop: 0.7 #ffffff, stop: 0.9 #fafafa, stop: 1 #666666);
+        stop: 0.7 #ffffff, stop: 0.9 #fafafa, stop: 1 #cccccc);
     height: 15px;
     margin: 0px 16px 0 16px;
 }
@@ -701,7 +700,6 @@ QTabBar::tab:!selected:hover
 
 QScrollBar::handle:horizontal
 {
-
     min-height: 20px;
 }
 
@@ -738,7 +736,7 @@ QScrollBar:vertical
 {
     background: QLinearGradient(
         x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #fafafa, stop: 0.1 #ffffff,
-        stop: 0.7 #ffffff, stop: 0.9 #fafafa, stop: 1 #666666);
+        stop: 0.7 #ffffff, stop: 0.9 #fafafa, stop: 1 #cccccc);
     width: 15px;
     margin: 16px 0 16px 0;
     border: 1px solid #222222;
@@ -894,15 +892,8 @@ QTabBar::tab:selected,QTabBar::tab:!selected:hover
 
 QTableWidget
 {
-    alternate-background-color: QLinearGradient(
-        x1:0, y1:0, x2:0, y2:1, stop:0 #3a3a3a, stop: .2 #464646,
-        stop: .7 #4b4b4f, stop: 1 #2f2f2f);
-    alternate-background-color: QLinearGradient(
-        x1:0, y1:0, x2:1, y2:1, stop:0 #3a3a3a, stop: .5 #464646,
-        stop: 1 #2f2f2f);
-    background-color: QLinearGradient(
-        x1:0, y1:0, x2:0, y2:1, stop:0 #464646, stop: .5 #3a3a3a,
-        stop: 1 #464646);
+    alternate-background-color: #464646;
+    background-color: #3a3a3a;
 }
 
 QRadioButton::indicator
