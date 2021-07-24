@@ -20,8 +20,7 @@ from sglib.lib import strings as sg_strings
 from sglib.lib import util
 from sglib.lib.translate import _
 from sglib.models import theme
-from sgui import shared as glbl_shared
-from sgui import shared as sg_shared, widgets
+from sgui import shared as glbl_shared, widgets
 from sgui.daw.lib import item as item_lib
 from sgui.daw import painter_path as daw_painter_path, shared
 from sgui.shared import AUDIO_ITEM_SCENE_RECT
@@ -72,7 +71,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
                     theme.SYSTEM_COLORS.daw.item_audio_waveform,
                 ),
             )
-            f_path_item.setPen(shared.NO_PEN)
+            f_path_item.setPen(NO_PEN)
             f_path_item.setParentItem(self)
             f_path_item.mapToParent(0.0, 0.0)
             self.path_items.append(f_path_item)
@@ -689,7 +688,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
             f_index = shared.CURRENT_ITEM.get_next_index()
             if f_index == -1:
                 QMessageBox.warning(
-                    sg_shared.MAIN_WINDOW.widget,
+                    glbl_shared.MAIN_WINDOW.widget,
                     _("Error"),
                     _(
                         "No more available audio item slots, max per sequence "
@@ -1215,7 +1214,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
                     f_index = f_audio_items.get_next_index()
                     if f_index == -1:
                         QMessageBox.warning(
-                            sg_shared.MAIN_WINDOW.widget,
+                            glbl_shared.MAIN_WINDOW.widget,
                             _("Error"),
                             _("No more available audio item slots, max per "
                             "sequence is {}").format(MAX_AUDIO_ITEM_COUNT)
@@ -1282,7 +1281,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
                     ):
                         LOG.error(f"Error creating {dest_path}")
                         QMessageBox.warning(
-                            sg_shared.MAIN_WINDOW.widget,
+                            glbl_shared.MAIN_WINDOW.widget,
                             _("Error"),
                             _(
                                 f"Unable to create {dest_path}: {stderr}"

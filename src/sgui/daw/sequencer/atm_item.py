@@ -1,14 +1,15 @@
-from . import _shared
-from sglib.math import clip_min, clip_value
-from sgui.daw import shared
 from sglib.models.daw import *
 from sgui.daw.shared import *
-from sglib.lib import util
 from sglib.lib.util import *
-from sglib.lib.translate import _
-from sglib.models import theme
 from sgui.plugins import *
 from sgui.sgqt import *
+
+from . import _shared
+from sglib.math import clip_min, clip_value
+from sglib.lib import util
+from sglib.lib.translate import _
+from sglib.models import theme
+from sgui.daw import shared
 
 class SeqAtmItem(QGraphicsEllipseItem):
     """ This is an automation point within the ItemSequencer, these are only
