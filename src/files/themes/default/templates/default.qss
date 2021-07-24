@@ -359,7 +359,7 @@ QSlider::sub-page:horizontal
 QSlider::add-page:horizontal
 {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #666666, stop: 1 #000000);
+        x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #333333, stop: 1 #000000);
     border: 1px solid #777;
     height: 4px;
     border-radius: 4px;
@@ -385,7 +385,7 @@ QSlider::groove:vertical
 QSlider::sub-page:vertical
 {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 1 #666666);
+        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 1 #333333);
     border: 1px solid #777;
     width: 4px;
     border-radius: 4px;
@@ -435,7 +435,8 @@ QSlider#zoom_slider::sub-page:horizontal
 QSlider#zoom_slider::add-page:horizontal
 {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #666666, stop: 1 #000000);
+        x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #333333, stop: 1 #000000
+    );
     border: 1px solid #777;
     height: 10px;
     border-radius: 4px;
@@ -465,7 +466,7 @@ QSlider#zoom_slider::groove:vertical
 QSlider#zoom_slider::sub-page:vertical
 {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 1 #666666);
+        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 1 #333333);
     border: 1px solid #777;
     width: 10px;
     border-radius: 4px;
