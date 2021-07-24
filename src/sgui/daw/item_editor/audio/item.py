@@ -71,7 +71,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
                     theme.SYSTEM_COLORS.daw.item_audio_waveform,
                 ),
             )
-            f_path_item.setPen(NO_PEN)
+            f_path_item.setPen(shared.NO_PEN)
             f_path_item.setParentItem(self)
             f_path_item.mapToParent(0.0, 0.0)
             self.path_items.append(f_path_item)
