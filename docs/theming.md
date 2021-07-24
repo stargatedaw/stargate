@@ -8,8 +8,8 @@ src/files/themes/default/
 ```
 
 # Performance Considerations
-Avoid the use of transparency to the greatest extent possible.  Transparent
-hex colors are prepended by an extra 2 digits, ie:
+Avoid the use of transparency and gradients to the greatest extent possible.
+Transparent hex colors are prepended by an extra 2 digits, ie:
 ```
 white: #ffffff
 transparent-white: #60ffffff
@@ -18,10 +18,12 @@ Transparency requires much more hardware power to render, and will not work
 well on low power systems like Raspberry Pi. You can fake transparency by
 blending colors together using `/scripts/color-hex-interpolate.py`.
 
+Gradients are specified in QSS themes.
+
 However, you can make an alternate version of the same theme that uses
-transparency.  Every theme in the main repo should offer a default version that
-works on 10 year old laptops and ARM single board computers.   Add `fancy` to
-the name of any theme that uses transparency.
+transparency and gradients.  Every theme in the main repo should offer a
+default version that works on 10 year old laptops and ARM single board
+computers.   Add `fancy` to the name of any theme that uses transparency.
 
 # Structure
 A theme is a folder containing the following structure:
