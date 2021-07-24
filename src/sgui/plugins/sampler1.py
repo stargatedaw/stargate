@@ -409,9 +409,9 @@ class sampler1_plugin_ui(AbstractPluginUI):
             QAbstractItemView.ScrollMode.ScrollPerPixel,
         )
         self.sample_table.horizontalHeader().setSectionResizeMode(
-            QHeaderView.Fixed)
+            QHeaderView.ResizeMode.Fixed)
         self.sample_table.verticalHeader().setSectionResizeMode(
-            QHeaderView.Fixed)
+            QHeaderView.ResizeMode.Fixed)
 
         glbl_shared.APP.processEvents()
 
@@ -784,9 +784,10 @@ class sampler1_plugin_ui(AbstractPluginUI):
 
         self.sample_table.setHorizontalHeaderLabels(f_sample_table_columns)
         self.sample_table.verticalHeader().setSectionResizeMode(
-            QHeaderView.Fixed)
+            QHeaderView.ResizeMode.Fixed,
+        )
         self.sample_table.horizontalHeader().setSectionResizeMode(
-            QHeaderView.Fixed)
+            QHeaderView.ResizeMode.Fixed)
         self.sample_table.resizeRowsToContents()
 
         self.file_selector = file_select_widget(self.load_files)
