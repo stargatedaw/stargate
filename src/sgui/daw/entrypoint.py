@@ -164,7 +164,7 @@ class MainWindow(QScrollArea):
         self.file_browser.folders_tab_widget.insertTab(
             0,
             shared.PLAYLIST_EDITOR.parent,
-            "Playlist",
+            _("Songs"),
         )
         self.file_browser.folders_tab_widget.setCurrentIndex(0)
         self.file_browser.set_multiselect(True)

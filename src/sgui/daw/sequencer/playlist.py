@@ -13,56 +13,12 @@ class PlaylistWidget:
         self.suppress_changes = True
         self.parent = QtWidgets.QWidget()
         layout = QtWidgets.QVBoxLayout(self.parent)
-        splitter = QtWidgets.QSplitter(
-            QtCore.Qt.Orientation.Vertical,
-        )
-        layout.addWidget(splitter)
-
-        # Playlist
-        playlist_widget = QtWidgets.QWidget()
-        playlist_vlayout = QtWidgets.QVBoxLayout(playlist_widget)
-        playlist_hlayout = QtWidgets.QHBoxLayout()
-        playlist_vlayout.addLayout(playlist_hlayout)
-        playlist_label = QtWidgets.QLabel("Playlist")
-        playlist_label.setSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Expanding,
-            QtWidgets.QSizePolicy.Policy.Fixed,
-        )
-        playlist_hlayout.addWidget(playlist_label)
-        playlist_menu_button = QtWidgets.QPushButton("Menu")
-        playlist_hlayout.addWidget(playlist_menu_button)
-        playlist_menu = QtWidgets.QMenu()
-        delete_action = playlist_menu.addAction('Delete Selected')
-        delete_action.triggered.connect(self.delete_playlist_items)
-        playlist_menu_button.setMenu(playlist_menu)
-
-        self.playlist_widget = QtWidgets.QListWidget()
-        playlist_vlayout.addWidget(self.playlist_widget)
-        self.playlist_widget.setAlternatingRowColors(True)
-        self.playlist_widget.setDragDropMode(
-            QtWidgets.QAbstractItemView.DragDropMode.DragDrop,
-        )
-        self.playlist_widget.setDefaultDropAction(
-            QtCore.Qt.DropAction.MoveAction
-        )
-        self.playlist_widget.setSelectionMode(
-            QtWidgets.QAbstractItemView.SelectionMode.ExtendedSelection,
-        )
-        model = self.playlist_widget.model()
-        model.rowsMoved.connect(self.playlist_changed)
-        self.playlist_widget.itemChanged.connect(self.playlist_changed)
-        self.playlist_widget.indexesMoved.connect(self.playlist_changed)
-        self.playlist_widget.itemClicked.connect(self.playlist_item_clicked)
-        splitter.addWidget(playlist_widget)
-        splitter.setCollapsible(0, False)
 
         # Sequence list
         sequence_widget = QtWidgets.QWidget()
+        layout.addWidget(sequence_widget)
         sequence_vlayout = QtWidgets.QVBoxLayout(
             sequence_widget,
-        )
-        sequence_vlayout.addWidget(
-            QtWidgets.QLabel("Sequence Pool"),
         )
         self.sequence_widget = QtWidgets.QListWidget()
         sequence_vlayout.addWidget(self.sequence_widget)
@@ -75,8 +31,6 @@ class PlaylistWidget:
         )
         self.sequence_widget.itemChanged.connect(self.sequence_changed)
         self.sequence_widget.itemClicked.connect(self.sequence_item_clicked)
-        splitter.addWidget(sequence_widget)
-        splitter.setCollapsible(1, False)
 
         # Add new sequence
         add_seq_layout = QtWidgets.QHBoxLayout()
@@ -119,29 +73,6 @@ class PlaylistWidget:
         self.add_seq_text.clear()
         self.open()
 
-    def playlist_changed(self):
-        """ Add, move, delete from the playlist
-        """
-        if self.suppress_changes:
-            return
-        playlist = []
-        for i in range(self.playlist_widget.count()):
-            item = self.playlist_widget.item(i)
-            playlist.append(item.text())
-        api_playlist.playlist_changed(playlist)
-
-    def playlist_item_clicked(self, item):
-        items = self.playlist_widget.selectedItems()
-        if (
-            len(items) == 1
-            and
-            # User did not CTRL+click unselect one of 2 items
-            items[0].text() == item.text()
-        ):
-            name = str(item.text())
-            LOG.info(f"Opening sequence {name}")
-            sequence_lib.change_sequence(name)
-
     def sequence_item_clicked(self, item):
         items = self.sequence_widget.selectedItems()
         if (
@@ -181,22 +112,6 @@ class PlaylistWidget:
                 )
         self.open()
 
-    def add_playlist_item(self, name):
-        flags = (
-            QtCore.Qt.ItemFlag.ItemIsDragEnabled
-            |
-            QtCore.Qt.ItemFlag.ItemIsDropEnabled
-            |
-            QtCore.Qt.ItemFlag.ItemIsEnabled
-            |
-            QtCore.Qt.ItemFlag.ItemIsSelectable
-        )
-        self.add_item(
-            name,
-            self.playlist_widget,
-            flags,
-        )
-
     def add_sequence_item(self, name):
         flags = (
             QtCore.Qt.ItemFlag.ItemIsDragEnabled
@@ -235,34 +150,11 @@ class PlaylistWidget:
         item.setFlags(flags)
         self.suppress_changes = False
 
-    def delete_playlist_items(self):
-        model = self.playlist_widget.selectionModel()
-        indices = [x.row() for x in model.selectedIndexes()]
-        if not indices:
-            QtWidgets.QMessageBox.warning(
-                self.parent,
-                "Error",
-                "No items selected",
-            )
-            return
-        if len(indices) == self.playlist_widget.count():
-            QtWidgets.QMessageBox.warning(
-                self.parent,
-                "Error",
-                "Cannot delete all sequences from the playlist",
-            )
-            return
-        api_playlist.delete_playlist_items(indices)
-        self.open()
-
     def open(self):
         """ Populate the widgets from the project files
         """
-        self.playlist_widget.clear()
         self.sequence_widget.clear()
         playlist_names, sequence_names = api_playlist.load()
-        for name in playlist_names:
-            self.add_playlist_item(name)
         for name in sequence_names:
             self.add_sequence_item(name)
 
