@@ -1464,7 +1464,10 @@ def main():
 
     # Workaround for weird stuff happening in Windows during initialization
     constants.IPC_ENABLED = True
-
+    def excepthook(excType, excValue, tracebackobj):
+        LOG.exception(excValue)
+        raise excValue
+    sys.excepthook = excepthook
     exit_code = shared.APP.exec()
     # Work around PyQt SEGFAULT-on-exit issues
     for w in QApplication.topLevelWindows():
@@ -1480,3 +1483,4 @@ def main():
         respawn()
 
     sys.exit(exit_code)
+
