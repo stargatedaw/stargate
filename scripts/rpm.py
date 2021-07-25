@@ -168,7 +168,6 @@ rm -rf $RPM_BUILD_ROOT
 %{{_usr}}/share/applications/{0}.desktop
 %{{_usr}}/share/doc/{0}/copyright
 %{{_usr}}/share/pixmaps/{0}.png
-%{{_usr}}/share/pixmaps/{0}_splash.png
 %{{_usr}}/lib/{0}
 
 %doc

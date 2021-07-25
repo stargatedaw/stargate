@@ -1386,6 +1386,7 @@ def main():
     RESPAWN = False
 
     if theme.ICON_PATH:
+        LOG.info(f"Setting icon to '{theme.ICON_PATH}'")
         shared.APP.setWindowIcon(QIcon(theme.ICON_PATH))
 
     global_check_device()

@@ -524,14 +524,7 @@ def setup_globals():
                 MAJOR_VERSION
             ),
         )
-
-    if IS_WINDOWS:
-        ICON_PATH = os.path.join(
-            INSTALL_PREFIX,
-            "{}.ico".format(
-                MAJOR_VERSION,
-            ),
-        )
+    ICON_PATH = os.path.abspath(ICON_PATH)
 
     DEFAULT_THEME_FILE = os.path.join(
         THEMES_DIR,
