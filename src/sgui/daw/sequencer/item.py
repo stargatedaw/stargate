@@ -387,7 +387,7 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
                 ),
             )
             handle_brush = QColor(
-                theme.SYSTEM_COLORS.daw.item_audio_handle_selected,
+                theme.SYSTEM_COLORS.daw.seq_item_handle_selected,
             )
             self.start_handle.setBrush(handle_brush)
             self.length_handle.setBrush(handle_brush)
@@ -410,7 +410,7 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
                 ),
             )
             handle_brush = QColor(
-                theme.SYSTEM_COLORS.daw.item_audio_handle,
+                theme.SYSTEM_COLORS.daw.seq_item_handle,
             )
             self.start_handle.setBrush(handle_brush)
             self.length_handle.setBrush(handle_brush)

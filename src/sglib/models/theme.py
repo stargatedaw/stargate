@@ -46,6 +46,8 @@ class DawColors:
         seq_header_text="#ffffff",
         seq_header_sequence_start="#7878ff",
         seq_header_sequence_end="#ff3c3c",
+        seq_item_handle="#ffffff",
+        seq_item_handle_selected="#ffffff",
         seq_tempo_marker="#ffffff",
         track_default_colors=[
             "#b00fb8",
@@ -159,6 +161,16 @@ class DawColors:
             seq_header_sequence_end,
             str,
             desc="Sequencer header sequence end marker",
+        )
+        self.seq_item_handle = type_assert(
+            seq_item_handle,
+            str,
+            desc="Sequencer item handle",
+        )
+        self.seq_item_handle_selected = type_assert(
+            seq_item_handle_selected,
+            str,
+            desc="Sequencer selected item handle",
         )
         self.seq_tempo_marker = type_assert(
             seq_tempo_marker,

@@ -27,6 +27,8 @@ daw:
   seq_header_sequence_end: "#ff3c3c"
   seq_header_sequence_start: "#7878ff"
   seq_header_text: "#ffffff"
+  seq_item_handle: "{{ item_handle }}"
+  seq_item_handle_selected: "{{ item_handle }}"
   seq_item_audio: "#969696"
   seq_item_note: "#a5a5a5"
   seq_item_text: "#ffffff"
