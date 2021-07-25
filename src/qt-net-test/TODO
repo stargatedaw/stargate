@@ -1,4 +1,0 @@
-+ Hard-code localhost and ports
-+ Break up everyting into proper functions and make main() CLI parsing only
-+ Have the Qt client send to the C server, and the C client to the Qt server
-+ Test on Windows

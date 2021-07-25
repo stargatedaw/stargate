@@ -34,10 +34,6 @@ PREFIX=/usr/local make install
 scripts/stargate
 ```
 ## Windows, Mac
-The code is capable of running on these platforms, but is not being regularly
-tested on these platforms at this time.  The plan is for the Linux port to be
-free (with donation nagging), and to charge for Windows and Mac.  Initial
-versions of the Windows and Mac ports will be freely available, once it is
-proven stable they will move to a paid-for model.  The initial versions will
-still be freely available, but will not receive feature updates.
+We will take care of that for you, it is quite complicated and time consuming
+to setup.
 

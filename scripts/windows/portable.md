@@ -1,9 +1,11 @@
 # Overview
 This is the current working-ish procedure for creating a portable Windows
 executable.  This is a single file that can be run on any 64 bit Windows,
-including from a flash drive.
+including from a flash drive.  Note that there is no more 32 bit MSYS2,
+so we are not able to support 32 bit Windows.
 
-# Create a fresh Windows 10 VM
+# Create a fresh 64 bit Windows 10 VM
+(or install to your hard drive if you are "into that")
 - Create a user called stargate
 - Install MSYS2
 - Download and install Python for Windows, the Visual Studio compiled variant
