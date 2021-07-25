@@ -299,6 +299,8 @@ class WidgetColors:
         rout_graph_to="#e7a0a0",
         rout_graph_from="#a0a0e7",
         rout_graph_lines="#696969",
+        splash_screen="splash.png",
+        splash_screen_text="#ffffff",
     ):
         self.default_scene_background = type_assert(
             default_scene_background,
@@ -359,6 +361,16 @@ class WidgetColors:
             rout_graph_lines,
             str,
             desc="Routing graph widget matrix lines",
+        )
+        self.splash_screen = type_assert(
+            splash_screen,
+            str,
+            desc="Splash screen shown at start up",
+        )
+        self.splash_screen_text = type_assert(
+            splash_screen_text,
+            str,
+            desc="Text status messages on splash screen shown at start up",
         )
 
 

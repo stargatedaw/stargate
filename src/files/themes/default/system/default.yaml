@@ -55,3 +55,5 @@ widgets:
   rout_graph_to: "#e7a0a0"
   rout_graph_from: "#a0a0e7"
   rout_graph_lines: "#696969"
+  splash_screen: "splash.png"
+  splash_screen_text: "#ffffff"

@@ -104,11 +104,8 @@ class SplashScreen(QSplashScreen):
     def __init__(self):
         self.pixmap = QPixmap(
             os.path.join(
-                util.SHARE_DIR,
-                "pixmaps",
-                "{}_splash.png".format(
-                    constants.MAJOR_VERSION,
-                ),
+                theme.ASSETS_DIR,
+                theme.SYSTEM_COLORS.widgets.splash_screen,
             )
         )
         QSplashScreen.__init__(
@@ -122,7 +119,9 @@ class SplashScreen(QSplashScreen):
         self.showMessage(
             a_text,
             QtCore.Qt.AlignmentFlag.AlignBottom,
-            QtCore.Qt.GlobalColor.white,
+            QColor(
+                theme.SYSTEM_COLORS.widgets.splash_screen_text,
+            ),
         )
         shared.APP.processEvents()
 
