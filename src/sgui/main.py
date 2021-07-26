@@ -1422,7 +1422,6 @@ def main():
     constants.IPC_ENABLED = True
     def excepthook(excType, excValue, tracebackobj):
         LOG.exception(excValue)
-        raise excValue
     sys.excepthook = excepthook
     exit_code = shared.APP.exec()
     # Work around PyQt SEGFAULT-on-exit issues
