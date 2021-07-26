@@ -102,14 +102,20 @@ VA1_PORT_MAP = {
 }
 
 
-class va1_plugin_ui(AbstractPluginUI):
+class VA1PluginUI(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(self, *args, **kwargs)
         self._plugin_name = "VA1"
         self.is_instrument = True
         f_osc_types = [
-            _("Off"), _("Saw"), _("Square"), _("H-Square"), _("Q-Square"),
-            _("Triangle"), _("Sine")]
+            _("Off"),
+            _("Saw"),
+            _("Square"),
+            _("H-Square"),
+            _("Q-Square"),
+            _("Triangle"),
+            _("Sine")
+        ]
         f_lfo_types = [_("Off"), _("Sine"), _("Triangle")]
         self.preset_manager = preset_manager_widget(
             self.get_plugin_name())
@@ -126,7 +132,7 @@ class va1_plugin_ui(AbstractPluginUI):
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
 
-        f_knob_size = 48
+        f_knob_size = 42
 
         self.hlayout1 = QHBoxLayout()
         self.main_layout.addLayout(self.hlayout1)
@@ -140,23 +146,6 @@ class va1_plugin_ui(AbstractPluginUI):
             a_uni_voices_port=VA1_UNISON_VOICES1,
             a_uni_spread_port=VA1_UNISON_SPREAD1, a_pb_port=VA1_OSC1_PB)
         self.hlayout1.addWidget(self.osc1.group_box)
-        self.adsr_amp = adsr_widget(
-            f_knob_size, True, VA1_ATTACK, VA1_DECAY,
-            VA1_SUSTAIN, VA1_RELEASE,
-            _("ADSR Amp"), self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, self.preset_manager,
-            a_prefx_port=VA1_ADSR_PREFX, a_knob_type=KC_LOG_TIME,
-            a_lin_port=VA1_ADSR_LIN_MAIN)
-        self.hlayout1.addWidget(self.adsr_amp.groupbox)
-
-        self.dist_widget = MultiDistWidget(
-            f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, VA1_DIST, VA1_DIST_WET, VA1_DIST_OUTGAIN,
-            VA1_DIST_TYPE, a_preset_mgr=self.preset_manager)
-        self.hlayout1.addWidget(self.dist_widget.groupbox_dist)
-
-        self.hlayout2 = QHBoxLayout()
-        self.main_layout.addLayout(self.hlayout2)
         self.osc2 = osc_widget(
             f_knob_size, VA1_OSC2_PITCH,
             VA1_OSC2_TUNE, VA1_OSC2_VOLUME,
@@ -165,8 +154,17 @@ class va1_plugin_ui(AbstractPluginUI):
             _("Oscillator 2"), self.port_dict, self.preset_manager,
             a_uni_voices_port=VA1_UNISON_VOICES2,
             a_uni_spread_port=VA1_UNISON_SPREAD2, a_pb_port=VA1_OSC2_PB)
-        self.hlayout2.addWidget(self.osc2.group_box)
-
+        self.hlayout1.addWidget(self.osc2.group_box)
+        self.hlayout2 = QHBoxLayout()
+        self.main_layout.addLayout(self.hlayout2)
+        self.adsr_amp = adsr_widget(
+            f_knob_size, True, VA1_ATTACK, VA1_DECAY,
+            VA1_SUSTAIN, VA1_RELEASE,
+            _("ADSR Amp"), self.plugin_rel_callback, self.plugin_val_callback,
+            self.port_dict, self.preset_manager,
+            a_prefx_port=VA1_ADSR_PREFX, a_knob_type=KC_LOG_TIME,
+            a_lin_port=VA1_ADSR_LIN_MAIN)
+        self.hlayout2.addWidget(self.adsr_amp.groupbox)
         self.adsr_filter = adsr_widget(
             f_knob_size, False, VA1_FILTER_ATTACK,
             VA1_FILTER_DECAY, VA1_FILTER_SUSTAIN,
@@ -174,11 +172,26 @@ class va1_plugin_ui(AbstractPluginUI):
             self.plugin_rel_callback, self.plugin_val_callback,
             self.port_dict, self.preset_manager, a_knob_type=KC_LOG_TIME)
         self.hlayout2.addWidget(self.adsr_filter.groupbox)
+        self.pitch_env = ramp_env_widget(
+            f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
+            self.port_dict, VA1_PITCH_ENV_TIME,
+            VA1_PITCH_ENV_AMT, _("Pitch Env"),
+            self.preset_manager, VA1_RAMP_CURVE)
+        self.hlayout2.addWidget(self.pitch_env.groupbox)
+
+        self.hlayout3 = QHBoxLayout()
+        self.main_layout.addLayout(self.hlayout3)
+        self.dist_widget = MultiDistWidget(
+            f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
+            self.port_dict, VA1_DIST, VA1_DIST_WET, VA1_DIST_OUTGAIN,
+            VA1_DIST_TYPE, a_preset_mgr=self.preset_manager)
+        self.hlayout3.addWidget(self.dist_widget.groupbox_dist)
+
         self.filter = filter_widget(
             f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
             self.port_dict, VA1_TIMBRE, VA1_RES,
             a_preset_mgr=self.preset_manager, a_type_port=VA1_FILTER_TYPE)
-        self.hlayout2.addWidget(self.filter.groupbox)
+        self.hlayout3.addWidget(self.filter.groupbox)
         self.filter_env_amt = knob_control(
             f_knob_size, _("Env Amt"), VA1_FILTER_ENV_AMT,
             self.plugin_rel_callback, self.plugin_val_callback,
@@ -194,9 +207,6 @@ class va1_plugin_ui(AbstractPluginUI):
             self.plugin_rel_callback, self.plugin_val_callback,
             0, 100, 0, KC_NONE, self.port_dict, self.preset_manager)
         self.filter_velocity.add_to_grid_layout(self.filter.layout, 12)
-
-        self.hlayout3 = QHBoxLayout()
-        self.main_layout.addLayout(self.hlayout3)
 
         self.hard_sync = checkbox_control(
             "Sync", VA1_OSC_HARD_SYNC,
@@ -216,7 +226,7 @@ class va1_plugin_ui(AbstractPluginUI):
         self.groupbox_noise.setObjectName("plugin_groupbox")
         self.noise_layout = QGridLayout(self.groupbox_noise)
         self.noise_layout.setContentsMargins(3, 3, 3, 3)
-        self.hlayout1.addWidget(self.groupbox_noise)
+        self.hlayout3.addWidget(self.groupbox_noise)
         self.noise_amp = knob_control(
             f_knob_size, _("Vol"), VA1_NOISE_AMP,
             self.plugin_rel_callback, self.plugin_val_callback,
@@ -231,7 +241,8 @@ class va1_plugin_ui(AbstractPluginUI):
         self.noise_type.control.setMaximumWidth(87)
         self.noise_type.add_to_grid_layout(self.noise_layout, 1)
 
-
+        self.hlayout4 = QHBoxLayout()
+        self.main_layout.addLayout(self.hlayout4)
         self.main = main_widget(
             f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
             VA1_MAIN_VOLUME, VA1_MAIN_GLIDE,
@@ -240,21 +251,14 @@ class va1_plugin_ui(AbstractPluginUI):
             self.preset_manager, a_poly_port=VA1_MONO_MODE,
             a_min_note_port=VA1_MIN_NOTE, a_max_note_port=VA1_MAX_NOTE,
             a_pitch_port=VA1_MAIN_PITCH, a_pb_min=0)
-        self.hlayout3.addWidget(self.main.group_box)
+        self.hlayout4.addWidget(self.main.group_box)
 
         self.lfo = lfo_widget(
             f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
             self.port_dict, VA1_LFO_FREQ,
             VA1_LFO_TYPE, f_lfo_types, _("LFO"),
             self.preset_manager, VA1_LFO_PHASE)
-        self.hlayout3.addWidget(self.lfo.groupbox)
-
-        self.pitch_env = ramp_env_widget(
-            f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, VA1_PITCH_ENV_TIME,
-            VA1_PITCH_ENV_AMT, _("Pitch Env"),
-            self.preset_manager, VA1_RAMP_CURVE)
-        self.hlayout3.addWidget(self.pitch_env.groupbox)
+        self.hlayout4.addWidget(self.lfo.groupbox)
 
         self.lfo_amp = knob_control(
             f_knob_size, _("Amp"), VA1_LFO_AMP,

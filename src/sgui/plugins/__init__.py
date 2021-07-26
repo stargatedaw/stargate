@@ -116,7 +116,7 @@ CONTROLLER_PORT_NUM_DICT = {x:{} for x in PLUGIN_NAMES}
 
 PLUGIN_UI_TYPES = {
     1: sampler1.sampler1_plugin_ui,
-    2: va1.va1_plugin_ui,
+    2: va1.VA1PluginUI,
     3: fm1.fm1_plugin_ui,
     4: multifx.multifx_plugin_ui,
     5: delay.sgdelay_plugin_ui,
