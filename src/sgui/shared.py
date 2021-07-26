@@ -89,12 +89,8 @@ def add_entropy(a_timedelta):
         return False
 
 def restart_engine():
-    if util.IS_ENGINE_LIB:
-        LOG.info("Not restarting engine because the engine is running "
-            "as a shared library")
-    else:
-        close_engine()
-        reopen_engine()
+    close_engine()
+    reopen_engine()
 
 def prepare_to_quit():
     global MAIN_WINDOW, TRANSPORT

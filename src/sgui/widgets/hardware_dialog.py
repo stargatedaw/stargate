@@ -38,29 +38,6 @@ from sglib.log import (
     setup_logging,
 )
 
-f_device_tooltip = _("""\
-Normal:  Run the audio engine without elevated privileges.  This generally
-works well enough, but may require higher latency settings.
-(YOU SHOULD PROBABLY USE THIS IF YOU ARE USING THE LIVE DVD/USB OR HAVE
-SELINUX ENABLED, THE ELEVATED OPTIONS MAY NOT WORK DUE TO THE
-SECURITY CONFIGURATION)
-
-Elevated:  Run the audio engine with elevated privilege, this gives the
-best possible latency, but if your desktop uses GTK+ it may refuse to run it.
-(USE THIS OPTION IF POSSIBLE)
-
-Debug:  Run an unoptimized binary with debug symbols and create a
-core dump on crashing. This is useful for diagnosing the cause of a crash,
-but consumes more CPU, and is not recommended for normal use
-unless the audio engine is crashing on your platform.
-
-OPTIONS BELOW ARE DEVELOPER OPTIONS THAT NORMAL USERS SHOULD NEVER USE
-
-GUI Only:  Run the UI only with no audio engine
-
-Module:  Load the engine as a shared library in the UI's process
-""")
-
 THREADS_TOOLTIP = _("""\
 This sets the number of worker threads for processing
 plugins and effects.
@@ -360,18 +337,6 @@ class hardware_dialog:
         f_latency_label = QLabel("")
         f_window_layout.addWidget(f_latency_label, 20, 2)
 
-        f_window_layout.addWidget(QLabel(_("Audio Engine")), 40, 0)
-        f_audio_engine_combobox = QComboBox()
-        f_audio_engine_combobox.addItems([
-            _("Normal"),
-            _("Elevated"),
-            _("Debug"),
-            _("GUI Only"),
-            _("Module")
-        ])
-        f_audio_engine_combobox.setToolTip(f_device_tooltip)
-        f_window_layout.addWidget(f_audio_engine_combobox, 40, 1)
-
         f_window_layout.addWidget(QLabel(_("Worker Threads")), 30, 0)
         f_worker_threads_combobox = QComboBox()
         f_worker_threads_combobox.addItems(
@@ -605,7 +570,6 @@ class hardware_dialog:
                     "please de-select some devices"))
                 return
             f_worker_threads = f_worker_threads_combobox.currentIndex()
-            f_audio_engine = f_audio_engine_combobox.currentIndex()
             if util.IS_LINUX:
                 f_thread_affinity = \
                     1 if f_thread_affinity_checkbox.isChecked() else 0
@@ -619,8 +583,6 @@ class hardware_dialog:
                 #so skip the test, and if it fails the
                 #user will be prompted again next time Stargate starts
                 if (
-                    f_audio_engine != 3
-                    or
                     not self.is_running
                     or
                     "name" not in util.DEVICE_SETTINGS
@@ -661,7 +623,6 @@ class hardware_dialog:
                 f_file.write("sampleRate|{}\n".format(f_samplerate))
                 f_file.write("threads|{}\n".format(f_worker_threads))
 
-                f_file.write("audioEngine|{}\n".format(f_audio_engine))
                 if util.IS_LINUX:
                     f_file.write("threadAffinity|{}\n".format(
                         f_thread_affinity))
@@ -788,10 +749,6 @@ class hardware_dialog:
             if "hugePages" in util.DEVICE_SETTINGS and \
             int(util.DEVICE_SETTINGS["hugePages"]) == 1:
                 f_hugepages_checkbox.setChecked(True)
-
-            if "audioEngine" in util.DEVICE_SETTINGS:
-                f_audio_engine_combobox.setCurrentIndex(
-                    int(util.DEVICE_SETTINGS["audioEngine"]))
 
         if a_msg is not None:
             QMessageBox.warning(f_window, _("Error"), a_msg)

@@ -39,57 +39,22 @@ install: clean_pyc
 	install -d $(SG_DIR)/stargate
 	install -m 755 engine/$(VERSION)-engine-dbg $(DESTDIR)$(PREFIX)/bin
 	install -s -m 4755 engine/$(VERSION)-engine $(DESTDIR)$(PREFIX)/bin
-	install -s -m 755 engine/$(VERSION)-engine \
-		$(DESTDIR)$(PREFIX)/bin/$(VERSION)-engine-no-root
 	cp -r sg_py_vendor sglib sgui $(SG_DIR)/stargate
-	install -d $(SG_DIR)/stargate/engine
-	install -m 555 engine/$(VERSION)-engine.dll \
-		$(SG_DIR)/stargate/engine || \
-	install -m 555 engine/$(VERSION)-engine.so \
-		$(SG_DIR)/stargate/engine
 	cp -r files/themes files/presets $(SG_DIR)
 	cp -r files/share $(DESTDIR)/$(PREFIX)
 	install -m 644 meta.json $(SG_DIR)
-
-install_non_linux: clean_pyc
-	install -d $(SG_DIR)
-	install -d $(DESTDIR)$(PREFIX)/bin
-	install -m 755 \
-		vendor/sbsms/cli/sbsms \
-		$(DESTDIR)$(PREFIX)/bin/$(VERSION)-sbsms
-	cp scripts/* $(DESTDIR)$(PREFIX)/bin
-	install -s -m 755 engine/$(VERSION)-engine $(DESTDIR)$(PREFIX)/bin
-	install -d $(SG_DIR)
-	install -d $(SG_DIR)/stargate
-	cp -r sg_py_vendor sglib sgui $(SG_DIR)/stargate
-	install -d $(SG_DIR)/stargate/engine
-	install -m 555 engine/$(VERSION)-engine.dll \
-		$(SG_DIR)/stargate/engine || \
-	install -m 555 engine/$(VERSION)-engine.so \
-		$(SG_DIR)/stargate/engine || \
-	install -m 555 engine/$(VERSION)-engine.dylib \
-		$(SG_DIR)/stargate/engine
-	cp -r files/themes files/presets $(SG_DIR)
-	cp -r files/share  $(DESTDIR)/$(PREFIX)
-	install -m 644 meta.json $(SG_DIR)
-
-install_mac_osx:
-	PREFIX=/usr/local make install_non_linux
 
 lines-of-code:
 	./loc.sh
 
 mac_osx:
 	OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make deps
-	OPTIMIZE_FLAGS= CC=clang make -C stargate mac_osx
+	OPTIMIZE_FLAGS= CC=clang make -C engine mac_osx
 
 mingw:
 	CFLAGS+=" -static-libgcc " make -C engine mingw
 
 mingw_deps:
-	cp /mingw64/bin/libportaudio-2.dll scripts/libportaudio-2.dll
-	cp /mingw64/bin/libportmidi.dll scripts/libportmidi.dll
-	cp /mingw64/bin/rubberband.exe scripts/rubberband.exe
 	cp \
 		 /mingw64/bin/libFLAC-8.dll \
 		 /mingw64/bin/libfftw3f-3.dll \
@@ -111,8 +76,10 @@ mingw_deps_clean:
 
 py_vendor:
 	mkdir -p ./sg_py_vendor
-	$(PIP) install --ignore-installed --target=./sg_py_vendor pymarshal
-	$(PIP) install --ignore-installed --target=./sg_py_vendor --no-deps wavefile
+	$(PIP) install \
+		--ignore-installed --target=./sg_py_vendor pymarshal
+	$(PIP) install \
+		--ignore-installed --target=./sg_py_vendor --no-deps wavefile
 
 test:
 	make -C engine test
@@ -122,5 +89,4 @@ uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(VERSION)*
 	rm -rf $(SG_DIR)
 	rm -rf $(DESTDOR)$(PREFIX)/share/*/stargate*
-
 

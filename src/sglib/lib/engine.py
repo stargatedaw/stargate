@@ -1,4 +1,3 @@
-from .enginelib import start_engine_lib
 import os
 import signal
 import subprocess
@@ -57,8 +56,6 @@ def check_engine():
     """ Check if the engine is running.  Only works for subprocess engine mode
         @return: int, the pid of the process, or None if not running
     """
-    if util.IS_ENGINE_LIB:
-        return None
     if os.path.exists(ENGINE_PIDFILE):
         with open(ENGINE_PIDFILE) as f:
             pid = int(f.read().strip())
@@ -108,13 +105,6 @@ def open_engine(a_project_path):
         kill_engine(pid)
     constants.PROJECT_DIR = os.path.dirname(a_project_path)
 
-    if util.IS_ENGINE_LIB:
-        start_engine_lib(constants.PROJECT_DIR)
-        #import stargateengine
-        #LOG.info("Starting engine python module")
-        #stargateengine.start(constants.PROJECT_DIR)
-        return
-
     f_pid = os.getpid()
     LOG.info(f"Starting audio engine with {a_project_path}")
     global ENGINE_SUBPROCESS
@@ -127,7 +117,6 @@ def open_engine(a_project_path):
     else:
         f_pa_suspend = False
 
-    audio_engine = int(util.DEVICE_SETTINGS["audioEngine"])
     if f_pa_suspend:
         f_cmd = 'pasuspender -- "{}" "{}" "{}" {} {}'.format(
             util.BIN_PATH,

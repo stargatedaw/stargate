@@ -180,9 +180,7 @@ class TransportWidget(AbstractTransportWidget):
                 f_file_name,
             )
             shared.SEQ_WIDGET.open_sequence()
-            if util.IS_ENGINE_LIB:
-                glbl_shared.clean_audio_pool()
-            elif a_restart:
+            if a_restart:
                 glbl_shared.restart_engine()
             f_window.close()
 

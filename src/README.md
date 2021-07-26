@@ -11,25 +11,17 @@ then PyQt6 will be used without any additional configuration.  Once PyQt6 is
 available in Debian stable, Fedora, MinGW and Homebrew, PyQt5 will be
 deprecated and removed.
 
-The audio/dsp engine is written in C and can be run one of 2 ways:
-- A separate process, communicating over UDP sockets (default on Linux)
-- A shared library (.so, .dll, .dylib) (default on Windows and Mac)
+The audio/dsp engine is written in C and runs as a separate process,
+communicating over UDP sockets.
 
-The separate process has the following advantages:
+Using a separate process has the following advantages:
+- The UI can be written in a very high-level language, and the engine in a
+  very low-level language, the best of both worlds
 - Able to run as a different user than the UI
 - More resilient to crashes, does not crash the UI if it crashes
 - Can be restarted freely
 - Many interesting options for debugging using GDB, LLDB, Valgrind and other
   tools.
-
-The shared library has the following advantages:
-- Does not require IPC (inter-process communication)
-- Deeper integration with the UI than the subprocess (but presently this
-  is not being done)
-
-Likely the socket mode will become the dominant mode, and the library will be
-kept around just in case there is a use for it on some platform where sockets
-are too much trouble.
 
 # Source Code Layout
 Note that there is some very old legacy code not following these standards.

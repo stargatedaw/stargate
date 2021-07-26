@@ -160,11 +160,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(4755, root, root) %{{_usr}}/bin/{0}-engine
 %attr(755, root, root) %{{_usr}}/bin/{0}
 %attr(755, root, root) %{{_usr}}/bin/{0}-engine-dbg
-%attr(755, root, root) %{{_usr}}/bin/{0}-engine-no-root
 %attr(755, root, root) %{{_usr}}/bin/{0}-paulstretch
 %attr(755, root, root) %{{_usr}}/bin/{0}-project-recover
 %attr(755, root, root) %{{_usr}}/bin/{0}-sbsms
-%attr(755, root, root) %{{_usr}}/lib/{0}/stargate/sgui/widgets/hardware_dialog.py
 %{{_usr}}/share/applications/{0}.desktop
 %{{_usr}}/share/doc/{0}/copyright
 %{{_usr}}/share/pixmaps/{0}.png

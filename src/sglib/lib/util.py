@@ -67,7 +67,6 @@ BIN_PATH = None
 
 WITH_AUDIO = True
 
-IS_ENGINE_LIB = False
 ENGINE_RETCODE = None
 
 CPU_COUNT = multiprocessing.cpu_count()
@@ -542,7 +541,7 @@ def delete_device_config():
         os.remove(DEVICE_CONFIG_PATH)
 
 def read_device_config():
-    global BIN_PATH, DEVICE_SETTINGS, MIDI_IN_DEVICES, IS_ENGINE_LIB
+    global BIN_PATH, DEVICE_SETTINGS, MIDI_IN_DEVICES
     global WITH_AUDIO, USE_HUGEPAGES
 
     DEVICE_SETTINGS = {}
@@ -564,56 +563,12 @@ def read_device_config():
             set_bin_path()
             WITH_AUDIO = True
 
-            if "hugePages" in DEVICE_SETTINGS and \
-            int(DEVICE_SETTINGS["hugePages"]) == 1:
+            if (
+                "hugePages" in DEVICE_SETTINGS
+                and
+                int(DEVICE_SETTINGS["hugePages"]) == 1
+            ):
                 USE_HUGEPAGES = 1
-
-            f_selinux = False
-            if IS_LINUX:
-                try:
-                    if (
-                        which("getenforce")
-                        and
-                        subprocess.check_output(
-                            "getenforce"
-                        ).strip().lower() == b"enforcing"
-                    ):
-                        f_selinux = True
-                except Exception as ex:
-                    LOG.error(
-                        "Exception while checking getenforce, "
-                        "assuming SELinux is enabled\n{}".format(
-                            ex
-                        )
-                    )
-                    LOG.exception(ex)
-                    f_selinux = True
-
-                if f_selinux:
-                    LOG.info("SELinux detected, not using any setuid "
-                        "binaries to prevent lockups.")
-
-            audio_engine = int(DEVICE_SETTINGS["audioEngine"])
-
-            if audio_engine == 0:
-                if os.path.exists(BIN_PATH + 'no-root'):
-                    BIN_PATH += "-no-root"
-            elif audio_engine <= 2:
-                # The setuid binaries will get blocked by
-                # SELinux, so don't use
-                if (
-                    f_selinux
-                    and
-                    os.path.exists(BIN_PATH + 'no-root')
-                ):
-                    BIN_PATH += "-no-root"
-            elif audio_engine == 2:
-                BIN_PATH += "-dbg"
-            elif audio_engine == 3:
-                WITH_AUDIO = False
-                BIN_PATH = None
-            elif audio_engine == 4:
-                IS_ENGINE_LIB = True
 
             global SAMPLE_RATE, NYQUIST_FREQ
             SAMPLE_RATE = int(DEVICE_SETTINGS["sampleRate"])

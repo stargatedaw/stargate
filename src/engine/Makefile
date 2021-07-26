@@ -83,7 +83,7 @@ BENCH_ITERATIONS ?= 100000000UL
 # is not guaranteed that this number will not be exceeded
 BENCH_SIZE_MB ?= 500UL
 
-all: engine debug shared
+all: engine debug
 
 bench:
 	# Run the benchmark, output the results as YAML to stderr

@@ -18,7 +18,6 @@ from sglib.models import stargate as sg_project
 from sglib.models import theme
 from sglib.ipc import *
 from sglib.lib import util
-from sglib.lib.enginelib import load_engine_lib
 from sglib.lib.util import *
 from sglib.lib.translate import _
 from sglib.log import (
@@ -29,6 +28,7 @@ from sglib import constants
 from sglib.math import clip_value, db_to_lin
 from sgui import widgets
 from sgui.daw import entrypoint as daw
+from sgui.ipc.socket import SocketIPCServer, SocketIPCTransport
 from sgui.plugins import SgPluginUiDict
 from sgui.transport import TransportWidget
 from sglib.lib import engine
@@ -49,8 +49,6 @@ import sys
 import time
 import traceback
 
-if not util.IS_ENGINE_LIB:
-    from sgui.ipc.socket import SocketIPCServer, SocketIPCTransport
 
 HOST_INDEX_DAW = 0
 HOST_INDEX_WAVE_EDIT = 1
@@ -140,12 +138,7 @@ class SgMainWindow(QMainWindow):
     def setup(self):
         self.suppress_resize_events = False
         shared.MAIN_WINDOW = self
-        if util.IS_ENGINE_LIB:
-            from sgui.ipc.enginelib import EngineLibIPCTransport
-            constants.IPC_TRANSPORT = EngineLibIPCTransport()
-        else:
-            from sgui.ipc.socket import SocketIPCTransport
-            constants.IPC_TRANSPORT = SocketIPCTransport()
+        constants.IPC_TRANSPORT = SocketIPCTransport()
         with_audio = constants.IPC_TRANSPORT is not None
         constants.IPC = StargateIPC(
             constants.IPC_TRANSPORT,
@@ -378,36 +371,19 @@ class SgMainWindow(QMainWindow):
         )
 
         self.subprocess_timer = None
-        self.osc_server = None
+        self.socket_server = None
 
-        if util.IS_ENGINE_LIB:
-            self.daw_callback.connect(
-                daw.MAIN_WINDOW.configure_callback,
-            )
-            self.wave_edit_callback.connect(
-                wave_edit.MAIN_WINDOW.configure_callback,
-            )
+        self.socket_server = SocketIPCServer(
+            daw.MAIN_WINDOW.configure_callback,
+            wave_edit.MAIN_WINDOW.configure_callback,
+        )
+        self.socket_server.start()
 
-            self.engine_callback_dict = {
-                "stargate/wave_edit": self.wave_edit_callback,
-                "stargate/daw": self.daw_callback,
-            }
-            load_engine_lib(engine_lib_callback)
-            #import stargateengine
-            #LOG.info("Initializing engine python module")
-            #stargateengine.init(engine_lib_callback)
-        else:
-            self.osc_server = SocketIPCServer(
-                daw.MAIN_WINDOW.configure_callback,
-                wave_edit.MAIN_WINDOW.configure_callback,
-            )
-            self.osc_server.start()
-
-            if util.WITH_AUDIO:
-                self.subprocess_timer = QtCore.QTimer(self)
-                self.subprocess_timer.timeout.connect(self.subprocess_monitor)
-                self.subprocess_timer.setSingleShot(False)
-                self.subprocess_timer.start(1000)
+        if util.WITH_AUDIO:
+            self.subprocess_timer = QtCore.QTimer(self)
+            self.subprocess_timer.timeout.connect(self.subprocess_monitor)
+            self.subprocess_timer.setSingleShot(False)
+            self.subprocess_timer.start(1000)
 
         self.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
         self.on_collapse_splitters(a_restore=True)
@@ -614,21 +590,9 @@ class SgMainWindow(QMainWindow):
                 self.subprocess_timer.stop()
                 exitCode = engine.ENGINE_SUBPROCESS.returncode
                 handle_engine_error(exitCode)
-            elif (
-                util.IS_ENGINE_LIB
-                and
-                util.ENGINE_RETCODE is not None
-            ):
-                self.subprocess_timer.stop()
-                handle_engine_error(util.ENGINE_RETCODE)
         except Exception as ex:
             LOG.error("subprocess_monitor: {}".format(ex))
             LOG.exception(ex)
-
-    def osc_fallback(self, path, args, types, src):
-        LOG.warning("got unknown message '{}' from '{}'".format(path, src))
-        for a, t in zip(args, types):
-            LOG.warning("argument of type '{}': {}".format(t, a))
 
     def on_new(self):
         if shared.IS_PLAYING:
@@ -744,8 +708,8 @@ class SgMainWindow(QMainWindow):
                 SPLASH_SCREEN.close()
             close_engine()
             shared.PLUGIN_UI_DICT.close_all_plugin_windows()
-            if self.osc_server is not None:
-                self.osc_server.free()
+            if self.socket_server is not None:
+                self.socket_server.free()
             for f_host in self.host_windows:
                 f_host.prepare_to_quit()
                 self.main_stack.removeWidget(f_host)
@@ -1164,18 +1128,10 @@ class SgMainWindow(QMainWindow):
 
     def on_offline_render(self):
         shared.PLUGIN_UI_DICT.save_all_plugin_state()
-        if (
-            self.current_module.CLOSE_ENGINE_ON_RENDER
-            and
-            not util.IS_ENGINE_LIB
-        ):
+        if self.current_module.CLOSE_ENGINE_ON_RENDER:
             close_engine()
         self.current_window.on_offline_render()
-        if (
-            self.current_module.CLOSE_ENGINE_ON_RENDER
-            and
-            not util.IS_ENGINE_LIB
-        ):
+        if self.current_module.CLOSE_ENGINE_ON_RENDER:
             open_engine(PROJECT_FILE)
             constants.IPC_ENABLED = True
             for i in range(30):
