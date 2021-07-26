@@ -51,7 +51,7 @@ GNU General Public License for more details.
     #include "hardware/midi.h"
 #endif
 
-#if defined(__linux__) && !defined(SG_DLL)
+#if defined(__linux__)
     sigset_t _signals;
 #endif
 
@@ -60,9 +60,7 @@ GNU General Public License for more details.
     PmError f_midi_err;
 #endif
 
-#ifdef WITH_SOCKET_IPC
-    pthread_t SOCKET_SERVER_THREAD;
-#endif
+pthread_t SOCKET_SERVER_THREAD;
 
 // Insert a brief sleep between loop runs when running without hardware
 static int NO_HARDWARE_USLEEP = 0;
@@ -74,12 +72,11 @@ void signalHandler(int sig){
     pthread_mutex_unlock(&STARGATE->exit_mutex);
 }
 
-typedef struct
-{
+typedef struct{
     int pid;
 }ui_thread_args;
 
-#if defined(__linux__) && !defined(SG_DLL)
+#if defined(__linux__)
 NO_OPTIMIZATION void * ui_process_monitor_thread(
     void * a_thread_args
 ){
@@ -127,7 +124,6 @@ void print_help(){
         "[huge_pages] [stem] [sequence_uid]\n\n", STARGATE_VERSION);
 }
 
-#ifndef SG_DLL
 int _main(int argc, char** argv){
     int j;
 
@@ -171,7 +167,7 @@ int _main(int argc, char** argv){
     }
 
     set_thread_params();
-#if defined(__linux__) && !defined(SG_DLL)
+#if defined(__linux__)
     setup_signal_handling();
     start_ui_thread(ui_pid);
 #endif
@@ -188,7 +184,6 @@ int _main(int argc, char** argv){
 
     return result;
 }
-#endif
 
 int daw_render(int argc, char** argv){
     if(argc < 12){
@@ -279,25 +274,24 @@ NO_OPTIMIZATION void init_main_vol(){
     printf("MAIN_VOL = %f\n", MAIN_VOL);
 }
 
-#ifndef SG_DLL
-    NO_OPTIMIZATION void start_osc_thread(){
-        ipc_init();
-        printf("Starting socket server thread\n");
-        struct IpcServerThreadArgs* args = (struct IpcServerThreadArgs*)malloc(
-            sizeof(struct IpcServerThreadArgs)
-        );
-        args->callback = v_configure;
+NO_OPTIMIZATION void start_osc_thread(){
+    ipc_init();
+    printf("Starting socket server thread\n");
+    struct IpcServerThreadArgs* args = (struct IpcServerThreadArgs*)malloc(
+        sizeof(struct IpcServerThreadArgs)
+    );
+    args->callback = v_configure;
 
-        int result = pthread_create(
-            &SOCKET_SERVER_THREAD,
-            NULL,
-            &ipc_server_thread,
-            (void*)args
-        );
-        assert(result == 0);
-    }
+    int result = pthread_create(
+        &SOCKET_SERVER_THREAD,
+        NULL,
+        &ipc_server_thread,
+        (void*)args
+    );
+    assert(result == 0);
+}
 
-#if defined(__linux__) && !defined(SG_DLL)
+#if defined(__linux__)
     NO_OPTIMIZATION void start_ui_thread(int pid){
         printf("Starting UI monitor thread\n");
         pthread_attr_t f_ui_threadAttr;
@@ -324,7 +318,7 @@ NO_OPTIMIZATION void init_main_vol(){
     }
 #endif
 
-#if defined(__linux__) && !defined(SG_DLL)
+#if defined(__linux__)
     NO_OPTIMIZATION void setup_signal_handling(){
         printf("Setting up signal handling\n");
         setsid();
@@ -354,7 +348,6 @@ NO_OPTIMIZATION void init_main_vol(){
     }
 #endif
 
-#endif
 
 NO_OPTIMIZATION void set_thread_params(){
     printf("Setting thread params\n");
@@ -448,10 +441,8 @@ int start_engine(char* project_dir){
         retcode = init_hardware(hardware_config);
     }
 
-#ifdef WITH_SOCKET_IPC
     printf("Sending ready message to the UI\n");
     v_queue_osc_message("ready", "");
-#endif
 
     return retcode;
 }
@@ -467,12 +458,10 @@ void stop_engine(){
 
     v_destructor();
 
-#if defined(__linux__) && !defined(SG_DLL)
+#if defined(__linux__)
     destruct_signal_handling();
 #endif
-#ifndef SG_DLL
     ipc_dtor();
-#endif
 }
 
 NO_OPTIMIZATION int main_loop(){

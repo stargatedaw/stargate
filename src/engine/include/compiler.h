@@ -63,10 +63,6 @@
 
 #endif
 
-#if !defined(SG_DLL)
-    #define WITH_SOCKET_IPC
-#endif
-
 #if !defined(CACHE_LINE_SIZE)
     #define CACHE_LINE_SIZE 64
     #warning "CACHE_LINE_SIZE not defined by compiler defaulting to 64"

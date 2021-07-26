@@ -35,46 +35,22 @@ SGFLT **pluginOutputBuffers;
 t_stargate * STARGATE = NULL;
 int ZERO = 0;
 
-#ifdef SG_DLL
-    v_ui_send_callback UI_SEND_CALLBACK = NULL;
 
-    void v_set_ui_callback(v_ui_send_callback a_callback){
-        UI_SEND_CALLBACK = a_callback;
-    }
-
-    void v_ui_send(char * a_path, char * a_msg){
-        assert(UI_SEND_CALLBACK);
-        UI_SEND_CALLBACK(a_path, a_msg);
-    }
-#elif defined(WITH_SOCKET_IPC)
-
-    void v_ui_send(char * a_path, char * a_msg){
-        int msg_len = strlen(a_path) + strlen(a_msg);
-        assert(msg_len < 24576);
-        char msg[24576];
-        sprintf(msg, "%s\n%s", a_path, a_msg);
-        ipc_client_send(msg);
-    }
-
-#else
-
-    void v_ui_send(char * a_path, char * a_msg){
-        printf("path: '%s', msg: '%s'\n", a_path, a_msg);
-    }
-
-#endif
-
-
+void v_ui_send(char * a_path, char * a_msg){
+    int msg_len = strlen(a_path) + strlen(a_msg);
+    assert(msg_len < 24576);
+    char msg[24576];
+    sprintf(msg, "%s\n%s", a_path, a_msg);
+    ipc_client_send(msg);
+}
 
 /* default generic t_sg_host->mix function pointer */
-void v_default_mix()
-{
+void v_default_mix(){
     int f_i;
     int framesPerBuffer = STARGATE->sample_count;
     float* out = STARGATE->out;
 
-    if(OUTPUT_CH_COUNT > 2)
-    {
+    if(OUTPUT_CH_COUNT > 2){
         int f_i2 = 0;
         memset(
             out,
@@ -82,17 +58,13 @@ void v_default_mix()
             sizeof(float) * framesPerBuffer * OUTPUT_CH_COUNT
         );
 
-        for(f_i = 0; f_i < framesPerBuffer; ++f_i)
-        {
+        for(f_i = 0; f_i < framesPerBuffer; ++f_i){
             out[f_i2 + MAIN_OUT_L] = (float)pluginOutputBuffers[0][f_i];
             out[f_i2 + MAIN_OUT_R] = (float)pluginOutputBuffers[1][f_i];
             f_i2 += OUTPUT_CH_COUNT;
         }
-    }
-    else
-    {
-        for(f_i = 0; f_i < framesPerBuffer; ++f_i)
-        {
+    } else {
+        for(f_i = 0; f_i < framesPerBuffer; ++f_i){
             *out = (float)pluginOutputBuffers[0][f_i];  // left
             ++out;
             *out = (float)pluginOutputBuffers[1][f_i];  // right
@@ -101,8 +73,7 @@ void v_default_mix()
     }
 }
 
-void g_sample_period_init(t_sample_period *self)
-{
+void g_sample_period_init(t_sample_period *self){
     int f_i;
 
     self->buffers[0] = NULL;

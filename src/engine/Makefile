@@ -168,11 +168,9 @@ lines-of-code:
 	find benchmark -name '*.c' -exec cat {} \; | wc -l
 
 mac_osx:
-	LIBEXT=dylib OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make shared
-	make engine
+	CC=clang make engine
 
 mingw:
-	LIBEXT=dll LINK_FLAGS="$(MINGW_LINK_FLAGS)" make shared
 	LINK_FLAGS="$(MINGW_LINK_FLAGS)" make engine
 
 pahole:
@@ -191,35 +189,6 @@ perf:
 	    $(shell find benchmark -name '*.c') \
 	    $(LINK_FLAGS) -o $(NAME).perf
 	perf stat -e $(PERF_COUNTERS) ./$(NAME).perf
-
-pymod:
-	# Compile the experimental Python module
-	$(CC) \
-		-fpic $(CC_ARGS) $(OPT_LVL) $(BUILD_FLAGS) \
-		-shared -DSG_DLL python/stargateenginemodule.c \
-		$(shell pkg-config --cflags --libs python3) \
-		$(LINK_FLAGS) -o stargateengine.$(LIBEXT)
-
-pymod-debug:
-	# Compile the experimental Python module with debug symbols and
-	# no optimization
-	$(CC) \
-		-fpic $(CC_ARGS) $(DEBUG_FLAGS) $(BUILD_FLAGS) \
-		-shared -DSG_DLL python/stargateenginemodule.c \
-		$(shell pkg-config --cflags --libs python3) \
-		$(LINK_FLAGS) -o stargateengine.$(LIBEXT)
-
-shared:
-	# Compile the shared library
-	$(CC) \
-		-fpic $(CC_ARGS) $(OPT_LVL) $(BUILD_FLAGS) \
-		-shared -DSG_DLL $(LINK_FLAGS) -o $(NAME).$(LIBEXT)
-
-shared-debug:
-	# Compile the shared library with debug symbols and no optimization
-	$(CC) \
-		-fpic $(CC_ARGS) $(DEBUG_FLAGS) $(BUILD_FLAGS) \
-		-shared -DSG_DLL $(LINK_FLAGS) -o $(NAME).$(LIBEXT)
 
 test:
 	# Compile and run the test suite through Valgrind to check for
