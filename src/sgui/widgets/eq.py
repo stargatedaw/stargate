@@ -151,6 +151,9 @@ class eq_viewer(QGraphicsView):
                 f_hline_pen,
             )
             f_label = QGraphicsSimpleTextItem(str(f_db))
+            f_label.setFlag(
+                QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
+            )
             self.scene.addItem(f_label)
             f_label.setPos(_shared.EQ_WIDTH - 36.0, f_y_pos + 3.0)
             f_label.setBrush(QtCore.Qt.GlobalColor.white)
@@ -180,6 +183,9 @@ class eq_viewer(QGraphicsView):
                 f_hline_pen,
             )
             f_label = QGraphicsSimpleTextItem(str(f_db))
+            f_label.setFlag(
+                QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
+            )
             self.scene.addItem(f_label)
             f_label.setPos(_shared.EQ_WIDTH - 36.0, f_y_pos - 24.0)
             f_label.setBrush(QtCore.Qt.GlobalColor.white)
@@ -197,6 +203,9 @@ class eq_viewer(QGraphicsView):
                 f_hz = round(f_hz, -1)
                 f_hz = "{}khz".format(round(f_hz / 1000, 1))
             f_label = QGraphicsSimpleTextItem(str(f_hz))
+            f_label.setFlag(
+                QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
+            )
             self.scene.addItem(f_label)
             f_label.setPos(
                 f_label_pos + 4.0,
