@@ -272,11 +272,6 @@ class SgMainWindow(QMainWindow):
             self.on_change_audio_settings)
         self.menu_file.addSeparator()
 
-        self.kill_engine_action = self.menu_file.addAction(
-            _("Kill Audio Engine"))
-        self.kill_engine_action.triggered.connect(self.on_kill_engine)
-        self.menu_file.addSeparator()
-
         self.quit_action = self.menu_file.addAction(_("Quit"))
         self.quit_action.triggered.connect(self.close)
         self.quit_action.setShortcut(QKeySequence.StandardKey.Quit)
@@ -363,10 +358,8 @@ class SgMainWindow(QMainWindow):
         self.tooltips_action.setChecked(shared.TOOLTIPS_ENABLED)
         self.tooltips_action.triggered.connect(self.set_tooltips_enabled)
 
-        self.panic_action = QAction(self)
-        self.addAction(self.panic_action)
-        self.panic_action.setShortcut(QKeySequence.fromString("CTRL+P"))
-        self.panic_action.triggered.connect(shared.TRANSPORT.on_panic)
+        self.menu_file.addSeparator()
+
 
         self.spacebar_action = QAction(self)
         self.addAction(self.spacebar_action)
@@ -790,9 +783,6 @@ class SgMainWindow(QMainWindow):
         global RESPAWN
         RESPAWN = True
         self.prepare_to_quit()
-
-    def on_kill_engine(self):
-        constants.IPC.kill_engine()
 
     def on_use_default_theme(self):
         util.clear_file_setting("default-style")

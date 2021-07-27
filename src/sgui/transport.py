@@ -40,9 +40,18 @@ class TransportWidget:
         self.clock.setMinimumWidth(210)
         self.clock.display("0:00.0")
         self.hlayout1.addWidget(self.clock)
+
         self.panic_button = QPushButton()
         self.panic_button.setObjectName("panic")
-        self.panic_button.pressed.connect(self.on_panic)
+        self.panic_menu = QMenu()
+        self.panic_button.setMenu(self.panic_menu)
+        self.all_notes_off_action = self.panic_menu.addAction("All notes off")
+        self.all_notes_off_action.triggered.connect(self.on_panic)
+        self.panic_menu.addSeparator()
+        self.stop_engine_action = self.panic_menu.addAction(
+            _("Stop Audio Engine"),
+        )
+        self.stop_engine_action.triggered.connect(self.on_stop_engine)
         self.hlayout1.addWidget(self.panic_button)
 
         self.hlayout1.addWidget(
@@ -68,6 +77,9 @@ class TransportWidget:
     def enable_controls(self, a_enabled):
         for f_control in self.controls_to_disable:
             f_control.setEnabled(a_enabled)
+
+    def on_stop_engine(self):
+        constants.IPC.kill_engine()
 
     def main_vol_released(self):
         util.set_file_setting(
