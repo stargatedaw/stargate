@@ -80,6 +80,12 @@ TAB_MIXER = 4
 TAB_HARDWARE = 5
 TAB_NOTES = 6
 
+# Nested tabs within the item editor
+TAB_IE_AUDIO = 0
+TAB_IE_NOTES = 1
+TAB_IE_CC = 2
+TAB_IE_PB = 3
+
 SEQUENCE_EDITOR_TRACK_HEIGHT = 64
 constants.DAW_PROJECT = DawProject(util.WITH_AUDIO)
 TRACK_NAMES = [

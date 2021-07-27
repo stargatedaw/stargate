@@ -260,6 +260,17 @@ class ItemEditorWidget:
         f_ok_cancel_layout.addWidget(f_cancel)
         f_window.exec_()
 
+    def set_transport_tool_visibility(self, index=None):
+        if index is None:
+            index = self.tab_widget.currentIndex()
+        args = {
+            shared.TAB_IE_AUDIO: {"draw": False, "erase": False},
+            shared.TAB_IE_NOTES: {"erase": False, "split": False},
+            shared.TAB_IE_CC: {"erase": False, "split": False},
+            shared.TAB_IE_PB: {"erase": False, "split": False},
+        }
+        shared.TRANSPORT.set_tool_button_visibility(**args[index])
+
     def tab_changed(self, a_val=None):
         f_list = [
             shared.AUDIO_SEQ,
@@ -268,6 +279,7 @@ class ItemEditorWidget:
             shared.PB_EDITOR,
         ]
         f_index = self.tab_widget.currentIndex()
+        self.set_transport_tool_visibility(f_index)
         if f_index == 0:
             global_open_audio_items()
         else:

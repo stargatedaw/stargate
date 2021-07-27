@@ -217,6 +217,7 @@ class MainWindow(QScrollArea):
         )
 
         self.main_tabwidget.currentChanged.connect(self.tab_changed)
+        shared.DAW = self
 
     def open_project(self):
         """ Open an existing project in the widgets """
@@ -514,6 +515,9 @@ class MainWindow(QScrollArea):
 
     def tab_changed(self):
         f_index = self.main_tabwidget.currentIndex()
+
+        shared.TRANSPORT.tab_changed(f_index)
+
         constants.DAW_PROJECT.set_undo_context(f_index)
         if f_index == shared.TAB_SEQUENCER and not glbl_shared.IS_PLAYING:
             shared.SEQUENCER.open_sequence()

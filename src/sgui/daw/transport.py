@@ -64,6 +64,51 @@ class TransportWidget(AbstractTransportWidget):
 
         self.suppress_osc = False
 
+    def tab_changed(self, index):
+        if index == shared.TAB_ITEM_EDITOR:
+            shared.ITEM_EDITOR.set_transport_tool_visibility()
+        elif index == shared.TAB_SEQUENCER:
+            # Restore all
+            self.set_tool_button_visibility()
+        else:
+            self.set_tool_button_visibility(False, False, False, False)
+
+    def set_tool_button_visibility(
+        self,
+        select=True,
+        draw=True,
+        erase=True,
+        split=True,
+    ):
+        self.tool_select_rb.setVisible(select)
+        shared.DAW.select_mode_action.setEnabled(select)
+
+        for enabled, rb, action in (
+            (
+                draw,
+                self.tool_draw_rb,
+                shared.DAW.draw_mode_action,
+            ),
+            (
+                erase,
+                self.tool_erase_rb,
+                shared.DAW.erase_mode_action,
+            ),
+            (
+                split,
+                self.tool_split_rb,
+                shared.DAW.split_mode_action,
+            ),
+        ):
+            rb.setVisible(enabled)
+            action.setEnabled(enabled)
+            if (
+                not enabled
+                and
+                rb.isChecked()
+            ):
+                self.tool_select_rb.setChecked(True)
+
     def tool_select_clicked(self, a_val=None):
         shared.EDITOR_MODE = shared.EDITOR_MODE_SELECT
         if not self.tool_select_rb.isChecked():
