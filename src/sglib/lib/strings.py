@@ -177,56 +177,6 @@ message if an attempted connection creates feedback.
 """
 )
 
-troubleshooting = _("""\
-<h3>Drop-outs or Xruns:</h3>
-
-<p>Xruns are usually caused by CPU power management throttling the CPU clock
-frequency too aggressively, especially if you are using a laptop.  Other
-causes are using an older or slower CPU in a CPU intensive project, or
-possibly (but probably not) bad audio drivers.</p>
-
-<p>Some PCs may just be able to force the CPU
-governor to "Performance" mode, others may have to disable power management
-features in the BIOS.  Many laptops don't expose the ability to turn off
-these features in the BIOS.</p>
-
-<p>Unfortunately, there is no one-size-fits-all
-solution, as different generations of Intel and AMD processors use different
-CPU frequency drivers and offer different power saving features and different
-BIOS.</p>
-
-<p>Others causes could be using a Jack audio device, ALSA is the preferred
-back-end for Stargate (and does not require a special real-time
-Linux kernel to achieve decent latency)</p>
-
-<p>If you only experience Xruns immediately after starting Stargate, you
-may want to try adding "vm.swappiness=0" to /etc/sysctl.conf and
-rebooting</p>
-
-<h3>My microphone doesn't work</h3>
-
-<p>On some interfaces (such as the Apogee One), you may need to open the
-terminal, type the command "alsamixer", and select your interface and
-set the input source to something like '48v ext. mic.', and/or adjust the
-microphone volume.</p>
-
-<p>You may also need to set the number of inputs on the
-"Audio In" tab of the Menu->File->HardwareSettings... dialog</p>
-
-<h3>The UI is sluggish in a large project</h3>
-
-<p>If using an Nvidia or AMD graphics card, you should probably try
-installing the proprietary driver for you card.  In Ubuntu, with an
-AMD card, for example: sudo apt-get install fglrx.</p>
-
-<h3>The playback cursor doesn't move after pressing the play button</h3>
-
-<p>This is <i>usually</i> caused by selecting an incorrect audio device,
-such as the "default" audio device.  Ensure that you have selected the
-correct device from Menu->File->HardwareSettings...</p>
-"""
-)
-
 track_panel = _("""\
 This is the track panel.  Each track has a name textbox, solo & mute
 buttons, and a dropdown menu.

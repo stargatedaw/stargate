@@ -324,13 +324,18 @@ class SgMainWindow(QMainWindow):
 
         self.menu_help = self.menu_bar.addMenu(_("Help"))
 
-        #self.youtube_action = self.menu_help.addAction(
-        #    _("Watch Tutorial Videos on Youtube..."))
-        #self.youtube_action.triggered.connect(self.on_youtube)
-
-        self.troubleshoot_action = self.menu_help.addAction(
-            _("Troubleshooting..."))
-        self.troubleshoot_action.triggered.connect(self.on_troubleshoot)
+        self.youtube_action = self.menu_help.addAction(
+            _("Watch Tutorial Videos on Youtube..."),
+        )
+        self.youtube_action.triggered.connect(self.on_youtube)
+        self.manual_action = self.menu_help.addAction(
+            _("View User Manual on Github..."),
+        )
+        self.manual_action.triggered.connect(self.on_manual)
+        self.twitter_action = self.menu_help.addAction(
+            _("Follow us on Twitter..."),
+        )
+        self.twitter_action.triggered.connect(self.on_twitter)
 
         self.version_action = self.menu_help.addAction(_("Version Info..."))
         self.version_action.triggered.connect(self.on_version)
@@ -414,7 +419,20 @@ class SgMainWindow(QMainWindow):
 
     def on_youtube(self):
         f_url = QtCore.QUrl(
-            "TODO",
+            "https://www.youtube.com/channel/UC0xYkPBN3cqMMaTQxc38Rfw",
+        )
+        QDesktopServices.openUrl(f_url)
+
+    def on_manual(self):
+        f_url = QtCore.QUrl(
+            "https://github.com/stargateaudio/stargate/"
+            "tree/main/docs/UserManual",
+        )
+        QDesktopServices.openUrl(f_url)
+
+    def on_twitter(self):
+        f_url = QtCore.QUrl(
+            "https://twitter.com/stargateaudio1",
         )
         QDesktopServices.openUrl(f_url)
 
@@ -824,21 +842,6 @@ class SgMainWindow(QMainWindow):
         f_layout.addWidget(f_ok_button)
         f_ok_button.pressed.connect(f_window.close)
         f_window.exec_()
-
-    def on_troubleshoot(self):
-        f_window = QDialog(MAIN_WINDOW)
-        f_window.setWindowTitle(_("Troubleshooting"))
-        f_window.setFixedSize(640, 460)
-        f_layout = QVBoxLayout()
-        f_window.setLayout(f_layout)
-        f_label = QTextEdit(sg_strings.troubleshooting)
-        f_label.setReadOnly(True)
-        f_layout.addWidget(f_label)
-        f_ok_button = QPushButton(_("OK"))
-        f_layout.addWidget(f_ok_button)
-        f_ok_button.pressed.connect(f_window.close)
-        f_window.exec_()
-
 
     def on_spacebar(self):
         shared.TRANSPORT.on_spacebar()
