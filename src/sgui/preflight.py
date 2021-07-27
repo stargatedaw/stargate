@@ -7,6 +7,12 @@ from sglib.lib.translate import _
 
 __all__ = ['preflight']
 
+RPI4_WARNING = """\
+Detected a Raspberry Pi with suboptimal settings.  "
+Please see <a href="https://github.com/stargateaudio/stargate/docs/rpi.md">
+the rpi4 documentation</a>
+"""
+
 def _preflight_rpi():
     if rpi.is_rpi():
         if not (
@@ -17,12 +23,7 @@ def _preflight_rpi():
             QMessageBox.warning(
                 None,
                 "Warning",
-                _(
-                    "Detected a Raspberry Pi with suboptimal settings.  "
-                    "Please see: "
-                    "https://github.com/stargateaudio/stargate/docs/"
-                    "rpi.md"
-                ),
+                _(RPI4_WARNING),
             )
 
 def preflight():
