@@ -14,7 +14,6 @@ class AbstractPluginUI:
         a_val_callback,
         a_project,
         a_plugin_uid,
-        a_stylesheet,
         a_configure_callback,
         a_folder,
         a_midi_learn_callback,
@@ -32,7 +31,6 @@ class AbstractPluginUI:
         self.widget = QWidget()
         self.widget.closeEvent = self.widget_close_event
         self.widget.setObjectName("plugin_ui")
-        self.widget.setStyleSheet(str(a_stylesheet))
         self.widget.keyPressEvent = self.widget_keyPressEvent
 
         self.layout = QVBoxLayout()

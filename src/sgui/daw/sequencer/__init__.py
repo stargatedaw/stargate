@@ -125,6 +125,7 @@ class SequencerWidget:
             self.vzoom_slider.keyPressEvent = lambda x: None
 
         self.size_label = QLabel()
+        self.size_label.setObjectName("seq_zoom_size_label")
         self.size_label.setWindowFlags(
             QtCore.Qt.WindowType.FramelessWindowHint,
         )
@@ -170,8 +171,6 @@ class SequencerWidget:
         f_widget = shared.MAIN_WINDOW.midi_scroll_area
         f_point = QtCore.QPoint(0, _shared.SEQUENCE_EDITOR_HEADER_HEIGHT + 2)
         self.size_label.setParent(f_widget)
-        self.size_label.setStyleSheet(
-            "QLabel { background-color: black; color: white }")
         self.size_label.move(f_point)
         self.size_label.show()
         self.old_height_px = shared.SEQUENCE_EDITOR_TRACK_HEIGHT
@@ -220,8 +219,6 @@ class SequencerWidget:
         )
         f_widget = shared.MAIN_WINDOW.midi_scroll_area
         self.size_label.setParent(f_widget)
-        self.size_label.setStyleSheet(
-            "QLabel { background-color: black; color: white }")
         self.size_label.move(f_point)
         self.size_label.show()
 
@@ -230,8 +227,12 @@ class SequencerWidget:
         _shared.set_seq_snap()
         self.open_sequence()
         self.scrollbar.setValue(
-            (_shared.SEQUENCER_PX_PER_BEAT / self.old_px_per_beat) *
-            self.scrollbar.value())
+            (
+                _shared.SEQUENCER_PX_PER_BEAT
+                /
+                self.old_px_per_beat
+            ) * self.scrollbar.value()
+        )
         self.scrollbar.setSingleStep(_shared.SEQUENCER_PX_PER_BEAT)
         self.size_label.hide()
 
@@ -252,7 +253,9 @@ class SequencerWidget:
             _shared.SEQUENCER_PX_PER_BEAT = (f_width / f_length) * f_factor
             self.size_label.setText("Project * {}".format(f_factor))
             self.size_label.setFixedSize(
-                150, _shared.SEQUENCE_EDITOR_HEADER_HEIGHT)
+                150,
+                _shared.SEQUENCE_EDITOR_HEADER_HEIGHT,
+            )
         else:
             if self.last_hzoom < 6:
                 self.last_hzoom = 6

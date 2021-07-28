@@ -25,6 +25,11 @@ QLabel{
     border: none;
 }
 
+QLabel#seq_zoom_size_label {
+    background-color: black;
+    color: white;
+}
+
 QWidget{
     background-color: {{ background_color }};
     selection-background-color: QLinearGradient(

@@ -170,17 +170,15 @@ def load_controller_maps():
 load_controller_maps()
 
 class SgPluginUiDict:
-    def __init__(self, a_project, a_ipc, a_stylesheet):
+    def __init__(self, a_project, a_ipc):
         """ a_project:    AbstractProject
             a_ipc:        AbstractIPC
-            a_stylesheet: Qt-CSS string
         """
         self.ui_dict = {}
         self.midi_learn_control = None
         self.ctrl_update_callback = a_ipc.update_plugin_control
         self.project = a_project
         self.plugin_pool_dir = a_project.plugin_pool_folder
-        self.stylesheet = a_stylesheet
         self.configure_callback = a_ipc.configure_plugin
         self.midi_learn_osc_callback = a_ipc.midi_learn
         self.load_cc_map_callback = a_ipc.load_cc_map
@@ -195,10 +193,15 @@ class SgPluginUiDict:
             self, a_plugin_uid, a_plugin_type, a_is_mixer=False):
         if not a_plugin_uid in self.ui_dict:
             f_plugin = PLUGIN_UI_TYPES[a_plugin_type](
-                self.ctrl_update_callback, self.project, a_plugin_uid,
-                self.stylesheet, self.configure_callback, self.plugin_pool_dir,
-                self.midi_learn_callback, self.load_cc_map_callback,
-                a_is_mixer)
+                self.ctrl_update_callback,
+                self.project,
+                a_plugin_uid,
+                self.configure_callback,
+                self.plugin_pool_dir,
+                self.midi_learn_callback,
+                self.load_cc_map_callback,
+                a_is_mixer,
+            )
             self.ui_dict[a_plugin_uid] = f_plugin
             return f_plugin
         else:

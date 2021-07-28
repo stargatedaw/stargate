@@ -1230,7 +1230,6 @@ def global_open_project(a_project_file, a_wait=True):
     shared.PLUGIN_UI_DICT = SgPluginUiDict(
         constants.PROJECT,
         constants.IPC,
-        MAIN_WINDOW.styleSheet(),
     )
 
     for f_module in shared.HOST_MODULES:
