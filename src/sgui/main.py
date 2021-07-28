@@ -276,15 +276,15 @@ class SgMainWindow(QMainWindow):
         self.quit_action.triggered.connect(self.close)
         self.quit_action.setShortcut(QKeySequence.StandardKey.Quit)
 
-        self.menu_edit = self.menu_bar.addMenu(_("Edit"))
+        #self.menu_edit = self.menu_bar.addMenu(_("Edit"))
 
-        self.undo_action = self.menu_edit.addAction(_("Undo"))
-        self.undo_action.triggered.connect(self.on_undo)
-        self.undo_action.setShortcut(QKeySequence.StandardKey.Undo)
+        #self.undo_action = self.menu_edit.addAction(_("Undo"))
+        #self.undo_action.triggered.connect(self.on_undo)
+        #self.undo_action.setShortcut(QKeySequence.StandardKey.Undo)
 
-        self.redo_action = self.menu_edit.addAction(_("Redo"))
-        self.redo_action.triggered.connect(self.on_redo)
-        self.redo_action.setShortcut(QKeySequence.StandardKey.Redo)
+        #self.redo_action = self.menu_edit.addAction(_("Redo"))
+        #self.redo_action.triggered.connect(self.on_redo)
+        #self.redo_action.setShortcut(QKeySequence.StandardKey.Redo)
 
         self.menu_appearance = self.menu_bar.addMenu(_("Appearance"))
 
