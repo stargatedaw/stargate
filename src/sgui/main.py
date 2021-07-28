@@ -608,7 +608,7 @@ class SgMainWindow(QMainWindow):
     def on_new(self):
         if shared.IS_PLAYING:
             return
-        if new_project(self):
+        if new_project(self.widget):
             global RESPAWN
             RESPAWN = True
             self.prepare_to_quit()

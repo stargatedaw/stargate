@@ -5,6 +5,7 @@ from sglib.constants import (
     DEFAULT_PROJECT_DIR,
     MAJOR_VERSION,
 )
+from sglib.lib.translate import _
 from sglib.lib.util import set_file_setting, PROJECT_FILE_TYPE
 from sglib.log import LOG
 from sgui.sgqt import *
@@ -20,7 +21,7 @@ def new_project(a_parent=None):
         while True:
             f_file = QFileDialog.getExistingDirectory(
                 a_parent,
-                'New Project',
+                _('Create a directory for a new project'),
                 f_last_dir,
                 QFileDialog.ShowDirsOnly | QFileDialog.DontUseNativeDialog,
             )
