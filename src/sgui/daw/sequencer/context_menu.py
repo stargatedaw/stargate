@@ -8,6 +8,7 @@ from sgui.daw import shared
 from sgui.daw.lib import item as item_lib
 from sglib.lib import util
 from sglib.lib.translate import _
+import re
 
 MENU = None
 
@@ -31,6 +32,24 @@ def takes_menu_triggered(a_action):
     constants.DAW_PROJECT.commit(_("Change active take"))
     shared.SEQ_WIDGET.open_sequence()
 
+def _next_item_name(item_name):
+    match = re.match(
+        r'(.*)-([0-9]+)',
+        item_name,
+    )
+    if match:
+        name, suffix = match.groups()
+        suffix = int(suffix)
+    else:
+        name = item_name
+        suffix = 1
+    while constants.DAW_PROJECT.item_exists(
+        f"{name}-{suffix}",
+    ):
+        suffix += 1
+    return f"{name}-{suffix}"
+
+
 def on_auto_unlink_selected():
     """ Adds an automatic -N suffix """
     if _shared.SEQUENCE_EDITOR_MODE != 0:
@@ -46,11 +65,7 @@ def on_auto_unlink_selected():
         f_selected,
         key=lambda x: (x.audio_item.track_num, x.audio_item.start_beat)
     ):
-        f_name_suffix = 1
-        while constants.DAW_PROJECT.item_exists(
-        "{}-{}".format(f_item.name, f_name_suffix)):
-            f_name_suffix += 1
-        f_cell_text = "{}-{}".format(f_item.name, f_name_suffix)
+        f_cell_text = _next_item_name(f_item.name)
         f_uid = constants.DAW_PROJECT.copy_item(f_item.name, f_cell_text)
         f_item_obj = f_item.audio_item
         f_takes.add_item(f_item_obj.item_uid, f_uid)
@@ -81,12 +96,7 @@ def on_auto_unlink_unique():
     f_takes = constants.DAW_PROJECT.get_takes()
 
     for f_item_name in set(x[0] for x in f_result):
-        f_name_suffix = 1
-        while constants.DAW_PROJECT.item_exists(
-            "{}-{}".format(f_item_name, f_name_suffix),
-        ):
-            f_name_suffix += 1
-        f_cell_text = "{}-{}".format(f_item_name, f_name_suffix)
+        f_cell_text = _next_item_name(f_item_name)
         f_uid = constants.DAW_PROJECT.copy_item(f_item_name, f_cell_text)
         old_new_map[f_item_name] = f_uid
 
