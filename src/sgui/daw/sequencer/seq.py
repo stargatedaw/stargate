@@ -70,6 +70,7 @@ class ItemSequencer(QGraphicsView):
 #        self.opengl_widget.setFormat(self.surface_format)
 #        self.setViewport(self.opengl_widget)
 
+        self.ignore_moves = False
         self.ignore_selection_change = False
         self.playback_pos = 0.0
         self.playback_pos_orig = 0.0
@@ -189,6 +190,11 @@ class ItemSequencer(QGraphicsView):
             if a_event.button() == QtCore.Qt.MouseButton.LeftButton:
                 f_beat = int(f_pos.x() / _shared.SEQUENCER_PX_PER_BEAT)
                 global_set_playback_pos(f_beat)
+            return
+
+        if self.ignore_moves:
+            self.ignore_moves = False
+            shared.SEQ_WIDGET.force_hzoom(3)
             return
 
         if a_event.button() == QtCore.Qt.MouseButton.RightButton:
@@ -995,7 +1001,13 @@ class ItemSequencer(QGraphicsView):
                 f_number.setBrush(number_brush)
                 f_number.setZValue(1000.0)
                 self.text_list.append(f_number)
-                self.scene.addLine(i3, 0.0, i3, f_total_height, bar_pen)
+                if shared.SEQ_WIDGET.last_hzoom >= 3:
+                    self.scene.addLine(
+                        i3,
+                        0.0,
+                        i3,
+                        f_total_height, bar_pen,
+                    )
                 f_number.setPos(i3 + 3.0, 2)
                 if (
                     _shared.SEQ_LINES_ENABLED
@@ -1064,7 +1076,11 @@ class ItemSequencer(QGraphicsView):
         self.draw_header()
 
     def draw_item(self, a_name, a_item):
-        f_item = SequencerItem(a_name, a_item)
+        f_item = SequencerItem(
+            a_name,
+            a_item,
+            draw_handle=shared.SEQ_WIDGET.last_hzoom >= 3,
+        )
         self.audio_items.append(f_item)
         self.scene.addItem(f_item)
         return f_item

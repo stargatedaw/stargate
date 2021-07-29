@@ -21,10 +21,11 @@ from sgui.sgqt import *
 class SequencerItem(widgets.QGraphicsRectItemNDL):
     """ This is an individual sequencer item within the ItemSequencer
     """
-    def __init__(self, a_name, a_audio_item):
+    def __init__(self, a_name, a_audio_item, draw_handle):
         QGraphicsRectItem.__init__(self)
         self.name = str(a_name)
         self.is_deleted = False
+        self.draw_handle = draw_handle
 
         if _shared.SEQUENCE_EDITOR_MODE == 0:
             self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
@@ -160,6 +161,9 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
             self.stretch_handle,
         )
         self.stretch_handle.hide()
+        if not self.draw_handle:
+            self.start_handle.hide()
+            self.length_handle.hide()
 
         self.split_line = QGraphicsLineItem(
             0.0,
@@ -244,7 +248,9 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
 
     def draw(self):
         f_start = self.audio_item.start_beat * _shared.SEQUENCER_PX_PER_BEAT
-        f_length = (self.audio_item.length_beats * _shared.SEQUENCER_PX_PER_BEAT)
+        f_length = (
+            self.audio_item.length_beats * _shared.SEQUENCER_PX_PER_BEAT
+        )
 
         self.length_orig = f_length
         self.length_px_start = (
@@ -262,6 +268,8 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
 
         label_rect = QtCore.QRectF(0.0, 0.0, f_length, 20)
         self.label_bg.setRect(label_rect)
+        if f_length < 20:
+            self.label.hide()
 
         f_track_num = _shared.SEQUENCE_EDITOR_HEADER_HEIGHT + (
             shared.SEQUENCE_EDITOR_TRACK_HEIGHT * self.audio_item.track_num

@@ -207,6 +207,12 @@ class SequencerWidget:
         )
         self.set_vzoom_size()
 
+    def force_hzoom(self, val):
+        self.hzoom_pressed()
+        self.hzoom_slider.setValue(3)
+        self.set_hzoom(3)
+        self.hzoom_released()
+
     def hzoom_pressed(self, a_val=None):
         self.is_hzooming = True
         self.old_px_per_beat = _shared.SEQUENCER_PX_PER_BEAT
@@ -246,6 +252,7 @@ class SequencerWidget:
             return
         self.last_hzoom = self.hzoom_slider.value()
         if self.last_hzoom < 3:
+            shared.SEQUENCER.ignore_moves = True
             _shared.DRAW_SEQUENCER_GRAPHS = False
             f_length = get_current_sequence_length()
             f_width = shared.SEQUENCER.width()
@@ -257,6 +264,7 @@ class SequencerWidget:
                 _shared.SEQUENCE_EDITOR_HEADER_HEIGHT,
             )
         else:
+            shared.SEQUENCER.ignore_moves = False
             if self.last_hzoom < 6:
                 self.last_hzoom = 6
             _shared.DRAW_SEQUENCER_GRAPHS = True
