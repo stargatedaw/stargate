@@ -13,11 +13,6 @@ import sys
 import time
 
 
-assert "cygwin" not in sys.platform, "Cygwin is unsupported"
-IS_WINDOWS = "win32" in sys.platform or "msys" in sys.platform
-IS_LINUX = "linux" in sys.platform
-IS_MAC_OSX = "darwin" in sys.platform
-
 if IS_LINUX:
     from .path.linux import *
 elif IS_WINDOWS:

@@ -1,9 +1,13 @@
 import os
+import sys
 
 __all__ = [
     'CONFIG_DIR',
     'DEFAULT_PROJECT_DIR',
     'HOME',
+    'IS_LINUX',
+    'IS_MAC_OSX',
+    'IS_WINDOWS',
     'LOG_DIR',
     'MAJOR_VERSION',
     'PRESET_DIR',
@@ -12,7 +16,26 @@ __all__ = [
 
 MAJOR_VERSION = 'stargate'
 
+assert "cygwin" not in sys.platform, "Cygwin is unsupported"
+IS_WINDOWS = "win32" in sys.platform or "msys" in sys.platform
+IS_LINUX = "linux" in sys.platform
+IS_MAC_OSX = "darwin" in sys.platform
+
 USER_HOME = os.path.expanduser("~")
+
+# Check if the exe was run from a flash drive, with a '_stargate_home' file
+# created in the same directory
+if IS_WINDOWS:
+    dirname = os.path.dirname(sys.executable)
+    if os.path.isfile(
+        os.path.join(dirname, '_stargate_home'),
+    ):
+        print(
+            f"Using {dirname} for USER_HOME because _stargate_home "
+            "file exists"
+        )
+        USER_HOME = dirname
+
 HOME = os.path.join(
     USER_HOME,
     MAJOR_VERSION,
