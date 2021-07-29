@@ -14,3 +14,9 @@ when the current release is considered stable.
 # Screenshots
 ![Sequencer](assets/sequencer.png?raw=true "Sequencer")
 
+![Audio Item](assets/audio_item.png?raw=true "Audio Item")
+
+![Note Item](assets/note_item.png?raw=true "Note Item")
+
+![Routing](assets/routing.png?raw=true "Routing")
+
