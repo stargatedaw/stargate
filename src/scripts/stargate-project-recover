@@ -13,6 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 """
 
+import argparse
 import datetime
 import json
 import os
@@ -155,14 +156,26 @@ def project_recover_dialog(a_file):
     f_window.show()
     return f_window
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Stargate project recover script",
+    )
+    parser.add_argument(
+        '-p',
+        '--project-file',
+        dest='project_file',
+        help="The project file to open",
+    )
+    return parser.parse_args()
 
 if __name__ == "__main__":
     def _main():
         theme.load_theme()
-        import sys
+        args = parse_args()
         app = QApplication(sys.argv)
         f_window = project_recover_dialog(
-            sys.argv[1] if len(sys.argv) == 2 else None)
+            args.project_file,
+        )
         exit(app.exec_())
 
     _main()

@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import traceback
 from logging.handlers import RotatingFileHandler
 
 from sglib.constants import LOG_DIR
@@ -38,4 +39,11 @@ def setup_logging(
     log.addHandler(handler)
 
     log.setLevel(level)
+
+    sys.excepthook = _excepthook
+
+
+def _excepthook(exc_type, exc_value, tb):
+    exc = traceback.format_exception(exc_type, exc_value, tb)
+    LOG.error("\n".join(exc))
 

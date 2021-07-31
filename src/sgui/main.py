@@ -660,7 +660,7 @@ class SgMainWindow(QMainWindow):
                         self, _("Error"), _("This name already exists, "
                         "please choose another name"))
 
-        f_window = QDialog()
+        f_window = QDialog(parent=MAIN_WINDOW.widget)
         f_window.setWindowTitle(_("Save As..."))
         f_layout = QVBoxLayout(f_window)
         f_lineedit = QLineEdit()
@@ -1411,9 +1411,6 @@ def main():
 
     # Workaround for weird stuff happening in Windows during initialization
     constants.IPC_ENABLED = True
-    def excepthook(excType, excValue, tracebackobj):
-        LOG.exception(excValue)
-    sys.excepthook = excepthook
     exit_code = shared.APP.exec()
     # Work around PyQt SEGFAULT-on-exit issues
     for w in QApplication.topLevelWindows():
