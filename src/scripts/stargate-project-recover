@@ -109,8 +109,8 @@ def project_recover_dialog(a_file):
     else:
         f_file = a_file
     f_project_dir = os.path.dirname(str(f_file))
-    f_backup_file = os.path.join(f_project_dir, "backups.json")
-    if not os.path.isfile(f_backup_file):
+    f_backup_dir = os.path.join(f_project_dir, "backups")
+    if not os.listdir(f_backup_dir):
         f_answer = QMessageBox.question(
             f_window,
             _("Error"),
@@ -134,7 +134,6 @@ def project_recover_dialog(a_file):
             util.run_stargate()
             exit(0)
         exit(1)
-    f_backup_dir = os.path.join(f_project_dir, "backups")
     f_central_widget = QWidget()
     f_layout = QVBoxLayout(f_central_widget)
     f_window.setCentralWidget(f_central_widget)
