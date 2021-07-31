@@ -2,6 +2,7 @@ from sglib import constants
 from sglib.log import LOG
 from sglib.math import clip_value
 from sglib.models.daw.audio_item import DawAudioItem
+from sglib.models.stargate.midi_events import cc, note, pitchbend
 from sglib.models.daw.seq_item import sequencer_item
 from sgui.daw import painter_path
 import os
