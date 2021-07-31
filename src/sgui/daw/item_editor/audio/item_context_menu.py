@@ -264,14 +264,20 @@ def normalize_dialog():
     if f_val is None:
         return
     f_save = False
+    audio_pool = constants.PROJECT.get_audio_pool()
+    audio_pool_by_uid = audio_pool.by_uid()
+    ap_entries = set()
     for f_item in shared.AUDIO_SEQ.get_selected():
         f_save = True
-        f_item.normalize(f_val)
+        entry = f_item.normalize(f_val, audio_pool_by_uid)
+        ap_entries.add(entry)
     if f_save:
-        item_lib.save_item(
-            shared.CURRENT_ITEM_NAME,
-            shared.CURRENT_ITEM,
-        )
+        constants.PROJECT.save_audio_pool(audio_pool)
+        for entry in ap_entries:
+            constants.IPC.audio_pool_entry_volume(
+                entry.uid,
+                entry.volume,
+            )
         constants.DAW_PROJECT.commit(_("Normalize audio items"))
         global_open_audio_items(True)
 

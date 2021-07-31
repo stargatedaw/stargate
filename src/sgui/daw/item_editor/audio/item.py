@@ -653,9 +653,11 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         f_ok_cancel_layout.addWidget(f_cancel_button)
         f_dialog.exec_()
 
-    def normalize(self, a_value):
+    def normalize(self, a_value, audio_pool_by_uid):
         f_val = self.graph_object.normalize(a_value)
-        self.audio_item.vol = f_val
+        entry = audio_pool_by_uid[self.audio_item.uid]
+        entry.volume = f_val
+        return entry
 
     def get_file_path(self):
         return constants.PROJECT.get_wav_path_by_uid(self.audio_item.uid)
