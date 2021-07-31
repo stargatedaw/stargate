@@ -148,7 +148,7 @@ class AbstractFileBrowserWidget:
         f_dir = os.path.dirname(f_path)
         if os.path.isdir(f_dir):
             # Set the Files tab as the selected tab
-            self.folders_tab_widget.setCurrentwidget(self.vsplitter)
+            self.folders_tab_widget.setCurrentWidget(self.vsplitter)
             self.set_folder(f_dir, True)
             f_file = os.path.basename(f_path)
             self.select_file(f_file)
