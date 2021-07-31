@@ -1,5 +1,11 @@
 from sglib import constants
+from sglib.log import LOG
+from sglib.math import clip_value
+from sglib.models.daw.audio_item import DawAudioItem
+from sglib.models.daw.seq_item import sequencer_item
 from sgui.daw import painter_path
+import os
+import shutil
 
 def save_item_by_uid(
     a_uid,
@@ -121,7 +127,11 @@ def save_recorded_items(
         f_items_to_save[f_uid] = f_item
         project.rec_take[a_track_num] = f_item
         f_item_ref = sequencer_item(
-            a_track_num, a_start_beat, f_item_length, f_uid)
+            a_track_num,
+            a_start_beat,
+            f_item_length,
+            f_uid,
+        )
         f_sequencer.add_item_ref_by_uid(f_item_ref)
 
     def copy_item(a_track_num):
@@ -135,7 +145,11 @@ def save_recorded_items(
             f_items_to_save[f_uid] = f_item
             project.rec_take[a_track_num] = f_item
             f_item_ref = sequencer_item(
-                a_track_num, a_start_beat, f_item_length, f_uid)
+                a_track_num,
+                a_start_beat,
+                f_item_length,
+                f_uid,
+            )
             f_sequencer.add_item_ref_by_uid(f_item_ref)
         else:
             new_item(a_track_num)
