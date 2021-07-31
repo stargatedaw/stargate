@@ -425,7 +425,7 @@ class SgMainWindow(QMainWindow):
 
     def on_twitter(self):
         f_url = QtCore.QUrl(
-            "https://twitter.com/stargateaudio1",
+            "https://twitter.com/stargatedaw",
         )
         QDesktopServices.openUrl(f_url)
 
