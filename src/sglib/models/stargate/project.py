@@ -171,13 +171,21 @@ class SgProject(AbstractProject):
         with tarfile.open(f_file_path, "w:bz2") as f_tar:
             f_tar.add(
                 self.projects_folder,
-                arcname=os.path.basename(self.projects_folder))
+                arcname=os.path.basename(self.projects_folder),
+            )
         return True
 
     def show_project_history(self):
         self.create_backup()
-        f_file = os.path.join(self.project_folder, "default.stargate")
-        subprocess.Popen([PROJECT_HISTORY_SCRIPT, f_file])
+        f_file = os.path.join(self.project_folder, "stargate.project")
+        cmd = [PROJECT_HISTORY_SCRIPT, '-p', f_file]
+        LOG.info(f"Running {cmd}")
+        proc = subprocess.Popen(cmd)
+        time.sleep(0.05)
+        if proc.poll():
+            stdout = proc.stdout.read()
+            stderr = proc.stderr.read()
+            LOG.error(f"{cmd} returned immediately, {stdout}, {stderr}")
 
     def get_next_glued_file_name(self):
         while True:
