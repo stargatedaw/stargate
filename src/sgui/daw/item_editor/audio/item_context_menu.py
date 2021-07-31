@@ -1,3 +1,10 @@
+from sglib.models.daw import *
+from sgui.daw.shared import *
+from sglib.lib.util import *
+from sgui.sgqt import *
+
+from sglib.lib import util
+from sglib.lib.translate import _
 from . import _shared
 from .fade_vol_dialog import FadeVolDialogWidget
 from .time_pitch_dialog import TimePitchDialogWidget
@@ -5,20 +12,17 @@ from sglib import constants
 from sgui import shared as glbl_shared
 from sgui.daw import shared
 from sgui.daw.lib import item as item_lib
-from sglib.models.daw import *
-from sgui.daw.shared import *
-from sglib.lib import util
-from sglib.lib.util import *
-from sglib.lib.translate import _
-from sgui.sgqt import *
 import shutil
 
 
 LAST_AUDIO_ITEM_DIR = HOME
+CURRENT_ITEM = None
 
-def show():
+def show(current_item):
+    global CURRENT_ITEM
+    CURRENT_ITEM = current_item
     f_CURRENT_AUDIO_ITEM_INDEX = _shared.CURRENT_AUDIO_ITEM_INDEX
-    _shared.CURRENT_AUDIO_ITEM_INDEX = _shared.CURRENT_ITEM.track_num
+    _shared.CURRENT_AUDIO_ITEM_INDEX = CURRENT_ITEM.track_num
     f_menu = QMenu(shared.MAIN_WINDOW)
 
     shared.AUDIO_SEQ.context_menu_enabled = False
@@ -161,28 +165,29 @@ def save_a_copy():
             f_file += ".wav"
         LAST_AUDIO_ITEM_DIR = os.path.dirname(f_file)
         f_orig_path = constants.PROJECT.get_wav_name_by_uid(
-            _shared.CURRENT_ITEM.audio_item.uid,
+            CURRENT_ITEM.audio_item.uid,
         )
         shutil.copy(f_orig_path, f_file)
 
 def open_item_folder():
     f_path = constants.PROJECT.get_wav_name_by_uid(
-        _shared.CURRENT_ITEM.audio_item.uid,
+        CURRENT_ITEM.audio_item.uid,
     )
     shared.AUDIO_SEQ_WIDGET.open_file_in_browser(f_path)
 
 def open_in_wave_editor():
-    f_path = _shared.CURRENT_ITEM.get_file_path()
+    f_path = CURRENT_ITEM.get_file_path()
     glbl_shared.MAIN_WINDOW.open_in_wave_editor(f_path)
 
 def copy_file_path_to_clipboard():
-    f_path = _shared.CURRENT_ITEM.get_file_path()
+    f_path = CURRENT_ITEM.get_file_path()
     f_clipboard = QApplication.clipboard()
     f_clipboard.setText(f_path)
 
 def select_file_instance():
+    LOG.info(f"{_shared}")
     shared.AUDIO_SEQ.scene.clearSelection()
-    f_uid = _shared.CURRENT_ITEM.audio_item.uid
+    f_uid = CURRENT_ITEM.audio_item.uid
     for f_item in shared.AUDIO_SEQ.audio_items:
         if f_item.audio_item.uid == f_uid:
             f_item.setSelected(True)
@@ -190,7 +195,7 @@ def select_file_instance():
 def replace_with_path_in_clipboard():
     f_path = _shared.global_get_audio_file_from_clipboard()
     if f_path is not None:
-        _shared.CURRENT_ITEM.audio_item.uid = \
+        CURRENT_ITEM.audio_item.uid = \
             constants.PROJECT.get_wav_uid_by_name(f_path)
         item_lib.save_item(
             shared.CURRENT_ITEM_NAME,
@@ -328,8 +333,8 @@ def reset_end():
     for f_item in f_list:
         f_item.audio_item.sample_start = 0.0
         f_item.audio_item.sample_end = 1000.0
-        _shared.CURRENT_ITEM.draw()
-        _shared.CURRENT_ITEM.clip_at_sequence_end()
+        CURRENT_ITEM.draw()
+        CURRENT_ITEM.clip_at_sequence_end()
     item_lib.save_item(shared.CURRENT_ITEM_NAME, shared.CURRENT_ITEM)
     constants.DAW_PROJECT.commit(_("Reset sample ends for audio item(s)"))
     global_open_audio_items()
@@ -379,19 +384,19 @@ def _reverse():
     global_open_audio_items(True)
 
 def time_pitch_dialog():
-    f_dialog = TimePitchDialogWidget(_shared.CURRENT_ITEM.audio_item)
+    f_dialog = TimePitchDialogWidget(CURRENT_ITEM.audio_item)
     f_dialog.widget.exec_()
 
 def fade_vol_dialog():
-    f_dialog = FadeVolDialogWidget(_shared.CURRENT_ITEM.audio_item)
+    f_dialog = FadeVolDialogWidget(CURRENT_ITEM.audio_item)
     f_dialog.widget.exec_()
 
 def edit_papifx():
-    _shared.CURRENT_ITEM.setSelected(True)
+    CURRENT_ITEM.setSelected(True)
     shared.AUDIO_SEQ_WIDGET.folders_tab_widget.setCurrentIndex(2)
 
 def edit_paif():
-    _shared.CURRENT_ITEM.setSelected(True)
+    CURRENT_ITEM.setSelected(True)
     shared.AUDIO_SEQ_WIDGET.folders_tab_widget.setCurrentIndex(3)
 
 def crisp_menu_triggered(a_action):

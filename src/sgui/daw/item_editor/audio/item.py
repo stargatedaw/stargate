@@ -3,10 +3,6 @@ from sgui.daw.shared import *
 from sglib.lib.util import *
 from sgui.sgqt import *
 
-from . import (
-    item_context_menu,
-    _shared,
-)
 from sglib.math import (
     clip_max,
     clip_min,
@@ -25,6 +21,10 @@ from sgui.daw.lib import item as item_lib
 from sgui.daw import painter_path as daw_painter_path, shared
 from sgui.shared import AUDIO_ITEM_SCENE_RECT
 from sgui.widgets.sample_graph import create_sample_graph
+from . import (
+    item_context_menu,
+    _shared,
+)
 
 
 PAINTER_PATH_CACHE = {}
@@ -671,8 +671,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
             self.setSelected(True)
 
         if a_event.button() == QtCore.Qt.MouseButton.RightButton:
-            _shared.CURRENT_ITEM = self
-            item_context_menu.show()
+            item_context_menu.show(self)
             return
 
         if shared.EDITOR_MODE == shared.EDITOR_MODE_SPLIT:

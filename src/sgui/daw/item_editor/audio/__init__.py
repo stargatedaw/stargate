@@ -83,7 +83,6 @@ class AudioItemSeq(AbstractItemEditor):
         self.scene.dropEvent = self.sceneDropEvent
         self.scene.dragEnterEvent = self.sceneDragEnterEvent
         self.scene.dragMoveEvent = self.sceneDragMoveEvent
-        self.scene.contextMenuEvent = self.sceneContextMenuEvent
         self.scene.setBackgroundBrush(
             QColor(
                 theme.SYSTEM_COLORS.widgets.default_scene_background,
@@ -231,30 +230,6 @@ class AudioItemSeq(AbstractItemEditor):
         QGraphicsView.resizeEvent(self, a_event)
         set_audio_seq_zoom(self.h_zoom, self.v_zoom)
         global_open_audio_items(a_reload=False)
-
-    def sceneContextMenuEvent(self, a_event):
-        if self.check_running():
-            return
-        if not self.context_menu_enabled:
-            self.context_menu_enabled = True
-            return
-        QGraphicsScene.contextMenuEvent(self.scene, a_event)
-        self.context_menu_pos = a_event.scenePos()
-        f_menu = QMenu(shared.MAIN_WINDOW)
-        f_paste_action = QAction(
-            _("Paste file path from clipboard"), self)
-        f_paste_action.triggered.connect(self.on_scene_paste_paths)
-        f_menu.addAction(f_paste_action)
-        f_menu.exec_(a_event.screenPos())
-
-    def on_scene_paste_paths(self):
-        f_path = _shared.global_get_audio_file_from_clipboard()
-        if f_path:
-            self.add_items(
-                self.context_menu_pos.x(),
-                self.context_menu_pos.y(),
-                [f_path],
-            )
 
     def scene_selection_changed(self):
         f_selected_items = []
