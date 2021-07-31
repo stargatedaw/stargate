@@ -248,11 +248,6 @@ class SgMainWindow(QMainWindow):
         self.save_as_action.triggered.connect(self.on_save_as)
         self.save_as_action.setShortcut(QKeySequence.StandardKey.SaveAs)
 
-        self.save_copy_action = self.menu_file.addAction(
-            _("Save Copy...("
-            "This creates a full copy of the project directory)"))
-        self.save_copy_action.triggered.connect(self.on_save_copy)
-
         self.menu_file.addSeparator()
 
         self.project_history_action = self.menu_file.addAction(
@@ -676,41 +671,6 @@ class SgMainWindow(QMainWindow):
         f_ok_layout.addWidget(f_cancel_button)
         f_cancel_button.pressed.connect(f_window.close)
         f_window.exec_()
-
-    def on_save_copy(self):
-        if shared.IS_PLAYING:
-            return
-        try:
-            f_last_dir = util.HOME
-            while True:
-                f_new_file = QFileDialog.getExistingDirectory(
-                    MAIN_WINDOW,
-                    _("Save copy of project as..."),
-                    f_last_dir,
-                    QFileDialog.ShowDirsOnly | QFileDialog.DontUseNativeDialog,
-                )
-                if f_new_file and str(f_new_file):
-                    f_new_file = str(f_new_file)
-                    f_last_dir = f_new_file
-                    if (
-                        not check_for_empty_directory(f_new_file)
-                        or
-                        not check_for_rw_perms(f_new_file)
-                    ):
-                        continue
-                    f_new_file += f"{constants.MAJOR_VERSION}.project"
-                    shared.PLUGIN_UI_DICT.save_all_plugin_state()
-                    constants.PROJECT.save_project_as(f_new_file)
-                    shared.set_window_title()
-                    util.set_file_setting("last-project", f_new_file)
-                    global RESPAWN
-                    RESPAWN = True
-                    self.prepare_to_quit()
-                    break
-                else:
-                    break
-        except Exception as ex:
-            show_generic_exception(ex)
 
     def prepare_to_quit(self):
         try:

@@ -370,8 +370,9 @@ class MainWindow(QScrollArea):
                 MAIN_WINDOW,
                 _("Error"),
                 _(
-                    "You must set the Loop/Export markers first by "
-                    "right-clicking on the sequencer timeline"
+                    "You must set the region markers first by "
+                    "right-clicking on the sequencer timeline.  "
+                    "Only the region will be exported."
                 ),
             )
             return

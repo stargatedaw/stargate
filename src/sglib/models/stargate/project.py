@@ -136,17 +136,6 @@ class SgProject(AbstractProject):
         self.open_stretch_dicts()
         #self.commit("Created project")
 
-    def save_project_as(self, a_file_name):
-        f_file_name = str(a_file_name)
-        LOG.info("Saving project as {} ...".format(f_file_name))
-        f_new_project_folder = os.path.dirname(f_file_name)
-        #The below is safe because we already checked that the folder
-        #should be empty before calling this
-        shutil.rmtree(f_new_project_folder)
-        shutil.copytree(self.project_folder, f_new_project_folder)
-#        self.set_project_folders(f_file_name)
-#        self.this_osc.open_song(self.project_folder)
-
     def get_next_plugin_uid(self):
         if os.path.isfile(self.plugin_uid_file):
             with open(self.plugin_uid_file) as f_handle:
