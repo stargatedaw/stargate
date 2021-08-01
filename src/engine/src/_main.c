@@ -397,13 +397,9 @@ NO_OPTIMIZATION void alloc_output_buffers(){
     }
 }
 
-NO_OPTIMIZATION int init_hardware(
+NO_OPTIMIZATION int init_audio_hardware(
     struct HardwareConfig* hardware_config
 ){
-    printf("Initializing MIDI hardware\n");
-#ifndef NO_MIDI
-    open_midi_devices(hardware_config);
-#endif
     printf("Initializing audio hardware\n");
     int result = open_audio_device(hardware_config);
     return result;
@@ -427,6 +423,10 @@ int start_engine(char* project_dir){
         1
     );
 #else
+    if(!NO_HARDWARE){
+        printf("Initializing MIDI hardware\n");
+        open_midi_devices(hardware_config);
+    }
     v_activate(
         hardware_config->thread_count,
         hardware_config->thread_affinity,
@@ -438,7 +438,7 @@ int start_engine(char* project_dir){
 #endif
 
     if(!NO_HARDWARE){
-        retcode = init_hardware(hardware_config);
+        retcode = init_audio_hardware(hardware_config);
     }
 
     printf("Sending ready message to the UI\n");
