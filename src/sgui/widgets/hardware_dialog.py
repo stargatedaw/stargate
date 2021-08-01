@@ -565,9 +565,11 @@ class hardware_dialog:
                 if v.isChecked())
             if len(f_midi_in_devices) >= 8:
                 QMessageBox.warning(
-                    f_window, _("Error"),
+                    f_window,
+                    _("Error"),
                     _("Using more than 8 MIDI devices is not supported, "
-                    "please de-select some devices"))
+                    "please de-select some devices"),
+                )
                 return
             f_worker_threads = f_worker_threads_combobox.currentIndex()
             if util.IS_LINUX:

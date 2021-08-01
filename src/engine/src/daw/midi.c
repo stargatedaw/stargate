@@ -7,32 +7,42 @@
 
 void v_daw_set_midi_devices(){
 #ifndef NO_MIDI
-
     char f_path[2048];
     int f_i, f_i2;
+    int found_device;
     t_midi_device * f_device;
 
-    if(!STARGATE->midi_devices)
-    {
+    if(!STARGATE->midi_devices){
         return;
     }
 
-    sprintf(f_path, "%s%sprojects%sdaw%smidi_routing.txt",
-        STARGATE->project_folder, PATH_SEP, PATH_SEP, PATH_SEP);
+    sprintf(
+        f_path,
+        "%s%sprojects%sdaw%smidi_routing.txt",
+        STARGATE->project_folder,
+        PATH_SEP,
+        PATH_SEP,
+        PATH_SEP
+    );
 
-    if(!i_file_exists(f_path))
-    {
+    if(!i_file_exists(f_path)){
+        fprintf(
+            stderr,
+            "Did not find MIDI device config file '%s', not "
+            "loading MIDI devices\n",
+            f_path
+        );
         return;
     }
 
-    t_2d_char_array * f_current_string =
-        g_get_2d_array_from_file(f_path, LARGE_STRING);
+    t_2d_char_array * f_current_string = g_get_2d_array_from_file(
+        f_path,
+        LARGE_STRING
+    );
 
-    for(f_i = 0; f_i < DN_TRACK_COUNT; ++f_i)
-    {
+    for(f_i = 0; f_i < DN_TRACK_COUNT; ++f_i){
         v_iterate_2d_char_array(f_current_string);
-        if(f_current_string->eof)
-        {
+        if(f_current_string->eof){
             break;
         }
 
@@ -43,14 +53,22 @@ void v_daw_set_midi_devices(){
 
         v_iterate_2d_char_array_to_next_line(f_current_string);
 
-        for(f_i2 = 0; f_i2 < STARGATE->midi_devices->count; ++f_i2)
-        {
+        found_device = 0;
+        for(f_i2 = 0; f_i2 < STARGATE->midi_devices->count; ++f_i2){
             f_device = &STARGATE->midi_devices->devices[f_i2];
-            if(!strcmp(f_current_string->current_str, f_device->name))
-            {
+            if(!strcmp(f_current_string->current_str, f_device->name)){
                 v_daw_set_midi_device(f_on, f_i2, f_track_num);
+                found_device = 1;
                 break;
             }
+        }
+        if(!found_device){
+            fprintf(
+                stderr,
+                "Warning, did not find MIDI device '%s' in %i devices\n",
+                f_current_string->current_str,
+                STARGATE->midi_devices->count
+            );
         }
     }
 
@@ -63,8 +81,11 @@ void v_daw_set_midi_devices(){
 
 #ifndef NO_MIDI
 
-void v_daw_set_midi_device(int a_on, int a_device, int a_output)
-{
+void v_daw_set_midi_device(
+    int a_on,
+    int a_device,
+    int a_output
+){
     t_daw * self = DAW;
     /* Interim logic to get a minimum viable product working
      * TODO:  Make it modular and able to support multiple devices
@@ -74,13 +95,18 @@ void v_daw_set_midi_device(int a_on, int a_device, int a_output)
     t_pytrack * f_track_old = NULL;
     t_pytrack * f_track_new = self->track_pool[a_output];
 
-    if(f_route->output_track != -1)
-    {
+    if(f_route->output_track != -1){
         f_track_old = self->track_pool[f_route->output_track];
     }
 
-    if(f_track_old && (!f_route->on || f_route->output_track != a_output))
-    {
+    if(
+        f_track_old
+        && (
+            !f_route->on
+            ||
+            f_route->output_track != a_output
+        )
+    ){
         f_track_old->extern_midi = 0;
         f_track_old->extern_midi_count = &ZERO;
         f_track_old->midi_device = 0;
@@ -89,15 +115,17 @@ void v_daw_set_midi_device(int a_on, int a_device, int a_output)
     f_route->on = a_on;
     f_route->output_track = a_output;
 
-    if(f_route->on && STARGATE->midi_devices->devices[a_device].loaded)
-    {
+    if(f_route->on && STARGATE->midi_devices->devices[a_device].loaded){
         f_track_new->midi_device = &STARGATE->midi_devices->devices[a_device];
         f_track_new->extern_midi =
             STARGATE->midi_devices->devices[a_device].instanceEventBuffers;
 
         midiPoll(f_track_new->midi_device);
-        midiDeviceRead(f_track_new->midi_device,
-            STARGATE->thread_storage[0].sample_rate, 512);
+        midiDeviceRead(
+            f_track_new->midi_device,
+            STARGATE->thread_storage[0].sample_rate,
+            512
+        );
 
         STARGATE->midi_devices->devices[a_device].instanceEventCounts = 0;
         STARGATE->midi_devices->devices[a_device].midiEventReadIndex = 0;
@@ -105,9 +133,7 @@ void v_daw_set_midi_device(int a_on, int a_device, int a_output)
 
         f_track_new->extern_midi_count =
             &STARGATE->midi_devices->devices[a_device].instanceEventCounts;
-    }
-    else
-    {
+    } else {
         f_track_new->extern_midi = 0;
         f_track_new->extern_midi_count = &ZERO;
         f_track_new->midi_device = 0;
@@ -123,8 +149,7 @@ void v_daw_process_external_midi(
     int a_thread_num,
     t_daw_thread_storage * a_ts
 ){
-    if(!a_track->midi_device)
-    {
+    if(!a_track->midi_device){
         return;
     }
 
@@ -147,39 +172,40 @@ void v_daw_process_external_midi(
 
     char * f_osc_msg = a_track->osc_cursor_message;
 
-    while(f_i2 < f_extern_midi_count)
-    {
+    while(f_i2 < f_extern_midi_count){
         f_valid_type = 1;
 
-        if(events[f_i2].tick >= sample_count)
-        {
+        if(events[f_i2].tick >= sample_count){
             //Otherwise the event will be missed
             events[f_i2].tick = sample_count - 1;
         }
 
-        if(events[f_i2].type == EVENT_NOTEON)
-        {
-            if(f_playback_mode == PLAYBACK_MODE_REC)
-            {
+        if(events[f_i2].type == EVENT_NOTEON){
+            if(f_playback_mode == PLAYBACK_MODE_REC){
                 SGFLT f_beat = a_ts->ml_current_beat +
-                    f_samples_to_beat_count(events[f_i2].tick,
-                        f_tempo, f_sample_rate);
+                    f_samples_to_beat_count(
+                        events[f_i2].tick,
+                        f_tempo,
+                        f_sample_rate
+                    );
 
-                sprintf(f_osc_msg, "on|%f|%i|%i|%i|%ld",
-                    f_beat, a_track->track_num, events[f_i2].note,
+                sprintf(
+                    f_osc_msg,
+                    "on|%f|%i|%i|%i|%ld",
+                    f_beat,
+                    a_track->track_num,
+                    events[f_i2].note,
                     events[f_i2].velocity,
-                    a_ts->current_sample + events[f_i2].tick);
+                    a_ts->current_sample + events[f_i2].tick
+                );
                 v_queue_osc_message("mrec", f_osc_msg);
             }
 
             sprintf(f_osc_msg, "1|%i", events[f_i2].note);
             v_queue_osc_message("ne", f_osc_msg);
 
-        }
-        else if(events[f_i2].type == EVENT_NOTEOFF)
-        {
-            if(f_playback_mode == PLAYBACK_MODE_REC)
-            {
+        } else if(events[f_i2].type == EVENT_NOTEOFF){
+            if(f_playback_mode == PLAYBACK_MODE_REC){
                 SGFLT f_beat = a_ts->ml_current_beat +
                     f_samples_to_beat_count(events[f_i2].tick,
                         f_tempo, f_sample_rate);
@@ -192,9 +218,7 @@ void v_daw_process_external_midi(
 
             sprintf(f_osc_msg, "0|%i", events[f_i2].note);
             v_queue_osc_message("ne", f_osc_msg);
-        }
-        else if(events[f_i2].type == EVENT_PITCHBEND)
-        {
+        } else if(events[f_i2].type == EVENT_PITCHBEND){
             if(f_playback_mode == PLAYBACK_MODE_REC)
             {
                 SGFLT f_beat = a_ts->ml_current_beat +
@@ -206,13 +230,10 @@ void v_daw_process_external_midi(
                     a_ts->current_sample + events[f_i2].tick);
                 v_queue_osc_message("mrec", f_osc_msg);
             }
-        }
-        else if(events[f_i2].type == EVENT_CONTROLLER)
-        {
+        } else if(events[f_i2].type == EVENT_CONTROLLER){
             int controller = events[f_i2].param;
 
-            if(f_midi_learn)
-            {
+            if(f_midi_learn){
                 STARGATE->midi_learn = 0;
                 f_midi_learn = 0;
                 sprintf(f_osc_msg, "%i", controller);
@@ -225,8 +246,7 @@ void v_daw_process_external_midi(
                 * (self->playback_inc))) * 4.0f;*/
             v_set_control_from_cc(&events[f_i2], a_track);
 
-            if(f_playback_mode == PLAYBACK_MODE_REC)
-            {
+            if(f_playback_mode == PLAYBACK_MODE_REC){
                 SGFLT f_beat =
                     a_ts->ml_current_beat +
                     f_samples_to_beat_count(
@@ -240,9 +260,7 @@ void v_daw_process_external_midi(
                     a_ts->current_sample + events[f_i2].tick);
                 v_queue_osc_message("mrec", f_osc_msg);
             }
-        }
-        else
-        {
+        } else {
             f_valid_type = 0;
         }
 

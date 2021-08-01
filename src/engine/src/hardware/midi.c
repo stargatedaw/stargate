@@ -26,9 +26,16 @@ NO_OPTIMIZATION void open_midi_devices(
         );
 
         if(f_device_result == 0){
-            printf("Succeeded\n");
+            printf(
+                "Initialized MIDI device '%s'\n",
+                f_midi_device_name
+            );
         } else if(f_device_result == 1){
-            printf("Error, did not find MIDI device\n");
+            fprintf(
+                stderr,
+                "Did not find MIDI device '%s'\n",
+                f_midi_device_name
+            );
             /*++f_failure_count;
             sprintf(f_cmd_buffer, "%s \"%s %s\"", f_show_dialog_cmd,
                 "Error: did not find MIDI device:",
@@ -36,7 +43,11 @@ NO_OPTIMIZATION void open_midi_devices(
             system(f_cmd_buffer);
             continue;*/
         } else if(f_device_result == 2){
-            printf("Error, opening MIDI device\n");
+            fprintf(
+                stderr,
+                "Could not open MIDI device '%s'\n",
+                f_midi_device_name
+            );
             /*++f_failure_count;
             sprintf(f_cmd_buffer, "%s \"%s %s, %s\"",
                 f_show_dialog_cmd, "Error opening MIDI device: ",
