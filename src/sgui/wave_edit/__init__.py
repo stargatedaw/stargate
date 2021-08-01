@@ -337,7 +337,7 @@ class TransportWidget(AbstractTransportWidget):
         pass
         #constants.WAVE_EDIT_PROJECT.ipc().panic()
 
-    def set_time(self, f_text):
+    def set_time(self, f_text="0:00.0"):
         #f_text = "{}:{}.{}".format(f_minutes, str(f_seconds).zfill(2), f_frac)
         glbl_shared.TRANSPORT.set_time(f_text)
 

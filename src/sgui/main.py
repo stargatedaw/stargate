@@ -448,6 +448,7 @@ class SgMainWindow(QMainWindow):
         self.current_window = self.host_windows[a_index]
         shared.CURRENT_HOST = a_index
         constants.IPC.set_host(a_index)
+        self.current_module.TRANSPORT.set_time()
 
     def show_offline_rendering_wait_window(self, a_file_name):
         f_file_name = "{}.finished".format(a_file_name)

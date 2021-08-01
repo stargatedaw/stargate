@@ -135,7 +135,9 @@ class TransportWidget(AbstractTransportWidget):
     def on_panic(self):
         constants.DAW_PROJECT.ipc().panic()
 
-    def set_time(self, a_beat):
+    def set_time(self, a_beat=None):
+        if a_beat is None:
+            a_beat = shared.SEQUENCER.get_beat_value()
         f_text = shared.CURRENT_SEQUENCE.get_time_at_beat(a_beat)
         glbl_shared.TRANSPORT.set_time(f_text)
 
