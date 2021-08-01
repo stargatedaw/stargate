@@ -85,7 +85,7 @@ void v_audio_input_run(
 
     int f_output_mode = f_ai->output_mode;
 
-    if(f_output_mode){
+    if(f_output_mode && a_sc_dirty){
         *a_sc_dirty = 1;
     }
 
