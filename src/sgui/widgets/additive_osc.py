@@ -354,13 +354,16 @@ class custom_additive_oscillator(abstract_custom_oscillator):
             f_result *= f_normalize
         self.draw_callback(f_result)
         if a_configure and self.configure_callback is not None:
-            f_engine_list = []
+            f_engine_list = [str(ADDITIVE_WAVETABLE_SIZE)]
             for f_float in f_result:
                 f_engine_list.append(
                     str(round(f_float, 6)),
                 )
-            f_engine_str = "{}|{}".format(ADDITIVE_WAVETABLE_SIZE,
-                "|".join(f_engine_list))
+            assert len(f_engine_list) == ADDITIVE_WAVETABLE_SIZE + 1, \
+                (len(f_engine_list), ADDITIVE_WAVETABLE_SIZE)
+            f_engine_str = "|".join(f_engine_list)
+            engine_str_len = len(f_engine_str)
+            print(f"Sending additive osc str of length {engine_str_len}")
             self.configure_wrapper(
                 "fm1_add_eng{}".format(self.osc_num),
                 f_engine_str,

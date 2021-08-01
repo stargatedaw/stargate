@@ -71,6 +71,7 @@ t_1d_char_array * c_split_str(
 
         ++f_i;
     }
+    assert(f_current_column == a_column_count - 1);
 
     return f_result;
 }

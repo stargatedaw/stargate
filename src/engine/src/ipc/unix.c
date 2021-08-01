@@ -133,7 +133,7 @@ void* ipc_server_thread(void* _arg){
         n = recvfrom(
             sockfd,
             (char*)buffer,
-            8192,
+            IPC_MAX_MESSAGE_SIZE,
             MSG_WAITALL,
             (struct sockaddr*)&cliaddr,
             &len
