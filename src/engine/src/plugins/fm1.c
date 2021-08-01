@@ -774,8 +774,9 @@ void v_fm1_process_midi_event(
                     }
                     v_osc_wav_set_waveform(
                         &f_pfx_osc->osc_wavtable,
-                        plugin_data->mono_modules->
-                        wavetables->tables[f_osc_type]->wavetable,
+                        plugin_data->mono_modules->wavetables->tables[
+                            f_osc_type
+                        ]->wavetable,
                         plugin_data->mono_modules->wavetables->tables[
                             f_osc_type
                         ]->length
@@ -1158,14 +1159,16 @@ void v_run_fm1(
 
                 while(f_i < FM1_OSC_COUNT)
                 {
-                    if(f_osc_type[f_i] >= 0)
-                    {
+                    if(f_osc_type[f_i] >= 0){
                         v_osc_wav_set_waveform(
                             &plugin_data->data[f_voice]->osc[f_i].osc_wavtable,
-                            plugin_data->mono_modules->wavetables->
-                                tables[f_osc_type[f_i]]->wavetable,
-                            plugin_data->mono_modules->wavetables->
-                                tables[f_osc_type[f_i]]->length);
+                            plugin_data->mono_modules->wavetables->tables[
+                                f_osc_type[f_i]
+                            ]->wavetable,
+                            plugin_data->mono_modules->wavetables->tables[
+                                f_osc_type[f_i]
+                            ]->length
+                        );
                     }
                     ++f_i;
                 }
@@ -1176,17 +1179,22 @@ void v_run_fm1(
             plugin_data->mono_modules->reset_wavetables = 0;
         }
 
-        v_sml_run(&plugin_data->mono_modules->pitchbend_smoother,
-                (plugin_data->sv_pitch_bend_value));
+        v_sml_run(
+            &plugin_data->mono_modules->pitchbend_smoother,
+            (plugin_data->sv_pitch_bend_value)
+        );
 
-        v_sml_run(&plugin_data->mono_modules->fm_macro_smoother[0],
-                (*plugin_data->fm_macro[0] * 0.01f));
+        v_sml_run(
+            &plugin_data->mono_modules->fm_macro_smoother[0],
+            (*plugin_data->fm_macro[0] * 0.01f)
+        );
 
-        v_sml_run(&plugin_data->mono_modules->fm_macro_smoother[1],
-                (*plugin_data->fm_macro[1] * 0.01f));
+        v_sml_run(
+            &plugin_data->mono_modules->fm_macro_smoother[1],
+            (*plugin_data->fm_macro[1] * 0.01f)
+        );
 
-        for(f_i = 0; f_i < FM1_POLYPHONY; ++f_i)
-        {
+        for(f_i = 0; f_i < FM1_POLYPHONY; ++f_i){
             if(plugin_data->data[f_i]->adsr_main.stage != ADSR_STAGE_OFF)
             {
                 v_run_fm1_voice(plugin_data,
@@ -1530,28 +1538,49 @@ SGFLT * f_char_to_wavetable(char * a_char)
     return f_result;
 }
 
-void v_fm1_configure(PluginHandle instance, char *key,
-        char *value, pthread_spinlock_t * a_spinlock)
-{
+void v_fm1_configure(
+    PluginHandle instance,
+    char* key,
+    char* value,
+    pthread_spinlock_t* a_spinlock
+){
     t_fm1 *plugin_data = (t_fm1*)instance;
 
     if (!strcmp(key, "fm1_add_eng0"))
     {
         SGFLT * f_table = f_char_to_wavetable(value);
-        v_wt_set_wavetable(plugin_data->mono_modules->wavetables, 17, f_table,
-                1024, a_spinlock, &plugin_data->mono_modules->reset_wavetables);
+        v_wt_set_wavetable(
+            plugin_data->mono_modules->wavetables,
+            17,
+            f_table,
+            1024,
+            a_spinlock,
+            &plugin_data->mono_modules->reset_wavetables
+        );
     }
     else if (!strcmp(key, "fm1_add_eng1"))
     {
         SGFLT * f_table = f_char_to_wavetable(value);
-        v_wt_set_wavetable(plugin_data->mono_modules->wavetables, 18, f_table,
-                1024, a_spinlock, &plugin_data->mono_modules->reset_wavetables);
+        v_wt_set_wavetable(
+            plugin_data->mono_modules->wavetables,
+            18,
+            f_table,
+            1024,
+            a_spinlock,
+            &plugin_data->mono_modules->reset_wavetables
+        );
     }
     else if (!strcmp(key, "fm1_add_eng2"))
     {
         SGFLT * f_table = f_char_to_wavetable(value);
-        v_wt_set_wavetable(plugin_data->mono_modules->wavetables, 19, f_table,
-                1024, a_spinlock, &plugin_data->mono_modules->reset_wavetables);
+        v_wt_set_wavetable(
+            plugin_data->mono_modules->wavetables,
+            19,
+            f_table,
+            1024,
+            a_spinlock,
+            &plugin_data->mono_modules->reset_wavetables
+        );
     }
     else
     {

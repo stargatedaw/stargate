@@ -13,7 +13,7 @@ from sglib.lib.translate import _
 
 class TimePitchDialogWidget:
     def __init__(self, a_audio_item):
-        self.widget = QDialog()
+        self.widget = QDialog(parent=glbl_shared.MAIN_WINDOW.widget)
         self.widget.setWindowTitle(_("Time/Pitch..."))
         self.widget.setMaximumWidth(480)
         self.main_vlayout = QVBoxLayout(self.widget)
@@ -200,8 +200,10 @@ class TimePitchDialogWidget:
     def ok_handler(self):
         if glbl_shared.IS_PLAYING:
             QMessageBox.warning(
-                self.widget, _("Error"),
-                _("Cannot edit audio items during playback"))
+                self.widget,
+                _("Error"),
+                _("Cannot edit audio items during playback"),
+            )
             return
 
         self.end_mode = 0

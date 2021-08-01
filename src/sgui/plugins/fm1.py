@@ -1137,7 +1137,8 @@ class fm1_plugin_ui(AbstractPluginUI):
         )
 
         self.additive_osc = custom_additive_oscillator(
-            self.configure_plugin)
+            self.configure_plugin,
+        )
         self.tab_widget.addTab(self.additive_osc.widget, "Additive")
 
         self.open_plugin_file()

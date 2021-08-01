@@ -356,16 +356,23 @@ class custom_additive_oscillator(abstract_custom_oscillator):
         if a_configure and self.configure_callback is not None:
             f_engine_list = []
             for f_float in f_result:
-                f_engine_list.append("{}".format(round(f_float, 6)))
+                f_engine_list.append(
+                    str(round(f_float, 6)),
+                )
             f_engine_str = "{}|{}".format(ADDITIVE_WAVETABLE_SIZE,
                 "|".join(f_engine_list))
             self.configure_wrapper(
-                "fm1_add_eng{}".format(self.osc_num), f_engine_str)
+                "fm1_add_eng{}".format(self.osc_num),
+                f_engine_str,
+            )
             self.configure_wrapper(
-                "fm1_add_ui{}".format(self.osc_num), "|".join(f_recall_list))
+                "fm1_add_ui{}".format(self.osc_num),
+                "|".join(f_recall_list),
+            )
             self.configure_wrapper(
                 "fm1_add_phase{}".format(self.osc_num),
-                "|".join(f_phase_list))
+                "|".join(f_phase_list),
+            )
 
     def set_saw(self):
         for f_i in range(len(self.viewer.bars)):
