@@ -770,7 +770,9 @@ void v_fm1_process_midi_event(
                     f_pfx_osc->osc_on = 1;
 
                     if(f_poly_mode == 0){
-                        v_osc_wav_note_on_sync_phases(&f_pfx_osc->osc_wavtable);
+                        v_osc_wav_note_on_sync_phases(
+                            &f_pfx_osc->osc_wavtable
+                        );
                     }
                     v_osc_wav_set_waveform(
                         &f_pfx_osc->osc_wavtable,
@@ -1157,8 +1159,7 @@ void v_run_fm1(
             {
                 f_i = 0;
 
-                while(f_i < FM1_OSC_COUNT)
-                {
+                while(f_i < FM1_OSC_COUNT){
                     if(f_osc_type[f_i] >= 0){
                         v_osc_wav_set_waveform(
                             &plugin_data->data[f_voice]->osc[f_i].osc_wavtable,
