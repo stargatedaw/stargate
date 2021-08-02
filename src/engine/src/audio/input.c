@@ -8,8 +8,10 @@
 #include "audio/input.h"
 
 
-void g_pyaudio_input_init(t_pyaudio_input * f_result, SGFLT a_sr)
-{
+void g_pyaudio_input_init(
+    t_pyaudio_input * f_result,
+    SGFLT a_sr
+){
     f_result->channels = 1;
     f_result->stereo_ch = -1;
     f_result->sf_info.channels = 1;
@@ -23,8 +25,7 @@ void g_pyaudio_input_init(t_pyaudio_input * f_result, SGFLT a_sr)
 
     int f_i;
 
-    for(f_i = 0; f_i < AUDIO_INPUT_REC_BUFFER_SIZE; ++f_i)
-    {
+    for(f_i = 0; f_i < AUDIO_INPUT_REC_BUFFER_SIZE; ++f_i){
         f_result->rec_buffers[0][f_i] = 0.0f;
         f_result->rec_buffers[1][f_i] = 0.0f;
     }
@@ -41,28 +42,23 @@ void g_pyaudio_input_init(t_pyaudio_input * f_result, SGFLT a_sr)
 }
 
 void v_audio_input_record_set(
-        t_pyaudio_input * self, char * a_file_out)
-{
-    if(self->sndfile)
-    {
+    t_pyaudio_input * self,
+    char * a_file_out
+){
+    if(self->sndfile){
         sf_close(self->sndfile);
         self->sndfile = NULL;
     }
 
-    if(i_file_exists(a_file_out))
-    {
+    if(i_file_exists(a_file_out)){
         remove(a_file_out);
     }
 
-    if(self->rec)
-    {
-        if(self->stereo_ch == -1)
-        {
+    if(self->rec){
+        if(self->stereo_ch == -1){
             self->channels = 1;
             self->sf_info.channels = 1;
-        }
-        else
-        {
+        } else {
             self->channels = 2;
             self->sf_info.channels = 2;
         }
@@ -112,28 +108,27 @@ void v_audio_input_run(
         int f_current_buffer = (f_ai->current_buffer);
         int f_orig_buffer_pos = f_ai->buffer_iterator[f_current_buffer];
 
-        for(f_i2 = 0; f_i2 < sample_count; ++f_i2)
-        {
+        for(f_i2 = 0; f_i2 < sample_count; ++f_i2){
             f_tmp_sample = a_input[f_buffer_pos] * (f_ai->vol_linear);
 
             f_ai->rec_buffers[f_current_buffer][
-                f_ai->buffer_iterator[f_current_buffer]] = f_tmp_sample;
+                f_ai->buffer_iterator[f_current_buffer]
+            ] = f_tmp_sample;
             f_ai->buffer_iterator[f_current_buffer] += f_ai->channels;
 
             f_buffer_pos += AUDIO_INPUT_TRACK_COUNT;
         }
 
-        if(f_ai->stereo_ch >= 0)
-        {
+        if(f_ai->stereo_ch >= 0){
             f_buffer_pos = f_ai->stereo_ch;
             f_ai->buffer_iterator[f_current_buffer] = f_orig_buffer_pos + 1;
 
-            for(f_i2 = 0; f_i2 < sample_count; ++f_i2)
-            {
+            for(f_i2 = 0; f_i2 < sample_count; ++f_i2){
                 f_tmp_sample = a_input[f_buffer_pos] * (f_ai->vol_linear);
 
                 f_ai->rec_buffers[f_current_buffer][
-                    f_ai->buffer_iterator[f_current_buffer]] = f_tmp_sample;
+                    f_ai->buffer_iterator[f_current_buffer]
+                ] = f_tmp_sample;
                 f_ai->buffer_iterator[f_current_buffer] += f_ai->channels;
 
                 f_buffer_pos += AUDIO_INPUT_TRACK_COUNT;
@@ -144,33 +139,26 @@ void v_audio_input_run(
         }
     }
 
-    if(f_ai->monitor)
-    {
+    if(f_ai->monitor){
         int f_buffer_pos = f_index;
 
-        for(f_i2 = 0; f_i2 < sample_count; ++f_i2)
-        {
+        for(f_i2 = 0; f_i2 < sample_count; ++f_i2){
             f_tmp_sample = a_input[f_buffer_pos] * (f_ai->vol_linear);
 
-            if(f_output_mode != 1)
-            {
+            if(f_output_mode != 1){
                 output[0][f_i2] += f_tmp_sample;
             }
 
-            if(f_output_mode > 0)
-            {
+            if(f_output_mode > 0){
                 sc_output[0][f_i2] += f_tmp_sample;
             }
 
-            if(f_ai->stereo_ch == -1)
-            {
-                if(f_output_mode != 1)
-                {
+            if(f_ai->stereo_ch == -1){
+                if(f_output_mode != 1){
                     output[1][f_i2] += f_tmp_sample;
                 }
 
-                if(f_output_mode > 0)
-                {
+                if(f_output_mode > 0){
                     sc_output[1][f_i2] += f_tmp_sample;
                 }
             }
@@ -178,21 +166,17 @@ void v_audio_input_run(
             f_buffer_pos += AUDIO_INPUT_TRACK_COUNT;
         }
 
-        if(f_ai->stereo_ch >= 0)
-        {
+        if(f_ai->stereo_ch >= 0){
             f_buffer_pos = f_ai->stereo_ch;
 
-            for(f_i2 = 0; f_i2 < sample_count; ++f_i2)
-            {
+            for(f_i2 = 0; f_i2 < sample_count; ++f_i2){
                 f_tmp_sample = a_input[f_buffer_pos] * (f_ai->vol_linear);
 
-                if(f_output_mode != 1)
-                {
+                if(f_output_mode != 1){
                     output[1][f_i2] += f_tmp_sample;
                 }
 
-                if(f_output_mode > 0)
-                {
+                if(f_output_mode > 0){
                     sc_output[1][f_i2] += f_tmp_sample;
                 }
 
@@ -207,22 +191,30 @@ void v_update_audio_inputs(char * a_project_folder){
     char f_tmp_file_name[2048];
 
     t_pyaudio_input * f_ai;
-    sprintf(f_inputs_file, "%s%sinput.txt", a_project_folder, PATH_SEP);
+    sprintf(
+        f_inputs_file,
+        "%s%sinput.txt",
+        a_project_folder,
+        PATH_SEP
+    );
 
-    if(a_project_folder && i_file_exists(f_inputs_file))
-    {
+    if(
+        a_project_folder
+        &&
+        i_file_exists(f_inputs_file)
+    ){
         int f_i;
         t_2d_char_array * f_2d_array = g_get_2d_array_from_file(
-            f_inputs_file, LARGE_STRING);
+            f_inputs_file,
+            LARGE_STRING
+        );
 
         pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
 
-        for(f_i = 0; f_i < AUDIO_INPUT_TRACK_COUNT; ++f_i)
-        {
+        for(f_i = 0; f_i < AUDIO_INPUT_TRACK_COUNT; ++f_i){
             v_iterate_2d_char_array(f_2d_array);
 
-            if(f_2d_array->eof) //!strcmp(f_index_str, "\\"))
-            {
+            if(f_2d_array->eof){  // !strcmp(f_index_str, "\\"))
                 break;
             }
 
@@ -243,8 +235,7 @@ void v_update_audio_inputs(char * a_project_folder){
             v_iterate_2d_char_array(f_2d_array);
             int f_right_ch = atoi(f_2d_array->current_str);
 
-            if(f_right_ch >= AUDIO_INPUT_TRACK_COUNT)
-            {
+            if(f_right_ch >= AUDIO_INPUT_TRACK_COUNT){
                 f_right_ch = -1;
             }
 
@@ -254,8 +245,7 @@ void v_update_audio_inputs(char * a_project_folder){
             // name, ignored by the engine
             v_iterate_2d_char_array_to_next_line(f_2d_array);
 
-            if(f_index >= AUDIO_INPUT_TRACK_COUNT)
-            {
+            if(f_index >= AUDIO_INPUT_TRACK_COUNT){
                 continue;
             }
 
@@ -268,22 +258,23 @@ void v_update_audio_inputs(char * a_project_folder){
             f_ai->vol = f_vol;
             f_ai->vol_linear = f_db_to_linear_fast(f_vol);
 
-            sprintf(f_tmp_file_name, "%s%i",
-                STARGATE->audio_tmp_folder, f_index);
+            sprintf(
+                f_tmp_file_name,
+                "%s%i",
+                STARGATE->audio_tmp_folder,
+                f_index
+            );
 
             v_audio_input_record_set(f_ai, f_tmp_file_name);
         }
 
         pthread_mutex_unlock(&STARGATE->audio_inputs_mutex);
         g_free_2d_char_array(f_2d_array);
-    }
-    else
-    {
+    } else {
         printf("%s not found, setting default values\n", f_inputs_file);
         pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
         int f_i;
-        for(f_i = 0; f_i < AUDIO_INPUT_TRACK_COUNT; ++f_i)
-        {
+        for(f_i = 0; f_i < AUDIO_INPUT_TRACK_COUNT; ++f_i){
             f_ai = &STARGATE->audio_inputs[f_i];
             f_ai->rec = 0;
             f_ai->monitor = 0;
@@ -294,8 +285,12 @@ void v_update_audio_inputs(char * a_project_folder){
             f_ai->vol = 0.0f;
             f_ai->vol_linear = 1.0f;
 
-            sprintf(f_tmp_file_name, "%s%i",
-                STARGATE->audio_tmp_folder, f_i);
+            sprintf(
+                f_tmp_file_name,
+                "%s%i",
+                STARGATE->audio_tmp_folder,
+                f_i
+            );
 
             v_audio_input_record_set(f_ai, f_tmp_file_name);
         }
@@ -356,8 +351,7 @@ void * v_audio_recording_thread(void* a_arg){
 
         pthread_mutex_unlock(&STARGATE->audio_inputs_mutex);
 
-        if(!f_did_something)
-        {
+        if(!f_did_something){
             usleep(10000);
         }
     }
