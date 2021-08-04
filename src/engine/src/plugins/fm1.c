@@ -270,82 +270,82 @@ void v_fm1_connect_port(PluginHandle instance, int port,
         case FM1_FX3_COMBOBOX: plugin->fx_combobox[3] = data; break;
         //End from MultiFX
         /*PolyFX mod matrix port connections*/
-        case WAVV_PFXMATRIX_GRP0DST0SRC0CTRL0: plugin->polyfx_mod_matrix[0][0][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC0CTRL1: plugin->polyfx_mod_matrix[0][0][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC0CTRL2: plugin->polyfx_mod_matrix[0][0][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC1CTRL0: plugin->polyfx_mod_matrix[0][1][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC1CTRL1: plugin->polyfx_mod_matrix[0][1][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC1CTRL2: plugin->polyfx_mod_matrix[0][1][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC2CTRL0: plugin->polyfx_mod_matrix[0][2][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC2CTRL1: plugin->polyfx_mod_matrix[0][2][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC2CTRL2: plugin->polyfx_mod_matrix[0][2][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC3CTRL0: plugin->polyfx_mod_matrix[0][3][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC3CTRL1: plugin->polyfx_mod_matrix[0][3][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC3CTRL2: plugin->polyfx_mod_matrix[0][3][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC0CTRL0: plugin->polyfx_mod_matrix[1][0][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC0CTRL1: plugin->polyfx_mod_matrix[1][0][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC0CTRL2: plugin->polyfx_mod_matrix[1][0][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC1CTRL0: plugin->polyfx_mod_matrix[1][1][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC1CTRL1: plugin->polyfx_mod_matrix[1][1][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC1CTRL2: plugin->polyfx_mod_matrix[1][1][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC2CTRL0: plugin->polyfx_mod_matrix[1][2][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC2CTRL1: plugin->polyfx_mod_matrix[1][2][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC2CTRL2: plugin->polyfx_mod_matrix[1][2][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC3CTRL0: plugin->polyfx_mod_matrix[1][3][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC3CTRL1: plugin->polyfx_mod_matrix[1][3][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC3CTRL2: plugin->polyfx_mod_matrix[1][3][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC0CTRL0: plugin->polyfx_mod_matrix[2][0][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC0CTRL1: plugin->polyfx_mod_matrix[2][0][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC0CTRL2: plugin->polyfx_mod_matrix[2][0][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC1CTRL0: plugin->polyfx_mod_matrix[2][1][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC1CTRL1: plugin->polyfx_mod_matrix[2][1][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC1CTRL2: plugin->polyfx_mod_matrix[2][1][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC2CTRL0: plugin->polyfx_mod_matrix[2][2][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC2CTRL1: plugin->polyfx_mod_matrix[2][2][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC2CTRL2: plugin->polyfx_mod_matrix[2][2][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC3CTRL0: plugin->polyfx_mod_matrix[2][3][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC3CTRL1: plugin->polyfx_mod_matrix[2][3][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC3CTRL2: plugin->polyfx_mod_matrix[2][3][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC0CTRL0: plugin->polyfx_mod_matrix[3][0][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC0CTRL1: plugin->polyfx_mod_matrix[3][0][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC0CTRL2: plugin->polyfx_mod_matrix[3][0][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC1CTRL0: plugin->polyfx_mod_matrix[3][1][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC1CTRL1: plugin->polyfx_mod_matrix[3][1][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC1CTRL2: plugin->polyfx_mod_matrix[3][1][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC2CTRL0: plugin->polyfx_mod_matrix[3][2][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC2CTRL1: plugin->polyfx_mod_matrix[3][2][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC2CTRL2: plugin->polyfx_mod_matrix[3][2][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC3CTRL0: plugin->polyfx_mod_matrix[3][3][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC3CTRL1: plugin->polyfx_mod_matrix[3][3][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC3CTRL2: plugin->polyfx_mod_matrix[3][3][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC0CTRL0: plugin->polyfx_mod_matrix[0][0][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC0CTRL1: plugin->polyfx_mod_matrix[0][0][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC0CTRL2: plugin->polyfx_mod_matrix[0][0][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC1CTRL0: plugin->polyfx_mod_matrix[0][1][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC1CTRL1: plugin->polyfx_mod_matrix[0][1][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC1CTRL2: plugin->polyfx_mod_matrix[0][1][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC2CTRL0: plugin->polyfx_mod_matrix[0][2][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC2CTRL1: plugin->polyfx_mod_matrix[0][2][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC2CTRL2: plugin->polyfx_mod_matrix[0][2][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC3CTRL0: plugin->polyfx_mod_matrix[0][3][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC3CTRL1: plugin->polyfx_mod_matrix[0][3][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC3CTRL2: plugin->polyfx_mod_matrix[0][3][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC0CTRL0: plugin->polyfx_mod_matrix[1][0][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC0CTRL1: plugin->polyfx_mod_matrix[1][0][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC0CTRL2: plugin->polyfx_mod_matrix[1][0][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC1CTRL0: plugin->polyfx_mod_matrix[1][1][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC1CTRL1: plugin->polyfx_mod_matrix[1][1][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC1CTRL2: plugin->polyfx_mod_matrix[1][1][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC2CTRL0: plugin->polyfx_mod_matrix[1][2][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC2CTRL1: plugin->polyfx_mod_matrix[1][2][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC2CTRL2: plugin->polyfx_mod_matrix[1][2][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC3CTRL0: plugin->polyfx_mod_matrix[1][3][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC3CTRL1: plugin->polyfx_mod_matrix[1][3][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC3CTRL2: plugin->polyfx_mod_matrix[1][3][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC0CTRL0: plugin->polyfx_mod_matrix[2][0][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC0CTRL1: plugin->polyfx_mod_matrix[2][0][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC0CTRL2: plugin->polyfx_mod_matrix[2][0][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC1CTRL0: plugin->polyfx_mod_matrix[2][1][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC1CTRL1: plugin->polyfx_mod_matrix[2][1][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC1CTRL2: plugin->polyfx_mod_matrix[2][1][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC2CTRL0: plugin->polyfx_mod_matrix[2][2][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC2CTRL1: plugin->polyfx_mod_matrix[2][2][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC2CTRL2: plugin->polyfx_mod_matrix[2][2][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC3CTRL0: plugin->polyfx_mod_matrix[2][3][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC3CTRL1: plugin->polyfx_mod_matrix[2][3][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC3CTRL2: plugin->polyfx_mod_matrix[2][3][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC0CTRL0: plugin->polyfx_mod_matrix[3][0][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC0CTRL1: plugin->polyfx_mod_matrix[3][0][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC0CTRL2: plugin->polyfx_mod_matrix[3][0][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC1CTRL0: plugin->polyfx_mod_matrix[3][1][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC1CTRL1: plugin->polyfx_mod_matrix[3][1][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC1CTRL2: plugin->polyfx_mod_matrix[3][1][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC2CTRL0: plugin->polyfx_mod_matrix[3][2][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC2CTRL1: plugin->polyfx_mod_matrix[3][2][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC2CTRL2: plugin->polyfx_mod_matrix[3][2][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC3CTRL0: plugin->polyfx_mod_matrix[3][3][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC3CTRL1: plugin->polyfx_mod_matrix[3][3][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC3CTRL2: plugin->polyfx_mod_matrix[3][3][2] = data; break;
 
         //keyboard tracking
-        case WAVV_PFXMATRIX_GRP0DST0SRC4CTRL0: plugin->polyfx_mod_matrix[0][4][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC4CTRL1: plugin->polyfx_mod_matrix[0][4][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC4CTRL2: plugin->polyfx_mod_matrix[0][4][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC4CTRL0: plugin->polyfx_mod_matrix[1][4][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC4CTRL1: plugin->polyfx_mod_matrix[1][4][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC4CTRL2: plugin->polyfx_mod_matrix[1][4][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC4CTRL0: plugin->polyfx_mod_matrix[2][4][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC4CTRL1: plugin->polyfx_mod_matrix[2][4][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC4CTRL2: plugin->polyfx_mod_matrix[2][4][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC4CTRL0: plugin->polyfx_mod_matrix[3][4][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC4CTRL1: plugin->polyfx_mod_matrix[3][4][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC4CTRL2: plugin->polyfx_mod_matrix[3][4][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC4CTRL0: plugin->polyfx_mod_matrix[0][4][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC4CTRL1: plugin->polyfx_mod_matrix[0][4][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC4CTRL2: plugin->polyfx_mod_matrix[0][4][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC4CTRL0: plugin->polyfx_mod_matrix[1][4][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC4CTRL1: plugin->polyfx_mod_matrix[1][4][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC4CTRL2: plugin->polyfx_mod_matrix[1][4][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC4CTRL0: plugin->polyfx_mod_matrix[2][4][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC4CTRL1: plugin->polyfx_mod_matrix[2][4][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC4CTRL2: plugin->polyfx_mod_matrix[2][4][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC4CTRL0: plugin->polyfx_mod_matrix[3][4][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC4CTRL1: plugin->polyfx_mod_matrix[3][4][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC4CTRL2: plugin->polyfx_mod_matrix[3][4][2] = data; break;
 
         //velocity tracking
-        case WAVV_PFXMATRIX_GRP0DST0SRC5CTRL0: plugin->polyfx_mod_matrix[0][5][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC5CTRL1: plugin->polyfx_mod_matrix[0][5][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC5CTRL2: plugin->polyfx_mod_matrix[0][5][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC5CTRL0: plugin->polyfx_mod_matrix[1][5][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC5CTRL1: plugin->polyfx_mod_matrix[1][5][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC5CTRL2: plugin->polyfx_mod_matrix[1][5][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC5CTRL0: plugin->polyfx_mod_matrix[2][5][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC5CTRL1: plugin->polyfx_mod_matrix[2][5][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC5CTRL2: plugin->polyfx_mod_matrix[2][5][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC5CTRL0: plugin->polyfx_mod_matrix[3][5][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC5CTRL1: plugin->polyfx_mod_matrix[3][5][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC5CTRL2: plugin->polyfx_mod_matrix[3][5][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC5CTRL0: plugin->polyfx_mod_matrix[0][5][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC5CTRL1: plugin->polyfx_mod_matrix[0][5][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC5CTRL2: plugin->polyfx_mod_matrix[0][5][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC5CTRL0: plugin->polyfx_mod_matrix[1][5][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC5CTRL1: plugin->polyfx_mod_matrix[1][5][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC5CTRL2: plugin->polyfx_mod_matrix[1][5][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC5CTRL0: plugin->polyfx_mod_matrix[2][5][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC5CTRL1: plugin->polyfx_mod_matrix[2][5][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC5CTRL2: plugin->polyfx_mod_matrix[2][5][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC5CTRL0: plugin->polyfx_mod_matrix[3][5][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC5CTRL1: plugin->polyfx_mod_matrix[3][5][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC5CTRL2: plugin->polyfx_mod_matrix[3][5][2] = data; break;
 
 
         case FM1_NOISE_TYPE: plugin->noise_type = data; break;
@@ -606,31 +606,31 @@ void v_fm1_connect_port(PluginHandle instance, int port,
         case FM1_NOISE_PREFX: plugin->noise_prefx = data; break;
 
         //fm macro 1
-        case WAVV_PFXMATRIX_GRP0DST0SRC6CTRL0: plugin->polyfx_mod_matrix[0][6][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC6CTRL1: plugin->polyfx_mod_matrix[0][6][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC6CTRL2: plugin->polyfx_mod_matrix[0][6][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC6CTRL0: plugin->polyfx_mod_matrix[1][6][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC6CTRL1: plugin->polyfx_mod_matrix[1][6][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC6CTRL2: plugin->polyfx_mod_matrix[1][6][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC6CTRL0: plugin->polyfx_mod_matrix[2][6][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC6CTRL1: plugin->polyfx_mod_matrix[2][6][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC6CTRL2: plugin->polyfx_mod_matrix[2][6][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC6CTRL0: plugin->polyfx_mod_matrix[3][6][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC6CTRL1: plugin->polyfx_mod_matrix[3][6][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC6CTRL2: plugin->polyfx_mod_matrix[3][6][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC6CTRL0: plugin->polyfx_mod_matrix[0][6][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC6CTRL1: plugin->polyfx_mod_matrix[0][6][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC6CTRL2: plugin->polyfx_mod_matrix[0][6][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC6CTRL0: plugin->polyfx_mod_matrix[1][6][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC6CTRL1: plugin->polyfx_mod_matrix[1][6][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC6CTRL2: plugin->polyfx_mod_matrix[1][6][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC6CTRL0: plugin->polyfx_mod_matrix[2][6][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC6CTRL1: plugin->polyfx_mod_matrix[2][6][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC6CTRL2: plugin->polyfx_mod_matrix[2][6][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC6CTRL0: plugin->polyfx_mod_matrix[3][6][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC6CTRL1: plugin->polyfx_mod_matrix[3][6][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC6CTRL2: plugin->polyfx_mod_matrix[3][6][2] = data; break;
         //fm macro 2
-        case WAVV_PFXMATRIX_GRP0DST0SRC7CTRL0: plugin->polyfx_mod_matrix[0][7][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC7CTRL1: plugin->polyfx_mod_matrix[0][7][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST0SRC7CTRL2: plugin->polyfx_mod_matrix[0][7][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC7CTRL0: plugin->polyfx_mod_matrix[1][7][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC7CTRL1: plugin->polyfx_mod_matrix[1][7][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST1SRC7CTRL2: plugin->polyfx_mod_matrix[1][7][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC7CTRL0: plugin->polyfx_mod_matrix[2][7][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC7CTRL1: plugin->polyfx_mod_matrix[2][7][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST2SRC7CTRL2: plugin->polyfx_mod_matrix[2][7][2] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC7CTRL0: plugin->polyfx_mod_matrix[3][7][0] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC7CTRL1: plugin->polyfx_mod_matrix[3][7][1] = data; break;
-        case WAVV_PFXMATRIX_GRP0DST3SRC7CTRL2: plugin->polyfx_mod_matrix[3][7][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC7CTRL0: plugin->polyfx_mod_matrix[0][7][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC7CTRL1: plugin->polyfx_mod_matrix[0][7][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST0SRC7CTRL2: plugin->polyfx_mod_matrix[0][7][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC7CTRL0: plugin->polyfx_mod_matrix[1][7][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC7CTRL1: plugin->polyfx_mod_matrix[1][7][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST1SRC7CTRL2: plugin->polyfx_mod_matrix[1][7][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC7CTRL0: plugin->polyfx_mod_matrix[2][7][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC7CTRL1: plugin->polyfx_mod_matrix[2][7][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST2SRC7CTRL2: plugin->polyfx_mod_matrix[2][7][2] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC7CTRL0: plugin->polyfx_mod_matrix[3][7][0] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC7CTRL1: plugin->polyfx_mod_matrix[3][7][1] = data; break;
+        case FM1_PFXMATRIX_GRP0DST3SRC7CTRL2: plugin->polyfx_mod_matrix[3][7][2] = data; break;
 
         case FM1_MIN_NOTE: plugin->min_note = data; break;
         case FM1_MAX_NOTE: plugin->max_note = data; break;
@@ -1366,13 +1366,19 @@ void v_run_fm1_voice(t_fm1 *plugin_data,
 
                 if(f_i <= f_osc_num)
                 {
-                    v_osc_wav_apply_fm(&f_osc->osc_wavtable,
-                        a_voice->osc[f_i].fm_last, f_osc->fm_osc_values[f_i]);
+                    v_osc_wav_apply_fm(
+                        &f_osc->osc_wavtable,
+                        a_voice->osc[f_i].fm_last,
+                        f_osc->fm_osc_values[f_i]
+                    );
                 }
                 else
                 {
-                    v_osc_wav_apply_fm_direct(&f_osc->osc_wavtable,
-                        a_voice->osc[f_i].fm_last, f_osc->fm_osc_values[f_i]);
+                    v_osc_wav_apply_fm_direct(
+                        &f_osc->osc_wavtable,
+                        a_voice->osc[f_i].fm_last,
+                        f_osc->fm_osc_values[f_i]
+                    );
                 }
 
                 ++f_i;
@@ -1647,9 +1653,9 @@ PluginDescriptor *fm1_plugin_descriptor(){
     set_pyfx_port(f_result, FM1_FX3_KNOB2, 64.0f, 0.0f, 127.0f);
     set_pyfx_port(f_result, FM1_FX3_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
 
-    int f_i = WAVV_PFXMATRIX_GRP0DST0SRC0CTRL0;
+    int f_i = FM1_PFXMATRIX_GRP0DST0SRC0CTRL0;
 
-    while(f_i <= WAVV_PFXMATRIX_GRP0DST3SRC3CTRL2)
+    while(f_i <= FM1_PFXMATRIX_GRP0DST3SRC3CTRL2)
     {
         set_pyfx_port(f_result, f_i,  0.0f, -100.0f, 100.0f);
         ++f_i;
@@ -1664,7 +1670,13 @@ PluginDescriptor *fm1_plugin_descriptor(){
     set_pyfx_port(f_result, FM1_OSC2_UNISON_VOICES, 1.0f, 1.0f, 7.0f);
     set_pyfx_port(f_result, FM1_OSC2_UNISON_SPREAD, 50.0f, 0.0f, 100.0f);
     set_pyfx_port(f_result, FM1_LFO_AMOUNT, 100.0f, 0.0f, 100.0f);
-    set_pyfx_port(f_result, FM1_OSC3_TYPE, 0.0f, 0.0f, (SGFLT)WT_TOTAL_WAVETABLE_COUNT);
+    set_pyfx_port(
+        f_result,
+        FM1_OSC3_TYPE,
+        0.0f,
+        0.0f,
+        (SGFLT)WT_TOTAL_WAVETABLE_COUNT
+    );
     set_pyfx_port(f_result, FM1_OSC3_PITCH, 0.0f, -72.0f, 72.0f);
     set_pyfx_port(f_result, FM1_OSC3_TUNE, 0.0f, -100.0f, 100.0f);
     set_pyfx_port(f_result, FM1_OSC3_VOLUME, -6.0f, -30.0f, 0.0f);
@@ -1685,9 +1697,9 @@ PluginDescriptor *fm1_plugin_descriptor(){
     set_pyfx_port(f_result, FM1_RELEASE3, 50.0f, 10.0f, 400.0f);
     set_pyfx_port(f_result, FM1_ADSR3_CHECKBOX, 0.0f, 0, 1);
 
-    f_i = WAVV_PFXMATRIX_GRP0DST0SRC4CTRL0;
+    f_i = FM1_PFXMATRIX_GRP0DST0SRC4CTRL0;
 
-    while(f_i <= WAVV_PFXMATRIX_GRP0DST3SRC5CTRL2)
+    while(f_i <= FM1_PFXMATRIX_GRP0DST3SRC5CTRL2)
     {
         set_pyfx_port(f_result, f_i, 0.0f, -100.0f, 100.0f);
         ++f_i;
@@ -1703,7 +1715,13 @@ PluginDescriptor *fm1_plugin_descriptor(){
     set_pyfx_port(f_result, FM1_OSC1_FM4, 0.0f, 0.0f, 100.0f);
     set_pyfx_port(f_result, FM1_OSC2_FM4, 0.0f, 0.0f, 100.0f);
     set_pyfx_port(f_result, FM1_OSC3_FM4, 0.0f, 0.0f, 100.0f);
-    set_pyfx_port(f_result, FM1_OSC4_TYPE, 0.0f, 0.0f, (SGFLT)WT_TOTAL_WAVETABLE_COUNT);
+    set_pyfx_port(
+        f_result,
+        FM1_OSC4_TYPE,
+        0.0f,
+        0.0f,
+        (SGFLT)WT_TOTAL_WAVETABLE_COUNT
+    );
     set_pyfx_port(f_result, FM1_OSC4_PITCH, 0.0f, -72.0f, 72.0f);
     set_pyfx_port(f_result, FM1_OSC4_TUNE, 0.0f, -100.0f, 100.0f);
     set_pyfx_port(f_result, FM1_OSC4_VOLUME, -6.0f, -30.0f, 0.0f);
@@ -1856,9 +1874,9 @@ PluginDescriptor *fm1_plugin_descriptor(){
 
     set_pyfx_port(f_result, FM1_NOISE_PREFX, 1.0f, 0, 1);
 
-    f_port = WAVV_PFXMATRIX_GRP0DST0SRC6CTRL0;
+    f_port = FM1_PFXMATRIX_GRP0DST0SRC6CTRL0;
 
-    while(f_port <= WAVV_PFXMATRIX_GRP0DST3SRC7CTRL2)
+    while(f_port <= FM1_PFXMATRIX_GRP0DST3SRC7CTRL2)
     {
         set_pyfx_port(f_result, f_port,  0.0f, -100.0f, 100.0f);
         ++f_port;

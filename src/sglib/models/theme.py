@@ -512,7 +512,7 @@ def setup_globals():
         'files',
         "share",
         "pixmaps",
-        "{}.png".format(
+        "{}.ico".format(
             MAJOR_VERSION
         ),
     )
@@ -520,7 +520,7 @@ def setup_globals():
         ICON_PATH = os.path.join(
             SHARE_DIR,
             "pixmaps",
-            "{}.png".format(
+            "{}.ico".format(
                 MAJOR_VERSION
             ),
         )

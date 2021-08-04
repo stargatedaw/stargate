@@ -163,9 +163,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755, root, root) %{{_usr}}/bin/{0}-paulstretch
 %attr(755, root, root) %{{_usr}}/bin/{0}-project-recover
 %attr(755, root, root) %{{_usr}}/bin/{0}-sbsms
-%{{_usr}}/share/applications/{0}.desktop
-%{{_usr}}/share/doc/{0}/copyright
-%{{_usr}}/share/pixmaps/{0}.png
+%{{_usr}}/share/
 %{{_usr}}/lib/{0}
 
 %doc

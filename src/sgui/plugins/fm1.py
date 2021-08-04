@@ -557,18 +557,33 @@ class fm1_plugin_ui(AbstractPluginUI):
         self._plugin_name = "FM1"
         self.is_instrument = True
 
-        f_osc_types = [_("Off"),
+        f_osc_types = [
+            _("Off"),
             #Saw-like waves
-            _("Plain Saw"), _("SuperbSaw"), _("Viral Saw"), _("Soft Saw"),
-            _("Mid Saw"), _("Lush Saw"),
+            _("Plain Saw"),
+            _("SuperbSaw"),
+            _("Viral Saw"),
+            _("Soft Saw"),
+            _("Mid Saw"),
+            _("Lush Saw"),
             #Square-like waves
-            _("Evil Square"), _("Punchy Square"), _("Soft Square"),
+            _("Evil Square"),
+            _("Punchy Square"),
+            _("Soft Square"),
             #Glitchy and distorted waves
-            _("Pink Glitch"), _("White Glitch"), _("Acid"), _("Screetch"),
+            _("Pink Glitch"),
+            _("White Glitch"),
+            _("Acid"),
+            _("Screetch"),
             #Sine and triangle-like waves
-            _("Thick Bass"), _("Rattler"), _("Deep Saw"), _("Sine"),
+            _("Thick Bass"),
+            _("Rattler"),
+            _("Deep Saw"),
+            _("Sine"),
             #The custom additive oscillator tab
-            _("(Additive 1)"), _("(Additive 2)"), _("(Additive 3)")
+            _("(Additive 1)"),
+            _("(Additive 2)"),
+            _("(Additive 3)"),
         ]
 
         self.fm_knobs = []
@@ -627,14 +642,19 @@ class fm1_plugin_ui(AbstractPluginUI):
                 f_knob_size,
                 getattr(sys.modules[__name__], "FM1_OSC{}_PITCH".format(f_i)),
                 getattr(sys.modules[__name__], "FM1_OSC{}_TUNE".format(f_i)),
-                getattr(sys.modules[__name__],
-                        "FM1_OSC{}_VOLUME".format(f_i)),
+                getattr(
+                    sys.modules[__name__],
+                    "FM1_OSC{}_VOLUME".format(f_i)
+                ),
                 getattr(sys.modules[__name__], "FM1_OSC{}_TYPE".format(f_i)),
                 f_osc_types,
-                self.plugin_rel_callback, self.plugin_val_callback,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
                 _("Oscillator {}".format(f_i)),
-                self.port_dict, self.preset_manager,
-                1 if f_i == 1 else 0)
+                self.port_dict,
+                self.preset_manager,
+                1 if f_i == 1 else 0
+            )
             f_osc1.osc_type_combobox.control.setMaxVisibleItems(
                 len(f_osc_types))
             f_osc1.pitch_knob.control.setRange(-72, 72)
@@ -666,10 +686,15 @@ class fm1_plugin_ui(AbstractPluginUI):
                 self.plugin_val_callback,
                 self.port_dict, self.preset_manager,
                 a_knob_type=KC_LOG_TIME,
-                a_delay_port=
-                getattr(sys.modules[__name__], "FM1_ADSR{}_DELAY".format(f_i)),
-                a_hold_port=
-                getattr(sys.modules[__name__], "FM1_ADSR{}_HOLD".format(f_i)))
+                a_delay_port=getattr(
+                    sys.modules[__name__],
+                    "FM1_ADSR{}_DELAY".format(f_i)
+                ),
+                a_hold_port=getattr(
+                    sys.modules[__name__],
+                    "FM1_ADSR{}_HOLD".format(f_i)
+                ),
+            )
             f_hlayout1.addWidget(f_adsr_amp1.groupbox)
 
             f_adsr_amp1_checkbox = checkbox_control(
