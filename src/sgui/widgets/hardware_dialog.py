@@ -148,7 +148,9 @@ class hardware_dialog:
         self.pyaudio.Pa_GetHostApiInfo.argstype = [ctypes.c_int]
         self.pyaudio.Pa_IsFormatSupported.argstype = [
             ctypes.POINTER(portaudio.PaStreamParameters),
-            ctypes.POINTER(portaudio.PaStreamParameters), ctypes.c_double]
+            ctypes.POINTER(portaudio.PaStreamParameters),
+            ctypes.c_double,
+        ]
         LOG.info("Initializing Portaudio")
         self.pyaudio.Pa_Initialize()
 
@@ -156,7 +158,8 @@ class hardware_dialog:
         ctypes.cdll.LoadLibrary(f_pm_dll)
         self.pypm = ctypes.CDLL(f_pm_dll)
         self.pypm.Pm_GetDeviceInfo.restype = ctypes.POINTER(
-            portmidi.PmDeviceInfo)
+            portmidi.PmDeviceInfo,
+        )
         LOG.info("Initializing PortMIDI")
         self.pypm.Pm_Initialize()
         self.devices_open = True
@@ -220,6 +223,7 @@ class hardware_dialog:
         for i in range(f_count):
             f_dev = self.pyaudio.Pa_GetDeviceInfo(i)
             f_dev_name = f_dev.contents.name.decode(TEXT_ENCODING)
+            LOG.info(f_dev.contents.__dict__)
             f_audio_device_names.append(f_dev_name)
             if f_device_str == f_dev_name:
                 break
@@ -371,13 +375,14 @@ class hardware_dialog:
         f_count = self.pyaudio.Pa_GetHostApiCount()
 
         f_host_api_names = []
+        host_api_dict = {}
 
         for i in range(f_count):
-            f_host_api_names.append(
-                self.pyaudio.Pa_GetHostApiInfo(
-                    i,
-                ).contents.name.decode(TEXT_ENCODING)
-            )
+            name = self.pyaudio.Pa_GetHostApiInfo(
+                i,
+            ).contents.name.decode(TEXT_ENCODING)
+            f_host_api_names.append(name)
+            host_api_dict[i] = name
 
         f_count = self.pyaudio.Pa_GetDeviceCount()
 
@@ -389,12 +394,16 @@ class hardware_dialog:
         for i in range(f_count):
             f_dev = self.pyaudio.Pa_GetDeviceInfo(i)
             f_dev_name = f_dev.contents.name.decode(TEXT_ENCODING)
-            LOG.info("\nDevice Index: {}".format(i))
-            LOG.info("Name : {}".format(f_dev_name))
-            LOG.info("maxInputChannels : {}".format(
-                f_dev.contents.maxInputChannels))
-            LOG.info("maxOutputChannels : {}".format(
-                f_dev.contents.maxOutputChannels))
+            host_api_name = host_api_dict[f_dev.contents.hostApi]
+            LOG.info(
+                f"{i}: {host_api_name}: {f_dev_name} "
+                f"in: {f_dev.contents.maxInputChannels} "
+                f"out: {f_dev.contents.maxOutputChannels} "
+                f"sr: {f_dev.contents.defaultSampleRate} "
+            )
+            if f_dev.contents.maxOutputChannels < 2:
+                LOG.info(f"Skipping {f_dev_name}, less than 2 outputs")
+                continue
             f_host_api = f_host_api_names[f_dev.contents.hostApi]
             f_name_to_index[f_host_api][f_dev_name] = i
             f_result_dict[f_host_api][f_dev_name] = f_dev.contents
