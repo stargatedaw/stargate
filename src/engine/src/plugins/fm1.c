@@ -1612,11 +1612,23 @@ PluginDescriptor *fm1_plugin_descriptor(){
     set_pyfx_port(f_result, FM1_SUSTAIN2, 0.0f, -30.0f, 0.0f);
     set_pyfx_port(f_result, FM1_RELEASE2, 50.0f, 10.0f, 400.0f);
     set_pyfx_port(f_result, FM1_NOISE_AMP, -30.0f, -60.0f, 0.0f);
-    set_pyfx_port(f_result, FM1_OSC1_TYPE, 1.0f, 0.0f, (SGFLT)WT_TOTAL_WAVETABLE_COUNT);
+    set_pyfx_port(
+        f_result,
+        FM1_OSC1_TYPE,
+        1.0f,
+        0.0f,
+        (SGFLT)WT_TOTAL_WAVETABLE_COUNT
+    );
     set_pyfx_port(f_result, FM1_OSC1_PITCH, 0.0f, -72.0f, 72.0f);
     set_pyfx_port(f_result, FM1_OSC1_TUNE, 0.0f, -100.0f, 100.0f);
     set_pyfx_port(f_result, FM1_OSC1_VOLUME, -6.0f, -30.0f, 0.0f);
-    set_pyfx_port(f_result, FM1_OSC2_TYPE, 0.0f, 0.0f, (SGFLT)WT_TOTAL_WAVETABLE_COUNT);
+    set_pyfx_port(
+        f_result,
+        FM1_OSC2_TYPE,
+        0.0f,
+        0.0f,
+        (SGFLT)WT_TOTAL_WAVETABLE_COUNT
+    );
     set_pyfx_port(f_result, FM1_OSC2_PITCH, 0.0f, -72.0f, 72.0f);
     set_pyfx_port(f_result, FM1_OSC2_TUNE, 0.0f, -100.0f, 100.0f);
     set_pyfx_port(f_result, FM1_OSC2_VOLUME, -6.0f, -30.0f, 0.0f);
