@@ -38,8 +38,8 @@ int ZERO = 0;
 
 void v_ui_send(char * a_path, char * a_msg){
     int msg_len = strlen(a_path) + strlen(a_msg);
-    assert(msg_len < 24576);
-    char msg[24576];
+    assert(msg_len < 60000);
+    char msg[60000];
     sprintf(msg, "%s\n%s", a_path, a_msg);
     ipc_client_send(msg);
 }

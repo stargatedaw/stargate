@@ -1,7 +1,7 @@
 #ifndef SG_IPC_H
 #define SG_IPC_H
 
-#define IPC_MAX_MESSAGE_SIZE 24576
+#define IPC_MAX_MESSAGE_SIZE 60000
 
 struct IpcServerThreadArgs{
     int (*callback)(char*, char*, char*);

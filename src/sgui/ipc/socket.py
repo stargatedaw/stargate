@@ -95,7 +95,7 @@ class SocketIPCTransport(AbstractIPCTransport):
         value,
     ):
         message = "\n".join([path, key, value])
-        assert len(message) < 24576, (len(message), message)
+        assert len(message) < 60000, (len(message), message)
         message = message.encode('ascii')
         for wait in (0.1, 0.3, 0.6):
             try:
