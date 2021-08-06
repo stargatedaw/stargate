@@ -848,15 +848,15 @@ void v_fm1_process_midi_event(
                 }
             }
 
-            f_fm1_voice->noise_linamp =
-                f_db_to_linear_fast(*(plugin_data->noise_amp));
+            f_fm1_voice->noise_linamp = f_db_to_linear_fast(
+                *(plugin_data->noise_amp)
+            );
 
             f_fm1_voice->adsr_noise_on = (int)*plugin_data->noise_adsr_on;
 
             f_fm1_voice->noise_prefx = (int)*plugin_data->noise_prefx;
 
-            if(f_fm1_voice->adsr_noise_on)
-            {
+            if(f_fm1_voice->adsr_noise_on){
                 v_adsr_retrigger(&f_fm1_voice->adsr_noise);
                 SGFLT f_attack = *(plugin_data->noise_attack) * .01f;
                 f_attack = (f_attack) * (f_attack);
@@ -865,20 +865,26 @@ void v_fm1_process_midi_event(
                 SGFLT f_sustain = (*plugin_data->noise_sustain);
                 SGFLT f_release = *(plugin_data->noise_release) * .01f;
                 f_release = (f_release) * (f_release);
-                v_adsr_set_adsr_db(&f_fm1_voice->adsr_noise,
-                        f_attack, f_decay, f_sustain, f_release);
+                v_adsr_set_adsr_db(
+                    &f_fm1_voice->adsr_noise,
+                    f_attack,
+                    f_decay,
+                    f_sustain,
+                    f_release
+                );
                 v_adsr_set_delay_time(
-                        &f_fm1_voice->adsr_noise,
-                        (*plugin_data->noise_delay) * 0.01f);
+                    &f_fm1_voice->adsr_noise,
+                    (*plugin_data->noise_delay) * 0.01f
+                );
                 v_adsr_set_hold_time(
-                        &f_fm1_voice->adsr_noise,
-                        (*plugin_data->noise_hold) * 0.01f);
+                    &f_fm1_voice->adsr_noise,
+                    (*plugin_data->noise_hold) * 0.01f
+                );
             }
 
             f_fm1_voice->adsr_lfo_on = (int)*plugin_data->lfo_adsr_on;
 
-            if(f_fm1_voice->adsr_lfo_on)
-            {
+            if(f_fm1_voice->adsr_lfo_on){
                 v_adsr_retrigger(&f_fm1_voice->adsr_lfo);
                 SGFLT f_attack = *(plugin_data->lfo_attack) * .01f;
                 f_attack = (f_attack) * (f_attack);
@@ -971,14 +977,17 @@ void v_fm1_process_midi_event(
             }
 
             //Get the noise function pointer
-            f_fm1_voice->noise_func_ptr =
-                    fp_get_noise_func_ptr((int)(*(plugin_data->noise_type)));
+            f_fm1_voice->noise_func_ptr = fp_get_noise_func_ptr(
+                (int)(*(plugin_data->noise_type))
+            );
 
             v_adsr_retrigger(&f_fm1_voice->adsr_amp);
             v_adsr_retrigger(&f_fm1_voice->adsr_filter);
-            v_lfs_sync(&f_fm1_voice->lfo1,
-                       *plugin_data->lfo_phase * 0.01f,
-                       *plugin_data->lfo_type);
+            v_lfs_sync(
+                &f_fm1_voice->lfo1,
+                *plugin_data->lfo_phase * 0.01f,
+                *plugin_data->lfo_type
+            );
 
             SGFLT f_attack_a = (*(plugin_data->pfx_attack) * .01);
             f_attack_a *= f_attack_a;
@@ -1017,9 +1026,12 @@ void v_fm1_process_midi_event(
                 (*(plugin_data->pfx_hold_f) * .01));
 
             /*Retrigger the pitch envelope*/
-            v_rmp_retrigger_curve(&f_fm1_voice->ramp_env,
-                    (*(plugin_data->pitch_env_time) * .01), 1.0f,
-                    (*plugin_data->ramp_curve) * 0.01f);
+            v_rmp_retrigger_curve(
+                &f_fm1_voice->ramp_env,
+                (*(plugin_data->pitch_env_time) * .01),
+                1.0f,
+                (*plugin_data->ramp_curve) * 0.01f
+            );
 
             f_fm1_voice->noise_amp = f_db_to_linear(*(plugin_data->noise_amp));
 
@@ -1384,27 +1396,20 @@ void v_run_fm1_voice(t_fm1 *plugin_data,
                 ++f_i;
             }
 
-            if(f_osc->adsr_amp_on)
-            {
+            if(f_osc->adsr_amp_on){
                 v_adsr_run_db(&f_osc->adsr_amp_osc);
                 f_osc->fm_last = f_osc_wav_run_unison(&f_osc->osc_wavtable)
                     * (f_osc->adsr_amp_osc.output);
-            }
-            else
-            {
+            } else {
                 f_osc->fm_last = f_osc_wav_run_unison(&f_osc->osc_wavtable);
             }
 
-            if(f_osc->osc_audible || f_macro_amp >= 1.0f)
-            {
+            if(f_osc->osc_audible || f_macro_amp >= 1.0f){
                 f_osc_amp = f_osc->osc_linamp * f_db_to_linear(f_macro_amp);
 
-                if(f_osc_amp > 1.0f)  //clip at 0dB
-                {
+                if(f_osc_amp > 1.0f){  //clip at 0dB
                     a_voice->current_sample += f_osc->fm_last;
-                }
-                else
-                {
+                } else {
                     a_voice->current_sample += f_osc->fm_last * f_osc_amp;
                 }
             }

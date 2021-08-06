@@ -6,6 +6,7 @@ DESTDIR ?=
 SBSMS_PREFIX = $(PREFIX)/lib/$(VERSION)/sbsms
 SG_DIR = $(DESTDIR)$(PREFIX)/lib/$(VERSION)
 PIP ?= pip3
+BROWSER ?= firefox-wayland
 
 # --------------------------------------------------------------
 
@@ -81,9 +82,10 @@ py_vendor:
 	$(PIP) install \
 		--ignore-installed --target=./sg_py_vendor --no-deps wavefile
 
-test:
+tests:
 	make -C engine test
 	pytest test/
+	$(BROWSER) htmlcov/index.html
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(VERSION)*

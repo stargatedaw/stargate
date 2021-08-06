@@ -7,6 +7,7 @@
 bench.out
 coverage*.html
 gmon.out
+html/
 pahole.txt
 profile.txt
 stargate-engine*
