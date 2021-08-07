@@ -236,7 +236,7 @@ class preset_manager_widget:
             caption=_('Open preset bank...'),
             directory=util.HOME,
             filter=PRESET_FILE_DIALOG_STRING,
-            options=QFileDialog.DontUseNativeDialog,
+            options=QFileDialog.Option.DontUseNativeDialog,
         )
         if not f_file is None and not str(f_file) == "":
             f_file = str(f_file)

@@ -761,7 +761,7 @@ class SgMainWindow(QMainWindow):
                 _("Open a theme file"),
                 util.THEMES_DIR,
                 "Stargate Theme(*.yaml *.yml)",
-                options=QFileDialog.DontUseNativeDialog,
+                options=QFileDialog.Option.DontUseNativeDialog,
             )
             if f_file and str(f_file):
                 f_file = str(f_file)
@@ -924,7 +924,7 @@ class SgMainWindow(QMainWindow):
                         MAIN_WINDOW,
                         _("Open Folder"),
                         self.last_ac_dir,
-                        options=QFileDialog.DontUseNativeDialog,
+                        options=QFileDialog.Option.DontUseNativeDialog,
                     )
                     if f_dir is None:
                         return
@@ -941,7 +941,7 @@ class SgMainWindow(QMainWindow):
                         filter=_("Audio Files {}").format(
                             '(*.wav *.{})'.format(a_label)
                         ),
-                        options=QFileDialog.DontUseNativeDialog,
+                        options=QFileDialog.Option.DontUseNativeDialog,
                     )
                     if f_file_name and str(f_file_name):
                         f_name.setText(str(f_file_name))
@@ -964,7 +964,7 @@ class SgMainWindow(QMainWindow):
                         MAIN_WINDOW,
                         _("Open Folder"),
                         self.last_ac_dir,
-                        options=QFileDialog.DontUseNativeDialog,
+                        options=QFileDialog.Option.DontUseNativeDialog,
                     )
                     if f_dir is None:
                         return
@@ -978,7 +978,7 @@ class SgMainWindow(QMainWindow):
                         MAIN_WINDOW,
                         _("Select a file name to save to..."),
                         self.last_ac_dir,
-                        options=QFileDialog.DontUseNativeDialog,
+                        options=QFileDialog.Option.DontUseNativeDialog,
                     )
                     if f_file_name and str(f_file_name):
                         f_file_name = str(f_file_name)

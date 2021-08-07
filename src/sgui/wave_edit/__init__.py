@@ -890,7 +890,7 @@ class wave_editor_widget:
                 "Save file as...",
                 self.last_offline_dir,
                 filter="Wav File (*.wav)",
-                options=QFileDialog.DontUseNativeDialog,
+                options=QFileDialog.Option.DontUseNativeDialog,
             )
             if f_file is None:
                 return
@@ -1014,7 +1014,7 @@ class wave_editor_widget:
                     MAIN_WINDOW,
                     _("Select a file name to save to..."),
                     self.last_offline_dir,
-                    options=QFileDialog.DontUseNativeDialog,
+                    options=QFileDialog.Option.DontUseNativeDialog,
                 )
                 f_file_name = str(f_file_name)
                 if not f_file_name is None and f_file_name != "":

@@ -165,7 +165,7 @@ class AbstractFileBrowserWidget:
             caption=_('Save bookmark file...'),
             directory=USER_HOME,
             filter=BM_FILE_DIALOG_STRING,
-            options=QFileDialog.DontUseNativeDialog,
+            options=QFileDialog.Option.DontUseNativeDialog,
         )
         if not f_file is None and not str(f_file) == "":
             f_file = str(f_file)
@@ -179,7 +179,7 @@ class AbstractFileBrowserWidget:
             caption=_('Open bookmark file...'),
             directory=USER_HOME,
             filter=BM_FILE_DIALOG_STRING,
-            options=QFileDialog.DontUseNativeDialog,
+            options=QFileDialog.Option.DontUseNativeDialog,
         )
         if not f_file is None and not str(f_file) == "":
             f_file = str(f_file)

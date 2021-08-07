@@ -157,7 +157,7 @@ def save_a_copy():
         parent=shared.MAIN_WINDOW,
         caption=_('Save audio item as .wav'),
         directory=LAST_AUDIO_ITEM_DIR,
-        options=QFileDialog.DontUseNativeDialog,
+        options=QFileDialog.Option.DontUseNativeDialog,
     )
     if not f_file is None and not str(f_file) == "":
         f_file = str(f_file)

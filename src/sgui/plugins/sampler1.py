@@ -2126,7 +2126,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
                 _("Select a directory to copy the samples to..."),
                 util.HOME,
                 filter=util.SAMPLER_FILE_TYPE,
-                options=QFileDialog.DontUseNativeDialog,
+                options=QFileDialog.Option.DontUseNativeDialog,
             )
             if f_selected_path is not None:
                 f_selected_path = str(f_selected_path)
@@ -2163,7 +2163,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
             _("Select a directory to move the samples to..."),
             util.HOME,
             filter=util.SAMPLER_FILE_TYPE,
-            options=QFileDialog.DontUseNativeDialog,
+            options=QFileDialog.Option.DontUseNativeDialog,
         )
         if f_selected_path is not None:
             f_selected_path = str(f_selected_path)
@@ -2209,7 +2209,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
                 _("Import SFZ instrument..."),
                 util.HOME,
                 filter="SFZ file (*.sfz)",
-                options=QFileDialog.DontUseNativeDialog,
+                options=QFileDialog.Option.DontUseNativeDialog,
             )
             if f_selected_path is not None:
                 f_selected_path = str(f_selected_path)

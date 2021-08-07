@@ -59,7 +59,7 @@ def open_project(a_parent=None):
             caption='Open Project',
             directory=DEFAULT_PROJECT_DIR,
             filter=PROJECT_FILE_TYPE,
-            options=QFileDialog.DontUseNativeDialog,
+            options=QFileDialog.Option.DontUseNativeDialog,
         )
         if f_file is None:
             return False

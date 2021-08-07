@@ -338,7 +338,11 @@ class MainWindow(QScrollArea):
                     MAIN_WINDOW,
                     _('Select an empty directory to render stems to'),
                     self.last_offline_dir,
-                    QFileDialog.ShowDirsOnly | QFileDialog.DontUseNativeDialog,
+                    (
+                        QFileDialog.Option.ShowDirsOnly
+                        |
+                        QFileDialog.Option.DontUseNativeDialog
+                    ),
                 )
                 if f_file and str(f_file):
                     if os.listdir(f_file):
@@ -353,7 +357,7 @@ class MainWindow(QScrollArea):
                     shared.MAIN_WINDOW,
                     _("Select a file name to save to..."),
                     self.last_offline_dir,
-                    options=QFileDialog.DontUseNativeDialog,
+                    options=QFileDialog.Option.DontUseNativeDialog,
                 )
                 f_file_name = str(f_file_name)
                 if f_file_name and str(f_file_name):
