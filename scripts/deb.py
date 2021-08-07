@@ -4,13 +4,13 @@
 """
 
 import argparse
-import distro
 import json
 import os
 import platform
 import shutil
 import subprocess
 import tempfile
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -130,12 +130,17 @@ with open(control, 'w') as f:
     f.write(CONTROL_FILE)
 retcode = os.system(f"dpkg-deb --build --root-owner-group {root}")
 assert not retcode, retcode
-distro_name = distro.name().split()[0].lower()
-distro_version = distro.version().lower().replace(' ', '-')
-package = (
-    f"{major_version}-{minor_version}-"
-    f"{distro_name}-{distro_version}-{arch}.deb"
-)
+try:
+    import distro
+    distro_name = distro.name().split()[0].lower()
+    distro_version = distro.version().lower().replace(' ', '-')
+    package = (
+        f"{major_version}-{minor_version}-"
+        f"{distro_name}-{distro_version}-{arch}.deb"
+    )
+except ImportError:
+    package = f"{major_version}-{minor_version}-{arch}.deb"
+
 os.rename(
     os.path.join(CWD, "tmp.deb"),
     os.path.join(CWD, package),
