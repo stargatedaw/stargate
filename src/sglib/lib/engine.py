@@ -154,6 +154,7 @@ def run_engine(cmd):
             |
             subprocess.CREATE_NO_WINDOW
         )
+        kwargs['stdin'] = subprocess.DEVNULL
     ENGINE_SUBPROCESS = subprocess.Popen(
         cmd,
         **kwargs
