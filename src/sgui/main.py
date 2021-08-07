@@ -302,6 +302,10 @@ class SgMainWindow(QMainWindow):
         self.default_theme_action.triggered.connect(
             self.on_use_default_theme,
         )
+        self.copy_theme_action = self.menu_appearance.addAction(
+            _("Copy Theme to New Theme..."),
+        )
+        self.copy_theme_action.triggered.connect(self.on_copy_theme)
 
         if not util.IS_WINDOWS:
             self.menu_tools = self.menu_bar.addMenu(_("Tools"))
@@ -753,11 +757,33 @@ class SgMainWindow(QMainWindow):
             _("Please restart Stargate to update the UI")
         )
 
+    def on_copy_theme(self):
+        try:
+            path, _filter = QFileDialog.getSaveFileName(
+                MAIN_WINDOW.widget,
+                _("Copy a theme directory"),
+                util.THEMES_DIR,
+                options=QFileDialog.Option.DontUseNativeDialog,
+            )
+            if path and str(path):
+                path = str(path)
+                if os.path.exists(path):
+                    QMessageBox.warning(
+                        MAIN_WINDOW.widget,
+                        _("Error"),
+                        _(f"{path} already exists"),
+                    )
+                    return
+                theme.copy_theme(path)
+        except Exception as ex:
+            LOG.exception(ex)
+            show_generic_exception(ex)
+
 
     def on_open_theme(self):
         try:
             f_file, f_filter = QFileDialog.getOpenFileName(
-                MAIN_WINDOW,
+                MAIN_WINDOW.widget,
                 _("Open a theme file"),
                 util.THEMES_DIR,
                 "Stargate Theme(*.yaml *.yml)",

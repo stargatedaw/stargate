@@ -575,3 +575,7 @@ def load_theme():
     theme = unmarshal_json(y, Theme)
     QSS, SYSTEM_COLORS = theme.render(THEME_FILE)
 
+def copy_theme(dest):
+    theme_dir = os.path.dirname(THEME_FILE)
+    shutil.copytree(theme_dir, dest)
+
