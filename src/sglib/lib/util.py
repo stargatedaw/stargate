@@ -18,8 +18,6 @@ if IS_LINUX:
 elif IS_WINDOWS:
     from .path.windows import *
 
-IS_A_TTY = sys.stdin.isatty()
-
 terminating_char = "\\"
 
 PROJECT_FILE_TYPE = f'Stargate Project ({MAJOR_VERSION}.project)'

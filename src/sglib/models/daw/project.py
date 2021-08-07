@@ -61,8 +61,6 @@ class DawProject(AbstractProject):
             f_history_file = history.history_file(
                 a_folder, a_file, a_text, f_old, f_existed)
             self.history_files.append(f_history_file)
-            if not util.IS_A_TTY:
-                LOG.info(str(f_history_file))
 
     def set_undo_context(self, a_context):
         self.undo_context = a_context
