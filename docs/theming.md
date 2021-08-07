@@ -7,6 +7,11 @@ src/sglib/models/theme.py
 src/files/themes/default/
 ```
 
+# Opening, Copying Themes
+Themes are controlled in the `Appearance` menu in the main menu (button on the
+upper left).  There are actions to open a theme, revert to the default theme,
+or copy the current theme to a new theme.
+
 # Performance Considerations
 Avoid the use of transparency and gradients to the greatest extent possible.
 Transparent hex colors are prepended by an extra 2 digits, ie:
