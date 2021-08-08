@@ -99,10 +99,13 @@ def prepare_to_quit():
 def set_window_title():
     if not MAIN_WINDOW:
         return
+    dirname = constants.PROJECT.project_folder
+    if util.IS_WINDOWS:
+        dirname = dirname.replace('/', '\\')
     MAIN_WINDOW.setWindowTitle(
         'Stargate - {}'.format(
             os.path.join(
-                constants.PROJECT.project_folder,
+                dirname,
                 f'{util.MAJOR_VERSION}.project',
             )
         ),
