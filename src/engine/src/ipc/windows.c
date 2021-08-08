@@ -15,12 +15,6 @@
 #include "globals.h"
 #include "ipc.h"
 
-// Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
-#pragma comment (lib, "Ws2_32.lib")
-#pragma comment (lib, "Mswsock.lib")
-#pragma comment (lib, "AdvApi32.lib")
-#pragma comment (lib, "Ws2_32.lib")
-
 struct SocketData{
     struct sockaddr_in si_other;
     int s;
@@ -159,10 +153,11 @@ void* ipc_server_thread(void* _arg){
 
     fd_set fds;
     int n;
-    struct timeval tv = {
+    struct timeval tv = (struct timeval){
         .tv_sec = 0,
         .tv_usec = 30000,
     };
+    int err;
 
     slen = sizeof(si_other) ;
 
@@ -180,6 +175,68 @@ void* ipc_server_thread(void* _arg){
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = inet_addr("127.0.0.1");
     server.sin_port = htons(19271);
+
+    int bufsize;
+    unsigned int max_msg_size;
+    int optsize;
+
+    optsize = sizeof(bufsize);
+    bufsize = 1024 * 1024;
+    err = setsockopt(
+        s,
+        SOL_SOCKET,
+        SO_RCVBUF,
+        (char*)&bufsize,
+        optsize
+    );
+    if(err){
+        fprintf(
+            stderr,
+            "ipc_server_thread: Unable to set recvbuf size, %i\n",
+            WSAGetLastError()
+        );
+    }
+
+    err = getsockopt(
+        s,
+        SOL_SOCKET,
+        SO_RCVBUF,
+        (char*)&bufsize,
+        &optsize
+    );
+    if(err){
+        fprintf(
+            stderr,
+            "ipc_server_thread: Unable to get recvbuf size, %i\n",
+            WSAGetLastError()
+        );
+    } else {
+        printf(
+            "ipc_server_thread: recv buffer size: %i\n",
+            bufsize
+        );
+    }
+
+    optsize = sizeof(max_msg_size);
+    err = getsockopt(
+        s,
+        SOL_SOCKET,
+        SO_MAX_MSG_SIZE,
+        (char*)&max_msg_size,
+        &optsize
+    );
+    if(err){
+        fprintf(
+            stderr,
+            "ipc_server_thread: Unable to get max_msg_size, %i\n",
+            WSAGetLastError()
+        );
+    } else {
+        printf(
+            "ipc_server_thread: max_msg_size: %i\n",
+            max_msg_size
+        );
+    }
 
     if(
         bind(
