@@ -12,6 +12,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
+#include "globals.h"
 #include "ipc.h"
 
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
@@ -196,7 +197,7 @@ void* ipc_server_thread(void* _arg){
     }
     printf("UDP server bind finished\n");
 
-    while(1){
+    while(!exiting){
         memset(buffer,'\0', IPC_MAX_MESSAGE_SIZE);
 
         FD_ZERO(&fds);
