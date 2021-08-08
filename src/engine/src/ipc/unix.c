@@ -146,12 +146,6 @@ void* ipc_server_thread(void* _arg){
             &engine_message,
             buffer
         );
-        printf(
-            "path: %s\nkey: %s\nvalue: %s\n",
-            engine_message.path,
-            engine_message.key,
-            engine_message.value
-        );
         args->callback(
             engine_message.path,
             engine_message.key,
