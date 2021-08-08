@@ -57,6 +57,7 @@ class SocketIPCServer:
             (self.host, self.port),
             UDPHandler
         ) as self.server:
+            self.server.max_packet_size = 63000
             self.server.serve_forever()
 
     def start(self):
