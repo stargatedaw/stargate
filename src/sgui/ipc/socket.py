@@ -109,8 +109,10 @@ class SocketIPCTransport(AbstractIPCTransport):
                     0.2,
                 )
                 if ready[0]:
-                    data = mysocket.recv(4096)
+                    data = self.socket.recv(4096)
                     LOG.info(data)
+                else:
+                    LOG.warning("Did not receive a reply from the engine")
                 return
             except Exception as ex:
                 LOG.warning(f"Error: {ex}, waiting {wait}s to retry")
