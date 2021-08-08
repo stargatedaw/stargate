@@ -24,6 +24,8 @@ struct SocketData{
     struct sockaddr_in si_other;
     int s;
     int slen;
+    fd_set fds;
+    struct timeval tv;
 };
 
 static struct SocketData SOCKET_DATA;
@@ -58,10 +60,17 @@ void ipc_init(){
         exit(EXIT_FAILURE);
     }
 
-    memset((char *) &SOCKET_DATA.si_other, 0, sizeof(SOCKET_DATA.si_other));
+    memset(
+        (char*) &SOCKET_DATA.si_other,
+        0,
+        sizeof(SOCKET_DATA.si_other)
+    );
     SOCKET_DATA.si_other.sin_family = AF_INET;
     SOCKET_DATA.si_other.sin_port = htons(30321);
     SOCKET_DATA.si_other.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+
+    SOCKET_DATA.tv.tv_sec = 0;
+    SOCKET_DATA.tv.tv_usec = 50000;
 }
 
 void ipc_dtor(){
@@ -70,7 +79,9 @@ void ipc_dtor(){
 }
 
 void ipc_client_send(char* message){
+    int n;
     char buffer[IPC_MAX_MESSAGE_SIZE];
+
     if(
         sendto(
             SOCKET_DATA.s,
@@ -83,16 +94,38 @@ void ipc_client_send(char* message){
     ){
         fprintf(
             stderr,
-            "UDP Client: sendto() failed with error code : %d\n",
+            "ipc_client_send: sendto() failed with error code : %d\n",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
     }
 
-    //receive a reply and print it
-    //clear the buffer by filling null, it might have previously received data
     memset(buffer,'\0', IPC_MAX_MESSAGE_SIZE);
-    //try to receive some data, this is a blocking call
+    FD_ZERO(&SOCKET_DATA.fds);
+    FD_SET(SOCKET_DATA.s, &SOCKET_DATA.fds);
+    n = select(
+        SOCKET_DATA.s,
+        &SOCKET_DATA.fds,
+        NULL,
+        NULL,
+        &SOCKET_DATA.tv
+    );
+    if(n == 0){
+        fprintf(
+            stderr,
+            "Warning: ipc_client_send select() returned 0, "
+            "UI did not respond\n"
+        );
+        return;
+    }
+    if(n == -1){
+        fprintf(
+            stderr,
+            "Warning: ipc_client_send select() returned -1, %i\n",
+            WSAGetLastError()
+        );
+        return;
+    }
     if(
         recvfrom(
             SOCKET_DATA.s,
@@ -105,7 +138,7 @@ void ipc_client_send(char* message){
     ){
         fprintf(
             stderr,
-            "recvfrom() failed with error code : %d\n",
+            "ipc_client_send: recvfrom() failed with error code : %d\n",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
@@ -126,25 +159,30 @@ void* ipc_server_thread(void* _arg){
     char *response = "Message processed";
     int response_len = strlen(response);
 
+    fd_set fds;
+    int n;
+    struct timeval tv = {
+        .tv_sec = 0,
+        .tv_usec = 30000,
+    };
+
     slen = sizeof(si_other) ;
 
-    //Create a socket
     if((s = socket(AF_INET , SOCK_DGRAM , 0 )) == INVALID_SOCKET){
         fprintf(
             stderr,
-            "Could not create socket : %d\n",
+            "ipc_server_thread: Could not create socket : %d\n",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
     }
-    printf("Socket created.\n");
+    printf("ipc_server_thread: Socket created.\n");
 
-    //Prepare the sockaddr_in structure
+    // Prepare the sockaddr_in structure
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = inet_addr("127.0.0.1");
     server.sin_port = htons(19271);
 
-    //Bind
     if(
         bind(
             s,
@@ -154,19 +192,30 @@ void* ipc_server_thread(void* _arg){
     ){
         fprintf(
             stderr,
-            "Bind failed with error code : %d\n",
+            "ipc_server_thread: Bind failed with error code : %d\n",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
     }
     printf("UDP server bind finished\n");
 
-    //keep listening for data
     while(1){
-        //clear the buffer by filling null, it might have previously received data
         memset(buffer,'\0', IPC_MAX_MESSAGE_SIZE);
 
-        //try to receive some data, this is a blocking call
+        FD_ZERO(&fds);
+        FD_SET(s, &fds);
+        n = select(s, &fds, NULL, NULL, &tv);
+        if(n == 0){  // timeout
+            continue;
+        } else if(n == -1){  // error
+            fprintf(
+                stderr,
+                "ipc_server_thread: select() returned -1, %i\n",
+                WSAGetLastError()
+            );
+            continue;
+        }
+        // Try to receive some data, this is a blocking call
         if (
             (recv_len = recvfrom(
                 s,
@@ -179,7 +228,25 @@ void* ipc_server_thread(void* _arg){
         ){
             fprintf(
                 stderr,
-                "recvfrom() failed with error code : %d\n",
+                "ipc_server_thread: recvfrom() failed with error code : %d\n",
+                WSAGetLastError()
+            );
+            exit(EXIT_FAILURE);
+        }
+
+        if (
+            sendto(
+                s,
+                response,
+                response_len,
+                0,
+                (struct sockaddr*)&si_other,
+                slen
+            ) == SOCKET_ERROR
+        ){
+            fprintf(
+                stderr,
+                "ipc_server_thread: sendto() failed with error code : %d\n",
                 WSAGetLastError()
             );
             exit(EXIT_FAILURE);
@@ -201,24 +268,6 @@ void* ipc_server_thread(void* _arg){
             engine_message.key,
             engine_message.value
         );
-        //now reply the client with the same data
-        if (
-            sendto(
-                s,
-                response,
-                response_len,
-                0,
-                (struct sockaddr*)&si_other,
-                slen
-            ) == SOCKET_ERROR
-        ){
-            fprintf(
-                stderr,
-                "UDP Server: sendto() failed with error code : %d\n",
-                WSAGetLastError()
-            );
-            exit(EXIT_FAILURE);
-        }
     }
 
     closesocket(s);

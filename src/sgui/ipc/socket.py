@@ -2,6 +2,7 @@ from sgui.sgqt import QtCore, Signal, Slot
 from sglib.ipc.abstract import AbstractIPCTransport
 from sglib.log import LOG
 from sgui import shared
+import select
 import socket
 import socketserver
 import time
@@ -22,12 +23,11 @@ class SocketIPCServerSignal(QtCore.QObject):
 class UDPHandler(socketserver.DatagramRequestHandler):
     def handle(self):
         data = self.rfile.read().strip()
+        self.wfile.write(
+			"Message received".encode(),
+		)
         data = data.decode('utf-8')
         SOCKET_IPC_SERVER.signal.handle(data)
-        # Send a message from a client
-        self.wfile.write(
-			"Message processed".encode(),
-		)
 
 class SocketIPCServerThread(QtCore.QThread):
     def run(self):
@@ -87,6 +87,7 @@ class SocketIPCTransport(AbstractIPCTransport):
         self.port = port
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.connect((self.host, self.port))
+        self.socket.setblocking(0)
 
     def send(
         self,
@@ -101,6 +102,15 @@ class SocketIPCTransport(AbstractIPCTransport):
             try:
                 self.socket.sendall(message)
                 LOG.info(f"Sent message: {message}")
+                ready = select.select(
+                    [self.socket],
+                    [],
+                    [],
+                    0.2,
+                )
+                if ready[0]:
+                    data = mysocket.recv(4096)
+                    LOG.info(data)
                 return
             except Exception as ex:
                 LOG.warning(f"Error: {ex}, waiting {wait}s to retry")
