@@ -1243,9 +1243,7 @@ def respawn():
     LOG.info("Spawning child UI process {}".format(sys.argv))
     if util.IS_WINDOWS:
         CHILD_PROC = subprocess.Popen([
-            "python3.exe",
-            constants.MAJOR_VERSION + ".py",
-            "--delay"
+            sys.executable,
         ])
     else:
         args = sys.argv[:]
