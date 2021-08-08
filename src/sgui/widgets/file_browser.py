@@ -206,8 +206,11 @@ class AbstractFileBrowserWidget:
         f_menu.exec_(QCursor.pos())
 
     def up_contextMenuEvent(self, a_event):
-        if (util.IS_LINUX and self.last_open_dir != "/") or (
-        util.IS_WINDOWS and self.last_open_dir):
+        if (
+            util.IS_LINUX and self.last_open_dir != "/"
+        ) or (
+            util.IS_WINDOWS and self.last_open_dir
+        ):
             f_menu = QMenu(self.up_button)
             f_menu.triggered.connect(self.open_path_from_action)
             f_arr = self.last_open_dir.split(os.path.sep)
@@ -447,6 +450,16 @@ class AbstractFileBrowserWidget:
         self.set_folder("..")
 
     def set_folder(self, a_folder, a_full_path=False):
+        if (
+            util.IS_WINDOWS
+            and
+            not a_full_path
+            and
+            a_folder == '..'
+            and
+            self.last_open_dir == ''
+        ):
+            return
         a_folder = str(a_folder)
         file_pos = self.list_file.currentRow()
         folder_pos = self.list_folder.currentRow()
@@ -459,9 +472,15 @@ class AbstractFileBrowserWidget:
             self.last_open_dir = a_folder
         else:
             if util.IS_WINDOWS and (
-            (a_full_path and not a_folder) or #...here, should be Windows only
-            (not a_full_path and len(self.last_open_dir) == 3
-            and a_folder == "..")):
+                (a_full_path and not a_folder)
+                or (
+                    not a_full_path
+                    and
+                    len(self.last_open_dir) == 3
+                    and
+                    a_folder == ".."
+                )
+            ):
                 self.last_open_dir = ""
                 self.folder_path_lineedit.setText("")
                 for drive, label in util.get_win_drives():
