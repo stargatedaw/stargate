@@ -223,7 +223,6 @@ class hardware_dialog:
         for i in range(f_count):
             f_dev = self.pyaudio.Pa_GetDeviceInfo(i)
             f_dev_name = f_dev.contents.name.decode(TEXT_ENCODING)
-            LOG.info(f_dev.contents.__dict__)
             f_audio_device_names.append(f_dev_name)
             if f_device_str == f_dev_name:
                 break

@@ -101,7 +101,6 @@ class SocketIPCTransport(AbstractIPCTransport):
         for wait in (0.1, 0.3, 0.6):
             try:
                 self.socket.sendall(message)
-                LOG.info(f"Sent message: {message}")
                 ready = select.select(
                     [self.socket],
                     [],
@@ -109,8 +108,7 @@ class SocketIPCTransport(AbstractIPCTransport):
                     0.2,
                 )
                 if ready[0]:
-                    data = self.socket.recv(4096)
-                    LOG.info(data)
+                    self.socket.recv(4096)
                 else:
                     LOG.warning("Did not receive a reply from the engine")
                 return

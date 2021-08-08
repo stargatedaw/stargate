@@ -143,9 +143,6 @@ void ipc_client_send(char* message){
         );
         exit(EXIT_FAILURE);
     }
-
-    //printf("%s\n", buffer);
-
 }
 
 void* ipc_server_thread(void* _arg){
@@ -256,12 +253,6 @@ void* ipc_server_thread(void* _arg){
         decode_engine_message(
             &engine_message,
             buffer
-        );
-        printf(
-            "path: %s\nkey: %s\nvalue: %s\n",
-            engine_message.path,
-            engine_message.key,
-            engine_message.value
         );
         args->callback(
             engine_message.path,
