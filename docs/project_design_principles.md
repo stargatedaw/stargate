@@ -113,14 +113,34 @@ have some effect on the experience, but the difference should be minimal).
   install the exact same plugins.
 
 ## 5. Stability
-You need your DAW to work reliably, we understand.  DAWs and plugins are
-notoriously buggy, especially when combined.
+You need your DAW to work reliably.  DAWs and plugins are notoriously buggy,
+especially when combined.  It is simply not feasible to test a plugin against
+every DAW ever made, or test a DAW against every plugin ever made.
+
+Then there is stability over time.  You should not have to keep the same
+computer around forever without ever updating it (while praying that the hard
+drive does not die) just to ensure that you can load and edit your old
+projects.
 
 ### How we achieve this
 - Engine and plugins written in C.  See the above rationale.
 - UI is a separate process from the engine, they cannot crash each other.
 - Best in class testing and debugging capabilities. See the project
   documentation on Github for more information.
+- Projects are completely portable between computers.  See the previous
+  section about project portability.
+- Minor releases will not break backwards compatility within that major
+  release.  If we decide to implement a backwards-incompatible feature, it
+  will happen in the next major release.
+- Major releases are supported for as long as possible, until it is simply
+  not feasible anymore.  Even after that, it should be possible to create
+  a VM of an older Linux distro running Stargate for the purpose of loading
+  old projects.  The project will consider providing pre-built images for VMs
+  later.
+- Major releases do not load projects from other major releases.  This avoids
+  many bugs that come with trying to change the software over time while
+  maintaining file compatibility.  Multiple major versions of Stargate can
+  be installed on the same computer.
 
 ## 6. Capable of running on all CPU architectures, past, present and future
 There should be close to zero effort on our part to make Stargate work on
