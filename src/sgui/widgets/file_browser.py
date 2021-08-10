@@ -416,9 +416,11 @@ class AbstractFileBrowserWidget:
                     self.folders_tab_widget.setCurrentWidget(self.vsplitter)
                 else:
                     QMessageBox.warning(
-                        self.widget, _("Error"),
+                        glbl_shared.MAIN_WINDOW.widget,
+                        _("Error"),
                         _("This bookmark no longer exists.  You may have "
-                        "deleted it in another window."))
+                        "deleted it in another window."),
+                    )
                 self.open_bookmarks()
 
     def delete_bookmark(self):
@@ -501,7 +503,9 @@ class AbstractFileBrowserWidget:
         try:
             f_list = os.listdir(self.last_open_dir)
         except PermissionError:
-            QMessageBox.warning(self.widget, _("Error"),
+            QMessageBox.warning(
+                glbl_shared.MAIN_WINDOW.widget,
+                _("Error"),
                 _("Access denied, you do not have "
                 "permission to access {}".format(self.last_open_dir)))
             self.set_folder(f_old_path, True)
@@ -521,10 +525,16 @@ class AbstractFileBrowserWidget:
                         f_item.setToolTip(f_file)
                         self.list_file.addItem(f_item)
                     else:
-                        QMessageBox.warning(self.widget, _("Error"),
-                        _("Not adding '{}' because it contains bad chars, "
-                        "you must rename this file path without:\n{}").format(
-                        f_full_path, "\n".join(util.bad_chars)))
+                        QMessageBox.warning(
+                            glbl_shared.MAIN_WINDOW.widget,
+                            _("Error"),
+                            _("Not adding '{}' because it contains bad chars, "
+                            "you must rename this file path without:\n{}"
+                            ).format(
+                                f_full_path,
+                                "\n".join(util.bad_chars),
+                            )
+                        )
         self.on_filter_files()
         self.on_filter_folders()
         if self.last_open_dir in self.scroll_dict:
