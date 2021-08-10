@@ -1263,6 +1263,9 @@ def splash_screen_opening(default_project_file):
 def main():
     global MAIN_WINDOW, SPLASH_SCREEN, RESPAWN
     setup_logging()
+    major_version = util.META_DOT_JSON['version']['major']
+    minor_version = util.META_DOT_JSON['version']['minor']
+    LOG.info(f"Starting {major_version}-{minor_version}")
     shared.APP = QApplication(sys.argv)
     try:
         theme.load_theme()
