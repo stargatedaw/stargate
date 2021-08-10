@@ -28,3 +28,12 @@ CPU, memory, laptop, desktop, mini-PC, x86, ARM, Windows 7, Windows 10, Windows
 
 **Additional context**
 Add any other context about the problem here.
+
+**Attach your log file**
+Located at `$HOME/stargate/log/stargate.log`.  This is very useful for
+developers to fix any bugs you might have encountered.  None of the
+information in the log should be sensitive, but feel free to review the log
+first before uploading, optionally you can look for ERRORs and stack traces
+and just add those to the ticket if you prefer not to upload the entire log.
+Please zip or tar.gz the file first.
+
