@@ -127,19 +127,29 @@ class audio_marker_widget(QGraphicsRectItem):
         QGraphicsRectItem.mouseMoveEvent(self, a_event)
         self.pos_x = a_event.scenePos().x()
         self.pos_x = clip_value(
-            self.pos_x, self.min_x, self.max_x)
+            self.pos_x,
+            self.min_x,
+            self.max_x,
+        )
         self.setPos(self.pos_x, self.y_pos)
         if self.marker_type == 0:
             f_new_val = self.pos_x * AUDIO_ITEM_PX_TO_VAL
-            if self.fade_marker is not None and \
-            self.fade_marker.pos().x() < self.pos_x:
+            if (
+                self.fade_marker is not None
+                and
+                self.fade_marker.pos().x() < self.pos_x
+            ):
                 self.fade_marker.value = f_new_val
                 self.fade_marker.set_pos()
         elif self.marker_type == 1:
-            f_new_val = (self.pos_x +
-                self.audio_item_marker_height) * AUDIO_ITEM_PX_TO_VAL
-            if self.fade_marker is not None and \
-            self.fade_marker.pos().x() > self.pos_x:
+            f_new_val = (
+                self.pos_x + self.audio_item_marker_height
+            ) * AUDIO_ITEM_PX_TO_VAL
+            if (
+                self.fade_marker is not None
+                and
+                self.fade_marker.pos().x() > self.pos_x
+            ):
                 self.fade_marker.value = f_new_val
                 self.fade_marker.set_pos()
         f_new_val = clip_value(f_new_val, 0.0, 994.0)
@@ -149,15 +159,21 @@ class audio_marker_widget(QGraphicsRectItem):
                 if self.value > self.other.value - MARKER_MIN_DIFF:
                     self.other.value = self.value + MARKER_MIN_DIFF
                     self.other.value = clip_value(
-                        self.other.value, MARKER_MIN_DIFF,
-                        1000.0, a_round=True)
+                        self.other.value,
+                        MARKER_MIN_DIFF,
+                        1000.0,
+                        _round=True,
+                    )
                     self.other.set_pos()
             elif self.marker_type == 1:
                 if self.other.value > self.value - MARKER_MIN_DIFF:
                     self.other.value = self.value - MARKER_MIN_DIFF
                     self.other.value = clip_value(
-                        self.other.value, 0.0,
-                        1000.0 - MARKER_MIN_DIFF, a_round=True)
+                        self.other.value,
+                        0.0,
+                        1000.0 - MARKER_MIN_DIFF,
+                        _round=True,
+                    )
                     self.other.set_pos()
         if self.fade_marker is not None:
             self.fade_marker.draw_lines()
@@ -271,7 +287,10 @@ class audio_fade_marker_widget(QGraphicsRectItem):
             f_new_val = (self.value *
                 AUDIO_ITEM_VAL_TO_PX) - self.audio_item_marker_height
         f_new_val = clip_value(
-            f_new_val, self.min_x, self.max_x)
+            f_new_val,
+            self.min_x,
+            self.max_x,
+        )
         self.setPos(f_new_val, self.y_pos)
         self.draw_lines()
 
@@ -284,7 +303,10 @@ class audio_fade_marker_widget(QGraphicsRectItem):
         QGraphicsRectItem.mouseMoveEvent(self, a_event)
         self.pos_x = a_event.scenePos().x()
         self.pos_x = clip_value(
-            self.pos_x, self.min_x, self.max_x)
+            self.pos_x,
+            self.min_x,
+            self.max_x,
+        )
         if self.marker_type == 0:
             self.pos_x = clip_max(
                 self.pos_x, self.other.scenePos().x())

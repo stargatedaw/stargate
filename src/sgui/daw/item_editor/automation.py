@@ -597,7 +597,10 @@ class AutomationEditorWidget:
         def ok_handler():
             f_value = clip_value(
                 f_epb_spinbox.value() / f_ipb_spinbox.value(),
-                -1.0, 1.0, a_round=True)
+                -1.0,
+                1.0,
+                _round=True,
+            )
             f_pb = sg_project.pitchbend(
                 f_pos_spinbox.value() - 1.0,
                 f_value,
