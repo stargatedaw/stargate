@@ -439,13 +439,11 @@ class SgProject(AbstractProject):
             audio_pool = self.get_audio_pool()
         else:
             audio_pool = a_uid_dict
-        if util.IS_WINDOWS:
-            f_path = str(a_path)
-        else:
-            f_path = str(a_path).replace("//", "/")
+        f_path = util.pi_path(a_path)
         if a_cp:
             self.cp_audio_file_to_cache(f_path)
         by_path = audio_pool.by_path()
+        LOG.info(f"{f_path}, {by_path}")
         if f_path in by_path:
             return by_path[f_path].uid
         else:
