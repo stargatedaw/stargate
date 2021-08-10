@@ -397,12 +397,17 @@ class SgProject(AbstractProject):
 
     def get_sample_graph_by_uid(self, a_uid):
         f_pygraph_file = os.path.join(
-            *(str(x) for x in (self.samplegraph_folder, a_uid)))
+            *(str(x) for x in (self.samplegraph_folder, a_uid))
+        )
         f_result = SampleGraph.create(
-            f_pygraph_file, self.samples_folder)
+            f_pygraph_file,
+            self.samples_folder,
+        )
         if not f_result.is_valid(): # or not f_result.check_mtime():
-            LOG.info("\n\nNot valid, or else mtime is newer than graph time, "
-                  "deleting sample graph...\n")
+            LOG.info(
+                "\n\nNot valid, or else mtime is newer than graph time, "
+                "deleting sample graph...\n"
+            )
             remove_item_from_sg_cache(f_pygraph_file)
             self.create_sample_graph(self.get_wav_path_by_uid(a_uid), a_uid)
             return SampleGraph.create(
@@ -416,7 +421,8 @@ class SgProject(AbstractProject):
 
     def delete_sample_graph_by_uid(self, a_uid):
         f_pygraph_file = os.path.join(
-            *(str(x) for x in (self.samplegraph_folder, a_uid)))
+            *(str(x) for x in (self.samplegraph_folder, a_uid))
+        )
         remove_item_from_sg_cache(f_pygraph_file)
 
     def get_wav_uid_by_name(

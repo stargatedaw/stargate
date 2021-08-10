@@ -18,6 +18,7 @@ from sgui import shared as glbl_shared
 from sgui.util import show_generic_exception
 from sgui.widgets.transport import AbstractTransportWidget
 import os
+import math
 
 
 TRACK_COUNT_ALL = 1
@@ -561,7 +562,11 @@ class MainWindow(QScrollArea):
                     a_val, glbl_shared.PLUGIN_UI_DICT.midi_learn_control[1])
             elif a_key == "wec":
                 if glbl_shared.IS_PLAYING:
-                    WAVE_EDITOR.set_playback_cursor(float(a_val))
+                    value = float(a_val)
+                    if math.isnan(value):
+                        LOG.error(f"Engine sent value {a_val}")
+                        return
+                    WAVE_EDITOR.set_playback_cursor(value)
             elif a_key == "ready":
                 glbl_shared.on_ready()
             elif a_key == "stop":
@@ -1151,7 +1156,8 @@ class wave_editor_widget:
             f_action.file_name = f_path
         self.history_button.setMenu(f_menu)
         constants.WAVE_EDIT_PROJECT.ipc().ab_open(
-            constants.PROJECT.get_wav_uid_by_name(a_file))
+            constants.PROJECT.get_wav_uid_by_name(a_file),
+        )
         self.marker_callback()
         glbl_shared.APP.restoreOverrideCursor()
         self.vol_slider.setEnabled(True)

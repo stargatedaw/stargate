@@ -134,7 +134,7 @@ class AudioPool:
         pm_assert(
             path not in by_path,
             FileExistsError,
-            (path, by_path),
+            (path, uid, by_path),
         )
         if uid is None:
             uid = self.next_uid()
