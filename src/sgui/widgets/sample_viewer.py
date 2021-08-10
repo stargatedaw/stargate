@@ -15,7 +15,7 @@ def global_set_audio_loop_clipboard(a_ls, a_le):
     AUDIO_LOOP_CLIPBOARD = (float(a_ls), float(a_le))
 
 
-class sample_viewer_widget(audio_item_viewer_widget):
+class sample_viewer_widget(AudioItemViewerWidget):
     def __init__(
         self,
         a_start_callback,
@@ -25,7 +25,7 @@ class sample_viewer_widget(audio_item_viewer_widget):
         a_fade_in_callback,
         a_fade_out_callback,
     ):
-        audio_item_viewer_widget.__init__(
+        AudioItemViewerWidget.__init__(
             self,
             a_start_callback,
             a_end_callback,
@@ -73,8 +73,14 @@ class sample_viewer_widget(audio_item_viewer_widget):
         a_fade_in,
         a_fade_out,
     ):
-        audio_item_viewer_widget.draw_item(
-            self, a_path_list, a_start, a_end, a_fade_in, a_fade_out)
+        AudioItemViewerWidget.draw_item(
+            self,
+            a_path_list,
+            a_start,
+            a_end,
+            a_fade_in,
+            a_fade_out,
+        )
         self.loop_start_marker = audio_marker_widget(
             0, a_loop_start, LOOP_PEN, LOOP_GRADIENT, "L",
             self.graph_object, audio_marker_widget.mode_loop,

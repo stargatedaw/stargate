@@ -629,6 +629,13 @@ class wave_editor_widget:
         self.file_browser.hsplitter.addWidget(self.right_widget)
         self.file_hlayout = QHBoxLayout()
 
+        self.sample_graph = AudioItemViewerWidget(
+            self.marker_callback,
+            self.marker_callback,
+            self.marker_callback,
+            self.marker_callback,
+        )
+
         self.menu = QMenu(self.widget)
         self.menu_button = QPushButton(_("Menu"))
         self.menu_button.setMenu(self.menu)
@@ -656,19 +663,23 @@ class wave_editor_widget:
         self.bookmark_action.setShortcut(
             QKeySequence.fromString("CTRL+D"))
         self.delete_bookmark_action = self.menu.addAction(
-            _("Delete Bookmark"))
+            _("Delete Bookmark"),
+        )
         self.delete_bookmark_action.triggered.connect(self.delete_bookmark)
         self.delete_bookmark_action.setShortcut(
-            QKeySequence.fromString("ALT+D"))
+            QKeySequence.fromString("ALT+D"),
+        )
         self.menu.addSeparator()
-        self.reset_markers_action = self.menu.addAction(
-            _("Reset Markers"))
-        self.reset_markers_action.triggered.connect(self.reset_markers)
+        _action = self.menu.addMenu(self.sample_graph.scene_context_menu)
+        _action.setText(_("Markers"))
+        self.menu.addSeparator()
         self.normalize_action = self.menu.addAction(
-            _("Normalize (non-destructive)..."))
+            _("Normalize (non-destructive)..."),
+        )
         self.normalize_action.triggered.connect(self.normalize_dialog)
         self.stretch_shift_action = self.menu.addAction(
-            _("Time-Stretch/Pitch-Shift..."))
+            _("Time-Stretch/Pitch-Shift..."),
+        )
         self.stretch_shift_action.triggered.connect(self.stretch_shift_dialog)
 
         self.bookmark_button = QPushButton(_("Bookmarks"))
@@ -724,12 +735,6 @@ class wave_editor_widget:
         )
         self.edit_hlayout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
-        self.sample_graph = audio_item_viewer_widget(
-            self.marker_callback,
-            self.marker_callback,
-            self.marker_callback,
-            self.marker_callback,
         )
         self.hlayout = QHBoxLayout()
 
@@ -852,11 +857,6 @@ class wave_editor_widget:
     def normalize(self, a_value):
         f_val = self.graph_object.normalize(a_value)
         self.vol_slider.setValue(int(f_val * 10.0))
-
-    def reset_markers(self):
-        if glbl_shared.IS_PLAYING:
-            return
-        self.sample_graph.reset_markers()
 
     def set_tooltips(self, a_on):
         if a_on:

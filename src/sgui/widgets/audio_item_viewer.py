@@ -337,7 +337,7 @@ class audio_fade_marker_widget(QGraphicsRectItem):
         if self.start_end_marker is not None:
             self.start_end_marker.callback(self.start_end_marker.value)
 
-class audio_item_viewer_widget(QGraphicsView):
+class AudioItemViewerWidget(QGraphicsView):
     def __init__(
         self,
         a_start_callback,
@@ -375,7 +375,7 @@ class audio_item_viewer_widget(QGraphicsView):
             _("Paste Markers"))
         self.paste_markers_action.triggered.connect(self.paste_markers)
         self.tempo_sync_action = self.scene_context_menu.addAction(
-            _("Tempo Sync"))
+            _("Tempo Sync Length"))
         self.tempo_sync_action.triggered.connect(self.tempo_sync_dialog)
 
         self.setHorizontalScrollBarPolicy(
