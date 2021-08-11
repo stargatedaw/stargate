@@ -37,11 +37,11 @@ daw:
   seq_tempo_marker: "#ffffff"
   seq_track_line: "#090909"
   track_default_colors: [
-      "#b00fb8",
-      "#0f1cb8",
-      "#62b80f",
-      "#b3b80f",
-      "#b80f0f",
+      "#333387",
+      "#555587",
+      "#448787",
+      "#558755",
+      "#875587",
   ]
 widgets:
   default_scene_background: "{{ background_color  }}"

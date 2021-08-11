@@ -13,7 +13,9 @@ QWidget#plugin_rack
     background-color: {{ background_color_alt }};
 }
 
-QWidget#mainwindow, QWidget#ccmaptabwidget, QWidget#itemtabwidget,
+QWidget#mainwindow,
+QWidget#ccmaptabwidget,
+QWidget#itemtabwidget,
 QMessageBox
 {
     background-color: {{ background_color }};
@@ -696,13 +698,6 @@ QScrollBar::handle:horizontal, QScrollBar::add-line:horizontal,
 QScrollBar::sub-line:horizontal, QScrollBar::handle:vertical,
 QScrollBar::add-line:vertical,QScrollBar::sub-line:vertical,
 QComboBox:enabled, QPushButton#plugin_menu,
-QTabBar::tab:!selected:hover
-{
-    background-color: QLinearGradient(
-        x1:0, y1:0, x2:0, y2:1, stop:1 #969696, stop:.4 #636363);
-    background-color: QLinearGradient(
-        x1:0, y1:0, x2:1, y2:1, stop:1 #dddddd, stop:.4 #aaaaaa);
-}
 
 QScrollBar::handle:horizontal
 {
@@ -885,14 +880,11 @@ QTabBar::tab:!selected
     background-color: {{ background_color }};
 }
 
+QTabBar::tab:!selected:hover,
 QTabBar::tab:selected
 {
-    background-color: #e83f2a;
-    color: #ffffff;
-}
-
-QTabBar::tab:selected,QTabBar::tab:!selected:hover
-{
+    background-color: #aaaaaa;
+    color: #222222;
     margin-bottom: 0px;
 }
 
