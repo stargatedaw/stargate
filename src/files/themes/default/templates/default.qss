@@ -716,6 +716,16 @@ QScrollBar:horizontal
     margin: 0px 16px 0 16px;
 }
 
+QScrollBar::handle:horizontal,
+QScrollBar::handle:vertical,
+QScrollBar::add-line:horizontal,
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:horizontal,
+QScrollBar::sub-line:vertical
+{
+	background: #cccccc;
+}
+
 QComboBox:enabled,
 QPushButton#plugin_menu,
 QScrollBar::add-line:horizontal,
