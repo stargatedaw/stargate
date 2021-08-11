@@ -16,6 +16,7 @@ GNU General Public License for more details.
 from sglib.math import clip_value
 from sgui.widgets import *
 from sglib.lib.translate import _
+from sglib.log import LOG
 import sys
 
 #Total number of LFOs, ADSRs, other envelopes, etc...
@@ -1191,7 +1192,7 @@ class fm1_plugin_ui(AbstractPluginUI):
         elif a_key.startswith("fm1_add_eng"):
             pass
         else:
-            print("FM1: Unknown configure message '{}'".format(a_key))
+            LOG.warning(f"FM1: Unknown configure message '{a_key}'")
 
     def reconfigure_plugin(self, a_dict):
         # Clear existing sample tables

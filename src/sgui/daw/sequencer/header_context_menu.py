@@ -139,11 +139,9 @@ def header_tempo_clear():
             continue
         marker = shared.CURRENT_SEQUENCE.has_marker(i, 2)
         if marker:
-            print("Deleting {}".format(marker.__dict__))
             shared.CURRENT_SEQUENCE.delete_marker(marker)
             deleted += 1
     if deleted:
-        print("Deleted {} tempo markers".format(deleted))
         constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
         constants.DAW_PROJECT.commit(_("Delete tempo ranger"))
         shared.SEQ_WIDGET.open_sequence()

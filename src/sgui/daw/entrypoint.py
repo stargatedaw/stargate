@@ -621,8 +621,8 @@ class MainWindow(QScrollArea):
             ):
                 f_widget.prepare_to_quit()
         except Exception as ex:
-            print("Exception thrown while attempting to close DAW-Next")
-            print("Exception:  {}".format(ex))
+            LOG.error("Exception raised while attempting to close DAW")
+            LOG.exception(ex)
 
 def init():
     global MAIN_WINDOW, TRANSPORT

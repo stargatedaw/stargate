@@ -84,11 +84,9 @@ class sg_lim_plugin_ui(AbstractPluginUI):
 
     def enable_ui_msg(self, a_enabled):
         if a_enabled:
-            print("Enabling UI messages")
             self.plugin_val_callback(
                 SG_LIM_UI_MSG_ENABLED, 1.0)
         else:
-            print("Disabling UI messages")
             self.plugin_val_callback(
                 SG_LIM_UI_MSG_ENABLED, 0.0)
 

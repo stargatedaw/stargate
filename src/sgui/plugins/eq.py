@@ -91,10 +91,8 @@ class sgeq_plugin_ui(AbstractPluginUI):
 
     def enable_spectrum(self, a_enabled):
         if a_enabled:
-            print("Enabling spectrum")
             self.plugin_val_callback(SGEQ_SPECTRUM_ENABLED, 1.0)
         else:
-            print("Disabling spectrum")
             self.plugin_val_callback(SGEQ_SPECTRUM_ENABLED, 0.0)
 
     def ui_message(self, a_name, a_value):
