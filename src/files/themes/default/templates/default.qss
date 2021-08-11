@@ -754,19 +754,20 @@ QScrollBar::sub-line:horizontal
     subcontrol-origin: margin;
 }
 
-QScrollBar::right-arrow:horizontal,
-QScrollBar::left-arrow:horizontal
+QScrollBar[hide="true"]::right-arrow:horizontal,
+QScrollBar[hide="true"]::left-arrow:horizontal,
+QScrollBar[hide="true"]::up-arrow:vertical,
+QScrollBar[hide="true"]::down-arrow:vertical
 {
-    border: 1px solid black;
-    width: 1px;
-    height: 1px;
-    background: white;
 }
 
 QScrollBar::add-page:horizontal,
-QScrollBar::sub-page:horizontal
+QScrollBar::sub-page:horizontal,
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical
 {
     background: {{ background_color_alt }};
+	border: 1px solid #888888;
 }
 
 QScrollBar:vertical
@@ -798,22 +799,6 @@ QScrollBar::sub-line:vertical
     height: 14px;
     subcontrol-position: top;
     subcontrol-origin: margin;
-}
-
-QScrollBar::up-arrow:vertical,
-QScrollBar::down-arrow:vertical
-{
-    border: 1px solid black;
-    width: 1px;
-    height: 1px;
-    background: white;
-}
-
-
-QScrollBar::add-page:vertical,
-QScrollBar::sub-page:vertical
-{
-    background: {{ background_color_alt }};
 }
 
 QTextEdit, QPlainTextEdit, QHeaderView::section
