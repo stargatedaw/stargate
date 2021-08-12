@@ -583,12 +583,16 @@ QWidget:item:selected
         x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffffff, stop: 1 #dddddd);
 }
 
-QPushButton:disabled, QComboBox:disabled, QLineEdit:disabled{
+QPushButton:disabled,
+QComboBox:disabled,
+QLineEdit:disabled
+{
     color: {{ text_color_disabled }};
     background-color: {{ background_color_disabled }};
 }
 
-QLineEdit{
+QLineEdit
+{
     color:{{ text_color }};
     background-color: {{ text_background_color }};
 }
@@ -646,10 +650,7 @@ QPushButton#plugin_menu
 {
     color: black;
     border: 1px solid #000000;
-    background-color: QLinearGradient(
-        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #fafafa, stop: 0.1 #ffffff,
-        stop: 0.7 #ffffff, stop: 0.9 #fafafa, stop: 1 #666666
-	);
+    background-color: #999999;
 }
 
 QComboBox:hover,
@@ -708,10 +709,7 @@ QComboBox::down-arrow
 QScrollBar:horizontal
 {
     border: 1px solid #222222;
-    background: QLinearGradient(
-        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #fafafa, stop: 0.1 #ffffff,
-        stop: 0.7 #ffffff, stop: 0.9 #fafafa, stop: 1 #cccccc
-	);
+    background: #666666;
     height: 15px;
     margin: 0px 16px 0 16px;
 }
@@ -723,7 +721,7 @@ QScrollBar::add-line:vertical,
 QScrollBar::sub-line:horizontal,
 QScrollBar::sub-line:vertical
 {
-	background: #cccccc;
+	background: #666666;
 }
 
 QComboBox:enabled,
@@ -772,9 +770,7 @@ QScrollBar::sub-page:vertical
 
 QScrollBar:vertical
 {
-    background: QLinearGradient(
-        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #fafafa, stop: 0.1 #ffffff,
-        stop: 0.7 #ffffff, stop: 0.9 #fafafa, stop: 1 #cccccc);
+    background: #666666;
     width: 15px;
     margin: 16px 0 16px 0;
     border: 1px solid #222222;
@@ -972,6 +968,7 @@ QCheckBox::indicator:checked
 
 QLCDNumber
 {
+	color: #b1b1b1;
     background-color: black;
     border: 3px solid #b1b1b1;
 }
