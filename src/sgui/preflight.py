@@ -9,8 +9,7 @@ __all__ = ['preflight']
 
 RPI4_WARNING = """\
 Detected a Raspberry Pi with suboptimal settings.  "
-Please see <a href="https://github.com/stargateaudio/stargate/docs/rpi.md">
-the rpi4 documentation</a>
+Please see https://github.com/stargateaudio/stargate/docs/rpi.md
 """
 
 def _preflight_rpi():
