@@ -43,5 +43,5 @@ exe = EXE(pyz,
           disable_windowed_traceback=False,
           target_arch=None,
           codesign_identity=None,
-          icon='files\\share\\pixmaps\\stargate.ico',
+          icon='stargate.ico',
           entitlements_file=None )
