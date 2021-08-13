@@ -786,7 +786,7 @@ class SgMainWindow(QMainWindow):
                 MAIN_WINDOW.widget,
                 _("Open a theme file"),
                 util.THEMES_DIR,
-                "Stargate Theme(*.yaml *.yml)",
+                "Stargate Theme(*.sgtheme)",
                 options=QFileDialog.Option.DontUseNativeDialog,
             )
             if f_file and str(f_file):

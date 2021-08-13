@@ -34,23 +34,27 @@ computers.   Add `fancy` to the name of any theme that uses transparency.
 A theme is a folder containing the following structure:
 ```
 theme/
-  theme1.yaml
-  theme2.yaml
+  theme1.sgtheme
+  theme2.sgtheme
   assets/
     image1.png
     image2.svg
+    subdirectory/
+      image456.svg
     ...
   system/
     system1.yaml
     ...
   templates/
     template1.qss
+    ...
   vars/
     vars1.yaml
     ...
 ```
 ## Theme files
-A theme file references one each of template, variable and system colors files.
+An `*.sgtheme` file references one each of template, variable and system colors
+files.
 ```
 # Looks in the templates/ folder
 template: default.qss

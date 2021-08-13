@@ -325,15 +325,13 @@ class SystemOverrides:
         daw,
         widgets,
     ):
-        self.daw = type_assert_dict(
+        self.daw = type_assert(
             daw,
-            kcls=str,
-            vcls=str,
+            dict,
         )
         self.widgets = type_assert_dict(
             widgets,
-            kcls=str,
-            vcls=str,
+            dict,
         )
 
 class SystemFile:
@@ -452,7 +450,7 @@ def setup_globals():
     DEFAULT_THEME_FILE = os.path.join(
         THEMES_DIR,
         "default",
-        "default.yaml",
+        "default.sgtheme",
     )
 
     if not os.path.exists(DEFAULT_THEME_FILE):
@@ -464,7 +462,7 @@ def setup_globals():
                 'files',
                 'themes',
                 'default',
-                'default.yaml',
+                'default.sgtheme',
             )
         )
 
