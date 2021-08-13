@@ -7,4 +7,5 @@ system:
   overrides:
     daw:
       seq_antialiasing: true
+      seq_item_background: "#11666666"
     widgets: {}

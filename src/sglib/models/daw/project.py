@@ -454,9 +454,14 @@ class DawProject(AbstractProject):
             f_items_dict.rename_item(a_item_names[0], a_new_item_name)
         self.save_items_dict(f_items_dict)
 
-    def set_vol_for_all_audio_items(self, a_uid, a_vol,
-                                    a_reverse=None, a_same_vol=False,
-                                    a_old_vol=0):
+    def set_vol_for_all_audio_items(
+        self,
+        a_uid,
+        a_vol,
+        a_reverse=None,
+        a_same_vol=False,
+        a_old_vol=0,
+    ):
         """ a_uid:  audio_pool uid
             a_vol:  dB
             a_reverse:  None=All, True=reversed-only,
