@@ -37,7 +37,7 @@ daw:
   # The vertical line drawn at each beat
   note_beat_line: "#000000"
   # The sequencer playback cursor
-  playback_cursor: "#aa0000"
+  playback_cursor: "#dddddd"
   # Vertical 16th note lines in the sequencer
   seq_16th_line: "#090909"
   # Sequencer automation points
@@ -100,7 +100,7 @@ widgets:
   # The knob image.  Will be rotated as the knob moves
   knob_fg_image: "knob-fg.png"
   # The color of a playback cursor line
-  playback_cursor: "#aa0000"
+  playback_cursor: "#dddddd"
   # Routing graph widget node
   rout_graph_node: "#e7e700"
   # Routing graph widget node text
