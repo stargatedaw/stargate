@@ -23,8 +23,16 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Hardware and operating system**
-CPU, memory, laptop, desktop, mini-PC, x86, ARM, Windows 7, Windows 10, Windows
-11, name of Linux distro, MacOS version, etc...
+CPU: vendor (Intel, AMD, etc...), model (Ryzen 5950x, Core i7 12345, etc...)
+Memory: GB (4, 8, 16, etc...)
+Form factor: laptop, desktop, mini-PC
+CPU arch: x86, ARM
+Mac OS X: version
+Windows: version 7/8/10/11
+Linux:
+  distro (Ubuntu, Fedora, etc...)
+  Desktop Environment: (Gnome, KDE, etc...)
+  X11 or Wayland
 
 **Additional context**
 Add any other context about the problem here.
