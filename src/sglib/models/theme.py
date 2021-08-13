@@ -75,214 +75,150 @@ class DawColors:
         self.seq_atm_item = type_assert(
             seq_atm_item,
             str,
-            desc="Sequencer automation points",
         )
         self.seq_atm_item_selected = type_assert(
             seq_atm_item_selected,
             str,
-            desc="Selected sequencer automation points",
         )
         self.seq_atm_line = type_assert(
             seq_atm_line,
             str,
-            desc="Sequencer automation lines",
         )
         self.seq_item_note = type_assert(
             seq_item_note,
             str,
-            desc="Used to paint notes on sequencer items",
         )
         self.seq_item_audio = type_assert(
             seq_item_audio,
             str,
-            desc="Used to paint audio on sequencer items",
         )
         self.seq_item_text = type_assert(
             seq_item_text,
             str,
-            desc="The label text for sequencer items",
         )
         self.seq_item_text_selected = type_assert(
             seq_item_text_selected,
             str,
-            desc="The label text for selected sequencer items",
         )
         self.seq_bar_line = type_assert(
             seq_bar_line,
             str,
-            desc="Vertical bar lines in the sequencer",
         )
         self.seq_beat_line = type_assert(
             seq_beat_line,
             str,
-            desc="Vertical beat lines in the sequencer",
         )
         self.seq_16th_line = type_assert(
             seq_16th_line,
             str,
-            desc="Vertical beat lines in the sequencer",
         )
         self.seq_track_line = type_assert(
             seq_track_line,
             str,
-            desc="Horizontal track lines in the sequencer",
         )
         self.seq_background = type_assert(
             seq_background,
             str,
-            desc="Sequencer QGraphicsScene background",
         )
         self.seq_item_background = type_assert(
             seq_item_background,
             str,
-            desc="The background fill color of the sequencer items",
         )
         self.seq_selected_item = type_assert(
             seq_selected_item,
             str,
-            desc="Selected sequencer items",
         )
         self.seq_header = type_assert(
             seq_header,
             str,
-            desc="Sequencer header",
         )
         self.seq_header_text = type_assert(
             seq_header_text,
             str,
-            desc="Sequencer header text",
         )
         self.seq_header_sequence_start = type_assert(
             seq_header_sequence_start,
             str,
-            desc="Sequencer header sequence start marker",
         )
         self.seq_header_sequence_end = type_assert(
             seq_header_sequence_end,
             str,
-            desc="Sequencer header sequence end marker",
         )
         self.seq_item_handle = type_assert(
             seq_item_handle,
             str,
-            desc="Sequencer item handle",
         )
         self.seq_item_handle_selected = type_assert(
             seq_item_handle_selected,
             str,
-            desc="Sequencer selected item handle",
         )
         self.seq_tempo_marker = type_assert(
             seq_tempo_marker,
             str,
-            desc="Sequencer tempo marker",
         )
         self.track_default_colors = type_assert_iter(
             track_default_colors,
             str,
-            desc="Default track colors",
         )
         self.item_audio_handle = type_assert(
             item_audio_handle,
             str,
-            desc="Item editor audio item handle",
         )
         self.item_audio_handle_selected = type_assert(
             item_audio_handle_selected,
             str,
-            desc="Item editor selected audio item handle",
         )
         self.item_audio_vol_line = type_assert(
             item_audio_vol_line,
             str,
-            desc=("""
-                The horizontal line that is drawn on audio items during
-                volume manipulation using mouse click+drag with
-                modifier keys.  The item will be selected, so this color
-                must contrast with the selected color
-            """),
         )
         self.item_audio_label = type_assert(
             item_audio_label,
             str,
-            desc=("""
-                The text on an audio item that displays data such as file
-                name, and volume during mouse modifier operations.  The item
-                will be selected, this color must contrast with the selected
-                color
-            """),
         )
         self.item_audio_label_selected = type_assert(
             item_audio_label_selected,
             str,
-            desc=("""
-                The text on an audio item that displays data such as file
-                name, and volume during mouse modifier operations.  The item
-                will be selected, this color must contrast with the selected
-                color
-            """),
         )
         self.item_audio_waveform = type_assert(
             item_audio_waveform,
             str,
-            desc=("""
-                The color used to draw the audio file waveform onto the
-                audio item
-            """),
         )
         self.item_atm_point = type_assert(
             item_atm_point,
             str,
-            desc="Item editor CC/pitchbend automation point",
         )
         self.item_atm_point_selected = type_assert(
             item_atm_point_selected,
             str,
-            desc="Item editor selected CC/pitchbend automation point",
         )
         self.item_atm_point_pen = type_assert(
-            item_atm_point,
+            item_atm_point_pen,
             str,
-            desc=(
-                "The pen drawing the outline of an item editor "
-                "CC/pitchbend automation point"
-            ),
         )
         self.note_root_background = type_assert(
             note_root_background,
             str,
-            desc=(
-                "The background of the note editor for the root key of the"
-                "scale"
-            ),
         )
         self.note_white_background = type_assert(
             note_white_background,
             str,
-            desc="The background of the note editor for the white keys"
         )
         self.note_black_background = type_assert(
             note_black_background,
             str,
-            desc="The background of the note editor for the black keys"
         )
         self.note_beat_line = type_assert(
             note_beat_line,
             str,
-            desc="The vertical line drawn at each beat"
         )
         self.note_snap_line = type_assert(
             note_snap_line,
             str,
-            desc="""
-                The vertical lines drawn between beats according to
-                snap settings, ie: 1/16th, 1/8th note, etc...
-            """,
         )
         self.playback_cursor = type_assert(
             playback_cursor,
             str,
-            desc="The sequencer playback cursor",
         )
 
 class WidgetColors:
@@ -293,7 +229,7 @@ class WidgetColors:
         knob_background_pen="#5a5a5a",
         knob_bg_image="knob-bg.png",
         knob_fg_image="knob-fg.png",
-        playback_cursor="#ff0000",
+        playback_cursor="#aa0000",
         rout_graph_node="#e7e700",
         rout_graph_node_text="#e7e7e7",
         rout_graph_to="#e7a0a0",
@@ -305,72 +241,54 @@ class WidgetColors:
         self.default_scene_background = type_assert(
             default_scene_background,
             str,
-            desc=(
-                "The default QGraphicsScene background color used by"
-                "the widgets library"
-            ),
         )
         self.knob_arc_pen = type_assert(
             knob_arc_pen,
             str,
-            desc="Used to draw the arc around the knob",
         )
         self.knob_background_pen = type_assert(
             knob_background_pen,
             str,
-            desc="Used to draw the knob background",
         )
         self.knob_bg_image = type_assert(
             knob_bg_image,
             str,
-            desc="The knob background.",
         )
         self.knob_fg_image = type_assert(
             knob_fg_image,
             str,
-            desc="The knob image.  Will be rotated as the knob moves",
         )
         self.playback_cursor = type_assert(
             playback_cursor,
             str,
-            desc=(
-                "The color of a playback cursor line"
-            ),
         )
         self.rout_graph_node = type_assert(
             rout_graph_node,
             str,
-            desc="Routing graph widget node",
         )
         self.rout_graph_node_text = type_assert(
             rout_graph_node_text,
             str,
-            desc="Routing graph widget node text",
         )
         self.rout_graph_to = type_assert(
             rout_graph_to,
             str,
-            desc="Routing graph widget to node when mouse hovering",
         )
         self.rout_graph_from = type_assert(
             rout_graph_from,
             str,
-            desc="Routing graph widget from node when mouse hovering",
         )
         self.rout_graph_lines = type_assert(
             rout_graph_lines,
             str,
-            desc="Routing graph widget matrix lines",
         )
         self.splash_screen = type_assert(
             splash_screen,
             str,
-            desc="Splash screen shown at start up",
         )
         self.splash_screen_text = type_assert(
             splash_screen_text,
             str,
-            desc="Text status messages on splash screen shown at start up",
         )
 
 
