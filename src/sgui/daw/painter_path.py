@@ -104,17 +104,23 @@ def painter_path(
     f_notes_path.addRect(0, 0, 1, 1)
     if item.notes:
         f_note_set = sorted(
-            set(x.note_num for x in item.notes), reverse=True)
+            set(x.note_num for x in item.notes),
+            reverse=True,
+        )
         f_note_h_area = (a_height * 0.6)
         f_note_height = round(f_note_h_area / len(f_note_set))
         f_note_height = clip_max(
-            f_note_height, a_height * 0.1)
+            f_note_height,
+            a_height * 0.05,
+        )
         f_min = 1.0 - (min(f_note_set) / 127.0)
-        f_note_bias = (f_note_h_area -
-            (f_note_height * len(f_note_set))) * f_min
-        f_note_dict = {x:((((y * f_note_height) + a_height * 0.36)) +
-                f_note_bias)
-            for x, y in zip(f_note_set, range(len(f_note_set)))}
+        f_note_bias = (
+            f_note_h_area - (f_note_height * len(f_note_set))
+        ) * f_min
+        f_note_dict = {
+            x:((((y * f_note_height) + a_height * 0.36)) + f_note_bias)
+            for x, y in zip(f_note_set, range(len(f_note_set)))
+        }
         for f_note in item.notes:
             f_y_pos = f_note_dict[f_note.note_num]
             f_x_pos = f_note.start * a_px_per_beat
