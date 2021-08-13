@@ -564,16 +564,23 @@ def setup_globals():
         'assets',
     ])
 
+def open_theme(
+    theme_file: str,
+):
+    with open(theme_file) as f:
+        y = yaml.safe_load(f)
+    theme = unmarshal_json(y, Theme)
+    return theme.render(THEME_FILE)
+
 def load_theme():
     """ Load the QSS theme and system colors.  Do this before creating any
         widgets.
     """
     global QSS, SYSTEM_COLORS
     setup_globals()
-    with open(THEME_FILE) as f:
-        y = yaml.safe_load(f)
-    theme = unmarshal_json(y, Theme)
-    QSS, SYSTEM_COLORS = theme.render(THEME_FILE)
+    QSS, SYSTEM_COLORS = open_theme(
+        THEME_FILE,
+    )
 
 def copy_theme(dest):
     theme_dir = os.path.dirname(THEME_FILE)

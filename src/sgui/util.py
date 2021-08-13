@@ -5,12 +5,15 @@ from sglib.lib.translate import _
 from sglib.log import LOG
 from sgui import shared as glbl_shared
 
-def show_generic_exception(ex):
+def show_generic_exception(
+    ex,
+    extra="",
+):
     LOG.exception(ex)
     QMessageBox.warning(
         glbl_shared.MAIN_WINDOW.widget,
-        _("Warning"),
-        _("The following error happened:\n{}").format(ex),
+        _("Error"),
+        _(f"The following error happened:\n{ex}\n\n{extra}"),
     )
 
 def check_for_rw_perms(a_file):

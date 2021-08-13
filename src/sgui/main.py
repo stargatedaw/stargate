@@ -791,6 +791,14 @@ class SgMainWindow(QMainWindow):
             )
             if f_file and str(f_file):
                 f_file = str(f_file)
+                try:
+                    theme.open_theme(f_file)
+                except Exception as ex:
+                    show_generic_exception(
+                        ex,
+                        _("Could not load the theme"),
+                    )
+                    return
                 util.set_file_setting("default-style", f_file)
                 QMessageBox.warning(
                     MAIN_WINDOW,
@@ -798,7 +806,6 @@ class SgMainWindow(QMainWindow):
                     _("Please restart Stargate to update the UI")
                 )
         except Exception as ex:
-            LOG.exception(ex)
             show_generic_exception(ex)
 
     def on_version(self):
