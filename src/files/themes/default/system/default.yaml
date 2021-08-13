@@ -84,11 +84,15 @@ daw:
   seq_track_line: "#090909"
   # Default track colors, also applies to audio item editor
   track_default_colors: [
-      "#333387",
-      "#555587",
-      "#448787",
-      "#558755",
-      "#875587",
+      "#41790d",
+      "#0d7910",
+      "#0d7937",
+      "#0d796b",
+      "#0d5979",
+      "#0d3979",
+      "#0d1679",
+      "#2d0d79",
+      "#5d0d79",
   ]
 widgets:
   # The default QGraphicsScene background color used by the widgets library
