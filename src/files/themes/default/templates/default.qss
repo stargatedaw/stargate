@@ -328,7 +328,7 @@ QRadioButton#rec_button::indicator::checked
 QSpinBox,
 QDoubleSpinBox
 {
-    color: #ffffff;
+    color: {{ text_color }};
     border: 1px solid gray;
     font-size: 18px;
 }
@@ -897,7 +897,7 @@ QTabBar::tab:!selected
 {
     background-color: {{ background_color }};
     border-bottom-style: solid;
-    color: #ffffff;
+    color: {{ text_color }};
 }
 
 QTabBar::tab:!selected:hover,
