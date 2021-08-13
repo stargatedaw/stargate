@@ -55,10 +55,12 @@ class ItemSequencer(QGraphicsView):
         self.setOptimizationFlag(
             QGraphicsView.OptimizationFlag.DontSavePainterState,
         )
-        self.setOptimizationFlag(
-            QGraphicsView.OptimizationFlag.DontAdjustForAntialiasing,
-        )
-        #self.setRenderHint(QPainter.RenderHint.Antialiasing)
+        if theme.SYSTEM_COLORS.daw.seq_antialiasing:
+            self.setRenderHint(QPainter.RenderHint.Antialiasing)
+        else:
+            self.setOptimizationFlag(
+                QGraphicsView.OptimizationFlag.DontAdjustForAntialiasing,
+            )
 
         # The below code is broken on Qt5.3.<=2, so not using it for
         # now, but this will obviously be quite desirable some day

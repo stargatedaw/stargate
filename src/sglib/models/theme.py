@@ -28,6 +28,7 @@ THEME_FILE = None
 class DawColors:
     def __init__(
         self,
+        seq_antialiasing=False,
         seq_atm_item='#ffffff',
         seq_atm_item_selected='#000000',
         seq_atm_line='#ffffff',
@@ -72,6 +73,10 @@ class DawColors:
         note_white_background="#5f5f61",
         playback_cursor="#ff0000",
     ):
+        self.seq_antialiasing = type_assert(
+            seq_antialiasing,
+            bool,
+        )
         self.seq_atm_item = type_assert(
             seq_atm_item,
             str,
