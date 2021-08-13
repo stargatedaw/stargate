@@ -31,7 +31,7 @@ QLabel
 QLabel#seq_zoom_size_label
 {
     background-color: black;
-    color: white;
+    color: {{ text_color }};
 }
 
 QWidget
@@ -573,12 +573,12 @@ QGroupBox:focus, QTextEdit::focus
 QWidget:item:hover
 {
     background-color: #ffffff;
-    color: #000000;
+    color: {{ text_color_dark }};
 }
 
 QWidget:item:selected
 {
-    color: #000000;
+    color: {{ text_color_dark }};
     background-color: QLinearGradient(
         x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffffff, stop: 1 #dddddd);
 }
@@ -594,7 +594,7 @@ QLineEdit:disabled
 QLineEdit
 {
     background-color: {{ text_background_color }};
-    color:{{ text_color }};
+    color: {{ text_color }};
 }
 
 QLineEdit,
@@ -650,7 +650,7 @@ QPushButton#plugin_menu
 {
     background-color: #999999;
     border: 1px solid #000000;
-    color: black;
+    color: {{ text_color_dark }};
 }
 
 QComboBox:hover,
@@ -694,7 +694,7 @@ QComboBox::drop-down
     border-left-style: solid; /* just a single line */
     border-left-width: 0px;
     border-top-right-radius: 3px; /* same radius as the QComboBox */
-    color: black;
+    color: {{ text_color_dark }};
     subcontrol-origin: padding;
     subcontrol-position: top right;
     width: 15px;
@@ -805,7 +805,7 @@ QTextEdit
 
 QCheckBox:disabled
 {
-    color: #aaaaaa;
+    color: {{ text_color_disabled }};
 }
 
 QMainWindow::separator
@@ -815,7 +815,7 @@ QMainWindow::separator
         stop: 0.6 #212121, stop:1 #343434
     );
     border: 1px solid #4c4c4c;
-    color: white;
+    color: {{ text_color }};
     padding-left: 4px;
     spacing: 3px; /* spacing between items in the tool bar */
 }
@@ -826,7 +826,7 @@ QMainWindow::separator:hover
         x1:0, y1:0, x2:0, y2:1, stop:0 #dddddd,
         stop:0.5 #b56c17 stop:1 #ffffff);
     border: 1px solid #6c6c6c;
-    color: white;
+    color: {{ text_color }};
     padding-left: 4px;
     spacing: 3px; /* spacing between items in the tool bar */
 }
@@ -860,7 +860,7 @@ QTabBar::tab
     background-color: {{ background_color }};
     border-bottom-style: none;
     border: 1px solid #000000;
-    color: #b1b1b1;
+    color: {{ text_color }};
     margin-right: -1px;
     padding-bottom: 2px;
     padding-left: 10px;
@@ -904,7 +904,7 @@ QTabBar::tab:!selected:hover,
 QTabBar::tab:selected
 {
     background-color: #aaaaaa;
-    color: #222222;
+    color: {{ text_color_dark }};
     margin-bottom: 0px;
 }
 
@@ -918,7 +918,7 @@ QRadioButton::indicator
 {
     border-radius: 6px;
     border: 1px solid #b1b1b1;
-    color: #b1b1b1;
+    color: {{ text_color }};
 }
 
 QRadioButton::indicator:checked
@@ -937,7 +937,7 @@ QCheckBox::indicator
     background-color: {{ background_color_alt }};
     border-radius: 6px;
     border: 1px solid #b1b1b1;
-    color: #b1b1b1;
+    color: {{ text_color }};
     height: 18px;
     width: 18px;
 }
@@ -971,6 +971,6 @@ QLCDNumber
 {
     background-color: black;
     border: 3px solid #b1b1b1;
-    color: #b1b1b1;
+    color: {{ text_color }};
 }
 
