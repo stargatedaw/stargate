@@ -550,7 +550,9 @@ class DawProject(AbstractProject):
         try:
             f_file = open(
                 os.path.join(
-                    *(str(x) for x in (self.items_folder, a_item_uid))))
+                    *(str(x) for x in (self.items_folder, a_item_uid))
+                ),
+            )
         except:
             return ""
         f_result = f_file.read()
@@ -560,7 +562,9 @@ class DawProject(AbstractProject):
     def get_item_by_uid(self, a_item_uid):
         a_item_uid = int(a_item_uid)
         f_result = item.from_str(
-            self.get_item_string(a_item_uid), a_item_uid)
+            self.get_item_string(a_item_uid),
+            a_item_uid,
+        )
         assert f_result.uid == a_item_uid, "UIDs do not match"
         return f_result
 

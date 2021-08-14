@@ -716,10 +716,11 @@ class SgMainWindow(QMainWindow):
         if self.ignore_close_event:
             event.ignore()
             if shared.IS_PLAYING:
+                LOG.info("User tried to close the window during playback")
                 return
             self.setEnabled(False)
             f_reply = QMessageBox.question(
-                self.widget,
+                MAIN_WINDOW.widget,
                 _('Message'),
                 _("Are you sure you want to quit?"),
                 (
