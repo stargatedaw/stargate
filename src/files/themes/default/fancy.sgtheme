@@ -31,6 +31,9 @@ system:
   path: default.yaml
   overrides:
     daw:
+      note_black_background: "#661e1e1e"
+      note_root_background: "#665f1e1e"
+      note_white_background: "#665f5f61"
       seq_antialiasing: true
       seq_item_background: "#12666666"
     widgets: {}
