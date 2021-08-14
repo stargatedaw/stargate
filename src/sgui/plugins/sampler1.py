@@ -1629,7 +1629,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_cancel_button = QPushButton(_("Cancel"))
         f_cancel_button.pressed.connect(on_cancel)
         f_hlayout2.addWidget(f_cancel_button)
-        f_window.exec_()
+        f_window.exec()
 
     def clearAllSamples(self):
         for i in range(SAMPLER1_MAX_SAMPLE_COUNT):
@@ -2062,7 +2062,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_status_lineedit.setReadOnly(True)
         f_layout.addWidget(f_status_lineedit)
 
-        f_window.exec_()
+        f_window.exec()
 
     def copySamplesToSingleDirectory(self, a_dir):
         f_dir = str(a_dir)
@@ -2268,7 +2268,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_cancel_button = QPushButton(_("Cancel"))
         f_cancel_button.pressed.connect(on_cancel)
         f_hlayout2.addWidget(f_cancel_button)
-        f_window.exec_()
+        f_window.exec()
 
     def import_sfz(self, a_sfz_path):
         try:

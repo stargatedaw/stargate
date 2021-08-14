@@ -148,7 +148,7 @@ def show(current_item):
         shared.AUDIO_SEQ_WIDGET.on_paifx_clear,
     )
 
-    f_menu.exec_(QCursor.pos())
+    f_menu.exec(QCursor.pos())
     _shared.CURRENT_AUDIO_ITEM_INDEX = f_CURRENT_AUDIO_ITEM_INDEX
 
 def save_a_copy():
@@ -261,7 +261,7 @@ def volume_dialog():
     f_cancel_button = QPushButton(_("Cancel"))
     f_ok_cancel_layout.addWidget(f_cancel_button)
     f_cancel_button.pressed.connect(on_cancel)
-    f_window.exec_()
+    f_window.exec()
     return f_window.f_result
 
 def normalize_dialog():
@@ -315,7 +315,7 @@ def _normalize_dialog():
     f_cancel_button = QPushButton(_("Cancel"))
     f_ok_cancel_layout.addWidget(f_cancel_button)
     f_cancel_button.pressed.connect(on_cancel)
-    f_window.exec_()
+    f_window.exec()
     return f_window.f_result
 
 def reset_fades():
@@ -385,11 +385,11 @@ def _reverse():
 
 def time_pitch_dialog():
     f_dialog = TimePitchDialogWidget(CURRENT_ITEM.audio_item)
-    f_dialog.widget.exec_()
+    f_dialog.widget.exec()
 
 def fade_vol_dialog():
     f_dialog = FadeVolDialogWidget(CURRENT_ITEM.audio_item)
-    f_dialog.widget.exec_()
+    f_dialog.widget.exec()
 
 def edit_papifx():
     CURRENT_ITEM.setSelected(True)

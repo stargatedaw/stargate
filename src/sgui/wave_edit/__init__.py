@@ -169,7 +169,7 @@ def normalize_dialog():
     f_cancel_button = QPushButton(_("Cancel"))
     f_ok_cancel_layout.addWidget(f_cancel_button)
     f_cancel_button.pressed.connect(on_cancel)
-    f_window.exec_()
+    f_window.exec()
     return f_window.f_result
 
 class AudioInput:
@@ -449,7 +449,7 @@ class TransportWidget(AbstractTransportWidget):
         f_cancel_button = QPushButton(_("Cancel"))
         f_ok_cancel_layout.addWidget(f_cancel_button)
         f_cancel_button.pressed.connect(on_cancel)
-        f_window.exec_()
+        f_window.exec()
 
     def set_tooltips(self, a_enabled):
         pass
@@ -970,7 +970,7 @@ class wave_editor_widget:
         f_cancel_button.pressed.connect(on_cancel)
         f_hlayout2.addWidget(f_cancel_button)
 
-        f_window.exec_()
+        f_window.exec()
 
     def open_file_from_action(self, a_action):
         self.open_file(a_action.file_name)
@@ -1085,7 +1085,7 @@ class wave_editor_widget:
         f_cancel = QPushButton(_("Cancel"))
         f_cancel.pressed.connect(cancel_handler)
         f_layout.addWidget(f_cancel, 9, 2)
-        f_window.exec_()
+        f_window.exec()
 
 
     def on_reload(self):

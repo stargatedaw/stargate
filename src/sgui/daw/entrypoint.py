@@ -470,7 +470,7 @@ class MainWindow(QScrollArea):
         f_cancel.setMinimumWidth(75)
         f_cancel.pressed.connect(cancel_handler)
         f_ok_layout.addWidget(f_cancel)
-        f_window.exec_()
+        f_window.exec()
 
     def on_undo(self):
         if glbl_shared.IS_PLAYING or not self.check_tab_for_undo():

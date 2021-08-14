@@ -257,7 +257,7 @@ class TransportWidget(AbstractTransportWidget):
         f_ok_cancel_layout.addWidget(f_ok_button)
         f_ok_cancel_layout.addWidget(f_cancel_button)
         f_layout.addLayout(f_ok_cancel_layout, 8, 2)
-        f_window.exec_()
+        f_window.exec()
 
 
     def on_rec(self):

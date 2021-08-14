@@ -201,7 +201,7 @@ def on_unlink_item():
     f_cancel_button = QPushButton(_("Cancel"))
     f_layout.addWidget(f_cancel_button, 5, 1)
     f_cancel_button.clicked.connect(note_cancel_handler)
-    f_window.exec_()
+    f_window.exec()
 
 def on_rename_items():
     if _shared.SEQUENCE_EDITOR_MODE != 0:
@@ -260,7 +260,7 @@ def on_rename_items():
     f_cancel_button = QPushButton(_("Cancel"))
     f_layout.addWidget(f_cancel_button, 5, 1)
     f_cancel_button.clicked.connect(cancel_handler)
-    f_window.exec_()
+    f_window.exec()
 
 def transpose_dialog():
     if _shared.SEQUENCE_EDITOR_MODE != 0:
@@ -323,7 +323,7 @@ def transpose_dialog():
     f_cancel = QPushButton(_("Cancel"))
     f_cancel.pressed.connect(transpose_cancel_handler)
     f_layout.addWidget(f_cancel, 6, 1)
-    f_window.exec_()
+    f_window.exec()
 
 def glue_selected():
     if glbl_shared.IS_PLAYING:

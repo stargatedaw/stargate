@@ -162,9 +162,9 @@ class ItemSequencer(QGraphicsView):
             return
         if _shared.SEQUENCE_EDITOR_MODE == 0:
             context_menu.populate_takes_menu()
-            context_menu.MENU.exec_(QCursor.pos())
+            context_menu.MENU.exec(QCursor.pos())
         elif _shared.SEQUENCE_EDITOR_MODE == 1:
-            atm_context_menu.MENU.exec_(QCursor.pos())
+            atm_context_menu.MENU.exec(QCursor.pos())
         self.context_menu_enabled = False
 
     def get_item(self, a_pos):
@@ -622,7 +622,7 @@ class ItemSequencer(QGraphicsView):
                     "Add all files to one item on one track")
                 single_action.triggered.connect(
                     lambda : self.add_items(a_pos, a_item_list, True))
-                menu.exec_(QCursor.pos())
+                menu.exec(QCursor.pos())
                 return
             else:
                 a_single_item = True

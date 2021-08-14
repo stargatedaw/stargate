@@ -586,7 +586,7 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
         f_cancel_button = QPushButton(_("Cancel"))
         f_cancel_button.pressed.connect(cancel_handler)
         f_ok_cancel_layout.addWidget(f_cancel_button)
-        f_dialog.exec_()
+        f_dialog.exec()
 
     def reset_end(self):
         f_list = shared.SEQUENCER.get_selected()

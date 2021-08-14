@@ -49,7 +49,7 @@ def show(event):
         if shared.SEQUENCER.sequence_clipboard:
             insert_sequence_action = menu.addAction(_("Insert Region"))
             insert_sequence_action.triggered.connect(insert_sequence)
-    menu.exec_(QCursor.pos())
+    menu.exec(QCursor.pos())
 
 def header_time_modify():
     def ok_handler():
@@ -121,7 +121,7 @@ def header_time_modify():
         cancel = QPushButton(_("Cancel"))
         cancel.pressed.connect(window.close)
     layout.addWidget(cancel, 6, 1)
-    window.exec_()
+    window.exec()
 
 def header_tempo_clear():
     if not shared.CURRENT_SEQUENCE.loop_marker:
@@ -232,7 +232,7 @@ def header_time_range():
     cancel = QPushButton(_("Cancel"))
     cancel.pressed.connect(cancel_handler)
     layout.addWidget(cancel, 6, 1)
-    window.exec_()
+    window.exec()
 
 def header_marker_modify():
     def ok_handler():
@@ -288,7 +288,7 @@ def header_marker_modify():
         cancel = QPushButton(_("Cancel"))
     cancel.pressed.connect(cancel_handler)
     ok_cancel_layout.addWidget(cancel)
-    window.exec_()
+    window.exec()
 
 def header_loop_start():
     tsig_beats = shared.CURRENT_SEQUENCE.get_tsig_at_pos(
