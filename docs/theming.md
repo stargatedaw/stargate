@@ -1,10 +1,10 @@
 # Theming
 This document describes how to create custom color themes.
 
-This document may become out of date.  For the latest, see:
+For documentation and examples of every parameter, see:
 ```
-src/sglib/models/theme.py
 src/files/themes/default/
+src/sglib/models/theme.py
 ```
 
 # Opening, Copying Themes
@@ -16,19 +16,28 @@ or copy the current theme to a new theme.
 Avoid the use of transparency and gradients to the greatest extent possible.
 Transparent hex colors are prepended by an extra 2 digits, ie:
 ```
-white: #ffffff
-transparent-white: #60ffffff
+white: "#ffffff"
+transparent-white: "#60ffffff"
 ```
-Transparency requires much more hardware power to render, and will not work
-well on low power systems like Raspberry Pi. You can fake transparency by
-blending colors together using `/scripts/color-hex-interpolate.py`.
+Transparency requires more hardware power to render, and will not work well on
+low power systems like Raspberry Pi. You can fake transparency by blending
+colors together using `/scripts/color-hex-interpolate.py`.
 
-Gradients are specified in QSS themes.
+Gradients are specified in QSS stylesheets, for example `qlineargradient(...)`,
+`qradialgradient(...)`, `qconicalgradient(...)`.  See the
+[Qt styleseet documentation](
+	https://doc.qt.io/qt-5/stylesheet-reference.html
+) and the existing [fancy theme](
+	../src/files/themes/default/fancy.sgtheme
+).
 
 However, you can make an alternate version of the same theme that uses
 transparency and gradients.  Every theme in the main repo should offer a
 default version that works on 10 year old laptops and ARM single board
 computers.   Add `fancy` to the name of any theme that uses transparency.
+See the existing [fancy theme](
+	../src/files/themes/default/fancy.sgtheme
+).
 
 # Structure
 A theme is a folder containing the following structure:
@@ -62,7 +71,13 @@ template: default.qss
 variables:
   path: default.yaml
   # Optional variable key/values to override the contents of @path
-  overrides: {}
+  overrides:
+    some_color: |-
+      qlineargradient(
+        x1:0, y1:0, x2:1, y2:0,
+        stop: 0 #ffffff, stop: 1: #000000
+      )
+    some_other_color: "#012345"
 # Looks in the system/ folder
 system:
   path: default.yaml
