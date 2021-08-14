@@ -2,27 +2,27 @@ template: default.qss
 variables:
   path: default.yaml
   overrides:
-    combobox: |
+    combobox: |-
       qlineargradient(
         x1:0, y1:0, x2:0, y2:1,
         stop:0 #777777, stop: 0.3 #999999, stop: 0.6 #999999, stop:1 #777777
       )
-    hscrollbar: |
+    hscrollbar: |-
       qlineargradient(
         x1:0, y1:0, x2:1, y2:0,
         stop:0 #555555, stop: 0.5 #777777, stop:1 #555555
       )
-    hscrollbar_groove: |
+    hscrollbar_groove: |-
       qlineargradient(
         x1:0, y1:0, x2:0, y2:1,
         stop:0 #444444, stop: 0.5 #222222, stop:1 #444444
       )
-    vscrollbar: |
+    vscrollbar: |-
       qlineargradient(
         x1:0, y1:0, x2:0, y2:1,
         stop:0 #555555, stop: 0.5 #777777, stop:1 #555555
       )
-    vscrollbar_groove: |
+    vscrollbar_groove: |-
       qlineargradient(
         x1:0, y1:0, x2:1, y2:0,
         stop:0 #444444, stop: 0.5 #222222, stop:1 #444444
