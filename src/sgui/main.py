@@ -153,7 +153,6 @@ class SgMainWindow(QMainWindow):
             with_audio,
         )
         shared.TRANSPORT = TransportWidget()
-        self.setObjectName("mainwindow")
         self.setObjectName("plugin_ui")
         self.setMinimumSize(900, 600)
         self.last_ac_dir = util.HOME

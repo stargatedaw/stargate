@@ -13,7 +13,6 @@ QWidget#plugin_rack
     background-color: {{ background_color_alt }};
 }
 
-QWidget#mainwindow,
 QWidget#ccmaptabwidget,
 QWidget#itemtabwidget,
 QMessageBox
@@ -37,6 +36,7 @@ QLabel#seq_zoom_size_label
 QWidget
 {
     background-color: {{ background_color }};
+    color: {{ text_color }};
     selection-background-color: QLinearGradient(
         x1: 0,
         y1: 0,
@@ -45,7 +45,6 @@ QWidget
         stop: 0 #ffffff,
         stop: 1 #dddddd
     );
-    color: {{ text_color }};
     selection-color: #111111;
 }
 
@@ -63,29 +62,29 @@ QWidget#plugin_ui
 
 QScrollArea
 {
-    outline: none;
     border: none;
+    outline: none;
     padding: 2px;
 }
 
 QCheckBox,
 QRadiobutton
 {
-    padding: 0px;
     background-color: {{ background_color }};
     margin: 3px;
+    padding: 0px;
 }
 
 QSplitter::handle:vertical
 {
-    height: 6px;
     background-color: #151515;
+    height: 6px;
 }
 
 QSplitter::handle:horizontal
 {
-    width:  6px;
     background-color: #151515;
+    width:  6px;
 }
 
 /* Transport tool selector */
@@ -100,9 +99,9 @@ QCheckBox#solo_checkbox,
 QCheckBox#mute_checkbox,
 QRadioButton#rec_arm_radiobutton
 {
+    background-color: transparent;
     spacing: 1px; /* Removes that junk on the right side where the
                      text would've been */
-    background-color: transparent;
 }
 
 QRadioButton#tool_select::indicator,
@@ -110,11 +109,11 @@ QRadioButton#tool_draw::indicator,
 QRadioButton#tool_erase::indicator,
 QRadioButton#tool_split::indicator
 {
-    width: 24px;
+    border-radius: 1px;
+    border: 1px solid #dddddd;
     height: 24px;
     outline: none;
-    border: 1px solid #dddddd;
-    border-radius: 1px;
+    width: 24px;
 }
 
 QCheckBox#button_hide,
@@ -122,11 +121,11 @@ QCheckBox#button_power,
 QCheckBox#button_hide::indicator,
 QCheckBox#button_power::indicator
 {
-    width: 36px;
+    background: none;
+    border: none;
     height: 36px;
     outline: none;
-    border: none;
-    background: none;
+    width: 36px;
 }
 
 QRadioButton#play_button::indicator::checked,
@@ -208,10 +207,10 @@ QCheckBox#solo_checkbox::indicator::checked,
 QCheckBox#mute_checkbox::indicator::checked,
 QRadioButton#rec_arm_radiobutton::indicator::checked
 {
+    height: 20px;
     margin: 0px;
     padding: 0px;
     width: 20px;
-    height: 20px;
 }
 
 /*Solo checkbox*/
@@ -268,31 +267,31 @@ QCheckBox#rec_arm_checkbox::indicator::checked
 }
 
 QPushButton#menu{
+    background: none;
     border-image: url({{ ASSETS_DIR }}/menu.png);
-    width: {{ transport_button_size }};
+    border: none;
     height: {{ transport_button_size }};
     outline: none;
-    border: none;
-    background: none;
+    width: {{ transport_button_size }};
 }
 
 QPushButton#panic{
+    background: none;
     border-image: url({{ ASSETS_DIR }}/panic.png);
-    width: {{ transport_button_size }};
+    border: none;
     height: {{ transport_button_size }};
     outline: none;
-    border: none;
-    background: none;
+    width: {{ transport_button_size }};
 }
 
 QRadioButton#play_button::indicator,
 QRadioButton#rec_button::indicator,
 QRadioButton#stop_button::indicator
 {
-    outline: none;
     border: none;
-    width: 56px;
     height: 42px;
+    outline: none;
+    width: 56px;
 }
 
 QRadioButton#play_button::indicator
@@ -328,8 +327,8 @@ QRadioButton#rec_button::indicator::checked
 QSpinBox,
 QDoubleSpinBox
 {
-    color: {{ text_color }};
     border: 1px solid gray;
+    color: {{ text_color }};
     font-size: 18px;
 }
 
@@ -362,18 +361,18 @@ QSlider
 
 QSlider::groove:horizontal
 {
-    border: 1px solid #bbb;
     background: white;
-    height: 4px;
     border-radius: 4px;
+    border: 1px solid #bbb;
+    height: 4px;
 }
 
 QSlider::sub-page:horizontal
 {
     background: #000000;
+    border-radius: 4px;
     border: 1px solid #777;
     height: 4px;
-    border-radius: 4px;
 }
 
 QSlider::add-page:horizontal
@@ -381,26 +380,26 @@ QSlider::add-page:horizontal
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #333333, stop: 1 #000000
     );
+    border-radius: 4px;
     border: 1px solid #777;
     height: 4px;
-    border-radius: 4px;
 }
 
 QSlider::handle:horizontal
 {
-    image: url({{ ASSETS_DIR }}/h-fader.png);
-    margin-top: -14px;
-    margin-bottom: -14px;
     border: 2px solid transparent;
+    image: url({{ ASSETS_DIR }}/h-fader.png);
+    margin-bottom: -14px;
+    margin-top: -14px;
 }
 
 
 QSlider::groove:vertical
 {
-    border: 1px solid #bbb;
     background: white;
-    width: 4px;
     border-radius: 4px;
+    border: 1px solid #bbb;
+    width: 4px;
 }
 
 QSlider::sub-page:vertical
@@ -408,25 +407,25 @@ QSlider::sub-page:vertical
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 1 #333333
     );
+    border-radius: 4px;
     border: 1px solid #777;
     width: 4px;
-    border-radius: 4px;
 }
 
 QSlider::add-page:vertical
 {
     background: #000000;
+    border-radius: 4px;
     border: 1px solid #777;
     width: 4px;
-    border-radius: 4px;
 }
 
 QSlider::handle:vertical
 {
+    border: 2px solid transparent;
     image: url({{ ASSETS_DIR }}/v-fader.png);
     margin-left: -14px;
     margin-right: -14px;
-    border: 2px solid transparent;
 }
 
 /*Zoom Sliders*/
@@ -440,18 +439,18 @@ QSlider#zoom_slider
 
 QSlider#zoom_slider::groove:horizontal
 {
-    border: 1px solid #bbb;
     background: white;
-    height: 10px;
     border-radius: 4px;
+    border: 1px solid #bbb;
+    height: 10px;
 }
 
 QSlider#zoom_slider::sub-page:horizontal
 {
     background: #000000;
+    border-radius: 4px;
     border: 1px solid #777;
     height: 10px;
-    border-radius: 4px;
 }
 
 QSlider#zoom_slider::add-page:horizontal
@@ -459,31 +458,31 @@ QSlider#zoom_slider::add-page:horizontal
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #333333, stop: 1 #000000
     );
+    border-radius: 4px;
     border: 1px solid #777;
     height: 10px;
-    border-radius: 4px;
 }
 
 QSlider#zoom_slider::handle:horizontal
 {
-    image: none;
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #cccccc,
         stop: 0.5 #dddddd stop: 1 #cccccc
     );
-    height: 15px;
-    width: 9px;
-    margin-top: -3px;
-    margin-bottom: -3px;
     border: 2px solid white;
+    height: 15px;
+    image: none;
+    margin-bottom: -3px;
+    margin-top: -3px;
+    width: 9px;
 }
 
 QSlider#zoom_slider::groove:vertical
 {
-    border: 1px solid #bbb;
     background: white;
-    width: 10px;
     border-radius: 4px;
+    border: 1px solid #bbb;
+    width: 10px;
 }
 
 QSlider#zoom_slider::sub-page:vertical
@@ -491,9 +490,9 @@ QSlider#zoom_slider::sub-page:vertical
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 1 #333333
     );
+    border-radius: 4px;
     border: 1px solid #777;
     width: 10px;
-    border-radius: 4px;
 }
 
 QSlider#zoom_slider::add-page:vertical
@@ -506,16 +505,16 @@ QSlider#zoom_slider::add-page:vertical
 
 QSlider#zoom_slider::handle:vertical
 {
-    image: none;
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #cccccc, stop: 0.5 #dddddd stop: 1 #cccccc
     );
-    height: 9px;
-    width: 15px;
-    margin-top: -3px;
-    margin-bottom: -3px;
     border: 2px solid white;
+    height: 9px;
+    image: none;
+    margin-bottom: -3px;
+    margin-top: -3px;
+    width: 15px;
 }
 
 QToolTip
@@ -529,8 +528,8 @@ QToolTip
 
 QGroupBox
 {
-    color: {{ text_color }};
     border: 2px solid #666666;
+    color: {{ text_color }};
     padding-top: 1.2em;
 }
 
@@ -578,9 +577,11 @@ QWidget:item:hover
 
 QWidget:item:selected
 {
-    color: {{ text_color_dark }};
     background-color: QLinearGradient(
-        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffffff, stop: 1 #dddddd);
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #ffffff, stop: 1 #dddddd
+    );
+    color: {{ text_color_dark }};
 }
 
 QPushButton:disabled,
@@ -623,8 +624,10 @@ QPushButton
 QPushButton:pressed
 {
     background-color: QLinearGradient(
-        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #2d2d2d, stop: 0.1 #2b2b2b,
-        stop: 0.5 #292929, stop: 0.9 #282828, stop: 1 #252525);
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #2d2d2d, stop: 0.1 #2b2b2b, stop: 0.5 #292929,
+        stop: 0.9 #282828, stop: 1 #252525
+    );
 }
 
 QPushButton#plugin_menu
@@ -648,7 +651,7 @@ QComboBox
 QComboBox,
 QPushButton#plugin_menu
 {
-    background-color: #999999;
+    background-color: {{ combobox }};
     border: 1px solid #000000;
     color: {{ text_color_dark }};
 }
@@ -684,7 +687,9 @@ QAbstractItemView
     background-color: {{ background_color }};
     border: 2px solid darkgray;
     selection-background-color: QLinearGradient(
-        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffffff, stop: 1 #dddddd);
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #ffffff, stop: 1 #dddddd
+    );
 }
 
 QComboBox::drop-down
@@ -707,20 +712,24 @@ QComboBox::down-arrow
 
 QScrollBar:horizontal
 {
-    background: #666666;
+    background: {{ hscrollbar }};
     border: 1px solid #222222;
     height: 15px;
     margin: 0px 16px 0 16px;
 }
 
 QScrollBar::add-line:horizontal,
-QScrollBar::add-line:vertical,
 QScrollBar::handle:horizontal,
+QScrollBar::sub-line:horizontal
+{
+    background: {{ hscrollbar }};
+}
+
+QScrollBar::add-line:vertical,
 QScrollBar::handle:vertical,
-QScrollBar::sub-line:horizontal,
 QScrollBar::sub-line:vertical
 {
-    background: #666666;
+    background: {{ vscrollbar }};
 }
 
 QComboBox:enabled,
@@ -759,11 +768,16 @@ QScrollBar[hide="true"]::up-arrow:vertical
 }
 
 QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal
+{
+    background: {{ hscrollbar_groove }};
+    border: 1px solid #888888;
+}
+
 QScrollBar::add-page:vertical,
-QScrollBar::sub-page:horizontal,
 QScrollBar::sub-page:vertical
 {
-    background: {{ background_color_alt }};
+    background: {{ vscrollbar_groove }};
     border: 1px solid #888888;
 }
 
@@ -824,7 +838,8 @@ QMainWindow::separator:hover
 {
     background-color: QLinearGradient(
         x1:0, y1:0, x2:0, y2:1, stop:0 #dddddd,
-        stop:0.5 #b56c17 stop:1 #ffffff);
+        stop:0.5 #b56c17 stop:1 #ffffff
+    );
     border: 1px solid #6c6c6c;
     color: {{ text_color }};
     padding-left: 4px;
