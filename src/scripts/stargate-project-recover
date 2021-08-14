@@ -94,15 +94,14 @@ class ProjectRecoveryWidget(QListWidget):
 
 def project_recover_dialog(a_file):
     f_window = QMainWindow()
-    f_window.setStyleSheet(theme.QSS)
-    f_window.setWindowState(QtCore.Qt.WindowMaximized)
+    f_window.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
     f_window.setWindowTitle("Project History")
     if a_file is None:
         f_file, f_filter = QFileDialog.getOpenFileName(
             caption='Open Project',
             filter=util.PROJECT_FILE_TYPE,
             directory=DEFAULT_PROJECT_DIR,
-            options=QFileDialog.DontUseNativeDialog,
+            options=QFileDialog.Option.DontUseNativeDialog,
         )
         if f_file is None or not str(f_file):
             exit(0)
@@ -119,15 +118,21 @@ def project_recover_dialog(a_file):
                 "possible.\nPress 'Yes' to open another project,\n"
                 "'No' to create a new project,\nor 'Cancel' to close Stargate"
             ),
-            QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
-            QMessageBox.Cancel,
+            (
+                QMessageBox.StandardButton.Yes
+                |
+                QMessageBox.StandardButton.No
+                |
+                QMessageBox.StandardButton.Cancel
+            ),
+            QMessageBox.StandardButton.Cancel,
         )
         if (
-            f_answer == QMessageBox.Yes
+            f_answer == QMessageBox.StandardButton.Yes
             and
             util.open_project()
         ) or (
-            f_answer == QMessageBox.No
+            f_answer == QMessageBox.StandardButton.No
             and
             util.new_project()
         ):
@@ -150,7 +155,8 @@ def project_recover_dialog(a_file):
         f_widget.set_selected_as_project)
     f_hlayout.addWidget(f_set_project_button)
     f_hlayout.addItem(
-        QSpacerItem(1, 1, QSizePolicy.Expanding))
+        QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+    )
     print("showing")
     f_window.show()
     return f_window
@@ -169,12 +175,14 @@ def parse_args():
 
 if __name__ == "__main__":
     def _main():
-        theme.load_theme()
         args = parse_args()
         app = QApplication(sys.argv)
+        theme.setup_globals()
+        qss, _ = theme.open_theme(theme.THEME_FILE)
+        app.setStyleSheet(qss)
         f_window = project_recover_dialog(
             args.project_file,
         )
-        exit(app.exec_())
+        exit(app.exec())
 
     _main()
