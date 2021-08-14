@@ -6,7 +6,6 @@ except ImportError:
 from sglib.constants import HOME, MAJOR_VERSION
 from sglib.lib.util import (
     get_file_setting,
-    INSTALL_PREFIX,
     IS_WINDOWS,
     pi_path,
     set_file_setting,
@@ -26,7 +25,7 @@ import yaml
 ASSETS_DIR = None
 ICON_PATH = None
 THEME_FILE = None
-_INSTALL_PREFIX_SUB = '{{ INSTALL_PREFIX }}'
+_THEMES_DIR_SUB = '{{ SYSTEM_THEME_DIR }}'
 
 class DawColors:
     def __init__(
@@ -474,8 +473,8 @@ def setup_globals():
         # The Windows install prefix changes everytime Stargate is launched,
         # so substitute it every time the file is saved or loaded
         THEME_FILE = THEME_FILE.replace(
-            _INSTALL_PREFIX_SUB,
-            pi_path(INSTALL_PREFIX),
+            _THEMES_DIR_SUB,
+            pi_path(THEMES_DIR),
         )
 
     if (
@@ -528,8 +527,8 @@ def set_theme(path):
     # The Windows install prefix changes everytime Stargate is launched,
     # so substitute it every time the file is saved or loaded
     path = path.replace(
-        pi_path(INSTALL_PREFIX),
-        _INSTALL_PREFIX_SUB,
+        pi_path(THEMES_DIR),
+        _THEMES_DIR_SUB,
     )
     LOG.info(f"Setting theme file {path}")
     set_file_setting("default-style", path)
