@@ -17,7 +17,7 @@ Avoid the use of transparency and gradients to the greatest extent possible.
 Transparent hex colors are prepended by an extra 2 digits, ie:
 ```
 white: "#ffffff"
-transparent-white: "#60ffffff"
+transparent_white: "#60ffffff"
 ```
 Transparency requires more hardware power to render, and will not work well on
 low power systems like Raspberry Pi. You can fake transparency by blending
@@ -67,8 +67,8 @@ files.
 ```
 # Looks in the templates/ folder
 template: default.qss
-# Looks in the vars/ folder
 variables:
+  # Looks in the vars/ folder
   path: default.yaml
   # Optional variable key/values to override the contents of @path
   overrides:
@@ -78,8 +78,8 @@ variables:
         stop: 0 #ffffff, stop: 1: #000000
       )
     some_other_color: "#012345"
-# Looks in the system/ folder
 system:
+  # Looks in the system/ folder
   path: default.yaml
   overrides:
     daw: {}
