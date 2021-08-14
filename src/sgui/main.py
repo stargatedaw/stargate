@@ -752,7 +752,7 @@ class SgMainWindow(QMainWindow):
     def on_use_default_theme(self):
         util.clear_file_setting("default-style")
         QMessageBox.warning(
-            MAIN_WINDOW,
+            MAIN_WINDOW.widget,
             _("Theme Applied..."),
             _("Please restart Stargate to update the UI")
         )
