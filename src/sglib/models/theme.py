@@ -8,6 +8,8 @@ from sglib.lib.util import (
     get_file_setting,
     INSTALL_PREFIX,
     IS_WINDOWS,
+    pi_path,
+    set_file_setting,
     SHARE_DIR,
     THEMES_DIR,
 )
@@ -24,6 +26,7 @@ import yaml
 ASSETS_DIR = None
 ICON_PATH = None
 THEME_FILE = None
+_INSTALL_PREFIX_SUB = '{{ INSTALL_PREFIX }}'
 
 class DawColors:
     def __init__(
@@ -467,14 +470,26 @@ def setup_globals():
         )
 
     THEME_FILE = get_file_setting("default-style", str, None)
+    if THEME_FILE:
+        # The Windows install prefix changes everytime Stargate is launched,
+        # so substitute it every time the file is saved or loaded
+        THEME_FILE = THEME_FILE.replace(
+            _INSTALL_PREFIX_SUB,
+            pi_path(INSTALL_PREFIX),
+        )
+
     if (
         not THEME_FILE
         or
         not os.path.isfile(THEME_FILE)
     ):
+        LOG.warning(
+            f"Theme file: '{THEME_FILE}', does not exist, using default"
+        )
         THEME_FILE = DEFAULT_THEME_FILE
 
-    LOG.info(f"Using stylesheet {THEME_FILE}")
+
+    LOG.info(f"Using theme file {THEME_FILE}")
     STYLESHEET_DIR = os.path.dirname(THEME_FILE)
     if IS_WINDOWS:
         STYLESHEET_DIR = STYLESHEET_DIR.replace("\\", "/")
@@ -499,11 +514,23 @@ def load_theme():
     """
     global QSS, SYSTEM_COLORS
     setup_globals()
-    QSS, SYSTEM_COLORS = open_theme(
-        THEME_FILE,
-    )
+    QSS, SYSTEM_COLORS = open_theme(THEME_FILE)
 
 def copy_theme(dest):
     theme_dir = os.path.dirname(THEME_FILE)
     shutil.copytree(theme_dir, dest)
+
+def set_theme(path):
+    path = pi_path(path)
+    # Test that the theme parses before accepting it.
+    # Will raise an exception if malformed data, you must use try/except
+    open_theme(path)
+    # The Windows install prefix changes everytime Stargate is launched,
+    # so substitute it every time the file is saved or loaded
+    path = path.replace(
+        pi_path(INSTALL_PREFIX),
+        _INSTALL_PREFIX_SUB,
+    )
+    LOG.info(f"Setting theme file {path}")
+    set_file_setting("default-style", path)
 

@@ -792,14 +792,13 @@ class SgMainWindow(QMainWindow):
             if f_file and str(f_file):
                 f_file = str(f_file)
                 try:
-                    theme.open_theme(f_file)
+                    theme.set_theme(f_file)
                 except Exception as ex:
                     show_generic_exception(
                         ex,
                         _("Could not load the theme"),
                     )
                     return
-                util.set_file_setting("default-style", f_file)
                 QMessageBox.warning(
                     MAIN_WINDOW,
                     _("Theme Applied..."),
