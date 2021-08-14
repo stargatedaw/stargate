@@ -857,19 +857,6 @@ QMenu::separator
     background-color: #686868;
 }
 
-QProgressBar
-{
-    border: 2px solid grey;
-    text-align: center;
-}
-
-QProgressBar::chunk
-{
-    background-color: #dddddd;
-    width: 2.15px;
-    margin: 0.5px;
-}
-
 QTabBar::tab
 {
     background-color: {{ background_color }};
