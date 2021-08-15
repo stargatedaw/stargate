@@ -291,7 +291,7 @@ QRadioButton#stop_button::indicator
     border: none;
     height: 42px;
     outline: none;
-    width: 56px;
+    width: 42px;
 }
 
 QRadioButton#play_button::indicator
