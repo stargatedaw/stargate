@@ -11,6 +11,6 @@ text_color: "#dddddd"
 text_color_dark: "#1e1e1e"
 text_color_disabled: "#d0d0d0"
 track_panel_background: "#292929"
-transport_button_size: 36px
+transport_button_size: 36
 vscrollbar: "#666666"
 vscrollbar_groove: "#111111"

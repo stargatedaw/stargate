@@ -111,9 +111,9 @@ QRadioButton#tool_split::indicator
 {
     border-radius: 1px;
     border: 1px solid #dddddd;
-    height: 24px;
+    height: {{ transport_button_size - 4 }}px;
     outline: none;
-    width: 24px;
+    width: {{ transport_button_size - 4 }}px;
 }
 
 QCheckBox#button_hide,
@@ -126,6 +126,13 @@ QCheckBox#button_power::indicator
     height: 36px;
     outline: none;
     width: 36px;
+}
+
+QRadioButton#play_button,
+QRadioButton#rec_button,
+QRadioButton#stop_button
+{
+	margin-left: -6px;
 }
 
 QRadioButton#play_button::indicator::checked,
@@ -270,18 +277,18 @@ QPushButton#menu{
     background: none;
     border-image: url({{ ASSETS_DIR }}/menu.png);
     border: none;
-    height: {{ transport_button_size }};
+    height: {{ transport_button_size - 4 }}px;
     outline: none;
-    width: {{ transport_button_size }};
+    width: {{ transport_button_size - 4 }}px;
 }
 
 QPushButton#panic{
     background: none;
     border-image: url({{ ASSETS_DIR }}/panic.png);
     border: none;
-    height: {{ transport_button_size }};
+    height: {{ transport_button_size - 4 }}px;
     outline: none;
-    width: {{ transport_button_size }};
+    width: {{ transport_button_size - 4 }}px;
 }
 
 QRadioButton#play_button::indicator,
@@ -289,9 +296,9 @@ QRadioButton#rec_button::indicator,
 QRadioButton#stop_button::indicator
 {
     border: none;
-    height: 42px;
+    height: {{ transport_button_size }};
     outline: none;
-    width: 42px;
+    width: {{ transport_button_size }};
 }
 
 QRadioButton#play_button::indicator

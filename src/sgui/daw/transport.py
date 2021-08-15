@@ -26,12 +26,12 @@ class TransportWidget(AbstractTransportWidget):
         self.hlayout1 = QHBoxLayout(self.group_box)
 
         self.hlayout1.addWidget(
-            QLabel(_("Loop Mode:")),
+            QLabel(_("Loop:")),
         )
         self.loop_mode_combobox = QComboBox()
         self.hlayout1.addWidget(self.loop_mode_combobox)
         self.loop_mode_combobox.addItems([_("Off"), _("Region")])
-        self.loop_mode_combobox.setMinimumWidth(90)
+        self.loop_mode_combobox.setMinimumWidth(75)
         self.loop_mode_combobox.currentIndexChanged.connect(
             self.on_loop_mode_changed,
         )

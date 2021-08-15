@@ -59,7 +59,7 @@ class TransportWidget:
         )
         self.host_combobox = QComboBox()
         self.hlayout1.addWidget(self.host_combobox)
-        self.host_combobox.setMinimumWidth(120)
+        self.host_combobox.setMinimumWidth(100)
         self.host_combobox.addItems(["DAW", "Wave Editor"])
         self.host_combobox.currentIndexChanged.connect(
             shared.MAIN_WINDOW.set_host,
