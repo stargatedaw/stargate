@@ -644,7 +644,7 @@ QPushButton#plugin_menu
 
 QPushButton#plugin_menu::menu-indicator
 {
-    image: url({{ ASSETS_DIR }}/drop-down.png);
+    image: url({{ ASSETS_DIR }}/drop-down.svg);
     left: -2px;
     subcontrol-origin: padding;
     subcontrol-position: right center;
