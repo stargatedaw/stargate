@@ -349,13 +349,13 @@ QDoubleSpinBox#large_spinbox
 QSpinBox::up-button,
 QDoubleSpinBox::up-button
 {
-    border-image: url({{ ASSETS_DIR }}/spinbox-up.png);
+    border-image: url({{ ASSETS_DIR }}/spinbox-up.svg);
 }
 
 QSpinBox::down-button,
 QDoubleSpinBox::down-button
 {
-    border-image: url({{ ASSETS_DIR }}/spinbox-down.png);
+    border-image: url({{ ASSETS_DIR }}/spinbox-down.svg);
 }
 
 /*Volume Faders*/
