@@ -60,11 +60,10 @@ class SeqTrack:
         self.menu_created = False
         self.solo_checkbox = QCheckBox()
         self.mute_checkbox = QCheckBox()
-        if self.track_number == 0:
-            self.hlayout3.addItem(
-                QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-            )
-        else:
+        self.hlayout3.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
+        if self.track_number != 0:
             self.solo_checkbox.stateChanged.connect(self.on_solo)
             self.solo_checkbox.setObjectName("solo_checkbox")
             self.hlayout3.addWidget(self.solo_checkbox)

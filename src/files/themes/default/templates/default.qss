@@ -220,57 +220,49 @@ QRadioButton#rec_arm_radiobutton::indicator::checked
     width: 20px;
 }
 
+QCheckBox#solo_checkbox,
+QCheckBox#mute_checkbox
+{
+    border: none;
+    color: black;
+    height: 20px;
+    margin: 0px;
+    padding: 0px;
+    width: 0px;
+}
+QCheckBox#mute_checkbox::indicator,
+QCheckBox#solo_checkbox::indicator
+{
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: transparent;
+    height: 20px;
+    width: 20px;
+}
+
 /*Solo checkbox*/
 
 QCheckBox#solo_checkbox::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/solo-off.png);
+    image: url({{ ASSETS_DIR }}/solo-off.svg) 0 0 0 0 stretch stretch;
 }
 
 QCheckBox#solo_checkbox::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/solo-on.png);
+    image: url({{ ASSETS_DIR }}/solo-on.svg) 0 0 0 0 stretch stretch;
 }
 
 /*Mute checkbox*/
 
 QCheckBox#mute_checkbox::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/mute-off.png);
+    image: url({{ ASSETS_DIR }}/mute-off.svg) 0 0 0 0 stretch stretch;
 }
 
 QCheckBox#mute_checkbox::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/mute-on.png);
-}
-
-/*Rec arm track radiobutton*/
-
-QRadioButton#rec_arm_radiobutton::indicator::unchecked
-{
-    image: url({{ ASSETS_DIR }}/record-off.png);
-}
-
-QRadioButton#rec_arm_radiobutton::indicator::checked
-{
-    image: url({{ ASSETS_DIR }}/record-on.png);
-}
-
-/*Rec arm checkbox*/
-
-QCheckBox#rec_arm_checkbox
-{
-    padding: 0px;
-}
-
-QCheckBox#rec_arm_checkbox::indicator::unchecked
-{
-    image: url({{ ASSETS_DIR }}/record-off.png);
-}
-
-QCheckBox#rec_arm_checkbox::indicator::checked
-{
-    image: url({{ ASSETS_DIR }}/record-on.png);
+    image: url({{ ASSETS_DIR }}/mute-on.svg) 0 0 0 0 stretch stretch;
 }
 
 QPushButton#menu{
@@ -714,7 +706,7 @@ QComboBox::drop-down
 
 QComboBox::down-arrow
 {
-    image: url({{ ASSETS_DIR }}/drop-down.png);
+    image: url({{ ASSETS_DIR }}/drop-down.svg);
 }
 
 QScrollBar:horizontal

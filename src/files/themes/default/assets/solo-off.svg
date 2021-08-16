@@ -1,0 +1,22 @@
+<svg width="20" height="20">
+  <g>
+    <rect
+        width="20"
+        height="20"
+        stroke="#aaa"
+        stroke-width="2"
+        fill="#777"
+    />
+    <text
+        x="10"
+        y="16"
+        alignment-baseline="middle"
+        font-size="16"
+        stroke-width="0"
+        stroke="#000"
+        text-anchor="middle"
+    >S</text>
+  </g>
+</svg>
+
+
