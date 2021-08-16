@@ -117,9 +117,9 @@ QRadioButton#tool_split::indicator
 {
     border-radius: 1px;
     border: 1px solid #dddddd;
-    height: {{ transport_button_size - 4 }}px;
+    height: {{ transport_button_size - tool_button_offset }}px;
     outline: none;
-    width: {{ transport_button_size - 4 }}px;
+    width: {{ transport_button_size - tool_button_offset }}px;
 }
 
 QCheckBox#button_hide,
@@ -275,18 +275,18 @@ QPushButton#menu{
     background: none;
     border-image: url({{ ASSETS_DIR }}/menu.png);
     border: none;
-    height: {{ transport_button_size - 4 }}px;
+    height: {{ transport_button_size - tool_button_offset }}px;
     outline: none;
-    width: {{ transport_button_size - 4 }}px;
+    width: {{ transport_button_size - tool_button_offset }}px;
 }
 
 QPushButton#panic{
     background: none;
     border-image: url({{ ASSETS_DIR }}/panic.png);
     border: none;
-    height: {{ transport_button_size - 4 }}px;
+    height: {{ transport_button_size - tool_button_offset }}px;
     outline: none;
-    width: {{ transport_button_size - 4 }}px;
+    width: {{ transport_button_size - tool_button_offset }}px;
 }
 
 QRadioButton#play_button::indicator,
@@ -606,7 +606,6 @@ QLineEdit#track_panel
     background-color: transparent;
     border: none;
 }
-
 
 QWidget#transport_panel
 {

@@ -10,7 +10,8 @@ text_background_color: "#5f5f61"
 text_color: "#dddddd"
 text_color_dark: "#1e1e1e"
 text_color_disabled: "#d0d0d0"
+tool_button_offset: 10
 track_panel_background: "#292929"
-transport_button_size: 36
+transport_button_size: 40
 vscrollbar: "#666666"
 vscrollbar_groove: "#111111"
