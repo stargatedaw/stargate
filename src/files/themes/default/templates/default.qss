@@ -1028,8 +1028,9 @@ QCheckBox::indicator:checked
 
 QLCDNumber
 {
-    background-color: black;
-    border: 3px solid #b1b1b1;
+    background: #333390;
+    border: 2px solid #787878;
     color: {{ text_color }};
+    width: 120px;
 }
 

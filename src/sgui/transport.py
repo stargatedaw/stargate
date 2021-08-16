@@ -37,7 +37,7 @@ class TransportWidget:
         self.hlayout1.addWidget(self.rec_button)
         self.clock = QLCDNumber()
         self.clock.setDigitCount(7)
-        self.clock.setMinimumWidth(210)
+        self.clock.setFixedWidth(180)
         self.clock.display("0:00.0")
         self.hlayout1.addWidget(self.clock)
 
