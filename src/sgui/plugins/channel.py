@@ -34,11 +34,25 @@ class sgchnl_plugin_ui(AbstractPluginUI):
         f_knob_size = 42
         self.gain_gridlayout = QGridLayout()
         if self.is_mixer:
-            self.layout.addLayout(self.gain_gridlayout)
-        else:
-            self.hlayout = QHBoxLayout()
-            self.layout.addLayout(self.hlayout)
-            self.hlayout.addLayout(self.gain_gridlayout)
+            self.widget.setFixedWidth(120)
+            self.pan_slider = slider_control(
+                QtCore.Qt.Orientation.Horizontal,
+                _("Pan"),
+                SGCHNL_PAN,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                -100,
+                100,
+                0,
+                KC_DECIMAL,
+                self.port_dict,
+                None,
+            )
+            self.pan_slider.control.setObjectName("pan_slider")
+            self.layout.addWidget(self.pan_slider.control)
+        self.hlayout = QHBoxLayout()
+        self.layout.addLayout(self.hlayout)
+        self.hlayout.addLayout(self.gain_gridlayout)
         self.gain_knob = knob_control(
             f_knob_size, _("Gain"), SGCHNL_GAIN,
             self.plugin_rel_callback, self.plugin_val_callback,
@@ -46,11 +60,21 @@ class sgchnl_plugin_ui(AbstractPluginUI):
         self.gain_knob.add_to_grid_layout(self.gain_gridlayout, 0)
         self.gain_knob.value_label.setMinimumWidth(55)
 
-        self.pan_knob = knob_control(
-            f_knob_size, _("Pan"), SGCHNL_PAN,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -100, 100, 0, KC_DECIMAL, self.port_dict, None)
-        self.pan_knob.add_to_grid_layout(self.gain_gridlayout, 1)
+        if not self.is_mixer:
+            self.pan_knob = knob_control(
+                f_knob_size,
+                _("Pan"),
+                SGCHNL_PAN,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                -100,
+                100,
+                0,
+                KC_DECIMAL,
+                self.port_dict,
+                None,
+            )
+            self.pan_knob.add_to_grid_layout(self.gain_gridlayout, 1)
         self.pan_law_knob = knob_control(
             f_knob_size, _("Law"), SGCHNL_LAW,
             self.plugin_rel_callback, self.plugin_val_callback,
