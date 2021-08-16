@@ -39,6 +39,7 @@ class SeqTrack:
         self.main_hlayout.addWidget(self.peak_meter.widget)
         self.group_box.setLayout(self.main_hlayout)
         self.track_name_lineedit = QLineEdit()
+        self.track_name_lineedit.setObjectName("track_panel")
         if a_track_num == 0:
             self.track_name_lineedit.setText("Main")
             self.track_name_lineedit.setDisabled(True)
@@ -342,7 +343,7 @@ class TrackPanel:
         self.tracks = {}
         self.plugin_uid_map = {}
         self.tracks_widget = QWidget()
-        self.tracks_widget.setObjectName("plugin_ui")
+        self.tracks_widget.setObjectName("track_panel")
         self.tracks_widget.setContentsMargins(0, 0, 0, 0)
         self.tracks_layout = QVBoxLayout(self.tracks_widget)
         self.tracks_layout.addItem(

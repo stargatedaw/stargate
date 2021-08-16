@@ -60,6 +60,12 @@ QWidget#plugin_ui
     border: 1px solid #7a7a7a;
 }
 
+QWidget#track_panel
+{
+    background-color: #222222;
+    border: 1px solid #7a7a7a;
+}
+
 QScrollArea
 {
     border: none;
@@ -132,7 +138,7 @@ QRadioButton#play_button,
 QRadioButton#rec_button,
 QRadioButton#stop_button
 {
-	margin-left: -6px;
+    margin-left: -6px;
 }
 
 QRadioButton#play_button::indicator::checked,
@@ -592,8 +598,15 @@ QWidget#plugin_widget
 QWidget#track_panel
 {
     background-color : {{ track_panel_background }};
-    border: 1px solid #333333;
+    border: 1px solid #111111;
 }
+
+QLineEdit#track_panel
+{
+    background-color: transparent;
+    border: none;
+}
+
 
 QWidget#transport_panel
 {
@@ -702,6 +715,7 @@ QPushButton#plugin_menu
 
 QComboBox:hover,
 QLineEdit:hover,
+QLineEdit#track_panel:hover,
 QSpinBox:hover,
 QDoubleSpinBox:hover,
 QPushButton#plugin_menu:hover
