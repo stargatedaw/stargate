@@ -213,6 +213,14 @@ QRadioButton#tool_split::indicator
 
 /* Track panel radio buttons  */
 
+
+QCheckBox#solo_checkbox:hover,
+QCheckBox#mute_checkbox:hover
+{
+	background: white;
+	border: 2px solid white;
+}
+
 QCheckBox#solo_checkbox::indicator::unchecked,
 QCheckBox#mute_checkbox::indicator::unchecked,
 QRadioButton#rec_arm_radiobutton::indicator::unchecked,
@@ -233,7 +241,7 @@ QCheckBox#mute_checkbox
     color: black;
     height: 20px;
     margin: 0px;
-    padding: 0px;
+    padding: 2px;
     width: 0px;
 }
 QCheckBox#mute_checkbox::indicator,
@@ -1026,9 +1034,9 @@ QCheckBox::indicator:checked
     );
 }
 
-QLCDNumber
+QLCDNumber#transport_clock
 {
-    background: #333390;
+    background: {{ transport_clock_background }};
     border: 2px solid #787878;
     color: {{ text_color }};
     width: 120px;

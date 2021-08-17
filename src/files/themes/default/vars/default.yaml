@@ -13,5 +13,6 @@ text_color_disabled: "#d0d0d0"
 tool_button_offset: 10
 track_panel_background: "#292929"
 transport_button_size: 40
+transport_clock_background: "#333390"
 vscrollbar: "#666666"
 vscrollbar_groove: "#111111"

@@ -17,6 +17,12 @@ variables:
         x1:0, y1:0, x2:0, y2:1,
         stop:0 #444444, stop: 0.5 #222222, stop:1 #444444
       )
+    transport_clock_background: |-
+      qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #515190, stop: 0.3 #333390,
+        stop: 0.7 #303090, stop: 1 #111190
+      )
     vscrollbar: |-
       qlineargradient(
         x1:0, y1:0, x2:0, y2:1,
