@@ -25,14 +25,10 @@ class TransportWidget(AbstractTransportWidget):
         self.group_box.setObjectName("transport_panel")
         self.hlayout1 = QHBoxLayout(self.group_box)
 
-        self.hlayout1.addWidget(
-            QLabel(_("Loop:")),
-        )
-        self.loop_mode_combobox = QComboBox()
-        self.hlayout1.addWidget(self.loop_mode_combobox)
-        self.loop_mode_combobox.addItems([_("Off"), _("Region")])
-        self.loop_mode_combobox.setMinimumWidth(75)
-        self.loop_mode_combobox.currentIndexChanged.connect(
+        self.loop_mode_checkbox = QCheckBox()
+        self.loop_mode_checkbox.setObjectName("loop_mode")
+        self.hlayout1.addWidget(self.loop_mode_checkbox)
+        self.loop_mode_checkbox.stateChanged.connect(
             self.on_loop_mode_changed,
         )
 
@@ -179,7 +175,7 @@ class TransportWidget(AbstractTransportWidget):
         shared.HARDWARE_WIDGET.on_stop()
         shared.AUDIO_SEQ_WIDGET.on_stop()
         self.set_controls_enabled(True)
-        self.loop_mode_combobox.setEnabled(True)
+        self.loop_mode_checkbox.setEnabled(True)
 
         if glbl_shared.IS_RECORDING:
             f_restart_engine = False
@@ -261,7 +257,7 @@ class TransportWidget(AbstractTransportWidget):
 
 
     def on_rec(self):
-        if self.loop_mode_combobox.currentIndex() == 1:
+        if self.loop_mode_checkbox.isChecked():
             QMessageBox.warning(
                 self.group_box,
                 _("Error"),
@@ -290,10 +286,14 @@ class TransportWidget(AbstractTransportWidget):
         shared.AUDIO_SEQ_WIDGET.on_play()
         shared.SEQUENCER.start_playback()
         self.set_controls_enabled(False)
-        self.loop_mode_combobox.setEnabled(False)
+        self.loop_mode_checkbox.setEnabled(False)
         MREC_EVENTS.clear()
         f_loop_pos = shared.SEQUENCER.get_loop_pos(a_warn=False)
-        if self.loop_mode_combobox.currentIndex() == 0 or not f_loop_pos:
+        if (
+            not self.loop_mode_checkbox.isChecked()
+            or
+            not f_loop_pos
+        ):
             self.rec_start = shared.SEQUENCER.get_beat_value()
             self.rec_end = None
         else:
@@ -303,17 +303,18 @@ class TransportWidget(AbstractTransportWidget):
         return True
 
     def on_loop_mode_changed(self, a_loop_mode):
+        # The states we expect are 0 or 2, not 0 or 1
+        a_loop_mode = 1 if a_loop_mode else 0
         if not self.suppress_osc:
             constants.DAW_PROJECT.ipc().set_loop_mode(a_loop_mode)
 
     def toggle_loop_mode(self):
-        f_index = self.loop_mode_combobox.currentIndex() + 1
-        if f_index >= self.loop_mode_combobox.count():
-            f_index = 0
-        self.loop_mode_combobox.setCurrentIndex(f_index)
+        self.loop_mode_checkbox.setChecked(
+            not self.loop_mode_checkbox.isChecked()
+        )
 
     def reset(self):
-        self.loop_mode_combobox.setCurrentIndex(0)
+        self.loop_mode_checkbox.setChecked(False)
         shared.HARDWARE_WIDGET.overdub_checkbox.setChecked(False)
 
     def set_tooltips(self, a_enabled):
@@ -322,13 +323,13 @@ class TransportWidget(AbstractTransportWidget):
                 _("Checking this box causes recording to "
                 "unlink existing items and append new events to the "
                 "existing events"))
-            self.loop_mode_combobox.setToolTip(
+            self.loop_mode_checkbox.setToolTip(
                 _("Use this to toggle between normal playback "
                 "and looping a sequence.\nYou can toggle between "
                 "settings with CTRL+L"))
             self.group_box.setToolTip(daw_strings.transport)
         else:
             shared.HARDWARE_WIDGET.overdub_checkbox.setToolTip("")
-            self.loop_mode_combobox.setToolTip("")
+            self.loop_mode_checkbox.setToolTip("")
             self.group_box.setToolTip("")
 

@@ -5,7 +5,7 @@ variables:
     combobox: |-
       qlineargradient(
         x1:0, y1:0, x2:0, y2:1,
-        stop:0 #777777, stop: 0.3 #999999, stop: 0.6 #999999, stop:1 #777777
+        stop:0 #1f1f27, stop: 0.3 #23232b, stop: 0.6 #23232b, stop:1 #1f1f27
       )
     hscrollbar: |-
       qlineargradient(

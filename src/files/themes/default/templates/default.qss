@@ -74,7 +74,7 @@ QScrollArea
 }
 
 QCheckBox,
-QRadiobutton
+QRadioButton
 {
     background-color: {{ background_color }};
     margin: 3px;
@@ -101,6 +101,7 @@ QRadioButton#tool_erase,
 QRadioButton#tool_split,
 QCheckBox#button_hide,
 QCheckBox#button_power,
+QCheckBox#loop_mode,
 QCheckBox#solo_checkbox,
 QCheckBox#mute_checkbox,
 QRadioButton#rec_arm_radiobutton
@@ -110,13 +111,12 @@ QRadioButton#rec_arm_radiobutton
                      text would've been */
 }
 
+QCheckBox#loop_mode::indicator,
 QRadioButton#tool_select::indicator,
 QRadioButton#tool_draw::indicator,
 QRadioButton#tool_erase::indicator,
 QRadioButton#tool_split::indicator
 {
-    border-radius: 1px;
-    border: 1px solid #dddddd;
     height: {{ transport_button_size - tool_button_offset }}px;
     outline: none;
     width: {{ transport_button_size - tool_button_offset }}px;
@@ -141,34 +141,14 @@ QRadioButton#stop_button
     margin-left: -6px;
 }
 
+QRadioButton#play_button::indicator::unchecked,
+QRadioButton#rec_button::indicator::unchecked,
+QRadioButton#stop_button::indicator::unchecked,
 QRadioButton#play_button::indicator::checked,
 QRadioButton#rec_button::indicator::checked,
 QRadioButton#stop_button::indicator::checked
 {
     background: none;
-}
-
-QRadioButton#tool_select::indicator::checked,
-QRadioButton#tool_draw::indicator::checked,
-QRadioButton#tool_erase::indicator::checked,
-QRadioButton#tool_split::indicator::checked
-{
-    background-color: #dddddd;
-}
-
-QRadioButton#play_button::indicator::unchecked,
-QRadioButton#rec_button::indicator::unchecked,
-QRadioButton#stop_button::indicator::unchecked
-{
-    background: none;
-}
-
-QRadioButton#tool_select::indicator::unchecked,
-QRadioButton#tool_draw::indicator::unchecked,
-QRadioButton#tool_erase::indicator::unchecked,
-QRadioButton#tool_split::indicator::unchecked
-{
-    background-color: #666666;
 }
 
 QCheckBox#button_power::indicator::checked
@@ -191,24 +171,54 @@ QCheckBox#button_hide::indicator::unchecked
     image: url({{ ASSETS_DIR }}/hide-off.png);
 }
 
-QRadioButton#tool_select::indicator
+QRadioButton#tool_select::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/select.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/select-off.svg);
 }
 
-QRadioButton#tool_draw::indicator
+QRadioButton#tool_select::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/draw.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/select-on.svg);
 }
 
-QRadioButton#tool_erase::indicator
+QRadioButton#tool_draw::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/erase.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/draw-off.svg);
 }
 
-QRadioButton#tool_split::indicator
+QRadioButton#tool_draw::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/split.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/draw-on.svg);
+}
+
+QRadioButton#tool_erase::indicator::unchecked
+{
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/erase-off.svg);
+}
+
+QRadioButton#tool_erase::indicator::checked
+{
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/erase-on.svg);
+}
+
+QRadioButton#tool_split::indicator::unchecked
+{
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/split-off.svg);
+}
+
+QRadioButton#tool_split::indicator::checked
+{
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/split-on.svg);
+}
+
+QCheckBox#loop_mode::indicator::unchecked
+{
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/loop-off.svg);
+}
+
+QCheckBox#loop_mode::indicator::checked
+{
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/loop-on.svg);
 }
 
 /* Track panel radio buttons  */
@@ -218,80 +228,48 @@ QCheckBox#solo_checkbox:hover,
 QCheckBox#mute_checkbox:hover
 {
 	background: white;
-	border: 2px solid white;
 }
 
-QCheckBox#solo_checkbox::indicator::unchecked,
-QCheckBox#mute_checkbox::indicator::unchecked,
-QRadioButton#rec_arm_radiobutton::indicator::unchecked,
-QCheckBox#solo_checkbox::indicator::checked,
-QCheckBox#mute_checkbox::indicator::checked,
-QRadioButton#rec_arm_radiobutton::indicator::checked
-{
-    height: 20px;
-    margin: 0px;
-    padding: 0px;
-    width: 20px;
-}
-
-QCheckBox#solo_checkbox,
-QCheckBox#mute_checkbox
-{
-    border: none;
-    color: black;
-    height: 20px;
-    margin: 0px;
-    padding: 2px;
-    width: 0px;
-}
 QCheckBox#mute_checkbox::indicator,
 QCheckBox#solo_checkbox::indicator
 {
-    background: transparent;
-    border: none;
-    border-radius: 6px;
+    background-color: transparent;
     color: transparent;
-    height: 20px;
-    width: 20px;
 }
 
 /*Solo checkbox*/
 
 QCheckBox#solo_checkbox::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/solo-off.svg) 0 0 0 0 stretch stretch;
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/solo-off.svg) 0 0 0 0 stretch stretch;
 }
 
 QCheckBox#solo_checkbox::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/solo-on.svg) 0 0 0 0 stretch stretch;
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/solo-on.svg) 0 0 0 0 stretch stretch;
 }
 
 /*Mute checkbox*/
 
 QCheckBox#mute_checkbox::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/mute-off.svg) 0 0 0 0 stretch stretch;
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/mute-off.svg) 0 0 0 0 stretch stretch;
 }
 
 QCheckBox#mute_checkbox::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/mute-on.svg) 0 0 0 0 stretch stretch;
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/mute-on.svg) 0 0 0 0 stretch stretch;
 }
 
 QPushButton#menu{
-    background: none;
-    border-image: url({{ ASSETS_DIR }}/menu.png);
-    border: none;
+    border-image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/menu.svg);
     height: {{ transport_button_size - tool_button_offset }}px;
     outline: none;
     width: {{ transport_button_size - tool_button_offset }}px;
 }
 
 QPushButton#panic{
-    background: none;
-    border-image: url({{ ASSETS_DIR }}/panic.png);
-    border: none;
+    border-image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/panic.svg);
     height: {{ transport_button_size - tool_button_offset }}px;
     outline: none;
     width: {{ transport_button_size - tool_button_offset }}px;
@@ -301,40 +279,39 @@ QRadioButton#play_button::indicator,
 QRadioButton#rec_button::indicator,
 QRadioButton#stop_button::indicator
 {
-    border: none;
     height: {{ transport_button_size }};
     outline: none;
     width: {{ transport_button_size }};
 }
 
-QRadioButton#play_button::indicator
+QRadioButton#play_button::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/play.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/play-off.svg);
 }
 
 QRadioButton#play_button::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/play_checked.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/play-on.svg);
 }
 
-QRadioButton#stop_button::indicator
+QRadioButton#stop_button::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/stop.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/stop-off.svg);
 }
 
 QRadioButton#stop_button::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/stop_checked.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/stop-on.svg);
 }
 
-QRadioButton#rec_button::indicator
+QRadioButton#rec_button::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/rec.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/rec-off.svg);
 }
 
 QRadioButton#rec_button::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/rec_checked.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/rec-on.svg);
 }
 
 QSpinBox,
@@ -593,7 +570,7 @@ QGroupBox
 
 QGroupBox#plugin_groupbox
 {
-    background-color : #2a2a2a;
+    background-color : {{ background_color }};
     border: 2px solid 666666;
 }
 
@@ -671,10 +648,7 @@ QLineEdit:disabled
 
 QPushButton
 {
-    background-color: QLinearGradient(
-        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #565656,
-        stop: 0.1 #525252, stop: 0.5 #4e4e4e, stop: 0.9 #4a4a4a,
-        stop: 1 #464646);
+	background-color: #1F1F27;
     border-color: {{ border_color }};
     border-style: solid;
     border-width: 1px;
@@ -701,7 +675,7 @@ QPushButton#plugin_menu
 
 QPushButton#plugin_menu::menu-indicator
 {
-    image: url({{ ASSETS_DIR }}/drop-down.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/drop-down.svg);
     left: -2px;
     subcontrol-origin: padding;
     subcontrol-position: right center;
@@ -717,7 +691,7 @@ QPushButton#plugin_menu
 {
     background-color: {{ combobox }};
     border: 1px solid #000000;
-    color: {{ text_color_dark }};
+    color: {{ text_color }};
 }
 
 QComboBox:hover,
@@ -749,7 +723,7 @@ QComboBox:on
 
 QAbstractItemView
 {
-    background-color: {{ background_color }};
+    background-color: {{ background_color_alt }};
     border: 2px solid darkgray;
     selection-background-color: QLinearGradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
@@ -772,7 +746,7 @@ QComboBox::drop-down
 
 QComboBox::down-arrow
 {
-    image: url({{ ASSETS_DIR }}/drop-down.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/drop-down.svg);
 }
 
 QScrollBar:horizontal
@@ -981,6 +955,7 @@ QTableWidget
     background-color: #3a3a3a;
 }
 
+QCheckBox::indicator,
 QRadioButton::indicator
 {
     border-radius: 6px;
@@ -1005,8 +980,6 @@ QCheckBox::indicator
     border-radius: 6px;
     border: 1px solid #b1b1b1;
     color: {{ text_color }};
-    height: 18px;
-    width: 18px;
 }
 
 QRadioButton::indicator

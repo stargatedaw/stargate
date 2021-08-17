@@ -147,7 +147,7 @@ class HardwareWidget(QWidget):
 
     def on_rec(self):
 #        if self.overdub_checkbox.isChecked() and \
-#        self.loop_mode_combobox.currentIndex() > 0:
+#        self.loop_mode_checkbox.checkState() > 0:
 #            QMessageBox.warning(
 #                self.group_box, _("Error"),
 #                _("Cannot use overdub mode with loop mode to record"))

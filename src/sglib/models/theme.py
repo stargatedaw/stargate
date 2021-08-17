@@ -315,10 +315,9 @@ class VarsFile:
         overrides,
     ):
         self.path = type_assert(path, str)
-        self.overrides = type_assert_dict(
+        self.overrides = type_assert(
             overrides,
-            kcls=str,
-            vcls=str,
+            dict,
         )
 
 class SystemOverrides:
@@ -390,6 +389,8 @@ class Theme:
         )
         with open(var_path) as f:
             variables = yaml.safe_load(f)
+        LOG.info(f"Overriding {variables}")
+        LOG.info(f"with {self.variables.overrides}")
         variables.update(self.variables.overrides)
 
         system_path = os.path.join(dirname, 'system', self.system.path)

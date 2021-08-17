@@ -375,7 +375,7 @@ def on_ready():
     # to the same setting as the UI, since this is not part
     # of the saved data
     TRANSPORT.on_loop_mode_changed(
-        TRANSPORT.loop_mode_combobox.currentIndex(),
+        TRANSPORT.loop_mode_checkbox.checkState(),
     )
 
 def get_mixer_peak_meters():
