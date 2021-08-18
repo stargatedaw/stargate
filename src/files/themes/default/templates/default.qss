@@ -378,7 +378,7 @@ QSlider::add-page:horizontal
 QSlider::handle:horizontal
 {
     border: 2px solid transparent;
-    image: url({{ ASSETS_DIR }}/h-fader.png);
+    image: url({{ ASSETS_DIR }}/h-fader.svg);
     margin-bottom: -14px;
     margin-top: -14px;
 }
@@ -413,7 +413,7 @@ QSlider::add-page:vertical
 QSlider::handle:vertical
 {
     border: 2px solid transparent;
-    image: url({{ ASSETS_DIR }}/v-fader.png);
+    image: url({{ ASSETS_DIR }}/v-fader.svg);
     margin-left: -14px;
     margin-right: -14px;
 }
@@ -690,7 +690,7 @@ QComboBox,
 QPushButton#plugin_menu
 {
     background-color: {{ combobox }};
-    border: 1px solid #000000;
+    border: 1px solid {{ border_color }};
     color: {{ text_color }};
 }
 
@@ -699,7 +699,7 @@ QLineEdit:hover,
 QLineEdit#track_panel:hover,
 QSpinBox:hover,
 QDoubleSpinBox:hover,
-QPushButton#plugin_menu:hover
+QPushButton:hover
 {
     border: 2px solid #ffffff;
 }
@@ -724,7 +724,7 @@ QComboBox:on
 QAbstractItemView
 {
     background-color: {{ background_color_alt }};
-    border: 2px solid darkgray;
+    border: 2px solid {{ border_color }};
     selection-background-color: QLinearGradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #ffffff, stop: 1 #dddddd
@@ -892,8 +892,8 @@ QToolBar::handle
 
 QMenu::separator
 {
-    height: 6px;
-    background-color: #686868;
+    height: 2px;
+    background-color: {{ text_color }};
 }
 
 QTabBar::tab
@@ -951,8 +951,8 @@ QTabBar::tab:selected
 
 QTableWidget
 {
-    alternate-background-color: #464646;
-    background-color: #3a3a3a;
+    alternate-background-color: {{ background_color }};
+    background-color: {{ background_color_alt }};
 }
 
 QCheckBox::indicator,
@@ -1012,6 +1012,7 @@ QLCDNumber#transport_clock
     background: {{ transport_clock_background }};
     border: 2px solid #787878;
     color: {{ text_color }};
+	height: {{ transport_button_size }};
     width: 120px;
 }
 

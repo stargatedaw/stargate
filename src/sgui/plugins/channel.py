@@ -84,11 +84,20 @@ class sgchnl_plugin_ui(AbstractPluginUI):
         self.volume_gridlayout = QGridLayout()
         self.layout.addLayout(self.volume_gridlayout)
         self.volume_slider = slider_control(
-            QtCore.Qt.Orientation.Vertical if self.is_mixer
-                else QtCore.Qt.Orientation.Horizontal,
+            (
+                QtCore.Qt.Orientation.Vertical
+                if self.is_mixer else
+                QtCore.Qt.Orientation.Horizontal
+            ),
             "Vol", SGCHNL_VOL_SLIDER,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -5000, 0, 0, KC_DECIMAL, self.port_dict)
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -5000,
+            0,
+            0,
+            KC_DECIMAL,
+            self.port_dict,
+        )
         if self.is_mixer:
             self.volume_slider.add_to_grid_layout(self.volume_gridlayout, 0)
             self.volume_slider.control.setSizePolicy(
