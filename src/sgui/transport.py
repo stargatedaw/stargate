@@ -12,6 +12,7 @@ import time
 class TransportWidget:
     def __init__(self):
         self.suppress_osc = True
+        self.last_clock_text = None
         self.last_open_dir = util.HOME
         self.group_box = QWidget()
         self.group_box.setObjectName("transport_panel")
@@ -105,6 +106,9 @@ class TransportWidget:
         constants.IPC.main_vol(f_result)
 
     def set_time(self, a_text):
+        if a_text == self.last_clock_text:
+            return
+        self.last_clock_text = a_text
         self.clock.display(a_text)
 
     def on_spacebar(self):
