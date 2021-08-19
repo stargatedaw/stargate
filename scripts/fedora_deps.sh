@@ -27,3 +27,4 @@ sudo dnf install \
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 pip install -r ${SCRIPT_DIR}/../src/requirements.txt
+pip install yq

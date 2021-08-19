@@ -2,7 +2,7 @@ template: default.qss
 variables:
   path: default.yaml
   overrides:
-	assets_subdir: "dark-neon"
+    assets_subdir: "dark-neon"
 system:
   path: default.yaml
   overrides:

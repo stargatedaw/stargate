@@ -149,21 +149,22 @@ class RoutingGraphWidget(QGraphicsView):
         )
 
         self.node_dict = {}
-        f_wire_gradient = QLinearGradient(
-            0.0,
-            0.0,
-            self.width(),
-            self.height(),
-        )
-        f_wire_gradient.setColorAt(0.0, QColor(250, 250, 255))
-        f_wire_gradient.setColorAt(1.0, QColor(210, 210, 222))
-        f_wire_pen = QPen(f_wire_gradient, self.wire_width_div2)
-        f_sc_wire_pen = QPen(
-            QtCore.Qt.GlobalColor.red,
+        f_wire_pen = QPen(
+            QColor(
+                theme.SYSTEM_COLORS.widgets.rout_graph_wire_audio,
+            ),
             self.wire_width_div2,
         )
         f_midi_wire_pen = QPen(
-            QtCore.Qt.GlobalColor.blue,
+            QColor(
+                theme.SYSTEM_COLORS.widgets.rout_graph_wire_midi,
+            ),
+            self.wire_width_div2,
+        )
+        f_sc_wire_pen = QPen(
+            QColor(
+                theme.SYSTEM_COLORS.widgets.rout_graph_wire_sc,
+            ),
             self.wire_width_div2,
         )
         pen_dict = {0: f_wire_pen, 1: f_sc_wire_pen, 2: f_midi_wire_pen}

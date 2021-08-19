@@ -242,6 +242,9 @@ class WidgetColors:
         rout_graph_to="#e7a0a0",
         rout_graph_from="#a0a0e7",
         rout_graph_lines="#696969",
+        rout_graph_wire_audio="#cccccc",
+        rout_graph_wire_midi="#6666cc",
+        rout_graph_wire_sc="#cc6666",
         splash_screen="splash.png",
         splash_screen_text="#ffffff",
     ):
@@ -287,6 +290,18 @@ class WidgetColors:
         )
         self.rout_graph_lines = type_assert(
             rout_graph_lines,
+            str,
+        )
+        self.rout_graph_wire_audio = type_assert(
+            rout_graph_wire_audio,
+            str,
+        )
+        self.rout_graph_wire_midi = type_assert(
+            rout_graph_wire_midi,
+            str,
+        )
+        self.rout_graph_wire_sc = type_assert(
+            rout_graph_wire_sc,
             str,
         )
         self.splash_screen = type_assert(

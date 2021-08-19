@@ -106,7 +106,7 @@ widgets:
   # The color of a playback cursor line
   playback_cursor: "#dddddd"
   # Routing graph widget node
-  rout_graph_node: "#e7e700"
+  rout_graph_node: "#f89e19"
   # Routing graph widget node text
   rout_graph_node_text: "#e7e7e7"
   # Routing graph widget to node when mouse hovering
@@ -115,6 +115,12 @@ widgets:
   rout_graph_from: "#a0a0e7"
   # Routing graph widget matrix lines
   rout_graph_lines: "#696969"
+  # Routing graph wires connecting audio
+  rout_graph_wire_audio: "#dddddd"
+  # Routing graph wires connecting midi
+  rout_graph_wire_midi: "#6666cc"
+  # Routing graph wires connecting audio sidechain inputs
+  rout_graph_wire_sc: "#cc6666"
   # Splash screen shown at start up
   splash_screen: "splash.png"
   # Text status messages on splash screen shown at start up
