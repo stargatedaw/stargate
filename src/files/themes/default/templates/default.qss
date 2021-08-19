@@ -227,13 +227,6 @@ QCheckBox#loop_mode::indicator::checked
 
 /* Track panel radio buttons  */
 
-
-QCheckBox#mute_checkbox:hover,
-QCheckBox#solo_checkbox:hover
-{
-	background: {{ palette.white }};
-}
-
 QCheckBox#mute_checkbox::indicator,
 QCheckBox#solo_checkbox::indicator
 {
@@ -267,17 +260,17 @@ QCheckBox#mute_checkbox::indicator::checked
     image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/mute-on.svg) 0 0 0 0 stretch stretch;
 }
 
-QPushButton#menu{
+QPushButton#menu
+{
     border-image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/menu.svg);
     height: {{ transport_button_size - tool_button_offset }}px;
-    outline: none;
     width: {{ transport_button_size - tool_button_offset }}px;
 }
 
-QPushButton#panic{
+QPushButton#panic
+{
     border-image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/panic.svg);
     height: {{ transport_button_size - tool_button_offset }}px;
-    outline: none;
     width: {{ transport_button_size - tool_button_offset }}px;
 }
 
