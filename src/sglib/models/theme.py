@@ -407,6 +407,7 @@ class Theme:
         LOG.info(f"Overriding {variables}")
         LOG.info(f"with {self.variables.overrides}")
         variables.update(self.variables.overrides)
+        LOG.info(f"Result: {variables}")
 
         system_path = os.path.join(dirname, 'system', self.system.path)
         with open(system_path) as f:
