@@ -9,12 +9,6 @@ PIANO_ROLL_NOTE_LABELS = [
     "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
 ]
 SELECTED_PIANO_NOTE = None   #Used for mouse click hackery
-SELECTED_NOTE_GRADIENT = QLinearGradient(
-    QtCore.QPointF(0, 0),
-    QtCore.QPointF(0, 12),
-)
-SELECTED_NOTE_GRADIENT.setColorAt(0, QColor(180, 172, 100))
-SELECTED_NOTE_GRADIENT.setColorAt(1, QColor(240, 240, 240))
 PIANO_ROLL_HEADER_HEIGHT = 45
 
 

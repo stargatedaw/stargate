@@ -38,6 +38,12 @@ daw:
   note_snap_line: "#000000"
   # The vertical line drawn at each beat
   note_beat_line: "#000000"
+  # The color of a selected note
+  note_selected_color: "#cccccc"
+  # The color of the note when velocity is at max value
+  note_vel_max_color: "#f89e19"
+  # The color of the note when velocity is at min value
+  note_vel_min_color: "#7777b9"
   # The sequencer playback cursor
   playback_cursor: "#dddddd"
   # Vertical 16th note lines in the sequencer

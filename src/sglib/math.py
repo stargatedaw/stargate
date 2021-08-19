@@ -12,6 +12,7 @@ __all__ = [
     'clip_max',
     'clip_min',
     'clip_value',
+    'color_interpolate',
     'cosine_interpolate',
     'db_to_lin',
     'hz_to_pitch',
@@ -216,4 +217,29 @@ def quantize(
     pos = round(pos / amt)
     pos *= amt
     return pos
+
+def color_interpolate(
+    foreground: str,
+    background: str,
+    pos: float,
+):
+    """ Interpolate 2 hex colors.
+        Only 6 digit are supported (with or without #), no transparency
+
+        @pos: 0.0 pure foreground to 1.0 pure background
+    """
+    if foreground.startswith('#'):
+        foreground = foreground[1:]
+    if background.startswith('#'):
+        background = background[1:]
+    for x in (foreground, background):
+        assert len(x) == 6, f"Invalid hex color {x}"
+    assert pos >= 0. and pos <= 1., pos
+    result = ""
+    for i in range(3):
+        fg = float(int(foreground[i*2:(i*2)+2], 16))
+        bg = float(int(background[i*2:(i*2)+2], 16))
+        color = ((fg - bg) * pos) + bg
+        result += hex(int(color))[2:]
+    return f"#{result}"
 

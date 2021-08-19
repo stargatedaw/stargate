@@ -73,6 +73,9 @@ class DawColors:
         note_root_background="#5f1e1e",
         note_snap_line="#000000",
         note_white_background="#5f5f61",
+        note_vel_max_color="#f89e19",
+        note_vel_min_color="#199ef8",
+        note_selected_color="#cccccc",
         playback_cursor="#ff0000",
     ):
         self.seq_antialiasing = type_assert(
@@ -221,6 +224,14 @@ class DawColors:
         )
         self.note_snap_line = type_assert(
             note_snap_line,
+            str,
+        )
+        self.note_vel_max_color = type_assert(
+            note_vel_max_color,
+            str,
+        )
+        self.note_vel_min_color = type_assert(
+            note_vel_min_color,
             str,
         )
         self.playback_cursor = type_assert(

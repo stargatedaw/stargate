@@ -8,24 +8,12 @@ from sgui import widgets
 from sgui.daw import shared
 from sglib.models.daw import *
 from sgui.daw.shared import *
-from sglib.models import stargate as sg_project
+from sglib.models import stargate as sg_project, theme
 from sglib.lib import util
 from sglib.lib.util import *
 from sglib.lib.translate import _
+from sglib.math import color_interpolate
 from sgui.sgqt import *
-
-PIANO_NOTE_GRADIENT_TUPLE = (
-    (255, 0, 0),
-    (255, 123, 0),
-    (255, 255, 0),
-    (123, 255, 0),
-    (0, 255, 0),
-    (0, 255, 123),
-    (0, 255, 255),
-    (0, 123, 255),
-    (0, 0, 255),
-    (0, 0, 255),
-)
 
 
 class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
@@ -85,24 +73,15 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
         self.vel_line.setLine(0.0, f_y, f_width, f_y)
 
     def set_brush(self):
-        f_val = (1.0 - (self.note_item.velocity / 127.0)) * 9.0
-        f_val = clip_value(f_val, 0.0, 9.0)
-        f_int = int(f_val)
-        f_frac = f_val - f_int
-        f_vals = []
-        for f_i in range(3):
-            f_val = (((PIANO_NOTE_GRADIENT_TUPLE[f_int + 1][f_i] -
-                PIANO_NOTE_GRADIENT_TUPLE[f_int][f_i]) * f_frac) +
-                PIANO_NOTE_GRADIENT_TUPLE[f_int][f_i])
-            f_vals.append(int(f_val))
-        f_vals_m1 = rgb_minus(f_vals, 90)
-        f_vals_m2 = rgb_minus(f_vals, 120)
-        f_gradient = QLinearGradient(0.0, 0.0, 0.0, self.note_height)
-        f_gradient.setColorAt(0.0, QColor(*f_vals_m1))
-        f_gradient.setColorAt(0.4, QColor(*f_vals))
-        f_gradient.setColorAt(0.6, QColor(*f_vals))
-        f_gradient.setColorAt(1.0, QColor(*f_vals_m2))
-        self.setBrush(f_gradient)
+        pos = (1.0 - (self.note_item.velocity / 127.0))
+        pos = clip_value(pos, 0.0, 1.0)
+        color = color_interpolate(
+            theme.SYSTEM_COLORS.daw.note_vel_min_color,
+            theme.SYSTEM_COLORS.daw.note_vel_max_color,
+            pos,
+        )
+        brush = QColor(color)
+        self.setBrush(brush)
 
     def update_note_text(self, a_note_num=None):
         f_note_num = a_note_num if a_note_num is not None \
@@ -194,7 +173,10 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
         else:
             a_event.setAccepted(True)
             QGraphicsRectItem.mousePressEvent(self, a_event)
-            self.setBrush(_shared.SELECTED_NOTE_GRADIENT)
+            s_brush = QColor(
+                theme.SYSTEM_COLORS.daw.note_selected_color,
+            )
+            self.setBrush(s_brush)
             self.o_pos = self.pos()
             if self.mouse_is_at_end(qt_event_pos(a_event)):
                 self.is_resizing = True

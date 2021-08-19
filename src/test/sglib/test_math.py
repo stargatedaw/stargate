@@ -142,3 +142,10 @@ def test_quantize():
         result = quantize(pos, amt)
         assert result == expected, result
 
+def test_color_interpolate():
+    for args, expected in (
+        (("ffffff", "000000", 0.5), "#7f7f7f"),
+        (("#ffffff", "#000000", 0.5), "#7f7f7f"),
+    ):
+        assert color_interpolate(*args) == expected, (args, expected)
+

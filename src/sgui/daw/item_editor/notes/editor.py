@@ -119,9 +119,12 @@ class PianoRollEditor(AbstractItemEditor):
 
     def highlight_selected(self):
         self.has_selected = False
+        s_brush = QColor(
+            theme.SYSTEM_COLORS.daw.note_selected_color,
+        )
         for f_item in self.note_items:
             if f_item.isSelected():
-                f_item.setBrush(_shared.SELECTED_NOTE_GRADIENT)
+                f_item.setBrush(s_brush)
                 f_item.note_item.is_selected = True
                 self.has_selected = True
             else:
