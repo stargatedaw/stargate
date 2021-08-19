@@ -497,20 +497,6 @@ QSlider#zoom_slider::add-page:horizontal
     height: 10px;
 }
 
-QSlider#zoom_slider::handle:horizontal
-{
-    background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #cccccc,
-        stop: 0.5 #dddddd stop: 1 #cccccc
-    );
-    border: 2px solid white;
-    height: 15px;
-    image: none;
-    margin-bottom: -3px;
-    margin-top: -3px;
-    width: 9px;
-}
-
 QSlider#zoom_slider::groove:vertical
 {
     background: white;
@@ -537,18 +523,12 @@ QSlider#zoom_slider::add-page:vertical
     border-radius: 4px;
 }
 
+QSlider#zoom_slider::handle:horizontal,
 QSlider#zoom_slider::handle:vertical
 {
-    background: qlineargradient(
-        x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #cccccc, stop: 0.5 #dddddd stop: 1 #cccccc
-    );
-    border: 2px solid white;
-    height: 9px;
-    image: none;
-    margin-bottom: -3px;
-    margin-top: -3px;
-    width: 15px;
+    image: url({{ ASSETS_DIR }}/zoom_slider_handle.svg) 0 0 0 0 stretch stretch;
+	height: 18px;
+	width: 18px;
 }
 
 QToolTip
