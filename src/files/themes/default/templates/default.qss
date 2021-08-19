@@ -5,8 +5,21 @@ QWidget:focus
 
 QMenu::item
 {
-    background-color: {{ background_color }};
+    background-color: {{ background_color_alt }};
 }
+
+QMenu::separator
+{
+    height: 2px;
+    background-color: {{ text_color }};
+}
+
+QMenu
+{
+    background-color: {{ background_color_alt }};
+    border: 1px solid #7a7a7a;
+}
+
 
 QWidget#plugin_rack
 {
@@ -51,7 +64,6 @@ QWidget
 QDialog,
 QDoubleSpinBox,
 QMainWindow,
-QMenu,
 QScrollArea,
 QSpinBox,
 QWidget#plugin_ui
@@ -71,14 +83,6 @@ QScrollArea
     border: none;
     outline: none;
     padding: 2px;
-}
-
-QCheckBox,
-QRadioButton
-{
-    background-color: {{ background_color }};
-    margin: 3px;
-    padding: 0px;
 }
 
 QSplitter::handle:vertical
@@ -224,17 +228,19 @@ QCheckBox#loop_mode::indicator::checked
 /* Track panel radio buttons  */
 
 
-QCheckBox#solo_checkbox:hover,
-QCheckBox#mute_checkbox:hover
+QCheckBox#mute_checkbox:hover,
+QCheckBox#solo_checkbox:hover
 {
-	background: white;
+	background: {{ palette.white }};
 }
 
 QCheckBox#mute_checkbox::indicator,
 QCheckBox#solo_checkbox::indicator
 {
-    background-color: transparent;
-    color: transparent;
+    background-color: none;
+    color: none;
+	height: none;
+	width: none;
 }
 
 /*Solo checkbox*/
@@ -563,7 +569,7 @@ QToolTip
 
 QGroupBox
 {
-    border: 2px solid #666666;
+    border: 2px solid {{ border_color }};
     color: {{ text_color }};
     padding-top: 1.2em;
 }
@@ -571,7 +577,7 @@ QGroupBox
 QGroupBox#plugin_groupbox
 {
     background-color : {{ background_color }};
-    border: 2px solid 666666;
+    border: 2px solid {{ border_color }};
 }
 
 QWidget#plugin_widget
@@ -583,7 +589,7 @@ QWidget#plugin_widget
 QWidget#track_panel
 {
     background-color : {{ track_panel_background }};
-    border: 1px solid #111111;
+    border: 1px solid {{ border_color }};
 }
 
 QLineEdit#track_panel
@@ -595,24 +601,24 @@ QLineEdit#track_panel
 QWidget#transport_panel
 {
     background-color: {{ background_color }};
-    border: 2px solid #666666;
+    border: 2px solid {{ border_color }};
 }
 
 QGroupBox::title
 {
     background-color: {{ background_color }};
-    border: 1px solid #000000;
+    border: 1px solid {{ border_color }};
     subcontrol-position: top left;
 }
 
 QGroupBox:focus, QTextEdit::focus
 {
-    border: 2px solid #ffffff;
+    border: 2px solid {{ palette.white }};
 }
 
 QWidget:item:hover
 {
-    background-color: #ffffff;
+    background-color: {{ palette.white }};
     color: {{ text_color_dark }};
 }
 
@@ -701,7 +707,7 @@ QSpinBox:hover,
 QDoubleSpinBox:hover,
 QPushButton:hover
 {
-    border: 2px solid #ffffff;
+    border: 2px solid {{ palette.white }};
 }
 
 QComboBox:off
@@ -718,7 +724,7 @@ QComboBox:on
     color: {{ text_color }};
     padding-left: 4px;
     padding-top: 3px;
-    selection-background-color: #ffffff;
+    selection-background-color: {{ palette.white }};
 }
 
 QAbstractItemView
@@ -752,7 +758,7 @@ QComboBox::down-arrow
 QScrollBar:horizontal
 {
     background: {{ hscrollbar }};
-    border: 1px solid #222222;
+    border: 1px solid {{ border_color }};
     height: 15px;
     margin: 0px 16px 0 16px;
 }
@@ -785,7 +791,7 @@ QScrollBar::sub-line:vertical
 
 QScrollBar::add-line:horizontal
 {
-    border: 1px solid #1b1b19;
+    border: 1px solid {{ border_color }};
     subcontrol-origin: margin;
     subcontrol-position: right;
     width: 14px;
@@ -793,7 +799,7 @@ QScrollBar::add-line:horizontal
 
 QScrollBar::sub-line:horizontal
 {
-    border: 1px solid #1b1b19;
+    border: 1px solid {{ border_color }};
     subcontrol-origin: margin;
     subcontrol-position: left;
     width: 14px;
@@ -810,20 +816,20 @@ QScrollBar::add-page:horizontal,
 QScrollBar::sub-page:horizontal
 {
     background: {{ hscrollbar_groove }};
-    border: 1px solid #888888;
+    border: 1px solid {{ border_color }};
 }
 
 QScrollBar::add-page:vertical,
 QScrollBar::sub-page:vertical
 {
     background: {{ vscrollbar_groove }};
-    border: 1px solid #888888;
+    border: 1px solid {{ border_color }};
 }
 
 QScrollBar:vertical
 {
     background: #666666;
-    border: 1px solid #222222;
+    border: 1px solid {{ border_color }};
     margin: 16px 0 16px 0;
     width: 15px;
 }
@@ -835,7 +841,7 @@ QScrollBar::handle:vertical
 
 QScrollBar::add-line:vertical
 {
-    border: 1px solid #1b1b19;
+    border: 1px solid {{ border_color }};
     height: 14px;
     subcontrol-origin: margin;
     subcontrol-position: bottom;
@@ -843,7 +849,7 @@ QScrollBar::add-line:vertical
 
 QScrollBar::sub-line:vertical
 {
-    border: 1px solid #1b1b19;
+    border: 1px solid {{ border_color }};
     height: 14px;
     subcontrol-origin: margin;
     subcontrol-position: top;
@@ -863,11 +869,8 @@ QCheckBox:disabled
 
 QMainWindow::separator
 {
-    background-color: QLinearGradient(
-        x1:0, y1:0, x2:0, y2:1, stop:0 #161616, stop: 0.5 #151515,
-        stop: 0.6 #212121, stop:1 #343434
-    );
-    border: 1px solid #4c4c4c;
+    background-color: {{ border_color }};
+    border: 1px solid {{ border_color }};
     color: {{ text_color }};
     padding-left: 4px;
     spacing: 3px; /* spacing between items in the tool bar */
@@ -875,10 +878,6 @@ QMainWindow::separator
 
 QMainWindow::separator:hover
 {
-    background-color: QLinearGradient(
-        x1:0, y1:0, x2:0, y2:1, stop:0 #dddddd,
-        stop:0.5 #b56c17 stop:1 #ffffff
-    );
     border: 1px solid #6c6c6c;
     color: {{ text_color }};
     padding-left: 4px;
@@ -890,17 +889,11 @@ QToolBar::handle
     spacing: 3px; /* spacing between items in the tool bar */
 }
 
-QMenu::separator
-{
-    height: 2px;
-    background-color: {{ text_color }};
-}
-
 QTabBar::tab
 {
     background-color: {{ background_color }};
     border-bottom-style: none;
-    border: 1px solid #000000;
+    border: 1px solid {{ border_color }};
     color: {{ text_color }};
     margin-right: -1px;
     padding-bottom: 2px;
@@ -955,14 +948,27 @@ QTableWidget
     background-color: {{ background_color_alt }};
 }
 
+QCheckBox,
+QRadioButton
+{
+    background-color: {{ background_color }};
+    margin: 3px;
+    padding: 0px;
+}
+
 QCheckBox::indicator,
 QRadioButton::indicator
 {
+    background-color: {{ background_color_alt }};
     border-radius: 6px;
     border: 1px solid #b1b1b1;
     color: {{ text_color }};
+    height: 18px;
+    margin-left: 6px;
+    width: 18px;
 }
 
+QCheckBox::indicator:checked,
 QRadioButton::indicator:checked
 {
     background-color: qradialgradient(
@@ -974,37 +980,10 @@ QRadioButton::indicator:checked
     );
 }
 
-QCheckBox::indicator
-{
-    background-color: {{ background_color_alt }};
-    border-radius: 6px;
-    border: 1px solid #b1b1b1;
-    color: {{ text_color }};
-}
-
-QRadioButton::indicator
-{
-    margin-left: 6px;
-    width: 18px;
-    height: 18px;
-    border-radius: 6px;
-}
-
 QRadioButton::indicator:hover,
 QCheckBox::indicator:hover
 {
-    border: 1px solid #ffffff;
-}
-
-QCheckBox::indicator:checked
-{
-    background-color: qradialgradient(
-        cx: 0.5, cy: 0.5,
-        fx: 0.5, fy: 0.5,
-        radius: 1.0,
-        stop: 0.25 #ffffff,
-        stop: 0.3 {{ background_color_alt }}
-    );
+    border: 1px solid {{ palette.white }};
 }
 
 QLCDNumber#transport_clock
