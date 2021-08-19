@@ -83,6 +83,7 @@ py_vendor:
 		--ignore-installed --target=./sg_py_vendor --no-deps wavefile
 
 tests:
+	./test_parse.sh
 	make -C engine test
 	pytest test/
 	$(BROWSER) htmlcov/index.html
