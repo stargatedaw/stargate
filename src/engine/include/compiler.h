@@ -13,8 +13,8 @@
 
 #include <pthread.h>
 #include <sched.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #ifdef __linux__
     #include <sys/resource.h>
 #endif
@@ -107,6 +107,11 @@ char * get_home_dir();
 
 void v_self_set_thread_affinity();
 void v_pre_fault_thread_stack(int stacksize);
-
+/* Similar to stdlib assert(...), but prints a message and a stack trace
+ * @cond: The condition to assert is true
+ * @msg:  The message to print
+ */
+void sg_assert(int cond, char* msg);
+void sg_assert_ptr(void* cond, char* msg);
 #endif
 

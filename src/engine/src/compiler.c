@@ -1,4 +1,6 @@
-#include <assert.h>
+#include <execinfo.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 #include "compiler.h"
@@ -29,14 +31,14 @@ void prefetch_range(void *addr, size_t len){
     #define REAL_PATH_SEP "\\"
     char * get_home_dir(){
         char * f_result = getenv("USERPROFILE");
-        assert(f_result);
+        sg_assert_ptr(f_result, "getenv(USERPROFILE) returned NULL");
         return f_result;
     }
 #else
     #define REAL_PATH_SEP "/"
     char * get_home_dir(){
         char * f_result = getenv("HOME");
-        assert(f_result);
+        sg_assert_ptr(f_result, "getenv(HOME) returned NULL");
         return f_result;
     }
 #endif
@@ -86,3 +88,26 @@ void v_pre_fault_thread_stack(int stacksize){
 #endif
 }
 
+static void _sg_assert_failed(char* msg){
+    void* callstack[128];
+    int frames;
+
+    if(msg){
+        fprintf(stderr, "%s\n", msg);
+    }
+    frames = backtrace(callstack, 128);
+    backtrace_symbols_fd(callstack + 2, frames - 2, STDERR_FILENO);
+    abort();
+}
+
+void sg_assert(int cond, char* msg){
+    if(!cond){
+        _sg_assert_failed(msg);
+    }
+}
+
+void sg_assert_ptr(void* cond, char* msg){
+    if(!cond){
+        _sg_assert_failed(msg);
+    }
+}

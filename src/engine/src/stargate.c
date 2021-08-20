@@ -1,7 +1,7 @@
-#include <assert.h>
 #include <string.h>
 #include <time.h>
 
+#include "compiler.h"
 #include "globals.h"
 #include "ipc.h"
 #include "audiodsp/lib/amp.h"
@@ -38,7 +38,12 @@ int ZERO = 0;
 
 void v_ui_send(char * a_path, char * a_msg){
     int msg_len = strlen(a_path) + strlen(a_msg);
-    assert(msg_len < 60000);
+    char dbg[512];
+    sprintf(dbg, "%s: %i", a_path, msg_len);
+    sg_assert(
+        msg_len < 60000,
+        dbg
+    );
     char msg[60000];
     sprintf(msg, "%s\n%s", a_path, a_msg);
     ipc_client_send(msg);
@@ -291,10 +296,10 @@ void v_sample_period_split(
                     &a_input_buffer[f_split * a_input_count];
             }
         } else {
-            assert(0);
+            sg_assert(0, NULL);
         }
     } else {
-        assert(0);
+        sg_assert(0, NULL);
     }
 }
 
@@ -388,8 +393,13 @@ void v_set_control_from_cc(
 
 void v_set_host(int a_mode){
     int f_i;
+    char dbg[128];
+    sprintf(dbg, "%i", a_mode);
 
-    assert(a_mode >= 0 && a_mode < SG_HOST_COUNT);
+    sg_assert(
+        a_mode >= 0 && a_mode < SG_HOST_COUNT,
+        dbg
+    );
 
     pthread_spin_lock(&STARGATE->main_lock);
 
@@ -498,11 +508,12 @@ NO_OPTIMIZATION void v_open_track(
                     0
                 );
             } else {
-                printf(
+                fprintf(
+                    stderr,
                     "Invalid track identifier '%c'\n",
                     f_2d_array->current_str[0]
                 );
-                assert(0);
+                sg_assert(0, NULL);
             }
         }
 
@@ -761,7 +772,10 @@ void v_sample_period_set_atm_events(
         a_event_list->atm_pos < next_sample;
         a_event_list->atm_pos += a_event_list->atm_clock_samples
     ){
-        assert(self->atm_tick_count < ATM_TICK_BUFFER_SIZE);
+        sg_assert(
+            (int)self->atm_tick_count < ATM_TICK_BUFFER_SIZE,
+            NULL
+        );
 
         pos = (a_event_list->atm_pos - current_sample);
         self->atm_ticks[self->atm_tick_count].sample = (int)(pos);
@@ -872,7 +886,7 @@ void v_sg_set_playback_pos(
          }
     }
 
-    assert(f_found_tempo);
+    sg_assert(f_found_tempo, NULL);
 }
 
 
@@ -1088,14 +1102,14 @@ void v_sg_seq_event_list_set(
             }
             else
             {
-                assert(0);
+                sg_assert(0, NULL);
             }
 
             self->period.end_beat = f_period->period.end_beat;
         }
         else
         {
-            assert(0);
+            sg_assert(0, NULL);
         }
     }
 }
@@ -1178,7 +1192,7 @@ void v_sg_configure(const char* a_key, const char* a_value){
         f_input->vol_linear = f_vol_linear;
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_KILL_ENGINE)){
         pthread_spin_lock(&STARGATE->main_lock);
-        assert(0);
+        sg_assert(0, NULL);
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_EXIT)){
         pthread_mutex_lock(&STARGATE->exit_mutex);
         exiting = 1;
@@ -1269,7 +1283,10 @@ void v_sg_configure(const char* a_key, const char* a_value){
     else if(!strcmp(a_key, SG_CONFIGURE_KEY_ENGINE))
     {
         int f_val = atoi(a_value);
-        assert(f_val == 0 || f_val == 1);
+        sg_assert(
+            (int)(f_val == 0 || f_val == 1),
+            (char*)a_value
+        );
         pthread_spin_lock(&STARGATE->main_lock);
         STARGATE->is_offline_rendering = f_val;
         pthread_spin_unlock(&STARGATE->main_lock);

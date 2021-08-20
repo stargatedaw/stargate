@@ -1,6 +1,7 @@
-#include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 
+#include "compiler.h"
 #include "files.h"
 #include "csv/1d.h"
 
@@ -55,7 +56,10 @@ t_1d_char_array * c_split_str(
             f_result->array[f_current_column][f_current_string_index] = '\0';
             ++f_current_column;
             f_current_string_index = 0;
-            assert(f_current_column < a_column_count);
+            sg_assert(
+                f_current_column < a_column_count,
+                f_result->array[f_current_column]
+            );
         }
         else if((a_input[f_i] == '\n') || (a_input[f_i] == '\0'))
         {
@@ -71,7 +75,13 @@ t_1d_char_array * c_split_str(
 
         ++f_i;
     }
-    assert(f_current_column == a_column_count - 1);
+
+    char dbg[512];
+    snprintf(dbg, 512, "%i", f_current_column);
+    sg_assert(
+        f_current_column == a_column_count - 1,
+        dbg
+    );
 
     return f_result;
 }

@@ -1,9 +1,9 @@
-#include <assert.h>
 #include <sndfile.h>
 
 #include "audiodsp/lib/interpolate-cubic.h"
 #include "audiodsp/lib/pitch_core.h"
 #include "audio/util.h"
+#include "compiler.h"
 
 
 /*For time(affecting pitch) time stretching...  Since this is done
@@ -21,17 +21,12 @@ void v_rate_envelope(
     info.format = 0;
     file = sf_open(a_file_in, SFM_READ, &info);
 
-    if (!file)
-    {
-        assert(0);
-    }
+    sg_assert_ptr(file, a_file_in);
 
     if (info.frames > 100000000)
     {
         //TODO:  Something, anything....
     }
-
-    //!!! complain also if more than 2 channels
 
     tmpFrames = (SGFLT *)malloc(info.frames * info.channels * sizeof(SGFLT));
     sg_read_audio(file, tmpFrames, info.frames);
@@ -53,50 +48,39 @@ void v_rate_envelope(
     SGFLT * f_buffer1 = 0;
     int f_i = 0;
 
-    if(info.channels == 1)
-    {
+    if(info.channels == 1){
         f_buffer0 = tmpFrames;
-    }
-    else if(info.channels == 2)
-    {
+    } else if(info.channels == 2){
         f_buffer0 = (SGFLT*)malloc(sizeof(SGFLT) * info.frames);
         f_buffer1 = (SGFLT*)malloc(sizeof(SGFLT) * info.frames);
 
         int f_i2 = 0;
         //De-interleave...
-        while(f_i < (info.frames * 2))
-        {
+        while(f_i < (info.frames * 2)){
             f_buffer0[f_i2] = tmpFrames[f_i];
             f_i++;
             f_buffer1[f_i2] = tmpFrames[f_i];
             f_i++;
             f_i2++;
         }
-    }
-    else
-    {
-        printf("\nMore than 2 channels not yet supported, "
-                "you should remind me to do it\n");
-        assert(0);
+    } else {
+        char dbg[256];
+        sprintf(dbg, "%i channels is not supported", info.channels);
+        sg_assert(0, dbg);
     }
 
     SNDFILE * f_sndfile = sf_open(a_file_out, SFM_WRITE, &f_sf_info);
 
-    while(((int)f_sample_pos) < info.frames)
-    {
+    while(((int)f_sample_pos) < info.frames){
         f_size = 0;
 
-        while(f_size < f_block_size)
-        {
-            if(info.channels == 1)
-            {
+        while(f_size < f_block_size){
+            if(info.channels == 1){
                 f_output[f_size] =
                     f_cubic_interpolate_ptr_wrap(f_buffer0, info.frames,
                         f_sample_pos);
                 f_size++;
-            }
-            else if(info.channels == 2)
-            {
+            } else if(info.channels == 2){
                 f_output[f_size] =
                     f_cubic_interpolate_ptr_wrap(f_buffer0, info.frames,
                         f_sample_pos);
@@ -118,12 +102,9 @@ void v_rate_envelope(
             }
         }
 
-        if(info.channels == 1)
-        {
+        if(info.channels == 1){
             sg_write_audio(f_sndfile, f_output, f_size);
-        }
-        else if(info.channels == 2)
-        {
+        } else if(info.channels == 2){
             sg_write_audio(f_sndfile, f_output, f_size / 2);
         }
     }
@@ -160,10 +141,7 @@ void v_pitch_envelope(
     info.format = 0;
     file = sf_open(a_file_in, SFM_READ, &info);
 
-    if (!file)
-    {
-        assert(0);
-    }
+    sg_assert_ptr(file, a_file_in);
 
     if (info.frames > 100000000)
     {
@@ -194,12 +172,9 @@ void v_pitch_envelope(
 
     t_pit_ratio * f_pit_ratio = g_pit_ratio();
 
-    if(info.channels == 1)
-    {
+    if(info.channels == 1){
         f_buffer0 = tmpFrames;
-    }
-    else if(info.channels == 2)
-    {
+    } else if(info.channels == 2){
         f_buffer0 = (SGFLT*)malloc(sizeof(SGFLT) * info.frames);
         f_buffer1 = (SGFLT*)malloc(sizeof(SGFLT) * info.frames);
 
@@ -213,12 +188,10 @@ void v_pitch_envelope(
             f_i++;
             f_i2++;
         }
-    }
-    else
-    {
-        printf("\nMore than 2 channels not yet supported, "
-                "you should remind me to do it\n");
-        assert(0);
+    } else {
+        char dbg[256];
+        sprintf(dbg, "%i channels is not supported", info.channels);
+        sg_assert(0, dbg);
     }
 
     SNDFILE * f_sndfile = sf_open(a_file_out, SFM_WRITE, &f_sf_info);

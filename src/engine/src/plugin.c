@@ -1,8 +1,8 @@
-#include <assert.h>
 #include <pthread.h>
 #include <stdlib.h>
 
 #include "audiodsp/lib/lmalloc.h"
+#include "compiler.h"
 #include "plugin.h"
 #include "plugins/sampler1.h"
 #include "plugins/channel.h"
@@ -114,7 +114,10 @@ void v_plugin_event_queue_add(
     f_item->value = a_val;
     f_item->port = a_port;
     ++self->count;
-    assert(self->count <= 200);
+    sg_assert(
+        (int)(self->count <= 200),
+        NULL
+    );
 }
 
 void v_plugin_event_queue_reset(t_plugin_event_queue * self)
@@ -244,10 +247,22 @@ void set_pyfx_port(
     SGFLT a_min,
     SGFLT a_max
 ){
-    assert(a_port >= 0 && a_port < a_desc->PortCount);
-    assert(!a_desc->PortDescriptors[a_port]);
-    assert(a_min < a_max);
-    assert(a_default >= a_min && a_default <= a_max);
+    sg_assert(
+        (int)(a_port >= 0 && a_port < a_desc->PortCount),
+        NULL
+    );
+    sg_assert(
+        (int)(!a_desc->PortDescriptors[a_port]),
+        NULL
+    );
+    sg_assert(
+        (int)(a_min < a_max),
+        NULL
+    );
+    sg_assert(
+        (int)(a_default >= a_min && a_default <= a_max),
+        NULL
+    );
 
     a_desc->PortDescriptors[a_port] = 1;
     a_desc->PortRangeHints[a_port].DefaultValue = a_default;
@@ -260,8 +275,14 @@ void set_pyfx_port(
 PluginData g_get_port_default(PluginDescriptor *plugin, int port)
 {
     PluginPortRangeHint hint = plugin->PortRangeHints[port];
-    assert(hint.DefaultValue <= hint.UpperBound &&
-            hint.DefaultValue >= hint.LowerBound );
+    sg_assert(
+        (int)(
+            hint.DefaultValue <= hint.UpperBound
+            &&
+            hint.DefaultValue >= hint.LowerBound
+        ),
+        NULL
+    );
     return hint.DefaultValue;
 }
 
@@ -344,7 +365,10 @@ void generic_file_loader(
             break;
         }
 
-        assert(strcmp(f_2d_array->current_str, ""));
+        sg_assert(
+            strcmp(f_2d_array->current_str, ""),
+            f_2d_array->current_str
+        );
 
         if(f_2d_array->current_str[0] == 'c')
         {
@@ -383,15 +407,19 @@ void generic_file_loader(
                 v_cc_mapping_set(&a_cc_map->map[f_cc], f_port, f_low, f_high);
                 ++f_i;
             }
-        }
-        else
-        {
+        } else {
             int f_port_key = atoi(f_2d_array->current_str);
             v_iterate_2d_char_array_to_next_line(f_2d_array);
             SGFLT f_port_value = atof(f_2d_array->current_str);
 
-            assert(f_port_key >= 0);
-            assert(f_port_key <= Descriptor->PortCount);
+            sg_assert(
+                (int)(f_port_key >= 0),
+                NULL
+            );
+            sg_assert(
+                (int)(f_port_key <= Descriptor->PortCount),
+                NULL
+            );
 
             a_table[f_port_key] = f_port_value;
         }
@@ -427,7 +455,10 @@ NO_OPTIMIZATION void g_plugin_init(
 
     f_result->descriptor = (PluginDescriptor*)f_result->descfn();
 
-    assert(f_result->descriptor);
+    sg_assert_ptr(
+        f_result->descriptor,
+        NULL
+    );
     printf("Calling descriptor->instantiate()\n");
     f_result->plugin_handle = (PluginHandle)f_result->descriptor->instantiate(
         f_result->descriptor,

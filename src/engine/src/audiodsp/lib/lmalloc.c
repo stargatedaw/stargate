@@ -1,8 +1,8 @@
 #include <stdlib.h>
-#include <assert.h>
 #include <stdlib.h>
 
 #include "audiodsp/lib/lmalloc.h"
+#include "compiler.h"
 
 #ifdef __linux__
     #include <sys/mman.h>
@@ -12,7 +12,10 @@
 void small_page_aligned_alloc(void ** a_ptr, size_t a_size, int a_alignment)
 {
 #ifdef __linux__
-    assert(posix_memalign(a_ptr, a_alignment, a_size) == 0);
+    sg_assert(
+        (int)(posix_memalign(a_ptr, a_alignment, a_size) == 0),
+        NULL
+    );
 #else
     *a_ptr = (void*)malloc(a_size);  //unaligned, but completely portable
 #endif

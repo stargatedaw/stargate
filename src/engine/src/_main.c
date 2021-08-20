@@ -12,7 +12,6 @@ GNU General Public License for more details.
 */
 
 
-#include <assert.h>
 #include <dirent.h>
 #include <errno.h>
 #include <limits.h>
@@ -143,7 +142,10 @@ int _main(int argc, char** argv){
 
     int ui_pid = atoi(argv[3]);
     int f_huge_pages = atoi(argv[4]);
-    assert(f_huge_pages == 0 || f_huge_pages == 1);
+    sg_assert(
+        (int)(f_huge_pages == 0 || f_huge_pages == 1),
+        argv[4]
+    );
 
     if(f_huge_pages){
         printf("Attempting to use hugepages\n");
@@ -204,7 +206,10 @@ int daw_render(int argc, char** argv){
     int f_stem_render = atoi(argv[10]);
     int sequence_uid = atoi(argv[11]);
 
-    assert(f_huge_pages == 0 || f_huge_pages == 1);
+    sg_assert(
+        (int)(f_huge_pages == 0 || f_huge_pages == 1),
+        argv[9]
+    );
 
     if(f_huge_pages){
         printf("Attempting to use hugepages\n");
@@ -288,7 +293,10 @@ NO_OPTIMIZATION void start_osc_thread(){
         &ipc_server_thread,
         (void*)args
     );
-    assert(result == 0);
+    sg_assert(
+        (int)(result == 0),
+        NULL
+    );
 }
 
 #if defined(__linux__)

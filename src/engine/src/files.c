@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,24 +35,24 @@ void get_string_from_file(
     //write_log(log_buff);
     FILE * f_file;
     f_file = fopen(a_file, "r");
-    if(!f_file){
-        printf("Failed to open '%s'\n", a_file);
-        assert(f_file);
-    }
+    sg_assert_ptr(f_file, (char*)a_file);
     size_t f_char_count = fread(
         a_buf,
         sizeof(char),
         sizeof(char) * a_size,
         f_file
     );
-    assert((int)f_char_count < a_size);
+    sg_assert(
+        (int)((int)f_char_count < a_size),
+        NULL
+    );
     a_buf[f_char_count] = '\0';
     fclose(f_file);
 }
 
 void v_write_to_file(char * a_file, char * a_string){
     FILE* pFile = fopen(a_file, "w");
-    assert(pFile);
+    sg_assert_ptr(pFile, a_file);
     fprintf(pFile, "%s",a_string);
     fclose(pFile);
 
@@ -62,13 +61,13 @@ void v_write_to_file(char * a_file, char * a_string){
 
     if (chmod (a_file,i) < 0)
     {
-        printf("Error chmod'ing file %s.\n", a_file);
+        fprintf(stderr, "Error chmod'ing file %s.\n", a_file);
     }
 }
 
 void v_append_to_file(char * a_file, char * a_string){
     FILE* pFile = fopen(a_file, "a");
-    assert(pFile);
+    sg_assert_ptr(pFile, a_file);
     fprintf(pFile, "%s", a_string);
     fclose(pFile);
 }
@@ -100,7 +99,7 @@ t_dir_list* g_get_dir_list(char * a_dir){
     struct dirent *ent;
     dir = opendir (a_dir);
 
-    assert(dir != NULL);
+    sg_assert_ptr(dir, NULL);
     //if (dir != NULL)
     //{
       while ((ent = readdir (dir)) != NULL)

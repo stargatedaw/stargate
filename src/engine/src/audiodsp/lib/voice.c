@@ -1,9 +1,9 @@
-#include <assert.h>
 #include <limits.h>
 #include <stdlib.h>
 
 #include "audiodsp/lib/lmalloc.h"
 #include "audiodsp/lib/voice.h"
+#include "compiler.h"
 
 
 void g_voc_single_init(t_voc_single_voice * f_result, int a_voice_number)
@@ -20,7 +20,10 @@ void g_voc_voices_init(
     int a_count,
     int a_thresh
 ){
-    assert(a_thresh < a_count);
+    sg_assert(
+        (int)(a_thresh < a_count),
+        NULL
+    );
 
     voices->count = a_count;
     voices->thresh = a_thresh;
@@ -70,7 +73,10 @@ int i_get_oldest_voice(
         }
     }
 
-    assert(oldest_tick_voice != -1);
+    sg_assert(
+        (int)(oldest_tick_voice != -1),
+        NULL
+    );
     return oldest_tick_voice;
 }
 

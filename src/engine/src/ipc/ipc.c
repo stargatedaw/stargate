@@ -1,7 +1,7 @@
-#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 
+#include "compiler.h"
 #include "ipc.h"
 
 
@@ -10,8 +10,14 @@ void ui_message_init(
     char* path,
     char* value
 ){
-    assert(strlen(path) < 128);
-    assert(strlen(value) < 8192);
+    sg_assert(
+        strlen(path) < 128,
+        path
+    );
+    sg_assert(
+        strlen(value) < 8192,
+        value
+    );
     strcpy(
         ui_msg->path,
         path

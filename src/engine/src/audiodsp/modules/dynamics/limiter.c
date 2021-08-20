@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <math.h>
 
 #include "audiodsp/lib/amp.h"
