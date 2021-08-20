@@ -234,6 +234,10 @@ class DawColors:
             note_vel_min_color,
             str,
         )
+        self.note_selected_color = type_assert(
+            note_selected_color,
+            str,
+        )
         self.playback_cursor = type_assert(
             playback_cursor,
             str,
