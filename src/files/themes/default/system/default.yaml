@@ -108,7 +108,7 @@ widgets:
   # The knob background image
   knob_bg_image: "knob-bg.png"
   # The knob image.  Will be rotated as the knob moves
-  knob_fg_image: "knob-fg.svg"
+  knob_fg_image: "{{ assets_subdir }}/knob-fg.svg"
   # The color of a playback cursor line
   playback_cursor: "#dddddd"
   # Routing graph widget node

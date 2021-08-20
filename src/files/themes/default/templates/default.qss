@@ -162,7 +162,7 @@ QCheckBox#button_power::indicator::checked
 
 QCheckBox#button_power::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/power-off.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/power-off.svg);
 }
 
 QCheckBox#button_hide::indicator::checked
@@ -172,7 +172,7 @@ QCheckBox#button_hide::indicator::checked
 
 QCheckBox#button_hide::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/hide-off.svg);
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/hide-off.svg);
 }
 
 QRadioButton#tool_select::indicator::unchecked
@@ -182,7 +182,7 @@ QRadioButton#tool_select::indicator::unchecked
 
 QRadioButton#tool_select::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/select-on.svg);
+    image: url({{ ASSETS_DIR }}/select-on.svg);
 }
 
 QRadioButton#tool_draw::indicator::unchecked
@@ -192,7 +192,7 @@ QRadioButton#tool_draw::indicator::unchecked
 
 QRadioButton#tool_draw::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/draw-on.svg);
+    image: url({{ ASSETS_DIR }}/draw-on.svg);
 }
 
 QRadioButton#tool_erase::indicator::unchecked
@@ -202,7 +202,7 @@ QRadioButton#tool_erase::indicator::unchecked
 
 QRadioButton#tool_erase::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/erase-on.svg);
+    image: url({{ ASSETS_DIR }}/erase-on.svg);
 }
 
 QRadioButton#tool_split::indicator::unchecked
@@ -212,7 +212,7 @@ QRadioButton#tool_split::indicator::unchecked
 
 QRadioButton#tool_split::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/split-on.svg);
+    image: url({{ ASSETS_DIR }}/split-on.svg);
 }
 
 QCheckBox#loop_mode::indicator::unchecked
@@ -222,7 +222,7 @@ QCheckBox#loop_mode::indicator::unchecked
 
 QCheckBox#loop_mode::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/loop-on.svg);
+    image: url({{ ASSETS_DIR }}/loop-on.svg);
 }
 
 /* Track panel radio buttons  */
@@ -290,7 +290,7 @@ QRadioButton#play_button::indicator::unchecked
 
 QRadioButton#play_button::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/play-on.svg);
+    image: url({{ ASSETS_DIR }}/play-on.svg);
 }
 
 QRadioButton#stop_button::indicator::unchecked
@@ -300,7 +300,7 @@ QRadioButton#stop_button::indicator::unchecked
 
 QRadioButton#stop_button::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/stop-on.svg);
+    image: url({{ ASSETS_DIR }}/stop-on.svg);
 }
 
 QRadioButton#rec_button::indicator::unchecked
@@ -310,7 +310,7 @@ QRadioButton#rec_button::indicator::unchecked
 
 QRadioButton#rec_button::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/rec-on.svg);
+    image: url({{ ASSETS_DIR }}/rec-on.svg);
 }
 
 QSpinBox,
