@@ -1,0 +1,21 @@
+assets_subdir: "light"
+background_color: "#d7ddfd"
+background_color_alt: "#d0e1fc"
+background_color_disabled: "#181818"
+border_color: "#333333"
+combobox: "#c1c7e2"
+hscrollbar: "#666666"
+hscrollbar_groove: "#111111"
+item_handle: "#ffffff"
+palette:
+  white: "#cccccc"
+text_background_color: "#c1c7e2"
+text_color: "#1f1f27"
+text_color_dark: "#1e1e1e"
+text_color_disabled: "#d0d0d0"
+tool_button_offset: 0
+track_panel_background: "#d0e1fc"
+transport_button_size: 40
+transport_clock_background: "#333390"
+vscrollbar: "#666666"
+vscrollbar_groove: "#d0e1fc"

@@ -1,0 +1,9 @@
+template: default.qss
+variables:
+  path: light.yaml
+  overrides: {}
+system:
+  path: light.yaml
+  overrides:
+    daw: {}
+    widgets: {}

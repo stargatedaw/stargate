@@ -1,0 +1,133 @@
+daw:
+  # Item editor CC/pitchbend automation point
+  item_atm_point: "#f00e0e"
+  # The pen drawing the outline of an item editor CC/pitchbend automation point
+  item_atm_point_pen: "#d00e0e"
+  # Item editor selected CC/pitchbend automation point
+  item_atm_point_selected: "#f0f0f0"
+  # Item editor audio item handle
+  item_audio_handle: "#ffffff"
+  # Item editor selected audio item handle
+  item_audio_handle_selected: "#181818"
+  # The horizontal line that is drawn on audio items during
+  # volume manipulation using mouse click+drag with
+  # modifier keys.  The item will be selected, so this color
+  # must contrast with the selected audio item color
+  item_audio_vol_line: "#ff0000"
+  # The text on an audio item that displays data such as file
+  # name, and volume during mouse modifier operations.  The item
+  # will be selected, this color must contrast with the selected
+  # audio item color
+  item_audio_label: "{{ text_color }}"
+  # The text on an audio item that displays data such as file name, and volume
+  # during mouse modifier operations.  The item will be selected, this color
+  # must contrast with the selected color
+  item_audio_label_selected: "{{ text_color_dark }}"
+  # The color used to draw the audio file waveform onto the audio item
+  item_audio_waveform: "{{ background_color_alt }}"
+  # The background of the note editor for the keys that are not part of
+  # the current scale
+  note_black_background: "#17181d"
+  # The background of the note editor for the root key of the current scale
+  note_root_background: "#401e1e"
+  # The background of the note editor for the keys that are part of the
+  # current scale
+  note_white_background: "#2c2d32"
+  # The vertical lines drawn between beats according to snap settings
+  # ie: 1/16th, 1/8th note, etc...
+  note_snap_line: "#000000"
+  # The vertical line drawn at each beat
+  note_beat_line: "#000000"
+  # The color of a selected note
+  note_selected_color: "#cccccc"
+  # The color of the note when velocity is at max value
+  note_vel_max_color: "#f89e19"
+  # The color of the note when velocity is at min value
+  note_vel_min_color: "#7777b9"
+  # The sequencer playback cursor
+  playback_cursor: "#dddddd"
+  # Vertical 16th note lines in the sequencer
+  seq_16th_line: "#090909"
+  # Enable antialiasing for the sequencer
+  seq_antialiasing: false
+  # Sequencer automation points
+  seq_atm_item: '#ffffff'
+  # Selected sequencer automation points
+  seq_atm_item_selected: '#000000'
+  # Sequencer automation lines
+  seq_atm_line: '#ffffff'
+  # Sequencer QGraphicsScene background
+  seq_background: "{{ background_color }}"
+  # The background fill color of the sequencer items
+  seq_item_background: "{{ background_color }}"
+  # Vertical bar lines in the sequencer
+  seq_bar_line: "#787878"
+  # Vertical beat lines in the sequencer
+  seq_beat_line: "#090909"
+  # Sequencer header
+  seq_header: "#1d1e22"
+  # Sequencer header sequence end marker
+  seq_header_sequence_end: "#ff3c3c"
+  # Sequencer header sequence start marker
+  seq_header_sequence_start: "#7878ff"
+  # Sequencer header text
+  seq_header_text: "{{ text_color }}"
+  # Sequencer item handle
+  seq_item_handle: "{{ item_handle }}"
+  # Sequencer selected item handle
+  seq_item_handle_selected: "{{ item_handle }}"
+  # Used to paint audio on sequencer items
+  seq_item_audio: "#969696"
+  # Used to paint notes on sequencer items
+  seq_item_note: "#a5a5a5"
+  # The label text for sequencer items
+  seq_item_text: "{{ text_color }}"
+  # The label text for selected sequencer items
+  seq_item_text_selected: "#000000"
+  # Selected sequencer items
+  seq_selected_item: "#eeeeee"
+  # Sequencer tempo marker
+  seq_tempo_marker: "#ffffff"
+  # Horizontal track lines in the sequencer
+  seq_track_line: "#090909"
+  # Default track colors, also applies to audio item editor
+  track_default_colors:
+    - "#559549"
+    - "#49956e"
+    - "#498595"
+    - "#495095"
+    - "#714995"
+    - "#95498e"
+widgets:
+  # The default QGraphicsScene background color used by the widgets library
+  default_scene_background: "{{ background_color  }}"
+  # Used to draw the arc around the knob
+  knob_arc_pen: "#8212F2"
+  # Used to draw the knob background
+  knob_background_pen: "#5a5a5a"
+  # The knob background image
+  knob_bg_image: "knob-bg.png"
+  # The knob image.  Will be rotated as the knob moves
+  knob_fg_image: "{{ assets_subdir }}/knob-fg.svg"
+  # The color of a playback cursor line
+  playback_cursor: "#333333"
+  # Routing graph widget node
+  rout_graph_node: "#f89e19"
+  # Routing graph widget node text
+  rout_graph_node_text: "#e7e7e7"
+  # Routing graph widget to node when mouse hovering
+  rout_graph_to: "#e7a0a0"
+  # Routing graph widget from node when mouse hovering
+  rout_graph_from: "#a0a0e7"
+  # Routing graph widget matrix lines
+  rout_graph_lines: "#696969"
+  # Routing graph wires connecting audio
+  rout_graph_wire_audio: "#dddddd"
+  # Routing graph wires connecting midi
+  rout_graph_wire_midi: "#6666cc"
+  # Routing graph wires connecting audio sidechain inputs
+  rout_graph_wire_sc: "#cc6666"
+  # Splash screen shown at start up
+  splash_screen: "splash.png"
+  # Text status messages on splash screen shown at start up
+  splash_screen_text: "{{ text_color }}"
