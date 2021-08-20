@@ -102,13 +102,13 @@ widgets:
   # The default QGraphicsScene background color used by the widgets library
   default_scene_background: "{{ background_color  }}"
   # Used to draw the arc around the knob
-  knob_arc_pen: "#eeeeee"
+  knob_arc_pen: "#8212F2"
   # Used to draw the knob background
   knob_background_pen: "#5a5a5a"
   # The knob background image
   knob_bg_image: "knob-bg.png"
   # The knob image.  Will be rotated as the knob moves
-  knob_fg_image: "knob-fg.png"
+  knob_fg_image: "knob-fg.svg"
   # The color of a playback cursor line
   playback_cursor: "#dddddd"
   # Routing graph widget node

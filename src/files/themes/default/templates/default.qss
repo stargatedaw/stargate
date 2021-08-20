@@ -157,22 +157,22 @@ QRadioButton#stop_button::indicator::checked
 
 QCheckBox#button_power::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/power-on.png);
+    image: url({{ ASSETS_DIR }}/power-on.svg);
 }
 
 QCheckBox#button_power::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/power-off.png);
+    image: url({{ ASSETS_DIR }}/power-off.svg);
 }
 
 QCheckBox#button_hide::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/hide-on.png);
+    image: url({{ ASSETS_DIR }}/hide-on.svg);
 }
 
 QCheckBox#button_hide::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/hide-off.png);
+    image: url({{ ASSETS_DIR }}/hide-off.svg);
 }
 
 QRadioButton#tool_select::indicator::unchecked
