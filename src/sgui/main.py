@@ -1408,6 +1408,8 @@ def main():
     exit_code = shared.APP.exec()
     time.sleep(0.3)
     flush_events()
+    if RESPAWN:
+        respawn()
     LOG.info("Deleting top level windows")
     # Work around PyQt SEGFAULT-on-exit issues
     for w in QApplication.topLevelWindows():
@@ -1416,9 +1418,6 @@ def main():
     final_gc(False)
     time.sleep(0.3)
     final_gc()
-
-    if RESPAWN:
-        respawn()
 
     sys.exit(exit_code)
 
