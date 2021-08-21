@@ -22,7 +22,7 @@ daw:
   # The text on an audio item that displays data such as file name, and volume
   # during mouse modifier operations.  The item will be selected, this color
   # must contrast with the selected color
-  item_audio_label_selected: "{{ text_color_dark }}"
+  item_audio_label_selected: "{{ text_color_alt }}"
   # The color used to draw the audio file waveform onto the audio item
   item_audio_waveform: "{{ background_color_alt }}"
   # The background of the note editor for the keys that are not part of

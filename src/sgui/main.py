@@ -117,9 +117,7 @@ class SplashScreen(QSplashScreen):
         self.showMessage(
             a_text,
             QtCore.Qt.AlignmentFlag.AlignBottom,
-            QColor(
-                theme.SYSTEM_COLORS.widgets.splash_screen_text,
-            ),
+            QtCore.Qt.GlobalColor.white,
         )
         shared.APP.processEvents()
 

@@ -232,8 +232,8 @@ QCheckBox#solo_checkbox::indicator
 {
     background-color: none;
     color: none;
-	height: none;
-	width: none;
+    height: none;
+    width: none;
 }
 
 /*Solo checkbox*/
@@ -527,8 +527,8 @@ QSlider#zoom_slider::handle:horizontal,
 QSlider#zoom_slider::handle:vertical
 {
     image: url({{ ASSETS_DIR }}/zoom_slider_handle.svg) 0 0 0 0 stretch stretch;
-	height: 18px;
-	width: 18px;
+    height: 18px;
+    width: 18px;
 }
 
 QToolTip
@@ -592,7 +592,7 @@ QGroupBox:focus, QTextEdit::focus
 QWidget:item:hover
 {
     background-color: {{ palette.white }};
-    color: {{ text_color_dark }};
+    color: {{ text_color_alt }};
 }
 
 QWidget:item:selected
@@ -601,7 +601,7 @@ QWidget:item:selected
         x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #ffffff, stop: 1 #dddddd
     );
-    color: {{ text_color_dark }};
+    color: {{ text_color_alt }};
 }
 
 QPushButton:disabled,
@@ -627,10 +627,8 @@ QLineEdit:disabled
 
 QPushButton
 {
-	background-color: #1F1F27;
-    border-color: {{ border_color }};
-    border-style: solid;
-    border-width: 1px;
+    background-color: {{ background_color_alt }};
+    border: 1px solid {{ border_color }};
     color: {{ text_color }};
     font-size: 12px;
     padding-left: 3px;
@@ -640,11 +638,7 @@ QPushButton
 
 QPushButton:pressed
 {
-    background-color: QLinearGradient(
-        x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #2d2d2d, stop: 0.1 #2b2b2b, stop: 0.5 #292929,
-        stop: 0.9 #282828, stop: 1 #252525
-    );
+    background-color: {{ button_pressed }};
 }
 
 QPushButton#plugin_menu
@@ -717,7 +711,7 @@ QComboBox::drop-down
     border-left-style: solid; /* just a single line */
     border-left-width: 0px;
     border-top-right-radius: 3px; /* same radius as the QComboBox */
-    color: {{ text_color_dark }};
+    color: {{ text_color_alt }};
     subcontrol-origin: padding;
     subcontrol-position: top right;
     width: 15px;
@@ -910,8 +904,8 @@ QTabBar::tab:!selected
 QTabBar::tab:!selected:hover,
 QTabBar::tab:selected
 {
-    background-color: #aaaaaa;
-    color: {{ text_color_dark }};
+    background-color: {{ tab_selected }};
+    color: {{ text_color_alt }};
     margin-bottom: 0px;
 }
 
@@ -934,7 +928,7 @@ QRadioButton::indicator
 {
     background-color: {{ background_color_alt }};
     border-radius: 6px;
-    border: 1px solid #b1b1b1;
+    border: 1px solid {{ checkbox_check }};
     color: {{ text_color }};
     height: 18px;
     margin-left: 6px;
@@ -948,7 +942,7 @@ QRadioButton::indicator:checked
         cx: 0.5, cy: 0.5,
         fx: 0.5, fy: 0.5,
         radius: 1.0,
-        stop: 0.25 #ffffff,
+        stop: 0.25 {{ checkbox_check }},
         stop: 0.3 {{ background_color_alt }}
     );
 }
@@ -962,9 +956,9 @@ QCheckBox::indicator:hover
 QLCDNumber#transport_clock
 {
     background: {{ transport_clock_background }};
-    border: 2px solid #787878;
-    color: {{ text_color }};
-	height: {{ transport_button_size }};
+    border: 2px solid {{ border_color }};
+    color: {{ palette.white }};
+    height: {{ transport_button_size }};
     width: 120px;
 }
 

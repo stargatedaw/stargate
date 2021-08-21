@@ -22,7 +22,7 @@ daw:
   # The text on an audio item that displays data such as file name, and volume
   # during mouse modifier operations.  The item will be selected, this color
   # must contrast with the selected color
-  item_audio_label_selected: "{{ text_color_dark }}"
+  item_audio_label_selected: "{{ text_color_alt }}"
   # The color used to draw the audio file waveform onto the audio item
   item_audio_waveform: "{{ background_color_alt }}"
   # The background of the note editor for the keys that are not part of
@@ -61,11 +61,11 @@ daw:
   # The background fill color of the sequencer items
   seq_item_background: "{{ background_color }}"
   # Vertical bar lines in the sequencer
-  seq_bar_line: "#787878"
+  seq_bar_line: "#090909"
   # Vertical beat lines in the sequencer
-  seq_beat_line: "#090909"
+  seq_beat_line: "#787878"
   # Sequencer header
-  seq_header: "#1d1e22"
+  seq_header: "{{ background_color_alt }}"
   # Sequencer header sequence end marker
   seq_header_sequence_end: "#ff3c3c"
   # Sequencer header sequence start marker
@@ -77,11 +77,11 @@ daw:
   # Sequencer selected item handle
   seq_item_handle_selected: "{{ item_handle }}"
   # Used to paint audio on sequencer items
-  seq_item_audio: "#969696"
+  seq_item_audio: "#555555"
   # Used to paint notes on sequencer items
-  seq_item_note: "#a5a5a5"
+  seq_item_note: "#777777"
   # The label text for sequencer items
-  seq_item_text: "{{ text_color }}"
+  seq_item_text: "{{ text_color_alt }}"
   # The label text for selected sequencer items
   seq_item_text_selected: "#000000"
   # Selected sequencer items
