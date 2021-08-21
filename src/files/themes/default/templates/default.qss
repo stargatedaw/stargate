@@ -42,7 +42,8 @@ QLabel
 
 QLabel#seq_zoom_size_label
 {
-    background-color: black;
+    background-color: {{ palette.black }};
+    border: 1px solid {{ border_color }};
     color: {{ palette.white }};
 }
 

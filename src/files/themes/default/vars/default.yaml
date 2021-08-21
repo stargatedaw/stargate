@@ -10,6 +10,7 @@ hscrollbar: "#666666"
 hscrollbar_groove: "#111111"
 item_handle: "#ffffff"
 palette:
+  black: "#111111"
   white: "#cccccc"
 text_background_color: "#1f1f27"
 text_color: "#dddddd"
