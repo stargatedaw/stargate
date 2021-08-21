@@ -27,12 +27,12 @@ daw:
   item_audio_waveform: "{{ background_color_alt }}"
   # The background of the note editor for the keys that are not part of
   # the current scale
-  note_black_background: "#17181d"
+  note_black_background: "{{ background_color_alt }}"
   # The background of the note editor for the root key of the current scale
-  note_root_background: "#401e1e"
+  note_root_background: "#ad44dc"
   # The background of the note editor for the keys that are part of the
   # current scale
-  note_white_background: "#2c2d32"
+  note_white_background: "{{ background_color }}"
   # The vertical lines drawn between beats according to snap settings
   # ie: 1/16th, 1/8th note, etc...
   note_snap_line: "#000000"

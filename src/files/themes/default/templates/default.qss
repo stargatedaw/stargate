@@ -43,7 +43,7 @@ QLabel
 QLabel#seq_zoom_size_label
 {
     background-color: black;
-    color: {{ text_color }};
+    color: {{ palette.white }};
 }
 
 QWidget
@@ -245,7 +245,7 @@ QCheckBox#solo_checkbox::indicator::unchecked
 
 QCheckBox#solo_checkbox::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/solo-on.svg) 0 0 0 0 stretch stretch;
+    image: url({{ ASSETS_DIR }}/solo-on.svg) 0 0 0 0 stretch stretch;
 }
 
 /*Mute checkbox*/
@@ -257,7 +257,7 @@ QCheckBox#mute_checkbox::indicator::unchecked
 
 QCheckBox#mute_checkbox::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/mute-on.svg) 0 0 0 0 stretch stretch;
+    image: url({{ ASSETS_DIR }}/mute-on.svg) 0 0 0 0 stretch stretch;
 }
 
 QPushButton#menu
@@ -481,7 +481,7 @@ QSlider#zoom_slider::groove:horizontal
 
 QSlider#zoom_slider::sub-page:horizontal
 {
-    background: #000000;
+    background: {{ hscrollbar_groove }};
     border-radius: 4px;
     border: 1px solid #777;
     height: 10px;
@@ -489,9 +489,7 @@ QSlider#zoom_slider::sub-page:horizontal
 
 QSlider#zoom_slider::add-page:horizontal
 {
-    background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #333333, stop: 1 #000000
-    );
+    background: {{ hscrollbar_groove }};
     border-radius: 4px;
     border: 1px solid #777;
     height: 10px;
@@ -507,9 +505,7 @@ QSlider#zoom_slider::groove:vertical
 
 QSlider#zoom_slider::sub-page:vertical
 {
-    background: qlineargradient(
-        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #000000, stop: 1 #333333
-    );
+    background: {{ vscrollbar_groove }};
     border-radius: 4px;
     border: 1px solid #777;
     width: 10px;
@@ -517,7 +513,7 @@ QSlider#zoom_slider::sub-page:vertical
 
 QSlider#zoom_slider::add-page:vertical
 {
-    background: #000000;
+    background: {{ vscrollbar_groove }};
     border: 1px solid #777;
     width: 10px;
     border-radius: 4px;
@@ -684,11 +680,8 @@ QComboBox:off
 
 QComboBox:on
 {
-    background-color: QLinearGradient(
-        x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #2d2d2d,
-        stop: 0.1 #2b2b2b, stop: 0.5 #292929,
-        stop: 0.9 #282828, stop: 1 #252525);
-    color: {{ text_color }};
+    background-color: {{ button_pressed }};
+    color: {{ text_color_alt }};
     padding-left: 4px;
     padding-top: 3px;
     selection-background-color: {{ palette.white }};
