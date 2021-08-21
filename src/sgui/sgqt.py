@@ -23,16 +23,19 @@ if True:  # PyQt
         from PyQt6.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
         from PyQt6.QtGui import *
         from PyQt6.QtWidgets import *
+        from PyQt6.QtSvg import QSvgRenderer
     else:
         qt_event_pos = lambda x: x.pos()
         from PyQt5 import QtGui, QtWidgets, QtCore
         from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
         from PyQt5.QtGui import *
         from PyQt5.QtWidgets import *
+        from PyQt5.QtSvg import QSvgRenderer
 else:  # PySide
     # Does not work yet, needs some porting and debugging
     from PySide6 import QtGui, QtWidgets, QtCore
     from PySide6.QtCore import Signal, Slot
     from PySide6.QtGui import *
     from PySide6.QtWidgets import *
+    from PySide6.QtSvg import QSvgRenderer
 

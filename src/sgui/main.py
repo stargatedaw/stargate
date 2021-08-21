@@ -39,6 +39,7 @@ from sgui.util import (
     check_for_empty_directory,
     check_for_rw_perms,
     show_generic_exception,
+    svg_to_pixmap,
 )
 from sgui.sgqt import *
 import datetime
@@ -101,21 +102,22 @@ def handle_engine_error(exit_code):
 class SplashScreen(QSplashScreen):
     def __init__(self):
         rect = QApplication.desktop().screenGeometry()
-        screen_height = rect.height()
-        pixmap = QPixmap(
+        scaled_height = int(rect.height() * 0.9)
+        self.pixmap = svg_to_pixmap(
             os.path.join(
                 theme.ASSETS_DIR,
                 theme.SYSTEM_COLORS.widgets.splash_screen,
-            )
+            ),
+            height=scaled_height,
         )
-        scaled_height = int(screen_height * 0.9)
-        scaled_width = int(pixmap.width() * (scaled_height / screen_height))
-        self.pixmap = pixmap.scaled(scaled_width, scaled_height)
         QSplashScreen.__init__(
             self,
             self.pixmap,
         )
-        self.setFixedSize(scaled_width, scaled_height)
+        self.setFixedSize(
+            self.pixmap.width(),
+            self.pixmap.height(),
+        )
         self.show()
         shared.APP.processEvents()
 

@@ -1,4 +1,5 @@
 import os
+from xml.etree import ElementTree as xmltree
 
 from sgui.sgqt import *
 from sglib.lib.translate import _
@@ -44,4 +45,36 @@ def check_for_empty_directory(a_dir):
         return False
     else:
         return True
+
+def svg_to_pixmap(path: str, width=None, height=None):
+    """ Convert an SVG file to a scaled QPixmap without pixelation
+        If width or height is omitted, the image will be scaled maintaining
+        aspect ratio
+        If width and height are omitted, it will be rendered to the original
+        size
+
+        @path:   The path to an SVG file
+        @width:  The desired width of the pixmap, or None
+        @height: The desired height of the pixmap, or None
+    """
+    if not (width and height):
+        tree = xmltree.parse(path)
+        root = tree.getroot()
+        svg_width = float(root.attrib['width'])
+        svg_height = float(root.attrib['height'])
+        if not width and not height:  # no scaling
+            width = svg_width
+            height = svg_height
+        elif not width:  # scale to height, preserve aspect ratio
+            width = int(svg_width * (height / svg_height))
+        elif not height:  # scale to width, preserve aspect ratio
+            height = int(svg_height * (width / svg_width))
+    svg_renderer = QSvgRenderer(path)
+    pixmap = QPixmap(width, height)
+    painter = QPainter()
+    pixmap.fill(QtCore.Qt.GlobalColor.transparent)
+    painter.begin(pixmap)
+    svg_renderer.render(painter)
+    painter.end()
+    return pixmap
 
