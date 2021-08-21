@@ -100,16 +100,22 @@ def handle_engine_error(exit_code):
 
 class SplashScreen(QSplashScreen):
     def __init__(self):
-        self.pixmap = QPixmap(
+        rect = QApplication.desktop().screenGeometry()
+        screen_height = rect.height()
+        pixmap = QPixmap(
             os.path.join(
                 theme.ASSETS_DIR,
                 theme.SYSTEM_COLORS.widgets.splash_screen,
             )
         )
+        scaled_height = int(screen_height * 0.9)
+        scaled_width = int(pixmap.width() * (scaled_height / screen_height))
+        self.pixmap = pixmap.scaled(scaled_width, scaled_height)
         QSplashScreen.__init__(
             self,
             self.pixmap,
         )
+        self.setFixedSize(scaled_width, scaled_height)
         self.show()
         shared.APP.processEvents()
 
