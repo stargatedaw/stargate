@@ -6,6 +6,7 @@ from sglib.math import clip_value
 from sgui import shared as glbl_shared
 from sglib.lib import util
 from sglib.lib.translate import _
+from sgui.util import svg_to_pixmap
 import os
 
 
@@ -16,28 +17,13 @@ class PixmapKnobCache:
     def __init__(self, a_path):
         self.cache = {}
         self.path = a_path
-        self.knob_pixmap = None
-        self.first_load = True
 
     def get_scaled_pixmap_knob(self, a_size):
-        # hack to get around creating a QApplication first
-        if self.first_load:
-            self.first_load = False
-            if os.path.exists(self.path):
-                self.knob_pixmap = QPixmap(self.path)
-            else:
-                LOG.error(
-                    "'{self.path}' does not exist, you may be using "
-                    "an old-style theme, try loading the default theme"
-                )
-        if not self.knob_pixmap:
-            return None
         if a_size not in self.cache:
-            self.cache[a_size] = self.knob_pixmap.scaled(
+            self.cache[a_size] = svg_to_pixmap(
+                self.path,
                 a_size,
                 a_size,
-                QtCore.Qt.AspectRatioMode.KeepAspectRatio,
-                QtCore.Qt.TransformationMode.SmoothTransformation,
             )
         return self.cache[a_size]
 

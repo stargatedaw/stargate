@@ -106,7 +106,7 @@ widgets:
   # Used to draw the knob background
   knob_background_pen: "#5a5a5a"
   # The knob background image
-  knob_bg_image: "knob-bg.png"
+  knob_bg_image: "knob-bg.svg"
   # The knob image.  Will be rotated as the knob moves
   knob_fg_image: "{{ assets_subdir }}/knob-fg.svg"
   # The color of a playback cursor line
