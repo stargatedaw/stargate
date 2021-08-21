@@ -1151,6 +1151,7 @@ def final_gc(a_print=True):
     """ Brute-force garbage collect all possible objects to
         prevent the infamous PyQt SEGFAULT-on-exit...
     """
+    LOG.info("Called final_gc")
     f_last_unreachable = gc.collect()
     if not f_last_unreachable:
         if a_print:
@@ -1173,6 +1174,7 @@ def final_gc(a_print=True):
             "after {} iterations".format(f_unreachable, f_i))
 
 def flush_events():
+    LOG.info("Called flush_events")
     for f_i in range(5):
         shared.APP.processEvents()
         time.sleep(0.1)
@@ -1404,11 +1406,12 @@ def main():
     # Workaround for weird stuff happening in Windows during initialization
     constants.IPC_ENABLED = True
     exit_code = shared.APP.exec()
+    time.sleep(0.3)
+    flush_events()
+    LOG.info("Deleting top level windows")
     # Work around PyQt SEGFAULT-on-exit issues
     for w in QApplication.topLevelWindows():
         del w
-    time.sleep(0.3)
-    flush_events()
     del shared.APP
     final_gc(False)
     time.sleep(0.3)
