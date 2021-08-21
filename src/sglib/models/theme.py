@@ -260,7 +260,7 @@ class WidgetColors:
         rout_graph_wire_audio="#cccccc",
         rout_graph_wire_midi="#6666cc",
         rout_graph_wire_sc="#cc6666",
-        splash_screen="splash.png",
+        splash_screen="splash.svg",
         splash_screen_text="#ffffff",
     ):
         self.default_scene_background = type_assert(

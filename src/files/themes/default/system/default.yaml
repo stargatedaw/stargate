@@ -128,6 +128,6 @@ widgets:
   # Routing graph wires connecting audio sidechain inputs
   rout_graph_wire_sc: "#cc6666"
   # Splash screen shown at start up
-  splash_screen: "splash.png"
+  splash_screen: "splash.svg"
   # Text status messages on splash screen shown at start up
   splash_screen_text: "{{ text_color }}"
