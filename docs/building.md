@@ -2,7 +2,7 @@
 ## Prequisites
 ```
 # Install dependencies using one of:
-scripts/ubuntu_deps.sh
+scripts/debian_deps.sh
 scripts/fedora_deps.sh
 # Or find the equivalent dependencies for your distro of choice
 

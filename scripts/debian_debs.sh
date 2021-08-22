@@ -29,6 +29,7 @@ sudo apt-get install -y \
     python3-numpy \
     python3-pip \
     python3-pyqt5 \
+    python3-pyqt5.qtsvg \
     rubberband-cli \
     squashfs-tools \
     vorbis-tools

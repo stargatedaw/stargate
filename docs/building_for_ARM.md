@@ -13,7 +13,7 @@ possible, better CPU performance is always helpful.
 # Steps
 ## Install all required dependencies for Debian or Ubuntu
 ```
-scripts/ubuntu_deps.sh
+scripts/debian_deps.sh
 # or
 scripts/fedora_deps.sh
 ```

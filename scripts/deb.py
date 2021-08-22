@@ -95,6 +95,7 @@ depends = [
     "python3-numpy",
     "python3-psutil",
     "python3-pyqt5",
+    "python3-pyqt5.qtsvg",
     "rubberband-cli",
     "vorbis-tools",
 ]
