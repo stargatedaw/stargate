@@ -367,10 +367,17 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
             return False
 
     def set_brush(self, a_index=None):
+        if theme.SYSTEM_COLORS.daw.seq_item_background_use_track_color:
+            if self.isSelected():
+                brush = theme.SYSTEM_COLORS.daw.seq_selected_item
+            else:
+                brush = shared.TRACK_COLORS.get_color(
+                    self.audio_item.track_num,
+                )
+        else:
+            brush = theme.SYSTEM_COLORS.daw.seq_item_background
         self.setBrush(
-            QColor(
-                theme.SYSTEM_COLORS.daw.seq_item_background,
-            ),
+            QColor(brush),
         )
         if self.isSelected():
             #if _shared.SEQUENCE_EDITOR_MODE == 0:

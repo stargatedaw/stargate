@@ -39,4 +39,5 @@ system:
     daw:
       seq_antialiasing: true
       seq_item_background: "#12666666"
+      seq_item_background_use_track_color: true
     widgets: {}

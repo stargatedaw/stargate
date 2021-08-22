@@ -58,8 +58,11 @@ daw:
   seq_atm_line: '#ffffff'
   # Sequencer QGraphicsScene background
   seq_background: "{{ background_color }}"
-  # The background fill color of the sequencer items
+  # If seq_item_background_use_track_color == true, the track color will be
+  # used, and this value should be set to something with transparency
   seq_item_background: "{{ background_color }}"
+  # Use the track color instead of seq_item_background
+  seq_item_background_use_track_color: false
   # Vertical bar lines in the sequencer
   seq_bar_line: "#090909"
   # Vertical beat lines in the sequencer

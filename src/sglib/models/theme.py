@@ -44,6 +44,7 @@ class DawColors:
         seq_track_line="#181818",
         seq_background="#424242",
         seq_item_background="#424242",
+        seq_item_background_use_track_color=False,
         seq_selected_item="#eeeeee",
         seq_header="#1d1e22",
         seq_header_text="#ffffff",
@@ -133,6 +134,10 @@ class DawColors:
         self.seq_item_background = type_assert(
             seq_item_background,
             str,
+        )
+        self.seq_item_background_use_track_color = type_assert(
+            seq_item_background_use_track_color,
+            bool,
         )
         self.seq_selected_item = type_assert(
             seq_selected_item,
