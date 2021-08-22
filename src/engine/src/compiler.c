@@ -1,9 +1,12 @@
-#include <execinfo.h>
+#include "compiler.h"
+#ifndef _WIN32
+    #include <execinfo.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "compiler.h"
 
 
 #ifdef __APPLE__
@@ -89,14 +92,16 @@ void v_pre_fault_thread_stack(int stacksize){
 }
 
 static void _sg_assert_failed(char* msg){
-    void* callstack[128];
-    int frames;
-
     if(msg){
         fprintf(stderr, "%s\n", msg);
     }
+#ifndef _WIN32
+    void* callstack[128];
+    int frames;
+
     frames = backtrace(callstack, 128);
     backtrace_symbols_fd(callstack + 2, frames - 2, STDERR_FILENO);
+#endif
     abort();
 }
 
