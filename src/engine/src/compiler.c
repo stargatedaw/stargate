@@ -94,6 +94,8 @@ void v_pre_fault_thread_stack(int stacksize){
 static void _sg_assert_failed(char* msg){
     if(msg){
         fprintf(stderr, "%s\n", msg);
+    } else {
+        fprintf(stderr, "Assertion failed, no message provided");
     }
 #ifndef _WIN32
     void* callstack[128];
