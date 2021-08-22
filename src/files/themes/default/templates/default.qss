@@ -73,12 +73,6 @@ QWidget#plugin_ui
     border: 1px solid #7a7a7a;
 }
 
-QWidget#track_panel
-{
-    background-color: #222222;
-    border: 1px solid #7a7a7a;
-}
-
 QScrollArea
 {
     border: none;
@@ -241,12 +235,12 @@ QCheckBox#solo_checkbox::indicator
 
 QCheckBox#solo_checkbox::indicator::unchecked
 {
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/solo-off.svg) 0 0 0 0 stretch stretch;
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/solo-off.svg);
 }
 
 QCheckBox#solo_checkbox::indicator::checked
 {
-    image: url({{ ASSETS_DIR }}/solo-on.svg) 0 0 0 0 stretch stretch;
+    image: url({{ ASSETS_DIR }}/solo-on.svg);
 }
 
 /*Mute checkbox*/

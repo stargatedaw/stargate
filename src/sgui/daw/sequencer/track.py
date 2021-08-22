@@ -47,10 +47,19 @@ class SeqTrack:
             self.track_name_lineedit.setText(a_track_text)
             self.track_name_lineedit.setMaxLength(48)
             self.track_name_lineedit.editingFinished.connect(
-                self.on_name_changed)
+                self.on_name_changed,
+            )
         self.main_vlayout.addWidget(self.track_name_lineedit)
         self.hlayout3 = QHBoxLayout()
         self.main_vlayout.addLayout(self.hlayout3)
+        self.main_vlayout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
 
         self.menu_button = QPushButton()
         self.menu_button.setFixedWidth(42)
