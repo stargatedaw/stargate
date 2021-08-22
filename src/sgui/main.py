@@ -1402,6 +1402,7 @@ def main():
 
     shared.set_window_title()
     SPLASH_SCREEN.status_update(_("Showing main window"))
+    time.sleep(2)
     MAIN_WINDOW.show()
     SPLASH_SCREEN.finish(MAIN_WINDOW)
 
