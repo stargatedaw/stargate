@@ -9,6 +9,7 @@ import psutil
 
 from sglib import constants
 from sglib.constants import ENGINE_PIDFILE, MAJOR_VERSION
+from sglib.hardware.rpi import is_rpi
 from sglib.log import LOG
 from sglib.lib import util
 from sglib.lib import strings as sg_strings
@@ -116,6 +117,8 @@ def open_engine(a_project_path):
     LOG.info(f"Starting audio engine with {a_project_path}")
     global ENGINE_SUBPROCESS
     if (
+        not is_rpi()
+        and
         util.which("pasuspender") is not None
         and
         os.system("pasuspender sleep 0.1") == 0

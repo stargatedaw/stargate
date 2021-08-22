@@ -13,17 +13,20 @@ Please see https://github.com/stargateaudio/stargate/docs/rpi.md
 """
 
 def _preflight_rpi():
-    if rpi.is_rpi():
-        if not (
-            rpi.gpu_mem()
-            and
-            rpi.desktop()
-        ):
-            QMessageBox.warning(
-                None,
-                "Warning",
-                _(RPI4_WARNING),
-            )
+    try:
+        if rpi.is_rpi():
+            if not (
+                rpi.gpu_mem()
+                and
+                rpi.desktop()
+            ):
+                QMessageBox.warning(
+                    None,
+                    "Warning",
+                    _(RPI4_WARNING),
+                )
+    except Exception as ex:
+        LOG.exception(ex)
 
 def preflight():
     _preflight_rpi()

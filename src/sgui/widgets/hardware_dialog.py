@@ -13,6 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 """
 
+from sglib.hardware.rpi import is_rpi
 from sglib.math import clip_value
 import ctypes
 import os
@@ -548,7 +549,28 @@ class hardware_dialog:
                     f_in_count if f_in_count < 16 else 16)
 
         def on_ok(a_self=None):
-            if self.device_name == "default":
+            if is_rpi() and self.device_name.startswith('bcm'):
+                f_warn_result = QMessageBox.question(
+                    f_window,
+                    _("Warning"),
+                    _(
+                        "It appears that you chose the built-in Raspberry "
+                        "Pi audio device, which is known to work poorly with "
+                        "real-time audio.  It is recommended that you use a "
+                        "high quality USB audio device with a "
+                        "class-compliant driver.  Do you still want to use"
+                        "this device?"
+                    ),
+                    (
+                        QMessageBox.StandardButton.Yes
+                        |
+                        QMessageBox.StandardButton.Cancel
+                    ),
+                    QMessageBox.StandardButton.Cancel,
+                )
+                if f_warn_result == QMessageBox.StandardButton.Cancel:
+                    return
+            elif self.device_name == "default":
                 f_warn_result = QMessageBox.question(
                     f_window,
                     _("Warning"),
