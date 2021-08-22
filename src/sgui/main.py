@@ -1281,6 +1281,10 @@ def main():
     minor_version = util.META_DOT_JSON['version']['minor']
     LOG.info(f"Starting {major_version}-{minor_version}")
     shared.APP = QApplication(sys.argv)
+    QGuiApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+    QGuiApplication.setHighDpiScaleFactorRoundingPolicy(
+        QtCore.Qt.HighDpiScaleFactorRoundingPolicy.PassThrough,
+    )
     try:
         theme.load_theme()
     except Exception as ex:
