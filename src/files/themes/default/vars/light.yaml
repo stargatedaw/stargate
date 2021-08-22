@@ -11,6 +11,7 @@ hscrollbar_groove: "#9fafc9"
 item_handle: "#aaaaaa"
 palette:
   black: "#111111"
+  purple: "#8212f2"
   white: "#cccccc"
 tab_selected: "#a700dd"
 text_background_color: "#c1c7e2"

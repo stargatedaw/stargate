@@ -391,12 +391,9 @@ class AudioItemViewerWidget(QGraphicsView):
         self.scroll_bar_height = self.horizontalScrollBar().height()
         self.last_x_scale = 1.0
         self.last_y_scale = 1.0
-        self.waveform_brush = QLinearGradient(
-            0.0, 0.0, AUDIO_ITEM_SCENE_HEIGHT,
-            AUDIO_ITEM_SCENE_WIDTH)
-        self.waveform_brush.setColorAt(0.0, QColor(140, 140, 240))
-        self.waveform_brush.setColorAt(0.5, QColor(240, 190, 140))
-        self.waveform_brush.setColorAt(1.0, QColor(140, 140, 240))
+        self.waveform_brush = QColor(
+            theme.SYSTEM_COLORS.widgets.audio_item_viewer_color,
+        )
         self.waveform_pen = QPen(QtCore.Qt.PenStyle.NoPen)
         self.is_drag_selecting = False
         self.drag_start_pos = 0.0

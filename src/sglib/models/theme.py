@@ -246,6 +246,7 @@ class DawColors:
 class WidgetColors:
     def __init__(
         self,
+        audio_item_viewer_color="#8212f2",
         default_scene_background="#424242",
         knob_arc_pen="#ffffff",
         knob_background_pen="#5a5a5a",
@@ -263,6 +264,10 @@ class WidgetColors:
         splash_screen="splash.svg",
         splash_screen_text="#ffffff",
     ):
+        self.audio_item_viewer_color = type_assert(
+            audio_item_viewer_color,
+            str,
+        )
         self.default_scene_background = type_assert(
             default_scene_background,
             str,

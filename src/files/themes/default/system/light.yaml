@@ -99,6 +99,8 @@ daw:
     - "#714995"
     - "#95498e"
 widgets:
+  # The color that audio files are drawn with in the sampler and wave editor
+  audio_item_viewer_color: "{{ palette.purple }}"
   # The default QGraphicsScene background color used by the widgets library
   default_scene_background: "{{ background_color  }}"
   # Used to draw the arc around the knob
