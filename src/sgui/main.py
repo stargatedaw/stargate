@@ -101,7 +101,8 @@ def handle_engine_error(exit_code):
 
 class SplashScreen(QSplashScreen):
     def __init__(self):
-        rect = QApplication.desktop().screenGeometry()
+        screen = QGuiApplication.primaryScreen()
+        rect = screen.geometry()
         scaled_height = int(rect.height() * 0.9)
         self.pixmap = svg_to_pixmap(
             os.path.join(
