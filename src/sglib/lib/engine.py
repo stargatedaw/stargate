@@ -58,7 +58,14 @@ def check_engine():
     """
     if os.path.exists(ENGINE_PIDFILE):
         with open(ENGINE_PIDFILE) as f:
-            pid = int(f.read().strip())
+            text = f.read().strip()
+            try:
+                pid = int(text)
+            except Exception as ex:
+                LOG.exception(ex)
+                LOG.error(f"Invalid pidfile: {text}")
+                os.remove(ENGINE_PIDFILE)
+                return
         LOG.warning(f"{ENGINE_PIDFILE} exists with pid {pid}")
         if not psutil.pid_exists(pid):
             LOG.info(f"pid {pid} no longer exists, deleting pidfile")
