@@ -1281,10 +1281,15 @@ def main():
     minor_version = util.META_DOT_JSON['version']['minor']
     LOG.info(f"Starting {major_version}-{minor_version}")
     shared.APP = QApplication(sys.argv)
-    QGuiApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
-    QGuiApplication.setHighDpiScaleFactorRoundingPolicy(
-        QtCore.Qt.HighDpiScaleFactorRoundingPolicy.PassThrough,
-    )
+    try:
+        QGuiApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+        QGuiApplication.setHighDpiScaleFactorRoundingPolicy(
+            QtCore.Qt.HighDpiScaleFactorRoundingPolicy.PassThrough,
+        )
+    except Exception as ex:
+        LOG.warning(
+            f"The platform you are using does not support Qt HiDpi: {ex}"
+        )
     try:
         theme.load_theme()
     except Exception as ex:
