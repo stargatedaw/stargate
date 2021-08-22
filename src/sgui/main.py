@@ -1304,6 +1304,7 @@ def main():
         if f_answer == QMessageBox.StandardButton.Ok:
             util.clear_file_setting("default-style")
         sys.exit(1)
+    SPLASH_SCREEN = SplashScreen()
     widgets.knob_setup()
     QPixmapCache.setCacheLimit(1024 * 1024)
     shared.APP.setStyle(QStyleFactory.create("Fusion"))
@@ -1312,7 +1313,6 @@ def main():
     #    QtCore.QTextCodec.codecForName("UTF-8"),
     #)
     MAIN_WINDOW = SgMainWindow()
-    SPLASH_SCREEN = SplashScreen()
     preflight()
     # Ensure that the engine is not running before trying to access
     # audio hardware
@@ -1401,9 +1401,9 @@ def main():
         global_new_project(default_project_file)
 
     shared.set_window_title()
-    SPLASH_SCREEN.close()
-    SPLASH_SCREEN = None
+    SPLASH_SCREEN.status_update(_("Showing main window"))
     MAIN_WINDOW.show()
+    SPLASH_SCREEN.finish(MAIN_WINDOW)
 
     if util.ENGINE_RETCODE is not None:
         handle_engine_error(util.ENGINE_RETCODE)
