@@ -393,8 +393,8 @@ class SgMainWindow(QMainWindow):
 
     def _copy_to_clipboard(self, text):
         cb = QApplication.clipboard()
-        cb.clear(mode=cb.Clipboard)
-        cb.setText(text, mode=cb.Clipboard)
+        cb.clear(mode=cb.Mode.Clipboard)
+        cb.setText(text, mode=cb.Mode.Clipboard)
 
     def copy_gdb_run_cmd(self):
         text = "run '{}' '{}' {} 0 --sleep".format(
