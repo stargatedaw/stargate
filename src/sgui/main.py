@@ -40,6 +40,7 @@ from sgui.util import (
     check_for_rw_perms,
     show_generic_exception,
     svg_to_pixmap,
+    ui_scaler_factory,
 )
 from sgui.sgqt import *
 import datetime
@@ -100,10 +101,8 @@ def handle_engine_error(exit_code):
 
 
 class SplashScreen(QSplashScreen):
-    def __init__(self):
-        screen = QGuiApplication.primaryScreen()
-        rect = screen.geometry()
-        scaled_height = int(rect.height() * 0.9)
+    def __init__(self, screen_height):
+        scaled_height = int(screen_height * 0.9)
         self.pixmap = svg_to_pixmap(
             os.path.join(
                 theme.ASSETS_DIR,
@@ -793,13 +792,14 @@ class SgMainWindow(QMainWindow):
                 MAIN_WINDOW.widget,
                 _("Open a theme file"),
                 util.THEMES_DIR,
-                "Stargate Theme(*.sgtheme)",
+                "Stargate Theme (*.sgtheme)",
                 options=QFileDialog.Option.DontUseNativeDialog,
             )
             if f_file and str(f_file):
                 f_file = str(f_file)
+                scaler = ui_scaler_factory()
                 try:
-                    theme.set_theme(f_file)
+                    theme.set_theme(f_file, scaler)
                 except Exception as ex:
                     show_generic_exception(
                         ex,
@@ -1291,8 +1291,9 @@ def main():
             f"The platform you are using does not support Qt HiDpi: {ex}"
         )
     shared.APP = QApplication(sys.argv)
+    scaler = ui_scaler_factory()
     try:
-        theme.load_theme()
+        theme.load_theme(scaler)
     except Exception as ex:
         LOG.exception(ex)
         f_answer = QMessageBox.warning(
@@ -1314,7 +1315,7 @@ def main():
         if f_answer == QMessageBox.StandardButton.Ok:
             util.clear_file_setting("default-style")
         sys.exit(1)
-    SPLASH_SCREEN = SplashScreen()
+    SPLASH_SCREEN = SplashScreen(scaler.y_res)
     widgets.knob_setup()
     QPixmapCache.setCacheLimit(1024 * 1024)
     shared.APP.setStyle(QStyleFactory.create("Fusion"))

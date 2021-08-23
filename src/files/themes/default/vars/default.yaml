@@ -6,6 +6,7 @@ border_color: "#333333"
 button_pressed: "#2d2d2d"
 checkbox_check: "#ffffff"
 combobox: "#1f1f27"
+font_size_mm: 4.5
 hscrollbar: "#666666"
 hscrollbar_groove: "#111111"
 item_handle: "#ffffff"
@@ -20,7 +21,7 @@ text_color_disabled: "#d0d0d0"
 tool_button_offset: 0
 tab_selected: "#aaaaaa"
 track_panel_background: "#17181d"
-transport_button_size: 40
+transport_button_size: 15
 transport_clock_background: "#333390"
 vscrollbar: "#666666"
 vscrollbar_groove: "#111111"

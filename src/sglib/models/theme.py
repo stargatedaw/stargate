@@ -13,6 +13,7 @@ from sglib.lib.util import (
     THEMES_DIR,
 )
 from sglib.log import LOG
+from sglib.math import clip_value
 
 import json
 import os
@@ -26,6 +27,57 @@ ASSETS_DIR = None
 ICON_PATH = None
 THEME_FILE = None
 _THEMES_DIR_SUB = '{{ SYSTEM_THEME_DIR }}'
+
+class UIScaler:
+    """ UI scaling helper class, available to sgui code and Jinja templates
+        Mostly useful for HiDpi scaling across many screen sizes
+    """
+    def __init__(
+        self,
+        x_size: float,
+        y_size: float,
+        x_res: float,
+        y_res: float,
+    ):
+        self.x_size = x_size
+        self.y_size = y_size
+        self.x_res = x_res
+        self.y_res = y_res
+
+    def mm_to_px(
+        self,
+        mm: int,
+        min_pct: float=3.,
+        max_pct: float=15.,
+        orientation: str='h',
+    ) -> int:
+        """ Covert millimeters to screen pixels
+            @mm:      The size in millimeters
+            @min_pct: 0.0-100.0
+                The minimum percentage of screen size the element should
+                consume.
+            @max_pct: 1.0-100.0
+                The maximum percentage of screen size the element should
+                consume
+            @return: The size in pixels (QSS px)
+        """
+        if orientation == 'w':
+            res = self.x_res
+            size = self.x_size
+        elif orientation == 'h':
+            res = self.y_res
+            size = self.y_size
+        else:
+            raise ValueError(f"orientation {orientation} not in ('w', 'h')")
+        px = (float(mm) / size) * res
+        max_px = max_pct * size * 0.01
+        min_px = min_pct * size * 0.01
+        px = clip_value(
+            px,
+            min_px,
+            max_px,
+        )
+        return int(px)
 
 class DawColors:
     def __init__(
@@ -417,7 +469,7 @@ class Theme:
             ),
         )
 
-    def render(self, path):
+    def render(self, path, scaler):
         rendered_dir = os.path.join(HOME, 'rendered_theme')
         if not os.path.isdir(rendered_dir):
             os.makedirs(rendered_dir)
@@ -458,6 +510,7 @@ class Theme:
             qss = template.render(
                 ASSETS_DIR=ASSETS_DIR,
                 SYSTEM_COLORS=system_colors,
+                SCALER=scaler,
                 **variables
             )
         qss_path = os.path.join(rendered_dir, 'theme.qss')
@@ -543,29 +596,32 @@ def setup_globals():
 
 def open_theme(
     theme_file: str,
+    scaler: UIScaler,
 ):
     with open(theme_file) as f:
         y = yaml.safe_load(f)
     theme = unmarshal_json(y, Theme)
-    return theme.render(THEME_FILE)
+    return theme.render(THEME_FILE, scaler)
 
-def load_theme():
+def load_theme(
+    scaler: UIScaler,
+):
     """ Load the QSS theme and system colors.  Do this before creating any
         widgets.
     """
     global QSS, SYSTEM_COLORS
     setup_globals()
-    QSS, SYSTEM_COLORS = open_theme(THEME_FILE)
+    QSS, SYSTEM_COLORS = open_theme(THEME_FILE, scaler)
 
 def copy_theme(dest):
     theme_dir = os.path.dirname(THEME_FILE)
     shutil.copytree(theme_dir, dest)
 
-def set_theme(path):
+def set_theme(path, scaler):
     path = pi_path(path)
     # Test that the theme parses before accepting it.
     # Will raise an exception if malformed data, you must use try/except
-    open_theme(path)
+    open_theme(path, scaler)
     # The Windows install prefix changes everytime Stargate is launched,
     # so substitute it every time the file is saved or loaded
     path = path.replace(

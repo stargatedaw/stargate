@@ -4,6 +4,7 @@ from xml.etree import ElementTree as xmltree
 from sgui.sgqt import *
 from sglib.lib.translate import _
 from sglib.log import LOG
+from sglib.models import theme
 from sgui import shared as glbl_shared
 
 def show_generic_exception(
@@ -77,4 +78,15 @@ def svg_to_pixmap(path: str, width=None, height=None):
     svg_renderer.render(painter)
     painter.end()
     return pixmap
+
+def ui_scaler_factory():
+    screen = QGuiApplication.primaryScreen()
+    phys_rect = screen.physicalSize()
+    res_rect = screen.geometry()
+    return theme.UIScaler(
+        phys_rect.width(),
+        phys_rect.height(),
+        res_rect.width(),
+        res_rect.height(),
+    )
 

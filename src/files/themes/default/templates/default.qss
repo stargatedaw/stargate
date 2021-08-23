@@ -1,3 +1,14 @@
+{% set transport_button_size = SCALER.mm_to_px(
+    transport_button_size,
+    3.0,
+    12.0,
+) %}
+{% set transport_button_size_offset = SCALER.mm_to_px(
+	transport_button_size - tool_button_offset,
+    3.0,
+    12.0,
+) %}
+
 QWidget:focus
 {
     outline: none;
@@ -51,6 +62,7 @@ QWidget
 {
     background-color: {{ background_color }};
     color: {{ text_color }};
+    font-size: {{ SCALER.mm_to_px(font_size_mm, 1.0, 5.0) }}px;
     selection-background-color: QLinearGradient(
         x1: 0,
         y1: 0,
@@ -83,13 +95,13 @@ QScrollArea
 QSplitter::handle:vertical
 {
     background-color: #151515;
-    height: 6px;
+    height: {{ SCALER.mm_to_px(2, 0.5, 1.0) }}px;
 }
 
 QSplitter::handle:horizontal
 {
     background-color: #151515;
-    width:  6px;
+    width:  {{ SCALER.mm_to_px(2, 0.5, 1.0) }}px;
 }
 
 /* Transport tool selector */
@@ -116,9 +128,9 @@ QRadioButton#tool_draw::indicator,
 QRadioButton#tool_erase::indicator,
 QRadioButton#tool_split::indicator
 {
-    height: {{ transport_button_size - tool_button_offset }}px;
+    height: {{ transport_button_size_offset }}px;
     outline: none;
-    width: {{ transport_button_size - tool_button_offset }}px;
+    width: {{ transport_button_size_offset }}px;
 }
 
 QCheckBox#button_hide,
@@ -128,9 +140,9 @@ QCheckBox#button_power::indicator
 {
     background: none;
     border: none;
-    height: 36px;
+    height: {{ SCALER.mm_to_px(10) }}px;
     outline: none;
-    width: 36px;
+    width: {{ SCALER.mm_to_px(10) }}px;
 }
 
 QRadioButton#play_button,
@@ -258,15 +270,15 @@ QCheckBox#mute_checkbox::indicator::checked
 QPushButton#menu
 {
     border-image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/menu.svg);
-    height: {{ transport_button_size - tool_button_offset }}px;
-    width: {{ transport_button_size - tool_button_offset }}px;
+    height: {{ transport_button_size_offset }}px;
+    width: {{ transport_button_size_offset }}px;
 }
 
 QPushButton#panic
 {
     border-image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/panic.svg);
-    height: {{ transport_button_size - tool_button_offset }}px;
-    width: {{ transport_button_size - tool_button_offset }}px;
+    height: {{ transport_button_size_offset }}px;
+    width: {{ transport_button_size_offset }}px;
 }
 
 QRadioButton#play_button::indicator,
@@ -313,14 +325,13 @@ QDoubleSpinBox
 {
     border: 1px solid gray;
     color: {{ text_color }};
-    font-size: 18px;
 }
 
 
 QSpinBox#large_spinbox,
 QDoubleSpinBox#large_spinbox
 {
-    font-size: 21px;
+    font-size: {{ SCALER.mm_to_px(6, 1.0, 5.0) }}px;
 }
 
 QSpinBox::up-button,
@@ -527,7 +538,6 @@ QToolTip
     background-color: {{ background_color }};
     border: 1px solid white;
     color: {{ text_color }};
-    font-size: 15px;
     padding: 6px;
 }
 
@@ -621,7 +631,6 @@ QPushButton
     background-color: {{ background_color_alt }};
     border: 1px solid {{ border_color }};
     color: {{ text_color }};
-    font-size: 12px;
     padding-left: 3px;
     padding-right: 3px;
     padding: 3px;
@@ -630,11 +639,6 @@ QPushButton
 QPushButton:pressed
 {
     background-color: {{ button_pressed }};
-}
-
-QPushButton#plugin_menu
-{
-    font-size: 12px;
 }
 
 QPushButton#plugin_menu::menu-indicator
@@ -947,6 +951,6 @@ QLCDNumber#transport_clock
     border: 2px solid {{ border_color }};
     color: {{ palette.white }};
     height: {{ transport_button_size }};
-    width: 120px;
+    width: {{ SCALER.mm_to_px(40, 5.0, 15.0, 'w') }}px;
 }
 
