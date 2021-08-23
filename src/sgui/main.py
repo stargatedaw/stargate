@@ -1281,7 +1281,6 @@ def main():
     major_version = util.META_DOT_JSON['version']['major']
     minor_version = util.META_DOT_JSON['version']['minor']
     LOG.info(f"Starting {major_version}-{minor_version}")
-    shared.APP = QApplication(sys.argv)
     try:
         QGuiApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
         QGuiApplication.setHighDpiScaleFactorRoundingPolicy(
@@ -1291,6 +1290,7 @@ def main():
         LOG.warning(
             f"The platform you are using does not support Qt HiDpi: {ex}"
         )
+    shared.APP = QApplication(sys.argv)
     try:
         theme.load_theme()
     except Exception as ex:
@@ -1319,9 +1319,6 @@ def main():
     QPixmapCache.setCacheLimit(1024 * 1024)
     shared.APP.setStyle(QStyleFactory.create("Fusion"))
     shared.APP.setStyleSheet(theme.QSS)
-    #QtCore.QTextCodec.setCodecForLocale(
-    #    QtCore.QTextCodec.codecForName("UTF-8"),
-    #)
     MAIN_WINDOW = SgMainWindow()
     preflight()
     # Ensure that the engine is not running before trying to access
