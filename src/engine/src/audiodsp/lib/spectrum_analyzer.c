@@ -69,7 +69,8 @@ void g_spa_free(t_spa_spectrum_analyzer *a_spa){
 
 void v_spa_compute_fft(t_spa_spectrum_analyzer *a_spa)
 {
-    int f_i = 1;
+    a_spa->str_buf[0] = '\0';
+    int f_i;
 
 #ifdef SG_USE_DOUBLE
     fftw_execute(a_spa->plan);
@@ -77,14 +78,16 @@ void v_spa_compute_fft(t_spa_spectrum_analyzer *a_spa)
     fftwf_execute(a_spa->plan);
 #endif
 
-    sprintf(a_spa->str_buf, "%i|spectrum|%f",
-            a_spa->plugin_uid, cabs(a_spa->output[0]));
+    sprintf(
+        a_spa->str_buf,
+        "%i|spectrum|%f",
+        a_spa->plugin_uid,
+        cabs(a_spa->output[0])
+    );
 
-    while(f_i < a_spa->samples_count_div2)
-    {
+    for(f_i = 1; f_i < a_spa->samples_count_div2; ++f_i){
         sprintf(a_spa->str_tmp, "|%f", cabs(a_spa->output[f_i]));
         strcat(a_spa->str_buf, a_spa->str_tmp);
-        ++f_i;
     }
 }
 

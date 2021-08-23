@@ -190,7 +190,11 @@ class SgPluginUiDict:
         return self.ui_dict[a_plugin_uid]
 
     def open_plugin_ui(
-            self, a_plugin_uid, a_plugin_type, a_is_mixer=False):
+        self,
+        a_plugin_uid,
+        a_plugin_type,
+        a_is_mixer=False,
+    ):
         if not a_plugin_uid in self.ui_dict:
             f_plugin = PLUGIN_UI_TYPES[a_plugin_type](
                 self.ctrl_update_callback,
@@ -596,19 +600,25 @@ class PluginRackTab:
         glbl_shared.APP.setOverrideCursor(
             QtCore.Qt.CursorShape.WaitCursor,
         )
+        f_index = self.track_combobox.currentIndex()
+        if (
+            self.last_rack_num is not None
+            and
+            self.last_rack_num != f_index
+        ):
+            self.close_rack(self.last_rack_num)
+        self.last_rack_num = f_index
         self.stacked_widget.setHidden(True)
         self.widget.update()
         self.widget.setUpdatesEnabled(False)
-        f_index = self.track_combobox.currentIndex()
         if f_index not in self.plugin_racks:
             f_rack = PluginRack(self.PROJECT, f_index)
             self.plugin_racks[f_index] = f_rack
             self.stacked_widget.addWidget(self.plugin_racks[f_index].widget)
         self.show_rack(f_index)
-        self.stacked_widget.setCurrentWidget(self.plugin_racks[f_index].widget)
-        if self.last_rack_num is not None and self.last_rack_num != f_index:
-            self.close_rack(self.last_rack_num)
-        self.last_rack_num = f_index
+        self.stacked_widget.setCurrentWidget(
+            self.plugin_racks[f_index].widget,
+        )
         self.stacked_widget.setHidden(False)
         self.widget.setUpdatesEnabled(True)
         self.widget.update()
