@@ -44,23 +44,11 @@ class UIScaler:
         self.x_res = x_res
         self.y_res = y_res
 
-    def mm_to_px(
+    def _mm_to_px(
         self,
         mm: int,
-        min_pct: float=3.,
-        max_pct: float=15.,
         orientation: str='h',
-    ) -> int:
-        """ Covert millimeters to screen pixels
-            @mm:      The size in millimeters
-            @min_pct: 0.0-100.0
-                The minimum percentage of screen size the element should
-                consume.
-            @max_pct: 1.0-100.0
-                The maximum percentage of screen size the element should
-                consume
-            @return: The size in pixels (QSS px)
-        """
+    ):
         if orientation == 'w':
             res = self.x_res
             size = self.x_size
@@ -70,12 +58,57 @@ class UIScaler:
         else:
             raise ValueError(f"orientation {orientation} not in ('w', 'h')")
         px = (float(mm) / size) * res
-        max_px = max_pct * size * 0.01
-        min_px = min_pct * size * 0.01
+        return px, size
+
+    def mm_to_px_pct(
+        self,
+        mm: int,
+        _min: float=3.,
+        _max: float=15.,
+        orientation: str='h',
+    ) -> int:
+        """ Covert millimeters to screen pixels, clip to a percentage of
+            screen size.
+
+            @mm:      The size in millimeters
+            @_min: 0.0-100.0
+                The minimum percentage of screen size the element should
+                consume.
+            @_max: 1.0-100.0
+                The maximum percentage of screen size the element should
+                consume
+            @return: The size in pixels (QSS px)
+        """
+        px, size = self._mm_to_px(mm, orientation)
+        max_px = _max * size * 0.01
+        min_px = _min * size * 0.01
         px = clip_value(
             px,
             min_px,
             max_px,
+        )
+        return int(px)
+
+    def mm_to_px(
+        self,
+        mm: int,
+        _min: int=1,
+        _max: int=15,
+        orientation: str='h',
+    ) -> int:
+        """ Covert millimeters to screen pixels
+            @mm:      The size in millimeters
+            @_min: 1-N
+                The minimum number of pixels
+            @_max:  1-N
+                The maximum number of pixels
+            @return: The size in pixels (QSS px)
+        """
+        px, _ = self._mm_to_px(mm, orientation)
+        px = clip_value(
+            px,
+            _min,
+            _max,
         )
         return int(px)
 

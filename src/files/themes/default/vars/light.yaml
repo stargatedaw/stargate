@@ -6,7 +6,7 @@ border_color: "#333333"
 button_pressed: "#8212f2"
 checkbox_check: "#8212f2"
 combobox: "#d0e1fc"
-font_size_mm: 4.5
+font_size_mm: 7
 hscrollbar: "#666666"
 hscrollbar_groove: "#9fafc9"
 item_handle: "#aaaaaa"
