@@ -536,12 +536,18 @@ class knob_control(AbstractUiControl):
         a_val_conversion=_shared.KC_NONE,
         a_port_dict=None,
         a_preset_mgr=None,
+        knob_kwargs={},
     ):
         AbstractUiControl.__init__(
             self, a_label, a_port_num, a_rel_callback,
             a_val_callback, a_val_conversion, a_port_dict, a_preset_mgr,
             a_default_val)
-        self.control = pixmap_knob(a_size, a_min_val, a_max_val)
+        self.control = pixmap_knob(
+            a_size,
+            a_min_val,
+            a_max_val,
+            **knob_kwargs
+        )
         self.control.valueChanged.connect(self.control_value_changed)
         self.control.sliderReleased.connect(self.control_released)
         self.control.contextMenuEvent = self.contextMenuEvent

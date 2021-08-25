@@ -27,6 +27,7 @@ ASSETS_DIR = None
 ICON_PATH = None
 THEME_FILE = None
 _THEMES_DIR_SUB = '{{ SYSTEM_THEME_DIR }}'
+VARIABLES = None
 
 class UIScaler:
     """ UI scaling helper class, available to sgui code and Jinja templates
@@ -367,7 +368,7 @@ class WidgetColors:
         audio_item_viewer_color="#8212f2",
         default_scene_background="#424242",
         knob_arc_pen="#ffffff",
-        knob_background_pen="#5a5a5a",
+        knob_arc_background_pen="#5a5a5a",
         knob_bg_image="knob-bg.png",
         knob_fg_image="knob-fg.png",
         playback_cursor="#aa0000",
@@ -394,8 +395,8 @@ class WidgetColors:
             knob_arc_pen,
             str,
         )
-        self.knob_background_pen = type_assert(
-            knob_background_pen,
+        self.knob_arc_background_pen = type_assert(
+            knob_arc_background_pen,
             str,
         )
         self.knob_bg_image = type_assert(

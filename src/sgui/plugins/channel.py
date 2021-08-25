@@ -54,9 +54,21 @@ class sgchnl_plugin_ui(AbstractPluginUI):
         self.layout.addLayout(self.hlayout)
         self.hlayout.addLayout(self.gain_gridlayout)
         self.gain_knob = knob_control(
-            f_knob_size, _("Gain"), SGCHNL_GAIN,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -2400, 2400, 0, KC_DECIMAL, self.port_dict, None)
+            f_knob_size,
+            _("Gain"),
+            SGCHNL_GAIN,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -2400,
+            2400,
+            0,
+            KC_DECIMAL,
+            self.port_dict,
+            None,
+            knob_kwargs={
+                'arc_type': ArcType.BIDIRECTIONAL,
+            },
+        )
         self.gain_knob.add_to_grid_layout(self.gain_gridlayout, 0)
         self.gain_knob.value_label.setMinimumWidth(55)
 

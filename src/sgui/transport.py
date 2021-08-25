@@ -67,9 +67,10 @@ class TransportWidget:
         self.host_combobox.currentIndexChanged.connect(
             shared.MAIN_WINDOW.set_host,
         )
-        #knob_size = scaler.pct_to_px(
-        #    theme
-        self.main_vol_knob = widgets.pixmap_knob(42, -480, 0)
+        knob_size = scaler.pct_to_px(
+            theme.VARIABLES['transport_button_size'],
+        )
+        self.main_vol_knob = widgets.pixmap_knob(knob_size, -480, 0)
         self.load_main_vol()
         self.hlayout1.addWidget(self.main_vol_knob)
         self.main_vol_knob.valueChanged.connect(self.main_vol_changed)

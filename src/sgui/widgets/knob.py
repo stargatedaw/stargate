@@ -7,6 +7,7 @@ from sgui import shared as glbl_shared
 from sglib.lib import util
 from sglib.lib.translate import _
 from sgui.util import svg_to_pixmap
+from enum import Enum
 import os
 
 
@@ -30,15 +31,7 @@ class PixmapKnobCache:
 def knob_setup():
     global \
         DEFAULT_KNOB_FG_PIXMAP_CACHE, \
-        DEFAULT_KNOB_BG_PIXMAP_CACHE, \
-        KNOB_ARC_PEN
-
-    KNOB_ARC_PEN = QPen(
-        QColor(
-            theme.SYSTEM_COLORS.widgets.knob_arc_pen,
-        ),
-        5.0,
-    )
+        DEFAULT_KNOB_BG_PIXMAP_CACHE
     DEFAULT_KNOB_FG_PIXMAP_CACHE = PixmapKnobCache(
         os.path.join(
             theme.ASSETS_DIR,
@@ -52,6 +45,10 @@ def knob_setup():
         ),
     )
 
+class ArcType(Enum):
+    UP = 0
+    BIDIRECTIONAL = 1
+
 class pixmap_knob(QDial):
     def __init__(
         self,
@@ -60,7 +57,11 @@ class pixmap_knob(QDial):
         a_max_val,
         a_pixmap_fg_cache=None,
         a_pixmap_bg_cache=None,
+        arc_width=5.0,  # 0.0 to disable
+        arc_type=ArcType.UP,
     ):
+        self.arc_width = arc_width
+        self.arc_type = arc_type
         QDial.__init__(self)
         self.pixmap_fg_cache = \
             a_pixmap_fg_cache if a_pixmap_fg_cache \
@@ -92,25 +93,52 @@ class pixmap_knob(QDial):
             |
             QPainter.RenderHint.SmoothPixmapTransform
         )
-        f_frac_val = ((float(self.value() - self.minimum())) /
-            (float(self.maximum() - self.minimum())))
+        f_frac_val = (
+            (float(self.value() - self.minimum()))
+            /
+            (float(self.maximum() - self.minimum()))
+        )
         f_rotate_value = f_frac_val * 270.0
         f_rect = self.rect()
-        f_rect.setWidth(f_rect.width() - 5)
-        f_rect.setHeight(f_rect.height() - 5)
-        f_rect.setX(f_rect.x() + 5)
-        f_rect.setY(f_rect.y() + 5)
-        p.setPen(
-            QPen(
+        f_rect.setWidth(f_rect.width() - self.arc_width)
+        f_rect.setHeight(f_rect.height() - self.arc_width)
+        f_rect.setX(f_rect.x() + self.arc_width)
+        f_rect.setY(f_rect.y() + self.arc_width)
+
+        if self.arc_width:
+            knob_arc_pen = QPen(
                 QColor(
-                    theme.SYSTEM_COLORS.widgets.knob_background_pen,
+                    theme.SYSTEM_COLORS.widgets.knob_arc_pen,
                 ),
-                5.0,
+                self.arc_width,
             )
-        )
-        p.drawArc(f_rect, -136 * 16, 136 * 2 * -16)
-        p.setPen(KNOB_ARC_PEN)
-        p.drawArc(f_rect, -136 * 16, (f_rotate_value + 1.0) * -16)
+            knob_arc_background_pen = QPen(
+                QColor(
+                    theme.SYSTEM_COLORS.widgets.knob_arc_background_pen,
+                ),
+                self.arc_width,
+            )
+            p.setPen(knob_arc_background_pen)
+            p.drawArc(f_rect, -136 * 16, 136 * 2 * -16)
+            p.setPen(knob_arc_pen)
+            if self.arc_type == ArcType.UP:
+                p.drawArc(
+                    f_rect,
+                    -136 * 16,
+                    (f_rotate_value + 1.0) * -16,
+                )
+            elif self.arc_type == ArcType.BIDIRECTIONAL:
+                if f_rotate_value < 135.:
+                    span_angle = (135. - f_rotate_value) * 16
+                else:
+                    span_angle = (f_rotate_value - 135.) * -16
+                p.drawArc(
+                    f_rect,
+                    90 * 16,
+                    span_angle,
+                )
+            else:
+                raise ValueError(f"Invalid arc_type: {self.arc_type}")
 
         if self.pixmap_bg:
             p.drawPixmap(6, 6, self.pixmap_bg)
