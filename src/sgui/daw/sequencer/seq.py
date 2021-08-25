@@ -26,6 +26,7 @@ from sgui.daw import strings as daw_strings
 from sgui.daw.lib import item as item_lib
 from sgui.daw.lib.midi_file import DawMidiFile
 from sglib.models import theme
+from sgui.util import font_factory
 
 
 def sequence_editor_set_delete_mode(a_enabled):
@@ -921,7 +922,10 @@ class ItemSequencer(QGraphicsView):
                 self.draw_sequence(f_marker)
             elif f_marker.type == 3:  # Text
                 f_item = QGraphicsSimpleTextItem(
-                    f_marker.text, self.header)
+                    f_marker.text,
+                    self.header,
+                )
+                f_item.setFont(font_factory())
                 f_item.setBrush(
                     QColor(
                         theme.SYSTEM_COLORS.daw.seq_header_text,
@@ -996,7 +1000,10 @@ class ItemSequencer(QGraphicsView):
         for i in range(int(a_marker.length)):
             if i % a_marker.tsig_num == 0:
                 f_number = QGraphicsSimpleTextItem(
-                    str((i // a_marker.tsig_num) + 1), self.header)
+                    str((i // a_marker.tsig_num) + 1),
+                    self.header,
+                )
+                f_number.setFont(font_factory())
                 f_number.setFlag(
                     QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
                 )

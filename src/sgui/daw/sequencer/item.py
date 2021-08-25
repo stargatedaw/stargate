@@ -16,6 +16,7 @@ from sglib.lib import util
 from sglib.lib.util import *
 from sglib.lib.translate import _
 from sgui.sgqt import *
+from sgui.util import font_factory
 
 
 class SequencerItem(widgets.QGraphicsRectItemNDL):
@@ -77,6 +78,7 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
         self.label_bg.setZValue(2050.00)
 
         self.label = QGraphicsSimpleTextItem(str(a_name), parent=self)
+        self.label.setFont(font_factory())
         self.label.setPen(shared.NO_PEN)
         self.label.setBrush(
             QColor(

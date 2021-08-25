@@ -47,7 +47,7 @@ daw:
   # The sequencer playback cursor
   playback_cursor: "#dddddd"
   # Vertical 16th note lines in the sequencer
-  seq_16th_line: "#090909"
+  seq_16th_line: "#282828"
   # Enable antialiasing for the sequencer
   seq_antialiasing: false
   # Sequencer automation points

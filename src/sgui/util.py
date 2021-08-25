@@ -7,6 +7,7 @@ from sglib.log import LOG
 from sglib.models import theme
 from sgui import shared as glbl_shared
 
+
 def show_generic_exception(
     ex,
     extra="",
@@ -91,3 +92,10 @@ def ui_scaler_factory():
         screen.physicalDotsPerInch() / screen.logicalDotsPerInch(),
     )
 
+def font_factory(
+    family="Tahoma",
+    px_size=14,
+):
+    font = QFont(family)
+    font.setPixelSize(px_size)
+    return font

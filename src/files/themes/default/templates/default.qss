@@ -581,10 +581,7 @@ QWidget:item:hover
 
 QWidget:item:selected
 {
-    background-color: QLinearGradient(
-        x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #ffffff, stop: 1 #dddddd
-    );
+    background-color:{{ highlight }};
     color: {{ text_color_alt }};
 }
 
