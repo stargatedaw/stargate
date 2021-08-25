@@ -141,7 +141,7 @@ class SgMainWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
 
-    def setup(self):
+    def setup(self, scaler):
         self.suppress_resize_events = False
         shared.MAIN_WINDOW = self
         constants.IPC_TRANSPORT = SocketIPCTransport()
@@ -158,7 +158,7 @@ class SgMainWindow(QMainWindow):
             constants.IPC_TRANSPORT,
             with_audio,
         )
-        shared.TRANSPORT = TransportWidget()
+        shared.TRANSPORT = TransportWidget(scaler)
         self.setObjectName("plugin_ui")
         self.setMinimumSize(900, 600)
         self.last_ac_dir = util.HOME
@@ -1347,7 +1347,7 @@ def main():
         shared.APP.setWindowIcon(QIcon(theme.ICON_PATH))
 
     global_check_device()
-    MAIN_WINDOW.setup()
+    MAIN_WINDOW.setup(scaler)
     shared.APP.lastWindowClosed.connect(shared.APP.quit)
 
     if not os.access(HOME, os.W_OK):

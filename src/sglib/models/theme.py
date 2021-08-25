@@ -38,11 +38,13 @@ class UIScaler:
         y_size: float,
         x_res: float,
         y_res: float,
+        font_ratio: float,
     ):
         self.x_size = x_size
         self.y_size = y_size
         self.x_res = x_res
         self.y_res = y_res
+        self.font_ratio = font_ratio
 
     def _mm_to_px(
         self,
@@ -59,6 +61,15 @@ class UIScaler:
             raise ValueError(f"orientation {orientation} not in ('w', 'h')")
         px = (float(mm) / size) * res
         return px, size
+
+    def mm_to_px_font(
+        self,
+        mm: int,
+        orientation: str='h',
+    ):
+        px, _ = self._mm_to_px(mm, orientation)
+        px = round(px * self.font_ratio)
+        return int(px)
 
     def mm_to_px_pct(
         self,
@@ -110,6 +121,23 @@ class UIScaler:
             _min,
             _max,
         )
+        return int(px)
+
+    def pct_to_px(
+        self,
+        pct: float,
+        orientation: str='h',
+    ) -> int:
+        """ Convert percentage of screen size to pixels
+            @pct: 0.0-100.0
+        """
+        if orientation == 'w':
+            px = self.x_res * pct
+        elif orientation == 'h':
+            px = self.y_res * pct
+        else:
+            raise ValueError(f"orientation {orientation} not in ('w', 'h')")
+        px = round(px * 0.01)
         return int(px)
 
 class DawColors:
@@ -473,6 +501,7 @@ class Theme:
     def __init__(
         self,
         template,
+        palette,
         variables,
         system=None,
     ):
@@ -483,6 +512,10 @@ class Theme:
                 "The path to a QSS Jinja template file relative to the "
                 "theme directory"
             ),
+        )
+        self.palette = type_assert(
+            palette,
+            str,
         )
         self.variables = type_assert(
             variables,
@@ -507,22 +540,31 @@ class Theme:
         if not os.path.isdir(rendered_dir):
             os.makedirs(rendered_dir)
         dirname = os.path.dirname(path)
-        var_path = os.path.join(dirname, 'vars', self.variables.path)
-        shutil.copy(
-            var_path,
-            os.path.join(rendered_dir, 'variables.yaml'),
-        )
+        var_dir = os.path.join(dirname, 'vars')
+        var_path = os.path.join(var_dir, self.variables.path)
+        palette_path = os.path.join(dirname, 'palettes', self.palette)
+        with open(palette_path) as f:
+            palette = yaml.safe_load(f)
         with open(var_path) as f:
-            variables = yaml.safe_load(f)
+            template = jinja2.Environment(
+                loader=jinja2.FileSystemLoader(var_dir),
+            ).from_string(f.read())
+            y = template.render(palette=palette)
+            variables = yaml.safe_load(y)
         LOG.info(f"Overriding {variables}")
         LOG.info(f"with {self.variables.overrides}")
         variables.update(self.variables.overrides)
         LOG.info(f"Result: {variables}")
+        with open(
+            os.path.join(rendered_dir, 'variables.yaml'),
+            'w',
+        ) as f:
+            json.dump(variables, f, indent=2)
 
         system_path = os.path.join(dirname, 'system', self.system.path)
         with open(system_path) as f:
             template = jinja2.Template(f.read())
-            y = template.render(**variables)
+            y = template.render(palette=palette, **variables)
             y = yaml.safe_load(y)
         y['daw'].update(self.system.overrides.daw)
         y['widgets'].update(self.system.overrides.widgets)
@@ -550,7 +592,7 @@ class Theme:
         with open(qss_path, 'w') as f:
             f.write(qss)
 
-        return qss, system_colors
+        return qss, system_colors, variables
 
 
 def setup_globals():
@@ -634,7 +676,7 @@ def open_theme(
     with open(theme_file) as f:
         y = yaml.safe_load(f)
     theme = unmarshal_json(y, Theme)
-    return theme.render(THEME_FILE, scaler)
+    return theme.render(theme_file, scaler)
 
 def load_theme(
     scaler: UIScaler,
@@ -642,9 +684,9 @@ def load_theme(
     """ Load the QSS theme and system colors.  Do this before creating any
         widgets.
     """
-    global QSS, SYSTEM_COLORS
+    global QSS, SYSTEM_COLORS, VARIABLES
     setup_globals()
-    QSS, SYSTEM_COLORS = open_theme(THEME_FILE, scaler)
+    QSS, SYSTEM_COLORS, VARIABLES = open_theme(THEME_FILE, scaler)
 
 def copy_theme(dest):
     theme_dir = os.path.dirname(THEME_FILE)

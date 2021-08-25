@@ -1,3 +1,5 @@
+{% include './common.yaml' %}
+
 assets_subdir: "light"
 background_color: "#a8aecd"
 background_color_alt: "#9fafc9"
@@ -6,22 +8,15 @@ border_color: "#333333"
 button_pressed: "#8212f2"
 checkbox_check: "#8212f2"
 combobox: "#d0e1fc"
-font_size_mm: 7
+highlight: "{{ palette.purple }}"
 hscrollbar: "#666666"
 hscrollbar_groove: "#9fafc9"
 item_handle: "#aaaaaa"
-palette:
-  black: "#111111"
-  purple: "#8212f2"
-  white: "#cccccc"
 tab_selected: "#a700dd"
 text_background_color: "#c1c7e2"
 text_color: "#1f1f27"
 text_color_alt: "#cccccc"
 text_color_disabled: "#d0d0d0"
-tool_button_offset: 0
 track_panel_background: "#9fafc9"
-transport_button_size: 15
-transport_clock_background: "#333390"
 vscrollbar: "#666666"
 vscrollbar_groove: "#9fafc9"

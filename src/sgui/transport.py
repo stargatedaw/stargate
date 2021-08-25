@@ -3,6 +3,7 @@ from sglib.lib import strings as sg_strings, util
 from sglib.lib.translate import _
 from sglib.log import LOG
 from sglib.math import db_to_lin
+from sglib.models import theme
 from sgui import shared
 from sgui.sgqt import *
 from sgui import widgets
@@ -10,7 +11,7 @@ import time
 
 
 class TransportWidget:
-    def __init__(self):
+    def __init__(self, scaler):
         self.suppress_osc = True
         self.last_clock_text = None
         self.last_open_dir = util.HOME
@@ -66,7 +67,8 @@ class TransportWidget:
         self.host_combobox.currentIndexChanged.connect(
             shared.MAIN_WINDOW.set_host,
         )
-
+        #knob_size = scaler.pct_to_px(
+        #    theme
         self.main_vol_knob = widgets.pixmap_knob(42, -480, 0)
         self.load_main_vol()
         self.hlayout1.addWidget(self.main_vol_knob)

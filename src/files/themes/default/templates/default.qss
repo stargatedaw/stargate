@@ -1,13 +1,4 @@
-{% set transport_button_size = SCALER.mm_to_px_pct(
-    transport_button_size,
-    12.0,
-    20.0,
-) %}
-{% set transport_button_size_offset = SCALER.mm_to_px_pct(
-	transport_button_size - tool_button_offset,
-    12.0,
-    20.0,
-) %}
+{% set transport_button_size = SCALER.pct_to_px(transport_button_size) %}
 
 QWidget:focus
 {
@@ -53,16 +44,16 @@ QLabel
 
 QLabel#seq_zoom_size_label
 {
-    background-color: {{ palette.black }};
+    background-color: {{ background_color_alt }};
     border: 1px solid {{ border_color }};
-    color: {{ palette.white }};
+    color: {{ text_color }};
 }
 
 QWidget
 {
     background-color: {{ background_color }};
     color: {{ text_color }};
-    font-size: {{ SCALER.mm_to_px_pct(font_size_mm, 4, 8) }}px;
+    font-size: {{ SCALER.mm_to_px_font(font_size_mm) }}px;
     selection-background-color: QLinearGradient(
         x1: 0,
         y1: 0,
@@ -126,11 +117,16 @@ QCheckBox#loop_mode::indicator,
 QRadioButton#tool_select::indicator,
 QRadioButton#tool_draw::indicator,
 QRadioButton#tool_erase::indicator,
-QRadioButton#tool_split::indicator
+QRadioButton#tool_split::indicator,
+QRadioButton#play_button::indicator,
+QRadioButton#rec_button::indicator,
+QRadioButton#stop_button::indicator,
+QPushButton#panic,
+QPushButton#menu
 {
-    height: {{ transport_button_size_offset }}px;
+    height: {{ transport_button_size }}px;
     outline: none;
-    width: {{ transport_button_size_offset }}px;
+    width: {{ transport_button_size }}px;
 }
 
 QCheckBox#button_hide,
@@ -270,24 +266,11 @@ QCheckBox#mute_checkbox::indicator::checked
 QPushButton#menu
 {
     border-image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/menu.svg);
-    height: {{ transport_button_size_offset }}px;
-    width: {{ transport_button_size_offset }}px;
 }
 
 QPushButton#panic
 {
     border-image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/panic.svg);
-    height: {{ transport_button_size_offset }}px;
-    width: {{ transport_button_size_offset }}px;
-}
-
-QRadioButton#play_button::indicator,
-QRadioButton#rec_button::indicator,
-QRadioButton#stop_button::indicator
-{
-    height: {{ transport_button_size }};
-    outline: none;
-    width: {{ transport_button_size }};
 }
 
 QRadioButton#play_button::indicator::unchecked
@@ -331,7 +314,7 @@ QDoubleSpinBox
 QSpinBox#large_spinbox,
 QDoubleSpinBox#large_spinbox
 {
-    font-size: {{ SCALER.mm_to_px_pct(6, 1.0, 5.0) }}px;
+    font-size: {{ SCALER.mm_to_px_font(6) }}px;
 }
 
 QSpinBox::up-button,
@@ -587,12 +570,12 @@ QGroupBox::title
 
 QGroupBox:focus, QTextEdit::focus
 {
-    border: 2px solid {{ palette.white }};
+    border: 2px solid {{ highlight }};
 }
 
 QWidget:item:hover
 {
-    background-color: {{ palette.white }};
+    background-color: {{ highlight }};
     color: {{ text_color_alt }};
 }
 
@@ -669,7 +652,7 @@ QSpinBox:hover,
 QDoubleSpinBox:hover,
 QPushButton:hover
 {
-    border: 2px solid {{ palette.white }};
+    border: 2px solid {{ highlight }};
 }
 
 QComboBox:off
@@ -683,7 +666,7 @@ QComboBox:on
     color: {{ text_color_alt }};
     padding-left: 4px;
     padding-top: 3px;
-    selection-background-color: {{ palette.white }};
+    selection-background-color: {{ highlight }};
 }
 
 QAbstractItemView
@@ -942,14 +925,14 @@ QRadioButton::indicator:checked
 QRadioButton::indicator:hover,
 QCheckBox::indicator:hover
 {
-    border: 1px solid {{ palette.white }};
+    border: 1px solid {{ highlight }};
 }
 
 QLCDNumber#transport_clock
 {
     background: {{ transport_clock_background }};
     border: 2px solid {{ border_color }};
-    color: {{ palette.white }};
+    color: {{ transport_clock_color }};
     height: {{ transport_button_size }}px;
     width: {{ SCALER.mm_to_px_pct(40, 5.0, 15.0, 'w') }}px;
 }
