@@ -124,12 +124,12 @@ class pixmap_knob(QDial):
                 arc_width,
             )
             p.setPen(knob_arc_background_pen)
-            p.drawArc(f_rect, -136 * 16, 136 * 2 * -16)
+            p.drawArc(f_rect, -135 * 16, 135 * 2 * -16)
             p.setPen(knob_arc_pen)
             if self.arc_type == ArcType.UP:
                 p.drawArc(
                     f_rect,
-                    -136 * 16,
+                    -135 * 16,
                     (f_rotate_value + 1.0) * -16,
                 )
             elif self.arc_type == ArcType.BIDIRECTIONAL:
