@@ -57,11 +57,14 @@ class pixmap_knob(QDial):
         a_max_val,
         a_pixmap_fg_cache=None,
         a_pixmap_bg_cache=None,
-        arc_width=5.0,  # 0.0 to disable
+        arc_width_pct=12.0,  # 0.0 to disable
         arc_type=ArcType.UP,
+        arc_pen_kwargs={},
     ):
-        self.arc_width = arc_width
+        self.size = a_size
+        self.arc_width_pct = arc_width_pct
         self.arc_type = arc_type
+        self.arc_pen_kwargs = arc_pen_kwargs
         QDial.__init__(self)
         self.pixmap_fg_cache = \
             a_pixmap_fg_cache if a_pixmap_fg_cache \
@@ -100,23 +103,25 @@ class pixmap_knob(QDial):
         )
         f_rotate_value = f_frac_val * 270.0
         f_rect = self.rect()
-        f_rect.setWidth(f_rect.width() - self.arc_width)
-        f_rect.setHeight(f_rect.height() - self.arc_width)
-        f_rect.setX(f_rect.x() + self.arc_width)
-        f_rect.setY(f_rect.y() + self.arc_width)
+        arc_width = self.arc_width_pct * f_rect.width() * 0.01
+        f_rect.setWidth(f_rect.width() - arc_width)
+        f_rect.setHeight(f_rect.height() - arc_width)
+        f_rect.setX(f_rect.x() + arc_width)
+        f_rect.setY(f_rect.y() + arc_width)
 
-        if self.arc_width:
+        if self.arc_width_pct:
             knob_arc_pen = QPen(
                 QColor(
                     theme.SYSTEM_COLORS.widgets.knob_arc_pen,
                 ),
-                self.arc_width,
+                arc_width,
+                **self.arc_pen_kwargs
             )
             knob_arc_background_pen = QPen(
                 QColor(
                     theme.SYSTEM_COLORS.widgets.knob_arc_background_pen,
                 ),
-                self.arc_width,
+                arc_width,
             )
             p.setPen(knob_arc_background_pen)
             p.drawArc(f_rect, -136 * 16, 136 * 2 * -16)
