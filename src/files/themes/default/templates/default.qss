@@ -86,13 +86,13 @@ QScrollArea
 QSplitter::handle:vertical
 {
     background-color: {{ border_color }};
-    height: {{ SCALER.mm_to_px(4, 5, 15) }}px;
+    height: {{ SCALER.mm_to_px(1, 4, 16) }}px;
 }
 
 QSplitter::handle:horizontal
 {
     background-color: {{ border_color }};
-    width:  {{ SCALER.mm_to_px(4, 5, 15) }}px;
+    width:  {{ SCALER.mm_to_px(1, 4, 16) }}px;
 }
 
 /* Transport tool selector */
