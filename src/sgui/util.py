@@ -88,6 +88,6 @@ def ui_scaler_factory():
         phys_rect.height(),
         res_rect.width(),
         res_rect.height(),
-        screen.logicalDotsPerInch() / screen.physicalDotsPerInch(),
+        screen.physicalDotsPerInch() / screen.logicalDotsPerInch(),
     )
 
