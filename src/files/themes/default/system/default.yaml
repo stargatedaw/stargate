@@ -6,7 +6,7 @@ daw:
   # Item editor selected CC/pitchbend automation point
   item_atm_point_selected: "#f0f0f0"
   # Item editor audio item handle
-  item_audio_handle: "#ffffff"
+  item_audio_handle: "{{ palette.white }}"
   # Item editor selected audio item handle
   item_audio_handle_selected: "#181818"
   # The horizontal line that is drawn on audio items during
@@ -27,7 +27,7 @@ daw:
   item_audio_waveform: "{{ background_color_alt }}"
   # The background of the note editor for the keys that are not part of
   # the current scale
-  note_black_background: "#17181d"
+  note_black_background: "{{ palette.black1 }}"
   # The background of the note editor for the root key of the current scale
   note_root_background: "#401e1e"
   # The background of the note editor for the keys that are part of the
@@ -35,9 +35,9 @@ daw:
   note_white_background: "#2c2d32"
   # The vertical lines drawn between beats according to snap settings
   # ie: 1/16th, 1/8th note, etc...
-  note_snap_line: "#000000"
+  note_snap_line: "{{ palette.black }}"
   # The vertical line drawn at each beat
-  note_beat_line: "#000000"
+  note_beat_line: "{{ palette.black }}"
   # The color of a selected note
   note_selected_color: "#cccccc"
   # The color of the note when velocity is at max value
@@ -45,17 +45,17 @@ daw:
   # The color of the note when velocity is at min value
   note_vel_min_color: "#7777b9"
   # The sequencer playback cursor
-  playback_cursor: "#dddddd"
+  playback_cursor: "{{ palette.white }}"
   # Vertical 16th note lines in the sequencer
   seq_16th_line: "#090909"
   # Enable antialiasing for the sequencer
   seq_antialiasing: false
   # Sequencer automation points
-  seq_atm_item: '#ffffff'
+  seq_atm_item: '{{ palette.white }}'
   # Selected sequencer automation points
-  seq_atm_item_selected: '#000000'
+  seq_atm_item_selected: '{{ palette.black }}'
   # Sequencer automation lines
-  seq_atm_line: '#ffffff'
+  seq_atm_line: '{{ palette.white }}'
   # Sequencer QGraphicsScene background
   seq_background: "{{ background_color }}"
   # The background fill color of the sequencer items
@@ -87,11 +87,11 @@ daw:
   # The label text for sequencer items
   seq_item_text: "{{ text_color }}"
   # The label text for selected sequencer items
-  seq_item_text_selected: "#000000"
+  seq_item_text_selected: "{{ palette.black }}"
   # Selected sequencer items
-  seq_selected_item: "#eeeeee"
+  seq_selected_item: "{{ palette.white }}"
   # Sequencer tempo marker
-  seq_tempo_marker: "#ffffff"
+  seq_tempo_marker: "{{ palette.white }}"
   # Horizontal track lines in the sequencer
   seq_track_line: "#090909"
   # Default track colors, also applies to audio item editor
@@ -116,11 +116,11 @@ widgets:
   # The knob image.  Will be rotated as the knob moves
   knob_fg_image: "{{ assets_subdir }}/knob-fg.svg"
   # The color of a playback cursor line
-  playback_cursor: "#dddddd"
+  playback_cursor: "{{ palette.white }}"
   # Routing graph widget node
   rout_graph_node: "#f89e19"
   # Routing graph widget node text
-  rout_graph_node_text: "#e7e7e7"
+  rout_graph_node_text: "{{ palette.white }}"
   # Routing graph widget to node when mouse hovering
   rout_graph_to: "#e7a0a0"
   # Routing graph widget from node when mouse hovering
@@ -128,7 +128,7 @@ widgets:
   # Routing graph widget matrix lines
   rout_graph_lines: "#696969"
   # Routing graph wires connecting audio
-  rout_graph_wire_audio: "#dddddd"
+  rout_graph_wire_audio: "{{ palette.white }}"
   # Routing graph wires connecting midi
   rout_graph_wire_midi: "#6666cc"
   # Routing graph wires connecting audio sidechain inputs
