@@ -59,9 +59,12 @@ class pixmap_knob(QDial):
         a_pixmap_bg_cache=None,
         arc_width_pct=12.0,  # 0.0 to disable
         arc_type=ArcType.UP,
+        arc_brush=None,
         arc_pen_kwargs={},
     ):
-        self.size = a_size
+        self.arc_brush = arc_brush if arc_brush else QColor(
+            theme.SYSTEM_COLORS.widgets.knob_arc_pen,
+        )
         self.arc_width_pct = arc_width_pct
         self.arc_type = arc_type
         self.arc_pen_kwargs = arc_pen_kwargs
@@ -111,9 +114,7 @@ class pixmap_knob(QDial):
 
         if self.arc_width_pct:
             knob_arc_pen = QPen(
-                QColor(
-                    theme.SYSTEM_COLORS.widgets.knob_arc_pen,
-                ),
+                self.arc_brush,
                 arc_width,
                 **self.arc_pen_kwargs
             )
