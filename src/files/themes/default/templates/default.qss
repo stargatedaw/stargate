@@ -53,7 +53,6 @@ QWidget
 {
     background-color: {{ background_color }};
     color: {{ text_color }};
-    font-size: {{ SCALER.mm_to_px_font(font_size_mm) }}px;
     selection-background-color: QLinearGradient(
         x1: 0,
         y1: 0,
@@ -308,13 +307,6 @@ QDoubleSpinBox
 {
     border: 1px solid gray;
     color: {{ text_color }};
-}
-
-
-QSpinBox#large_spinbox,
-QDoubleSpinBox#large_spinbox
-{
-    font-size: {{ SCALER.mm_to_px_font(6) }}px;
 }
 
 QSpinBox::up-button,
