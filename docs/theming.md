@@ -39,6 +39,22 @@ See the existing [fancy theme](
 	../src/files/themes/default/fancy.sgtheme
 ).
 
+# Font Considerations
+Font scaling between different displays is very tricky.  As such, the strategy
+of the project is to use the font size the user configured the operating system
+to use.  Theme designers can change the font-family, but the font size should
+not be changed directly by the theme.  Note that the user can override your
+font choice in the application. If you want to change the size of a widget's
+font relative to the system font size, you can do this:
+
+```
+{% if FONT_UNIT == 'pt' %}
+font-size: {{ FONT_SIZE + 2 }}{{ FONT_UNIT }};
+{% elif FONT_UNIT == 'px %}
+font-size: {{ FONT_SIZE + 4 }}{{ FONT_UNIT }};
+{% endif %}
+```
+
 # Structure
 A theme is a folder containing the following structure:
 ```
