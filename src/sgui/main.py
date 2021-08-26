@@ -38,6 +38,8 @@ from sgui.project import new_project, open_project
 from sgui.util import (
     check_for_empty_directory,
     check_for_rw_perms,
+    get_font,
+    set_font,
     show_generic_exception,
     svg_to_pixmap,
     ui_scaler_factory,
@@ -312,6 +314,18 @@ class SgMainWindow(QMainWindow):
         )
         self.copy_theme_action.triggered.connect(self.on_copy_theme)
 
+        self.menu_appearance.addSeparator()
+        self.custom_font_action = self.menu_appearance.addAction(
+            _("Choose custom font..."),
+        )
+        self.custom_font_action.triggered.connect(self.on_custom_font)
+        self.clear_custom_font_action = self.menu_appearance.addAction(
+            _("Use default font"),
+        )
+        self.clear_custom_font_action.triggered.connect(
+            self.on_clear_custom_font,
+        )
+
         if not util.IS_WINDOWS:
             self.menu_tools = self.menu_bar.addMenu(_("Tools"))
 
@@ -389,6 +403,14 @@ class SgMainWindow(QMainWindow):
 
         self.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
         self.on_collapse_splitters(a_restore=True)
+
+    def on_custom_font(self):
+        font = get_font()
+        font.choose_font()
+
+    def on_clear_custom_font(self):
+        font = get_font()
+        font.clear_font()
 
     def _copy_to_clipboard(self, text):
         cb = QApplication.clipboard()
@@ -798,8 +820,9 @@ class SgMainWindow(QMainWindow):
             if f_file and str(f_file):
                 f_file = str(f_file)
                 scaler = ui_scaler_factory()
+                font_size, font_unit = get_font().get_font_size()
                 try:
-                    theme.set_theme(f_file, scaler)
+                    theme.set_theme(f_file, scaler, font_size, font_unit)
                 except Exception as ex:
                     show_generic_exception(
                         ex,
@@ -1291,9 +1314,13 @@ def main():
             f"The platform you are using does not support Qt HiDpi: {ex}"
         )
     shared.APP = QApplication(sys.argv)
+    set_font()
     scaler = ui_scaler_factory()
+    font = get_font()
+    shared.APP.setFont(font.font)
+    font_size, font_unit = font.get_font_size()
     try:
-        theme.load_theme(scaler)
+        theme.load_theme(scaler, font_size, font_unit)
     except Exception as ex:
         LOG.exception(ex)
         f_answer = QMessageBox.warning(

@@ -309,6 +309,12 @@ QDoubleSpinBox
     color: {{ text_color }};
 }
 
+QSpinBox#large_spinbox,
+QDoubleSpinBox#large_spinbox
+{
+    font-size: {{ FONT_SIZE + 2 }}{{ FONT_UNIT }};
+}
+
 QSpinBox::up-button,
 QDoubleSpinBox::up-button
 {

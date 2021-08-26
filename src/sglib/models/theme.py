@@ -39,13 +39,11 @@ class UIScaler:
         y_size: float,
         x_res: float,
         y_res: float,
-        font_ratio: float,
     ):
         self.x_size = x_size
         self.y_size = y_size
         self.x_res = x_res
         self.y_res = y_res
-        self.font_ratio = font_ratio
 
     def _mm_to_px(
         self,
@@ -62,15 +60,6 @@ class UIScaler:
             raise ValueError(f"orientation {orientation} not in ('w', 'h')")
         px = (float(mm) / size) * res
         return px, size
-
-    def mm_to_px_font(
-        self,
-        mm: int,
-        orientation: str='h',
-    ):
-        px, _ = self._mm_to_px(mm, orientation)
-        px = round(px * self.font_ratio)
-        return int(px)
 
     def mm_to_px_pct(
         self,
@@ -536,7 +525,13 @@ class Theme:
             ),
         )
 
-    def render(self, path, scaler):
+    def render(
+        self,
+        path,
+        scaler,
+        font_size,
+        font_unit,
+    ):
         rendered_dir = os.path.join(HOME, 'rendered_theme')
         if not os.path.isdir(rendered_dir):
             os.makedirs(rendered_dir)
@@ -585,6 +580,8 @@ class Theme:
             template = jinja2.Template(f.read())
             qss = template.render(
                 ASSETS_DIR=ASSETS_DIR,
+                FONT_SIZE=font_size,
+                FONT_UNIT=font_unit,
                 SYSTEM_COLORS=system_colors,
                 SCALER=scaler,
                 **variables
@@ -673,31 +670,50 @@ def setup_globals():
 def open_theme(
     theme_file: str,
     scaler: UIScaler,
+    font_size: int,
+    font_unit: str,
 ):
     with open(theme_file) as f:
         y = yaml.safe_load(f)
     theme = unmarshal_json(y, Theme)
-    return theme.render(theme_file, scaler)
+    return theme.render(
+        theme_file,
+        scaler,
+        font_size,
+        font_unit,
+    )
 
 def load_theme(
     scaler: UIScaler,
+    font_size: int,
+    font_unit: str,
 ):
     """ Load the QSS theme and system colors.  Do this before creating any
         widgets.
     """
     global QSS, SYSTEM_COLORS, VARIABLES
     setup_globals()
-    QSS, SYSTEM_COLORS, VARIABLES = open_theme(THEME_FILE, scaler)
+    QSS, SYSTEM_COLORS, VARIABLES = open_theme(
+        THEME_FILE,
+        scaler,
+        font_size,
+        font_unit,
+    )
 
 def copy_theme(dest):
     theme_dir = os.path.dirname(THEME_FILE)
     shutil.copytree(theme_dir, dest)
 
-def set_theme(path, scaler):
+def set_theme(
+    path: str,
+    scaler,
+    font_size: int,
+    font_unit: str,
+):
     path = pi_path(path)
     # Test that the theme parses before accepting it.
     # Will raise an exception if malformed data, you must use try/except
-    open_theme(path, scaler)
+    open_theme(path, scaler, font_size, font_unit)
     # The Windows install prefix changes everytime Stargate is launched,
     # so substitute it every time the file is saved or loaded
     path = path.replace(
