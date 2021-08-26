@@ -20,6 +20,7 @@ from sglib.lib.translate import _
 from sgui.sgqt import *
 from sglib.models import theme
 from sglib.models.stargate.audio_pool import PerFileFX
+from sgui.util import get_font
 
 
 def papifx_val_callback(a_port, a_val):
@@ -453,7 +454,7 @@ class AudioItemSeq(AbstractItemEditor):
             theme.SYSTEM_COLORS.daw.seq_header_text,
         )
         for i in range(int(f_sequence_length)):
-            f_number = QGraphicsSimpleTextItem(
+            f_number = get_font().QGraphicsSimpleTextItem(
                 "{}".format(i + 1),
                 self.header,
             )

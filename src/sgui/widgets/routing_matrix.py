@@ -1,6 +1,7 @@
 from . import _shared
 from sgui.sgqt import *
 from sglib.models import theme
+from sgui.util import get_font
 
 ROUTING_GRAPH_NODE_BRUSH = None
 ROUTING_GRAPH_TO_BRUSH = None
@@ -9,7 +10,7 @@ ROUTING_GRAPH_FROM_BRUSH = None
 class RoutingGraphNode(QGraphicsRectItem):
     def __init__(self, a_text, a_width, a_height):
         QGraphicsRectItem.__init__(self, 0, 0, a_width, a_height)
-        self.text = QGraphicsSimpleTextItem(a_text, self)
+        self.text = get_font().QGraphicsSimpleTextItem(a_text, self)
         self.setToolTip(a_text)
         self.text.setPos(3.0, 3.0)
         self.setPen(

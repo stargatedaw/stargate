@@ -14,6 +14,7 @@ from sglib.lib.util import *
 from sglib.lib.translate import _
 from sglib.math import color_interpolate
 from sgui.sgqt import *
+from sgui.util import get_font
 
 
 class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
@@ -58,7 +59,7 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
         self.showing_resize_cursor = False
         self.resize_rect = self.rect()
         self.mouse_y_pos = QCursor.pos().y()
-        self.note_text = QGraphicsSimpleTextItem(self)
+        self.note_text = get_font().QGraphicsSimpleTextItem(self)
         self.note_text.setPen(QPen(QtCore.Qt.GlobalColor.black))
         self.update_note_text()
         self.vel_line = QGraphicsLineItem(self)

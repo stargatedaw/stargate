@@ -921,7 +921,7 @@ class ItemSequencer(QGraphicsView):
                 ).mouse_press
                 self.draw_sequence(f_marker)
             elif f_marker.type == 3:  # Text
-                f_item = QGraphicsSimpleTextItem(
+                f_item = get_font().QGraphicsSimpleTextItem(
                     f_marker.text,
                     self.header,
                 )

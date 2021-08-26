@@ -25,6 +25,7 @@ from . import (
     item_context_menu,
     _shared,
 )
+from sgui.util import get_font
 
 
 PAINTER_PATH_CACHE = {}
@@ -82,7 +83,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
             f_file_name)
         f_name_arr = f_file_name.rsplit("/", 1)
         f_name = f_name_arr[-1]
-        self.label = QGraphicsSimpleTextItem(f_name, parent=self)
+        self.label = get_font().QGraphicsSimpleTextItem(f_name, parent=self)
         self.label.setPos(10, 0)
         self.label.setFlag(
             QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,

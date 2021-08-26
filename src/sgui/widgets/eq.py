@@ -5,6 +5,7 @@ from sglib.math import clip_value, pitch_to_hz, hz_to_pitch
 from sglib.lib import util
 from sglib.lib.translate import _
 from sgui.sgqt import *
+from sgui.util import get_font
 
 
 class eq_item(QGraphicsEllipseItem):
@@ -150,7 +151,7 @@ class eq_viewer(QGraphicsView):
                 f_y_pos,
                 f_hline_pen,
             )
-            f_label = QGraphicsSimpleTextItem(str(f_db))
+            f_label = get_font().QGraphicsSimpleTextItem(str(f_db))
             f_label.setFlag(
                 QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
             )
@@ -182,7 +183,7 @@ class eq_viewer(QGraphicsView):
                 f_y_pos,
                 f_hline_pen,
             )
-            f_label = QGraphicsSimpleTextItem(str(f_db))
+            f_label = get_font().QGraphicsSimpleTextItem(str(f_db))
             f_label.setFlag(
                 QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
             )
@@ -202,7 +203,7 @@ class eq_viewer(QGraphicsView):
             if f_hz > 950:
                 f_hz = round(f_hz, -1)
                 f_hz = "{}khz".format(round(f_hz / 1000, 1))
-            f_label = QGraphicsSimpleTextItem(str(f_hz))
+            f_label = get_font().QGraphicsSimpleTextItem(str(f_hz))
             f_label.setFlag(
                 QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
             )

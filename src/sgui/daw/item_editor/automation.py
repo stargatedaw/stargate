@@ -13,6 +13,7 @@ from sglib.lib.util import *
 from sglib.lib.translate import _
 from sgui.sgqt import *
 from sglib.models import theme
+from sgui.util import get_font
 
 
 AUTOMATION_POINT_DIAMETER = 15.0
@@ -260,7 +261,7 @@ class AutomationEditor(AbstractItemEditor):
                 0, 0, self.automation_width, 0, self.y_axis)
             f_line.setPos(self.axis_size, self.viewer_height * (i - 1) / 4)
             if i % 2:
-                f_label = QGraphicsSimpleTextItem(
+                f_label = get_font().QGraphicsSimpleTextItem(
                     f_labels[i], self.y_axis)
                 f_label.setPos(1, self.viewer_height * (i - 1) / 4)
                 f_label.setBrush(QtCore.Qt.GlobalColor.white)
@@ -282,7 +283,7 @@ class AutomationEditor(AbstractItemEditor):
                 QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
             )
 
-            f_number = QGraphicsSimpleTextItem(
+            f_number = get_font().QGraphicsSimpleTextItem(
                 str(i + 1), self.header)
             f_number.setFlag(
                 QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,

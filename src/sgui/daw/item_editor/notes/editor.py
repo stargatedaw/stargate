@@ -16,6 +16,7 @@ from sglib.lib.translate import _
 from sglib.models import theme
 from sglib.log import LOG
 from sgui.sgqt import *
+from sgui.util import get_font
 
 
 class PianoRollEditor(AbstractItemEditor):
@@ -453,7 +454,7 @@ class PianoRollEditor(AbstractItemEditor):
             _shared.PIANO_ROLL_HEADER_HEIGHT,
         )
         f_key = PianoKeyItem(self.piano_width, self.note_height, self.piano)
-        f_label = QGraphicsSimpleTextItem("C8", f_key)
+        f_label = get_font().QGraphicsSimpleTextItem("C8", f_key)
         f_label.setPen(QtCore.Qt.GlobalColor.black)
         f_label.setFlag(
             QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
@@ -479,7 +480,7 @@ class PianoRollEditor(AbstractItemEditor):
                     round(pitch_to_hz(f_note_num)), f_note_num))
                 f_note_num += 1
                 if j == 12:
-                    f_label = QGraphicsSimpleTextItem("C{}".format(
+                    f_label = get_font().QGraphicsSimpleTextItem("C{}".format(
                         self.end_octave - i), f_key)
                     f_label.setFlag(
                         QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
@@ -604,7 +605,7 @@ class PianoRollEditor(AbstractItemEditor):
             f_beat_number = i
             f_beat.setPen(f_beat_pen)
             if i < shared.CURRENT_ITEM_LEN:
-                f_number = QGraphicsSimpleTextItem(
+                f_number = get_font().QGraphicsSimpleTextItem(
                     str(f_beat_number + 1), self.header)
                 f_number.setFlag(
                     QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
@@ -674,7 +675,7 @@ class PianoRollEditor(AbstractItemEditor):
                     f_note_item = self.draw_note(
                         f_note, False, a_offset=f_offset)
             self.scrollContentsBy(0, 0)
-#            f_text = QGraphicsSimpleTextItem(f_name, self.header)
+#            f_text = get_font().QGraphicsSimpleTextItem(f_name, self.header)
 #            f_text.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
 #            f_text.setBrush(QtCore.Qt.GlobalColor.yellow)
 #            f_text.setPos((f_i * shared.PIANO_ROLL_GRID_WIDTH), 2.0)
