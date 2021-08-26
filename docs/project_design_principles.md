@@ -70,6 +70,9 @@ heavy synthesizer patches with many unison voices.
   Using a lightweight rpi4 distro like NOOBs, a 2GB rpi4 would be adequate.
   There should be a gradient of usability all the way back to 20 year old
   hardware, but we do not have any such hardware to test.
+- Stargate is regularly tested against the following display resolutions:
+  1366x768, 1920x1080 (HD), 3840x2160 (4k), to ensure that users of new
+  hardware and old hardware both have a great experience.
 
 ## 3. Cutting corners on sound quality is not the way to achieve #2
 DSP code is expected to be highly optimized.  Outside developers submitting
