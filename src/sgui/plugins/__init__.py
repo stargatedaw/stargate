@@ -129,7 +129,7 @@ PLUGIN_UI_TYPES = {
     12: xfade.xfade_plugin_ui,
     13: compressor.sg_comp_plugin_ui,
     14: vocoder.sg_vocoder_plugin_ui,
-    15: limiter.sg_lim_plugin_ui,
+    15: limiter.LimiterPluginUI,
 }
 
 PORTMAP_DICT = {

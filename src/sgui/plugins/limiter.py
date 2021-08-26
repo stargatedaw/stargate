@@ -26,7 +26,7 @@ SG_LIM_UI_MSG_ENABLED = 3
 SG_LIM_PORT_MAP = {}
 
 
-class sg_lim_plugin_ui(AbstractPluginUI):
+class LimiterPluginUI(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(self, *args, **kwargs)
         self._plugin_name = "SG Limiter"
@@ -46,21 +46,48 @@ class sg_lim_plugin_ui(AbstractPluginUI):
         self.delay_hlayout.addLayout(self.groupbox_gridlayout)
 
         self.thresh_knob = knob_control(
-            f_knob_size, _("Thresh"), SG_LIM_THRESHOLD,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -360, 0, 0, KC_TENTH, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Thresh"),
+            SG_LIM_THRESHOLD,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -360,
+            0,
+            0,
+            KC_TENTH,
+            self.port_dict,
+            self.preset_manager,
+        )
         self.thresh_knob.add_to_grid_layout(self.groupbox_gridlayout, 3)
 
         self.ceiling_knob = knob_control(
-            f_knob_size, _("Ceiling"), SG_LIM_CEILING,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -180, 0, 0, KC_TENTH, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Ceiling"),
+            SG_LIM_CEILING,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -180,
+            0,
+            0,
+            KC_TENTH,
+            self.port_dict,
+            self.preset_manager,
+        )
         self.ceiling_knob.add_to_grid_layout(self.groupbox_gridlayout, 7)
 
         self.release_knob = knob_control(
-            f_knob_size, _("Release"), SG_LIM_RELEASE,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            50, 1500, 500, KC_INTEGER, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Release"),
+            SG_LIM_RELEASE,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            50,
+            1500,
+            500,
+            KC_INTEGER,
+            self.port_dict,
+            self.preset_manager,
+        )
         self.release_knob.add_to_grid_layout(self.groupbox_gridlayout, 22)
 
         self.peak_meter = peak_meter(16, False)

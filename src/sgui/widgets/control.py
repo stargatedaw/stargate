@@ -5,7 +5,7 @@ from sglib.math import (
     pitch_to_ratio,
     ratio_to_pitch,
 )
-from .knob import pixmap_knob
+from .knob import PixmapKnob
 from sgui import shared as glbl_shared
 from sglib.lib import util
 from sglib.lib.translate import _
@@ -542,7 +542,7 @@ class knob_control(AbstractUiControl):
             self, a_label, a_port_num, a_rel_callback,
             a_val_callback, a_val_conversion, a_port_dict, a_preset_mgr,
             a_default_val)
-        self.control = pixmap_knob(
+        self.control = PixmapKnob(
             a_size,
             a_min_val,
             a_max_val,

@@ -49,7 +49,7 @@ class ArcType(Enum):
     UP = 0
     BIDIRECTIONAL = 1
 
-class pixmap_knob(QDial):
+class PixmapKnob(QDial):
     def __init__(
         self,
         a_size,
