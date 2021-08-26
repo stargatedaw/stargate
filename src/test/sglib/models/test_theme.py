@@ -5,7 +5,6 @@ SCALER = theme.UIScaler(
     1000.,
     2000.,
     1000.,
-    1.5,
 )
 
 def test_ui_scaler_pct_to_px():

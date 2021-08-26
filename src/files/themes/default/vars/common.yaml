@@ -1,3 +1,6 @@
+
+# Must leave one blank line at the top
+
 # This one is used by the UI and must be set
 transport_button_size: 4.0
 transport_clock_background: "#333390"

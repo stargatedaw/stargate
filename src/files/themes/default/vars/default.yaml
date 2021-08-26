@@ -1,4 +1,4 @@
-{% include './common.yaml' %}
+# {% include './common.yaml' %}
 
 assets_subdir: "dark"
 background_color: "{{ palette.black1 }}"

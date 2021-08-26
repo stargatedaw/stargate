@@ -1,4 +1,4 @@
-{% include './common.yaml' %}
+# {% include './common.yaml' %}
 
 assets_subdir: "light"
 background_color: "#a8aecd"
