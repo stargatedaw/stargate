@@ -31,6 +31,7 @@ class AbstractUiControl:
             self.name_label = None
         else:
             self.name_label = QLabel(str(a_label))
+            self.name_label.setObjectName("plugin_name_label")
             self.name_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
             self.name_label.setMinimumWidth(15)
         self.undo_history = collections.deque()
@@ -552,6 +553,7 @@ class knob_control(AbstractUiControl):
         self.control.sliderReleased.connect(self.control_released)
         self.control.contextMenuEvent = self.contextMenuEvent
         self.value_label = QLabel("")
+        self.value_label.setObjectName("plugin_value_label")
         self.value_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.value_label.setMinimumWidth(15)
         self.set_value(a_default_val)
@@ -581,6 +583,7 @@ class slider_control(AbstractUiControl):
         self.control.valueChanged.connect(self.control_value_changed)
         self.control.sliderReleased.connect(self.control_released)
         self.value_label = QLabel("")
+        self.value_label.setObjectName("plugin_value_label")
         self.value_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.value_label.setMinimumWidth(15)
         self.set_value(a_default_val)
@@ -682,6 +685,7 @@ class combobox_control(AbstractUiControl):
                  a_preset_mgr=None):
         self.suppress_changes = True
         self.name_label = QLabel(str(a_label))
+        self.name_label.setObjectName("plugin_name_label")
         self.name_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.control = QComboBox()
         self.control.wheelEvent = self.wheel_event

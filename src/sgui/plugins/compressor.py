@@ -30,10 +30,32 @@ SG_COMP_UI_MSG_ENABLED = 8
 
 SG_COMP_PORT_MAP = {}
 
+STYLESHEET = """\
+QWidget#plugin_window{
+    background-color: #cccccc;
+}
+
+QLabel#plugin_name_label{
+    background-color: #999999;
+    border: 2px solid #222222;
+    border-radius: 3px;
+    color: #222222;
+}
+
+QLabel#plugin_value_label{
+    background: none;
+    color: #222222;
+}
+"""
 
 class sg_comp_plugin_ui(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
-        AbstractPluginUI.__init__(self, *args, **kwargs)
+        AbstractPluginUI.__init__(
+            self,
+            *args,
+            stylesheet=STYLESHEET,
+            **kwargs
+        )
         self._plugin_name = "SG Compressor"
         self.is_instrument = False
 
@@ -45,57 +67,127 @@ class sg_comp_plugin_ui(AbstractPluginUI):
         self.delay_hlayout = QHBoxLayout()
         self.layout.addLayout(self.delay_hlayout)
 
-        f_knob_size = DEFAULT_KNOB_SIZE
+        f_knob_size = 96
 
         self.groupbox_gridlayout = QGridLayout()
         self.delay_hlayout.addLayout(self.groupbox_gridlayout)
 
         self.thresh_knob = knob_control(
-            f_knob_size, _("Thresh"), SG_COMP_THRESHOLD,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -360, -60, -240, KC_TENTH, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Thresh"),
+            SG_COMP_THRESHOLD,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -360,
+            -60,
+            -240,
+            KC_TENTH,
+            self.port_dict,
+            self.preset_manager,
+        )
         self.thresh_knob.add_to_grid_layout(self.groupbox_gridlayout, 3)
 
         self.ratio_knob = knob_control(
-            f_knob_size, _("Ratio"), SG_COMP_RATIO,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            10, 100, 20, KC_TENTH, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Ratio"),
+            SG_COMP_RATIO,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            10,
+            100,
+            20,
+            KC_TENTH,
+            self.port_dict,
+            self.preset_manager,
+        )
         self.ratio_knob.add_to_grid_layout(self.groupbox_gridlayout, 7)
 
         self.knee_knob = knob_control(
-            f_knob_size, _("Knee"), SG_COMP_KNEE,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            0, 120, 0, KC_TENTH, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Knee"),
+            SG_COMP_KNEE,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            0,
+            120,
+            0,
+            KC_TENTH,
+            self.port_dict,
+            self.preset_manager,
+        )
         self.knee_knob.add_to_grid_layout(self.groupbox_gridlayout, 15)
 
         self.attack_knob = knob_control(
-            f_knob_size, _("Attack"), SG_COMP_ATTACK,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            0, 500, 50, KC_MILLISECOND, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Attack"),
+            SG_COMP_ATTACK,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            0,
+            500,
+            50,
+            KC_MILLISECOND,
+            self.port_dict,
+            self.preset_manager,
+        )
         self.attack_knob.add_to_grid_layout(self.groupbox_gridlayout, 21)
 
         self.release_knob = knob_control(
-            f_knob_size, _("Release"), SG_COMP_RELEASE,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            10, 500, 100, KC_MILLISECOND, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Release"),
+            SG_COMP_RELEASE,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            10,
+            500,
+            100,
+            KC_MILLISECOND,
+            self.port_dict,
+            self.preset_manager,
+        )
         self.release_knob.add_to_grid_layout(self.groupbox_gridlayout, 22)
 
         self.gain_knob = knob_control(
-            f_knob_size, _("Gain"), SG_COMP_GAIN,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -360, 360, 0, KC_TENTH, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Gain"),
+            SG_COMP_GAIN,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -360,
+            360,
+            0,
+            KC_TENTH,
+            self.port_dict,
+            self.preset_manager,
+        )
         self.gain_knob.add_to_grid_layout(self.groupbox_gridlayout, 30)
 
         self.mono_combobox = combobox_control(
-            90, _("Mode"), SG_COMP_MODE,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            [_("Peak"), _("RMS")], self.port_dict, 0, self.preset_manager)
+            90,
+            _("Mode"),
+            SG_COMP_MODE,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            [_("Peak"), _("RMS")],
+            self.port_dict,
+            0,
+            self.preset_manager,
+        )
         self.mono_combobox.add_to_grid_layout(self.groupbox_gridlayout, 36)
 
         self.rms_time_knob = knob_control(
-            f_knob_size, _("RMS Time"), SG_COMP_RMS_TIME,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            1, 5, 2, KC_DECIMAL, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("RMS Time"),
+            SG_COMP_RMS_TIME,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            1,
+            5,
+            2,
+            KC_DECIMAL,
+            self.port_dict,
+            self.preset_manager,
+        )
         self.rms_time_knob.add_to_grid_layout(self.groupbox_gridlayout, 37)
 
         self.peak_meter = peak_meter(16, False)

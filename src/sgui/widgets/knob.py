@@ -79,11 +79,13 @@ class PixmapKnob(QDial):
         self.val_step = float(a_max_val - a_min_val) * 0.005  # / 200.0
         self.val_step_small = self.val_step * 0.1
         self.setGeometry(0, 0, a_size, a_size)
-        self.pixmap_size = a_size - 12
+        self.pixmap_size = a_size - (arc_width_pct * a_size * 0.02)
         self.pixmap_fg = self.pixmap_fg_cache.get_scaled_pixmap_knob(
-            self.pixmap_size)
+            self.pixmap_size,
+        )
         self.pixmap_bg = self.pixmap_bg_cache.get_scaled_pixmap_knob(
-            self.pixmap_size)
+            self.pixmap_size,
+        )
         self.setFixedSize(a_size, a_size)
         self._button = QtCore.Qt.MouseButton.NoButton
 

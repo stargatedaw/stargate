@@ -19,6 +19,7 @@ class AbstractPluginUI:
         a_midi_learn_callback,
         a_cc_map_callback,
         a_is_mixer=False,
+        stylesheet="",
     ):
         self.is_mixer = a_is_mixer
         self.plugin_uid = int(a_plugin_uid)
@@ -30,7 +31,8 @@ class AbstractPluginUI:
         self.cc_map_callback = a_cc_map_callback
         self.widget = QWidget()
         self.widget.closeEvent = self.widget_close_event
-        self.widget.setObjectName("plugin_ui")
+        self.widget.setObjectName("plugin_window")
+        self.widget.setStyleSheet(stylesheet)
         self.widget.keyPressEvent = self.widget_keyPressEvent
 
         self.layout = QVBoxLayout()
