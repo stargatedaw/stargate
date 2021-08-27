@@ -24,6 +24,7 @@ class PixmapKnobCache:
             return None
         if path == 'default':
             path = DEFAULT_THEME_KNOB
+        path = util.pi_path(path)
         key = (path, size)
         if key in self.cache:
             return self.cache[key]

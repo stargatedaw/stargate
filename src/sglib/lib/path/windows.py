@@ -8,6 +8,7 @@ INSTALL_PREFIX = os.path.abspath(
 )
 SHARE_DIR = os.path.join(INSTALL_PREFIX, 'files', 'share')
 PRESETS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'presets')
+PLUGIN_ASSETS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'plugin_assets')
 THEMES_DIR = os.path.join(INSTALL_PREFIX, 'files', 'themes')
 META_DOT_JSON_PATH = os.path.join(INSTALL_PREFIX, "meta.json")
 BIN_DIR = os.path.join(INSTALL_PREFIX, 'scripts')

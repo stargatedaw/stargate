@@ -32,18 +32,27 @@ SG_COMP_PORT_MAP = {}
 
 STYLESHEET = """\
 QWidget#plugin_window{
-    background-color: #6a93cb;
-    background-image: qlineargradient(
+    background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #006a93cb, stop: 1 #bba4bfef
+        stop: 0 #6a6a6a, stop: 0.5 #a4a4a5, stop: 1 #6a6a6a
     );
+}
+
+QComboBox{
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+    );
+    border: 1px solid #222222;
+    border-radius: 6px;
+    color: #cccccc;
 }
 
 QLabel#plugin_name_label{
     background-color: #999999;
     background-image: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #00999999, stop: 1 #bb777777
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #999999, stop: 0.5 #777777, stop 1.0 #999999
     );
     border: 2px solid #222222;
     border-radius: 6px;
@@ -64,6 +73,13 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             stylesheet=STYLESHEET,
             **kwargs
         )
+        knob_kwargs = {
+            'arc_width_pct': 0.,
+            'fg_svg': os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'knob-plastic-2.svg',
+            ),
+        }
         self._plugin_name = "SG Compressor"
         self.is_instrument = False
 
@@ -75,7 +91,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
         self.delay_hlayout = QHBoxLayout()
         self.layout.addLayout(self.delay_hlayout)
 
-        f_knob_size = 96
+        f_knob_size = 75
 
         self.groupbox_gridlayout = QGridLayout()
         self.delay_hlayout.addLayout(self.groupbox_gridlayout)
@@ -92,6 +108,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             KC_TENTH,
             self.port_dict,
             self.preset_manager,
+            knob_kwargs=knob_kwargs,
         )
         self.thresh_knob.add_to_grid_layout(self.groupbox_gridlayout, 3)
 
@@ -107,6 +124,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             KC_TENTH,
             self.port_dict,
             self.preset_manager,
+            knob_kwargs=knob_kwargs,
         )
         self.ratio_knob.add_to_grid_layout(self.groupbox_gridlayout, 7)
 
@@ -122,6 +140,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             KC_TENTH,
             self.port_dict,
             self.preset_manager,
+            knob_kwargs=knob_kwargs,
         )
         self.knee_knob.add_to_grid_layout(self.groupbox_gridlayout, 15)
 
@@ -137,6 +156,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             KC_MILLISECOND,
             self.port_dict,
             self.preset_manager,
+            knob_kwargs=knob_kwargs,
         )
         self.attack_knob.add_to_grid_layout(self.groupbox_gridlayout, 21)
 
@@ -152,6 +172,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             KC_MILLISECOND,
             self.port_dict,
             self.preset_manager,
+            knob_kwargs=knob_kwargs,
         )
         self.release_knob.add_to_grid_layout(self.groupbox_gridlayout, 22)
 
@@ -167,6 +188,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             KC_TENTH,
             self.port_dict,
             self.preset_manager,
+            knob_kwargs=knob_kwargs,
         )
         self.gain_knob.add_to_grid_layout(self.groupbox_gridlayout, 30)
 
@@ -195,6 +217,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             KC_DECIMAL,
             self.port_dict,
             self.preset_manager,
+            knob_kwargs=knob_kwargs,
         )
         self.rms_time_knob.add_to_grid_layout(self.groupbox_gridlayout, 37)
 
@@ -203,8 +226,10 @@ class sg_comp_plugin_ui(AbstractPluginUI):
 
         self.ui_msg_enabled = null_control(
             SG_COMP_UI_MSG_ENABLED,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            0, self.port_dict)
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            0, self.port_dict,
+        )
 
         self.open_plugin_file()
         self.set_midi_learn(SG_COMP_PORT_MAP)
