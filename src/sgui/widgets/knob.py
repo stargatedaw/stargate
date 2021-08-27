@@ -11,42 +11,43 @@ from enum import Enum
 import os
 
 
+DEFAULT_THEME_KNOB = None
 # This is for plugins to consume, it's not a default value anywhere
 DEFAULT_KNOB_SIZE = 48
 
 class PixmapKnobCache:
-    def __init__(self, a_path):
+    def __init__(self):
         self.cache = {}
-        self.path = a_path
 
-    def get_scaled_pixmap_knob(self, a_size):
-        if a_size not in self.cache:
-            self.cache[a_size] = svg_to_pixmap(
-                self.path,
-                a_size,
-                a_size,
+    def get_scaled_pixmap_knob(self, path, size):
+        if not path:
+            return None
+        if path == 'default':
+            path = DEFAULT_THEME_KNOB
+        key = (path, size)
+        if key in self.cache:
+            return self.cache[key]
+        else:
+            pixmap = svg_to_pixmap(
+                path,
+                size,
+                size,
             )
-        return self.cache[a_size]
+            self.cache[key] = pixmap
+            return pixmap
 
 def knob_setup():
-    global \
-        DEFAULT_KNOB_FG_PIXMAP_CACHE, \
-        DEFAULT_KNOB_BG_PIXMAP_CACHE
-    DEFAULT_KNOB_FG_PIXMAP_CACHE = PixmapKnobCache(
-        os.path.join(
-            theme.ASSETS_DIR,
-            theme.SYSTEM_COLORS.widgets.knob_fg_image,
-        ),
+    global DEFAULT_THEME_KNOB, KNOB_PIXMAP_CACHE
+    DEFAULT_THEME_KNOB = os.path.join(
+        theme.ASSETS_DIR,
+        theme.SYSTEM_COLORS.widgets.knob_fg_image,
     )
-    DEFAULT_KNOB_BG_PIXMAP_CACHE = PixmapKnobCache(
-        os.path.join(
-            theme.ASSETS_DIR,
-            theme.SYSTEM_COLORS.widgets.knob_bg_image,
-        ),
-    )
+    KNOB_PIXMAP_CACHE = PixmapKnobCache()
 
 class ArcType(Enum):
+    # Arc goes from minimal at -135 degrees to full at +135 degrees from top
     UP = 0
+    # Arc is minimal at 0 degress (top), half-full at -/+135 degrees from top
     BIDIRECTIONAL = 1
 
 class PixmapKnob(QDial):
@@ -55,8 +56,8 @@ class PixmapKnob(QDial):
         a_size,
         a_min_val,
         a_max_val,
-        a_pixmap_fg_cache=None,
-        a_pixmap_bg_cache=None,
+        fg_svg="default",
+        bg_svg=None,
         arc_width_pct=12.0,  # 0.0 to disable
         arc_type=ArcType.UP,
         arc_brush=None,
@@ -69,21 +70,19 @@ class PixmapKnob(QDial):
         self.arc_type = arc_type
         self.arc_pen_kwargs = arc_pen_kwargs
         QDial.__init__(self)
-        self.pixmap_fg_cache = \
-            a_pixmap_fg_cache if a_pixmap_fg_cache \
-            else  DEFAULT_KNOB_FG_PIXMAP_CACHE
-        self.pixmap_bg_cache = \
-            a_pixmap_bg_cache if a_pixmap_bg_cache \
-            else DEFAULT_KNOB_BG_PIXMAP_CACHE
+        self.bg_svg = bg_svg
+        self.fg_svg = fg_svg
         self.setRange(a_min_val, a_max_val)
         self.val_step = float(a_max_val - a_min_val) * 0.005  # / 200.0
         self.val_step_small = self.val_step * 0.1
         self.setGeometry(0, 0, a_size, a_size)
         self.pixmap_size = a_size - (arc_width_pct * a_size * 0.02)
-        self.pixmap_fg = self.pixmap_fg_cache.get_scaled_pixmap_knob(
+        self.pixmap_fg = KNOB_PIXMAP_CACHE.get_scaled_pixmap_knob(
+            self.fg_svg,
             self.pixmap_size,
         )
-        self.pixmap_bg = self.pixmap_bg_cache.get_scaled_pixmap_knob(
+        self.pixmap_bg = KNOB_PIXMAP_CACHE.get_scaled_pixmap_knob(
+            self.bg_svg,
             self.pixmap_size,
         )
         self.setFixedSize(a_size, a_size)
@@ -157,7 +156,11 @@ class PixmapKnob(QDial):
             yc = self.height() * 0.5
             # translates the coordinate system by xc and yc
             p.translate(xc, yc)
-            p.rotate(f_rotate_value)
+            p.rotate(
+                int(
+                    round(f_rotate_value),
+                ),
+            )
             # we need to move the rectangle that we draw by
             # rx and ry so it's in the center.
             rx = -(self.pixmap_size * 0.5)
