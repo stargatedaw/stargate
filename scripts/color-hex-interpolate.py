@@ -67,8 +67,8 @@ def _interpolate(
     assert pos >= 0. and pos <= 1., pos
     result = ""
     for i in range(3):
-        fg = float(int(start_color[i*2:(i*2)+2], 16))
-        bg = float(int(end_color[i*2:(i*2)+2], 16))
+        bg = float(int(start_color[i*2:(i*2)+2], 16))
+        fg = float(int(end_color[i*2:(i*2)+2], 16))
         color = ((fg - bg) * pos) + bg
         result += hex(int(color))[2:]
     return result
