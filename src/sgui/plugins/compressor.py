@@ -32,13 +32,21 @@ SG_COMP_PORT_MAP = {}
 
 STYLESHEET = """\
 QWidget#plugin_window{
-    background-color: #cccccc;
+    background-color: #6a93cb;
+    background-image: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #006a93cb, stop: 1 #bba4bfef
+    );
 }
 
 QLabel#plugin_name_label{
     background-color: #999999;
+    background-image: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #00999999, stop: 1 #bb777777
+    );
     border: 2px solid #222222;
-    border-radius: 3px;
+    border-radius: 6px;
     color: #222222;
 }
 
