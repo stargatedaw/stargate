@@ -42,6 +42,7 @@ install: clean_pyc
 	install -s -m 4755 engine/$(VERSION)-engine $(DESTDIR)$(PREFIX)/bin
 	cp -r sg_py_vendor sglib sgui $(SG_DIR)/stargate
 	cp -r files/themes files/presets $(SG_DIR)
+	cp -r files/themes files/plugin_assets $(SG_DIR)
 	cp -r files/share $(DESTDIR)/$(PREFIX)
 	install -m 644 meta.json $(SG_DIR)
 
