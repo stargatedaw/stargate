@@ -5,42 +5,74 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'foreground',
-        help="The foreground color",
+        'start_color',
+        help="The start_color color",
     )
     parser.add_argument(
-        'background',
-        help="The background color",
+        'end_color',
+        help="The end_color color",
     )
     parser.add_argument(
-        'opacity',
+        '--pos',
+        default=0.5,
+        dest='pos',
         type=float,
+        help='The position to interpolate to.  Ignored if --count > 1',
+    )
+    parser.add_argument(
+        '--count',
+        default=1,
+        dest='count',
+        type=int,
         help=(
-            "The opacity of the foreground color, 0.0(tranparent)-1.0(opaque)"
+            "The number of colors to return, evenly spaced interpolations"
         ),
     )
     return parser.parse_args()
 
 def interpolate(
-    foreground,
-    background,
-    opacity,
+    start_color,
+    end_color,
+    count,
+    pos,
 ):
-    if foreground.startswith('#'):
-        foreground = foreground[1:]
-    if background.startswith('#'):
-        background = background[1:]
-    for x in (foreground, background):
+    if start_color.startswith('#'):
+        start_color = start_color[1:]
+    if end_color.startswith('#'):
+        end_color = end_color[1:]
+    for x in (start_color, end_color):
         assert len(x) == 6, f"Invalid hex color {x}"
-    assert opacity >= 0. and opacity <= 1., opacity
+    if count == 1:
+        print(_interpolate(start_color, end_color, pos))
+    elif count == 2:
+        print(start_color)
+        print(end_color)
+    else:
+        pos_step = 1. / float(count - 1)
+        _pos = pos_step
+        _print(start_color)
+        for i in range(count - 2):
+            _print(_interpolate(start_color, end_color, _pos))
+            _pos += pos_step
+        _print(end_color)
+
+def _print(_str):
+    print(f"#{_str}")
+
+def _interpolate(
+    start_color,
+    end_color,
+    pos,
+):
+    assert pos >= 0. and pos <= 1., pos
     result = ""
     for i in range(3):
-        fg = float(int(foreground[i*2:(i*2)+2], 16))
-        bg = float(int(background[i*2:(i*2)+2], 16))
-        color = ((fg - bg) * opacity) + bg
+        fg = float(int(start_color[i*2:(i*2)+2], 16))
+        bg = float(int(end_color[i*2:(i*2)+2], 16))
+        color = ((fg - bg) * pos) + bg
         result += hex(int(color))[2:]
     return result
 
 if __name__ == "__main__":
     args = parse_args()
-    print(interpolate(**args.__dict__))
+    interpolate(**args.__dict__)
