@@ -76,11 +76,12 @@ class LimiterPluginUI(AbstractPluginUI):
         self.delay_hlayout.addLayout(self.groupbox_gridlayout)
 
         knob_kwargs={
+            'arc_brush': QColor("#cccccc"),
+            'arc_width_pct': 12.,
             'fg_svg': os.path.join(
                 util.PLUGIN_ASSETS_DIR,
                 'knob-metal-3.svg',
             ),
-            'arc_width_pct': 0.,
         }
 
         self.thresh_knob = knob_control(
