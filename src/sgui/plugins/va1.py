@@ -130,6 +130,8 @@ QGroupBox::title {
     border: 2px solid #cccccc;
 }
 
+QSpinBox,
+QDoubleSpinBox,
 QComboBox{
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
@@ -137,7 +139,7 @@ QComboBox{
     );
     border: 1px solid #222222;
     border-radius: 6px;
-    color: #cccccc;
+    color: #222222;
 }
 
 """
