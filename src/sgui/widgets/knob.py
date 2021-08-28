@@ -106,6 +106,8 @@ class PixmapKnob(QDial):
         QDial.__init__(self)
         self.bg_svg = bg_svg
         self.fg_svg = fg_svg
+        self.draw_line = draw_line
+        self._size = a_size
         self.setRange(a_min_val, a_max_val)
         self.val_step = float(a_max_val - a_min_val) * 0.005  # / 200.0
         self.val_step_small = self.val_step * 0.1
@@ -179,8 +181,27 @@ class PixmapKnob(QDial):
             else:
                 raise ValueError(f"Invalid arc_type: {self.arc_type}")
 
+        if self.draw_line:
+            rectf_width = float(self._size - (arc_width * 2.))
+            rectf = QtCore.QRectF(
+                arc_width,
+                arc_width,
+                rectf_width,
+                rectf_width,
+            )
+            ppath = QPainterPath()
+            ppath.arcMoveTo(rectf, -float(f_rotate_value) - 135.)
+            center = self._size * 0.5
+            ppath.lineTo(center, center)
+            cap_style = knob_arc_pen.capStyle()
+            knob_arc_pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
+            p.setPen(knob_arc_pen)
+            p.drawPath(ppath)
+            knob_arc_pen.setCapStyle(cap_style)
+            p.setPen(knob_arc_pen)
+
         if self.pixmap_bg:
-            p.drawPixmap(6, 6, self.pixmap_bg)
+            p.drawPixmap(arc_width, arc_width, self.pixmap_bg)
 
         if self.pixmap_fg:
             # xc and yc are the center of the widget's rect.
