@@ -551,10 +551,57 @@ FM1_PORT_MAP = {
     "Osc6 Hold": FM1_ADSR6_HOLD,
 }
 
+STYLESHEET = """\
+QWidget {
+    background: none;
+    color: #222222;
+}
+
+QPushButton,
+QWidget#plugin_window {
+    background: #1c1c1c;
+}
+
+QGroupBox {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #aaaaaa, stop: 0.5 #9c9c9c, stop: 1 #aaaaaa
+    );
+    border: 2px solid #222222;
+    color: #222222;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
+    padding: 0 3px;
+    background-color: #aaaaaa;
+    border: 2px solid #222222;
+}
+
+QSpinBox,
+QDoubleSpinBox,
+QComboBox {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+    );
+    border: 1px solid #222222;
+    border-radius: 6px;
+    color: #222222;
+}
+
+"""
+
 
 class fm1_plugin_ui(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
-        AbstractPluginUI.__init__(self, *args, **kwargs)
+        AbstractPluginUI.__init__(
+            self,
+            *args,
+            stylesheet=STYLESHEET,
+            **kwargs,
+        )
         self._plugin_name = "FM1"
         self.is_instrument = True
 
@@ -586,6 +633,12 @@ class fm1_plugin_ui(AbstractPluginUI):
             _("(Additive 2)"),
             _("(Additive 3)"),
         ]
+        knob_kwargs = {
+            'arc_brush': QColor('#222222'),
+            'arc_width_pct': 12.0,
+            'draw_line': True,
+            'fg_svg': None,
+        }
 
         self.fm_knobs = []
         self.fm_origin = None
@@ -654,7 +707,8 @@ class fm1_plugin_ui(AbstractPluginUI):
                 _("Oscillator {}".format(f_i)),
                 self.port_dict,
                 self.preset_manager,
-                1 if f_i == 1 else 0
+                1 if f_i == 1 else 0,
+                knob_kwargs=knob_kwargs,
             )
             f_osc1.osc_type_combobox.control.setMaxVisibleItems(
                 len(f_osc_types))
@@ -663,21 +717,43 @@ class fm1_plugin_ui(AbstractPluginUI):
                 f_knob_size, _("Unison"),
                 getattr(
                     sys.modules[__name__],
-                    "FM1_OSC{}_UNISON_VOICES".format(f_i)),
-                self.plugin_rel_callback, self.plugin_val_callback,
-                1, 7, 1, KC_INTEGER, self.port_dict, self.preset_manager)
+                    "FM1_OSC{}_UNISON_VOICES".format(f_i)
+                ),
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                1,
+                7,
+                1,
+                KC_INTEGER,
+                self.port_dict,
+                self.preset_manager,
+                knob_kwargs=knob_kwargs,
+            )
             f_osc1_uni_voices.add_to_grid_layout(f_osc1.grid_layout, 4)
             f_osc1_uni_spread = knob_control(
-                f_knob_size, _("Spread"), getattr(sys.modules[__name__],
-                "FM1_OSC{}_UNISON_SPREAD".format(f_i)),
-                self.plugin_rel_callback, self.plugin_val_callback,
-                0, 100, 50, KC_DECIMAL, self.port_dict, self.preset_manager)
+                f_knob_size,
+                _("Spread"),
+                getattr(
+                    sys.modules[__name__],
+                    "FM1_OSC{}_UNISON_SPREAD".format(f_i),
+                ),
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                0,
+                100,
+                50,
+                KC_DECIMAL,
+                self.port_dict,
+                self.preset_manager,
+                knob_kwargs=knob_kwargs,
+            )
             f_osc1_uni_spread.add_to_grid_layout(f_osc1.grid_layout, 5)
 
             f_hlayout1.addWidget(f_osc1.group_box)
 
             f_adsr_amp1 = adsr_widget(
-                f_knob_size, True,
+                f_knob_size,
+                True,
                 getattr(sys.modules[__name__], "FM1_ATTACK{}".format(f_i)),
                 getattr(sys.modules[__name__], "FM1_DECAY{}".format(f_i)),
                 getattr(sys.modules[__name__], "FM1_SUSTAIN{}".format(f_i)),
@@ -695,14 +771,19 @@ class fm1_plugin_ui(AbstractPluginUI):
                     sys.modules[__name__],
                     "FM1_ADSR{}_HOLD".format(f_i)
                 ),
+                knob_kwargs=knob_kwargs,
             )
             f_hlayout1.addWidget(f_adsr_amp1.groupbox)
 
             f_adsr_amp1_checkbox = checkbox_control(
-                _("On"), getattr(sys.modules[__name__],
+                _("On"),
+                getattr(sys.modules[__name__],
                 "FM1_ADSR{}_CHECKBOX".format(f_i)),
-                self.plugin_rel_callback, self.plugin_val_callback,
-                self.port_dict, self.preset_manager)
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                self.port_dict,
+                self.preset_manager,
+            )
             f_adsr_amp1_checkbox.add_to_grid_layout(f_adsr_amp1.layout, 15)
 
             f_hlayout1.addItem(
@@ -822,11 +903,23 @@ class fm1_plugin_ui(AbstractPluginUI):
 
         for f_i in range(2):
             f_port = getattr(
-                sys.modules[__name__], "FM1_FM_MACRO{}".format(f_i + 1))
+                sys.modules[__name__],
+                "FM1_FM_MACRO{}".format(f_i + 1),
+            )
             f_macro = knob_control(
-                f_knob_size, _("Macro{}".format(f_i + 1)), f_port,
-                self.plugin_rel_callback, self.plugin_val_callback,
-                0, 100, 0, KC_DECIMAL, self.port_dict, self.preset_manager)
+                f_knob_size,
+                _("Macro{}".format(f_i + 1)),
+                f_port,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                0,
+                100,
+                0,
+                KC_DECIMAL,
+                self.port_dict,
+                self.preset_manager,
+                knob_kwargs=knob_kwargs,
+            )
             f_macro.add_to_grid_layout(self.fm_macro_knobs_gridlayout, f_i)
             self.fm_macro_knobs.append(f_macro)
 
@@ -842,7 +935,8 @@ class fm1_plugin_ui(AbstractPluginUI):
             )
             self.fm_macro_labels_hlayout.addWidget(
                 QLabel("Macro {}".format(f_i + 1),
-                f_fm_macro_matrix), -1)
+                f_fm_macro_matrix), -1,
+            )
 
             f_fm_macro_matrix.setCornerButtonEnabled(False)
             f_fm_macro_matrix.setRowCount(7)
@@ -887,8 +981,12 @@ class fm1_plugin_ui(AbstractPluginUI):
                     self.fm_macro_spinboxes[f_i].append(f_spinbox)
 
                 f_port = getattr(
-                    sys.modules[__name__], "FM1_FM_MACRO{}_OSC{}_VOL".format(
-                    f_i + 1, f_i2 + 1))
+                    sys.modules[__name__],
+                    "FM1_FM_MACRO{}_OSC{}_VOL".format(
+                        f_i + 1,
+                        f_i2 + 1,
+                    ),
+                )
                 f_spinbox = spinbox_control(
                     None, f_port,
                     self.plugin_rel_callback, self.plugin_val_callback,
@@ -910,46 +1008,78 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.hlayout_main = QHBoxLayout()
         self.modulation_vlayout.addLayout(self.hlayout_main)
         self.main = main_widget(
-            f_knob_size, self.plugin_rel_callback,
-            self.plugin_val_callback, FM1_MAIN_VOLUME,
-            FM1_MAIN_GLIDE, FM1_MAIN_PITCHBEND_AMT,
-            self.port_dict, a_preset_mgr=self.preset_manager,
+            f_knob_size,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            FM1_MAIN_VOLUME,
+            FM1_MAIN_GLIDE,
+            FM1_MAIN_PITCHBEND_AMT,
+            self.port_dict,
+            a_preset_mgr=self.preset_manager,
             a_poly_port=FM1_MONO_MODE,
-            a_min_note_port=FM1_MIN_NOTE, a_max_note_port=FM1_MAX_NOTE,
-            a_pitch_port=FM1_MAIN_PITCH)
+            a_min_note_port=FM1_MIN_NOTE,
+            a_max_note_port=FM1_MAX_NOTE,
+            a_pitch_port=FM1_MAIN_PITCH,
+            knob_kwargs=knob_kwargs,
+        )
 
         self.hlayout_main.addWidget(self.main.group_box)
 
         self.adsr_amp_main = adsr_widget(
-            f_knob_size, True, FM1_ATTACK_MAIN,
-            FM1_DECAY_MAIN, FM1_SUSTAIN_MAIN,
-            FM1_RELEASE_MAIN, _("AHDSR Main"),
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, self.preset_manager,
+            f_knob_size,
+            True,
+            FM1_ATTACK_MAIN,
+            FM1_DECAY_MAIN,
+            FM1_SUSTAIN_MAIN,
+            FM1_RELEASE_MAIN,
+            _("AHDSR Main"),
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            self.preset_manager,
             a_prefx_port=FM1_ADSR_PREFX,
-            a_knob_type=KC_LOG_TIME, a_hold_port=FM1_HOLD_MAIN,
-            a_lin_port=FM1_ADSR_LIN_MAIN)
+            a_knob_type=KC_LOG_TIME,
+            a_hold_port=FM1_HOLD_MAIN,
+            a_lin_port=FM1_ADSR_LIN_MAIN,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout_main.addWidget(self.adsr_amp_main.groupbox)
 
         self.perc_env = perc_env_widget(
-            f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, FM1_PERC_ENV_TIME1,
-            FM1_PERC_ENV_PITCH1, FM1_PERC_ENV_TIME2,
-            FM1_PERC_ENV_PITCH2, FM1_PERC_ENV_ON,
-            a_preset_mgr=self.preset_manager)
+            f_knob_size,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            FM1_PERC_ENV_TIME1,
+            FM1_PERC_ENV_PITCH1,
+            FM1_PERC_ENV_TIME2,
+            FM1_PERC_ENV_PITCH2,
+            FM1_PERC_ENV_ON,
+            a_preset_mgr=self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
 
         self.hlayout_main2 = QHBoxLayout()
         self.modulation_vlayout.addLayout(self.hlayout_main2)
         self.hlayout_main2.addWidget(self.perc_env.groupbox)
 
         self.adsr_noise = adsr_widget(
-            f_knob_size, True, FM1_ATTACK_NOISE,
-            FM1_DECAY_NOISE, FM1_SUSTAIN_NOISE,
-            FM1_RELEASE_NOISE, _("DAHDSR Noise"),
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, self.preset_manager,
-            a_knob_type=KC_LOG_TIME, a_hold_port=FM1_HOLD_NOISE,
-            a_delay_port=FM1_DELAY_NOISE)
+            f_knob_size,
+            True,
+            FM1_ATTACK_NOISE,
+            FM1_DECAY_NOISE,
+            FM1_SUSTAIN_NOISE,
+            FM1_RELEASE_NOISE,
+            _("DAHDSR Noise"),
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            self.preset_manager,
+            a_knob_type=KC_LOG_TIME,
+            a_hold_port=FM1_HOLD_NOISE,
+            a_delay_port=FM1_DELAY_NOISE,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout_main2.addWidget(self.adsr_noise.groupbox)
         self.adsr_noise_on = checkbox_control(
             "On", FM1_ADSR_NOISE_ON,
@@ -962,9 +1092,19 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.groupbox_noise_layout = QGridLayout(self.groupbox_noise)
         self.hlayout_main2.addWidget(self.groupbox_noise)
         self.noise_amp = knob_control(
-            f_knob_size, _("Vol"), FM1_NOISE_AMP,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -60, 0, -30, KC_INTEGER, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Vol"),
+            FM1_NOISE_AMP,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -60,
+            0,
+            -30,
+            KC_INTEGER,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.noise_amp.add_to_grid_layout(self.groupbox_noise_layout, 0)
 
         self.noise_type = combobox_control(
@@ -1004,24 +1144,48 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.main_layout.addLayout(self.hlayout6)
         #From MultiFX
         self.fx0 = multifx_single(
-            _("FX0"), FM1_FX0_KNOB0,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, self.preset_manager, a_knob_size=f_knob_size)
+            _("FX0"),
+            FM1_FX0_KNOB0,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            self.preset_manager,
+            a_knob_size=f_knob_size,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout5.addWidget(self.fx0.group_box)
         self.fx1 = multifx_single(
-            _("FX1"), FM1_FX1_KNOB0,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, self.preset_manager, a_knob_size=f_knob_size)
+            _("FX1"),
+            FM1_FX1_KNOB0,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            self.preset_manager,
+            a_knob_size=f_knob_size,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout5.addWidget(self.fx1.group_box)
         self.fx2 = multifx_single(
-            _("FX2"), FM1_FX2_KNOB0,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, self.preset_manager, a_knob_size=f_knob_size)
+            _("FX2"),
+            FM1_FX2_KNOB0,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            self.preset_manager,
+            a_knob_size=f_knob_size,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout6.addWidget(self.fx2.group_box)
         self.fx3 = multifx_single(
-            _("FX3"), FM1_FX3_KNOB0,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, self.preset_manager, a_knob_size=f_knob_size)
+            _("FX3"),
+            FM1_FX3_KNOB0,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            self.preset_manager,
+            a_knob_size=f_knob_size,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout6.addWidget(self.fx3.group_box)
 
         self.mod_matrix = QTableWidget()
@@ -1074,34 +1238,56 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.modulation_vlayout.addLayout(self.hlayout7)
 
         self.adsr_amp = adsr_widget(
-            f_knob_size, True,
-            FM1_ATTACK_PFX1, FM1_DECAY_PFX1,
-            FM1_SUSTAIN_PFX1, FM1_RELEASE_PFX1,
-            _("DAHDSR 1"), self.plugin_rel_callback,
-            self.plugin_val_callback, self.port_dict, self.preset_manager,
+            f_knob_size,
+            True,
+            FM1_ATTACK_PFX1,
+            FM1_DECAY_PFX1,
+            FM1_SUSTAIN_PFX1,
+            FM1_RELEASE_PFX1,
+            _("DAHDSR 1"),
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            self.preset_manager,
             a_knob_type=KC_LOG_TIME,
             a_delay_port=FM1_PFX_ADSR_DELAY,
-            a_hold_port=FM1_PFX_ADSR_HOLD)
+            a_hold_port=FM1_PFX_ADSR_HOLD,
+            knob_kwargs=knob_kwargs,
+        )
 
         self.hlayout7.addWidget(self.adsr_amp.groupbox)
 
         self.adsr_filter = adsr_widget(
-            f_knob_size, False, FM1_ATTACK_PFX2,
-            FM1_DECAY_PFX2, FM1_SUSTAIN_PFX2,
-            FM1_RELEASE_PFX2, _("DAHDSR 2"),
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, self.preset_manager,
+            f_knob_size,
+            False,
+            FM1_ATTACK_PFX2,
+            FM1_DECAY_PFX2,
+            FM1_SUSTAIN_PFX2,
+            FM1_RELEASE_PFX2,
+            _("DAHDSR 2"),
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            self.preset_manager,
             a_knob_type=KC_LOG_TIME,
             a_delay_port=FM1_PFX_ADSR_F_DELAY,
-            a_hold_port=FM1_PFX_ADSR_F_HOLD)
+            a_hold_port=FM1_PFX_ADSR_F_HOLD,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout7.addWidget(self.adsr_filter.groupbox)
 
         self.pitch_env = ramp_env_widget(
             f_knob_size,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, FM1_RAMP_ENV_TIME,
-            FM1_PITCH_ENV_AMT, _("Ramp Env"),
-            self.preset_manager, FM1_RAMP_CURVE)
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            FM1_RAMP_ENV_TIME,
+            FM1_PITCH_ENV_AMT,
+            _("Ramp Env"),
+            self.preset_manager,
+            FM1_RAMP_CURVE,
+            knob_kwargs=knob_kwargs,
+        )
         self.pitch_env.amt_knob.name_label.setText(_("Pitch"))
         self.pitch_env.amt_knob.control.setRange(-60, 60)
         self.hlayout7.addWidget(self.pitch_env.groupbox)
@@ -1110,47 +1296,104 @@ class fm1_plugin_ui(AbstractPluginUI):
         )
 
         self.lfo = lfo_widget(
-            f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, FM1_LFO_FREQ,
-            FM1_LFO_TYPE, f_lfo_types,
-            _("LFO"), self.preset_manager, FM1_LFO_PHASE)
+            f_knob_size,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            FM1_LFO_FREQ,
+            FM1_LFO_TYPE,
+            f_lfo_types,
+            _("LFO"),
+            self.preset_manager,
+            FM1_LFO_PHASE,
+            knob_kwargs=knob_kwargs,
+        )
 
         self.lfo_hlayout = QHBoxLayout()
         self.modulation_vlayout.addLayout(self.lfo_hlayout)
         self.lfo_hlayout.addWidget(self.lfo.groupbox)
 
         self.lfo_amount = knob_control(
-            f_knob_size, _("Amount"), FM1_LFO_AMOUNT,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            0, 100, 100, KC_DECIMAL, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Amount"),
+            FM1_LFO_AMOUNT,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            0,
+            100,
+            100,
+            KC_DECIMAL,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.lfo_amount.add_to_grid_layout(self.lfo.layout, 7)
 
         self.lfo_amp = knob_control(
-            f_knob_size, _("Amp"), FM1_LFO_AMP,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -24, 24, 0, KC_INTEGER, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Amp"),
+            FM1_LFO_AMP,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -24,
+            24,
+            0,
+            KC_INTEGER,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.lfo_amp.add_to_grid_layout(self.lfo.layout, 8)
 
         self.lfo_pitch = knob_control(
-            f_knob_size, _("Pitch"), FM1_LFO_PITCH,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -36, 36, 0, KC_INTEGER, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Pitch"),
+            FM1_LFO_PITCH,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -36,
+            36,
+            0,
+            KC_INTEGER,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.lfo_pitch.add_to_grid_layout(self.lfo.layout, 9)
 
         self.lfo_pitch_fine = knob_control(
-            f_knob_size, _("Fine"), FM1_LFO_PITCH_FINE,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -100, 100, 0, KC_DECIMAL, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Fine"),
+            FM1_LFO_PITCH_FINE,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -100,
+            100,
+            0,
+            KC_DECIMAL,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.lfo_pitch_fine.add_to_grid_layout(self.lfo.layout, 10)
 
         self.adsr_lfo = adsr_widget(
-            f_knob_size, False, FM1_ATTACK_LFO,
-            FM1_DECAY_LFO, FM1_SUSTAIN_LFO,
-            FM1_RELEASE_LFO, _("DAHDSR LFO"),
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, self.preset_manager,
-            a_knob_type=KC_LOG_TIME, a_hold_port=FM1_HOLD_LFO,
-            a_delay_port=FM1_DELAY_LFO)
+            f_knob_size,
+            False,
+            FM1_ATTACK_LFO,
+            FM1_DECAY_LFO,
+            FM1_SUSTAIN_LFO,
+            FM1_RELEASE_LFO,
+            _("DAHDSR LFO"),
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            self.preset_manager,
+            a_knob_type=KC_LOG_TIME,
+            a_hold_port=FM1_HOLD_LFO,
+            a_delay_port=FM1_DELAY_LFO,
+            knob_kwargs=knob_kwargs,
+        )
         self.lfo_hlayout.addWidget(self.adsr_lfo.groupbox)
         self.adsr_lfo_on = checkbox_control(
             "On", FM1_ADSR_LFO_ON,

@@ -18,6 +18,7 @@ class perc_env_widget:
         a_on_port,
         a_label=_("Perc Env"),
         a_preset_mgr=None,
+        knob_kwargs={},
     ):
         self.groupbox = QGroupBox(str(a_label))
         self.groupbox.setObjectName("plugin_groupbox")
@@ -25,25 +26,67 @@ class perc_env_widget:
         self.layout.setContentsMargins(3, 3, 3, 3)
 
         self.time1_knob = knob_control(
-            a_size, _("Time1"), a_time1_port,
-            a_rel_callback, a_val_callback,
-            2, 40, 10, _shared.KC_INTEGER, a_port_dict, a_preset_mgr)
+            a_size,
+            _("Time1"),
+            a_time1_port,
+            a_rel_callback,
+            a_val_callback,
+            2,
+            40,
+            10,
+            _shared.KC_INTEGER,
+            a_port_dict,
+            a_preset_mgr,
+            knob_kwargs=knob_kwargs,
+        )
         self.time1_knob.add_to_grid_layout(self.layout, 0)
 
         self.pitch1_knob = knob_control(
-            a_size, _("Pitch1"), a_pitch1_port, a_rel_callback,
-            a_val_callback, 42, 120, 66, _shared.KC_PITCH,
-            a_port_dict, a_preset_mgr)
+            a_size,
+            _("Pitch1"),
+            a_pitch1_port,
+            a_rel_callback,
+            a_val_callback,
+            42,
+            120,
+            66,
+            _shared.KC_PITCH,
+            a_port_dict,
+            a_preset_mgr,
+            knob_kwargs=knob_kwargs,
+        )
         self.pitch1_knob.add_to_grid_layout(self.layout, 1)
 
         self.time2_knob = knob_control(
-            a_size, _("Time2"), a_time2_port, a_rel_callback, a_val_callback,
-            20, 400, 100, _shared.KC_INTEGER, a_port_dict, a_preset_mgr)
+            a_size,
+            _("Time2"),
+            a_time2_port,
+            a_rel_callback,
+            a_val_callback,
+            20,
+            400,
+            100,
+            _shared.KC_INTEGER,
+            a_port_dict,
+            a_preset_mgr,
+            knob_kwargs=knob_kwargs,
+        )
         self.time2_knob.add_to_grid_layout(self.layout, 2)
 
         self.pitch2_knob = knob_control(
-            a_size, _("Pitch2"), a_pitch2_port, a_rel_callback,
-            a_val_callback, 33, 63, 48, _shared.KC_PITCH, a_port_dict, a_preset_mgr)
+            a_size,
+            _("Pitch2"),
+            a_pitch2_port,
+            a_rel_callback,
+            a_val_callback,
+            33,
+            63,
+            48,
+            _shared.KC_PITCH,
+            a_port_dict,
+            a_preset_mgr,
+            knob_kwargs=knob_kwargs,
+        )
         self.pitch2_knob.add_to_grid_layout(self.layout, 3)
 
         self.on_switch = checkbox_control(

@@ -49,6 +49,7 @@ class multifx_single:
         a_port_dict=None,
         a_preset_mgr=None,
         a_knob_size=51,
+        knob_kwargs={},
     ):
         self.group_box = QGroupBox()
         self.group_box.contextMenuEvent = self.contextMenuEvent
@@ -72,6 +73,7 @@ class multifx_single:
                 64,
                 a_port_dict=a_port_dict,
                 a_preset_mgr=a_preset_mgr,
+                knob_kwargs=knob_kwargs,
             )
             f_knob.add_to_grid_layout(self.layout, f_i)
             self.knobs.append(f_knob)
