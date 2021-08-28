@@ -557,6 +557,17 @@ QWidget {
     color: #222222;
 }
 
+QLabel {
+    background-color: #aaaaaa;
+	color: #222222;
+}
+
+QLabel#plugin_name_label,
+QLabel#plugin_value_label {
+    background: none;
+    color: #222222;
+}
+
 QPushButton,
 QWidget#plugin_window {
     background: #1c1c1c;
@@ -577,6 +588,13 @@ QGroupBox::title {
     padding: 0 3px;
     background-color: #aaaaaa;
     border: 2px solid #222222;
+}
+
+QHeaderView::section {
+    background-color: #aaaaaa;
+	color: #222222;
+    border: 1px solid #fffff8;
+    padding: 4px;
 }
 
 QSpinBox,
