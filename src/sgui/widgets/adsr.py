@@ -27,6 +27,7 @@ class adsr_widget:
         a_hold_port=None,
         a_lin_port=None,
         a_lin_default=1,
+        knob_kwargs={},
     ):
         self.clipboard_dict = {}
         self.groupbox = QGroupBox(a_label)
@@ -48,6 +49,7 @@ class adsr_widget:
                 _shared.KC_TIME_DECIMAL,
                 a_port_dict,
                 a_preset_mgr,
+                knob_kwargs=knob_kwargs,
             )
             self.delay_knob.add_to_grid_layout(self.layout, 0)
             self.clipboard_dict["delay"] = self.delay_knob
@@ -63,6 +65,7 @@ class adsr_widget:
             a_knob_type,
             a_port_dict,
             a_preset_mgr,
+            knob_kwargs=knob_kwargs,
         )
         if a_hold_port is not None:
             self.hold_knob = knob_control(
@@ -77,6 +80,7 @@ class adsr_widget:
                 _shared.KC_TIME_DECIMAL,
                 a_port_dict,
                 a_preset_mgr,
+                knob_kwargs=knob_kwargs,
             )
             self.hold_knob.add_to_grid_layout(self.layout, 3)
             self.clipboard_dict["hold"] = self.hold_knob
@@ -92,6 +96,7 @@ class adsr_widget:
             a_knob_type,
             a_port_dict,
             a_preset_mgr,
+            knob_kwargs=knob_kwargs,
         )
         if a_sustain_in_db:
             self.sustain_knob = knob_control(
@@ -106,6 +111,7 @@ class adsr_widget:
                 _shared.KC_INTEGER,
                 a_port_dict,
                 a_preset_mgr,
+                knob_kwargs=knob_kwargs,
             )
             self.clipboard_dict["sustain_db"] = self.sustain_knob
         else:
@@ -121,6 +127,7 @@ class adsr_widget:
                 _shared.KC_DECIMAL,
                 a_port_dict,
                 a_preset_mgr,
+                knob_kwargs=knob_kwargs,
             )
             self.clipboard_dict["sustain"] = self.sustain_knob
         self.release_knob = knob_control(
@@ -135,6 +142,7 @@ class adsr_widget:
             a_knob_type,
             a_port_dict,
             a_preset_mgr,
+            knob_kwargs=knob_kwargs,
         )
         self.attack_knob.add_to_grid_layout(self.layout, 2)
         self.decay_knob.add_to_grid_layout(self.layout, 4)

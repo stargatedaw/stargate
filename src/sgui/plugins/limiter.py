@@ -25,10 +25,40 @@ SG_LIM_UI_MSG_ENABLED = 3
 
 SG_LIM_PORT_MAP = {}
 
+STYLESHEET = """\
+QWidget#plugin_window{
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #11116a, stop: 0.5 #1c1c5f, stop: 1 #11116a
+    );
+}
+
+QComboBox{
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+    );
+    border: 1px solid #222222;
+    border-radius: 6px;
+    color: #cccccc;
+}
+
+QLabel#plugin_name_label,
+QLabel#plugin_value_label{
+    background: none;
+    color: #cccccc;
+}
+"""
+
 
 class LimiterPluginUI(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
-        AbstractPluginUI.__init__(self, *args, **kwargs)
+        AbstractPluginUI.__init__(
+            self,
+            *args,
+            stylesheet=STYLESHEET,
+            **kwargs,
+        )
         self._plugin_name = "SG Limiter"
         self.is_instrument = False
 
@@ -40,10 +70,18 @@ class LimiterPluginUI(AbstractPluginUI):
         self.delay_hlayout = QHBoxLayout()
         self.layout.addLayout(self.delay_hlayout)
 
-        f_knob_size = DEFAULT_KNOB_SIZE
+        f_knob_size = 75
 
         self.groupbox_gridlayout = QGridLayout()
         self.delay_hlayout.addLayout(self.groupbox_gridlayout)
+
+        knob_kwargs={
+            'fg_svg': os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'knob-metal-3.svg',
+            ),
+            'arc_width_pct': 0.,
+        }
 
         self.thresh_knob = knob_control(
             f_knob_size,
@@ -57,6 +95,7 @@ class LimiterPluginUI(AbstractPluginUI):
             KC_TENTH,
             self.port_dict,
             self.preset_manager,
+            knob_kwargs=knob_kwargs,
         )
         self.thresh_knob.add_to_grid_layout(self.groupbox_gridlayout, 3)
 
@@ -72,6 +111,7 @@ class LimiterPluginUI(AbstractPluginUI):
             KC_TENTH,
             self.port_dict,
             self.preset_manager,
+            knob_kwargs=knob_kwargs,
         )
         self.ceiling_knob.add_to_grid_layout(self.groupbox_gridlayout, 7)
 
@@ -87,6 +127,7 @@ class LimiterPluginUI(AbstractPluginUI):
             KC_INTEGER,
             self.port_dict,
             self.preset_manager,
+            knob_kwargs=knob_kwargs,
         )
         self.release_knob.add_to_grid_layout(self.groupbox_gridlayout, 22)
 
@@ -95,8 +136,11 @@ class LimiterPluginUI(AbstractPluginUI):
 
         self.ui_msg_enabled = null_control(
             SG_LIM_UI_MSG_ENABLED,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            0, self.port_dict)
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            0,
+            self.port_dict,
+        )
 
         self.open_plugin_file()
         self.set_midi_learn(SG_LIM_PORT_MAP)

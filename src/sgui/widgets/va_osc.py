@@ -22,6 +22,7 @@ class osc_widget:
         a_uni_voices_port=None,
         a_uni_spread_port=None,
         a_pb_port=None,
+        knob_kwargs={},
     ):
         self.grid_layout = QGridLayout()
         self.group_box = QGroupBox(str(a_label))
@@ -29,41 +30,107 @@ class osc_widget:
         self.group_box.setLayout(self.grid_layout)
 
         self.pitch_knob = knob_control(
-            a_size, _("Pitch"), a_pitch_port,
-            a_rel_callback, a_val_callback, -36, 36,
-            0, a_val_conversion=_shared.KC_INT_PITCH, a_port_dict=a_port_dict,
-            a_preset_mgr=a_preset_mgr)
+            a_size,
+            _("Pitch"),
+            a_pitch_port,
+            a_rel_callback,
+            a_val_callback,
+            -36,
+            36,
+            0,
+            a_val_conversion=_shared.KC_INT_PITCH,
+            a_port_dict=a_port_dict,
+            a_preset_mgr=a_preset_mgr,
+            knob_kwargs=knob_kwargs,
+        )
         self.fine_knob = knob_control(
-            a_size, _("Fine"), a_fine_port, a_rel_callback,
-            a_val_callback, -100, 100, 0, a_val_conversion=_shared.KC_DECIMAL,
-            a_port_dict=a_port_dict, a_preset_mgr=a_preset_mgr)
+            a_size,
+            _("Fine"),
+            a_fine_port,
+            a_rel_callback,
+            a_val_callback,
+            -100,
+            100,
+            0,
+            a_val_conversion=_shared.KC_DECIMAL,
+            a_port_dict=a_port_dict,
+            a_preset_mgr=a_preset_mgr,
+            knob_kwargs=knob_kwargs,
+        )
 
         self.pitch_knob.ratio_callback = self.fine_knob.set_value
 
         self.vol_knob = knob_control(
-            a_size, _("Vol"), a_vol_port, a_rel_callback,
-            a_val_callback, -30, 0, -6, a_val_conversion=_shared.KC_INTEGER,
-            a_port_dict=a_port_dict, a_preset_mgr=a_preset_mgr)
+            a_size,
+            _("Vol"),
+            a_vol_port,
+            a_rel_callback,
+            a_val_callback,
+            -30,
+            0,
+            -6,
+            a_val_conversion=_shared.KC_INTEGER,
+            a_port_dict=a_port_dict,
+            a_preset_mgr=a_preset_mgr,
+            knob_kwargs=knob_kwargs,
+        )
         self.osc_type_combobox = combobox_control(
-            100, _("Type"), a_type_port, a_rel_callback, a_val_callback,
-            a_osc_types_list, a_port_dict, a_preset_mgr=a_preset_mgr,
-            a_default_index=a_default_type)
+            100,
+            _("Type"),
+            a_type_port,
+            a_rel_callback,
+            a_val_callback,
+            a_osc_types_list,
+            a_port_dict,
+            a_preset_mgr=a_preset_mgr,
+            a_default_index=a_default_type,
+        )
         if a_uni_voices_port is not None and a_uni_spread_port is not None:
             self.uni_voices_knob = knob_control(
-                a_size, _("Unison"), a_uni_voices_port,
-                a_rel_callback, a_val_callback, 1, 7, 1, _shared.KC_INTEGER,
-                a_port_dict, a_preset_mgr)
+                a_size,
+                _("Unison"),
+                a_uni_voices_port,
+                a_rel_callback,
+                a_val_callback,
+                1,
+                7,
+                1,
+                _shared.KC_INTEGER,
+                a_port_dict,
+                a_preset_mgr,
+                knob_kwargs=knob_kwargs,
+            )
             self.uni_voices_knob.add_to_grid_layout(self.grid_layout, 10)
             self.uni_spread_knob = knob_control(
-                a_size, _("Spread"), a_uni_spread_port,
-                a_rel_callback, a_val_callback,
-                10, 100, 50, _shared.KC_DECIMAL, a_port_dict, a_preset_mgr)
+                a_size,
+                _("Spread"),
+                a_uni_spread_port,
+                a_rel_callback,
+                a_val_callback,
+                10,
+                100,
+                50,
+                _shared.KC_DECIMAL,
+                a_port_dict,
+                a_preset_mgr,
+                knob_kwargs=knob_kwargs,
+            )
             self.uni_spread_knob.add_to_grid_layout(self.grid_layout, 11)
         if a_pb_port is not None:
             self.pb_knob = knob_control(
-                a_size, _("PitchBnd"), a_pb_port,
-                a_rel_callback, a_val_callback, -36, 36, 0, _shared.KC_INTEGER,
-                a_port_dict, a_preset_mgr)
+                a_size,
+                _("PitchBnd"),
+                a_pb_port,
+                a_rel_callback,
+                a_val_callback,
+                -36,
+                36,
+                0,
+                _shared.KC_INTEGER,
+                a_port_dict,
+                a_preset_mgr,
+                knob_kwargs=knob_kwargs,
+            )
             self.pb_knob.add_to_grid_layout(self.grid_layout, 15)
         self.pitch_knob.add_to_grid_layout(self.grid_layout, 0)
         self.fine_knob.add_to_grid_layout(self.grid_layout, 1)

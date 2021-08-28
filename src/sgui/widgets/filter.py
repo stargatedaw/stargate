@@ -15,6 +15,7 @@ class filter_widget:
         a_type_port=None,
         a_label=_("Filter"),
         a_preset_mgr=None,
+        knob_kwargs={},
     ):
         self.groupbox = QGroupBox(str(a_label))
         self.groupbox.setObjectName("plugin_groupbox")
@@ -32,6 +33,7 @@ class filter_widget:
             _shared.KC_PITCH,
             a_port_dict,
             a_preset_mgr,
+            knob_kwargs=knob_kwargs,
         )
         self.cutoff_knob.add_to_grid_layout(self.layout, 0)
         self.res_knob = knob_control(
@@ -46,6 +48,7 @@ class filter_widget:
             _shared.KC_TENTH,
             a_port_dict,
             a_preset_mgr,
+            knob_kwargs=knob_kwargs,
         )
         self.res_knob.add_to_grid_layout(self.layout, 1)
         if a_type_port is not None:
