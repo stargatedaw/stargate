@@ -14,6 +14,7 @@ import os
 DEFAULT_THEME_KNOB = None
 # This is for plugins to consume, it's not a default value anywhere
 DEFAULT_KNOB_SIZE = 48
+DEFAULT_LARGE_KNOB_SIZE = 64
 
 class PixmapKnobCache:
     def __init__(self):

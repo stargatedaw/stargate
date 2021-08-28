@@ -29,13 +29,59 @@ SCC_PORT_MAP = {
     "Wet": SCC_WET
 }
 
+STYLESHEET = """\
+QWidget#plugin_window{
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #2a2a2a, stop: 0.5 #3a3a3f, stop: 1 #2a2a2a
+    );
+}
+
+QComboBox{
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+    );
+    border: 1px solid #222222;
+    border-radius: 6px;
+    color: #cccccc;
+}
+
+QLabel#plugin_name_label{
+    background-color: #999999;
+    background-image: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #999999, stop: 0.5 #777777, stop 1.0 #999999
+    );
+    border: 2px solid #222222;
+    border-radius: 6px;
+    color: #222222;
+}
+
+QLabel#plugin_value_label{
+    background: none;
+    color: #cccccc;
+}
+"""
 
 class scc_plugin_ui(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
-        AbstractPluginUI.__init__(self, *args, **kwargs)
+        AbstractPluginUI.__init__(
+            self,
+            *args,
+            stylesheet=STYLESHEET,
+            **kwargs,
+        )
         self._plugin_name = "Sidechain Comp."
         self.is_instrument = False
 
+        knob_kwargs = {
+            'arc_width_pct': 0.,
+            'fg_svg': os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'knob-plastic-2-light.svg',
+            ),
+        }
         self.preset_manager = None
         self.layout.setSizeConstraint(
             QLayout.SizeConstraint.SetFixedSize,
@@ -44,44 +90,94 @@ class scc_plugin_ui(AbstractPluginUI):
         self.delay_hlayout = QHBoxLayout()
         self.layout.addLayout(self.delay_hlayout)
 
-        f_knob_size = DEFAULT_KNOB_SIZE
+        f_knob_size = DEFAULT_LARGE_KNOB_SIZE
 
         self.widget.setObjectName("plugin_groupbox")
         self.reverb_groupbox_gridlayout = QGridLayout()
         self.delay_hlayout.addLayout(self.reverb_groupbox_gridlayout)
 
         self.thresh_knob = knob_control(
-            f_knob_size, _("Thresh"), SCC_THRESHOLD,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -36, -6, -24, KC_INTEGER, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Thresh"),
+            SCC_THRESHOLD,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -36,
+            -6,
+            -24,
+            KC_INTEGER,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.thresh_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout, 3)
 
         self.ratio_knob = knob_control(
-            f_knob_size, _("Ratio"), SCC_RATIO,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            1, 100, 20, KC_TENTH, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Ratio"),
+            SCC_RATIO,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            1,
+            100,
+            20,
+            KC_TENTH,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.ratio_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout, 7)
 
         self.attack_knob = knob_control(
-            f_knob_size, _("Attack"), SCC_ATTACK,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            0, 100, 20, KC_INTEGER, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Attack"),
+            SCC_ATTACK,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            0,
+            100,
+            20,
+            KC_INTEGER,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.attack_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout, 15)
 
         self.release_knob = knob_control(
-            f_knob_size, _("Release"), SCC_RELEASE,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            20, 300, 50, KC_INTEGER, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Release"),
+            SCC_RELEASE,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            20,
+            300,
+            50,
+            KC_INTEGER,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.release_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout, 18)
 
         self.wet_knob = knob_control(
-            f_knob_size, _("Wet"), SCC_WET,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            0, 100, 100, KC_INTEGER, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Wet"),
+            SCC_WET,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            0,
+            100,
+            100,
+            KC_INTEGER,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.wet_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout, 21)
 

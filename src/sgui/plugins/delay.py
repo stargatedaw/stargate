@@ -56,7 +56,7 @@ QLabel#plugin_name_label{
 
 QLabel#plugin_name_label{
     color: #222222;
-|
+}
 """
 
 class sgdelay_plugin_ui(AbstractPluginUI):
@@ -86,7 +86,7 @@ class sgdelay_plugin_ui(AbstractPluginUI):
         self.delay_hlayout = QHBoxLayout()
         self.layout.addLayout(self.delay_hlayout)
 
-        f_knob_size = 75
+        f_knob_size = DEFAULT_LARGE_KNOB_SIZE
         self.preset_manager = None
 
         self.delay_gridlayout = QGridLayout()

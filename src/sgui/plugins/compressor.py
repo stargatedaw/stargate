@@ -91,7 +91,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
         self.delay_hlayout = QHBoxLayout()
         self.layout.addLayout(self.delay_hlayout)
 
-        f_knob_size = 75
+        f_knob_size = DEFAULT_LARGE_KNOB_SIZE
 
         self.groupbox_gridlayout = QGridLayout()
         self.delay_hlayout.addLayout(self.groupbox_gridlayout)
