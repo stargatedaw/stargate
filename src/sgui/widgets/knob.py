@@ -64,7 +64,36 @@ class PixmapKnob(QDial):
         arc_brush=None,
         arc_bg_brush=None,
         arc_pen_kwargs={},
+        draw_line=False,
     ):
+        """
+        @a_size:    The size of the knobs bounding square
+        @a_min_val: THe minimum value of the knob
+        @a_max_val: THe maximum value of the knob
+        @fg_svg:
+            The full path to an SVG image to draw as the foreground image, will
+            be rotated with the knob value from -135 to +135 degrees from top
+            center.  It is expected that the knob initially points to -135
+            degrees from the top.
+        @bg_svg: A static image drawn behind @fg_svg, will not be rotated
+        @arc_width_pct:
+            The 0-100 percentage of @a_size that the arc drawn around the knob
+            should be.  0.0 to not draw an arc
+        @arc_type:  See ArcType for details
+        @arc_brush:
+            The brush to use for the arc pen.  Use a QColor or QGradient
+        @arc_bg_brush:
+            The brush to use for the arc background pen.  This is the static
+            arc drawn behind the main arc, always from -135 to +135 degrees
+            from the top
+        @arc_pen_kwargs:
+            Additional keyword arguments to pass to the QPen for the
+            foreground arc.
+        @draw_line:
+            True to draw a ine from the center of the knob to the end of
+            the arc.
+
+        """
         self.arc_brush = arc_brush if arc_brush else QColor(
             theme.SYSTEM_COLORS.widgets.knob_arc_pen,
         )
