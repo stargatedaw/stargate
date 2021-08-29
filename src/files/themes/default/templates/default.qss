@@ -571,12 +571,7 @@ QGroupBox:focus, QTextEdit::focus
     border: 2px solid {{ highlight }};
 }
 
-QWidget:item:hover
-{
-    background-color: {{ highlight }};
-    color: {{ text_color_alt }};
-}
-
+QWidget:item:hover,
 QWidget:item:selected
 {
     background-color:{{ highlight }};
