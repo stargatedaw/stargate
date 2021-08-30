@@ -91,7 +91,8 @@ class sreverb_plugin_ui(AbstractPluginUI):
         knob_kwargs = {
             'arc_width_pct': 20.,
             'fg_svg': None,
-            'arc_brush': QColor('#873fb5')
+            'arc_brush': QColor('#873fb5'),
+            'arc_bg_brush': QColor("#5a5a5a"),
         }
         self.reverb_time_knob = knob_control(
             f_knob_size,

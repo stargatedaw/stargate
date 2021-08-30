@@ -77,6 +77,7 @@ class LimiterPluginUI(AbstractPluginUI):
 
         knob_kwargs={
             'arc_brush': QColor("#cccccc"),
+            'arc_bg_brush': QColor("#5a5a5a"),
             'arc_width_pct': 12.,
             'fg_svg': os.path.join(
                 util.PLUGIN_ASSETS_DIR,
