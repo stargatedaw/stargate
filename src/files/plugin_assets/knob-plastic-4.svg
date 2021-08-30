@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="254"
+   height="254"
+   viewBox="0 0 254 254"
+   fill="none"
+   version="1.1"
+   id="svg67"
+   sodipodi:docname="Group 9.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview69"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="2.398827"
+     inkscape:cx="114.22249"
+     inkscape:cy="74.828239"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg67" />
+  <g
+     filter="url(#filter0_dd)"
+     id="g4"
+     transform="rotate(-135,145.15938,170.84062)">
+    <circle
+       cx="189"
+       cy="189"
+       r="127"
+       fill="#2d3441"
+       id="circle2" />
+    <path
+       d="m 188.69682,65.940097 15,33 -15,-10.115 -15,10.115 z"
+       fill="#c4c4c4"
+       id="path6" />
+  </g>
+  <defs
+     id="defs65">
+    <filter
+       id="filter1_i"
+       x="0"
+       y="6.10352e-05"
+       width="378"
+       height="328.11301"
+       filterUnits="userSpaceOnUse"
+       color-interpolation-filters="sRGB">
+      <feFlood
+         flood-opacity="0"
+         result="BackgroundImageFix"
+         id="feFlood41" />
+      <feBlend
+         mode="normal"
+         in="SourceGraphic"
+         in2="BackgroundImageFix"
+         result="shape"
+         id="feBlend43" />
+      <feColorMatrix
+         in="SourceAlpha"
+         type="matrix"
+         values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+         result="hardAlpha"
+         id="feColorMatrix45" />
+      <feOffset
+         id="feOffset47" />
+      <feGaussianBlur
+         stdDeviation="10"
+         id="feGaussianBlur49" />
+      <feComposite
+         in2="hardAlpha"
+         operator="arithmetic"
+         k2="-1"
+         k3="1"
+         id="feComposite51"
+         k1="0"
+         k4="0" />
+      <feColorMatrix
+         type="matrix"
+         values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0"
+         id="feColorMatrix53" />
+      <feBlend
+         mode="normal"
+         in2="shape"
+         result="effect1_innerShadow"
+         id="feBlend55" />
+    </filter>
+    <linearGradient
+       id="paint0_linear"
+       x1="92"
+       y1="185"
+       x2="302"
+       y2="187"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         stop-color="#408BF4"
+         id="stop58" />
+      <stop
+         offset="0.5"
+         stop-color="#FEDFB0"
+         id="stop60" />
+      <stop
+         offset="1"
+         stop-color="#FE332C"
+         id="stop62" />
+    </linearGradient>
+  </defs>
+</svg>
