@@ -1,4 +1,4 @@
-{% set transport_button_size = SCALER.pct_to_px(transport_button_size) %}
+{% set transport_button_size = 40 %}
 
 QWidget:focus
 {
@@ -85,13 +85,13 @@ QScrollArea
 QSplitter::handle:vertical
 {
     background-color: {{ border_color }};
-    height: {{ SCALER.mm_to_px(1, 4, 16) }}px;
+    height: 3px;
 }
 
 QSplitter::handle:horizontal
 {
     background-color: {{ border_color }};
-    width:  {{ SCALER.mm_to_px(1, 4, 16) }}px;
+    width:  3px;
 }
 
 /* Transport tool selector */
@@ -135,9 +135,9 @@ QCheckBox#button_power::indicator
 {
     background: none;
     border: none;
-    height: {{ SCALER.mm_to_px_pct(10) }}px;
+    height: 32px;
     outline: none;
-    width: {{ SCALER.mm_to_px_pct(10) }}px;
+    width: 32px;
 }
 
 QRadioButton#play_button,
@@ -923,7 +923,7 @@ QLCDNumber#transport_clock
     background: {{ transport_clock_background }};
     border: 2px solid {{ border_color }};
     color: {{ transport_clock_color }};
-    height: {{ transport_button_size }}px;
-    width: {{ SCALER.mm_to_px_pct(40, 5.0, 15.0, 'w') }}px;
+    height: 40px;
+    width: 90px;
 }
 
