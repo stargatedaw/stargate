@@ -265,6 +265,43 @@ QComboBox::down-arrow
     image: url({PLUGIN_ASSETS_DIR}/drop-down.svg);
 }}
 
+QCheckBox,
+QRadioButton
+{{
+    background-color: none;
+    margin: 3px;
+    padding: 0px;
+}}
+
+QCheckBox::indicator,
+QRadioButton::indicator
+{{
+    background-color: #222222;
+    border-radius: 6px;
+    border: 1px solid #cccccc;
+    color: #cccccc;
+    height: 18px;
+    margin-left: 6px;
+    width: 18px;
+}}
+
+QCheckBox::indicator:checked,
+QRadioButton::indicator:checked
+{{
+    background-color: qradialgradient(
+        cx: 0.5, cy: 0.5,
+        fx: 0.5, fy: 0.5,
+        radius: 1.0,
+        stop: 0.25 #cccccc,
+        stop: 0.3 #222222
+    );
+}}
+
+QRadioButton::indicator:hover,
+QCheckBox::indicator:hover
+{{
+    border: 1px solid #ffffff;
+}}
 """.format(
     PLUGIN_ASSETS_DIR=util.PLUGIN_ASSETS_DIR,
 )
