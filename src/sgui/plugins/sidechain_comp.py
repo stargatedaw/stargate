@@ -92,7 +92,6 @@ class scc_plugin_ui(AbstractPluginUI):
 
         f_knob_size = DEFAULT_LARGE_KNOB_SIZE
 
-        self.widget.setObjectName("plugin_groupbox")
         self.reverb_groupbox_gridlayout = QGridLayout()
         self.delay_hlayout.addLayout(self.reverb_groupbox_gridlayout)
 
