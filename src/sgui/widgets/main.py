@@ -153,6 +153,8 @@ class main_widget:
                 120,
                 a_preset_mgr,
             )
+            self.min_note.widget.setObjectName('transparent')
+            self.max_note.widget.setObjectName('transparent')
             self.range_label = QLabel(_("Range"))
             self.range_label.setObjectName("plugin_name_label")
             self.layout.addWidget(

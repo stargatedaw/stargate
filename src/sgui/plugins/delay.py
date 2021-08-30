@@ -35,8 +35,10 @@ SGDELAY_PORT_MAP = {
 }
 
 STYLESHEET = """\
-QWidget{
-    background: none;
+QWidget,
+QMenu,
+QMenu::item {
+    background: #222222;
     color: #cccccc;
 }
 
@@ -55,6 +57,11 @@ QLabel#plugin_name_label{
 }
 
 QLabel#plugin_name_label{
+    color: #222222;
+}
+
+QLabel#plugin_value_label{
+    background: none;
     color: #222222;
 }
 """

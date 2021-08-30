@@ -103,17 +103,25 @@ VA1_PORT_MAP = {
 }
 
 STYLESHEET = """\
-QWidget {{
+QWidget#transparent {{
     background: none;
+}}
+
+QMenu::separator
+{{
+    height: 2px;
+    background-color: #cccccc;
+}}
+
+QMenu,
+QMenu::item,
+QPushButton,
+QWidget#plugin_window {{
+    background: #222222;
     color: #cccccc;
 }}
 
-QPushButton,
-QWidget#plugin_window {{
-    background: #1c1c1c;
-}}
-
-QGroupBox {{
+QGroupBox#plugin_groupbox {{
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
         stop: 0 #6a1111, stop: 0.5 #5f1c1c, stop: 1 #6a1111
@@ -128,6 +136,11 @@ QGroupBox::title {{
     padding: 0 3px;
     background-color: #6a1111;
     border: 2px solid #cccccc;
+}}
+
+QLabel#plugin_name_label,
+QLabel#plugin_value_label {{
+    background: none;
 }}
 
 QSpinBox,
@@ -268,7 +281,7 @@ QComboBox::down-arrow
 QCheckBox,
 QRadioButton
 {{
-    background-color: none;
+    background: none;
     margin: 3px;
     padding: 0px;
 }}
