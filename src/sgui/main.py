@@ -1454,14 +1454,7 @@ def main():
     flush_events()
     if RESPAWN:
         respawn()
-    LOG.info("Deleting top level windows")
+    LOG.info("Calling os._exit()")
     # Work around PyQt SEGFAULT-on-exit issues
-    for w in QApplication.topLevelWindows():
-        del w
-    del shared.APP
-    final_gc(False)
-    time.sleep(0.3)
-    final_gc()
-
-    sys.exit(exit_code)
+    os._exit(exit_code)
 
