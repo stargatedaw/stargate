@@ -1273,15 +1273,6 @@ def main(app, splash_screen, scaler):
     major_version = util.META_DOT_JSON['version']['major']
     minor_version = util.META_DOT_JSON['version']['minor']
     LOG.info(f"Starting {major_version}-{minor_version}")
-    try:
-        QGuiApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
-        QGuiApplication.setHighDpiScaleFactorRoundingPolicy(
-            QtCore.Qt.HighDpiScaleFactorRoundingPolicy.PassThrough,
-        )
-    except Exception as ex:
-        LOG.warning(
-            f"The platform you are using does not support Qt HiDpi: {ex}"
-        )
     SPLASH_SCREEN = splash_screen
     widgets.knob_setup()
     QPixmapCache.setCacheLimit(1024 * 1024)

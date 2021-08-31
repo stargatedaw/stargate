@@ -16,8 +16,18 @@ if "--delay" in sys.argv:
     time.sleep(2)
 
 def start_stargate():
-    from sgui.sgqt import QApplication
+    from sglib.log import LOG
+    from sgui.sgqt import QApplication, QGuiApplication, QtCore
     from sgui.util import setup_theme
+    try:
+        QGuiApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+        QGuiApplication.setHighDpiScaleFactorRoundingPolicy(
+            QtCore.Qt.HighDpiScaleFactorRoundingPolicy.PassThrough,
+        )
+    except Exception as ex:
+        LOG.warning(
+            f"The platform you are using does not support Qt HiDpi: {ex}"
+        )
     app = QApplication(sys.argv)
     scaler = setup_theme(app)
     from sgui.splash import SplashScreen
