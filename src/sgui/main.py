@@ -101,37 +101,6 @@ def handle_engine_error(exit_code):
     if exit_code >= 1000 and exit_code <= 1002:
         shared.MAIN_WINDOW.on_change_audio_settings()
 
-
-class SplashScreen(QSplashScreen):
-    def __init__(self, screen_height):
-        scaled_height = int(screen_height * 0.9)
-        self.pixmap = svg_to_pixmap(
-            os.path.join(
-                theme.ASSETS_DIR,
-                theme.SYSTEM_COLORS.widgets.splash_screen,
-            ),
-            height=scaled_height,
-        )
-        QSplashScreen.__init__(
-            self,
-            self.pixmap,
-        )
-        self.setFixedSize(
-            self.pixmap.width(),
-            self.pixmap.height(),
-        )
-        self.show()
-        shared.APP.processEvents()
-
-    def status_update(self, a_text):
-        self.showMessage(
-            a_text,
-            QtCore.Qt.AlignmentFlag.AlignBottom,
-            QtCore.Qt.GlobalColor.white,
-        )
-        shared.APP.processEvents()
-
-
 def engine_lib_callback(a_path, a_msg):
     MAIN_WINDOW.engine_lib_callback(a_path, a_msg)
 
@@ -1298,7 +1267,7 @@ def splash_screen_opening(default_project_file):
         f_msg = "Opening\n" + default_project_file
     SPLASH_SCREEN.status_update(f_msg)
 
-def main():
+def main(app, splash_screen, scaler):
     global MAIN_WINDOW, SPLASH_SCREEN, RESPAWN
     setup_logging()
     major_version = util.META_DOT_JSON['version']['major']
@@ -1313,40 +1282,9 @@ def main():
         LOG.warning(
             f"The platform you are using does not support Qt HiDpi: {ex}"
         )
-    shared.APP = QApplication(sys.argv)
-    set_font()
-    scaler = ui_scaler_factory()
-    font = get_font()
-    shared.APP.setFont(font.font)
-    font_size, font_unit = font.get_font_size()
-    try:
-        theme.load_theme(scaler, font_size, font_unit)
-    except Exception as ex:
-        LOG.exception(ex)
-        f_answer = QMessageBox.warning(
-            None,
-            _("Warning"),
-            _(
-                "Encountered the following error loading the theme: \n\n"
-                f"{ex}\n\n"
-                "Click 'OK' to clear the current theme and quit, 'Cancel' to "
-                "quit without clearing the current theme.\n\n"
-                "You can check ~/stargate/{log,rendered_theme} for details"
-            ),
-            buttons=(
-                QMessageBox.StandardButton.Ok
-                |
-                QMessageBox.StandardButton.Cancel
-            ),
-        )
-        if f_answer == QMessageBox.StandardButton.Ok:
-            util.clear_file_setting("default-style")
-        sys.exit(1)
-    SPLASH_SCREEN = SplashScreen(scaler.y_res)
+    SPLASH_SCREEN = splash_screen
     widgets.knob_setup()
     QPixmapCache.setCacheLimit(1024 * 1024)
-    shared.APP.setStyle(QStyleFactory.create("Fusion"))
-    shared.APP.setStyleSheet(theme.QSS)
     MAIN_WINDOW = SgMainWindow()
     preflight()
     # Ensure that the engine is not running before trying to access

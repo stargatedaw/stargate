@@ -11,6 +11,7 @@ from sglib.lib.util import (
 from sglib.log import LOG
 from sglib.models import theme
 from sgui import shared as glbl_shared
+import sys
 
 
 FONT = None
@@ -162,4 +163,38 @@ class FontManager:
         else:
             font = QApplication.font()
         return FontManager(font)
+
+def setup_theme(app):
+    set_font()
+    scaler = ui_scaler_factory()
+    font = get_font()
+    glbl_shared.APP = app
+    app.setFont(font.font)
+    font_size, font_unit = font.get_font_size()
+    try:
+        theme.load_theme(scaler, font_size, font_unit)
+        glbl_shared.APP.setStyle(QStyleFactory.create("Fusion"))
+        glbl_shared.APP.setStyleSheet(theme.QSS)
+        return scaler
+    except Exception as ex:
+        LOG.exception(ex)
+        f_answer = QMessageBox.warning(
+            None,
+            _("Warning"),
+            _(
+                "Encountered the following error loading the theme: \n\n"
+                f"{ex}\n\n"
+                "Click 'OK' to clear the current theme and quit, 'Cancel' to "
+                "quit without clearing the current theme.\n\n"
+                "You can check ~/stargate/{log,rendered_theme} for details"
+            ),
+            buttons=(
+                QMessageBox.StandardButton.Ok
+                |
+                QMessageBox.StandardButton.Cancel
+            ),
+        )
+        if f_answer == QMessageBox.StandardButton.Ok:
+            clear_file_setting("default-style")
+        sys.exit(1)
 

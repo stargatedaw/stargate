@@ -60,10 +60,19 @@ else:  # Run the UI, which will run the engine
     f_path = os.path.abspath(f_path)
     print(f_path)
     sys.path.insert(0, f_path)
+    from sgui.sgqt import QApplication
+    from sgui.util import setup_theme
+    app = QApplication(sys.argv)
+    scaler = setup_theme(app)
+    from sgui.splash import SplashScreen
+    splash_screen = SplashScreen(scaler.y_res)
     try:
         from sgui.main import main
     except ImportError:
-        print("Could not detect local development UI, trying system UI")
+        print(
+            "Did not detect local development environment, trying "
+            "system installation",
+        )
         f_path = os.path.join(
             f_prefix_dir,
             "..",
@@ -75,4 +84,4 @@ else:  # Run the UI, which will run the engine
         print(f_path)
         sys.path.insert(0, f_path)
         from sgui.main import main
-    main()
+    main(app, splash_screen, scaler)

@@ -103,8 +103,27 @@ VA1_PORT_MAP = {
 }
 
 STYLESHEET = """\
+QWidget {{
+    color: #cccccc;
+}}
 QWidget#transparent {{
     background: none;
+}}
+
+QWidget::item:hover,
+QWidget::item:selected,
+QMenu::item:hover,
+QMenu::item:selected
+{{
+    background-color: #cccccc;
+    color: #222222;
+}}
+
+QWidget::item,
+QMenu::item
+{{
+    background-color: #222222;
+    color: #cccccc;
 }}
 
 QMenu::separator
@@ -141,6 +160,7 @@ QGroupBox::title {{
 QLabel#plugin_name_label,
 QLabel#plugin_value_label {{
     background: none;
+    color: #cccccc;
 }}
 
 QSpinBox,
@@ -310,6 +330,11 @@ QRadioButton::indicator:checked
     );
 }}
 
+QPushButton:hover
+{{
+    border: 2px solid #cccccc;
+}}
+
 QRadioButton::indicator:hover,
 QCheckBox::indicator:hover
 {{
@@ -341,7 +366,11 @@ class VA1PluginUI(AbstractPluginUI):
         ]
         f_lfo_types = [_("Off"), _("Sine"), _("Triangle")]
         self.preset_manager = preset_manager_widget(
-            self.get_plugin_name())
+            self.get_plugin_name(),
+        )
+        self.preset_manager.group_box.setObjectName('transparent')
+        self.preset_manager.bank_label.setObjectName('plugin_name_label')
+        self.preset_manager.presets_label.setObjectName('plugin_name_label')
         self.main_layout = QVBoxLayout()
         self.main_layout.setContentsMargins(3, 3, 3, 3)
         self.layout.addLayout(self.main_layout)

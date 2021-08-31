@@ -568,7 +568,7 @@ QGroupBox::title
 
 QGroupBox:focus, QTextEdit::focus
 {
-    border: 2px solid {{ highlight }};
+    border: 2px solid {{ highlight_border }};
 }
 
 QWidget:item:hover,
@@ -642,7 +642,7 @@ QSpinBox:hover,
 QDoubleSpinBox:hover,
 QPushButton:hover
 {
-    border: 2px solid {{ highlight }};
+    border: 2px solid {{ highlight_border }};
 }
 
 QComboBox:off
@@ -915,7 +915,7 @@ QRadioButton::indicator:checked
 QRadioButton::indicator:hover,
 QCheckBox::indicator:hover
 {
-    border: 1px solid {{ highlight }};
+    border: 1px solid {{ highlight_border }};
 }
 
 QLCDNumber#transport_clock

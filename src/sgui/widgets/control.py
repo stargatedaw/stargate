@@ -406,7 +406,7 @@ class AbstractUiControl:
     def contextMenuEvent(self, a_event):
         f_menu = QMenu(self.control)
         if self.undo_history:
-            undo_menu = QMenu(_("Undo"))
+            undo_menu = QMenu(_("Undo"), f_menu)
             f_menu.addMenu(undo_menu)
             undo_menu.triggered.connect(self.undo_action_callback)
             for x in reversed(self.undo_history):
@@ -419,12 +419,12 @@ class AbstractUiControl:
         if self.midi_learn_callback:
             f_ml_action = f_menu.addAction(_("MIDI Learn"))
             f_ml_action.triggered.connect(self.midi_learn)
-            f_cc_menu = QMenu(_("CCs"))
+            f_cc_menu = QMenu(_("CCs"), f_menu)
             f_menu.addMenu(f_cc_menu)
             f_cc_menu.triggered.connect(self.cc_menu_triggered)
             f_cc_map = self.get_cc_map()
             if f_cc_map:
-                f_range_menu = QMenu(_("Set Range for CC"))
+                f_range_menu = QMenu(_("Set Range for CC"), f_menu)
                 f_range_menu.triggered.connect(self.cc_range_dialog)
                 f_menu.addMenu(f_range_menu)
             for f_i in range(1, 128):

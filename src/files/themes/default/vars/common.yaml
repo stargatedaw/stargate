@@ -1,8 +1,9 @@
 
 # Must leave one blank line at the top
 
+highlight_border: "#ffffff"
 # This one is used by the UI and must be set
-transport_button_size: 4.0
+transport_button_size: 40
 transport_clock_background: "#333390"
 transport_clock_color: "{{ palette.white }}"
 
