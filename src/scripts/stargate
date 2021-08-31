@@ -15,6 +15,16 @@ if "--delay" in sys.argv:
     import time
     time.sleep(2)
 
+def start_stargate():
+    from sgui.sgqt import QApplication
+    from sgui.util import setup_theme
+    app = QApplication(sys.argv)
+    scaler = setup_theme(app)
+    from sgui.splash import SplashScreen
+    splash_screen = SplashScreen(scaler.y_res)
+    from sgui.main import main
+    main(app, splash_screen, scaler)
+
 # Run the engine
 if len(sys.argv) > 1:
     def sig_handle(a_1=None, a_2=None):
@@ -60,14 +70,8 @@ else:  # Run the UI, which will run the engine
     f_path = os.path.abspath(f_path)
     print(f_path)
     sys.path.insert(0, f_path)
-    from sgui.sgqt import QApplication
-    from sgui.util import setup_theme
-    app = QApplication(sys.argv)
-    scaler = setup_theme(app)
-    from sgui.splash import SplashScreen
-    splash_screen = SplashScreen(scaler.y_res)
     try:
-        from sgui.main import main
+        start_stargate()
     except ImportError:
         print(
             "Did not detect local development environment, trying "
@@ -83,5 +87,4 @@ else:  # Run the UI, which will run the engine
         f_path = os.path.abspath(f_path)
         print(f_path)
         sys.path.insert(0, f_path)
-        from sgui.main import main
-    main(app, splash_screen, scaler)
+        start_stargate()
