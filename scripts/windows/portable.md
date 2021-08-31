@@ -16,11 +16,11 @@ cd ~
 mkdir src && cd src
 git clone https://github.com/stargateaudio/stargate.git
 cd stargate
-source scripts/mingw64-source-me.sh
 ./scripts/msys2_deps.sh
 cd src/
 make mingw_deps
 cd engine
+source mingw64-source-me.sh
 make mingw
 ```
 ## Windows Cmd.exe

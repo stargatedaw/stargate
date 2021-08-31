@@ -1,10 +1,11 @@
 #!/usr/bin/make -f
 
 PREFIX ?= /usr
-VERSION := $(shell jq -r .version.major meta.json || echo stargate)
+MAJOR := $(shell jq -r .version.major meta.json || echo stargate)
+MINOR := $(shell jq -r .version.minor meta.json)
 DESTDIR ?=
-SBSMS_PREFIX = $(PREFIX)/lib/$(VERSION)/sbsms
-SG_DIR = $(DESTDIR)$(PREFIX)/lib/$(VERSION)
+SBSMS_PREFIX = $(PREFIX)/lib/$(MAJOR)/sbsms
+SG_DIR = $(DESTDIR)$(PREFIX)/lib/$(MAJOR)
 PIP ?= pip3
 BROWSER ?= firefox-wayland
 
@@ -35,11 +36,11 @@ install: clean_pyc
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -m 755 \
 		vendor/sbsms/cli/sbsms \
-		$(DESTDIR)$(PREFIX)/bin/$(VERSION)-sbsms
+		$(DESTDIR)$(PREFIX)/bin/$(MAJOR)-sbsms
 	cp scripts/* $(DESTDIR)$(PREFIX)/bin
 	install -d $(SG_DIR)/stargate
-	install -m 755 engine/$(VERSION)-engine-dbg $(DESTDIR)$(PREFIX)/bin
-	install -s -m 4755 engine/$(VERSION)-engine $(DESTDIR)$(PREFIX)/bin
+	install -m 755 engine/$(MAJOR)-engine-dbg $(DESTDIR)$(PREFIX)/bin
+	install -s -m 4755 engine/$(MAJOR)-engine $(DESTDIR)$(PREFIX)/bin
 	cp -r sg_py_vendor sglib sgui $(SG_DIR)/stargate
 	cp -r files/themes files/presets $(SG_DIR)
 	cp -r files/themes files/plugin_assets $(SG_DIR)
@@ -90,7 +91,10 @@ tests:
 	$(BROWSER) htmlcov/index.html
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/$(VERSION)*
+	rm -f $(DESTDIR)$(PREFIX)/bin/$(MAJOR)*
 	rm -rf $(SG_DIR)
 	rm -rf $(DESTDOR)$(PREFIX)/share/*/stargate*
+
+windows_release:
+	cp dist/$(MAJOR).exe dist/$(MAJOR)-$(MINOR)-win64.exe
 
