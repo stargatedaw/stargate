@@ -157,7 +157,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr(644, root, root)
 
-%attr(4755, root, root) %{{_usr}}/bin/{0}-engine
+%attr(755, root, root) %{{_usr}}/bin/{0}-engine
 %attr(755, root, root) %{{_usr}}/bin/{0}
 %attr(755, root, root) %{{_usr}}/bin/{0}-engine-dbg
 %attr(755, root, root) %{{_usr}}/bin/{0}-paulstretch
