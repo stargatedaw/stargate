@@ -57,7 +57,7 @@ class note_selector_widget:
         f_copy_action.triggered.connect(self.copy_to_clipboard)
         f_paste_action = f_menu.addAction(_("Paste"))
         f_paste_action.triggered.connect(self.paste_from_clipboard)
-        f_menu.exec_(QCursor.pos())
+        f_menu.exec(QCursor.pos())
 
     def copy_to_clipboard(self):
         global NOTE_SELECTOR_CLIPBOARD

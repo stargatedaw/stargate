@@ -520,7 +520,7 @@ class SgMainWindow(QMainWindow):
         #f_cancel.pressed.connect(cancel_handler)
         #f_layout.addWidget(f_cancel, 9, 2)
         f_timer.start(100)
-        f_window.exec_()
+        f_window.exec()
 
     def show_offline_rendering_wait_window_v2(
         self,
@@ -616,7 +616,7 @@ class SgMainWindow(QMainWindow):
         f_cancel.pressed.connect(cancel_handler)
         f_ok_cancel_layout.addWidget(f_cancel)
         f_timer.start(20)
-        f_window.exec_()
+        f_window.exec()
 
     def subprocess_monitor(self):
         try:
@@ -702,7 +702,7 @@ class SgMainWindow(QMainWindow):
         f_cancel_button = QPushButton(_("Cancel"))
         f_ok_layout.addWidget(f_cancel_button)
         f_cancel_button.pressed.connect(f_window.close)
-        f_window.exec_()
+        f_window.exec()
 
     def prepare_to_quit(self):
         try:
@@ -854,7 +854,7 @@ class SgMainWindow(QMainWindow):
         f_ok_button = QPushButton(_("OK"))
         f_layout.addWidget(f_ok_button)
         f_ok_button.pressed.connect(f_window.close)
-        f_window.exec_()
+        f_window.exec()
 
     def on_spacebar(self):
         shared.TRANSPORT.on_spacebar()
@@ -1140,7 +1140,7 @@ class SgMainWindow(QMainWindow):
         f_ok_layout.addWidget(f_cancel)
         f_status_label = QLabel("")
         f_layout.addWidget(f_status_label, 15, 1)
-        f_window.exec_()
+        f_window.exec()
 
     def on_offline_render(self):
         shared.PLUGIN_UI_DICT.save_all_plugin_state()

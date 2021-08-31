@@ -652,7 +652,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         f_cancel_button = QPushButton(_("Cancel"))
         f_cancel_button.pressed.connect(cancel_handler)
         f_ok_cancel_layout.addWidget(f_cancel_button)
-        f_dialog.exec_()
+        f_dialog.exec()
 
     def normalize(self, a_value, audio_pool_by_uid):
         f_val = self.graph_object.normalize(a_value)

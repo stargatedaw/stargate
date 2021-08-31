@@ -228,7 +228,7 @@ class preset_manager_widget:
         f_cancel_button.pressed.connect(f_dialog.close)
         f_groupbox_layout.addWidget(f_cancel_button, 2, 0)
         f_groupbox_layout.addWidget(f_sync_button, 2, 1)
-        f_dialog.exec_()
+        f_dialog.exec()
 
     def on_open_bank(self):
         f_file, f_filter = QFileDialog.getOpenFileName(

@@ -74,6 +74,6 @@ def add_mul_dialog(a_update_callback, a_save_callback):
     f_layout.addWidget(f_cancel_button, 2, 31)
     f_cancel_button.pressed.connect(f_dialog.close)
     f_dialog.move(0, 0)
-    f_dialog.exec_()
+    f_dialog.exec()
     return f_dialog.retval
 

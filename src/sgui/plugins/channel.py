@@ -118,7 +118,9 @@ class sgchnl_plugin_ui(AbstractPluginUI):
             )
         else:
             self.volume_slider_layout = QGridLayout()
-            self.volume_slider_layout.setSizeConstraint(QLayout.SetMaximumSize)
+            self.volume_slider_layout.setSizeConstraint(
+                QLayout.SizeConstraint.SetMaximumSize,
+            )
             self.hlayout.addLayout(self.volume_slider_layout, 1)
             self.volume_slider.add_to_grid_layout(
                 self.volume_slider_layout, 0, a_alignment=None)

@@ -117,7 +117,7 @@ class multifx_single:
         f_menu.addAction(f_paste_and_copy_action)
         f_reset_action = f_menu.addAction(_("Reset"))
         f_reset_action.triggered.connect(self.reset_settings)
-        f_menu.exec_(QCursor.pos())
+        f_menu.exec(QCursor.pos())
 
     def copy_settings(self):
         global MULTIFX_CLIPBOARD

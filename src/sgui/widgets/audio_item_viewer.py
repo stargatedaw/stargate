@@ -481,10 +481,10 @@ class AudioItemViewerWidget(QGraphicsView):
         f_groupbox_layout.addWidget(count_spinbox, 1, 2)
         f_groupbox_layout.addWidget(f_cancel_button, 2, 1)
         f_groupbox_layout.addWidget(f_sync_button, 2, 2)
-        f_dialog.exec_()
+        f_dialog.exec()
 
     def scene_contextMenuEvent(self):
-        self.scene_context_menu.exec_(QCursor.pos())
+        self.scene_context_menu.exec(QCursor.pos())
 
     def reset_markers(self):
         for f_marker in self.drag_start_markers + self.drag_end_markers:

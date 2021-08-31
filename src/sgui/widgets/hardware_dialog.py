@@ -795,7 +795,7 @@ class hardware_dialog:
         f_window.raise_()
         LOG.info("Showing dialog")
         if self.is_running:
-            f_window.exec_()
+            f_window.exec()
         else:
             f_window.show()
 
@@ -810,6 +810,6 @@ if __name__ == "__main__":
 
         f_hardware_dialog = hardware_dialog()
         f_hardware_dialog.show_hardware_dialog(f_msg)
-        sys.exit(app.exec_())
+        sys.exit(app.exec())
 
     _hardware_dialog_standalone()

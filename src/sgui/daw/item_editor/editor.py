@@ -198,7 +198,7 @@ class ItemEditorWidget:
         f_cancel = QPushButton(_("Cancel"))
         f_cancel.pressed.connect(quantize_cancel_handler)
         f_ok_cancel_layout.addWidget(f_cancel)
-        f_window.exec_()
+        f_window.exec()
 
     def transpose_dialog(self, a_selected_only=False):
         if not self.enabled:
@@ -258,7 +258,7 @@ class ItemEditorWidget:
         f_cancel = QPushButton(_("Cancel"))
         f_cancel.pressed.connect(transpose_cancel_handler)
         f_ok_cancel_layout.addWidget(f_cancel)
-        f_window.exec_()
+        f_window.exec()
 
     def set_transport_tool_visibility(self, index=None):
         if index is None:

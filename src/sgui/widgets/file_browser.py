@@ -203,7 +203,7 @@ class AbstractFileBrowserWidget:
         for f_path in reversed(self.history):
             f_action = f_menu.addAction(f_path)
             f_action.path = f_path
-        f_menu.exec_(QCursor.pos())
+        f_menu.exec(QCursor.pos())
 
     def up_contextMenuEvent(self, a_event):
         if (
@@ -229,7 +229,7 @@ class AbstractFileBrowserWidget:
             if util.IS_WINDOWS:
                 f_action = f_menu.addAction("")
                 f_action.path = ""
-            f_menu.exec_(QCursor.pos())
+            f_menu.exec(QCursor.pos())
 
     def on_filter_folders(self):
         self.on_filter(self.folder_filter_lineedit, self.list_folder)
@@ -367,7 +367,7 @@ class AbstractFileBrowserWidget:
                 item.dirname_abbrev = dirname_abbrev
                 dir_list_widget.addItem(item)
             dir_list_widget.selectAll()
-        f_window.exec_()
+        f_window.exec()
 
     def copy_button_pressed(self):
         f_clipboard = glbl_shared.APP.clipboard()
@@ -443,7 +443,7 @@ class AbstractFileBrowserWidget:
         f_menu = QMenu(self.list_bookmarks)
         f_del_action = f_menu.addAction(_("Delete"))
         f_del_action.triggered.connect(self.delete_bookmark)
-        f_menu.exec_(QCursor.pos())
+        f_menu.exec(QCursor.pos())
 
     def folder_item_clicked(self, a_item):
         self.set_folder(a_item.text())

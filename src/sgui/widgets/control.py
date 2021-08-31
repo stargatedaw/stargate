@@ -187,7 +187,7 @@ class AbstractUiControl:
         f_ok_button.pressed.connect(ok_handler)
         f_layout.addWidget(f_ok_button, 6, 1)
         f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0.0, 0.0)))
-        f_dialog.exec_()
+        f_dialog.exec()
 
     def tempo_sync_dialog(self):
         def sync_button_pressed(a_self=None):
@@ -236,7 +236,7 @@ class AbstractUiControl:
         f_groupbox_layout.addWidget(f_cancel_button, 2, 0)
         f_groupbox_layout.addWidget(f_sync_button, 2, 1)
         f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0.0, 0.0)))
-        f_dialog.exec_()
+        f_dialog.exec()
 
     def set_note_dialog(self):
         def ok_button_pressed():
@@ -261,7 +261,7 @@ class AbstractUiControl:
         f_ok_cancel_layout.addWidget(f_ok_button)
         f_vlayout.addLayout(f_ok_cancel_layout)
         f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0.0, 0.0)))
-        f_dialog.exec_()
+        f_dialog.exec()
 
     def set_ratio_dialog(self):
         def ok_button_pressed():
@@ -296,7 +296,7 @@ class AbstractUiControl:
         f_layout.addWidget(f_ok_button, 5, 0)
         f_layout.addWidget(f_cancel_button, 5, 1)
         f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0.0, 0.0)))
-        f_dialog.exec_()
+        f_dialog.exec()
 
     def set_octave_dialog(self):
         def ok_button_pressed():
@@ -321,7 +321,7 @@ class AbstractUiControl:
         f_layout.addWidget(f_ok_button, 5, 0)
         f_layout.addWidget(f_cancel_button, 5, 1)
         f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0.0, 0.0)))
-        f_dialog.exec_()
+        f_dialog.exec()
 
     def copy_automation(self):
         f_value = ((self.get_value() - self.control.minimum()) /
@@ -396,7 +396,7 @@ class AbstractUiControl:
         f_cancel_button.pressed.connect(f_dialog.close)
         f_ok_cancel_layout.addWidget(f_cancel_button)
         f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0.0, 0.0)))
-        f_dialog.exec_()
+        f_dialog.exec()
 
     def undo_action_callback(self, a_action):
         value = a_action.control_value
@@ -465,7 +465,7 @@ class AbstractUiControl:
             f_set_octave_action = f_menu.addAction(_("Set to Octave..."))
             f_set_octave_action.triggered.connect(self.set_octave_dialog)
 
-        f_menu.exec_(QCursor.pos())
+        f_menu.exec(QCursor.pos())
 
 
 class null_control:

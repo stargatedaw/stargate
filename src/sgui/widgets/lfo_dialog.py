@@ -137,6 +137,6 @@ def lfo_dialog(a_update_callback, a_save_callback):
     update()
     save()
     f_dialog.move(0, 0)
-    f_dialog.exec_()
+    f_dialog.exec()
     return f_dialog.retval
 

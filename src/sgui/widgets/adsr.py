@@ -179,7 +179,7 @@ class adsr_widget:
         f_copy_action.triggered.connect(self.copy)
         f_paste_action = f_menu.addAction(_("Paste"))
         f_paste_action.triggered.connect(self.paste)
-        f_menu.exec_(QCursor.pos())
+        f_menu.exec(QCursor.pos())
 
     def copy(self):
         global ADSR_CLIPBOARD
