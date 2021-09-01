@@ -282,8 +282,14 @@ class PluginComboBox(QPushButton):
 
 class AbstractPluginSettings:
     def __init__(
-            self, a_set_plugin_func, a_index, a_track_num,
-            a_save_callback, a_qcbox=False, a_is_mixer=False):
+        self,
+        a_set_plugin_func,
+        a_index,
+        a_track_num,
+        a_save_callback,
+        a_qcbox=False,
+        a_is_mixer=False,
+    ):
         self.is_mixer = a_is_mixer
         self.plugin_ui = None
         self.set_plugin_func = a_set_plugin_func
@@ -300,7 +306,8 @@ class AbstractPluginSettings:
             self.plugin_combobox = QComboBox()
         else:
             self.plugin_combobox = PluginComboBox(
-                self.on_plugin_combobox_change)
+                self.on_plugin_combobox_change,
+            )
         self.plugin_combobox.setMinimumWidth(150)
         self.plugin_combobox.wheelEvent = self.wheel_event
 
@@ -308,7 +315,8 @@ class AbstractPluginSettings:
 
         if a_qcbox:
             self.plugin_combobox.currentIndexChanged.connect(
-                self.on_plugin_combobox_change)
+                self.on_plugin_combobox_change,
+            )
 
         self.power_checkbox = QCheckBox()
         self.power_checkbox.setObjectName("button_power")
@@ -390,9 +398,11 @@ class AbstractPluginSettings:
     def get_value(self):
         return track_plugin(
             self.index, get_plugin_uid_by_name(
-                self.plugin_combobox.currentText()),
+                self.plugin_combobox.currentText(),
+            ),
             self.plugin_uid,
-            a_power=1 if self.power_checkbox.isChecked() else 0)
+            a_power=1 if self.power_checkbox.isChecked() else 0,
+        )
 
     def on_plugin_combobox_change(self, a_val=None):
         if self.suppress_osc:
@@ -419,8 +429,12 @@ class AbstractPluginSettings:
             self.plugin_uid = constants.PROJECT.get_next_plugin_uid()
             self.plugin_index = f_index
         self.set_plugin_func(
-            self.track_num, self.index, f_index,
-            self.plugin_uid, self.power_checkbox.isChecked())
+            self.track_num,
+            self.index,
+            f_index,
+            self.plugin_uid,
+            self.power_checkbox.isChecked(),
+        )
         if a_save:
             self.save_callback()
         self.on_show_ui()
@@ -429,8 +443,12 @@ class AbstractPluginSettings:
         f_index = get_plugin_uid_by_name(self.plugin_combobox.currentText())
         if f_index:
             self.set_plugin_func(
-                self.track_num, self.index, f_index,
-                self.plugin_uid, self.power_checkbox.isChecked())
+                self.track_num,
+                self.index,
+                f_index,
+                self.plugin_uid,
+                self.power_checkbox.isChecked(),
+            )
             self.save_callback()
 
     def wheel_event(self, a_event=None):
@@ -451,15 +469,25 @@ class AbstractPluginSettings:
             )
             self.vlayout.removeWidget(self.plugin_ui.widget)
         self.plugin_ui = glbl_shared.PLUGIN_UI_DICT.open_plugin_ui(
-            self.plugin_uid, f_index, a_is_mixer=self.is_mixer)
+            self.plugin_uid,
+            f_index,
+            a_is_mixer=self.is_mixer,
+        )
         if self.is_mixer:
             self.vlayout.removeItem(self.spacer)
+        #else:
+        #    self.plugin_ui.widget.setFixedWidth(1100)
         self.vlayout.addWidget(self.plugin_ui.widget)
 
 
 class PluginSettingsMain(AbstractPluginSettings):
     def __init__(
-            self, a_set_plugin_func, a_index, a_track_num, a_save_callback):
+        self,
+        a_set_plugin_func,
+        a_index,
+        a_track_num,
+        a_save_callback,
+    ):
         self.plugin_list = MAIN_PLUGIN_NAMES
 
         self.menu_button = QPushButton(_("Menu"))
@@ -659,7 +687,8 @@ class PluginRack:
                 a_track_number,
                 self.save_callback,
             )
-            for x in range(PLUGINS_PER_TRACK)]
+            for x in range(PLUGINS_PER_TRACK)
+        ]
         self.widget = QWidget()
         self.vlayout = QVBoxLayout(self.widget)
         self.vlayout.setContentsMargins(1, 1, 1, 1)
@@ -738,10 +767,12 @@ class PluginRack:
     def save_callback(self):
         f_result = self.PROJECT.get_track_plugins(self.track_number)
         f_result.plugins[:PLUGINS_PER_TRACK] = [
-            x.get_value() for x in self.plugins]
+            x.get_value() for x in self.plugins
+        ]
         self.PROJECT.save_track_plugins(self.track_number, f_result)
         self.PROJECT.commit(
-            "Update track plugins for track {}".format(self.track_number))
+            "Update track plugins for track {}".format(self.track_number),
+        )
 
 
 class MixerChannel:
