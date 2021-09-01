@@ -66,15 +66,17 @@ NO_OPTIMIZATION int open_audio_device(
 
     int f_found_index = 0;
     for(f_i = 0; f_i < Pa_GetDeviceCount(); ++f_i){
-        const PaDeviceInfo * f_padevice = Pa_GetDeviceInfo(f_i);
+        const PaDeviceInfo* f_padevice = Pa_GetDeviceInfo(f_i);
+        const PaHostApiInfo* host_api = Pa_GetHostApiInfo(f_padevice->hostApi);
         printf(
-            "\"%s\" %i %i\n",
+            "device: '%s' host api: '%s' output channels: %i\n",
             f_padevice->name,
-            f_padevice->hostApi,
+            host_api->name,
             f_padevice->maxOutputChannels
         );
         if(
-            !strcmp(f_padevice->name, config->device_name) &&
+            !strcmp(f_padevice->name, config->device_name)
+            &&
             f_host_api_index == f_padevice->hostApi
         ){
             if(!f_padevice->maxOutputChannels){
@@ -94,7 +96,7 @@ NO_OPTIMIZATION int open_audio_device(
     }
 
     if(!f_found_index){
-        fprintf(stderr, "Device not found\n");
+        fprintf(stderr, "'%s' not found\n", config->device_name);
         return RET_CODE_DEVICE_NOT_FOUND;
     }
 
@@ -157,7 +159,8 @@ NO_OPTIMIZATION int open_audio_device(
         );
 
         if(err != paNoError){
-            printf(
+            fprintf(
+                stderr,
                 "Error while opening audio device: %s",
                 Pa_GetErrorText(err)
             );
@@ -167,22 +170,28 @@ NO_OPTIMIZATION int open_audio_device(
 
     err = Pa_StartStream(stream);
     if(err != paNoError){
-        printf(
-            "Error: Unknown error while starting device.  Please "
-            "re-configure your device and try starting Stargate again.\n"
+        fprintf(
+            stderr,
+            "'%s' while starting device.  Please "
+            "re-configure your device and try starting Stargate again.\n",
+            Pa_GetErrorText(err)
         );
         return RET_CODE_AUDIO_DEVICE_ERROR;
     }
     const PaStreamInfo * f_stream_info = Pa_GetStreamInfo(stream);
     printf(
-        "Actual output latency:\n\tmilliseconds:  %f\n\tsamples:  %i\n",
-        (SGFLT)f_stream_info->outputLatency * 1000.0f,
+        "Actual output latency: %fs, %fms, %i samples\n",
+        f_stream_info->outputLatency,
+        f_stream_info->outputLatency * 1000.0,
         (int)(f_stream_info->outputLatency * f_stream_info->sampleRate)
     );
     if((int)f_stream_info->sampleRate != (int)config->sample_rate){
-        printf(
-            "Warning:  Samplerate reported by the device does not "
-            "match the selected sample rate.\n"
+        fprintf(
+            stderr,
+            "Warning: Samplerate reported by the device (%f)  does not "
+            "match the selected sample rate %f.\n",
+            f_stream_info->sampleRate,
+            config->sample_rate
         );
     }
 
