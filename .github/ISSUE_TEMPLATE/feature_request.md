@@ -28,7 +28,7 @@ context below.
 
 **Does your proposal align with the core project design principles?**
 Project principles are available [HERE](
-  https://github.com/stargateaudio/stargate/docs/project_design_principles.md
+  https://github.com/stargateaudio/stargate/blob/main/docs/project_design_principles.md
 )
 
 If not, provide a justification for why we should implement it anyway.  We
