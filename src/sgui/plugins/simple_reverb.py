@@ -58,7 +58,7 @@ QLabel#plugin_name_label
 {
     background-color: none;
     border: none;
-    color: #cccccc;
+    color: #222222;
 }
 
 """

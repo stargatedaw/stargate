@@ -46,7 +46,7 @@ QMenu::item {
 QWidget#plugin_window{
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #9a9a11, stop: 0.5 #7f7f1c, stop: 1 #9a9a11
+        stop: 0 #227722, stop: 0.5 #337733, stop: 1 #228022
     );
 }
 
