@@ -39,6 +39,7 @@ from sgui.util import (
     check_for_empty_directory,
     check_for_rw_perms,
     get_font,
+    get_fps,
     set_font,
     show_generic_exception,
     svg_to_pixmap,
@@ -1117,7 +1118,7 @@ class SgMainWindow(QMainWindow):
             close_engine()
         self.current_window.on_offline_render()
         if self.current_module.CLOSE_ENGINE_ON_RENDER:
-            open_engine(PROJECT_FILE)
+            open_engine(PROJECT_FILE, get_fps())
             constants.IPC_ENABLED = True
             for i in range(30):
                 time.sleep(0.1)
@@ -1211,7 +1212,7 @@ def global_open_project(a_project_file, a_wait=True):
     # TODO: SG DEPRECATED
     global PROJECT_FILE
     PROJECT_FILE = a_project_file
-    open_engine(a_project_file)
+    open_engine(a_project_file, get_fps())
     constants.PROJECT = sg_project.SgProject()
     constants.PROJECT.suppress_updates = True
     constants.PROJECT.open_project(a_project_file, False)
@@ -1244,7 +1245,7 @@ def global_new_project(a_project_file, a_wait=True):
 
     for f_module in shared.HOST_MODULES:
         f_module.global_new_project(a_project_file)
-    open_engine(a_project_file)
+    open_engine(a_project_file, get_fps())
 
 def respawn():
     LOG.info("Spawning child UI process {}".format(sys.argv))

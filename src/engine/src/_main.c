@@ -111,16 +111,22 @@ NO_OPTIMIZATION void * ui_process_monitor_thread(
 
 void print_help(){
     printf("Usage:\n\nStart the engine:\n");
-    printf("%s install_prefix project_dir ui_pid "
-            "huge_pages[--sleep --no-hardware]\n", STARGATE_VERSION);
+    printf(
+        "%s-engine install_prefix project_dir ui_pid "
+        "huge_pages frames_per_second [--sleep --no-hardware]\n",
+        STARGATE_VERSION
+    );
     printf(
         "--no-hardware: Do not use audio or MIDI hardware, for debugging\n"
     );
     printf("--sleep: Sleep for 1ms between loops.  Implies --no-hardware\n\n");
     printf("Offline render:\n");
-    printf("%s daw [project_dir] [output_file] [start_beat] "
+    printf(
+        "%s daw [project_dir] [output_file] [start_beat] "
         "[end_beat] [sample_rate] [buffer_size] [thread_count] "
-        "[huge_pages] [stem] [sequence_uid]\n\n", STARGATE_VERSION);
+        "[huge_pages] [stem] [sequence_uid]\n\n",
+        STARGATE_VERSION
+    );
 }
 
 int _main(int argc, char** argv){
@@ -135,7 +141,7 @@ int _main(int argc, char** argv){
         return 1;
     } else if(!strcmp(argv[1], "daw")){
         return daw_render(argc, argv);
-    } else if(argc < 5){
+    } else if(argc < 6){
         print_help();
         return 9996;
     }
@@ -150,11 +156,30 @@ int _main(int argc, char** argv){
     if(f_huge_pages){
         printf("Attempting to use hugepages\n");
     }
+    int fps = atoi(argv[5]);
+    printf("UI Frames per second: %i\n", fps);
+    int ui_send_usleep = (int)(1000000. / (float)fps);
+    if(ui_send_usleep < 15000){
+        fprintf(
+            stderr,
+            "Invalid FPS received: %i\n",
+            fps
+        );
+        ui_send_usleep = 10000;
+    } else if(ui_send_usleep > 100000){
+        fprintf(
+            stderr,
+            "Invalid FPS received: %i\n",
+            fps
+        );
+        ui_send_usleep = 100000;
+    }
+    UI_SEND_USLEEP = ui_send_usleep;
 
     USE_HUGEPAGES = f_huge_pages;
 
-    if(argc > 5){
-        for(j = 5; j < argc; ++j){
+    if(argc > 6){
+        for(j = 6; j < argc; ++j){
             if(!strcmp(argv[j], "--sleep")){
                 NO_HARDWARE_USLEEP = 1;
                 NO_HARDWARE = 1;

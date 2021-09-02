@@ -5,5 +5,6 @@
 extern volatile int exiting;
 // Override the hardware config to force a single thread
 extern int SINGLE_THREAD;
+extern int UI_SEND_USLEEP;
 
 #endif

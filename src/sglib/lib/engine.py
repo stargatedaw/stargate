@@ -28,7 +28,8 @@ ENGINE_SUBPROCESS = None
 
 def close_engine():
     """ Ask the engine to gracefully stop itself, then kill the process if it
-    doesn't exit on it's own"""
+        doesn't exit on it's own
+    """
     constants.IPC.stop_server()
     global ENGINE_SUBPROCESS
     if ENGINE_SUBPROCESS is not None:
@@ -99,7 +100,7 @@ def kill_engine(pid):
         LOG.exception(ex)
     time.sleep(2.0)
 
-def open_engine(a_project_path):
+def open_engine(a_project_path, fps):
     if not util.WITH_AUDIO:
         LOG.info(
             "Not starting audio because of the audio engine setting, "
@@ -128,10 +129,14 @@ def open_engine(a_project_path):
         f_pa_suspend = False
 
     if f_pa_suspend:
-        f_cmd = 'pasuspender -- "{}" "{}" "{}" {} {}'.format(
+        f_cmd = 'pasuspender -- "{}" "{}" "{}" {} {} {}'.format(
             util.BIN_PATH,
             util.INSTALL_PREFIX,
-            constants.PROJECT_DIR, f_pid, util.USE_HUGEPAGES)
+            constants.PROJECT_DIR,
+            f_pid,
+            util.USE_HUGEPAGES,
+            fps,
+        )
     else:
         f_cmd = [
             str(x) for x in (
@@ -139,7 +144,8 @@ def open_engine(a_project_path):
                 util.INSTALL_PREFIX,
                 constants.PROJECT_DIR,
                 f_pid,
-                util.USE_HUGEPAGES
+                util.USE_HUGEPAGES,
+                fps,
             )
         ]
     run_engine(f_cmd)

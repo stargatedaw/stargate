@@ -6,6 +6,7 @@
 #include "audiodsp/lib/lmalloc.h"
 #include "stargate.h"
 #include "compiler.h"
+#include "globals.h"
 #include "osc.h"
 
 
@@ -39,7 +40,7 @@ void* v_osc_send_thread(void* a_arg){
 
     while(!STARGATE->audio_recording_quit_notifier){
         STARGATE->current_host->osc_send(&f_send_data);
-        usleep(30000);
+        usleep(UI_SEND_USLEEP);
     }
 
     printf("osc send thread exiting\n");

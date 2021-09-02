@@ -8,9 +8,11 @@ from sglib.lib.util import (
     get_file_setting,
     set_file_setting,
 )
+from sglib.hardware.rpi import is_rpi
 from sglib.log import LOG
 from sglib.models import theme
 from sgui import shared as glbl_shared
+import multiprocessing
 import sys
 
 
@@ -197,4 +199,21 @@ def setup_theme(app):
         if f_answer == QMessageBox.StandardButton.Ok:
             clear_file_setting("default-style")
         sys.exit(1)
+
+def get_fps() -> int:
+    """ Get the frames-per-second that the engine should send messages to
+        the UI
+    """
+    if is_rpi():
+        return 10
+    screen = QGuiApplication.primaryScreen()
+    cpu_count = multiprocessing.cpu_count()
+    if cpu_count >= 8:
+        return int(screen.refreshRate())
+    elif cpu_count >= 6:
+        return 30
+    elif cpu_count >= 4:
+        return 25
+    else:
+        return 20
 
