@@ -37,10 +37,9 @@ STYLESHEET = """\
 QWidget#plugin_window{
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 0,
-        stop: 0 #37743b, stop: 0.17 #377467,
-        stop: 0.33 #37743b, stop: 0.5 #377467,
-        stop: 0.66 #37743b, stop: 0.83 #377467,
-        stop: 1 #37743b
+        stop: 0 #7777f9,
+        stop: 0.5 #8888d6,
+        stop: 1 #7777dd
     );
 }
 
@@ -95,10 +94,14 @@ class sreverb_plugin_ui(AbstractPluginUI):
         right_screws = get_screws()
         self.main_hlayout.addLayout(right_screws)
 
+        knob_gradient = QLinearGradient(0., 0., f_knob_size, 0.)
+        knob_gradient.setColorAt(0., QColor("#0000cc"))
+        knob_gradient.setColorAt(1., QColor("#cc0000"))
+
         knob_kwargs = {
             'arc_width_pct': 20.,
             'fg_svg': None,
-            'arc_brush': QColor('#873fb5'),
+            'arc_brush': knob_gradient,
             'arc_bg_brush': QColor("#5a5a5a"),
         }
         self.reverb_time_knob = knob_control(
@@ -120,7 +123,6 @@ class sreverb_plugin_ui(AbstractPluginUI):
             3,
         )
 
-        knob_kwargs['arc_brush'] = QColor("#903f9d")
         self.reverb_dry_knob = knob_control(
             f_knob_size,
             _("Dry"),
@@ -140,7 +142,6 @@ class sreverb_plugin_ui(AbstractPluginUI):
             9,
         )
 
-        knob_kwargs['arc_brush'] = QColor("#993f85")
         self.reverb_wet_knob = knob_control(
             f_knob_size,
             _("Wet"),
@@ -160,7 +161,6 @@ class sreverb_plugin_ui(AbstractPluginUI):
             10,
         )
 
-        knob_kwargs['arc_brush'] = QColor("#a23f6e")
         self.reverb_hp_knob = knob_control(
             f_knob_size,
             _("HP"),
@@ -180,7 +180,6 @@ class sreverb_plugin_ui(AbstractPluginUI):
             15,
         )
 
-        knob_kwargs['arc_brush'] = QColor("#ab3f56")
         self.reverb_lp_knob = knob_control(
             f_knob_size,
             _("LP"),
@@ -200,7 +199,6 @@ class sreverb_plugin_ui(AbstractPluginUI):
             16,
         )
 
-        knob_kwargs['arc_brush'] = QColor("#b53f3f")
         self.reverb_predelay_knob = knob_control(
             f_knob_size,
             _("PreDelay"),
