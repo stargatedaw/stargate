@@ -15,11 +15,14 @@ t_spa_spectrum_analyzer * g_spa_spectrum_analyzer_get(
     int a_plugin_uid
 ){
     t_spa_spectrum_analyzer * f_result = (t_spa_spectrum_analyzer*)malloc(
-        sizeof(t_spa_spectrum_analyzer))
-    ;
+        sizeof(t_spa_spectrum_analyzer)
+    );
     int f_i = 0;
 
-    lmalloc((void**)&f_result->buffer, sizeof(SGFLT) * a_sample_count);
+    lmalloc(
+        (void**)&f_result->buffer,
+        sizeof(SGFLT) * a_sample_count
+    );
 
     f_result->plugin_uid = a_plugin_uid;
     f_result->buf_pos = 0;
@@ -34,8 +37,7 @@ t_spa_spectrum_analyzer * g_spa_spectrum_analyzer_get(
     f_result->output = fftwf_alloc_complex(a_sample_count);
 #endif
 
-    for(f_i = 0; f_i < f_result->samples_count; ++f_i)
-    {
+    for(f_i = 0; f_i < f_result->samples_count; ++f_i){
         f_result->samples[f_i] = 0.0f;
         f_result->output[f_i] = 0.0f;
     }
@@ -67,10 +69,11 @@ void g_spa_free(t_spa_spectrum_analyzer *a_spa){
 }
 */
 
-void v_spa_compute_fft(t_spa_spectrum_analyzer *a_spa)
-{
+void v_spa_compute_fft(t_spa_spectrum_analyzer *a_spa){
     a_spa->str_buf[0] = '\0';
     int f_i;
+    char* buf;
+    int bytes_written;
 
 #ifdef SG_USE_DOUBLE
     fftw_execute(a_spa->plan);
@@ -78,16 +81,24 @@ void v_spa_compute_fft(t_spa_spectrum_analyzer *a_spa)
     fftwf_execute(a_spa->plan);
 #endif
 
-    sprintf(
+    bytes_written = sprintf(
         a_spa->str_buf,
-        "%i|spectrum|%f",
-        a_spa->plugin_uid,
-        cabs(a_spa->output[0])
+        "%i|spectrum",
+        a_spa->plugin_uid
     );
 
-    for(f_i = 1; f_i < a_spa->samples_count_div2; ++f_i){
-        sprintf(a_spa->str_tmp, "|%f", cabs(a_spa->output[f_i]));
-        strcat(a_spa->str_buf, a_spa->str_tmp);
+    buf = a_spa->str_buf + bytes_written;
+    for(f_i = 0; f_i < a_spa->samples_count_div2; ++f_i){
+        bytes_written = sprintf(
+            buf,
+            "|%.2f",
+#ifdef SG_USE_DOUBLE
+            cabs(a_spa->output[f_i])
+#else
+            cabsf(a_spa->output[f_i])
+#endif
+        );
+        buf += bytes_written;
     }
 }
 
@@ -105,13 +116,11 @@ void v_spa_run(
 ){
     int f_i;
 
-    for(f_i = 0; f_i < a_count; ++f_i)
-    {
+    for(f_i = 0; f_i < a_count; ++f_i){
         a_spa->samples[a_spa->buf_pos] = (a_buf0[f_i] + a_buf1[f_i]) * 0.5f;
         ++a_spa->buf_pos;
 
-        if(a_spa->buf_pos >= a_spa->samples_count)
-        {
+        if(a_spa->buf_pos >= a_spa->samples_count){
             a_spa->buf_pos = 0;
             v_spa_compute_fft(a_spa);
         }

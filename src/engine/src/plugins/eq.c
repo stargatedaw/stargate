@@ -39,18 +39,19 @@ void v_sgeq_on_stop(PluginHandle instance)
     //t_sgeq *plugin = (t_sgeq*)instance;
 }
 
-void v_sgeq_connect_buffer(PluginHandle instance, int a_index,
-        SGFLT * DataLocation, int a_is_sidechain)
-{
-    if(a_is_sidechain)
-    {
+void v_sgeq_connect_buffer(
+    PluginHandle instance,
+    int a_index,
+    SGFLT * DataLocation,
+    int a_is_sidechain
+){
+    if(a_is_sidechain){
         return;
     }
 
     t_sgeq *plugin = (t_sgeq*)instance;
 
-    switch(a_index)
-    {
+    switch(a_index){
         case 0:
             plugin->output0 = DataLocation;
             break;
@@ -63,9 +64,11 @@ void v_sgeq_connect_buffer(PluginHandle instance, int a_index,
     }
 }
 
-void v_sgeq_connect_port(PluginHandle instance, int port,
-        PluginData * data)
-{
+void v_sgeq_connect_port(
+    PluginHandle instance,
+    int port,
+    PluginData * data
+){
     t_sgeq *plugin;
 
     plugin = (t_sgeq *) instance;
@@ -96,10 +99,13 @@ void v_sgeq_connect_port(PluginHandle instance, int port,
     }
 }
 
-PluginHandle g_sgeq_instantiate(PluginDescriptor * descriptor,
-        int s_rate, fp_get_audio_pool_item_from_host a_host_audio_pool_func,
-        int a_plugin_uid, fp_queue_message a_queue_func)
-{
+PluginHandle g_sgeq_instantiate(
+    PluginDescriptor * descriptor,
+    int s_rate,
+    fp_get_audio_pool_item_from_host a_host_audio_pool_func,
+    int a_plugin_uid,
+    fp_queue_message a_queue_func
+){
     t_sgeq *plugin_data;
     hpalloc((void**)&plugin_data, sizeof(t_sgeq));
 
@@ -108,11 +114,15 @@ PluginHandle g_sgeq_instantiate(PluginDescriptor * descriptor,
     plugin_data->plugin_uid = a_plugin_uid;
     plugin_data->queue_func = a_queue_func;
 
-    plugin_data->mono_modules =
-            v_sgeq_mono_init(plugin_data->fs, plugin_data->plugin_uid);
+    plugin_data->mono_modules = v_sgeq_mono_init(
+        plugin_data->fs,
+        plugin_data->plugin_uid
+    );
 
     plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data, descriptor);
+        (void**)plugin_data,
+        descriptor
+    );
 
     v_cc_map_init(&plugin_data->cc_map);
 
@@ -233,12 +243,17 @@ void v_sgeq_run(
 
     if((int)(*plugin_data->spectrum_analyzer_on))
     {
-        v_spa_run(plugin_data->mono_modules->spectrum_analyzer,
-                plugin_data->output0, plugin_data->output1, sample_count);
-        if(plugin_data->mono_modules->spectrum_analyzer->str_buf[0] != '\0')
-        {
-            plugin_data->queue_func("ui",
-                plugin_data->mono_modules->spectrum_analyzer->str_buf);
+        v_spa_run(
+            plugin_data->mono_modules->spectrum_analyzer,
+            plugin_data->output0,
+            plugin_data->output1,
+            sample_count
+        );
+        if(plugin_data->mono_modules->spectrum_analyzer->str_buf[0] != '\0'){
+            plugin_data->queue_func(
+                "ui",
+                plugin_data->mono_modules->spectrum_analyzer->str_buf
+            );
             plugin_data->mono_modules->spectrum_analyzer->str_buf[0] = '\0';
         }
     }
@@ -301,8 +316,10 @@ t_sgeq_mono_modules * v_sgeq_mono_init(SGFLT a_sr, int a_plugin_uid){
 
     a_mono->vol_linear = 1.0f;
 
-    a_mono->spectrum_analyzer =
-        g_spa_spectrum_analyzer_get(4096, a_plugin_uid);
+    a_mono->spectrum_analyzer = g_spa_spectrum_analyzer_get(
+        4096,
+        a_plugin_uid
+    );
 
     return a_mono;
 }
