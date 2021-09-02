@@ -144,7 +144,7 @@ QWidget#plugin_window {
 QGroupBox#plugin_groupbox {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #6a1111, stop: 0.5 #5f1c1c, stop: 1 #6a1111
+        stop: 0 #480606, stop: 0.5 #4B0D0D, stop: 1 #480606
     );
     border: 2px solid #cccccc;
     color: #cccccc;
@@ -154,7 +154,7 @@ QGroupBox::title {
     subcontrol-origin: margin;
     subcontrol-position: top center; /* position at the top center */
     padding: 0 3px;
-    background-color: #6a1111;
+    background-color: #4B0D0D;
     border: 2px solid #cccccc;
 }
 
@@ -343,7 +343,10 @@ QCheckBox::indicator:hover
 }
 
 QWidget#left_logo {
-    background-color: none;
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #380404, stop: 1 #300606
+    );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/va1/logo-left.svg);
     background-position: center;
     background-repeat: no-repeat;
@@ -351,7 +354,10 @@ QWidget#left_logo {
 }
 
 QWidget#right_logo {
-    background-color: none;
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #380404, stop: 1 #300606
+    );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/va1/logo-right.svg);
     background-position: center;
     background-repeat: no-repeat;
