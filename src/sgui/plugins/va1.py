@@ -103,69 +103,69 @@ VA1_PORT_MAP = {
 }
 
 STYLESHEET = """\
-QWidget {{
+QWidget {
     color: #cccccc;
-}}
-QWidget#transparent {{
+}
+QWidget#transparent {
     background: none;
-}}
+}
 
 QWidget::item:hover,
 QWidget::item:selected,
 QMenu::item:hover,
 QMenu::item:selected
-{{
+{
     background-color: #cccccc;
     color: #222222;
-}}
+}
 
 QWidget::item,
 QMenu::item
-{{
+{
     background-color: #222222;
     color: #cccccc;
-}}
+}
 
 QMenu::separator
-{{
+{
     height: 2px;
     background-color: #cccccc;
-}}
+}
 
 QMenu,
 QMenu::item,
 QPushButton,
-QWidget#plugin_window {{
+QWidget#plugin_window {
     background: #222222;
     color: #cccccc;
-}}
+}
 
-QGroupBox#plugin_groupbox {{
+QGroupBox#plugin_groupbox {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
         stop: 0 #6a1111, stop: 0.5 #5f1c1c, stop: 1 #6a1111
     );
     border: 2px solid #cccccc;
     color: #cccccc;
-}}
+}
 
-QGroupBox::title {{
+QGroupBox::title {
     subcontrol-origin: margin;
     subcontrol-position: top center; /* position at the top center */
     padding: 0 3px;
     background-color: #6a1111;
     border: 2px solid #cccccc;
-}}
+}
 
 QLabel#plugin_name_label,
-QLabel#plugin_value_label {{
+QLabel#plugin_value_label {
     background: none;
     color: #cccccc;
-}}
+}
 
 QSpinBox,
 QDoubleSpinBox,
-QComboBox {{
+QComboBox {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
@@ -173,29 +173,29 @@ QComboBox {{
     border: 1px solid #222222;
     border-radius: 6px;
     color: #222222;
-}}
+}
 
 QScrollBar:horizontal
-{{
+{
     background: #aaaaaa;
     border: 1px solid #222222;
     height: 15px;
     margin: 0px 16px 0 16px;
-}}
+}
 
 QScrollBar::add-line:horizontal,
 QScrollBar::handle:horizontal,
 QScrollBar::sub-line:horizontal
-{{
+{
     background: #aaaaaa;
-}}
+}
 
 QScrollBar::add-line:vertical,
 QScrollBar::handle:vertical,
 QScrollBar::sub-line:vertical
-{{
+{
     background: #aaaaaa;
-}}
+}
 
 QScrollBar::add-line:horizontal,
 QScrollBar::add-line:vertical,
@@ -203,85 +203,85 @@ QScrollBar::handle:horizontal,
 QScrollBar::handle:vertical,
 QScrollBar::sub-line:horizontal,
 QScrollBar::sub-line:vertical
-{{
+{
     min-height: 20px;
-}}
+}
 
 QScrollBar::add-line:horizontal
-{{
+{
     border: 1px solid #222222;
     subcontrol-origin: margin;
     subcontrol-position: right;
     width: 14px;
-}}
+}
 
 QScrollBar::sub-line:horizontal
-{{
+{
     border: 1px solid #222222;
     subcontrol-origin: margin;
     subcontrol-position: left;
     width: 14px;
-}}
+}
 
 QScrollBar[hide="true"]::down-arrow:vertical,
 QScrollBar[hide="true"]::left-arrow:horizontal,
 QScrollBar[hide="true"]::right-arrow:horizontal,
 QScrollBar[hide="true"]::up-arrow:vertical
-{{
-}}
+{
+}
 
 QScrollBar::add-page:horizontal,
 QScrollBar::sub-page:horizontal
-{{
+{
     background: #222222;
     border: 1px solid #222222;
-}}
+}
 
 QScrollBar::add-page:vertical,
 QScrollBar::sub-page:vertical
-{{
+{
     background: #222222;
     border: 1px solid #222222;
-}}
+}
 
 QScrollBar:vertical
-{{
+{
     background: #666666;
     border: 1px solid #222222;
     margin: 16px 0 16px 0;
     width: 15px;
-}}
+}
 
 QScrollBar::handle:vertical
-{{
+{
     min-height: 20px;
-}}
+}
 
 QScrollBar::add-line:vertical
-{{
+{
     border: 1px solid #222222;
     height: 14px;
     subcontrol-origin: margin;
     subcontrol-position: bottom;
-}}
+}
 
 QScrollBar::sub-line:vertical
-{{
+{
     border: 1px solid #222222;
     height: 14px;
     subcontrol-origin: margin;
     subcontrol-position: top;
-}}
+}
 
 QAbstractItemView
-{{
+{
     background-color: #222222;
     border: 2px solid #aaaaaa;
     selection-background-color: #cccccc;
-}}
+}
 
 QComboBox::drop-down
-{{
+{
     border-bottom-right-radius: 3px;
     border-left-color: #222222;
     border-left-style: solid; /* just a single line */
@@ -291,24 +291,24 @@ QComboBox::drop-down
     subcontrol-origin: padding;
     subcontrol-position: top right;
     width: 15px;
-}}
+}
 
 QComboBox::down-arrow
-{{
-    image: url({PLUGIN_ASSETS_DIR}/drop-down.svg);
-}}
+{
+    image: url({{ PLUGIN_ASSETS_DIR }}/drop-down.svg);
+}
 
 QCheckBox,
 QRadioButton
-{{
+{
     background: none;
     margin: 3px;
     padding: 0px;
-}}
+}
 
 QCheckBox::indicator,
 QRadioButton::indicator
-{{
+{
     background-color: #222222;
     border-radius: 6px;
     border: 1px solid #cccccc;
@@ -316,11 +316,11 @@ QRadioButton::indicator
     height: 18px;
     margin-left: 6px;
     width: 18px;
-}}
+}
 
 QCheckBox::indicator:checked,
 QRadioButton::indicator:checked
-{{
+{
     background-color: qradialgradient(
         cx: 0.5, cy: 0.5,
         fx: 0.5, fy: 0.5,
@@ -328,21 +328,19 @@ QRadioButton::indicator:checked
         stop: 0.25 #cccccc,
         stop: 0.3 #222222
     );
-}}
+}
 
 QPushButton:hover
-{{
+{
     border: 2px solid #cccccc;
-}}
+}
 
 QRadioButton::indicator:hover,
 QCheckBox::indicator:hover
-{{
+{
     border: 1px solid #ffffff;
-}}
-""".format(
-    PLUGIN_ASSETS_DIR=util.PLUGIN_ASSETS_DIR,
-)
+}
+"""
 
 
 class VA1PluginUI(AbstractPluginUI):
@@ -374,9 +372,6 @@ class VA1PluginUI(AbstractPluginUI):
         self.main_layout = QVBoxLayout()
         self.main_layout.setContentsMargins(3, 3, 3, 3)
         self.layout.addLayout(self.main_layout)
-        self.layout.setSizeConstraint(
-            QLayout.SizeConstraint.SetFixedSize,
-        )
         self.hlayout0 = QHBoxLayout()
         self.main_layout.addLayout(self.hlayout0)
         self.hlayout0.addWidget(self.preset_manager.group_box)

@@ -97,9 +97,6 @@ class multifx_plugin_ui(AbstractPluginUI):
         )
         self.layout.addLayout(self.presets_hlayout)
         self.spectrum_enabled = None
-        self.layout.setSizeConstraint(
-            QLayout.SizeConstraint.SetFixedSize,
-        )
 
         self.fx_tab = QWidget()
         self.layout.addWidget(self.fx_tab)

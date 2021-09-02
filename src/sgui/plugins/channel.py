@@ -26,7 +26,7 @@ SGCHNL_PORT_MAP = {
     "Pan": SGCHNL_PAN,
 }
 
-class sgchnl_plugin_ui(AbstractPluginUI):
+class SgChnlPluginUI(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(self, *args, **kwargs)
         self._plugin_name = "SGCHNL"
@@ -34,7 +34,6 @@ class sgchnl_plugin_ui(AbstractPluginUI):
         f_knob_size = 42
         self.gain_gridlayout = QGridLayout()
         if self.is_mixer:
-            self.widget.setFixedWidth(120)
             self.pan_slider = slider_control(
                 QtCore.Qt.Orientation.Horizontal,
                 _("Pan"),

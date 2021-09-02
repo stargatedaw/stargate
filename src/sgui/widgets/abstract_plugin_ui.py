@@ -7,6 +7,32 @@ from sgui import shared as glbl_shared
 from sgui.sgqt import *
 import os
 
+from sglib.lib import util
+from jinja2 import Template
+
+DEFAULT_STYLE = """\
+QLabel#screw {
+    background-color: none;
+    border: none;
+    border-image: url({{ PLUGIN_ASSETS_DIR }}/screw.svg) 0 0 0 0 stretch stretch;
+}
+
+"""
+
+STYLESHEET_CACHE = {}
+
+def render_stylesheet(
+    stylesheet: str,
+    **kwargs
+) -> str:
+    if stylesheet not in STYLESHEET_CACHE:
+        STYLESHEET_CACHE[stylesheet] = DEFAULT_STYLE + stylesheet
+    _stylesheet = STYLESHEET_CACHE[stylesheet]
+    t = Template(_stylesheet)
+    return t.render(
+        PLUGIN_ASSETS_DIR=util.PLUGIN_ASSETS_DIR,
+        **kwargs,
+    )
 
 class AbstractPluginUI:
     def __init__(
@@ -32,7 +58,10 @@ class AbstractPluginUI:
         self.widget = QWidget()
         self.widget.closeEvent = self.widget_close_event
         self.widget.setObjectName("plugin_window")
-        self.widget.setStyleSheet(stylesheet)
+        if stylesheet:
+            self.widget.setStyleSheet(
+                render_stylesheet(stylesheet),
+            )
         self.widget.keyPressEvent = self.widget_keyPressEvent
 
         self.layout = QVBoxLayout()

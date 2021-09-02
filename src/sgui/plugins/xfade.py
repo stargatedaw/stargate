@@ -34,9 +34,6 @@ class xfade_plugin_ui(AbstractPluginUI):
         AbstractPluginUI.__init__(self, *args, **kwargs)
         self._plugin_name = "XFADE"
         self.is_instrument = False
-        self.layout.setSizeConstraint(
-            QLayout.SizeConstraint.SetFixedSize,
-        )
         f_knob_size = DEFAULT_KNOB_SIZE
 
         self.hlayout = QHBoxLayout()

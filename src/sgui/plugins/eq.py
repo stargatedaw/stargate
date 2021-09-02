@@ -50,10 +50,6 @@ class sgeq_plugin_ui(AbstractPluginUI):
         self.preset_manager = None
         self.spectrum_enabled = None
 
-        self.layout.setSizeConstraint(
-            QLayout.SizeConstraint.SetFixedSize,
-        )
-
         f_knob_size = 48
 
         self.eq6 = eq6_widget(

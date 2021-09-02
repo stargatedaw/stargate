@@ -409,9 +409,11 @@ class sampler1_plugin_ui(AbstractPluginUI):
             QAbstractItemView.ScrollMode.ScrollPerPixel,
         )
         self.sample_table.horizontalHeader().setSectionResizeMode(
-            QHeaderView.ResizeMode.Fixed)
+            QHeaderView.ResizeMode.Fixed,
+        )
         self.sample_table.verticalHeader().setSectionResizeMode(
-            QHeaderView.ResizeMode.Fixed)
+            QHeaderView.ResizeMode.Fixed,
+        )
 
         glbl_shared.APP.processEvents()
 
@@ -787,7 +789,8 @@ class sampler1_plugin_ui(AbstractPluginUI):
             QHeaderView.ResizeMode.Fixed,
         )
         self.sample_table.horizontalHeader().setSectionResizeMode(
-            QHeaderView.ResizeMode.Fixed)
+            QHeaderView.ResizeMode.Fixed,
+        )
         self.sample_table.resizeRowsToContents()
 
         self.file_selector = file_select_widget(self.load_files)
@@ -951,7 +954,8 @@ class sampler1_plugin_ui(AbstractPluginUI):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(
             self.selected_sample_index_combobox.sizePolicy().
-            hasHeightForWidth())
+            hasHeightForWidth(),
+        )
         self.selected_sample_index_combobox.setSizePolicy(sizePolicy1)
         self.selected_sample_index_combobox.setMinimumWidth(320)
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):

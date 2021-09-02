@@ -554,62 +554,62 @@ FM1_PORT_MAP = {
 STYLESHEET = """\
 QWidget,
 QMenu,
-QMenu::item {{
+QMenu::item {
     background-color: #aaaaaa;
 	color: #222222;
-}}
+}
 
 QMenu::separator
-{{
+{
     height: 2px;
     background-color: #222222;
-}}
+}
 
 QWidget:item:hover,
 QWidget:item:selected
-{{
+{
     background-color: #222222;
     color: #cccccc;
-}}
+}
 
-QLabel {{
+QLabel {
     border: 1px solid #222222;
-}}
+}
 
 QLabel#plugin_name_label,
-QLabel#plugin_value_label {{
+QLabel#plugin_value_label {
     background: none;
     border: none;
     color: #222222;
-}}
+}
 
-QGroupBox {{
+QGroupBox {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
         stop: 0 #aaaaaa, stop: 0.5 #9c9c9c, stop: 1 #aaaaaa
     );
     border: 2px solid #222222;
     color: #222222;
-}}
+}
 
-QGroupBox::title {{
+QGroupBox::title {
     subcontrol-origin: margin;
     subcontrol-position: top center; /* position at the top center */
     padding: 0 3px;
     background-color: #aaaaaa;
     border: 2px solid #222222;
-}}
+}
 
-QHeaderView::section {{
+QHeaderView::section {
     background-color: #aaaaaa;
 	color: #222222;
     border: 1px solid #fffff8;
     padding: 4px;
-}}
+}
 
 QSpinBox,
 QDoubleSpinBox,
-QComboBox {{
+QComboBox {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
@@ -617,10 +617,10 @@ QComboBox {{
     border: 1px solid #222222;
     border-radius: 6px;
     color: #222222;
-}}
+}
 
 QTabBar::tab
-{{
+{
     background-color: #aaaaaa;
     border-bottom-style: none;
     border: 1px solid #222222;
@@ -630,69 +630,69 @@ QTabBar::tab
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 3px;
-}}
+}
 
 
 QTabWidget::tab-bar
-{{
+{
     left: 5px;
-}}
+}
 
 QTabWidget::pane
-{{
+{
     /*border: 1px solid #444;*/
     border-top: 2px solid #cccccc;
     top: 1px;
-}}
+}
 
 QTabBar::tab:last
-{{
+{
     /* the last selected tab has nothing to overlap with on the right */
     margin-right: 0;
-}}
+}
 
 QTabBar::tab:first:!selected
-{{
+{
     /* the last selected tab has nothing to overlap with on the right */
     margin-left: 0px;
-}}
+}
 
 QTabBar::tab:!selected
-{{
+{
     background-color: #aaaaaa;
     border-bottom-style: solid;
     color: #222222;
-}}
+}
 
 QTabBar::tab:!selected:hover,
 QTabBar::tab:selected
-{{
+{
     background-color: #222222;
     color: #cccccc;
     margin-bottom: 0px;
-}}
+}
 
 QScrollBar:horizontal
-{{
+{
     background: #aaaaaa;
     border: 1px solid #222222;
     height: 15px;
     margin: 0px 16px 0 16px;
-}}
+}
 
 QScrollBar::add-line:horizontal,
 QScrollBar::handle:horizontal,
 QScrollBar::sub-line:horizontal
-{{
+{
     background: #aaaaaa;
-}}
+}
 
 QScrollBar::add-line:vertical,
 QScrollBar::handle:vertical,
 QScrollBar::sub-line:vertical
-{{
+{
     background: #aaaaaa;
-}}
+}
 
 QScrollBar::add-line:horizontal,
 QScrollBar::add-line:vertical,
@@ -700,85 +700,85 @@ QScrollBar::handle:horizontal,
 QScrollBar::handle:vertical,
 QScrollBar::sub-line:horizontal,
 QScrollBar::sub-line:vertical
-{{
+{
     min-height: 20px;
-}}
+}
 
 QScrollBar::add-line:horizontal
-{{
+{
     border: 1px solid #222222;
     subcontrol-origin: margin;
     subcontrol-position: right;
     width: 14px;
-}}
+}
 
 QScrollBar::sub-line:horizontal
-{{
+{
     border: 1px solid #222222;
     subcontrol-origin: margin;
     subcontrol-position: left;
     width: 14px;
-}}
+}
 
 QScrollBar[hide="true"]::down-arrow:vertical,
 QScrollBar[hide="true"]::left-arrow:horizontal,
 QScrollBar[hide="true"]::right-arrow:horizontal,
 QScrollBar[hide="true"]::up-arrow:vertical
-{{
-}}
+{
+}
 
 QScrollBar::add-page:horizontal,
 QScrollBar::sub-page:horizontal
-{{
+{
     background: #222222;
     border: 1px solid #222222;
-}}
+}
 
 QScrollBar::add-page:vertical,
 QScrollBar::sub-page:vertical
-{{
+{
     background: #222222;
     border: 1px solid #222222;
-}}
+}
 
 QScrollBar:vertical
-{{
+{
     background: #666666;
     border: 1px solid #222222;
     margin: 16px 0 16px 0;
     width: 15px;
-}}
+}
 
 QScrollBar::handle:vertical
-{{
+{
     min-height: 20px;
-}}
+}
 
 QScrollBar::add-line:vertical
-{{
+{
     border: 1px solid #222222;
     height: 14px;
     subcontrol-origin: margin;
     subcontrol-position: bottom;
-}}
+}
 
 QScrollBar::sub-line:vertical
-{{
+{
     border: 1px solid #222222;
     height: 14px;
     subcontrol-origin: margin;
     subcontrol-position: top;
-}}
+}
 
 QAbstractItemView
-{{
+{
     background-color: #aaaaaa;
     border: 2px solid #222222;
     selection-background-color: #cccccc;
-}}
+}
 
 QComboBox::drop-down
-{{
+{
     border-bottom-right-radius: 3px;
     border-left-color: #222222;
     border-left-style: solid; /* just a single line */
@@ -788,24 +788,24 @@ QComboBox::drop-down
     subcontrol-origin: padding;
     subcontrol-position: top right;
     width: 15px;
-}}
+}
 
 QComboBox::down-arrow
-{{
-    image: url({PLUGIN_ASSETS_DIR}/drop-down.svg);
-}}
+{
+    image: url({{ PLUGIN_ASSETS_DIR }}/drop-down.svg);
+}
 
 QCheckBox,
 QRadioButton
-{{
+{
     background-color: none;
     margin: 3px;
     padding: 0px;
-}}
+}
 
 QCheckBox::indicator,
 QRadioButton::indicator
-{{
+{
     background-color: #aaaaaa;
     border-radius: 6px;
     border: 1px solid #222222;
@@ -813,11 +813,11 @@ QRadioButton::indicator
     height: 18px;
     margin-left: 6px;
     width: 18px;
-}}
+}
 
 QCheckBox::indicator:checked,
 QRadioButton::indicator:checked
-{{
+{
     background-color: qradialgradient(
         cx: 0.5, cy: 0.5,
         fx: 0.5, fy: 0.5,
@@ -825,16 +825,14 @@ QRadioButton::indicator:checked
         stop: 0.25 #222222,
         stop: 0.3 #aaaaaa
     );
-}}
+}
 
 QRadioButton::indicator:hover,
 QCheckBox::indicator:hover
-{{
+{
     border: 1px solid #ffffff;
-}}
-""".format(
-    PLUGIN_ASSETS_DIR=util.PLUGIN_ASSETS_DIR,
-)
+}
+"""
 
 
 class fm1_plugin_ui(AbstractPluginUI):
@@ -891,9 +889,6 @@ class fm1_plugin_ui(AbstractPluginUI):
         f_lfo_types = [_("Off"), _("Sine"), _("Triangle")]
         self.tab_widget = QTabWidget()
         self.layout.addWidget(self.tab_widget)
-        self.layout.setSizeConstraint(
-            QLayout.SizeConstraint.SetFixedSize,
-        )
         self.osc_tab = QWidget()
         self.osc_tab_vlayout = QVBoxLayout(self.osc_tab)
         self.osc_scrollarea = QScrollArea()
@@ -1029,14 +1024,6 @@ class fm1_plugin_ui(AbstractPluginUI):
                 self.preset_manager,
             )
             f_adsr_amp1_checkbox.add_to_grid_layout(f_adsr_amp1.layout, 15)
-
-            f_hlayout1.addItem(
-                QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-            )
-
-
-        ######################
-
 
         self.fm_vlayout = QVBoxLayout(self.fm_tab)
 
@@ -1369,14 +1356,6 @@ class fm1_plugin_ui(AbstractPluginUI):
             QSpacerItem(1, 1, vPolicy=QSizePolicy.Policy.Expanding),
         )
 
-        self.hlayout_main.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
-
-        self.hlayout_main2.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
-
         self.modulation_vlayout.addWidget(QLabel(_("PolyFX")))
 
         ############################
@@ -1535,9 +1514,6 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.pitch_env.amt_knob.name_label.setText(_("Pitch"))
         self.pitch_env.amt_knob.control.setRange(-60, 60)
         self.hlayout7.addWidget(self.pitch_env.groupbox)
-        self.hlayout7.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
 
         self.lfo = lfo_widget(
             f_knob_size,
@@ -1644,10 +1620,6 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.plugin_rel_callback, self.plugin_val_callback,
             self.port_dict, self.preset_manager)
         self.adsr_lfo_on.add_to_grid_layout(self.adsr_lfo.layout, 21)
-
-        self.lfo_hlayout.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
 
         self.additive_osc = custom_additive_oscillator(
             self.configure_plugin,

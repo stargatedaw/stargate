@@ -15,6 +15,7 @@ GNU General Public License for more details.
 
 from sgui.widgets import *
 from sglib.lib.translate import _
+from .util import get_screws
 
 
 SREVERB_REVERB_TIME = 0
@@ -76,17 +77,23 @@ class sreverb_plugin_ui(AbstractPluginUI):
 
         self.preset_manager = None
 
-        self.layout.setSizeConstraint(
-            QLayout.SizeConstraint.SetFixedSize,
+        self.main_hlayout = QHBoxLayout()
+        left_screws = get_screws()
+        self.main_hlayout.addLayout(left_screws)
+        self.main_hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
-
-        self.delay_hlayout = QHBoxLayout()
-        self.layout.addLayout(self.delay_hlayout)
+        self.layout.addLayout(self.main_hlayout)
 
         f_knob_size = 75
 
         self.reverb_groupbox_gridlayout = QGridLayout()
-        self.delay_hlayout.addLayout(self.reverb_groupbox_gridlayout)
+        self.main_hlayout.addLayout(self.reverb_groupbox_gridlayout)
+        self.main_hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
+        right_screws = get_screws()
+        self.main_hlayout.addLayout(right_screws)
 
         knob_kwargs = {
             'arc_width_pct': 20.,

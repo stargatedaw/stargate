@@ -37,9 +37,6 @@ class sg_vocoder_plugin_ui(AbstractPluginUI):
         AbstractPluginUI.__init__(self, *args, **kwargs)
         self._plugin_name = "SG Vocoder"
         self.is_instrument = False
-        self.layout.setSizeConstraint(
-            QLayout.SizeConstraint.SetFixedSize,
-        )
         f_knob_size = DEFAULT_KNOB_SIZE
         self.widget.setMinimumHeight(120)
 

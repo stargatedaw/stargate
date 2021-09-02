@@ -125,7 +125,7 @@ PLUGIN_UI_TYPES = {
     8: simple_reverb.sreverb_plugin_ui,
     9: trigger_fx.triggerfx_plugin_ui,
     10: sidechain_comp.scc_plugin_ui,
-    11: channel.sgchnl_plugin_ui,
+    11: channel.SgChnlPluginUI,
     12: xfade.xfade_plugin_ui,
     13: compressor.sg_comp_plugin_ui,
     14: vocoder.sg_vocoder_plugin_ui,
@@ -474,9 +474,10 @@ class AbstractPluginSettings:
             a_is_mixer=self.is_mixer,
         )
         if self.is_mixer:
+            self.plugin_ui.widget.setFixedWidth(120)
             self.vlayout.removeItem(self.spacer)
-        #else:
-        #    self.plugin_ui.widget.setFixedWidth(1100)
+        else:
+            self.plugin_ui.widget.setFixedWidth(1200)
         self.vlayout.addWidget(self.plugin_ui.widget)
 
 
@@ -562,6 +563,9 @@ class PluginRackTab:
         self.vlayout = QVBoxLayout(self.widget)
         self.menu_layout = QHBoxLayout()
         self.vlayout.addLayout(self.menu_layout)
+        self.menu_layout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
         self.track_combobox = QComboBox()
         self.track_combobox.setMinimumWidth(300)
         self.menu_layout.addWidget(QLabel(_("Track")))
@@ -580,7 +584,15 @@ class PluginRackTab:
         )
 
         self.stacked_widget = QStackedWidget()
-        self.vlayout.addWidget(self.stacked_widget)
+        self.hlayout = QHBoxLayout()
+        self.vlayout.addLayout(self.hlayout)
+        self.hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
+        self.hlayout.addWidget(self.stacked_widget)
+        self.hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
         self.enabled = True
         self.plugin_racks = {}
         self.last_rack_num = None
@@ -694,6 +706,7 @@ class PluginRack:
         self.vlayout.setContentsMargins(1, 1, 1, 1)
 
         self.scrollarea = QScrollArea()
+        self.scrollarea.setFixedWidth(1239)
         self.scrollarea.setHorizontalScrollBarPolicy(
             QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
         )

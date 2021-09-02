@@ -15,6 +15,7 @@ GNU General Public License for more details.
 
 from sgui.widgets import *
 from sglib.lib.translate import _
+from .util import get_screws
 
 
 SGDELAY_DELAY_TIME = 0
@@ -87,18 +88,24 @@ class sgdelay_plugin_ui(AbstractPluginUI):
             ),
         }
 
-        self.layout.setSizeConstraint(
-            QLayout.SizeConstraint.SetFixedSize,
+        self.main_hlayout = QHBoxLayout()
+        left_screws = get_screws()
+        self.main_hlayout.addLayout(left_screws)
+        self.main_hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
-
-        self.delay_hlayout = QHBoxLayout()
-        self.layout.addLayout(self.delay_hlayout)
+        self.layout.addLayout(self.main_hlayout)
 
         f_knob_size = DEFAULT_LARGE_KNOB_SIZE
         self.preset_manager = None
 
         self.delay_gridlayout = QGridLayout()
-        self.delay_hlayout.addLayout(self.delay_gridlayout)
+        self.main_hlayout.addLayout(self.delay_gridlayout)
+        self.main_hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
+        right_screws = get_screws()
+        self.main_hlayout.addLayout(right_screws)
 
         self.delay_time_knob = knob_control(
             f_knob_size,

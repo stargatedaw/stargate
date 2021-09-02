@@ -15,6 +15,7 @@ GNU General Public License for more details.
 
 from sgui.widgets import *
 from sglib.lib.translate import _
+from .util import get_screws
 
 
 SG_COMP_THRESHOLD = 0
@@ -84,17 +85,19 @@ class sg_comp_plugin_ui(AbstractPluginUI):
         self.is_instrument = False
 
         self.preset_manager = None
-        self.layout.setSizeConstraint(
-            QLayout.SizeConstraint.SetFixedSize,
-        )
 
-        self.delay_hlayout = QHBoxLayout()
-        self.layout.addLayout(self.delay_hlayout)
+        self.main_hlayout = QHBoxLayout()
+        left_screws = get_screws()
+        self.main_hlayout.addLayout(left_screws)
+        self.main_hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
+        self.layout.addLayout(self.main_hlayout)
 
         f_knob_size = DEFAULT_LARGE_KNOB_SIZE
 
         self.groupbox_gridlayout = QGridLayout()
-        self.delay_hlayout.addLayout(self.groupbox_gridlayout)
+        self.main_hlayout.addLayout(self.groupbox_gridlayout)
 
         self.thresh_knob = knob_control(
             f_knob_size,
@@ -222,7 +225,12 @@ class sg_comp_plugin_ui(AbstractPluginUI):
         self.rms_time_knob.add_to_grid_layout(self.groupbox_gridlayout, 37)
 
         self.peak_meter = peak_meter(16, False)
-        self.delay_hlayout.addWidget(self.peak_meter.widget)
+        self.main_hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
+        self.main_hlayout.addWidget(self.peak_meter.widget)
+        right_screws = get_screws()
+        self.main_hlayout.addLayout(right_screws)
 
         self.ui_msg_enabled = null_control(
             SG_COMP_UI_MSG_ENABLED,

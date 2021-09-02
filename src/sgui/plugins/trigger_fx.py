@@ -46,9 +46,6 @@ class triggerfx_plugin_ui(AbstractPluginUI):
         self.is_instrument = False
 
         self.preset_manager = None
-        self.layout.setSizeConstraint(
-            QLayout.SizeConstraint.SetFixedSize,
-        )
 
         self.delay_hlayout = QHBoxLayout()
         self.layout.addLayout(self.delay_hlayout)
