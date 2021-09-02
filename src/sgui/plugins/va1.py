@@ -341,6 +341,23 @@ QCheckBox::indicator:hover
 {
     border: 1px solid #ffffff;
 }
+
+QWidget#left_logo {
+    background-color: none;
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/va1/logo-left.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+}
+
+QWidget#right_logo {
+    background-color: none;
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/va1/logo-right.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+}
+
 """
 
 
@@ -373,10 +390,16 @@ class VA1PluginUI(AbstractPluginUI):
         self.main_layout = QVBoxLayout()
         self.main_hlayout = QHBoxLayout()
         left_screws = get_screws()
-        self.main_hlayout.addLayout(left_screws)
+        left_logo = QWidget()
+        left_logo.setObjectName("left_logo")
+        left_logo.setLayout(left_screws)
+        self.main_hlayout.addWidget(left_logo)
         self.main_hlayout.addLayout(self.main_layout)
         right_screws = get_screws()
-        self.main_hlayout.addLayout(right_screws)
+        right_logo = QWidget()
+        right_logo.setObjectName("right_logo")
+        right_logo.setLayout(right_screws)
+        self.main_hlayout.addWidget(right_logo)
         self.main_layout.setContentsMargins(3, 3, 3, 3)
         self.layout.addLayout(self.main_hlayout)
         self.hlayout0 = QHBoxLayout()
