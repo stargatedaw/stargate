@@ -16,6 +16,7 @@ GNU General Public License for more details.
 from sgui.widgets import *
 from sglib.lib.translate import _
 from sglib.lib import util
+from .util import get_screws
 import os
 
 VA1_OUTPUT0 = 0
@@ -370,8 +371,14 @@ class VA1PluginUI(AbstractPluginUI):
         self.preset_manager.bank_label.setObjectName('plugin_name_label')
         self.preset_manager.presets_label.setObjectName('plugin_name_label')
         self.main_layout = QVBoxLayout()
+        self.main_hlayout = QHBoxLayout()
+        left_screws = get_screws()
+        self.main_hlayout.addLayout(left_screws)
+        self.main_hlayout.addLayout(self.main_layout)
+        right_screws = get_screws()
+        self.main_hlayout.addLayout(right_screws)
         self.main_layout.setContentsMargins(3, 3, 3, 3)
-        self.layout.addLayout(self.main_layout)
+        self.layout.addLayout(self.main_hlayout)
         self.hlayout0 = QHBoxLayout()
         self.main_layout.addLayout(self.hlayout0)
         self.hlayout0.addWidget(self.preset_manager.group_box)
@@ -384,7 +391,8 @@ class VA1PluginUI(AbstractPluginUI):
             'arc_width_pct': 0.0,
             'fg_svg': os.path.join(
                 util.PLUGIN_ASSETS_DIR,
-                'knob-va1.svg',
+                'va1',
+                'knob.svg',
             ),
         }
 
