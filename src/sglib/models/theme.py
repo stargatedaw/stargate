@@ -17,6 +17,7 @@ from sglib.math import clip_value
 
 import json
 import os
+import re
 import shutil
 
 import jinja2
@@ -28,6 +29,42 @@ ICON_PATH = None
 THEME_FILE = None
 _THEMES_DIR_SUB = '{{ SYSTEM_THEME_DIR }}'
 VARIABLES = None
+
+HEX_MATCHER = re.compile(r'^#(?:[0-9a-fA-F]{1,2}){3,4}$')
+
+def hex_color_assert(color):
+    pm_assert(
+        HEX_MATCHER.match(color),
+        ValueError,
+        (HEX_MATCHER, color),
+        "Invalid hex color",
+    )
+
+class GradientStop:
+    def __init__(
+        self,
+        pos: float,
+        color: str,
+    ):
+        hex_color_assert(color)
+        self.pos = type_assert(
+            pos,
+            float,
+        )
+        self.color = type_assert(
+            color,
+            str,
+        )
+
+class Gradient:
+    def __init__(
+        self,
+        stops: list,
+    ):
+        self.stops = type_assert_iter(
+            stops,
+            GradientStop,
+        )
 
 class UIScaler:
     """ UI scaling helper class, available to sgui code and Jinja templates
@@ -360,6 +397,17 @@ class WidgetColors:
         knob_arc_background_pen="#5a5a5a",
         knob_bg_image="knob-bg.png",
         knob_fg_image="knob-fg.png",
+        peak_meter={
+            'stops': [
+                {'pos': 0.0, 'color': "#cc2222"},
+                {'pos': 0.0333, 'color': "#cc2222"},
+                {'pos': 0.05, 'color': "#aacc22"},
+                {'pos': 0.2, 'color': "#aacc22"},
+                {'pos': 0.4, 'color': "#22cc22"},
+                {'pos': 0.7, 'color': "#22cc22"},
+                {'pos': 1.0, 'color': "#22aa99"},
+            ],
+        },
         playback_cursor="#aa0000",
         rout_graph_node="#e7e700",
         rout_graph_node_text="#e7e7e7",
@@ -395,6 +443,10 @@ class WidgetColors:
         self.knob_fg_image = type_assert(
             knob_fg_image,
             str,
+        )
+        self.peak_meter = type_assert(
+            peak_meter,
+            Gradient,
         )
         self.playback_cursor = type_assert(
             playback_cursor,

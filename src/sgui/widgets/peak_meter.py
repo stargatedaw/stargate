@@ -1,7 +1,8 @@
+from sgui.sgqt import *
 from sglib.math import clip_min, lin_to_db
 from sglib.lib import util
 from sglib.lib.translate import _
-from sgui.sgqt import *
+from sglib.models import theme
 
 
 PEAK_GRADIENT_CACHE = {}
@@ -9,18 +10,19 @@ PEAK_GRADIENT_CACHE = {}
 def peak_meter_gradient(a_height):
     if a_height not in PEAK_GRADIENT_CACHE:
         f_gradient = QLinearGradient(0.0, 0.0, 0.0, a_height)
-        f_gradient.setColorAt(0.0, QColor.fromRgb(255, 0, 0))
-        f_gradient.setColorAt(0.0333, QColor.fromRgb(255, 0, 0))
-        f_gradient.setColorAt(0.05, QColor.fromRgb(150, 255, 0))
-        f_gradient.setColorAt(0.2, QColor.fromRgb(90, 255, 0))
-        f_gradient.setColorAt(0.4, QColor.fromRgb(0, 255, 0))
-        f_gradient.setColorAt(0.7, QColor.fromRgb(0, 255, 0))
-        f_gradient.setColorAt(1.0, QColor.fromRgb(0, 210, 180))
+        for stop in theme.SYSTEM_COLORS.widgets.peak_meter.stops:
+            f_gradient.setColorAt(stop.pos, QColor(stop.color))
         PEAK_GRADIENT_CACHE[a_height] = f_gradient
     return PEAK_GRADIENT_CACHE[a_height]
 
 class peak_meter:
-    def __init__(self, a_width=14, a_text=False):
+    def __init__(
+        self,
+        a_width=14,
+        a_text=False,
+        invert=False,
+        brush=None,
+    ):
         self.text = a_text
         self.widget = QWidget()
         self.widget.setFixedWidth(a_width)
@@ -31,6 +33,8 @@ class peak_meter:
         self.set_tooltip()
         self.widget.mousePressEvent = self.reset_high
         self.white_pen = QPen(QtCore.Qt.GlobalColor.white, 1.0)
+        self.invert = invert
+        self.brush = brush
 
     def set_value(self, a_vals):
         f_vals = [float(x) for x in a_vals]
@@ -55,13 +59,16 @@ class peak_meter:
         p.fillRect(self.widget.rect(), QtCore.Qt.GlobalColor.black)
         p.setPen(QtCore.Qt.PenStyle.NoPen)
         f_height = self.widget.height()
-        p.setBrush(peak_meter_gradient(f_height))
+        brush = self.brush if self.brush else peak_meter_gradient(f_height)
+        p.setBrush(brush)
         f_rect_width = self.widget.width() * 0.5
 
         for f_val, f_i in zip(self.values, range(2)):
+            if self.invert:
+                f_val = 1.0 - f_val
             if f_val == 0.0:
                 continue
-            elif f_val > 1.0:
+            elif f_val >= 1.0:
                 f_rect_y = 0.0
                 f_rect_height = f_height
             else:
@@ -74,7 +81,11 @@ class peak_meter:
                 self.set_tooltip()
             f_rect_x = f_i * f_rect_width
             f_rect = QtCore.QRectF(
-                f_rect_x, f_rect_y, f_rect_width, f_rect_height)
+                f_rect_x,
+                f_rect_y,
+                f_rect_width,
+                f_rect_height,
+            )
             p.drawRect(f_rect)
 
         if self.text:

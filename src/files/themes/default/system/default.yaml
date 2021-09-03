@@ -115,6 +115,17 @@ widgets:
   knob_bg_image: "knob-bg.svg"
   # The knob image.  Will be rotated as the knob moves
   knob_fg_image: "{{ assets_subdir }}/knob-fg.svg"
+  # The gradient used to draw peak meters.  See sglib.models.theme.Gradient
+  peak_meter:
+    stops:
+      - pos: 0.0
+        color: "#cc2233"
+      - pos: 0.0333
+        color: "#aa22bb"
+      - pos: 0.3
+        color: "#772288"
+      - pos: 0.9
+        color: "#442266"
   # The color of a playback cursor line
   playback_cursor: "{{ palette.white }}"
   # Routing graph widget node

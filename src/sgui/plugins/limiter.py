@@ -135,7 +135,17 @@ class LimiterPluginUI(AbstractPluginUI):
         )
         self.release_knob.add_to_grid_layout(self.groupbox_gridlayout, 22)
 
-        self.peak_meter = peak_meter(16, False)
+        peak_gradient = QLinearGradient(0., 0., 0., 100.)
+        peak_gradient.setColorAt(0.0, QColor("#cc2222"))
+        peak_gradient.setColorAt(0.3, QColor("#cc2222"))
+        peak_gradient.setColorAt(0.6, QColor("#8877bb"))
+        peak_gradient.setColorAt(1.0, QColor("#7777cc"))
+        self.peak_meter = peak_meter(
+            16,
+            False,
+            invert=True,
+            brush=peak_gradient,
+        )
         self.main_hlayout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
