@@ -10,6 +10,8 @@ so we are not able to support 32 bit Windows.
 - Install MSYS2
 - Download and install Python for Windows, the Visual Studio compiled variant
   from python.org
+- Install NSIS
+
 ## MSYS2 Terminal
 ```
 cd ~
@@ -25,12 +27,15 @@ make mingw
 ```
 ## Windows Cmd.exe
 ```
+venv\stargate\Scripts\activate.bat
 cd C:\mingw64\home\starg\src
 python -m venv C:\Users\starg\venv\stargate
-C:\Users\starg\venv\stargate\bin\activate.bat
 pip install pyinstaller
 pip install -r requirements-windows.txt
+# Build the portable exe
 pyinstaller windows.spec
+# Build the installer exe
+python windows\nsis.py
 ```
 # ..and that is it
 File is dist\stargate.exe
