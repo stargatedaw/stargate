@@ -17,6 +17,7 @@ from sglib.math import clip_value
 from sgui.widgets import *
 from sglib.lib.translate import _
 from sglib.log import LOG
+from .util import get_screws
 import sys
 
 #Total number of LFOs, ADSRs, other envelopes, etc...
@@ -832,6 +833,29 @@ QCheckBox::indicator:hover
 {
     border: 1px solid #ffffff;
 }
+
+QWidget#left_logo {
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #151416, stop: 1 #232027
+    );
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/va1/logo-left.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+}
+
+QWidget#right_logo {
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #151416, stop: 1 #232027
+    );
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/va1/logo-right.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+}
+
 """
 
 
@@ -887,8 +911,22 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.fm_macro_spinboxes = [[] for x in range(2)]
 
         f_lfo_types = [_("Off"), _("Sine"), _("Triangle")]
+
         self.tab_widget = QTabWidget()
-        self.layout.addWidget(self.tab_widget)
+        self.main_hlayout = QHBoxLayout()
+        left_screws = get_screws()
+        left_logo = QWidget()
+        left_logo.setObjectName("left_logo")
+        left_logo.setLayout(left_screws)
+        self.main_hlayout.addWidget(left_logo)
+        self.main_hlayout.addWidget(self.tab_widget)
+        right_screws = get_screws()
+        right_logo = QWidget()
+        right_logo.setObjectName("right_logo")
+        right_logo.setLayout(right_screws)
+        self.main_hlayout.addWidget(right_logo)
+        self.layout.addLayout(self.main_hlayout)
+
         self.osc_tab = QWidget()
         self.osc_tab_vlayout = QVBoxLayout(self.osc_tab)
         self.osc_scrollarea = QScrollArea()
