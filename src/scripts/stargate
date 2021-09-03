@@ -13,11 +13,26 @@ if "--delay" in sys.argv:
     import time
     time.sleep(2)
 
+def qt_message_handler(mode, context, message):
+    line = (
+        f'qt_message_handler: {mode} '
+        f'{context.file}:{context.line}:{context.functio}'
+        f' "{message}"'
+    )
+    if mode == QtCore.QtWarningMsg:
+        LOG.warning(line)
+    elif mode in (QtCore.QtCriticalMsg, QtCore.QtFatalMsg):
+        LOG.error(line)
+    else:
+        LOG.info(line)
+
 def start_stargate():
+    global LOG
     from sglib.log import LOG, setup_logging
     setup_logging()
     LOG.info(f"sys.argv == {sys.argv}")
     from sgui.sgqt import QApplication, QGuiApplication, QtCore
+    QtCore.qInstallMessageHandler(qt_message_handler)
     from sgui.util import setup_theme
     try:
         QGuiApplication.setHighDpiScaleFactorRoundingPolicy(
