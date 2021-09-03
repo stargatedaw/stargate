@@ -96,5 +96,5 @@ uninstall:
 	rm -rf $(DESTDOR)$(PREFIX)/share/*/stargate*
 
 windows_release:
-	cp dist/$(MAJOR).exe dist/$(MAJOR)-$(MINOR)-win64.exe
+	cp dist/$(MAJOR).exe dist/$(MAJOR)-$(MINOR)-win64-portable.exe
 
