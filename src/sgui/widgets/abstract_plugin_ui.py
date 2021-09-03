@@ -30,7 +30,7 @@ def render_stylesheet(
     _stylesheet = STYLESHEET_CACHE[stylesheet]
     t = Template(_stylesheet)
     return t.render(
-        PLUGIN_ASSETS_DIR=util.PLUGIN_ASSETS_DIR,
+        PLUGIN_ASSETS_DIR=util.pi_path(util.PLUGIN_ASSETS_DIR),
         **kwargs,
     )
 
