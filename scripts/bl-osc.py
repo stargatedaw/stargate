@@ -22,13 +22,23 @@ import os
 import sys
 
 current_dir = os.path.dirname(__file__)
-wavefile_path = os.path.join(current_dir, "..", "src", "pydaw", "python")
+wavefile_path = os.path.join(current_dir, "..", "src", "py_vendor")
 sys.path.append(os.path.abspath(wavefile_path))
 import wavefile
 
-CODE_DIR = os.path.abspath(os.path.join(
-    current_dir, "..", "src", "pydaw", "libmodsynth", "modules",
-    "oscillator", "af"))
+CODE_DIR = os.path.abspath(
+    os.path.join(
+        current_dir,
+        "..",
+        "src",
+        "engine",
+        "src",
+        "audiodsp",
+        "modules",
+        "oscillator",
+        "af",
+    ),
+)
 
 SR = 44100.
 NYQUIST = SR / 2.
@@ -68,7 +78,7 @@ __thread float AF_{NAMEU}_DATA[AF_{NAMEU}_DCOUNT] = {{
 #endif /*{NAMEU}_H*/
 """
 
-def pydaw_pitch_to_hz(a_pitch):
+def pitch_to_hz(a_pitch):
     return (440.0 * pow(2.0, (float(a_pitch) - 57.0) * 0.0833333333333333333))
 
 def get_harmonic(a_size, a_phase, a_num):
@@ -138,7 +148,7 @@ def normalize(arr):
 
 def get_notes():
     for note in range(0, 100):
-        hz = pydaw_pitch_to_hz(note)
+        hz = pitch_to_hz(note)
         # This introduces minor rounding error into the note frequency
         length = round(SR / hz)
         count = int((NYQUIST - hz) // hz)
