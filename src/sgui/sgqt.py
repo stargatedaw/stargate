@@ -1,4 +1,6 @@
+from sglib.log import LOG
 import os
+
 
 if True:  # PyQt
     try:
@@ -31,6 +33,15 @@ if True:  # PyQt
         from PyQt5.QtGui import *
         from PyQt5.QtWidgets import *
         from PyQt5.QtSvg import QSvgRenderer
+        # Not needed on Qt6, is the default behavior
+        try:
+            QGuiApplication.setAttribute(
+                QtCore.Qt.ApplicationAttribute.AA_EnableHighDpiScaling,
+            )
+        except Exception as ex:
+            LOG.warning(
+                f"The platform you are using does not support Qt HiDpi: {ex}",
+            )
 else:  # PySide
     # Does not work yet, needs some porting and debugging
     from PySide6 import QtGui, QtWidgets, QtCore

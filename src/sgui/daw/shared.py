@@ -5,6 +5,7 @@ from sglib.models.daw import *
 from sgui.sgqt import *
 
 from sglib import constants
+from sglib.log import LOG
 from sglib.math import clip_min
 from sglib.models.daw.project import DawProject
 from sglib.lib import util
@@ -339,7 +340,7 @@ def global_update_peak_meters(a_val):
             for f_pkm in ALL_PEAK_METERS[f_index]:
                 f_pkm.set_value(f_list[1:])
         else:
-            print("{} not in ALL_PEAK_METERS".format(f_index))
+            LOG.info("{} not in ALL_PEAK_METERS".format(f_index))
 
 def active_audio_pool_uids():
     return constants.DAW_PROJECT.active_audio_pool_uids()
@@ -487,7 +488,7 @@ def global_open_audio_items(
 #                try:
                     f_graph = constants.PROJECT.get_sample_graph_by_uid(v.uid)
                     if f_graph is None:
-                        print(
+                        LOG.info(
                             _(
                                 "Error drawing item for {}, could not get "
                                 "sample graph object"
@@ -497,7 +498,7 @@ def global_open_audio_items(
                     AUDIO_SEQ.draw_item(k, v, f_graph)
 #                except:
 #                    if glbl_shared.IS_PLAYING:
-#                        print(_("Exception while loading {}".format(v.uid)))
+#                        LOG.info(_("Exception while loading {}".format(v.uid)))
 #                    else:
 #                        f_path = constants.PROJECT.get_wav_path_by_uid(v.uid)
 #                        if os.path.isfile(f_path):

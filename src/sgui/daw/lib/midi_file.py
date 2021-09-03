@@ -23,7 +23,7 @@ class DawMidiFile:
             if f_event.length >= _shared.min_note_length:
                 f_velocity = f_event.ev.velocity
                 f_beat = f_event.start_beat
-                print("f_beat : {}".format(f_beat))
+                LOG.info("f_beat : {}".format(f_beat))
                 f_pitch = f_event.ev.note
                 f_length = f_event.length
                 f_channel = f_event.ev.channel

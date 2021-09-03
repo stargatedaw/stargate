@@ -5,6 +5,7 @@ from sgui import widgets
 from sgui.daw import shared
 from sgui.daw.lib import item as item_lib
 from sglib import constants
+from sglib.log import LOG
 from sglib.models.daw import *
 from sgui.daw.shared import *
 from sglib.models import stargate as sg_project
@@ -778,7 +779,7 @@ class AutomationItem(QGraphicsEllipseItem):
                     #try:
                     shared.CURRENT_ITEM.pitchbends.remove(f_point.cc_item)
                     #except ValueError:
-                    #print("Exception removing {} from list".format(
+                    #LOG.info("Exception removing {} from list".format(
                         #f_point.cc_item))
                     f_cc_val = (1.0 - (((f_point.pos().y() -
                         AUTOMATION_MIN_HEIGHT) /

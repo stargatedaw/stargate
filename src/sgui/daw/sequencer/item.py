@@ -8,6 +8,7 @@ from sglib import constants
 from sgui import shared as glbl_shared
 from sgui import widgets
 from sgui.daw import painter_path, shared
+from sglib.log import LOG
 from sglib.models.daw import *
 from sglib.models import theme
 from sgui.daw.shared import *
@@ -846,7 +847,7 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
                 f_audio_item.setRect(
                     0.0, 0.0, f_x, shared.SEQUENCE_EDITOR_TRACK_HEIGHT)
                 f_item.length_beats = f_x /_shared.SEQUENCER_PX_PER_BEAT
-                print(f_item.length_beats)
+                LOG.info(f_item.length_beats)
                 f_did_change = True
             elif f_audio_item.is_start_resizing:
                 f_x = f_audio_item.start_handle.scenePos().x()

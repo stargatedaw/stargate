@@ -17,6 +17,7 @@ from sglib.lib import util
 from sglib.lib import strings as sg_strings
 from sglib.lib.util import *
 from sglib.lib.translate import _
+from sglib.log import LOG
 from sgui.sgqt import *
 from sglib.models import theme
 from sglib.models.stargate.audio_pool import PerFileFX
@@ -297,7 +298,7 @@ class AudioItemSeq(AbstractItemEditor):
 
         f_beat_frac = f_x / shared.AUDIO_PX_PER_BEAT
         f_beat_frac = clip_min(f_beat_frac, 0.0)
-        print("f_beat_frac: {}".format(f_beat_frac))
+        LOG.info("f_beat_frac: {}".format(f_beat_frac))
         if shared.AUDIO_QUANTIZE:
             f_beat_frac = int(
                 f_beat_frac * shared.AUDIO_QUANTIZE_AMT

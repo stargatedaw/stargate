@@ -1,6 +1,7 @@
 from sglib.math import clip_value, db_to_lin, lin_to_db
 from sglib.lib import util
 from sglib.lib.translate import _
+from sglib.log import LOG
 from sgui.sgqt import *
 import numpy
 
@@ -363,7 +364,7 @@ class custom_additive_oscillator(abstract_custom_oscillator):
                 (len(f_engine_list), ADDITIVE_WAVETABLE_SIZE)
             f_engine_str = "|".join(f_engine_list)
             engine_str_len = len(f_engine_str)
-            print(f"Sending additive osc str of length {engine_str_len}")
+            LOG.info(f"Sending additive osc str of length {engine_str_len}")
             self.configure_wrapper(
                 "fm1_add_eng{}".format(self.osc_num),
                 f_engine_str,

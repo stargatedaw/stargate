@@ -1,3 +1,4 @@
+from sglib.log import LOG
 from sgui.sgqt import *
 import os
 
@@ -17,7 +18,7 @@ def global_get_audio_file_from_clipboard():
     else:
         f_path = str(f_path).strip()
         if os.path.isfile(f_path):
-            print(f_path)
+            LOG.info(f_path)
             return f_path
         else:
             f_path = f_path[:100]

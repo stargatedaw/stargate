@@ -7,8 +7,6 @@ import sys
 
 stargate_version = "stargate"
 
-print("sys.argv == {}".format(sys.argv))
-
 # When respawning, give the old process a chance to garbage collect first
 if "--delay" in sys.argv:
     sys.argv.remove("--delay")
@@ -16,17 +14,19 @@ if "--delay" in sys.argv:
     time.sleep(2)
 
 def start_stargate():
-    from sglib.log import LOG
+    from sglib.log import LOG, setup_logging
+    setup_logging()
+    LOG.info(f"sys.argv == {sys.argv}")
     from sgui.sgqt import QApplication, QGuiApplication, QtCore
     from sgui.util import setup_theme
     try:
-        QGuiApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
         QGuiApplication.setHighDpiScaleFactorRoundingPolicy(
             QtCore.Qt.HighDpiScaleFactorRoundingPolicy.PassThrough,
         )
     except Exception as ex:
         LOG.warning(
-            f"The platform you are using does not support Qt HiDpi: {ex}"
+            "Unable to set QGuiApplication.setHighDpiScaleFactorRoundingPolicy"
+            f" {ex}"
         )
     app = QApplication(sys.argv)
     scaler = setup_theme(app)
@@ -41,8 +41,7 @@ if len(sys.argv) > 1:
         try:
             f_proc.kill()
         except Exception as ex:
-            print("Exception while trying to kill engine from "
-                "helper script: {}".format(ex))
+            print(f"Exception while stopping engine: {ex}")
 
     signal.signal(signal.SIGTERM, sig_handle)
     signal.signal(signal.SIGINT, sig_handle)
@@ -66,10 +65,11 @@ if len(sys.argv) > 1:
             engine_exe
         )
     f_path = os.path.abspath(f_path)
-    print(f_path)
-    f_proc = subprocess.Popen([f_path] + sys.argv[1:])
+    cmd_args = [f_path] + sys.argv[1:]
+    print(f"Running command {cmd_args}")
+    f_proc = subprocess.Popen(cmd_args)
     f_proc.wait()
-    print("helper script:  f_proc returned with {}".format(f_proc.returncode))
+    print(f"helper script:  f_proc returned with {f_proc.returncode}")
     sys.exit(f_proc.returncode)
 else:  # Run the UI, which will run the engine
     f_prefix_dir = os.path.dirname(__file__)
@@ -78,7 +78,7 @@ else:  # Run the UI, which will run the engine
         "..",
     )
     f_path = os.path.abspath(f_path)
-    print(f_path)
+    print(f'Adding PYTHONPATH {f_path}')
     sys.path.insert(0, f_path)
     try:
         start_stargate()
@@ -95,6 +95,7 @@ else:  # Run the UI, which will run the engine
             "stargate",
         )
         f_path = os.path.abspath(f_path)
-        print(f_path)
+        print(f'Adding PYTHONPATH {f_path}')
         sys.path.insert(0, f_path)
         start_stargate()
+

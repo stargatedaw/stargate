@@ -1,4 +1,5 @@
 from sglib import constants
+from sglib.log import LOG
 from sglib.lib.util import *
 from sglib.models.daw import *
 from sgui.daw.shared import *
@@ -79,7 +80,7 @@ class AudioInput:
                 constants.DAW_PROJECT.check_output(f_track)
                 self.update_engine()
             else:
-                print("{} not in shared.TRACK_PANEL".format(f_track))
+                LOG.info("{} not in shared.TRACK_PANEL".format(f_track))
 
     def name_update(self, a_val=None):
         self.update_engine(a_notify=False)

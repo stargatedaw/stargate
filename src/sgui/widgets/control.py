@@ -9,6 +9,7 @@ from .knob import PixmapKnob
 from sgui import shared as glbl_shared
 from sglib.lib import util
 from sglib.lib.translate import _
+from sglib.log import LOG
 from sgui.sgqt import *
 import collections
 import math
@@ -364,7 +365,7 @@ class AbstractUiControl:
         def ok_hander():
             f_low = get_zero_to_one(f_low_spinbox.value())
             f_high = get_zero_to_one(f_high_spinbox.value())
-            print((f_low, f_high))
+            LOG.info((f_low, f_high))
             self.midi_learn_callback(self, f_cc, f_low, f_high)
             f_dialog.close()
 

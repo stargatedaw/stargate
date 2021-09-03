@@ -20,10 +20,7 @@ from sglib.ipc import *
 from sglib.lib import util
 from sglib.lib.util import *
 from sglib.lib.translate import _
-from sglib.log import (
-    LOG,
-    setup_logging,
-)
+from sglib.log import LOG
 from sglib import constants
 from sglib.math import clip_value, db_to_lin
 from sgui import widgets
@@ -1270,7 +1267,6 @@ def splash_screen_opening(default_project_file):
 
 def main(app, splash_screen, scaler):
     global MAIN_WINDOW, SPLASH_SCREEN, RESPAWN
-    setup_logging()
     major_version = util.META_DOT_JSON['version']['major']
     minor_version = util.META_DOT_JSON['version']['minor']
     LOG.info(f"Starting {major_version}-{minor_version}")

@@ -1,4 +1,5 @@
 from sglib import constants
+from sglib.log import LOG
 from sglib.models.daw import *
 from sgui.daw.shared import *
 from sglib.lib.util import *
@@ -237,7 +238,7 @@ class ItemSequencer(QGraphicsView):
                 f_pos_y = f_pos.y() - _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
                 f_beat = float(f_pos_x // _shared.SEQUENCER_PX_PER_BEAT)
                 f_track = int(f_pos_y // shared.SEQUENCE_EDITOR_TRACK_HEIGHT)
-                print(f_track, shared.TRACK_NAMES)
+                LOG.info(f_track, shared.TRACK_NAMES)
                 f_item_name = "{}-1".format(shared.TRACK_NAMES[f_track])
                 f_uid = constants.DAW_PROJECT.create_empty_item(f_item_name)
                 f_item_ref = sequencer_item(
@@ -1094,7 +1095,7 @@ class ItemSequencer(QGraphicsView):
 
     def draw_point(self, a_point):
         if a_point.index not in shared.TRACK_PANEL.plugin_uid_map:
-            print("{} not in {}".format(
+            LOG.info("{} not in {}".format(
                 a_point.index, shared.TRACK_PANEL.plugin_uid_map))
             return
         f_track = shared.TRACK_PANEL.plugin_uid_map[a_point.index]
