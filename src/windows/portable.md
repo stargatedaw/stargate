@@ -37,6 +37,11 @@ pyinstaller windows.spec
 # Build the installer exe
 python windows\nsis.py
 ```
-# ..and that is it
+
 File is dist\stargate.exe
 
+## MSYS2 Terminal
+```
+# Copy the portable exe to the full name with version info
+make windows_release
+```
