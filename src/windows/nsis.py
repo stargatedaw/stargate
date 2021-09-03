@@ -1,5 +1,6 @@
 # Run this script from Windows, not MSYS2
 
+import json
 import os
 import subprocess
 
@@ -17,7 +18,7 @@ SetCompressor /SOLID lzma
 
 Name "{MAJOR_VERSION} {MINOR_VERSION}"
 OutFile "{MAJOR_VERSION}-{MINOR_VERSION}-win64-installer.exe"
-InstallDir "$PROGRAMFILES\stargateaudio@github\Stargate"
+InstallDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
 
 ;--------------------------------
 ;Interface Settings
@@ -30,7 +31,7 @@ InstallDir "$PROGRAMFILES\stargateaudio@github\Stargate"
 ;Modern UI Configuration
 ;Installer pages
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "gpl-3.0.txt"
+!insertmacro MUI_PAGE_LICENSE "windows\gpl-3.0.txt"
 ;!insertmacro MUI_PAGE_COMPONENTS
 ;!insertmacro MUI_PAGE_DIRECTORY
 ;!insertmacro MUI_PAGE_STARTMENU pageid variable
@@ -80,10 +81,16 @@ Section "uninstall"
 SectionEnd
 """
 
-CWD = os.path.abspath(os.path.dirname(__file__))
+CWD = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__),
+        '..',
+    ),
+)
+os.chdir(CWD)
 
-with open(os.path.join(CWD, "meta.json")) as f:
-    meta = fh.read()
+with open("meta.json") as f:
+    meta = json.load(f)
 MAJOR_VERSION = meta['version']['major']
 MINOR_VERSION = meta['version']['minor']
 
