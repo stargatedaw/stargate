@@ -1,3 +1,8 @@
+# UPDATE
+This functionality is now baked into the Windows installer, you can choose
+the `Portable Flash Drive Install' component.  This document will remain to
+explain how it works.
+
 # Creating a portable Windows flash drive
 This document describes how to create a portable flash drive for Windows PCs
 that will persist all of your files and settings to the flash drive.

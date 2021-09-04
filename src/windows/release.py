@@ -47,6 +47,7 @@ InstallDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
   !define MUI_ABORTWARNING
   !define MUI_LICENSEPAGE_CHECKBOX
   !define MUI_FINISHPAGE_RUN "$INSTDIR\stargate.exe"
+  !define MUI_STARTMENUPAGE_DEFAULTFOLDER "Stargate DAW"
 
 !include MUI2.nsh
 
@@ -55,6 +56,7 @@ InstallDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
 ;Installer pages
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "windows\gpl-3.0.txt"
+
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 
@@ -76,20 +78,21 @@ Var StartMenuFolder
 ;Languages
   !insertmacro MUI_LANGUAGE "English"
 
-Section
-    UserInfo::getAccountType
-    Pop $0
+;Section
+;    UserInfo::getAccountType
+;    Pop $0
+;
+;    # compare the result with the string "Admin" to see if the user is admin.
+;    # If match, jump 3 lines down.
+;    StrCmp $0 "Admin" +3
+;
+;    # if there is not a match, print message and return
+;    MessageBox MB_OK "not admin: $0"
+;    Return
+;SectionEnd
 
-    # compare the result with the string "Admin" to see if the user is admin.
-    # If match, jump 3 lines down.
-    StrCmp $0 "Admin" +3
-
-    # if there is not a match, print message and return
-    MessageBox MB_OK "not admin: $0"
-    Return
-SectionEnd
-
-Section "install"
+Section "Base Install" SEC01
+    SectionIn RO
     SetOutPath $INSTDIR
     writeUninstaller "$INSTDIR\uninstall.exe"
     File "dist\stargate.exe"
@@ -101,8 +104,22 @@ Section "install"
       "$INSTDIR\{MAJOR_VERSION}.ico"
 SectionEnd
 
+Section /o "Portable Flash Drive Install" SEC02
+    SetOutPath $INSTDIR
+    ; The exe looks for this empty file to choose the Stargate home folder
+    FileOpen $9 _stargate_home w
+    FileClose $9
+SectionEnd
+
+LangString DESC_SEC02 ${{LANG_ENGLISH}} "Store settings and projects in the same folder as the exexecutable.  Only use this if you are installing to a flash drive."
+
+!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+!insertmacro MUI_DESCRIPTION_TEXT ${{SEC02}} $(DESC_SEC02)
+!insertmacro MUI_FUNCTION_DESCRIPTION_END
+
 Section "uninstall"
   RMDir /r $INSTDIR
+  RMDir /r $StartMenuFolder
 SectionEnd
 """
 
