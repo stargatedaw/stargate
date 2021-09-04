@@ -97,6 +97,3 @@ uninstall:
 	rm -rf $(SG_DIR)
 	rm -rf $(DESTDOR)$(PREFIX)/share/*/stargate*
 
-windows_release:
-	cp dist/$(WMAJOR).exe dist/$(WMAJOR)-$(WMINOR)-win64-portable.exe
-

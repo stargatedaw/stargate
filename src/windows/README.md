@@ -32,10 +32,8 @@ cd C:\mingw64\home\starg\src
 python -m venv C:\Users\starg\venv\stargate
 pip install pyinstaller
 pip install -r requirements-windows.txt
-# Build the portable exe
-pyinstaller windows.spec
-# Build the installer exe
-python windows\nsis.py
+# Build the portable exe and installer exe
+python windows\release.py
 ```
 
 File is dist\stargate.exe
