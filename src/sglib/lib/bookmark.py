@@ -5,6 +5,7 @@ from .util import (
 from sglib.constants import CONFIG_DIR, IS_PORTABLE_INSTALL, USER_HOME
 from sglib.log import LOG
 import os
+import pathlib
 
 BOOKMARKS_FILE = os.path.join(CONFIG_DIR, "file_browser_bookmarks.txt")
 
@@ -51,8 +52,18 @@ def add_file_bookmark(a_name, a_folder, a_category):
     if not f_category in f_dict:
         f_dict[f_category] = {}
     if IS_PORTABLE_INSTALL:
-        relpath = os.path.relpath(a_folder, USER_HOME)
-        a_folder = os.path.join("{{ USER_HOME }}", relpath)
+        folder_drive = pathlib.Path(a_folder).drive.upper()
+        user_drive = pathlib.Path(USER_HOME).drive.upper()
+        assert folder_drive and user_drive, (a_folder, USER_HOME)
+        if user_drive == folder_drive:
+            relpath = os.path.relpath(a_folder, USER_HOME)
+            a_folder = os.path.join("{{ USER_HOME }}", relpath)
+        else:
+            LOG.warning(
+                'Bookmark set to a different drive than portable install at '
+                f'"{USER_HOME}".  "{a_folder}" will not be accessible on '
+                'another computer'
+            )
     f_dict[f_category][str(a_name)] = str(a_folder)
     write_file_bookmarks(f_dict)
 
