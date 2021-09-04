@@ -42,6 +42,28 @@ if True:  # PyQt
             LOG.warning(
                 f"The platform you are using does not support Qt HiDpi: {ex}",
             )
+
+    # Work around QMenu not taking the QApplication font, even if the QMenu
+    # has a parent widget
+    class _QMenu(QMenu):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            # Avoid circular dependency
+            from sgui.util import get_font
+            font = get_font()
+            self.setFont(font.font)
+
+        def addMenu(self, *args, **kwargs):
+            menu = super().addMenu(*args, **kwargs)
+            # Avoid circular dependency
+            from sgui.util import get_font
+            font = get_font()
+            menu.setFont(font.font)
+            return menu
+
+    QMenu = _QMenu
+
+
 else:  # PySide
     # Does not work yet, needs some porting and debugging
     from PySide6 import QtGui, QtWidgets, QtCore
