@@ -46,6 +46,7 @@ InstallDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
 ;Interface Settings
   !define MUI_ABORTWARNING
   !define MUI_LICENSEPAGE_CHECKBOX
+  !define MUI_FINISHPAGE_RUN "$INSTDIR\stargate.exe"
 
 !include MUI2.nsh
 
@@ -54,9 +55,11 @@ InstallDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
 ;Installer pages
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "windows\gpl-3.0.txt"
-;!insertmacro MUI_PAGE_COMPONENTS
-;!insertmacro MUI_PAGE_DIRECTORY
-;!insertmacro MUI_PAGE_STARTMENU pageid variable
+!insertmacro MUI_PAGE_COMPONENTS
+!insertmacro MUI_PAGE_DIRECTORY
+
+Var StartMenuFolder
+!insertmacro MUI_PAGE_STARTMENU "Stargate DAW" $StartMenuFolder
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 
@@ -65,7 +68,7 @@ InstallDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
 !insertmacro MUI_UNPAGE_CONFIRM
 ;!insertmacro MUI_UNPAGE_LICENSE textfile
 ;!insertmacro MUI_UNPAGE_COMPONENTS
-;!insertmacro MUI_UNPAGE_DIRECTORY
+!insertmacro MUI_UNPAGE_DIRECTORY
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_UNPAGE_FINISH
 
