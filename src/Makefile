@@ -3,6 +3,8 @@
 PREFIX ?= /usr
 MAJOR := $(shell jq -r .version.major meta.json || echo stargate)
 MINOR := $(shell jq -r .version.minor meta.json)
+WMAJOR := $(shell /mingw64/bin/jq -r .version.major meta.json)
+WMINOR := $(shell /mingw64/bin/jq -r .version.minor meta.json)
 DESTDIR ?=
 SBSMS_PREFIX = $(PREFIX)/lib/$(MAJOR)/sbsms
 SG_DIR = $(DESTDIR)$(PREFIX)/lib/$(MAJOR)
@@ -96,5 +98,5 @@ uninstall:
 	rm -rf $(DESTDOR)$(PREFIX)/share/*/stargate*
 
 windows_release:
-	cp dist/$(MAJOR).exe dist/$(MAJOR)-$(MINOR)-win64-portable.exe
+	cp dist/$(WMAJOR).exe dist/$(WMAJOR)-$(WMINOR)-win64-portable.exe
 
