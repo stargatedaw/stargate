@@ -604,7 +604,7 @@ QGroupBox::title {
 QHeaderView::section {
     background-color: #aaaaaa;
 	color: #222222;
-    border: 1px solid #fffff8;
+    border: 1px solid #222222;
     padding: 4px;
 }
 
@@ -1063,13 +1063,11 @@ class fm1_plugin_ui(AbstractPluginUI):
             )
             f_adsr_amp1_checkbox.add_to_grid_layout(f_adsr_amp1.layout, 15)
 
-        self.fm_vlayout = QVBoxLayout(self.fm_tab)
 
         # FM Matrix
 
-        self.fm_matrix_hlayout = QHBoxLayout()
-        self.fm_vlayout.addLayout(self.fm_matrix_hlayout)
-        self.fm_matrix_hlayout.addWidget(QLabel("FM Matrix"))
+        self.fm_gridlayout = QGridLayout(self.fm_tab)
+        self.fm_gridlayout.addWidget(QLabel("FM Matrix"), 0, 0)
         self.fm_matrix = QTableWidget()
 
         self.fm_matrix.setCornerButtonEnabled(False)
@@ -1094,7 +1092,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             QHeaderView.ResizeMode.Fixed,
         )
 
-        self.fm_matrix_hlayout.addWidget(self.fm_matrix)
+        self.fm_gridlayout.addWidget(self.fm_matrix, 1, 0)
 
         for f_i in range(6):
             for f_i2 in range(6):
@@ -1111,14 +1109,6 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.fm_matrix.resizeColumnsToContents()
 
         self.fm_matrix_button = QPushButton(_("Menu"))
-        self.fm_matrix_hlayout.addWidget(
-            self.fm_matrix_button,
-            alignment=(
-                QtCore.Qt.AlignmentFlag.AlignTop
-                |
-                QtCore.Qt.AlignmentFlag.AlignLeft
-            ),
-        )
 
         self.fm_matrix_menu = QMenu(self.widget)
         self.fm_matrix_button.setMenu(self.fm_matrix_menu)
@@ -1142,33 +1132,29 @@ class fm1_plugin_ui(AbstractPluginUI):
         f_clear_fm_action = self.fm_matrix_menu.addAction(_("Clear All"))
         f_clear_fm_action.triggered.connect(self.clear_all)
 
-        self.fm_matrix_hlayout.addWidget(
-            QLabel(_("FM\nModulation\nMacros")))
+        self.fm_gridlayout.addWidget(
+            QLabel(_("FM Modulation Macros")),
+            0,
+            1,
+        )
 
         self.fm_macro_knobs_gridlayout = QGridLayout()
         self.fm_macro_knobs_gridlayout.addItem(
             QSpacerItem(
                 1,
                 1,
-                vPolicy=QSizePolicy.Policy.Expanding
+                QSizePolicy.Policy.Expanding,
+                QSizePolicy.Policy.Expanding,
             ),
             10,
-            0,
+            10,
         )
+        self.fm_macro_knobs_gridlayout.addWidget(self.fm_matrix_button, 0, 0)
 
-        self.fm_matrix_hlayout.addLayout(self.fm_macro_knobs_gridlayout)
-
-        self.fm_matrix_hlayout.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
+        self.fm_gridlayout.addLayout(self.fm_macro_knobs_gridlayout, 1, 1)
 
         self.fm_macro_knobs = []
         self.osc_amp_mod_matrix_spinboxes = [[] for x in range(2)]
-
-        self.fm_macro_labels_hlayout = QHBoxLayout()
-        self.fm_vlayout.addLayout(self.fm_macro_labels_hlayout)
-        self.fm_macro_matrix_hlayout = QHBoxLayout()
-        self.fm_vlayout.addLayout(self.fm_macro_matrix_hlayout)
 
         for f_i in range(2):
             f_port = getattr(
@@ -1189,7 +1175,10 @@ class fm1_plugin_ui(AbstractPluginUI):
                 self.preset_manager,
                 knob_kwargs=knob_kwargs,
             )
-            f_macro.add_to_grid_layout(self.fm_macro_knobs_gridlayout, f_i)
+            f_macro.add_to_grid_layout(
+                self.fm_macro_knobs_gridlayout,
+                f_i + 1,
+            )
             self.fm_macro_knobs.append(f_macro)
 
             f_fm_macro_matrix = QTableWidget()
@@ -1202,9 +1191,13 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.fm_matrix.setSelectionMode(
                 QAbstractItemView.SelectionMode.NoSelection
             )
-            self.fm_macro_labels_hlayout.addWidget(
-                QLabel("Macro {}".format(f_i + 1),
-                f_fm_macro_matrix), -1,
+            self.fm_gridlayout.addWidget(
+                QLabel(
+                    "Macro {}".format(f_i + 1),
+                    f_fm_macro_matrix
+                ),
+                2,
+                f_i,
             )
 
             f_fm_macro_matrix.setCornerButtonEnabled(False)
@@ -1232,7 +1225,7 @@ class fm1_plugin_ui(AbstractPluginUI):
                 QHeaderView.ResizeMode.Fixed,
             )
 
-            self.fm_macro_matrix_hlayout.addWidget(f_fm_macro_matrix)
+            self.fm_gridlayout.addWidget(f_fm_macro_matrix, 3, f_i)
 
             for f_i2 in range(6):
                 for f_i3 in range(6):
@@ -1263,12 +1256,6 @@ class fm1_plugin_ui(AbstractPluginUI):
                 f_fm_macro_matrix.setCellWidget(6, f_i2, f_spinbox.control)
                 self.osc_amp_mod_matrix_spinboxes[f_i].append(f_spinbox)
                 f_fm_macro_matrix.resizeColumnsToContents()
-        self.fm_macro_matrix_hlayout.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
-        self.fm_vlayout.addItem(
-            QSpacerItem(1, 1, vPolicy=QSizePolicy.Policy.Expanding),
-        )
 
         ############################
 
