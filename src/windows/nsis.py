@@ -17,7 +17,7 @@ RequestExecutionLevel admin
 SetCompressor /SOLID lzma
 
 Name "{MAJOR_VERSION} {MINOR_VERSION}"
-OutFile "{MAJOR_VERSION}-{MINOR_VERSION}-win64-installer.exe"
+OutFile "dist\{MAJOR_VERSION}-{MINOR_VERSION}-win64-installer.exe"
 InstallDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
 
 ;--------------------------------
