@@ -894,7 +894,7 @@ QRadioButton::indicator
 {
     background-color: {{ background_color_alt }};
     border-radius: 6px;
-    border: 1px solid {{ checkbox_check }};
+    border: 1px solid {{ border_color }};
     color: {{ text_color }};
     height: 18px;
     margin-left: 6px;
