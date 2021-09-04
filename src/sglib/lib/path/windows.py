@@ -6,6 +6,7 @@ INSTALL_PREFIX = os.path.abspath(
         *(['..'] * 3),
     ),
 )
+FONTS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'fonts')
 SHARE_DIR = os.path.join(INSTALL_PREFIX, 'files', 'share')
 PRESETS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'presets')
 PLUGIN_ASSETS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'plugin_assets')

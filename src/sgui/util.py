@@ -5,6 +5,7 @@ from sgui.sgqt import *
 from sglib.lib.translate import _
 from sglib.lib.util import (
     clear_file_setting,
+    FONTS_DIR,
     get_file_setting,
     set_file_setting,
 )
@@ -114,8 +115,12 @@ class FontManager:
         self.font = font
 
     def get_font_size(self):
-        px_size = self.font.pixelSize()
-        pt_size = self.font.pointSize()
+        return self._font_size(self.font)
+
+    @staticmethod
+    def _font_size(font):
+        px_size = font.pixelSize()
+        pt_size = font.pointSize()
         if px_size != -1 and pt_size == -1:
             return px_size, 'px'
         elif px_size == -1 and pt_size != -1:
@@ -161,10 +166,36 @@ class FontManager:
                 assert font.fromString(font_str), font_str
             except Exception as ex:
                 LOG.exception(ex)
-                font = QApplication.font()
+                font = FontManager._default_font()
         else:
-            font = QApplication.font()
+            font = FontManager._default_font()
         return FontManager(font)
+
+    @staticmethod
+    def _default_font():
+        default_font = QApplication.font()
+        size, unit = FontManager._font_size(default_font)
+        font_file = os.path.join(
+            FONTS_DIR,
+            'RobotoCondensed-Regular.ttf',
+        )
+        _id = QFontDatabase.addApplicationFont(font_file)
+        family = QFontDatabase.applicationFontFamilies(_id)[0]
+        font = QFont(family)
+        if unit == 'px':
+            font.setPixelSize(int(size))
+        elif unit == 'pt':
+            font.setPointSizeF(float(size))
+        else:
+            raise ValueError(unit)
+
+        return font
+
+def pt_to_px(pt):
+    dpi = QGuiApplication.primaryScreen().physicalDotsPerInch()
+    return round(
+        (pt / 72.) * dpi
+    )
 
 def setup_theme(app):
     set_font()

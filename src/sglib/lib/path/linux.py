@@ -10,6 +10,7 @@ if os.path.join("src", "sglib") in os.path.abspath(__file__):
             *([".."] * 3)
         )
     )
+    FONTS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'fonts')
     SHARE_DIR = os.path.join(INSTALL_PREFIX, 'files', 'share')
     PRESETS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'presets')
     PLUGIN_ASSETS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'plugin_assets')
@@ -24,31 +25,12 @@ else:
             *(['..'] * 6),
         )
     )
+    _STARGATE_DIR = os.path.join(INSTALL_PREFIX, 'lib', MAJOR_VERSION)
+    FONTS_DIR = os.path.join(_STARGATE_DIR, 'fonts')
     SHARE_DIR = os.path.join(INSTALL_PREFIX, 'share')
-    PRESETS_DIR = os.path.join(
-        INSTALL_PREFIX,
-        'lib',
-        MAJOR_VERSION,
-        'presets',
-    )
-    THEMES_DIR = os.path.join(
-        INSTALL_PREFIX,
-        'lib',
-        MAJOR_VERSION,
-        'themes',
-    )
-    PLUGIN_ASSETS_DIR = os.path.join(
-        INSTALL_PREFIX,
-        'lib',
-        MAJOR_VERSION,
-        'plugin_assets',
-    )
-
-    META_DOT_JSON_PATH = os.path.join(
-        INSTALL_PREFIX,
-        "lib",
-        MAJOR_VERSION,
-        "meta.json",
-    )
+    PRESETS_DIR = os.path.join(_STARGATE_DIR, 'presets')
+    THEMES_DIR = os.path.join(_STARGATE_DIR, 'themes')
+    PLUGIN_ASSETS_DIR = os.path.join(_STARGATE_DIR, 'plugin_assets')
+    META_DOT_JSON_PATH = os.path.join(_STARGATE_DIR, "meta.json")
     BIN_DIR = os.path.join(INSTALL_PREFIX, 'bin')
 
