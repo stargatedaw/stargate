@@ -1,11 +1,10 @@
 # Overview
-This is the current working-ish procedure for creating a portable Windows
-executable.  This is a single file that can be run on any 64 bit Windows,
-including from a flash drive.  Note that there is no more 32 bit MSYS2,
-so we are not able to support 32 bit Windows.
+This is the procedure for creating Windows build artifacts, both the installer,
+and the portable executable suitable for running from a flash drive.
 
-# Create a fresh 64 bit Windows 10 VM
-(or install to your hard drive if you are "into that")
+# Initial Setup
+## Create a fresh 64 bit Windows 10 VM
+(or install to your hard drive if you are `into that`)
 - Create a user called stargate
 - Install MSYS2
 - Download and install Python for Windows, the Visual Studio compiled variant
@@ -21,11 +20,15 @@ cd stargate
 ./scripts/msys2_deps.sh
 cd src/
 make mingw_deps
+```
+
+# Creating a new release
+```
 cd engine
 source mingw64-source-me.sh
 make mingw
 ```
-## Windows Cmd.exe
+## Windows cmd.exe
 ```
 venv\stargate\Scripts\activate.bat
 cd C:\mingw64\home\starg\src
@@ -36,10 +39,4 @@ pip install -r requirements-windows.txt
 python windows\release.py
 ```
 
-File is dist\stargate.exe
-
-## MSYS2 Terminal
-```
-# Copy the portable exe to the full name with version info
-make windows_release
-```
+The build artifacts are now in `dist/`
