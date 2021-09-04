@@ -2,7 +2,7 @@ from .util import (
     read_file_text,
     write_file_text,
 )
-from sglib.constants import CONFIG_DIR
+from sglib.constants import CONFIG_DIR, IS_PORTABLE_INSTALL, USER_HOME
 from sglib.log import LOG
 import os
 
@@ -15,17 +15,22 @@ def get_file_bookmarks():
             f_text = read_file_text(BOOKMARKS_FILE)
             f_arr = f_text.split("\n")
             for f_line in f_arr:
-                f_line_arr = f_line.split("|||", 2)
-                if len(f_line_arr) != 3:
-                    break
-                if os.path.isdir(f_line_arr[2]):
-                    if not f_line_arr[1] in f_result:
-                        f_result[f_line_arr[1]] = {}
-                    f_result[f_line_arr[1]][f_line_arr[0]] = f_line_arr[2]
+                if not f_line.strip():
+                    continue
+                name, category, path = f_line.split("|||", 2)
+                if IS_PORTABLE_INSTALL:
+                    path = path.replace("{{ USER_HOME }}", USER_HOME)
+                    path = os.path.abspath(path)
+                if os.path.isdir(path):
+                    if category not in f_result:
+                        f_result[category] = {}
+                    f_result[category][name] = path
                 else:
-                    LOG.warning("Warning:  Not loading bookmark '{}' "
-                        "because the directory '{}' does not "
-                        "exist.".format(f_line_arr[0], f_line_arr[2]))
+                    LOG.warning(
+                        f"Not loading bookmark '{name}' "
+                        f"because the directory '{path}' does not "
+                        "exist."
+                    )
         return f_result
     except Exception as ex:
         LOG.error("Error getting bookmarks:\n".format(ex))
@@ -45,6 +50,9 @@ def add_file_bookmark(a_name, a_folder, a_category):
     f_category = str(a_category)
     if not f_category in f_dict:
         f_dict[f_category] = {}
+    if IS_PORTABLE_INSTALL:
+        relpath = os.path.relpath(a_folder, USER_HOME)
+        a_folder = os.path.join("{{ USER_HOME }}", relpath)
     f_dict[f_category][str(a_name)] = str(a_folder)
     write_file_bookmarks(f_dict)
 
@@ -57,7 +65,8 @@ def delete_file_bookmark(a_category, a_name):
             f_dict[f_key].pop(f_name)
             write_file_bookmarks(f_dict)
         else:
-            LOG.warning("{} was not in the bookmarks file, it may "
-                "have been deleted in a different "
-                "file browser widget".format(f_key))
+            LOG.warning(
+                f"{f_key} was not in the bookmarks file, it may "
+                "have been deleted in a different file browser widget"
+            )
 

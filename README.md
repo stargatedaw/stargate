@@ -20,6 +20,7 @@ music on a computer.  To understand what Stargate is, and why, read the
 - Lightweight, minimum recommended hardware: Raspberry Pi 4, or a 10 year
   old laptop.
 - Support for display resolution from 1366x768 to 4k and above.
+- Optional portable flash drive install on Windows
 
 # Building
 [See the building instructions](docs/building.md "Building")

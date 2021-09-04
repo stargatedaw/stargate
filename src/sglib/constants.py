@@ -22,6 +22,7 @@ IS_LINUX = "linux" in sys.platform
 IS_MAC_OSX = "darwin" in sys.platform
 
 USER_HOME = os.path.expanduser("~")
+IS_PORTABLE_INSTALL = False
 
 # Check if the exe was run from a flash drive, with a '_stargate_home' file
 # created in the same directory
@@ -35,6 +36,7 @@ if IS_WINDOWS:
             "file exists"
         )
         USER_HOME = dirname
+        IS_PORTABLE_INSTALL = True
 
 HOME = os.path.join(
     USER_HOME,
