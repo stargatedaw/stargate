@@ -233,9 +233,10 @@ QCheckBox#mute_checkbox::indicator,
 QCheckBox#solo_checkbox::indicator
 {
     background-color: none;
+    border: 1px solid {{ border_color }};
     color: none;
-    height: none;
-    width: none;
+    height: 27;
+    width: 27;
 }
 
 /*Solo checkbox*/
