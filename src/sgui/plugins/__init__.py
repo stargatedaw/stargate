@@ -584,15 +584,7 @@ class PluginRackTab:
         )
 
         self.stacked_widget = QStackedWidget()
-        self.hlayout = QHBoxLayout()
-        self.vlayout.addLayout(self.hlayout)
-        self.hlayout.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
-        self.hlayout.addWidget(self.stacked_widget)
-        self.hlayout.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
+        self.vlayout.addWidget(self.stacked_widget)
         self.enabled = True
         self.plugin_racks = {}
         self.last_rack_num = None
@@ -706,7 +698,6 @@ class PluginRack:
         self.vlayout.setContentsMargins(1, 1, 1, 1)
 
         self.scrollarea = QScrollArea()
-        self.scrollarea.setFixedWidth(1239)
         self.scrollarea.setHorizontalScrollBarPolicy(
             QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
         )
@@ -717,7 +708,15 @@ class PluginRack:
         self.scrollarea.setWidgetResizable(True)
         self.scroll_widget = QWidget()
         self.scroll_widget.setObjectName("plugin_ui")
-        self.scroll_vlayout = QVBoxLayout(self.scroll_widget)
+        self.scroll_hlayout = QHBoxLayout(self.scroll_widget)
+        self.scroll_hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
+        self.scroll_vlayout = QVBoxLayout()
+        self.scroll_hlayout.addLayout(self.scroll_vlayout)
+        self.scroll_hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
         #self.scroll_widget.setContentsMargins(0, 0, 0, 0)
         self.scrollarea.setWidget(self.scroll_widget)
         for plugin in self.plugins[:PLUGINS_PER_TRACK]:
