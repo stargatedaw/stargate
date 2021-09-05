@@ -591,14 +591,30 @@ class slider_control(AbstractUiControl):
 
 
 class spinbox_control(AbstractUiControl):
-    def __init__(self, a_label, a_port_num, a_rel_callback,
-                 a_val_callback, a_min_val, a_max_val,
-                 a_default_val, a_val_conversion=_shared.KC_NONE,
-                 a_port_dict=None, a_preset_mgr=None):
+    def __init__(
+        self,
+        a_label,
+        a_port_num,
+        a_rel_callback,
+        a_val_callback,
+        a_min_val,
+        a_max_val,
+        a_default_val,
+        a_val_conversion=_shared.KC_NONE,
+        a_port_dict=None,
+        a_preset_mgr=None,
+    ):
         AbstractUiControl.__init__(
-            self, a_label, a_port_num, a_rel_callback,
-            a_val_callback, a_val_conversion,
-            a_port_dict, a_preset_mgr, a_default_val)
+            self,
+            a_label,
+            a_port_num,
+            a_rel_callback,
+            a_val_callback,
+            a_val_conversion,
+            a_port_dict,
+            a_preset_mgr,
+            a_default_val,
+        )
         self.control = QSpinBox()
         self.widget = self.control
         self.control.setRange(a_min_val, a_max_val)
@@ -624,9 +640,16 @@ class doublespinbox_control(AbstractUiControl):
         a_preset_mgr=None,
     ):
         AbstractUiControl.__init__(
-            self, a_label, a_port_num, a_rel_callback,
-            a_val_callback, a_val_conversion,
-            a_port_dict, a_preset_mgr, a_default_val)
+            self,
+            a_label,
+            a_port_num,
+            a_rel_callback,
+            a_val_callback,
+            a_val_conversion,
+            a_port_dict,
+            a_preset_mgr,
+            a_default_val,
+        )
         self.control = QDoubleSpinBox()
         self.widget = self.control
         self.control.setRange(a_min_val, a_max_val)
