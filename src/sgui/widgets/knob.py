@@ -125,6 +125,9 @@ class PixmapKnob(QDial):
         self.setFixedSize(a_size, a_size)
         self._button = QtCore.Qt.MouseButton.NoButton
 
+    def wheelEvent(self, event):
+        event.ignore()
+
     def keyPressEvent(self, a_event):
         QDial.keyPressEvent(self, a_event)
         if a_event.key() == QtCore.Qt.Key.Key_Space:
