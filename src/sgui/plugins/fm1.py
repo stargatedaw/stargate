@@ -839,9 +839,11 @@ QWidget#left_logo {
         x1: 0, y1: 0, x2: 1, y2: 1,
         stop: 0 #151416, stop: 1 #232027
     );
+    /*
     background-image: url({{ PLUGIN_ASSETS_DIR }}/va1/logo-left.svg);
     background-position: center;
     background-repeat: no-repeat;
+    */
     border: none;
 }
 
@@ -850,9 +852,11 @@ QWidget#right_logo {
         x1: 0, y1: 0, x2: 1, y2: 1,
         stop: 0 #151416, stop: 1 #232027
     );
+    /*
     background-image: url({{ PLUGIN_ASSETS_DIR }}/va1/logo-right.svg);
     background-position: center;
     background-repeat: no-repeat;
+    */
     border: none;
 }
 
@@ -1073,8 +1077,7 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.fm_matrix.setCornerButtonEnabled(False)
         self.fm_matrix.setRowCount(6)
         self.fm_matrix.setColumnCount(6)
-        self.fm_matrix.setFixedHeight(228)
-        self.fm_matrix.setFixedWidth(447)
+        self.fm_matrix.setFixedHeight(240)
         f_fm_src_matrix_labels = ["From Osc{}".format(x) for x in range(1, 7)]
         f_fm_dest_matrix_labels = ["To\nOsc{}".format(x) for x in range(1, 7)]
         self.fm_matrix.setHorizontalHeaderLabels(f_fm_dest_matrix_labels)
@@ -1203,8 +1206,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             f_fm_macro_matrix.setCornerButtonEnabled(False)
             f_fm_macro_matrix.setRowCount(7)
             f_fm_macro_matrix.setColumnCount(6)
-            f_fm_macro_matrix.setFixedHeight(264)
-            f_fm_macro_matrix.setFixedWidth(487)
+            f_fm_macro_matrix.setFixedHeight(275)
             f_fm_src_matrix_labels = ["From Osc{}".format(x)
                 for x in range(1, 7)] + ["Vol"]
             f_fm_dest_matrix_labels = ["To\nOsc{}".format(x)
