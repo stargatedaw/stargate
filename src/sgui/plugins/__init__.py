@@ -337,6 +337,7 @@ class AbstractPluginSettings:
             self.vlayout.addItem(self.spacer)
         else:
             self.controls_widget = QWidget()
+            self.controls_widget.setFixedWidth(1200)
             self.controls_widget.setObjectName("plugin_rack")
             self.layout = QHBoxLayout(self.controls_widget)
             self.layout.setContentsMargins(3, 3, 3, 3)
