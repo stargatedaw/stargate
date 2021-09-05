@@ -839,11 +839,9 @@ QWidget#left_logo {
         x1: 0, y1: 0, x2: 1, y2: 1,
         stop: 0 #151416, stop: 1 #232027
     );
-    /*
-    background-image: url({{ PLUGIN_ASSETS_DIR }}/va1/logo-left.svg);
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/fm1/logo-left.svg);
     background-position: center;
     background-repeat: no-repeat;
-    */
     border: none;
 }
 
@@ -852,11 +850,9 @@ QWidget#right_logo {
         x1: 0, y1: 0, x2: 1, y2: 1,
         stop: 0 #151416, stop: 1 #232027
     );
-    /*
-    background-image: url({{ PLUGIN_ASSETS_DIR }}/va1/logo-right.svg);
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/logo-right.svg);
     background-position: center;
     background-repeat: no-repeat;
-    */
     border: none;
 }
 
