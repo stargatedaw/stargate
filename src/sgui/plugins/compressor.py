@@ -37,6 +37,10 @@ QWidget#plugin_window{
         x1: 0, y1: 0, x2: 1, y2: 1,
         stop: 0 #6a6a6a, stop: 0.5 #a4a4a5, stop: 1 #6a6a6a
     );
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/compressor/logo.svg);
+    background-position: left;
+    background-repeat: no-repeat;
+    border: none;
 }
 
 QComboBox{

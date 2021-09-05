@@ -45,9 +45,13 @@ QMenu::item {
 
 QWidget#plugin_window{
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #227722, stop: 0.5 #337733, stop: 1 #228022
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #BE2E2E, stop: 1 #990B0B
     );
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/delay/logo.svg);
+    background-position: left;
+    background-repeat: no-repeat;
+    border: none;
 }
 
 QLabel#plugin_name_label{

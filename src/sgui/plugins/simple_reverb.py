@@ -37,10 +37,13 @@ STYLESHEET = """\
 QWidget#plugin_window{
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 0,
-        stop: 0 #7777f9,
-        stop: 0.5 #8888d6,
-        stop: 1 #7777dd
+        stop: 0 #E1EF87, stop: 0.33 #ADC038,
+        stop: 0.75 #D6E387, stop: 1 #C9E755
     );
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/reverb/logo.svg);
+    background-position: left;
+    background-repeat: no-repeat;
+    border: none;
 }
 
 QComboBox{

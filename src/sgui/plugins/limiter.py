@@ -29,9 +29,14 @@ SG_LIM_PORT_MAP = {}
 STYLESHEET = """\
 QWidget#plugin_window{
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #11116a, stop: 0.5 #1c1c5f, stop: 1 #11116a
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #026FD5, stop: 0.33 #004585,
+        stop: 0.75 #0058A8, stop: 1 #1768B3
     );
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/limiter/logo.svg);
+    background-position: left;
+    background-repeat: no-repeat;
+    border: none;
 }
 
 QComboBox{
@@ -49,6 +54,7 @@ QLabel#plugin_value_label{
     background: none;
     color: #cccccc;
 }
+
 """
 
 
