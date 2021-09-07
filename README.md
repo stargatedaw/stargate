@@ -6,8 +6,7 @@ music on a computer.  To understand what Stargate is, and why, read the
 # Links
 - [Learn Stargate by watching Youtube Videos](
   https://www.youtube.com/channel/UC0xYkPBN3cqMMaTQxc38Rfw)
-- [Chat with us on Discord](
-  https://discord.com/channels/884471705194627102/884471705194627105)
+- [Chat with us on Discord](https://discord.gg/7mP5psUN7D)
 - [Get the latest Stargate news on Twitter](https://twitter.com/stargatedaw)
 
 # Features
