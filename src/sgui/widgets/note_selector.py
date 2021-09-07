@@ -29,6 +29,7 @@ class note_selector_widget:
         self.octave_spinbox.setValue(3)
         self.octave_spinbox.contextMenuEvent = self.context_menu_event
         self.widget = QWidget()
+        self.widget.setObjectName("note_selector")
         self.layout = QHBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.widget.setLayout(self.layout)

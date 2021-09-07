@@ -15,6 +15,7 @@ GNU General Public License for more details.
 
 from sgui.widgets import *
 from sglib.lib.translate import _
+from .util import get_screws
 
 
 TRIGGERFX_INPUT0 = 0
@@ -37,78 +38,243 @@ TRIGGERFX_PORT_MAP = {
     "Glitch Time": TRIGGERFX_GLITCH_TIME
 }
 
+STYLESHEET = """
+QWidget#plugin_window {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #339933, stop: 0.5 #33743f, stop: 1 #339833
+    );
+}
+
+QSpinBox,
+QDoubleSpinBox,
+QComboBox {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+    );
+    border: 1px solid #222222;
+    border-radius: 6px;
+    color: #222222;
+}
+
+QLabel#plugin_name_label,
+QLabel#plugin_value_label {
+    background: none;
+    color: #222222;
+}
+
+QComboBox::drop-down
+{
+    border-bottom-right-radius: 3px;
+    border-left-color: #222222;
+    border-left-style: solid; /* just a single line */
+    border-left-width: 0px;
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    color: #cccccc;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+}
+
+QComboBox::down-arrow
+{
+    image: url({{ PLUGIN_ASSETS_DIR }}/drop-down.svg);
+}
+
+QCheckBox,
+QRadioButton
+{
+    background: none;
+    color: #cccccc;
+    margin: 3px;
+    padding: 0px;
+}
+
+QCheckBox::indicator,
+QRadioButton::indicator
+{
+    background-color: #222222;
+    border-radius: 6px;
+    border: 1px solid #cccccc;
+    color: #cccccc;
+    height: 18px;
+    margin-left: 6px;
+    width: 18px;
+}
+
+QCheckBox::indicator:checked,
+QRadioButton::indicator:checked
+{
+    background-color: qradialgradient(
+        cx: 0.5, cy: 0.5,
+        fx: 0.5, fy: 0.5,
+        radius: 1.0,
+        stop: 0.25 #cccccc,
+        stop: 0.3 #222222
+    );
+}
+
+QPushButton:hover
+{
+    border: 2px solid #cccccc;
+}
+
+QRadioButton::indicator:hover,
+QCheckBox::indicator:hover
+{
+    border: 1px solid #ffffff;
+}
+
+QWidget#note_selector {
+    background: none;
+}
+"""
 
 
 class triggerfx_plugin_ui(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
-        AbstractPluginUI.__init__(self, *args, **kwargs)
+        AbstractPluginUI.__init__(
+            self,
+            *args,
+            stylesheet=STYLESHEET,
+            **kwargs,
+        )
         self._plugin_name = "TRIGGERFX"
         self.is_instrument = False
 
         self.preset_manager = None
 
-        self.delay_hlayout = QHBoxLayout()
-        self.layout.addLayout(self.delay_hlayout)
+        self.main_hlayout = QHBoxLayout()
+        self.layout.addLayout(self.main_hlayout)
+        left_screws = get_screws()
+        self.main_hlayout.addLayout(left_screws)
 
         f_knob_size = DEFAULT_KNOB_SIZE
+        knob_kwargs = {
+            'arc_width_pct': 0.,
+            'fg_svg': os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'knob-plastic-3.svg',
+            ),
+        }
 
-        self.delay_hlayout.addWidget(QLabel(_("Gate")))
         self.gate_gridlayout = QGridLayout()
-        self.delay_hlayout.addLayout(self.gate_gridlayout)
-        self.delay_hlayout.addLayout
+        self.main_hlayout.addLayout(self.gate_gridlayout)
+        self.main_hlayout.addLayout
         self.gate_on_checkbox = checkbox_control(
-            "On", TRIGGERFX_GATE_MODE,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, a_preset_mgr=self.preset_manager)
+            "Gate",
+            TRIGGERFX_GATE_MODE,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            a_preset_mgr=self.preset_manager,
+        )
         self.gate_on_checkbox.add_to_grid_layout(self.gate_gridlayout, 3)
         self.gate_note_selector = note_selector_widget(
             TRIGGERFX_GATE_NOTE,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, 120, self.preset_manager)
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            120,
+            self.preset_manager,
+        )
         self.gate_note_selector.add_to_grid_layout(self.gate_gridlayout, 6)
         self.gate_wet_knob = knob_control(
-            f_knob_size, _("Wet"), TRIGGERFX_GATE_WET,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            0, 100, 0, KC_DECIMAL, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Wet"),
+            TRIGGERFX_GATE_WET,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            0,
+            100,
+            0,
+            KC_DECIMAL,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.gate_wet_knob.add_to_grid_layout(self.gate_gridlayout, 9)
 
         self.gate_pitch_knob = knob_control(
-            f_knob_size, _("Pitch"), TRIGGERFX_GATE_PITCH,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            20, 120, 60, KC_PITCH, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Pitch"),
+            TRIGGERFX_GATE_PITCH,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            20,
+            120,
+            60,
+            KC_PITCH,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.gate_pitch_knob.add_to_grid_layout(self.gate_gridlayout, 12)
 
-        self.delay_hlayout.addWidget(QLabel(_("Glitch")))
+        self.main_hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
         self.glitch_gridlayout = QGridLayout()
-        self.delay_hlayout.addLayout(self.glitch_gridlayout)
+        self.main_hlayout.addLayout(self.glitch_gridlayout)
 
         self.glitch_on_checkbox = checkbox_control(
-            "On", TRIGGERFX_GLITCH_ON,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, a_preset_mgr=self.preset_manager)
+            "Glitch",
+            TRIGGERFX_GLITCH_ON,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            a_preset_mgr=self.preset_manager,
+        )
         self.glitch_on_checkbox.add_to_grid_layout(self.glitch_gridlayout, 3)
         self.glitch_note_selector = note_selector_widget(
             TRIGGERFX_GLITCH_NOTE,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, 119, self.preset_manager)
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            119,
+            self.preset_manager,
+        )
         self.glitch_note_selector.add_to_grid_layout(self.glitch_gridlayout, 6)
         self.glitch_time_knob = knob_control(
-            f_knob_size, _("Time"), TRIGGERFX_GLITCH_TIME,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            1, 25, 10, KC_TIME_DECIMAL, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Time"),
+            TRIGGERFX_GLITCH_TIME,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            1,
+            25,
+            10,
+            KC_TIME_DECIMAL,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.glitch_time_knob.add_to_grid_layout(self.glitch_gridlayout, 9)
         self.glitch_pb_knob = knob_control(
-            f_knob_size, _("Pitchbend"), TRIGGERFX_GLITCH_PB,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            0, 36, 0, KC_INTEGER, self.port_dict, self.preset_manager)
+            f_knob_size,
+            _("Pitchbend"),
+            TRIGGERFX_GLITCH_PB,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            0,
+            36,
+            0,
+            KC_INTEGER,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
         self.glitch_pb_knob.add_to_grid_layout(self.glitch_gridlayout, 12)
+        right_screws = get_screws()
+        self.main_hlayout.addLayout(right_screws)
 
         f_note_triggered_label = QLabel(_(
             _("The effects are triggered when you play their \n"
             "selected note.  Usually you will want to change the note\n"
             "range on any instrument plugins on the same track to not\n"
             "include the selected note for these effects.")))
-        self.delay_hlayout.addWidget(f_note_triggered_label)
+        # self.main_hlayout.addWidget(f_note_triggered_label)
 
         self.open_plugin_file()
         self.set_midi_learn(TRIGGERFX_PORT_MAP)

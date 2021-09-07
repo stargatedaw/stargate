@@ -15,6 +15,7 @@ GNU General Public License for more details.
 
 from sgui.widgets import *
 from sglib.lib.translate import _
+from .util import get_screws
 
 SG_VOCODER_WET = 0
 SG_VOCODER_MODULATOR = 1
@@ -31,10 +32,38 @@ SG_VOCODER_TEXT = _(
 and route the modulator signal to the track's
 sidechain input.""")
 
+STYLESHEET = """
+QWidget#plugin_window {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #993399, stop: 0.5 #74337f, stop: 1 #993398
+    );
+}
+
+QLabel#plugin_name_label,
+QLabel#plugin_value_label {
+    background: none;
+    color: #222222;
+}
+
+"""
+
 
 class sg_vocoder_plugin_ui(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
-        AbstractPluginUI.__init__(self, *args, **kwargs)
+        AbstractPluginUI.__init__(
+            self,
+            *args,
+            stylesheet=STYLESHEET,
+            **kwargs
+        )
+        knob_kwargs = {
+            'arc_width_pct': 0.,
+            'fg_svg': os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'knob-plastic-4.svg',
+            ),
+        }
         self._plugin_name = "SG Vocoder"
         self.is_instrument = False
         f_knob_size = DEFAULT_KNOB_SIZE
@@ -42,28 +71,67 @@ class sg_vocoder_plugin_ui(AbstractPluginUI):
 
         self.hlayout = QHBoxLayout()
         self.layout.addLayout(self.hlayout)
+        left_screws = get_screws()
+        self.hlayout.addLayout(left_screws)
+        self.hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
+
         self.groupbox_gridlayout = QGridLayout()
         self.hlayout.addLayout(self.groupbox_gridlayout)
 
+        self.hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
+        right_screws = get_screws()
+        self.hlayout.addLayout(right_screws)
+
         self.wet_knob = knob_control(
-            f_knob_size, _("Wet"), SG_VOCODER_WET,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -500, 0, 0, KC_TENTH, self.port_dict)
+            f_knob_size,
+            _("Wet"),
+            SG_VOCODER_WET,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -500,
+            0,
+            0,
+            KC_TENTH,
+            self.port_dict,
+            knob_kwargs=knob_kwargs,
+        )
         self.wet_knob.add_to_grid_layout(self.groupbox_gridlayout, 3)
 
         self.modulator_knob = knob_control(
-            f_knob_size, _("Modulator"), SG_VOCODER_MODULATOR,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -500, 0, -500, KC_TENTH, self.port_dict)
+            f_knob_size,
+            _("Modulator"),
+            SG_VOCODER_MODULATOR,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -500,
+            0,
+            -500,
+            KC_TENTH,
+            self.port_dict,
+            knob_kwargs=knob_kwargs,
+        )
         self.modulator_knob.add_to_grid_layout(self.groupbox_gridlayout, 9)
 
         self.carrier_knob = knob_control(
-            f_knob_size, _("Carrier"), SG_VOCODER_CARRIER,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -500, 0, -500, KC_TENTH, self.port_dict)
+            f_knob_size,
+            _("Carrier"),
+            SG_VOCODER_CARRIER,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -500,
+            0,
+            -500,
+            KC_TENTH,
+            self.port_dict,
+            knob_kwargs=knob_kwargs,
+        )
         self.carrier_knob.add_to_grid_layout(self.groupbox_gridlayout, 6)
 
-        self.hlayout.addWidget(QLabel(SG_VOCODER_TEXT))
+        # self.hlayout.addWidget(QLabel(SG_VOCODER_TEXT))
 
         self.open_plugin_file()
         self.set_midi_learn(SG_VOCODER_PORT_MAP)
