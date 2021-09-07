@@ -16,7 +16,7 @@ if "--delay" in sys.argv:
 def qt_message_handler(mode, context, message):
     line = (
         f'qt_message_handler: {mode} '
-        f'{context.file}:{context.line}:{context.functio}'
+        f'{context.file}:{context.line}:{context.function}'
         f' "{message}"'
     )
     if mode == QtCore.QtWarningMsg:
