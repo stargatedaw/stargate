@@ -326,7 +326,7 @@ QDoubleSpinBox::down-button
 
 QSlider
 {
-    background:transparent;
+    background: transparent;
     border: 2px solid transparent;
 }
 
