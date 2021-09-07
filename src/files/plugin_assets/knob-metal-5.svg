@@ -6,7 +6,7 @@
    fill="none"
    version="1.1"
    id="svg86"
-   sodipodi:docname="Group 14.svg"
+   sodipodi:docname="knob-metal-5.svg"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -26,14 +26,14 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:zoom="2.7635135"
-     inkscape:cx="88.655257"
-     inkscape:cy="121.40342"
+     inkscape:cx="60.249389"
+     inkscape:cy="121.22249"
      inkscape:window-width="1920"
-     inkscape:window-height="1009"
+     inkscape:window-height="1011"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg86" />
+     inkscape:current-layer="g14" />
   <g
      filter="url(#filter0_d)"
      id="g14"
@@ -67,7 +67,7 @@
        d="m 146,33 c -2.209,0 -4,1.7908 -4,4 V 77.9295 C 105.174,83.6924 77,115.556 77,154 c 0,42.526 34.474,77 77,77 42.526,0 77,-34.474 77,-77 0,-38.444 -28.174,-70.3076 -65,-76.0705 V 37 c 0,-2.2092 -1.791,-4 -4,-4 z"
        fill="url(#paint1_linear)"
        id="path12"
-       style="fill:url(#paint1_linear)" />
+       style="fill:#575764;fill-opacity:1" />
   </g>
   <defs
      id="defs84">
