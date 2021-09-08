@@ -65,7 +65,7 @@ mingw_deps:
 		 /mingw64/bin/libfftw3f-3.dll \
 		 /mingw64/bin/libogg-0.dll \
 		 /mingw64/bin/libopus-0.dll \
-		 /mingw64/bin/libportaudio-2.dll \
+		 /mingw64/bin/libportaudio.dll \
 		 /mingw64/bin/libportmidi.dll \
 		 /mingw64/bin/librubberband-2.dll \
 		 /mingw64/bin/libsndfile-1.dll \
