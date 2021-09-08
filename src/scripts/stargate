@@ -27,7 +27,7 @@ def qt_message_handler(mode, context, message):
         LOG.info(line)
 
 def start_stargate():
-    global LOG
+    global LOG, QtCore
     from sglib.log import LOG, setup_logging
     setup_logging()
     LOG.info(f"sys.argv == {sys.argv}")
