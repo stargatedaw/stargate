@@ -40,30 +40,106 @@ SGEQ_SPECTRUM_ENABLED = 22
 
 SGEQ_PORT_MAP = {}
 
+STYLESHEET = """\
+QWidget#plugin_groupbox,
+QWidget#plugin_window,
+QWidget#plugin_ui {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #6a6a6a, stop: 0.5 #a4a4a5, stop: 1 #6a6a6a
+    );
+    border: none;
+}
+
+QGroupBox#plugin_groupbox {
+    border: 2px solid #222222;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left; /* position at the top center */
+    padding: 0 3px;
+    background-color: #222222;
+    border: 2px solid #333333;
+    color: #cccccc;
+}
+
+QComboBox{
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+    );
+    border: 1px solid #222222;
+    border-radius: 6px;
+    color: #cccccc;
+}
+
+QLabel#plugin_name_label{
+    background: none;
+    color: #222222;
+}
+
+QLabel#plugin_value_label{
+    background: none;
+    color: #222222;
+}
+
+QPushButton {
+    background: #222222;
+    border: 2px solid #333333;
+    color: #cccccc;
+}
+
+QPushButton:hover {
+    border: 2px solid #cccccc;
+}
+
+"""
 
 class sgeq_plugin_ui(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
-        AbstractPluginUI.__init__(self, *args, **kwargs)
+        AbstractPluginUI.__init__(
+            self,
+            *args,
+            stylesheet=STYLESHEET,
+            **kwargs,
+        )
         self._plugin_name = "SGEQ"
         self.is_instrument = False
 
         self.preset_manager = None
         self.spectrum_enabled = None
+        knob_kwargs = {
+            'arc_width_pct': 0.,
+            'fg_svg': os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'va1',
+                'knob.svg',
+            ),
+        }
 
         f_knob_size = 48
 
         self.eq6 = eq6_widget(
             SGEQ_EQ1_FREQ,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, a_preset_mgr=self.preset_manager,
-            a_size=f_knob_size, a_vlayout=False)
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            a_preset_mgr=self.preset_manager,
+            a_size=f_knob_size,
+            a_vlayout=False,
+            knob_kwargs=knob_kwargs,
+        )
 
         self.layout.addWidget(self.eq6.widget)
 
         self.spectrum_enabled = null_control(
             SGEQ_SPECTRUM_ENABLED,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            0, self.port_dict)
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            0,
+            self.port_dict,
+        )
 
         self.open_plugin_file()
         self.set_midi_learn(SGEQ_PORT_MAP)

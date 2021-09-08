@@ -247,10 +247,20 @@ class eq_viewer(QGraphicsView):
 
 
 class eq_widget:
-    def __init__(self, a_number, a_freq_port, a_res_port,
-                 a_gain_port, a_rel_callback,
-                 a_val_callback, a_default_value, a_port_dict=None,
-                 a_preset_mgr=None, a_size=48):
+    def __init__(
+        self,
+        a_number,
+        a_freq_port,
+        a_res_port,
+        a_gain_port,
+        a_rel_callback,
+        a_val_callback,
+        a_default_value,
+        a_port_dict=None,
+        a_preset_mgr=None,
+        a_size=48,
+        knob_kwargs={},
+    ):
         self.groupbox = QGroupBox("EQ{}".format(a_number))
         self.groupbox.setObjectName("plugin_groupbox")
         self.layout = QGridLayout(self.groupbox)
@@ -267,19 +277,40 @@ class eq_widget:
             _shared.KC_PITCH,
             a_port_dict,
             a_preset_mgr,
+            knob_kwargs=knob_kwargs,
         )
         self.freq_knob.add_to_grid_layout(self.layout, 0)
 
         self.res_knob = knob_control(
-            a_size, "BW", a_res_port, a_rel_callback,
-            a_val_callback, 100.0, 600.0, 300.0, _shared.KC_DECIMAL,
-            a_port_dict, a_preset_mgr)
+            a_size,
+            "BW",
+            a_res_port,
+            a_rel_callback,
+            a_val_callback,
+            100.0,
+            600.0,
+            300.0,
+            _shared.KC_DECIMAL,
+            a_port_dict,
+            a_preset_mgr,
+            knob_kwargs=knob_kwargs,
+        )
         self.res_knob.add_to_grid_layout(self.layout, 1)
 
         self.gain_knob = knob_control(
-            a_size, _("Gain"), a_gain_port, a_rel_callback,
-            a_val_callback, -240.0, 240.0, 0.0, _shared.KC_TENTH,
-            a_port_dict, a_preset_mgr)
+            a_size,
+            _("Gain"),
+            a_gain_port,
+            a_rel_callback,
+            a_val_callback,
+            -240.0,
+            240.0,
+            0.0,
+            _shared.KC_TENTH,
+            a_port_dict,
+            a_preset_mgr,
+            knob_kwargs=knob_kwargs,
+        )
         self.gain_knob.add_to_grid_layout(self.layout, 2)
 
 EQ6_CLIPBOARD = None
@@ -339,9 +370,17 @@ EQ6_FORMANTS = {
 
 
 class eq6_widget:
-    def __init__(self, a_first_port, a_rel_callback, a_val_callback,
-                 a_port_dict=None, a_preset_mgr=None,
-                 a_size=48, a_vlayout=True):
+    def __init__(
+        self,
+        a_first_port,
+        a_rel_callback,
+        a_val_callback,
+        a_port_dict=None,
+        a_preset_mgr=None,
+        a_size=48,
+        a_vlayout=True,
+        knob_kwargs={},
+    ):
         self.rel_callback = a_rel_callback
         self.val_callback = a_val_callback
         self.widget = QWidget()
@@ -396,9 +435,18 @@ class eq6_widget:
 
         for f_i in range(1, 7):
             f_eq = eq_widget(
-                f_i, f_port, f_port + 1, f_port + 2,
-                a_rel_callback, self.knob_callback,
-                f_default_value, a_port_dict, a_preset_mgr, a_size)
+                f_i,
+                f_port,
+                f_port + 1,
+                f_port + 2,
+                a_rel_callback,
+                self.knob_callback,
+                f_default_value,
+                a_port_dict,
+                a_preset_mgr,
+                a_size,
+                knob_kwargs=knob_kwargs,
+            )
             self.eqs.append(f_eq)
             self.grid_layout.addWidget(f_eq.groupbox, f_y, f_x)
 
