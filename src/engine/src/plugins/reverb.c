@@ -22,7 +22,7 @@ GNU General Public License for more details.
 #include "audiodsp/modules/delay/reverb.h"
 #include "audiodsp/modules/filter/svf.h"
 #include "plugin.h"
-#include "plugins/simple_reverb.h"
+#include "plugins/reverb.h"
 
 
 void v_sreverb_cleanup(PluginHandle instance)

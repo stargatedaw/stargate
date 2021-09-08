@@ -17,7 +17,7 @@
 #include "plugins/va1.h"
 #include "plugins/sidechain_comp.h"
 #include "plugins/simple_fader.h"
-#include "plugins/simple_reverb.h"
+#include "plugins/reverb.h"
 #include "plugins/trigger_fx.h"
 #include "plugins/fm1.h"
 #include "plugins/xfade.h"

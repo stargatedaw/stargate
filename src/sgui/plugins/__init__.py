@@ -32,7 +32,7 @@ from sgui.plugins import multifx
 from sgui.plugins import va1
 from sgui.plugins import sidechain_comp
 from sgui.plugins import simple_fader
-from sgui.plugins import simple_reverb
+from sgui.plugins import reverb
 from sgui.plugins import trigger_fx
 from sgui.plugins import vocoder
 from sgui.plugins import fm1
@@ -60,7 +60,7 @@ PLUGIN_NAMES = [
     "MultiFX",
     "Sidechain Comp.",
     "Simple Fader",
-    "Simple Reverb",
+    "SG Reverb",
     "TriggerFX",
     "X-Fade",
 ]
@@ -74,7 +74,7 @@ PLUGIN_UIDS = {
     "SG Delay": 5,
     "SG EQ": 6,
     "Simple Fader": 7,
-    "Simple Reverb": 8,
+    "SG Reverb": 8,
     "TriggerFX": 9,
     "Sidechain Comp.": 10,
     "SG Channel": 11,
@@ -86,7 +86,7 @@ PLUGIN_UIDS = {
 
 PLUGINS_SYNTH = ["VA1", "FM1"]
 PLUGINS_SAMPLER = ["Sampler1",]
-PLUGINS_EFFECTS = ["MultiFX", "SG Delay", "SG EQ", "Simple Reverb"]
+PLUGINS_EFFECTS = ["MultiFX", "SG Delay", "SG EQ", "SG Reverb"]
 PLUGINS_MIDI_TRIGGERED = ["TriggerFX"]
 PLUGINS_DYNAMICS = ["SG Compressor", "SG Limiter"]
 PLUGINS_SIDECHAIN = ["Sidechain Comp.", "X-Fade", "SG Vocoder",]
@@ -122,7 +122,7 @@ PLUGIN_UI_TYPES = {
     5: delay.sgdelay_plugin_ui,
     6: eq.sgeq_plugin_ui,
     7: simple_fader.sfader_plugin_ui,
-    8: simple_reverb.sreverb_plugin_ui,
+    8: reverb.ReverbPluginUI,
     9: trigger_fx.triggerfx_plugin_ui,
     10: sidechain_comp.scc_plugin_ui,
     11: channel.SgChnlPluginUI,
@@ -142,7 +142,7 @@ PORTMAP_DICT = {
     "SG Delay": delay.SGDELAY_PORT_MAP,
     "SG EQ": eq.SGEQ_PORT_MAP,
     "Simple Fader": simple_fader.SFADER_PORT_MAP,
-    "Simple Reverb": simple_reverb.SREVERB_PORT_MAP,
+    "SG Reverb": reverb.SREVERB_PORT_MAP,
     "TriggerFX": trigger_fx.TRIGGERFX_PORT_MAP,
     "Sidechain Comp.": sidechain_comp.SCC_PORT_MAP,
     "X-Fade": xfade.XFADE_PORT_MAP,

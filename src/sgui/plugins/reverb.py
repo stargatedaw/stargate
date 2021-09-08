@@ -66,7 +66,7 @@ QLabel#plugin_name_label
 
 """
 
-class sreverb_plugin_ui(AbstractPluginUI):
+class ReverbPluginUI(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
         AbstractPluginUI.__init__(
             self,
