@@ -15,6 +15,7 @@ GNU General Public License for more details.
 
 from sgui.widgets import *
 from sglib.lib.translate import _
+from sglib.lib import util
 from .util import get_screws
 
 
@@ -129,6 +130,10 @@ QCheckBox::indicator:hover
 QWidget#note_selector {
     background: none;
 }
+
+QLabel#logo {
+    background: none;
+}
 """
 
 
@@ -212,6 +217,20 @@ class triggerfx_plugin_ui(AbstractPluginUI):
         )
         self.gate_pitch_knob.add_to_grid_layout(self.gate_gridlayout, 12)
 
+        self.main_hlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
+        pixmap = QPixmap(
+            os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'triggerfx',
+                'logo.svg',
+            )
+        )
+        self.logo_label = QLabel("")
+        self.logo_label.setObjectName("logo")
+        self.logo_label.setPixmap(pixmap)
+        self.main_hlayout.addWidget(self.logo_label)
         self.main_hlayout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )

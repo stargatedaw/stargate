@@ -81,6 +81,9 @@ QSlider::handle:horizontal
     margin-top: -30px;
 }
 
+QLabel#logo {
+    background: none;
+}
 """
 
 class xfade_plugin_ui(AbstractPluginUI):
@@ -145,6 +148,17 @@ class xfade_plugin_ui(AbstractPluginUI):
         self.midpoint_knob.add_to_grid_layout(self.volume_gridlayout, 1)
         self.midpoint_knob.value_label.setMinimumWidth(60)
 
+        pixmap = QPixmap(
+            os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'xfade',
+                'logo.svg',
+            )
+        )
+        self.logo_label = QLabel("")
+        self.logo_label.setObjectName("logo")
+        self.logo_label.setPixmap(pixmap)
+        self.hlayout.addWidget(self.logo_label)
         right_screws = get_screws()
         self.hlayout.addLayout(right_screws)
 

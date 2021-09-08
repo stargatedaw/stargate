@@ -15,6 +15,7 @@ GNU General Public License for more details.
 
 from sgui.widgets import *
 from sglib.lib.translate import _
+from .util import get_screws
 
 
 MULTIFX_FIRST_CONTROL_PORT = 4
@@ -80,13 +81,118 @@ MULTIFX_PORT_MAP = {
     "FX7 Knob2": MULTIFX_FX7_KNOB2,
 }
 
+STYLESHEET = """\
+QWidget#plugin_window{
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #2a2a2a, stop: 0.5 #3a3a3f, stop: 1 #2a2a2a
+    );
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/sidechain_compressor/logo.svg);
+    background-position: left;
+    background-repeat: no-repeat;
+    border: none;
+}
+
+QGroupBox#plugin_groupbox {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #060648, stop: 0.5 #0D0D4B, stop: 1 #060648
+    );
+    border: 2px solid #cccccc;
+    color: #cccccc;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
+    padding: 0 3px;
+    background-color: #0D0D4B;
+    border: 2px solid #cccccc;
+}
+
+QLabel#plugin_name_label,
+QLabel#plugin_value_label {
+    background: none;
+    color: #cccccc;
+}
+
+QComboBox{
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+    );
+    border: 1px solid #222222;
+    border-radius: 6px;
+    color: #222222;
+}
+
+QAbstractItemView
+{
+    background-color: #222222;
+    border: 2px solid #aaaaaa;
+    selection-background-color: #cccccc;
+}
+
+QComboBox::drop-down
+{
+    border-bottom-right-radius: 3px;
+    border-left-color: #222222;
+    border-left-style: solid; /* just a single line */
+    border-left-width: 0px;
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    color: #cccccc;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+}
+
+QComboBox::down-arrow
+{
+    image: url({{ PLUGIN_ASSETS_DIR }}/drop-down.svg);
+}
+
+QWidget#left_logo {
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #040438, stop: 1 #060630
+    );
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/multifx/logo-left.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+}
+
+QWidget#right_logo {
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #040438, stop: 1 #060630
+    );
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/logo-right.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+}
+"""
 
 
 class multifx_plugin_ui(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
-        AbstractPluginUI.__init__(self, *args, **kwargs)
+        AbstractPluginUI.__init__(
+            self,
+            *args,
+            stylesheet=STYLESHEET,
+            **kwargs,
+        )
         self._plugin_name = "MULTIFX"
         self.is_instrument = False
+        knob_kwargs = {
+            'arc_width_pct': 0.0,
+            'fg_svg': os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'va1',
+                'knob.svg',
+            ),
+        }
 
         self.preset_manager = preset_manager_widget(
             self.get_plugin_name())
@@ -98,8 +204,35 @@ class multifx_plugin_ui(AbstractPluginUI):
         self.layout.addLayout(self.presets_hlayout)
         self.spectrum_enabled = None
 
+        self.main_hlayout = QHBoxLayout()
+        self.layout.addLayout(self.main_hlayout)
+        left_screws = get_screws()
+        left_logo = QWidget()
+        left_logo.setObjectName("left_logo")
+        left_logo.setSizePolicy(
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Minimum,
+        )
+        left_logo.setLayout(left_screws)
+        self.main_hlayout.addWidget(left_logo)
+
         self.fx_tab = QWidget()
-        self.layout.addWidget(self.fx_tab)
+        self.fx_tab.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding,
+        )
+        self.main_hlayout.addWidget(self.fx_tab)
+
+        right_screws = get_screws()
+        right_logo = QWidget()
+        right_logo.setObjectName("right_logo")
+        right_logo.setLayout(right_screws)
+        right_logo.setSizePolicy(
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Minimum,
+        )
+        self.main_hlayout.addWidget(right_logo)
+
         self.fx_layout = QGridLayout()
         self.fx_hlayout = QHBoxLayout(self.fx_tab)
         self.fx_hlayout.addLayout(self.fx_layout)
@@ -111,9 +244,15 @@ class multifx_plugin_ui(AbstractPluginUI):
         f_row = 0
         for f_i in range(8):
             f_effect = multifx_single(
-                "FX{}".format(f_i), f_port,
-                self.plugin_rel_callback, self.plugin_val_callback,
-                self.port_dict, self.preset_manager, a_knob_size=f_knob_size)
+                "FX{}".format(f_i),
+                f_port,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                self.port_dict,
+                self.preset_manager,
+                a_knob_size=f_knob_size,
+                knob_kwargs=knob_kwargs,
+            )
             self.effects.append(f_effect)
             self.fx_layout.addWidget(f_effect.group_box, f_row, f_column)
             f_column += 1

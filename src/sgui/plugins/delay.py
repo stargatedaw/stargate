@@ -54,20 +54,10 @@ QWidget#plugin_window{
     border: none;
 }
 
-QLabel#plugin_name_label{
-    background: #cccccc;
-    color: #222222;
-    border: 2px solid #222222;
-    border-radius: 4px;
-}
-
-QLabel#plugin_name_label{
-    color: #222222;
-}
-
-QLabel#plugin_value_label{
+QLabel#plugin_name_label,
+QLabel#plugin_value_label {
     background: none;
-    color: #222222;
+    color: #cccccc;
 }
 """
 
@@ -83,12 +73,10 @@ class sgdelay_plugin_ui(AbstractPluginUI):
         self.is_instrument = False
 
         knob_kwargs={
-            'arc_brush': QColor("#cccccc"),
-            'arc_bg_brush': QColor("#5a5a5a"),
-            'arc_width_pct': 12.,
+            'arc_width_pct': 0.,
             'fg_svg': os.path.join(
                 util.PLUGIN_ASSETS_DIR,
-                'knob-metal-4.svg',
+                'knob-metal-1.svg',
             ),
         }
 

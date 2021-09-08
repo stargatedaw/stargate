@@ -38,6 +38,10 @@ QWidget#plugin_window {
         x1: 0, y1: 0, x2: 1, y2: 0,
         stop: 0 #993399, stop: 0.5 #74337f, stop: 1 #993398
     );
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/vocoder/logo.svg);
+    background-position: left;
+    background-repeat: no-repeat;
+    border: none;
 }
 
 QLabel#plugin_name_label,

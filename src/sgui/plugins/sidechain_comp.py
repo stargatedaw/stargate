@@ -36,6 +36,10 @@ QWidget#plugin_window{
         x1: 0, y1: 0, x2: 1, y2: 1,
         stop: 0 #2a2a2a, stop: 0.5 #3a3a3f, stop: 1 #2a2a2a
     );
+    background-image: url({{ PLUGIN_ASSETS_DIR }}/sidechain_compressor/logo.svg);
+    background-position: left;
+    background-repeat: no-repeat;
+    border: none;
 }
 
 QComboBox{
