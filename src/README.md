@@ -4,12 +4,12 @@
 
 # Architecture
 The UI is written in Python and PyQt.  PyQt5 and PyQt6 are both supported,
-presently the default is PyQt5 because most package managers do not have PyQt6
-at the time of this writing.  You can specify PyQt6 by passing in the
-environment variable `_USE_PYQT6=1`.  If PyQt6 is available, and PyQt5 is not,
-then PyQt6 will be used without any additional configuration.  Once PyQt6 is
-available in Debian stable, Fedora, MinGW and Homebrew, PyQt5 will be
-deprecated and removed.
+presently the default is PyQt5 because it fixes some issues with Wayland, but
+most package managers do not have PyQt6 at the time of this writing.  You can
+specify PyQt5 by passing in the environment variable `_USE_PYQT5=1`.  If PyQt5
+is available, and PyQt6 is not, then PyQt5 will be used without any additional
+configuration.  Once PyQt6 is available in Debian stable, Fedora, MinGW and
+Homebrew, PyQt5 will be deprecated and removed.
 
 The audio/dsp engine is written in C and runs as a separate process,
 communicating over UDP sockets.
