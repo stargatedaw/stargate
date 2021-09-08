@@ -54,4 +54,4 @@ cd C:\msys64\home\starg\src\stargate\src
 python windows\release.py
 ```
 
-The build artifacts are now in `C:\msys64\home\starg\src\stargate\dist\`
+The build artifacts are now in `C:\msys64\home\starg\src\stargate\src\dist\`
