@@ -240,7 +240,7 @@ typedef struct {
 } t_va1;
 
 
-void g_va1_poly_init(t_va1_poly_voice*, SGFLT);
+void g_va1_poly_init(t_va1_poly_voice*, SGFLT, int);
 void v_va1_poly_note_off(t_va1_poly_voice * a_voice, int a_fast);
 void v_va1_mono_init(t_va1_mono_modules*, SGFLT);
 PluginDescriptor *va1_plugin_descriptor();

@@ -306,7 +306,7 @@ NO_OPTIMIZATION PluginHandle g_va1_instantiate(
     );
 
     for (f_i = 0; f_i < VA1_POLYPHONY; ++f_i){
-        g_va1_poly_init(&plugin_data->data[f_i], a_sr);
+        g_va1_poly_init(&plugin_data->data[f_i], a_sr, f_i);
         plugin_data->data[f_i].note_f = f_i;
     }
 
@@ -489,7 +489,7 @@ void v_va1_process_midi_event(
 
             v_nosvf_reset(&f_voice->svf_filter);
 
-            if(f_poly_mode == 0)
+            if(f_poly_mode == POLY_MODE_RETRIG)
             {
                 v_osc_note_on_sync_phases(&f_voice->osc_unison1);
                 v_osc_note_on_sync_phases(&f_voice->osc_unison2);
@@ -568,8 +568,11 @@ void v_run_va1(
 
     int midi_event_pos = 0;
 
-    if(f_poly_mode == 2 && plugin_data->voices.poly_mode != 2)
-    {
+    if(
+        f_poly_mode == POLY_MODE_MONO
+        &&
+        plugin_data->voices.poly_mode != POLY_MODE_MONO
+    ){
         va1Panic(instance);  //avoid hung notes
     }
 
@@ -577,8 +580,7 @@ void v_run_va1(
 
     int f_i;
 
-    for(f_i = 0; f_i < event_count; ++f_i)
-    {
+    for(f_i = 0; f_i < event_count; ++f_i){
         v_va1_process_midi_event(plugin_data, events[f_i], f_poly_mode);
     }
 
@@ -909,10 +911,11 @@ PluginDescriptor *va1_plugin_descriptor(){
 
 void g_va1_poly_init(
     t_va1_poly_voice* f_voice,
-    SGFLT a_sr
+    SGFLT a_sr,
+    int voice_num
 ){
-    g_osc_simple_unison_init(&f_voice->osc_unison1, a_sr);
-    g_osc_simple_unison_init(&f_voice->osc_unison2, a_sr);
+    g_osc_simple_unison_init(&f_voice->osc_unison1, a_sr, voice_num);
+    g_osc_simple_unison_init(&f_voice->osc_unison2, a_sr, voice_num);
 
     f_voice->osc1_pitch_adjust = 0.0f;
     f_voice->osc2_pitch_adjust = 0.0f;

@@ -216,8 +216,13 @@ void v_osc_set_simple_osc_unison_type_v2(
 /*Resync the oscillators at note_on to hopefully avoid phasing artifacts*/
 void v_osc_note_on_sync_phases(t_osc_simple_unison * a_osc_ptr){
     int i;
-    for(i = 0; i < a_osc_ptr->voice_count; ++i){
-        a_osc_ptr->osc_cores[i].output = a_osc_ptr->phases[i];
+
+    if(a_osc_ptr->voice_count == 1){
+        a_osc_ptr->osc_cores[0].output = 0.0;
+    } else {
+        for(i = 0; i < a_osc_ptr->voice_count; ++i){
+            a_osc_ptr->osc_cores[i].output = a_osc_ptr->phases[i];
+        }
     }
 }
 
@@ -233,7 +238,8 @@ void v_osc_note_on_sync_phases_hard(t_osc_simple_unison * a_osc_ptr){
 
 NO_OPTIMIZATION void g_osc_simple_unison_init(
     t_osc_simple_unison * f_result,
-    SGFLT a_sample_rate
+    SGFLT a_sample_rate,
+    int voice_num
 ){
     f_result->osc_type = f_get_saw;
     f_result->sr_recip = 1.0 / a_sample_rate;
@@ -254,10 +260,14 @@ NO_OPTIMIZATION void g_osc_simple_unison_init(
         g_init_osc_core(&f_result->osc_cores[f_i]);
     }
 
-    v_osc_set_unison_pitch(f_result, .5f, 60.0f);
+    v_osc_set_unison_pitch(
+        f_result,
+        .5f,
+        60.0f + (1.01234 * (float)voice_num)
+    );
 
     //Prevent phasing artifacts from the oscillators starting at the same phase.
-    for(f_i = 0; f_i < 200000; ++f_i){
+    for(f_i = 0; f_i < (int)(6 * a_sample_rate); ++f_i){
         f_osc_run_unison_osc(f_result);
     }
 
@@ -271,17 +281,20 @@ NO_OPTIMIZATION void g_osc_simple_unison_init(
 
 /* t_osc_simple_unison * g_osc_get_osc_simple_unison(SGFLT a_sample_rate)
  */
-t_osc_simple_unison * g_osc_get_osc_simple_unison(SGFLT a_sample_rate)
-{
+t_osc_simple_unison * g_osc_get_osc_simple_unison(
+    SGFLT a_sample_rate,
+    int voice_num
+){
     t_osc_simple_unison * f_result;
     lmalloc((void**)&f_result, sizeof(t_osc_simple_unison));
-    g_osc_simple_unison_init(f_result, a_sample_rate);
+    g_osc_simple_unison_init(f_result, a_sample_rate, voice_num);
     return f_result;
 }
 
 void g_osc_init_osc_simple_single(
-        t_osc_simple_unison * f_result,
-        SGFLT a_sample_rate
+    t_osc_simple_unison * f_result,
+    SGFLT a_sample_rate,
+    int voice_num
 ){
     f_result->osc_type = f_get_saw;
     f_result->sr_recip = 1.0 / a_sample_rate;
@@ -303,12 +316,15 @@ void g_osc_init_osc_simple_single(
         ++f_i;
     }
 
-    v_osc_set_unison_pitch(f_result, .5f, 60.0f);
+    v_osc_set_unison_pitch(
+        f_result,
+        .5f,
+        60.0f + (float)voice_num * 1.01234
+    );
 
     f_i = 0;
 
-    while(f_i < (OSC_UNISON_MAX_VOICES))
-    {
+    while(f_i < (OSC_UNISON_MAX_VOICES)){
         f_result->phases[f_i] = 0.0f;
         ++f_i;
     }
@@ -316,13 +332,13 @@ void g_osc_init_osc_simple_single(
     v_osc_set_unison_pitch(f_result, .2, 60.0f);
 }
 
-t_osc_simple_unison * g_osc_get_osc_simple_single(SGFLT a_sample_rate)
-{
+t_osc_simple_unison * g_osc_get_osc_simple_single(
+    SGFLT a_sample_rate,
+    int voice_num
+){
     t_osc_simple_unison * f_result;
-
     lmalloc((void**)&f_result, sizeof(t_osc_simple_unison));
-
-    g_osc_init_osc_simple_single(f_result, a_sample_rate);
+    g_osc_init_osc_simple_single(f_result, a_sample_rate, voice_num);
 
     return f_result;
 }

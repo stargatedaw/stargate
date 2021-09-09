@@ -60,14 +60,16 @@ SGFLT f_get_triangle(t_osc_core *);
 SGFLT f_get_osc_off(t_osc_core *);
 void v_osc_set_simple_osc_unison_type(t_osc_simple_unison *, int);
 void v_osc_note_on_sync_phases(t_osc_simple_unison *);
-t_osc_simple_unison * g_osc_get_osc_simple_unison(SGFLT);
+t_osc_simple_unison * g_osc_get_osc_simple_unison(SGFLT, int);
 void g_osc_init_osc_simple_single(
         t_osc_simple_unison * f_result,
-        SGFLT a_sample_rate
+        SGFLT a_sample_rate,
+        int voice_num
 );
 void g_osc_simple_unison_init(
     t_osc_simple_unison * f_result,
-    SGFLT a_sample_rate
+    SGFLT a_sample_rate,
+    int voice_num
 );
 void v_osc_note_on_sync_phases_hard(t_osc_simple_unison * a_osc_ptr);
 void v_osc_set_simple_osc_unison_type_v2(

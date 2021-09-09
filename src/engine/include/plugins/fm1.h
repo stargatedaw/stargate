@@ -711,7 +711,11 @@ typedef struct
     PluginDescriptor * descriptor;
 } t_fm1;
 
-t_fm1_poly_voice * g_fm1_poly_init(SGFLT a_sr, t_fm1_mono_modules* a_mono);
+t_fm1_poly_voice* g_fm1_poly_init(
+    SGFLT a_sr,
+    t_fm1_mono_modules* a_mono,
+    int voice_num
+);
 
 void v_fm1_poly_note_off(t_fm1_poly_voice * a_voice, int a_fast);
 

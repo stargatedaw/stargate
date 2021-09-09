@@ -62,11 +62,12 @@ void v_osc_wav_run(t_osc_core *, t_wavetable*);
 void v_osc_wav_note_on_sync_phases(t_osc_wav_unison *);
 void v_osc_wav_set_waveform(t_osc_wav_unison*, SGFLT *, int);
 t_osc_wav * g_osc_get_osc_wav();
-t_osc_wav_unison * g_osc_get_osc_wav_unison(SGFLT);
+t_osc_wav_unison * g_osc_get_osc_wav_unison(SGFLT, int);
 void v_osc_wav_apply_fm(t_osc_wav_unison*, SGFLT, SGFLT);
 void g_osc_init_osc_wav_unison(
     t_osc_wav_unison * f_result,
-    SGFLT a_sample_rate
+    SGFLT a_sample_rate,
+    int voice_num
 );
 void v_osc_wav_apply_fm_direct(
     t_osc_wav_unison* a_osc_ptr,

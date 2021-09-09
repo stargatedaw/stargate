@@ -17,6 +17,11 @@ GNU General Public License for more details.
 #define VOICES_MAX_MIDI_NOTE_NUMBER 128
 #define MIDI_NOTES  128
 
+#define POLY_MODE_RETRIG 0
+#define POLY_MODE_FREE 1
+#define POLY_MODE_MONO 2
+#define POLY_MODE_MONO2 3
+
 typedef enum
 {
     note_state_off = 0,
@@ -42,7 +47,7 @@ typedef struct
     t_voc_single_voice * voices;
     int count;
     int thresh;  //when to start agressively killing voices
-    int poly_mode;  //0 = retrigger, 1 = free, 2 = mono, 3 = mono_v2
+    int poly_mode;
 }t_voc_voices;
 
 t_voc_voices * g_voc_get_voices(int, int);

@@ -6,7 +6,7 @@
 
 void g_rmd_init(t_rmd_ring_mod * f_result, SGFLT a_sr)
 {
-    g_osc_init_osc_simple_single(&f_result->osc, a_sr);
+    g_osc_init_osc_simple_single(&f_result->osc, a_sr, 0);
     v_osc_set_simple_osc_unison_type(&f_result->osc, 3);
     v_osc_set_uni_voice_count(&f_result->osc, 1);
     f_result->output0 = 0.0f;
