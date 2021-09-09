@@ -562,7 +562,9 @@ class PluginRackTab:
     def __init__(self):
         self.widget = QWidget(shared.MAIN_WINDOW)
         self.vlayout = QVBoxLayout(self.widget)
+        self.vlayout.setContentsMargins(0, 0, 0, 0)
         self.menu_layout = QHBoxLayout()
+        self.menu_layout.setContentsMargins(3, 0, 3, 0)
         self.vlayout.addLayout(self.menu_layout)
         self.menu_layout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
@@ -696,11 +698,11 @@ class PluginRack:
         ]
         self.widget = QWidget()
         self.vlayout = QVBoxLayout(self.widget)
-        self.vlayout.setContentsMargins(1, 1, 1, 1)
+        self.vlayout.setContentsMargins(0, 0, 0, 0)
 
         self.scrollarea = QScrollArea()
         self.scrollarea.setHorizontalScrollBarPolicy(
-            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded,
         )
         self.scrollarea.setVerticalScrollBarPolicy(
             QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn,
@@ -718,7 +720,7 @@ class PluginRack:
         self.scroll_hlayout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
-        #self.scroll_widget.setContentsMargins(0, 0, 0, 0)
+        self.scroll_widget.setContentsMargins(0, 0, 0, 0)
         self.scrollarea.setWidget(self.scroll_widget)
         for plugin in self.plugins[:PLUGINS_PER_TRACK]:
             self.scroll_vlayout.addLayout(plugin.vlayout)
