@@ -37,6 +37,7 @@ from sgui.util import (
     check_for_rw_perms,
     get_font,
     get_fps,
+    log_screen_info,
     set_font,
     show_generic_exception,
     svg_to_pixmap,
@@ -1270,6 +1271,7 @@ def main(app, splash_screen, scaler):
     major_version = util.META_DOT_JSON['version']['major']
     minor_version = util.META_DOT_JSON['version']['minor']
     LOG.info(f"Starting {major_version}-{minor_version}")
+    log_screen_info()
     SPLASH_SCREEN = splash_screen
     widgets.knob_setup()
     QPixmapCache.setCacheLimit(1024 * 1024)

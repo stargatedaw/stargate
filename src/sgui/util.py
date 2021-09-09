@@ -110,6 +110,33 @@ def ui_scaler_factory():
         res_rect.height(),
     )
 
+def log_screen_info():
+    try:
+        screens = QGuiApplication.screens()
+        for screen, i in zip(screens, range(len(screens))):
+            LOG.info(
+                f"Screen {i} screen.logicalDotsPerInch: "
+                f"{screen.logicalDotsPerInch()}"
+            )
+            LOG.info(
+                f"Screen {i} screen.physicalDotsPerInch: "
+                f"{screen.physicalDotsPerInch()}"
+            )
+            LOG.info(
+                f"Screen {i} screen.devicePixelRatio: "
+                f"{screen.devicePixelRatio()}"
+            )
+            LOG.info(
+                f"Screen {i} screen.physicalSize: {screen.physicalSize()}"
+            )
+            LOG.info(
+                f"Screen {i} screen.manufacturer: {screen.manufacturer()}"
+            )
+            LOG.info(f"Screen {i} screen.model: {screen.model()}")
+            LOG.info(f"Screen {i} screen.refreshRate: {screen.refreshRate()}")
+    except Exception as ex:
+        LOG.exception(ex)
+
 class FontManager:
     def __init__(self, font):
         self.font = font

@@ -16,13 +16,24 @@ if True:  # PyQt
         or
         "_USE_PYQT5" in os.environ
     ):
+        LOG.info("Using PyQt5")
         qt_event_pos = lambda x: x.pos()
         from PyQt5 import QtGui, QtWidgets, QtCore
         from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
         from PyQt5.QtGui import *
         from PyQt5.QtWidgets import *
         from PyQt5.QtSvg import QSvgRenderer
+        # Not needed on Qt6, is the default behavior
+        try:
+            QGuiApplication.setAttribute(
+                QtCore.Qt.ApplicationAttribute.AA_EnableHighDpiScaling,
+            )
+        except Exception as ex:
+            LOG.warning(
+                f"The platform you are using does not support Qt HiDpi: {ex}",
+            )
     else:
+        LOG.info("Using PyQt5")
         def qt_event_pos(x):
             if hasattr(x, 'pos'):
                 return x.pos()
@@ -33,15 +44,6 @@ if True:  # PyQt
         from PyQt6.QtGui import *
         from PyQt6.QtWidgets import *
         from PyQt6.QtSvg import QSvgRenderer
-        # Not needed on Qt6, is the default behavior
-        try:
-            QGuiApplication.setAttribute(
-                QtCore.Qt.ApplicationAttribute.AA_EnableHighDpiScaling,
-            )
-        except Exception as ex:
-            LOG.warning(
-                f"The platform you are using does not support Qt HiDpi: {ex}",
-            )
 
     # Work around QMenu not taking the QApplication font, even if the QMenu
     # has a parent widget
