@@ -74,15 +74,16 @@ void v_scc_connect_buffer(PluginHandle instance, int a_index,
     }
 }
 
-void v_scc_connect_port(PluginHandle instance, int port,
-        PluginData * data)
-{
+void v_scc_connect_port(
+    PluginHandle instance,
+    int port,
+    PluginData* data
+){
     t_scc *plugin;
 
-    plugin = (t_scc *) instance;
+    plugin = (t_scc*)instance;
 
-    switch (port)
-    {
+    switch (port){
         case SCC_THRESHOLD: plugin->threshold = data; break;
         case SCC_RATIO: plugin->ratio = data; break;
         case SCC_ATTACK: plugin->attack = data; break;
@@ -92,10 +93,13 @@ void v_scc_connect_port(PluginHandle instance, int port,
     }
 }
 
-PluginHandle g_scc_instantiate(PluginDescriptor * descriptor,
-        int s_rate, fp_get_audio_pool_item_from_host a_host_audio_pool_func,
-        int a_plugin_uid, fp_queue_message a_queue_func)
-{
+PluginHandle g_scc_instantiate(
+    PluginDescriptor * descriptor,
+    int s_rate,
+    fp_get_audio_pool_item_from_host a_host_audio_pool_func,
+    int a_plugin_uid,
+    fp_queue_message a_queue_func
+){
     t_scc *plugin_data;
     hpalloc((void**)&plugin_data, sizeof(t_scc));
 
@@ -107,33 +111,44 @@ PluginHandle g_scc_instantiate(PluginDescriptor * descriptor,
     plugin_data->mono_modules = v_scc_mono_init(s_rate, a_plugin_uid);
 
     plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data, descriptor);
+        (void**)plugin_data,
+        descriptor
+    );
 
     v_cc_map_init(&plugin_data->cc_map);
 
     return (PluginHandle) plugin_data;
 }
 
-void v_scc_load(PluginHandle instance,
-        PluginDescriptor * Descriptor, char * a_file_path)
-{
+void v_scc_load(
+    PluginHandle instance,
+    PluginDescriptor* Descriptor,
+    char* a_file_path
+){
     t_scc *plugin_data = (t_scc*)instance;
-    generic_file_loader(instance, Descriptor,
-        a_file_path, plugin_data->port_table, &plugin_data->cc_map);
+    generic_file_loader(
+        instance,
+        Descriptor,
+        a_file_path,
+        plugin_data->port_table,
+        &plugin_data->cc_map
+    );
 }
 
-void v_scc_set_port_value(PluginHandle Instance,
-        int a_port, SGFLT a_value)
-{
+void v_scc_set_port_value(
+    PluginHandle Instance,
+    int a_port,
+    SGFLT a_value
+){
     t_scc *plugin_data = (t_scc*)Instance;
     plugin_data->port_table[a_port] = a_value;
 }
 
 void v_scc_process_midi_event(
-    t_scc * plugin_data, t_seq_event * a_event)
-{
-    if (a_event->type == EVENT_CONTROLLER)
-    {
+    t_scc * plugin_data,
+    t_seq_event * a_event
+){
+    if (a_event->type == EVENT_CONTROLLER){
         assert(a_event->param >= 1 && a_event->param < 128);
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =
@@ -150,12 +165,15 @@ void v_scc_process_midi_event(
 }
 
 void v_scc_run(
-        PluginHandle instance, int sample_count,
-        struct ShdsList * midi_events, struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    struct ShdsList* midi_events,
+    struct ShdsList* atm_events
+){
     t_scc *plugin_data = (t_scc*)instance;
 
     t_seq_event **events = (t_seq_event**)midi_events->data;
+
     int event_count = midi_events->len;
 
     t_scc_sidechain_comp * f_cmp = &plugin_data->mono_modules->sidechain_comp;
@@ -164,32 +182,37 @@ void v_scc_run(
     int midi_event_pos = 0;
     plugin_data->midi_event_count = 0;
 
-    for(f_i = 0; f_i < event_count; ++f_i)
-    {
+    for(f_i = 0; f_i < event_count; ++f_i){
         v_scc_process_midi_event(plugin_data, events[f_i]);
     }
 
     v_plugin_event_queue_reset(&plugin_data->atm_queue);
 
     t_seq_event * ev_tmp;
-    for(f_i = 0; f_i < atm_events->len; ++f_i)
-    {
+    for(f_i = 0; f_i < atm_events->len; ++f_i){
         ev_tmp = (t_seq_event*)atm_events->data[f_i];
         v_plugin_event_queue_add(
-            &plugin_data->atm_queue, ev_tmp->type,
-            ev_tmp->tick, ev_tmp->value, ev_tmp->port);
+            &plugin_data->atm_queue,
+            ev_tmp->type,
+            ev_tmp->tick,
+            ev_tmp->value,
+            ev_tmp->port
+        );
     }
 
     f_i = 0;
 
-    while(f_i < sample_count)
-    {
-        while(midi_event_pos < plugin_data->midi_event_count &&
-                plugin_data->midi_event_ticks[midi_event_pos] == f_i)
-        {
-            if(plugin_data->midi_event_types[midi_event_pos] ==
-                    EVENT_CONTROLLER)
-            {
+    while(f_i < sample_count){
+        while(
+            midi_event_pos < plugin_data->midi_event_count
+            &&
+            plugin_data->midi_event_ticks[midi_event_pos] == f_i
+        ){
+            if(
+                plugin_data->midi_event_types[midi_event_pos]
+                ==
+                EVENT_CONTROLLER
+            ){
                 v_cc_map_translate(
                     &plugin_data->cc_map, plugin_data->descriptor,
                     plugin_data->port_table,
@@ -200,28 +223,41 @@ void v_scc_run(
         }
 
         v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue, f_i, plugin_data->port_table);
+            &plugin_data->atm_queue,
+            f_i,
+            plugin_data->port_table
+        );
 
-        v_scc_set(f_cmp,
-            *plugin_data->threshold, (*plugin_data->ratio) * 0.1f,
-            *plugin_data->attack * 0.001f, *plugin_data->release * 0.001f,
-            *plugin_data->wet * 0.01f);
+        v_scc_set(
+            f_cmp,
+            *plugin_data->threshold,
+            (*plugin_data->ratio) * 0.1f,
+            *plugin_data->attack * 0.001f,
+            *plugin_data->release * 0.001f,
+            *plugin_data->wet * 0.01f
+        );
 
-        v_scc_run_comp(f_cmp,
-            plugin_data->sc_input0[f_i], plugin_data->sc_input1[f_i],
-            plugin_data->output0[f_i], plugin_data->output1[f_i]);
+        v_scc_run_comp(
+            f_cmp,
+            plugin_data->sc_input0[f_i],
+            plugin_data->sc_input1[f_i],
+            plugin_data->output0[f_i],
+            plugin_data->output1[f_i]
+        );
 
         plugin_data->output0[f_i] = f_cmp->output0;
         plugin_data->output1[f_i] = f_cmp->output1;
         ++f_i;
     }
 
-    if((int)(*plugin_data->peak_meter))
-    {
-        if(f_cmp->peak_tracker.dirty)
-        {
-            sprintf(plugin_data->ui_msg_buff, "%i|gain|%f",
-                plugin_data->plugin_uid, f_cmp->peak_tracker.gain_redux);
+    if((int)(*plugin_data->peak_meter)){
+        if(f_cmp->peak_tracker.dirty){
+            sprintf(
+                plugin_data->ui_msg_buff,
+                "%i|gain|%f",
+                plugin_data->plugin_uid,
+                f_cmp->peak_tracker.gain_redux
+            );
             plugin_data->queue_func("ui", plugin_data->ui_msg_buff);
             v_pkm_redux_lin_reset(&f_cmp->peak_tracker);
         }
@@ -256,8 +292,7 @@ PluginDescriptor *scc_plugin_descriptor(){
     return f_result;
 }
 
-t_scc_mono_modules * v_scc_mono_init(SGFLT a_sr, int a_plugin_uid)
-{
+t_scc_mono_modules * v_scc_mono_init(SGFLT a_sr, int a_plugin_uid){
     t_scc_mono_modules * f_result;
     hpalloc((void**)&f_result, sizeof(t_scc_mono_modules));
     g_scc_init(&f_result->sidechain_comp, a_sr);

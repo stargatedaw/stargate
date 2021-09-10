@@ -26,9 +26,14 @@ void g_scc_init(t_scc_sidechain_comp * self, SGFLT a_sr)
     g_pkm_redux_init(&self->peak_tracker, a_sr);
 }
 
-void v_scc_set(t_scc_sidechain_comp *self, SGFLT a_thresh, SGFLT a_ratio,
-    SGFLT a_attack, SGFLT a_release, SGFLT a_wet)
-{
+void v_scc_set(
+    t_scc_sidechain_comp *self,
+    SGFLT a_thresh,
+    SGFLT a_ratio,
+    SGFLT a_attack,
+    SGFLT a_release,
+    SGFLT a_wet
+){
     self->thresh = a_thresh;
     self->ratio = a_ratio;
 
@@ -46,13 +51,19 @@ void v_scc_set(t_scc_sidechain_comp *self, SGFLT a_thresh, SGFLT a_ratio,
     }
 }
 
-void v_scc_run_comp(t_scc_sidechain_comp *self,
-    SGFLT a_input0, SGFLT a_input1, SGFLT a_output0, SGFLT a_output1)
-{
+void v_scc_run_comp(
+    t_scc_sidechain_comp* self,
+    SGFLT a_input0,
+    SGFLT a_input1,
+    SGFLT a_output0,
+    SGFLT a_output1
+){
     SGFLT f_gain;
 
-    v_enf_run(&self->env_follower,
-        f_sg_max(f_sg_abs(a_input0), f_sg_abs(a_input1)));
+    v_enf_run(
+        &self->env_follower,
+        f_sg_max(f_sg_abs(a_input0), f_sg_abs(a_input1))
+    );
 
     f_gain = self->thresh - f_linear_to_db_fast(self->env_follower.envelope);
 
@@ -63,13 +74,17 @@ void v_scc_run_comp(t_scc_sidechain_comp *self,
         f_gain = v_svf_run_4_pole_lp(&self->filter, f_gain);
 
         self->output0 = f_axf_run_xfade(
-            &self->xfade, a_output0, a_output0 * f_gain);
+            &self->xfade,
+            a_output0,
+            a_output0 * f_gain
+        );
         self->output1 = f_axf_run_xfade(
-            &self->xfade, a_output1, a_output1 * f_gain);
+            &self->xfade,
+            a_output1,
+            a_output1 * f_gain
+        );
         v_pkm_redux_run(&self->peak_tracker, f_gain);
-    }
-    else
-    {
+    } else {
         self->output0 = a_output0;
         self->output1 = a_output1;
         v_pkm_redux_run(&self->peak_tracker, 1.0f);

@@ -37,9 +37,12 @@ void v_sg_comp_on_stop(PluginHandle instance)
     //t_sg_comp *plugin = (t_sg_comp*)instance;
 }
 
-void v_sg_comp_connect_buffer(PluginHandle instance, int a_index,
-        SGFLT * DataLocation, int a_is_sidechain)
-{
+void v_sg_comp_connect_buffer(
+    PluginHandle instance,
+    int a_index,
+    SGFLT * DataLocation,
+    int a_is_sidechain
+){
     t_sg_comp *plugin = (t_sg_comp*)instance;
 
     if(!a_is_sidechain)
@@ -59,15 +62,16 @@ void v_sg_comp_connect_buffer(PluginHandle instance, int a_index,
     }
 }
 
-void v_sg_comp_connect_port(PluginHandle instance, int port,
-        PluginData * data)
-{
+void v_sg_comp_connect_port(
+    PluginHandle instance,
+    int port,
+    PluginData * data
+){
     t_sg_comp *plugin;
 
     plugin = (t_sg_comp *) instance;
 
-    switch (port)
-    {
+    switch (port){
         case SG_COMP_THRESHOLD: plugin->threshold = data; break;
         case SG_COMP_RATIO: plugin->ratio = data; break;
         case SG_COMP_KNEE: plugin->knee = data; break;
@@ -80,10 +84,13 @@ void v_sg_comp_connect_port(PluginHandle instance, int port,
     }
 }
 
-PluginHandle g_sg_comp_instantiate(PluginDescriptor * descriptor,
-        int s_rate, fp_get_audio_pool_item_from_host a_host_audio_pool_func,
-        int a_plugin_uid, fp_queue_message a_queue_func)
-{
+PluginHandle g_sg_comp_instantiate(
+    PluginDescriptor * descriptor,
+    int s_rate,
+    fp_get_audio_pool_item_from_host a_host_audio_pool_func,
+    int a_plugin_uid,
+    fp_queue_message a_queue_func
+){
     t_sg_comp *plugin_data;
     hpalloc((void**)&plugin_data, sizeof(t_sg_comp));
 
@@ -95,33 +102,44 @@ PluginHandle g_sg_comp_instantiate(PluginDescriptor * descriptor,
     plugin_data->mono_modules = v_sg_comp_mono_init(s_rate, a_plugin_uid);
 
     plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data, descriptor);
+        (void**)plugin_data,
+        descriptor
+    );
 
     v_cc_map_init(&plugin_data->cc_map);
 
     return (PluginHandle) plugin_data;
 }
 
-void v_sg_comp_load(PluginHandle instance,
-        PluginDescriptor * Descriptor, char * a_file_path)
-{
+void v_sg_comp_load(
+    PluginHandle instance,
+    PluginDescriptor * Descriptor,
+    char * a_file_path
+){
     t_sg_comp *plugin_data = (t_sg_comp*)instance;
-    generic_file_loader(instance, Descriptor,
-        a_file_path, plugin_data->port_table, &plugin_data->cc_map);
+    generic_file_loader(
+        instance,
+        Descriptor,
+        a_file_path,
+        plugin_data->port_table,
+        &plugin_data->cc_map
+    );
 }
 
-void v_sg_comp_set_port_value(PluginHandle Instance,
-        int a_port, SGFLT a_value)
-{
+void v_sg_comp_set_port_value(
+    PluginHandle Instance,
+    int a_port,
+    SGFLT a_value
+){
     t_sg_comp *plugin_data = (t_sg_comp*)Instance;
     plugin_data->port_table[a_port] = a_value;
 }
 
 void v_sg_comp_process_midi_event(
-    t_sg_comp * plugin_data, t_seq_event * a_event)
-{
-    if (a_event->type == EVENT_CONTROLLER)
-    {
+    t_sg_comp * plugin_data,
+    t_seq_event * a_event
+){
+    if(a_event->type == EVENT_CONTROLLER){
         assert(a_event->param >= 1 && a_event->param < 128);
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =
@@ -138,9 +156,11 @@ void v_sg_comp_process_midi_event(
 }
 
 void v_sg_comp_run(
-        PluginHandle instance, int sample_count,
-        struct ShdsList * midi_events, struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    struct ShdsList* midi_events,
+    struct ShdsList * atm_events
+){
     t_sg_comp *plugin_data = (t_sg_comp*)instance;
 
     t_seq_event **events = (t_seq_event**)midi_events->data;
@@ -153,59 +173,76 @@ void v_sg_comp_run(
     SGFLT f_gain = f_db_to_linear_fast((*plugin_data->gain) * 0.1f);
     plugin_data->midi_event_count = 0;
 
-    for(f_i = 0; f_i < event_count; ++f_i)
-    {
+    for(f_i = 0; f_i < event_count; ++f_i){
         v_sg_comp_process_midi_event(plugin_data, events[f_i]);
     }
 
     v_plugin_event_queue_reset(&plugin_data->atm_queue);
 
     t_seq_event * ev_tmp;
-    for(f_i = 0; f_i < atm_events->len; ++f_i)
-    {
+    for(f_i = 0; f_i < atm_events->len; ++f_i){
         ev_tmp = (t_seq_event*)atm_events->data[f_i];
         v_plugin_event_queue_add(
-            &plugin_data->atm_queue, ev_tmp->type,
-            ev_tmp->tick, ev_tmp->value, ev_tmp->port);
+            &plugin_data->atm_queue,
+            ev_tmp->type,
+            ev_tmp->tick,
+            ev_tmp->value,
+            ev_tmp->port
+        );
     }
 
     f_i = 0;
 
-    while(f_i < sample_count)
-    {
-        while(midi_event_pos < plugin_data->midi_event_count &&
-                plugin_data->midi_event_ticks[midi_event_pos] == f_i)
-        {
-            if(plugin_data->midi_event_types[midi_event_pos] ==
-                    EVENT_CONTROLLER)
-            {
+    while(f_i < sample_count){
+        while(
+            midi_event_pos < plugin_data->midi_event_count
+            &&
+            plugin_data->midi_event_ticks[midi_event_pos] == f_i
+        ){
+            if(
+                plugin_data->midi_event_types[midi_event_pos]
+                ==
+                EVENT_CONTROLLER
+            ){
                 v_cc_map_translate(
                     &plugin_data->cc_map, plugin_data->descriptor,
                     plugin_data->port_table,
                     plugin_data->midi_event_ports[midi_event_pos],
-                    plugin_data->midi_event_values[midi_event_pos]);
+                    plugin_data->midi_event_values[midi_event_pos]
+                );
             }
             ++midi_event_pos;
         }
 
         v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue, f_i, plugin_data->port_table);
+            &plugin_data->atm_queue,
+            f_i,
+            plugin_data->port_table
+        );
 
-        v_cmp_set(f_cmp,
-            *plugin_data->threshold * 0.1f, (*plugin_data->ratio) * 0.1f,
-            *plugin_data->knee * 0.1f, *plugin_data->attack * 0.001f,
-            *plugin_data->release * 0.001f, *plugin_data->gain * 0.1f);
+        v_cmp_set(
+            f_cmp,
+            *plugin_data->threshold * 0.1f,
+            (*plugin_data->ratio) * 0.1f,
+            *plugin_data->knee * 0.1f,
+            *plugin_data->attack * 0.001f,
+            *plugin_data->release * 0.001f,
+            *plugin_data->gain * 0.1f
+        );
 
-        if(f_is_rms)
-        {
+        if(f_is_rms){
             v_cmp_set_rms(f_cmp, (*plugin_data->rms_time) * 0.01f);
             v_cmp_run_rms(
-                f_cmp, plugin_data->output0[f_i], plugin_data->output1[f_i]);
-        }
-        else
-        {
+                f_cmp,
+                plugin_data->output0[f_i],
+                plugin_data->output1[f_i]
+            );
+        } else {
             v_cmp_run(
-                f_cmp, plugin_data->output0[f_i], plugin_data->output1[f_i]);
+                f_cmp,
+                plugin_data->output0[f_i],
+                plugin_data->output1[f_i]
+            );
         }
 
         plugin_data->output0[f_i] = f_cmp->output0 * f_gain;
@@ -213,12 +250,14 @@ void v_sg_comp_run(
         ++f_i;
     }
 
-    if((int)(*plugin_data->peak_meter))
-    {
-        if(f_cmp->peak_tracker.dirty)
-        {
-            sprintf(plugin_data->ui_msg_buff, "%i|gain|%f",
-                plugin_data->plugin_uid, f_cmp->peak_tracker.gain_redux);
+    if((int)(*plugin_data->peak_meter)){
+        if(f_cmp->peak_tracker.dirty){
+            sprintf(
+                plugin_data->ui_msg_buff,
+                "%i|gain|%f",
+                plugin_data->plugin_uid,
+                f_cmp->peak_tracker.gain_redux
+            );
             plugin_data->queue_func("ui", plugin_data->ui_msg_buff);
             v_pkm_redux_lin_reset(&f_cmp->peak_tracker);
         }
