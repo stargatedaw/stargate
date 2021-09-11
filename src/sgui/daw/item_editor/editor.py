@@ -11,7 +11,7 @@ from sgui.sgqt import *
 
 
 class ItemEditorWidget:
-    """ This is the "Items" tab in MainWindow
+    """ This is the "Item Editor" tab in MainWindow
     """
     def __init__(self):
         self.enabled = False

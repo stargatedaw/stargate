@@ -439,17 +439,20 @@ class DawProject(AbstractProject):
     def rename_items(self, a_item_names, a_new_item_name):
         """ @a_item_names:  A list of str
         """
-        assert isinstance(a_item_names, list), "a_item_names must be a list"
+        assert isinstance(a_item_names, list), a_item_names
         f_items_dict = self.get_items_dict()
         if len(a_item_names) > 1 or f_items_dict.name_exists(a_new_item_name):
             f_suffix = 1
-            f_new_item_name = "{}-".format(a_new_item_name)
+            f_new_item_name = f"{a_new_item_name}-"
             for f_item_name in a_item_names:
                 while f_items_dict.name_exists(
-                "{}{}".format(f_new_item_name, f_suffix)):
+                    f"{f_new_item_name}{f_suffix}",
+                ):
                     f_suffix += 1
                 f_items_dict.rename_item(
-                    f_item_name, f_new_item_name + str(f_suffix))
+                    f_item_name,
+                    f_new_item_name + str(f_suffix),
+                )
         else:
             f_items_dict.rename_item(a_item_names[0], a_new_item_name)
         self.save_items_dict(f_items_dict)
