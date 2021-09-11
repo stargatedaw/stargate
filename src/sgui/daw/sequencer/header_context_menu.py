@@ -1,6 +1,7 @@
 from . import _shared
 from sglib import constants
 from sglib.math import clip_max, clip_min
+from sgui import shared as sg_shared
 from sgui.daw import shared
 from sglib.models.daw import *
 from sgui.daw.shared import *
@@ -126,8 +127,9 @@ def header_time_modify():
 def header_tempo_clear():
     if not shared.CURRENT_SEQUENCE.loop_marker:
         QMessageBox.warning(
-            "Error",
-            "No sequence set, please set a sequence first",
+            sg_shared.MAIN_WINDOW,
+            _("Error"),
+            _("No region set, please set a region first"),
         )
         return
     deleted = False
@@ -149,8 +151,9 @@ def header_tempo_clear():
 def header_time_range():
     if not shared.CURRENT_SEQUENCE.loop_marker:
         QMessageBox.warning(
-            "Error",
-            "No sequence set, please set a sequence first",
+            sg_shared.MAIN_WINDOW,
+            _("Error"),
+            _("No region set, please set a region first"),
         )
         return
     def ok_handler():
