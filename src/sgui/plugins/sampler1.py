@@ -354,9 +354,96 @@ SMP_TB_INTERPOLATION_MODE_INDEX = 11
 
 SAMPLER1_INSTRUMENT_CLIPBOARD = None
 
+STYLESHEET = """\
+QWidget {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: .5,
+        stop: 0 #605f5f, stop: 1 #545255
+    );
+    border: none;
+}
+
+QGroupBox#plugin_groupbox {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: .5,
+        stop: 0 #605f5f, stop: 1 #545255
+    );
+    border: 2px solid #222222;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left; /* position at the top center */
+    padding: 0 3px;
+    background-color: #222222;
+    border: 2px solid #333333;
+    color: #cccccc;
+}
+
+QComboBox{
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+    );
+    border: 1px solid #222222;
+    border-radius: 6px;
+    color: #cccccc;
+}
+
+QLabel#plugin_name_label{
+    background: none;
+    color: #222222;
+}
+
+QLabel#plugin_value_label{
+    background: none;
+    color: #222222;
+}
+
+QPushButton {
+    background: #222222;
+    border: 2px solid #333333;
+    color: #cccccc;
+}
+
+QPushButton:hover {
+    border: 2px solid #cccccc;
+}
+
+QAbstractItemView
+{
+    background-color: #6a6a6a;
+    border: 2px solid #828282;
+    color: #cccccc;
+    selection-background-color: #cccccc;
+    selection-color: #333333;
+}
+
+QTableWidget
+{
+    alternate-background-color: #605f5f;
+    background-color: #545255;
+    color: #cccccc;
+}
+
+QLabel {
+    background: none;
+}
+
+QLineEdit {
+    background: 2px solid #6a6a6a;
+    border: 2px solid #333333;
+}
+"""
+
 class sampler1_plugin_ui(AbstractPluginUI):
     def __init__(self, *args, **kwargs):
-        AbstractPluginUI.__init__(self, *args, **kwargs)
+        AbstractPluginUI.__init__(
+            self,
+            *args,
+            stylesheet=STYLESHEET,
+            **kwargs,
+        )
 
         self.widget.setUpdatesEnabled(False)
         self.is_instrument = True
