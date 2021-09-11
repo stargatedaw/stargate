@@ -33,5 +33,7 @@ music on a computer.  To understand what Stargate is, and why, read the
 
 ![Note Item](assets/note_item.png?raw=true "Note Item")
 
+![Plugins](assets/plugins.png?raw=true "Plugins")
+
 ![Routing](assets/routing.png?raw=true "Routing")
 
