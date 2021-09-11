@@ -219,7 +219,7 @@ void v_sgchnl_run_mixing(
         );
 
         f_vol_linear = f_db_to_linear_fast(
-            plugin_data->mono_modules->volume_smoother.last_value
+            plugin_data->mono_modules->volume_smoother.last_value - f_pan_law
         );
 
         left = plugin_data->buffers[0][f_i] *
