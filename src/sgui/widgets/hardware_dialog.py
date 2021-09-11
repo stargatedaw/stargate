@@ -112,7 +112,8 @@ Select your audio interface from this list.
 """)
 
 class hardware_dialog:
-    def __init__(self, a_is_running=False):
+    def __init__(self, a_is_running=False, splash_screen=None):
+        self.splash_screen = splash_screen
         self.devices_open = False
         self.is_running = a_is_running
         self.device_name = None
@@ -204,12 +205,14 @@ class hardware_dialog:
             if x not in util.DEVICE_SETTINGS
         ]:
             if a_splash_screen:
+                LOG.info("Hiding splash screen")
                 a_splash_screen.hide()
             self.show_hardware_dialog(
                 _("Invalid device configuration"),
                 a_exit_on_cancel=True,
             )
             if a_splash_screen:
+                LOG.info("Showing splash screen")
                 a_splash_screen.show()
             return
 
@@ -694,11 +697,14 @@ class hardware_dialog:
             f_window.close()
 
         def notify_restart():
-            QMessageBox.warning(
-                f_window,
-                _("Info"),
-                _("Stargate will restart now"),
-            )
+            if self.splash_screen:
+                self.splash_screen.show()
+            else:
+                QMessageBox.warning(
+                    f_window,
+                    _("Info"),
+                    _("Stargate will restart now"),
+                )
 
         f_ok_button.pressed.connect(on_ok)
         f_cancel_button.pressed.connect(on_cancel)
@@ -784,15 +790,9 @@ class hardware_dialog:
 
         if a_msg is not None:
             QMessageBox.warning(f_window, _("Error"), a_msg)
-
-        LOG.info("Setting dialog size")
-        f_screen = QDesktopWidget().screenGeometry()
-        f_size = f_window.geometry()
-        f_hpos = (f_screen.width() - f_size.width()) / 2
-        f_vpos = (f_screen.height() - f_size.height()) / 2
-        f_window.move(f_hpos, f_vpos)
+        if self.splash_screen:
+            self.splash_screen.hide()
         latency_changed()
-        f_window.raise_()
         LOG.info("Showing dialog")
         if self.is_running:
             f_window.exec()

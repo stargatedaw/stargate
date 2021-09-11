@@ -126,7 +126,7 @@ Requires: \
     python3-numpy \
     python3-psutil \
     python3-pyyaml \
-    python3-qt5 \
+    (python3-qt6 or python3-qt5) \
     rubberband \
     vorbis-tools \
 

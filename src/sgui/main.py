@@ -1182,14 +1182,17 @@ def flush_events():
 def global_check_device():
     f_hardware_dialog = widgets.hardware_dialog(
         a_is_running=True,
+        splash_screen=SPLASH_SCREEN,
     )
     f_hardware_dialog.check_device(
         a_splash_screen=SPLASH_SCREEN,
     )
 
     if not util.DEVICE_SETTINGS:
-        LOG.info("It appears that the user did not select "
-            "an audio device, quitting...")
+        LOG.info(
+            "It appears that the user did not select "
+            "an audio device, quitting..."
+        )
         sys.exit(999)
 
 def global_close_all():
