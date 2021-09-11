@@ -126,6 +126,7 @@ class ItemEditorWidget:
         items_dict = constants.DAW_PROJECT.get_items_dict()
         name = items_dict.get_name_by_uid(shared.CURRENT_ITEM.uid)
         self.item_name_lineedit.setText(name)
+        shared.global_open_items(name)
 
     def set_snap(self, a_val=None):
         f_index = self.snap_combobox.currentIndex()
