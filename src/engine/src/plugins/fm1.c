@@ -134,15 +134,16 @@ void v_fm1_connect_buffer(PluginHandle instance, int a_index,
     }
 }
 
-void v_fm1_connect_port(PluginHandle instance, int port,
-                          PluginData * data)
-{
+void v_fm1_connect_port(
+    PluginHandle instance,
+    int port,
+    PluginData * data
+){
     t_fm1 *plugin;
 
     plugin = (t_fm1 *) instance;
 
-    switch (port)
-    {
+    switch (port){
         case FM1_ATTACK_MAIN:
             plugin->attack_main = data;
             break;
@@ -640,10 +641,13 @@ void v_fm1_connect_port(PluginHandle instance, int port,
     }
 }
 
-PluginHandle g_fm1_instantiate(PluginDescriptor * descriptor,
-            int s_rate, fp_get_audio_pool_item_from_host a_host_audio_pool_func,
-            int a_plugin_uid, fp_queue_message a_queue_func)
-{
+PluginHandle g_fm1_instantiate(
+    PluginDescriptor * descriptor,
+    int s_rate,
+    fp_get_audio_pool_item_from_host a_host_audio_pool_func,
+    int a_plugin_uid,
+    fp_queue_message a_queue_func
+){
     t_fm1 *plugin_data;
     hpalloc((void**)&plugin_data, sizeof(t_fm1));
 
@@ -659,8 +663,7 @@ PluginHandle g_fm1_instantiate(PluginDescriptor * descriptor,
         FM1_POLYPHONY_THRESH
     );
 
-    for (i = 0; i < FM1_POLYPHONY; ++i)
-    {
+    for (i = 0; i < FM1_POLYPHONY; ++i){
         plugin_data->data[i] = g_fm1_poly_init(
             plugin_data->fs,
             plugin_data->mono_modules,
@@ -675,24 +678,35 @@ PluginHandle g_fm1_instantiate(PluginDescriptor * descriptor,
     plugin_data->sv_last_note = -1.0f;  //For glide
 
     plugin_data->port_table = g_get_port_table(
-            (void**)plugin_data, descriptor);
+        (void**)plugin_data,
+        descriptor
+    );
 
     v_cc_map_init(&plugin_data->cc_map);
 
-    return (PluginHandle) plugin_data;
+    return (PluginHandle)plugin_data;
 }
 
-void v_fm1_load(PluginHandle instance,
-        PluginDescriptor * Descriptor, char * a_file_path)
-{
+void v_fm1_load(
+    PluginHandle instance,
+    PluginDescriptor * Descriptor,
+    char * a_file_path
+){
     t_fm1 *plugin_data = (t_fm1*)instance;
-    generic_file_loader(instance, Descriptor,
-        a_file_path, plugin_data->port_table, &plugin_data->cc_map);
+    generic_file_loader(
+        instance,
+        Descriptor,
+        a_file_path,
+        plugin_data->port_table,
+        &plugin_data->cc_map
+    );
 }
 
-void v_fm1_set_port_value(PluginHandle Instance,
-        int a_port, SGFLT a_value)
-{
+void v_fm1_set_port_value(
+    PluginHandle Instance,
+    int a_port,
+    SGFLT a_value
+){
     t_fm1 *plugin_data = (t_fm1*)Instance;
     plugin_data->port_table[a_port] = a_value;
 }
