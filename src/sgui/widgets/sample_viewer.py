@@ -24,6 +24,8 @@ class sample_viewer_widget(AudioItemViewerWidget):
         a_loop_end_callback,
         a_fade_in_callback,
         a_fade_out_callback,
+        bg_brush=None,
+        fg_brush=None,
     ):
         AudioItemViewerWidget.__init__(
             self,
@@ -31,6 +33,8 @@ class sample_viewer_widget(AudioItemViewerWidget):
             a_end_callback,
             a_fade_in_callback,
             a_fade_out_callback,
+            bg_brush=bg_brush,
+            fg_brush=fg_brush,
         )
         self.loop_start_callback_x = a_loop_start_callback
         self.loop_end_callback_x = a_loop_end_callback

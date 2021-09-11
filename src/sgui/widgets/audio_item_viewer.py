@@ -344,6 +344,8 @@ class AudioItemViewerWidget(QGraphicsView):
         a_end_callback,
         a_fade_in_callback,
         a_fade_out_callback,
+        bg_brush=None,
+        fg_brush=None,
     ):
         QGraphicsView.__init__(self)
         self.setViewportUpdateMode(
@@ -357,7 +359,7 @@ class AudioItemViewerWidget(QGraphicsView):
         self.setScene(self.scene)
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.scene.setBackgroundBrush(
-            QColor(
+            bg_brush if bg_brush else QColor(
                 theme.SYSTEM_COLORS.widgets.default_scene_background,
             ),
         )
@@ -391,7 +393,7 @@ class AudioItemViewerWidget(QGraphicsView):
         self.scroll_bar_height = self.horizontalScrollBar().height()
         self.last_x_scale = 1.0
         self.last_y_scale = 1.0
-        self.waveform_brush = QColor(
+        self.waveform_brush = fg_brush if fg_brush else QColor(
             theme.SYSTEM_COLORS.widgets.audio_item_viewer_color,
         )
         self.waveform_pen = QPen(QtCore.Qt.PenStyle.NoPen)

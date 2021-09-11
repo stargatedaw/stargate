@@ -1016,9 +1016,15 @@ class sampler1_plugin_ui(AbstractPluginUI):
 
         #Sample Graph
         self.sample_graph = sample_viewer_widget(
-            self.sample_start_callback, self.sample_end_callback,
-            self.loop_start_callback, self.loop_end_callback,
-            self.fade_in_callback, self.fade_out_callback)
+            self.sample_start_callback,
+            self.sample_end_callback,
+            self.loop_start_callback,
+            self.loop_end_callback,
+            self.fade_in_callback,
+            self.fade_out_callback,
+            bg_brush=QColor("#222222"),
+            fg_brush=QColor("#aaaaaa"),
+        )
         self.sample_graph.scene_context_menu.addSeparator()
         self.marker_all_action = \
             self.sample_graph.scene_context_menu.addAction(
