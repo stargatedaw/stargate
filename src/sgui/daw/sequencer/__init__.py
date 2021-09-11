@@ -330,10 +330,11 @@ class SequencerWidget:
         )
         if f_result:
             f_result = {f_result[x]:x + 1 for x in range(len(f_result))}
-            f_result[0] = 0 # main track
+            f_result[0] = 0  # main track
             constants.DAW_PROJECT.reorder_tracks(f_result)
             shared.TRACK_PANEL.open_tracks()
             self.open_sequence()
             shared.MIDI_DEVICES_DIALOG.set_routings()
             shared.TRANSPORT.open_project()
+            shared.PLUGIN_RACK.set_track_order(f_result)
 

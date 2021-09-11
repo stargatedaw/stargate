@@ -671,8 +671,12 @@ class PluginRackTab:
         self.enabled = False
         f_index = self.track_combobox.currentIndex()
         f_new_index = a_dict[f_index]
-        self.plugin_racks = {y:self.plugin_racks[x] for x, y in a_dict.items()}
-        for k, v in self.plugin_racks:
+        self.plugin_racks = {
+            y:self.plugin_racks[x]
+            for x, y in a_dict.items()
+            if x in self.plugin_racks
+        }
+        for k, v in self.plugin_racks.items():
             v.track_number = k
         self.track_combobox.setCurrentIndex(f_new_index)
         self.enabled = True
