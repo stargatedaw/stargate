@@ -447,6 +447,13 @@ class sampler1_plugin_ui(AbstractPluginUI):
 
         self.widget.setUpdatesEnabled(False)
         self.is_instrument = True
+        knob_kwargs = {
+            'arc_brush': QColor('#111111'),
+            'arc_bg_brush': QColor("#4a4a4a"),
+            'arc_width_pct': 12.0,
+            'draw_line': True,
+            'fg_svg': None,
+        }
 
         self.selected_row_index = 0
         self.handle_control_updates = True
@@ -1127,26 +1134,46 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.hlayout0 = QHBoxLayout()
         self.main_layout.addLayout(self.hlayout0)
         self.fx0 = multifx_single(
-            _("FX0"), SAMPLER1_FX0_KNOB0,
-            self.plugin_rel_callback, self.plugin_val_callback, self.port_dict,
-            a_knob_size=f_knob_size)
+            _("FX0"),
+            SAMPLER1_FX0_KNOB0,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            a_knob_size=f_knob_size,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout0.addWidget(self.fx0.group_box)
         self.fx1 = multifx_single(
-            _("FX1"), SAMPLER1_FX1_KNOB0,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, a_knob_size=f_knob_size)
+            _("FX1"),
+            SAMPLER1_FX1_KNOB0,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            a_knob_size=f_knob_size,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout0.addWidget(self.fx1.group_box)
         self.hlayout1 = QHBoxLayout()
         self.main_layout.addLayout(self.hlayout1)
         self.fx2 = multifx_single(
-            _("FX2"), SAMPLER1_FX2_KNOB0,
-            self.plugin_rel_callback, self.plugin_val_callback, self.port_dict,
-            a_knob_size=f_knob_size)
+            _("FX2"),
+            SAMPLER1_FX2_KNOB0,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            a_knob_size=f_knob_size,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout1.addWidget(self.fx2.group_box)
         self.fx3 = multifx_single(
-            _("FX3"), SAMPLER1_FX3_KNOB0,
-            self.plugin_rel_callback, self.plugin_val_callback, self.port_dict,
-            a_knob_size=f_knob_size)
+            _("FX3"),
+            SAMPLER1_FX3_KNOB0,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            a_knob_size=f_knob_size,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout1.addWidget(self.fx3.group_box)
 
         self.mod_matrix = QTableWidget()
@@ -1212,7 +1239,9 @@ class sampler1_plugin_ui(AbstractPluginUI):
             SAMPLER1_RELEASE, _("ADSR Amp"),
             self.plugin_rel_callback, self.plugin_val_callback,
             self.port_dict, a_attack_default=0, a_knob_type=KC_LOG_TIME,
-            a_lin_port=SAMPLER1_ADSR_LIN_MAIN, a_lin_default=1)
+            a_lin_port=SAMPLER1_ADSR_LIN_MAIN, a_lin_default=1,
+            knob_kwargs=knob_kwargs,
+        )
         #overriding the default for self, because we want a
         #low minimum default that won't click
         self.adsr_amp.release_knob.control.setMinimum(5)
@@ -1223,12 +1252,17 @@ class sampler1_plugin_ui(AbstractPluginUI):
             SAMPLER1_FILTER_SUSTAIN,
             SAMPLER1_FILTER_RELEASE,
             _("ADSR 2"), self.plugin_rel_callback,
-            self.plugin_val_callback, self.port_dict, a_knob_type=KC_LOG_TIME)
+            self.plugin_val_callback, self.port_dict,
+            a_knob_type=KC_LOG_TIME,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout2.addWidget(self.adsr_filter.groupbox)
         self.pitch_env = ramp_env_widget(
             f_knob_size, self.plugin_rel_callback,
             self.plugin_val_callback, self.port_dict,
-            SAMPLER1_PITCH_ENV_TIME, None, _("Ramp Env"))
+            SAMPLER1_PITCH_ENV_TIME, None, _("Ramp Env"),
+            knob_kwargs=knob_kwargs,
+        )
 
         self.hlayout2.addWidget(self.pitch_env.groupbox)
 
@@ -1236,20 +1270,26 @@ class sampler1_plugin_ui(AbstractPluginUI):
             f_knob_size, self.plugin_rel_callback,
             self.plugin_val_callback, self.port_dict,
             SAMPLER1_LFO_FREQ,
-            SAMPLER1_LFO_TYPE, f_lfo_types, _("LFO"))
+            SAMPLER1_LFO_TYPE, f_lfo_types, _("LFO"),
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout2.addWidget(self.lfo.groupbox)
 
         self.lfo_pitch = knob_control(
             f_knob_size, _("Pitch"), SAMPLER1_LFO_PITCH,
             self.plugin_rel_callback, self.plugin_val_callback,
-            -36, 36, 0, KC_INTEGER, self.port_dict)
+            -36, 36, 0, KC_INTEGER, self.port_dict,
+            knob_kwargs=knob_kwargs,
+        )
         self.lfo_pitch.add_to_grid_layout(self.lfo.layout, 7)
 
         self.lfo_pitch_fine = knob_control(
             f_knob_size, _("Fine"),
             SAMPLER1_LFO_PITCH_FINE,
             self.plugin_rel_callback, self.plugin_val_callback,
-            -100, 100, 0, KC_DECIMAL, self.port_dict)
+            -100, 100, 0, KC_DECIMAL, self.port_dict,
+            knob_kwargs=knob_kwargs,
+        )
         self.lfo_pitch_fine.add_to_grid_layout(self.lfo.layout, 8)
 
         glbl_shared.APP.processEvents()
@@ -1304,18 +1344,42 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.hlayout11 = QHBoxLayout()
         self.monofx_sub_tab_fx_layout.addLayout(self.hlayout11)
         self.mono_fx0 = multifx_single(
-            _("FX0"), 0, None, self.monofx0_callback, a_knob_size=f_knob_size)
+            _("FX0"),
+            0,
+            None,
+            self.monofx0_callback,
+            a_knob_size=f_knob_size,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout11.addWidget(self.mono_fx0.group_box)
         self.mono_fx1 = multifx_single(
-            _("FX1"), 0, None, self.monofx1_callback, a_knob_size=f_knob_size)
+            _("FX1"),
+            0,
+            None,
+            self.monofx1_callback,
+            a_knob_size=f_knob_size,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout11.addWidget(self.mono_fx1.group_box)
         self.hlayout12 = QHBoxLayout()
         self.monofx_sub_tab_fx_layout.addLayout(self.hlayout12)
         self.mono_fx2 = multifx_single(
-            _("FX2"), 0, None, self.monofx2_callback, a_knob_size=f_knob_size)
+            _("FX2"),
+            0,
+            None,
+            self.monofx2_callback,
+            a_knob_size=f_knob_size,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout12.addWidget(self.mono_fx2.group_box)
         self.mono_fx3 = multifx_single(
-            _("FX3"), 0, None, self.monofx3_callback, a_knob_size=f_knob_size)
+            _("FX3"),
+            0,
+            None,
+            self.monofx3_callback,
+            a_knob_size=f_knob_size,
+            knob_kwargs=knob_kwargs,
+        )
         self.hlayout12.addWidget(self.mono_fx3.group_box)
 
         self.monofx_knob_tuple = tuple(
@@ -1326,19 +1390,31 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.set_monofx_knob_callbacks(0)
 
         self.main = main_widget(
-            f_knob_size, self.plugin_rel_callback, self.plugin_val_callback,
-            SAMPLER1_MAIN_VOLUME, SAMPLER1_MAIN_GLIDE,
-            SAMPLER1_MAIN_PITCHBEND_AMT, self.port_dict, _("Main"),
+            f_knob_size,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            SAMPLER1_MAIN_VOLUME,
+            SAMPLER1_MAIN_GLIDE,
+            SAMPLER1_MAIN_PITCHBEND_AMT,
+            self.port_dict,
+            _("Main"),
             a_min_note_port=SAMPLER1_MIN_NOTE,
             a_max_note_port=SAMPLER1_MAX_NOTE,
-            a_pitch_port=SAMPLER1_MAIN_PITCH)
+            a_pitch_port=SAMPLER1_MAIN_PITCH,
+            knob_kwargs=knob_kwargs,
+        )
         self.monofx_sub_tab_fx_layout.addWidget(self.main.group_box)
         self.main.vol_knob.control.setRange(-24, 24)
 
         glbl_shared.APP.processEvents()
 
         self.eq6 = eq6_widget(
-            0, self.eq6_rel_callback, self.eq6_val_callback, a_vlayout=False)
+            0,
+            self.eq6_rel_callback,
+            self.eq6_val_callback,
+            a_vlayout=False,
+            knob_kwargs=knob_kwargs,
+        )
         self.monofx_sub_tab.addTab(self.eq6.widget, _("EQ"))
         self.eq6.hlayout.setAlignment(
             QtCore.Qt.AlignmentFlag.AlignLeft
