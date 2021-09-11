@@ -12,6 +12,7 @@ GNU General Public License for more details.
 */
 
 #include "audiodsp/lib/amp.h"
+#include "audiodsp/lib/peak_meter.h"
 #include "plugin.h"
 #include "plugins/channel.h"
 
@@ -154,11 +155,16 @@ void v_sgchnl_process_midi(
 
 
 void v_sgchnl_run_mixing(
-        PluginHandle instance, int sample_count,
-        SGFLT ** output_buffers, int output_count,
-        struct ShdsList * midi_events, struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    SGFLT ** output_buffers,
+    int output_count,
+    struct ShdsList* midi_events,
+    struct ShdsList * atm_events,
+    t_pkm_peak_meter* peak_meter
+){
     t_sgchnl *plugin_data = (t_sgchnl*)instance;
+    float left, right;
 
     v_sgchnl_process_midi(instance, midi_events, atm_events);
 
@@ -167,74 +173,100 @@ void v_sgchnl_run_mixing(
     SGFLT f_pan_law = (*plugin_data->pan_law) * 0.01f;
 
     int midi_event_pos = 0;
-    int f_i = 0;
+    int f_i;
 
-    while(f_i < sample_count)
-    {
-        while(midi_event_pos < plugin_data->midi_event_count &&
-            plugin_data->midi_event_ticks[midi_event_pos] == f_i)
-        {
-            if(plugin_data->midi_event_types[midi_event_pos] ==
-                    EVENT_CONTROLLER)
-            {
+    for(f_i = 0; f_i < sample_count; ++f_i){
+        while(
+            midi_event_pos < plugin_data->midi_event_count
+            &&
+            plugin_data->midi_event_ticks[midi_event_pos] == f_i
+        ){
+            if(
+                plugin_data->midi_event_types[midi_event_pos]
+                ==
+                EVENT_CONTROLLER
+            ){
                 v_cc_map_translate(
                     &plugin_data->cc_map, plugin_data->descriptor,
                     plugin_data->port_table,
                     plugin_data->midi_event_ports[midi_event_pos],
-                    plugin_data->midi_event_values[midi_event_pos]);
+                    plugin_data->midi_event_values[midi_event_pos]
+                );
             }
             ++midi_event_pos;
         }
 
         v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue, f_i, plugin_data->port_table);
+            &plugin_data->atm_queue,
+            f_i,
+            plugin_data->port_table
+        );
 
-        v_sml_run(&plugin_data->mono_modules->volume_smoother,
-            (*plugin_data->vol_slider * 0.01f));
+        v_sml_run(
+            &plugin_data->mono_modules->volume_smoother,
+            (*plugin_data->vol_slider * 0.01f)
+        );
 
-        v_sml_run(&plugin_data->mono_modules->pan_smoother,
-            (*plugin_data->pan * 0.01f));
+        v_sml_run(
+            &plugin_data->mono_modules->pan_smoother,
+            (*plugin_data->pan * 0.01f)
+        );
 
-        v_pn2_set(&plugin_data->mono_modules->panner,
-            plugin_data->mono_modules->pan_smoother.last_value, f_pan_law);
+        v_pn2_set(
+            &plugin_data->mono_modules->panner,
+            plugin_data->mono_modules->pan_smoother.last_value,
+            f_pan_law
+        );
 
         f_vol_linear = f_db_to_linear_fast(
-            (plugin_data->mono_modules->volume_smoother.last_value));
+            plugin_data->mono_modules->volume_smoother.last_value
+        );
 
-        output_buffers[0][f_i] += plugin_data->buffers[0][f_i] *
+        left = plugin_data->buffers[0][f_i] *
             f_vol_linear * f_gain * plugin_data->mono_modules->panner.gainL;
-        output_buffers[1][f_i] += plugin_data->buffers[1][f_i] *
+        right = plugin_data->buffers[1][f_i] *
             f_vol_linear * f_gain * plugin_data->mono_modules->panner.gainR;
-
-        ++f_i;
+        if(peak_meter){
+            v_pkm_run_single(
+                peak_meter,
+                left,
+                right
+            );
+        }
+        output_buffers[0][f_i] += left;
+        output_buffers[1][f_i] += right;
     }
-
 }
 
 void v_sgchnl_run(
-        PluginHandle instance, int sample_count,
-        struct ShdsList * midi_events, struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    struct ShdsList* midi_events,
+    struct ShdsList * atm_events
+){
     t_sgchnl *plugin_data = (t_sgchnl*)instance;
 
     v_sgchnl_process_midi(instance, midi_events, atm_events);
 
     int midi_event_pos = 0;
-    int f_i = 0;
+    int f_i;
 
     SGFLT f_vol_linear;
 
     SGFLT f_gain = f_db_to_linear_fast((*plugin_data->gain) * 0.01f);
     SGFLT f_pan_law = (*plugin_data->pan_law) * 0.01f;
 
-    while(f_i < sample_count)
-    {
-        while(midi_event_pos < plugin_data->midi_event_count &&
-            plugin_data->midi_event_ticks[midi_event_pos] == f_i)
-        {
-            if(plugin_data->midi_event_types[midi_event_pos] ==
-                    EVENT_CONTROLLER)
-            {
+    for(f_i = 0; f_i < sample_count; ++f_i){
+        while(
+            midi_event_pos < plugin_data->midi_event_count
+            &&
+            plugin_data->midi_event_ticks[midi_event_pos] == f_i
+        ){
+            if(
+                plugin_data->midi_event_types[midi_event_pos]
+                ==
+                EVENT_CONTROLLER
+            ){
                 v_cc_map_translate(
                     &plugin_data->cc_map, plugin_data->descriptor,
                     plugin_data->port_table,
@@ -245,26 +277,35 @@ void v_sgchnl_run(
         }
 
         v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue, f_i, plugin_data->port_table);
+            &plugin_data->atm_queue,
+            f_i,
+            plugin_data->port_table
+        );
 
-        v_sml_run(&plugin_data->mono_modules->volume_smoother,
-            (*plugin_data->vol_slider * 0.01f));
+        v_sml_run(
+            &plugin_data->mono_modules->volume_smoother,
+            (*plugin_data->vol_slider * 0.01f)
+        );
 
-        v_sml_run(&plugin_data->mono_modules->pan_smoother,
-            (*plugin_data->pan * 0.01f));
+        v_sml_run(
+            &plugin_data->mono_modules->pan_smoother,
+            (*plugin_data->pan * 0.01f)
+        );
 
-        v_pn2_set(&plugin_data->mono_modules->panner,
-            plugin_data->mono_modules->pan_smoother.last_value, f_pan_law);
+        v_pn2_set(
+            &plugin_data->mono_modules->panner,
+            plugin_data->mono_modules->pan_smoother.last_value,
+            f_pan_law
+        );
 
         f_vol_linear = f_db_to_linear_fast(
-            (plugin_data->mono_modules->volume_smoother.last_value));
+            (plugin_data->mono_modules->volume_smoother.last_value)
+        );
 
         plugin_data->buffers[0][f_i] *=
             f_vol_linear * f_gain * plugin_data->mono_modules->panner.gainL;
         plugin_data->buffers[1][f_i] *=
             f_vol_linear * f_gain * plugin_data->mono_modules->panner.gainR;
-
-        ++f_i;
     }
 }
 

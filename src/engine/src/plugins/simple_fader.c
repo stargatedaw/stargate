@@ -13,6 +13,7 @@ GNU General Public License for more details.
 
 #include "plugin.h"
 #include "audiodsp/lib/amp.h"
+#include "audiodsp/lib/peak_meter.h"
 #include "audiodsp/modules/filter/svf.h"
 #include "audiodsp/modules/delay/reverb.h"
 #include "plugins/simple_fader.h"
@@ -153,80 +154,99 @@ void v_sfader_process_midi(
 
 
 void v_sfader_run_mixing(
-        PluginHandle instance, int sample_count,
-        SGFLT ** output_buffers, int output_count,
-        struct ShdsList * midi_events, struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    SGFLT** output_buffers,
+    int output_count,
+    struct ShdsList* midi_events,
+    struct ShdsList * atm_events,
+    t_pkm_peak_meter* peak_meter
+){
     t_sfader *plugin_data = (t_sfader*)instance;
+    float left, right;
 
     v_sfader_process_midi(instance, midi_events, atm_events);
 
     int midi_event_pos = 0;
-    int f_i = 0;
+    int f_i;
 
     t_plugin_event_queue_item * f_midi_item;
 
-    while(f_i < sample_count)
-    {
-        while(1)
-        {
+    for(f_i = 0; f_i < sample_count; ++f_i){
+        while(1){
             f_midi_item = v_plugin_event_queue_iter(
-                &plugin_data->midi_queue, f_i);
-            if(!f_midi_item)
-            {
+                &plugin_data->midi_queue,
+                f_i
+            );
+            if(!f_midi_item){
                 break;
             }
 
-            if(f_midi_item->type == EVENT_CONTROLLER)
-            {
+            if(f_midi_item->type == EVENT_CONTROLLER){
                 v_cc_map_translate(
-                    &plugin_data->cc_map, plugin_data->descriptor,
-                    plugin_data->port_table, f_midi_item->port,
-                    f_midi_item->value);
+                    &plugin_data->cc_map,
+                    plugin_data->descriptor,
+                    plugin_data->port_table,
+                    f_midi_item->port,
+                    f_midi_item->value
+                );
             }
             ++midi_event_pos;
         }
 
         v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue, f_i, plugin_data->port_table);
+            &plugin_data->atm_queue,
+            f_i,
+            plugin_data->port_table
+        );
 
-        v_sml_run(plugin_data->mono_modules->volume_smoother,
-            (*plugin_data->vol_slider * 0.01f));
+        v_sml_run(
+            plugin_data->mono_modules->volume_smoother,
+            (*plugin_data->vol_slider * 0.01f)
+        );
 
-        plugin_data->mono_modules->vol_linear =
-            f_db_to_linear_fast(
-            (plugin_data->mono_modules->volume_smoother->last_value));
+        plugin_data->mono_modules->vol_linear = f_db_to_linear_fast(
+            plugin_data->mono_modules->volume_smoother->last_value
+        );
 
-        output_buffers[0][f_i] += plugin_data->buffers[0][f_i] *
-            (plugin_data->mono_modules->vol_linear);
-        output_buffers[1][f_i] += plugin_data->buffers[1][f_i] *
-            (plugin_data->mono_modules->vol_linear);
-
-        ++f_i;
+        left = plugin_data->buffers[0][f_i] *
+            plugin_data->mono_modules->vol_linear;
+        right = plugin_data->buffers[1][f_i] *
+            plugin_data->mono_modules->vol_linear;
+        if(peak_meter){
+            v_pkm_run_single(
+                peak_meter,
+                left,
+                right
+            );
+        }
+        output_buffers[0][f_i] += left;
+        output_buffers[1][f_i] += right;
     }
 
 }
 
 void v_sfader_run(
-        PluginHandle instance, int sample_count,
-        struct ShdsList * midi_events, struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    struct ShdsList* midi_events,
+    struct ShdsList * atm_events
+){
     t_sfader *plugin_data = (t_sfader*)instance;
 
     v_sfader_process_midi(instance, midi_events, atm_events);
 
     t_plugin_event_queue_item * f_midi_item;
     int midi_event_pos = 0;
-    int f_i = 0;
+    int f_i;
 
-    while(f_i < sample_count)
-    {
-        while(1)
-        {
+    for(f_i = 0; f_i < sample_count; ++f_i){
+        while(1){
             f_midi_item = v_plugin_event_queue_iter(
-                &plugin_data->midi_queue, f_i);
-            if(!f_midi_item)
-            {
+                &plugin_data->midi_queue,
+                f_i
+            );
+            if(!f_midi_item){
                 break;
             }
 
@@ -246,19 +266,20 @@ void v_sfader_run(
         v_sml_run(plugin_data->mono_modules->volume_smoother,
             (*plugin_data->vol_slider * 0.01f));
 
-        if(plugin_data->mono_modules->volume_smoother->last_value != 0.0f ||
-            (*plugin_data->vol_slider != 0.0f))
-        {
-            plugin_data->mono_modules->vol_linear =
-                f_db_to_linear_fast(
-                (plugin_data->mono_modules->volume_smoother->last_value));
+        if(
+            plugin_data->mono_modules->volume_smoother->last_value != 0.0f
+            ||
+            (*plugin_data->vol_slider != 0.0f)
+        ){
+            plugin_data->mono_modules->vol_linear = f_db_to_linear_fast(
+                plugin_data->mono_modules->volume_smoother->last_value
+            );
 
             plugin_data->buffers[0][f_i] *=
                 (plugin_data->mono_modules->vol_linear);
             plugin_data->buffers[1][f_i] *=
                 (plugin_data->mono_modules->vol_linear);
         }
-        ++f_i;
     }
 }
 

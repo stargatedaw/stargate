@@ -74,9 +74,35 @@ void v_pkm_run(
     }
     self->buffer_pos = 0;
     while(self->buffer_pos < a_count){
-        self->value[0] = f_pkm_compare(a_in0[self->buffer_pos], self->value[0]);
-        self->value[1] = f_pkm_compare(a_in1[self->buffer_pos], self->value[1]);
+        self->value[0] = f_pkm_compare(
+            a_in0[self->buffer_pos],
+            self->value[0]
+        );
+        self->value[1] = f_pkm_compare(
+            a_in1[self->buffer_pos],
+            self->value[1]
+        );
         self->buffer_pos += PEAK_STEP_SIZE;
     }
+}
+
+void v_pkm_run_single(
+    t_pkm_peak_meter * self,
+    SGFLT a_in0,
+    SGFLT a_in1
+){
+    if(self->dirty){
+        self->dirty = 0;
+        self->value[0] = 0.0f;
+        self->value[1] = 0.0f;
+    }
+    self->value[0] = f_pkm_compare(
+        a_in0,
+        self->value[0]
+    );
+    self->value[1] = f_pkm_compare(
+        a_in1,
+        self->value[1]
+    );
 }
 

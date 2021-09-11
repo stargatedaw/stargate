@@ -243,13 +243,17 @@ void v_daw_process_track(
         }
     }
 
-    v_pkm_run(
-        f_track->peak_meter,
-        f_track->buffers[0],
-        f_track->buffers[1],
-        a_sample_count
-    );
 
+    f_plugin = f_track->plugins[f_i];
+    // No mixer plugin, run the peak meter
+    if(!f_plugin){
+        v_pkm_run(
+            f_track->peak_meter,
+            f_track->buffers[0],
+            f_track->buffers[1],
+            a_sample_count
+        );
+    }
 
     if(a_global_track_num){
         v_daw_sum_track_outputs(
@@ -347,8 +351,7 @@ void v_daw_sum_track_outputs(
 
     f_i2 = 0;
 
-    if(a_track->fade_state == FADE_STATE_OFF)
-    {
+    if(a_track->fade_state == FADE_STATE_OFF){
 
     } else if(a_track->fade_state == FADE_STATE_FADING){
         while(f_i2 < a_sample_count){
@@ -374,7 +377,6 @@ void v_daw_sum_track_outputs(
             a_track->fade_state = FADE_STATE_OFF;
         }
     }
-
 
     int f_i3;
 
@@ -423,8 +425,7 @@ void v_daw_sum_track_outputs(
             f_buff = f_bus->buffers;
         }
 
-        if(a_track->fade_state != FADE_STATE_FADED)
-        {
+        if(a_track->fade_state != FADE_STATE_FADED){
             if(f_plugin && f_plugin->power){
                 v_daw_process_atm(
                     self,
@@ -443,7 +444,8 @@ void v_daw_sum_track_outputs(
                     f_buff,
                     2,
                     a_track->event_list,
-                    f_plugin->atm_list
+                    f_plugin->atm_list,
+                    a_track->peak_meter
                 );
             } else {
                 pthread_spin_lock(&f_bus->lock);

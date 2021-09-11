@@ -2,6 +2,7 @@
 #define SG_PLUGIN_H
 
 #include "audio/paifx.h"
+#include "audiodsp/lib/peak_meter.h"
 #include "compiler.h"
 #include "ds/list.h"
 
@@ -123,10 +124,14 @@ typedef struct _PluginDescriptor {
     // any plugin that isn't a fader/channel type plugin do not need
     // to implement or set this
     void (*run_mixing)(
-        PluginHandle Instance, int SampleCount,
-        SGFLT ** output_buffers, int output_count,
-        struct ShdsList * midi_events,
-        struct ShdsList * atm_events);
+        PluginHandle Instance,
+        int SampleCount,
+        SGFLT** output_buffers,
+        int output_count,
+        struct ShdsList* midi_events,
+        struct ShdsList* atm_events,
+        t_pkm_peak_meter* peak_meter
+    );
 
     /* Do anything like warming up oscillators, etc...  in preparation
      * for offline rendering.  This must be called after loading

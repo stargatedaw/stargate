@@ -52,5 +52,10 @@ void v_pkm_run(
     int a_count
 );
 
+void v_pkm_run_single(
+    t_pkm_peak_meter * self,
+    SGFLT a_in0,
+    SGFLT a_in1
+);
 #endif /* PEAK_METER_H */
 
