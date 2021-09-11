@@ -1109,27 +1109,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
 
         f_knob_size = 42
 
-        self.polyfx_tab_layout = QVBoxLayout(self.poly_fx_tab)
-        self.polyfx_tabs_control = QTabWidget()
-        self.polyfx_tab_layout.addWidget(self.polyfx_tabs_control)
-        self.polyfx_tab_layout.setContentsMargins(0, 0, 0, 0)
-        self.polyfx_tab_widget = QWidget()
-        self.polyfx_tabs_control.addTab(self.polyfx_tab_widget, _("FX"))
-        self.polyfx_modulation_tab_widget = QWidget()
-        self.polyfx_tabs_control.addTab(
-            self.polyfx_modulation_tab_widget, _("Modulation"))
-        self.main_layout = QVBoxLayout(self.polyfx_tab_widget)
-        self.main_layout.setAlignment(
-            QtCore.Qt.AlignmentFlag.AlignLeft
-            |
-            QtCore.Qt.AlignmentFlag.AlignTop
-        )
-        self.modulation_layout = QVBoxLayout(self.polyfx_modulation_tab_widget)
-        self.modulation_layout.setAlignment(
-            QtCore.Qt.AlignmentFlag.AlignLeft
-            |
-            QtCore.Qt.AlignmentFlag.AlignTop
-        )
+        self.main_layout = QVBoxLayout(self.poly_fx_tab)
 
         self.hlayout0 = QHBoxLayout()
         self.main_layout.addLayout(self.hlayout0)
@@ -1153,8 +1133,6 @@ class sampler1_plugin_ui(AbstractPluginUI):
             knob_kwargs=knob_kwargs,
         )
         self.hlayout0.addWidget(self.fx1.group_box)
-        self.hlayout1 = QHBoxLayout()
-        self.main_layout.addLayout(self.hlayout1)
         self.fx2 = multifx_single(
             _("FX2"),
             SAMPLER1_FX2_KNOB0,
@@ -1164,7 +1142,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
         )
-        self.hlayout1.addWidget(self.fx2.group_box)
+        self.hlayout0.addWidget(self.fx2.group_box)
         self.fx3 = multifx_single(
             _("FX3"),
             SAMPLER1_FX3_KNOB0,
@@ -1174,7 +1152,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
         )
-        self.hlayout1.addWidget(self.fx3.group_box)
+        self.hlayout0.addWidget(self.fx3.group_box)
 
         self.mod_matrix = QTableWidget()
         self.mod_matrix.setRowCount(6)
@@ -1222,16 +1200,13 @@ class sampler1_plugin_ui(AbstractPluginUI):
                     self.mod_matrix.setCellWidget(f_i_src, f_x, f_ctrl.control)
                     f_port_num += 1
 
-        self.modulation_layout.addWidget(self.mod_matrix)
+        self.hlayout1 = QHBoxLayout()
+        self.main_layout.addLayout(self.hlayout1)
+        self.hlayout1.addWidget(self.mod_matrix)
         self.mod_matrix.resizeColumnsToContents()
 
         self.hlayout2 = QHBoxLayout()
-        self.hlayout2.setAlignment(
-            QtCore.Qt.AlignmentFlag.AlignLeft
-            |
-            QtCore.Qt.AlignmentFlag.AlignTop
-        )
-        self.modulation_layout.addLayout(self.hlayout2)
+        self.main_layout.addLayout(self.hlayout2)
 
         self.adsr_amp = adsr_widget(
             f_knob_size, True, SAMPLER1_ATTACK,
