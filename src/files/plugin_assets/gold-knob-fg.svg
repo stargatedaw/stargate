@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="44.919235"
+   height="44.919235"
+   viewBox="0 0 44.919235 44.919235"
+   fill="none"
+   version="1.1"
+   id="svg43"
+   sodipodi:docname="gold-knob-fg.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview45"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="17.847826"
+     inkscape:cx="22.691839"
+     inkscape:cy="22.691839"
+     inkscape:window-width="1920"
+     inkscape:window-height="1007"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg43" />
+  <g
+     id="g1189"
+     transform="rotate(-135,22.550555,22.777795)">
+    <path
+       id="path2"
+       style="fill:url(#paint0_radial)"
+       d="m 17.873047,0.4765625 c -2.671,0.587997 -5.168444,1.6406994 -7.402344,3.0683594 0.5084,1.84183 -0.03022,3.98529 -1.5761718,5.53125 -1.5387399,1.5387701 -3.6698493,2.0801841 -5.5058593,1.5839841 -1.39832,2.2104 -2.42963665,4.675847 -3.00976565,7.310547 1.66289395,0.9425 2.79882815,2.840144 2.79882815,5.027344 0,2.1769 -1.1252366,4.066672 -2.77539065,5.013672 0.592366,2.6313 1.63600185,5.092475 3.04492185,7.296875 1.84194,-0.5086 3.98513,0.02997 5.53125,1.576172 1.5388104,1.5387 2.0802844,3.669859 1.5839844,5.505859 2.2105,1.3982 4.675747,2.429766 7.310547,3.009766 0.9424,-1.663 2.840044,-2.798829 5.027344,-2.798829 2.1769,0 4.066671,1.125391 5.013671,2.775391 2.594901,-0.5842 5.024179,-1.608781 7.205079,-2.988281 -0.4962,-1.836 0.04333,-3.965206 1.582031,-5.503906 1.546,-1.546 3.68945,-2.084472 5.53125,-1.576172 1.4089,-2.2043 2.452622,-4.665675 3.044922,-7.296875 -1.6502,-0.947 -2.775391,-2.836772 -2.775391,-5.013672 0,-2.1872 1.135928,-4.084844 2.798828,-5.027344 -0.5801,-2.6347 -1.611565,-5.100147 -3.009765,-7.310547 -1.8358,0.4958 -3.96736,-0.04546 -5.50586,-1.5839841 -1.5457,-1.54579 -2.084272,-3.68957 -1.576172,-5.53125 C 33.004584,2.1359519 30.545362,1.092427 27.914062,0.5 c -0.947099,1.649827 -2.836971,2.7753906 -5.013671,2.7753906 -2.187,0 -4.084744,-1.1360811 -5.027344,-2.7988281 z M 22.78125,4.171875 c 10.3328,0 18.708984,8.376184 18.708984,18.708984 0,10.3327 -8.376184,18.708985 -18.708984,18.708985 -10.3328,0 -18.7089844,-8.376285 -18.7089844,-18.708985 0,-10.3328 8.3761844,-18.708984 18.7089844,-18.708984 z" />
+    <rect
+       x="21.769501"
+       y="7.8154302"
+       width="2.02808"
+       height="8.9688501"
+       rx="1.01404"
+       fill="#000000"
+       fill-opacity="0.5"
+       id="rect8" />
+  </g>
+  <defs
+     id="defs41">
+    <radialGradient
+       id="paint0_radial"
+       cx="0"
+       cy="0"
+       r="1"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,22.4614,-22.4612,0,22.8401,22.9386)">
+      <stop
+         stop-color="#383838"
+         id="stop10" />
+      <stop
+         offset="1"
+         stop-color="#1E1E1E"
+         id="stop12" />
+    </radialGradient>
+    <linearGradient
+       id="paint1_linear"
+       x1="22.781401"
+       y1="4.1715102"
+       x2="22.781401"
+       y2="41.589802"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         stop-color="#888888"
+         id="stop15" />
+      <stop
+         offset="0.697917"
+         stop-color="#202020"
+         id="stop17" />
+      <stop
+         offset="1"
+         stop-color="#3B3B3B"
+         id="stop19" />
+    </linearGradient>
+    <linearGradient
+       id="paint2_linear"
+       x1="22.7822"
+       y1="5.2437701"
+       x2="75.499496"
+       y2="114.5"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         stop-color="#F8F0CC"
+         id="stop22" />
+      <stop
+         offset="0.125"
+         stop-color="#826130"
+         id="stop24" />
+      <stop
+         offset="0.234375"
+         stop-color="#F4E9A8"
+         id="stop26" />
+      <stop
+         offset="0.364583"
+         stop-color="#7F5E2E"
+         id="stop28" />
+      <stop
+         offset="0.484375"
+         stop-color="#F9EAA1"
+         id="stop30" />
+      <stop
+         offset="0.604167"
+         stop-color="#5F3F14"
+         id="stop32" />
+      <stop
+         offset="0.744792"
+         stop-color="#CBB666"
+         id="stop34" />
+      <stop
+         offset="0.875"
+         stop-color="#81602F"
+         id="stop36" />
+      <stop
+         offset="1"
+         stop-color="#F8F0CC"
+         id="stop38" />
+    </linearGradient>
+  </defs>
+</svg>

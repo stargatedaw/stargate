@@ -74,9 +74,13 @@ class sgdelay_plugin_ui(AbstractPluginUI):
 
         knob_kwargs={
             'arc_width_pct': 0.,
+            'bg_svg': os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'gold-knob-bg.svg',
+            ),
             'fg_svg': os.path.join(
                 util.PLUGIN_ASSETS_DIR,
-                'knob-metal-1.svg',
+                'gold-knob-fg.svg',
             ),
         }
 
