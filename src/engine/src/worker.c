@@ -156,25 +156,24 @@ void v_init_worker_threads(
 
 #ifdef __linux__
     struct sched_param param;
-    param.__sched_priority = sched_get_priority_max(SCHED_DEADLINE);
-    printf(
-        " Attempting to set .__sched_priority = %i\n",
-        param.__sched_priority
-    );
+    param.__sched_priority = sched_get_priority_max(RT_SCHED);
+    printf(" Attempting to set .__sched_priority = %i\n",
+            param.__sched_priority);
     pthread_attr_setschedparam(&threadAttr, &param);
 #endif
 
     pthread_attr_setstacksize(&threadAttr, f_stack_size);
     pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_DETACHED);
-    pthread_attr_setschedpolicy(&threadAttr, SCHED_DEADLINE);
+    pthread_attr_setschedpolicy(&threadAttr, RT_SCHED);
 
     //pthread_t f_self = pthread_self();
-    //pthread_setschedparam(f_self, SCHED_DEADLINE, &param);
+    //pthread_setschedparam(f_self, RT_SCHED, &param);
 
     int f_cpu_core = 0;
     int f_i;
 
-    for(f_i = 0; f_i < STARGATE->worker_thread_count; ++f_i){
+    for(f_i = 0; f_i < (STARGATE->worker_thread_count); ++f_i)
+    {
         STARGATE->track_thread_quit_notifier[f_i] = 0;
         t_thread_args * f_args = (t_thread_args*)malloc(
             sizeof(t_thread_args)
@@ -219,24 +218,14 @@ void v_init_worker_threads(
         int f_applied_policy = 0;
         pthread_getschedparam(
             STARGATE->worker_threads[f_i],
-            &f_applied_policy,
-            &param2
+            &f_applied_policy, &param2
         );
 
-        if(f_applied_policy == SCHED_DEADLINE){
-            printf(
-                "Scheduling successfully applied, priority == %i\n ",
-                 param2.__sched_priority
-            );
+        if(f_applied_policy == RT_SCHED){
+            printf("Scheduling successfully applied with priority %i\n ",
+                    param2.__sched_priority);
         } else {
-            printf(
-                "Scheduling %i was not successfully applied, "
-                "policy == %i, priority == %i\n",
-                SCHED_DEADLINE,
-                f_applied_policy,
-                param2.__sched_priority
-            );
-            printf("Attempting to use SCHED_DEADLINE\n");
+            printf("Scheduling was not successfully applied\n");
         }
 #endif
     }

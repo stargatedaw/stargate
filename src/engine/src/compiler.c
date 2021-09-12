@@ -52,33 +52,23 @@ NO_OPTIMIZATION void v_self_set_thread_affinity(){
 #ifdef __linux__
     pthread_attr_t threadAttr;
     struct sched_param param;
-    // Subtract 10, as the use likely cannot set that priority
-    param.__sched_priority = sched_get_priority_max(SCHED_DEADLINE);
+    param.__sched_priority = sched_get_priority_max(RT_SCHED);
     printf(
-        "Attempting to set scheduler = %i, __sched_priority = %i\n",
-        SCHED_DEADLINE,
+        " Attempting to set pthread_self to .__sched_priority = %i\n",
         param.__sched_priority
     );
     pthread_attr_init(&threadAttr);
     pthread_attr_setschedparam(&threadAttr, &param);
     pthread_attr_setstacksize(&threadAttr, 1024 * 1024);
     pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_DETACHED);
-    pthread_attr_setschedpolicy(&threadAttr, SCHED_DEADLINE);
+    pthread_attr_setschedpolicy(&threadAttr, RT_SCHED);
 
     pthread_t f_self = pthread_self();
-    pthread_setschedparam(f_self, SCHED_DEADLINE, &param);
+    pthread_setschedparam(f_self, RT_SCHED, &param);
     cpu_set_t cpuset;
     CPU_ZERO(&cpuset);
     CPU_SET(0, &cpuset);
     pthread_setaffinity_np(f_self, sizeof(cpu_set_t), &cpuset);
-
-    int scheduler;
-    pthread_getschedparam(f_self, &scheduler, &param);
-    printf(
-        "scheduler == %i, __sched_priority == %i\n",
-        scheduler,
-        param.__sched_priority
-    );
 
     pthread_attr_destroy(&threadAttr);
 #endif
