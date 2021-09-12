@@ -149,24 +149,50 @@ class AbstractUiControl:
             a_layout,
             a_x,
             a_alignment=QtCore.Qt.AlignmentFlag.AlignHCenter,
+            a_row=0,
         ):
+        row_offset = a_row * 3
         if self.name_label is not None:
             if a_alignment:
                 a_layout.addWidget(
-                    self.name_label, 0, a_x, alignment=a_alignment)
+                    self.name_label,
+                    row_offset,
+                    a_x,
+                    alignment=a_alignment,
+                )
             else:
-                a_layout.addWidget(self.name_label, 0, a_x)
+                a_layout.addWidget(
+                    self.name_label,
+                    row_offset,
+                    a_x,
+                )
         if a_alignment:
             a_layout.addWidget(
-                self.control, 1, a_x, alignment=a_alignment)
+                self.control,
+                row_offset + 1,
+                a_x,
+                alignment=a_alignment,
+            )
         else:
-            a_layout.addWidget(self.control, 1, a_x)
+            a_layout.addWidget(
+                self.control,
+                row_offset + 1,
+                a_x,
+            )
         if self.value_label is not None:
             if a_alignment:
                 a_layout.addWidget(
-                    self.value_label, 2, a_x, alignment=a_alignment)
+                    self.value_label,
+                    row_offset + 2,
+                    a_x,
+                    alignment=a_alignment,
+                )
             else:
-                a_layout.addWidget(self.value_label, 2, a_x)
+                a_layout.addWidget(
+                    self.value_label,
+                    row_offset + 2,
+                    a_x,
+                )
 
     def set_value_dialog(self):
         def ok_handler(a_self=None, a_val=None):
@@ -661,8 +687,16 @@ class doublespinbox_control(AbstractUiControl):
 
 
 class checkbox_control(AbstractUiControl):
-    def __init__(self, a_label, a_port_num, a_rel_callback, a_val_callback,
-                 a_port_dict=None, a_preset_mgr=None, a_default=0):
+    def __init__(
+        self,
+        a_label,
+        a_port_num,
+        a_rel_callback,
+        a_val_callback,
+        a_port_dict=None,
+        a_preset_mgr=None,
+        a_default=0,
+    ):
         AbstractUiControl.__init__(
             self, None, a_port_num, a_rel_callback, a_val_callback,
             a_port_dict=a_port_dict, a_preset_mgr=a_preset_mgr,
@@ -703,10 +737,18 @@ class checkbox_control(AbstractUiControl):
 
 
 class combobox_control(AbstractUiControl):
-    def __init__(self, a_size, a_label, a_port_num,
-                 a_rel_callback, a_val_callback,
-                 a_items_list=[], a_port_dict=None, a_default_index=None,
-                 a_preset_mgr=None):
+    def __init__(
+        self,
+        a_size,
+        a_label,
+        a_port_num,
+        a_rel_callback,
+        a_val_callback,
+        a_items_list=[],
+        a_port_dict=None,
+        a_default_index=None,
+        a_preset_mgr=None,
+    ):
         self.suppress_changes = True
         self.name_label = QLabel(str(a_label))
         self.name_label.setObjectName("plugin_name_label")

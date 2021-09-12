@@ -18,8 +18,7 @@ GNU General Public License for more details.
 #include "compiler.h"
 
 
-typedef struct
-{
+typedef struct {
     SGFLT in_n_m1, out_n_m1, coeff;
 }t_dco_dc_offset_filter;
 

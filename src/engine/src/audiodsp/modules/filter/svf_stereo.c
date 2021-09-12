@@ -362,9 +362,10 @@ void v_svf2_run_2_pole_allpass(t_svf2_filter* a_svf,
 
 /* void v_svf2_velocity_mod(t_svf2_filter* a_svf, SGFLT a_velocity)
  */
-void v_svf2_velocity_mod(t_svf2_filter* a_svf,
-        SGFLT a_velocity)
-{
+void v_svf2_velocity_mod(
+    t_svf2_filter* a_svf,
+    SGFLT a_velocity
+){
     a_svf->velocity_cutoff = ((a_velocity) * .2f) - 24.0f;
     a_svf->velocity_mod_amt = a_velocity * 0.007874016f;
 }
@@ -373,9 +374,10 @@ void v_svf2_velocity_mod(t_svf2_filter* a_svf,
  * SGFLT a_midi_note_number)
  * Set the base pitch of the filter, this will usually correspond to a
  * single GUI knob*/
-void v_svf2_set_cutoff_base(t_svf2_filter* a_svf,
-        SGFLT a_midi_note_number)
-{
+void v_svf2_set_cutoff_base(
+    t_svf2_filter* a_svf,
+    SGFLT a_midi_note_number
+){
     a_svf->cutoff_base = a_midi_note_number;
 }
 
@@ -391,8 +393,7 @@ void v_svf2_add_cutoff_mod(t_svf2_filter* a_svf,
 /* void v_svf2_set_cutoff(t_svf2_filter * a_svf)
  * This should be called every sample, otherwise the smoothing and
  * modulation doesn't work properly*/
-void v_svf2_set_cutoff(t_svf2_filter * a_svf)
-{
+void v_svf2_set_cutoff(t_svf2_filter * a_svf){
     a_svf->cutoff_note = (a_svf->cutoff_base) + ((a_svf->cutoff_mod) *
             (a_svf->velocity_mod_amt)) + (a_svf->velocity_cutoff);
     a_svf->cutoff_mod = 0.0f;
@@ -403,7 +404,15 @@ void v_svf2_set_cutoff(t_svf2_filter * a_svf)
 
     a_svf->cutoff_last = (a_svf->cutoff_note);
 
-    a_svf->cutoff_hz = f_pit_midi_note_to_hz_fast((a_svf->cutoff_note));
+    v_svf2_set_cutoff_hz(
+        a_svf,
+        f_pit_midi_note_to_hz_fast((a_svf->cutoff_note))
+    );
+
+}
+
+void v_svf2_set_cutoff_hz(t_svf2_filter * a_svf, SGFLT hz){
+    a_svf->cutoff_hz = hz;
     //_svf->cutoff_smoother->last_value);
 
     a_svf->cutoff_filter = (a_svf->pi2_div_sr) * (a_svf->cutoff_hz) * 4.0f;
@@ -411,8 +420,9 @@ void v_svf2_set_cutoff(t_svf2_filter * a_svf)
     /*prevent the filter from exploding numerically,
      * this does artificially cap the cutoff frequency to below
      * what you set it to if you lower the oversampling rate of the filter.*/
-    if((a_svf->cutoff_filter) > 0.8f)
+    if((a_svf->cutoff_filter) > 0.8f){
         a_svf->cutoff_filter = 0.8f;
+    }
 }
 
 /* void v_svf2_set_res(
@@ -420,22 +430,16 @@ void v_svf2_set_cutoff(t_svf2_filter * a_svf)
  * SGFLT a_db)   //-100 to 0 is the expected range
  *
  */
-void v_svf2_set_res(t_svf2_filter * a_svf, SGFLT a_db)
-{
+void v_svf2_set_res(t_svf2_filter * a_svf, SGFLT a_db){
     /*Don't calculate it again if it hasn't changed*/
-    if((a_svf->filter_res_db) == a_db)
-    {
+    if((a_svf->filter_res_db) == a_db){
         return;
     }
-
     a_svf->filter_res_db = a_db;
 
-    if(a_db < -100.0f)
-    {
+    if(a_db < -100.0f){
         a_db = -100.0f;
-    }
-    else if (a_db > -0.2f)
-    {
+    } else if (a_db > -0.2f){
         a_db = -0.2f;
     }
 

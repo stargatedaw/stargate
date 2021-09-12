@@ -280,3 +280,20 @@ def get_fps() -> int:
     else:
         return 20
 
+def Separator(
+    orientation='v',
+    parent=None,
+):
+    """ Return a separator line suitable for adding to a QLayout
+        Style using stylesheets with #separator_h/v
+    """
+    assert orientation in ('h', 'v'), orientation
+    line = QFrame(parent)
+    line.setFrameShape(
+        QFrame.Shape.HLine if orientation == 'h' else QFrame.Shape.VLine
+    )
+    line.setFrameShadow(QFrame.Shadow.Sunken)
+    line.setObjectName(f'separator_{orientation}')
+    #line.setLineWidth(1)
+    return line
+

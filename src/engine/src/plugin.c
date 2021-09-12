@@ -20,6 +20,7 @@
 #include "plugins/reverb.h"
 #include "plugins/trigger_fx.h"
 #include "plugins/fm1.h"
+#include "plugins/widemixer.h"
 #include "plugins/xfade.h"
 #include "csv/2d.h"
 #include "files.h"
@@ -40,7 +41,8 @@ PluginDescriptor_Function PLUGIN_DESC_FUNCS[] = {
     xfade_plugin_descriptor, //12
     sg_comp_plugin_descriptor, //13
     sg_vocoder_plugin_descriptor, //14
-    sg_lim_plugin_descriptor //15
+    sg_lim_plugin_descriptor, //15
+    widemixer_plugin_descriptor, //16
 };
 
 
@@ -224,18 +226,21 @@ void v_ev_set_atm(
 }
 
 PluginDescriptor * get_pyfx_descriptor(int a_port_count){
-    PluginDescriptor *f_result =
-            (PluginDescriptor*)malloc(sizeof(PluginDescriptor));
+    PluginDescriptor *f_result = (PluginDescriptor*)malloc(
+        sizeof(PluginDescriptor)
+    );
 
     f_result->PortCount = a_port_count;
 
-    f_result->PortDescriptors =
-        (PluginPortDescriptor*)calloc(f_result->PortCount,
-            sizeof(PluginPortDescriptor));
+    f_result->PortDescriptors = (PluginPortDescriptor*)calloc(
+        f_result->PortCount,
+        sizeof(PluginPortDescriptor)
+    );
 
-    f_result->PortRangeHints =
-        (PluginPortRangeHint*)calloc(f_result->PortCount,
-            sizeof(PluginPortRangeHint));
+    f_result->PortRangeHints = (PluginPortRangeHint*)calloc(
+        f_result->PortCount,
+        sizeof(PluginPortRangeHint)
+    );
 
     return f_result;
 }
@@ -292,26 +297,23 @@ SGFLT * g_get_port_table(
 ){
     SGFLT * pluginControlIns;
     int j;
-
     int f_i = 0;
 
-    hpalloc((void**)(&pluginControlIns), sizeof(SGFLT) * descriptor->PortCount);
+    hpalloc(
+        (void**)(&pluginControlIns),
+        sizeof(SGFLT) * descriptor->PortCount
+    );
 
     f_i = 0;
-    while(f_i < descriptor->PortCount)
-    {
+    while(f_i < descriptor->PortCount){
         pluginControlIns[f_i] = 0.0f;
         f_i++;
     }
 
-    for (j = 0; j < descriptor->PortCount; j++)
-    {
+    for (j = 0; j < descriptor->PortCount; j++){
         PluginPortDescriptor pod = descriptor->PortDescriptors[j];
-
-        if(pod)
-        {
+        if(pod){
             pluginControlIns[j] = g_get_port_default(descriptor, j);
-
             descriptor->connect_port(handle, j, &pluginControlIns[j]);
         }
     }
@@ -319,8 +321,7 @@ SGFLT * g_get_port_table(
     return pluginControlIns;
 }
 
-void v_generic_cc_map_set(t_plugin_cc_map * a_cc_map, char * a_str)
-{
+void v_generic_cc_map_set(t_plugin_cc_map * a_cc_map, char * a_str){
     t_2d_char_array * f_2d_array = g_get_2d_array(SMALL_STRING);
     f_2d_array->array = a_str;
     v_iterate_2d_char_array(f_2d_array);
@@ -331,8 +332,7 @@ void v_generic_cc_map_set(t_plugin_cc_map * a_cc_map, char * a_str)
     a_cc_map->map[f_cc].count = f_count;
 
     int f_i = 0;
-    while(f_i < f_count)
-    {
+    while(f_i < f_count){
         v_iterate_2d_char_array(f_2d_array);
         int f_port = atoi(f_2d_array->current_str);
         v_iterate_2d_char_array(f_2d_array);
@@ -353,15 +353,15 @@ void generic_file_loader(
     SGFLT * a_table,
     t_plugin_cc_map * a_cc_map
 ){
-    t_2d_char_array * f_2d_array = g_get_2d_array_from_file(a_path,
-                LARGE_STRING);
+    t_2d_char_array * f_2d_array = g_get_2d_array_from_file(
+        a_path,
+        LARGE_STRING
+    );
 
-    while(1)
-    {
+    while(1){
         v_iterate_2d_char_array(f_2d_array);
 
-        if(f_2d_array->eof)
-        {
+        if(f_2d_array->eof){
             break;
         }
 
@@ -370,14 +370,15 @@ void generic_file_loader(
             f_2d_array->current_str
         );
 
-        if(f_2d_array->current_str[0] == 'c')
-        {
+        if(f_2d_array->current_str[0] == 'c'){
             char * f_config_key = (char*)malloc(
-                sizeof(char) * TINY_STRING);
+                sizeof(char) * TINY_STRING
+            );
             v_iterate_2d_char_array(f_2d_array);
             strcpy(f_config_key, f_2d_array->current_str);
             char * f_value = (char*)malloc(
-                sizeof(char) * SMALL_STRING);
+                sizeof(char) * SMALL_STRING
+            );
             v_iterate_2d_char_array_to_next_line(f_2d_array);
             strcpy(f_value, f_2d_array->current_str);
 
@@ -385,9 +386,7 @@ void generic_file_loader(
 
             free(f_config_key);
             free(f_value);
-        }
-        else if(f_2d_array->current_str[0] == 'm')
-        {
+        } else if(f_2d_array->current_str[0] == 'm'){
             v_iterate_2d_char_array(f_2d_array);
             int f_cc = atoi(f_2d_array->current_str);
 
@@ -395,8 +394,7 @@ void generic_file_loader(
             int f_count = atoi(f_2d_array->current_str);
 
             int f_i = 0;
-            while(f_i < f_count)
-            {
+            while(f_i < f_count){
                 v_iterate_2d_char_array(f_2d_array);
                 int f_port = atoi(f_2d_array->current_str);
                 v_iterate_2d_char_array(f_2d_array);

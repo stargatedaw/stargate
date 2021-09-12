@@ -599,12 +599,15 @@ class DawProject(AbstractProject):
         f_midi_routings = self.get_midi_routing()
         f_midi_routings.reorder(a_dict)
 
-        f_track_plugins = {k:self.get_track_plugins(k)
-            for k in f_tracks.tracks}
+        f_track_plugins = {
+            k:self.get_track_plugins(k)
+            for k in f_tracks.tracks
+        }
         # Delete the existing track files
         for k in f_track_plugins:
             f_path = os.path.join(
-                *(str(x) for x in (self.track_pool_folder, k)))
+                *(str(x) for x in (self.track_pool_folder, k))
+            )
             if os.path.exists(f_path):
                 os.remove(f_path)
         for k, v in f_track_plugins.items():

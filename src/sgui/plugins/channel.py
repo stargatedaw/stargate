@@ -100,7 +100,8 @@ class SgChnlPluginUI(AbstractPluginUI):
                 if self.is_mixer else
                 QtCore.Qt.Orientation.Horizontal
             ),
-            "Vol", SGCHNL_VOL_SLIDER,
+            "Vol",
+            SGCHNL_VOL_SLIDER,
             self.plugin_rel_callback,
             self.plugin_val_callback,
             -5000,

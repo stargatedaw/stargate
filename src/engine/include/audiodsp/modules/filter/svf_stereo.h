@@ -39,8 +39,7 @@ GNU General Public License for more details.
 #define SVF_OVERSAMPLE_STEP_SIZE 0.25f
 
 
-typedef struct
-{
+typedef struct {
     SGFLT filter_input;
     SGFLT filter_last_input;
     SGFLT bp_m1;
@@ -50,8 +49,7 @@ typedef struct
     SGFLT lp;
 }t_svf2_kernel;
 
-typedef struct
-{
+typedef struct {
     SGFLT cutoff_note;
     SGFLT cutoff_hz;
     SGFLT cutoff_filter;
@@ -72,13 +70,14 @@ typedef struct
 void v_svf2_set_cutoff(t_svf2_filter*);
 void v_svf2_set_res(t_svf2_filter*, SGFLT);
 void v_svf2_set_cutoff_base(t_svf2_filter*, SGFLT);
+void v_svf2_set_cutoff_hz(t_svf2_filter * a_svf, SGFLT hz);
 void v_svf2_add_cutoff_mod(t_svf2_filter*, SGFLT);
 void v_svf2_velocity_mod(t_svf2_filter*,SGFLT);
 
 typedef void (*fp_svf2_run_filter)(t_svf2_filter*, SGFLT, SGFLT);
 
 /*The int is the number of cascaded filter kernels*/
-fp_svf2_run_filter fp_svf2_get_run_filter_ptr(int,int);
+fp_svf2_run_filter fp_svf2_get_run_filter_ptr(int, int);
 
 void v_svf2_run(t_svf2_filter*, t_svf2_kernel *, SGFLT);
 

@@ -5,6 +5,20 @@ QWidget:focus
     outline: none;
 }
 
+QFrame#separator_h {
+	background-color: {{ text_color }};
+	border: none;
+	color: {{ text_color }};
+	width: 1px;
+}
+
+QFrame#separator_w {
+	background-color: {{ text_color }};
+	color: {{ text_color }};
+	border: none;
+	height: 1px;
+}
+
 QMenu::item
 {
     background-color: {{ background_color_alt }};
@@ -102,9 +116,11 @@ QRadioButton#tool_erase,
 QRadioButton#tool_split,
 QCheckBox#button_hide,
 QCheckBox#button_power,
+QCheckBox#button_power_small,
 QCheckBox#loop_mode,
 QCheckBox#solo_checkbox,
 QCheckBox#mute_checkbox,
+QCheckBox#dc_checkbox,
 QRadioButton#rec_arm_radiobutton
 {
     background-color: transparent;
@@ -157,11 +173,13 @@ QRadioButton#stop_button::indicator::checked
     background: none;
 }
 
+QCheckBox#button_power_small::indicator::checked,
 QCheckBox#button_power::indicator::checked
 {
     image: url({{ ASSETS_DIR }}/power-on.svg);
 }
 
+QCheckBox#button_power_small::indicator::unchecked,
 QCheckBox#button_power::indicator::unchecked
 {
     image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/power-off.svg);
@@ -229,6 +247,8 @@ QCheckBox#loop_mode::indicator::checked
 
 /* Track panel radio buttons  */
 
+QCheckBox#button_power_small::indicator,
+QCheckBox#dc_checkbox::indicator,
 QCheckBox#mute_checkbox::indicator,
 QCheckBox#solo_checkbox::indicator
 {
@@ -249,6 +269,17 @@ QCheckBox#solo_checkbox::indicator::unchecked
 QCheckBox#solo_checkbox::indicator::checked
 {
     image: url({{ ASSETS_DIR }}/solo-on.svg);
+}
+
+/* DC checkbox */
+QCheckBox#dc_checkbox::indicator::unchecked
+{
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/dc-off.svg) 0 0 0 0 stretch stretch;
+}
+
+QCheckBox#dc_checkbox::indicator::checked
+{
+    image: url({{ ASSETS_DIR }}/dc-on.svg) 0 0 0 0 stretch stretch;
 }
 
 /*Mute checkbox*/

@@ -19,8 +19,7 @@ GNU General Public License for more details.
 
 //#define AXF_DEBUG_MODE
 
-typedef struct st_audio_xfade
-{
+typedef struct st_audio_xfade {
     SGFLT mid_point;
     SGFLT mid_point_50_minus;
     SGFLT in1_mult;
@@ -35,9 +34,9 @@ typedef struct st_audio_xfade
  * SGFLT a_point // 0 to 1
  * )
  */
-void v_axf_set_xfade(t_audio_xfade *, SGFLT);
-SGFLT f_axf_run_xfade(t_audio_xfade *, SGFLT, SGFLT);
-void g_axf_init(t_audio_xfade * f_result, SGFLT a_mid_point);
+void v_axf_set_xfade(t_audio_xfade*, SGFLT);
+SGFLT f_axf_run_xfade(t_audio_xfade*, SGFLT, SGFLT);
+void g_axf_init(t_audio_xfade* f_result, SGFLT a_mid_point);
 
 /*t_audio_xfade * g_axf_get_audio_xfade
  * (

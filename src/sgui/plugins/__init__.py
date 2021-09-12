@@ -22,21 +22,24 @@ from sglib.lib import strings as sg_strings
 from sglib.lib.translate import _
 from sglib.log import LOG
 from sgui import shared as glbl_shared
-from sgui.plugins import channel
-from sgui.plugins import compressor
-from sgui.plugins import delay
-from sgui.plugins import eq
-from sgui.plugins import sampler1
-from sgui.plugins import limiter
-from sgui.plugins import multifx
-from sgui.plugins import va1
-from sgui.plugins import sidechain_comp
-from sgui.plugins import simple_fader
-from sgui.plugins import reverb
-from sgui.plugins import trigger_fx
-from sgui.plugins import vocoder
-from sgui.plugins import fm1
-from sgui.plugins import xfade
+from sgui.plugins import (
+    channel,
+    compressor,
+    delay,
+    eq,
+    fm1,
+    limiter,
+    multifx,
+    reverb,
+    sampler1,
+    sidechain_comp,
+    simple_fader,
+    trigger_fx,
+    va1,
+    vocoder,
+    widemixer,
+    xfade,
+)
 from sgui.sgqt import *
 from sglib.constants import (
     PLUGINS_PER_TRACK,
@@ -63,6 +66,7 @@ PLUGIN_NAMES = [
     "SG Reverb",
     "TriggerFX",
     "X-Fade",
+    'Wide Mixer',
 ]
 
 PLUGIN_UIDS = {
@@ -82,6 +86,7 @@ PLUGIN_UIDS = {
     "SG Compressor": 13,
     "SG Vocoder": 14,
     "SG Limiter": 15,
+    'Wide Mixer': 16,
 }
 
 PLUGINS_SYNTH = ["VA1", "FM1"]
@@ -90,7 +95,7 @@ PLUGINS_EFFECTS = ["MultiFX", "SG Delay", "SG EQ", "SG Reverb"]
 PLUGINS_MIDI_TRIGGERED = ["TriggerFX"]
 PLUGINS_DYNAMICS = ["SG Compressor", "SG Limiter"]
 PLUGINS_SIDECHAIN = ["Sidechain Comp.", "X-Fade", "SG Vocoder",]
-PLUGINS_MIXER = ["Simple Fader", "SG Channel"]
+PLUGINS_MIXER = ["Simple Fader", "SG Channel", 'Wide Mixer']
 
 MAIN_PLUGIN_NAMES = [
     ("Synth", PLUGINS_SYNTH),
@@ -130,6 +135,7 @@ PLUGIN_UI_TYPES = {
     13: compressor.sg_comp_plugin_ui,
     14: vocoder.sg_vocoder_plugin_ui,
     15: limiter.LimiterPluginUI,
+    16: widemixer.WideMixerPluginUI,
 }
 
 PORTMAP_DICT = {
