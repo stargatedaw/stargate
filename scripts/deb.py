@@ -119,6 +119,17 @@ Build-Depends: {build_depends}
 Depends: {depends}
 """
 
+postinst_path = os.path.join(
+    DEBIAN,
+    'postinst',
+)
+postinst = """\
+#!/bin/sh
+
+# Attempt to give the binary permissions to use realtime scheduling
+setcap CAP_SYS_NICE=+eip /usr/bin/stargate-engine* || echo "setcap: $?"
+"""
+
 if args.plat_flags is None:
     assert not os.system("make")
 else:
@@ -129,6 +140,8 @@ os.makedirs(DEBIAN)
 control = os.path.join(DEBIAN, 'control')
 with open(control, 'w') as f:
     f.write(CONTROL_FILE)
+with open(postinst_path, 'w') as f:
+    f.write(postinst)
 retcode = os.system(f"dpkg-deb --build --root-owner-group {root}")
 assert not retcode, retcode
 try:
