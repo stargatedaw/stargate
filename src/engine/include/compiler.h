@@ -19,11 +19,8 @@
     #include <sys/resource.h>
 #endif
 
-#ifdef SCHED_DEADLINE
-    //#define RT_SCHED SCHED_DEADLINE
-    #define RT_SCHED SCHED_FIFO
-#else
-    #define RT_SCHED SCHED_FIFO
+#ifndef RT_SCHED
+    #define RT_SCHED SCHED_RR
 #endif
 
 #ifndef SG_THREAD_LOCAL

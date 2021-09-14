@@ -266,11 +266,13 @@ int portaudioCallback(
         framesPerBuffer = FRAMES_PER_BUFFER;
     }
 
+    /*
     // Try one time to set thread affinity
     if(unlikely(THREAD_AFFINITY && !THREAD_AFFINITY_SET)){
         v_self_set_thread_affinity();
         THREAD_AFFINITY_SET = 1;
     }
+    */
 
     v_run(pluginOutputBuffers, in, framesPerBuffer);
 

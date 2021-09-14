@@ -125,14 +125,12 @@ void v_init_worker_threads(
         }
     }
 
-    if((STARGATE->worker_thread_count * 2) <= f_cpu_count){
-        f_cpu_core_inc = f_cpu_count / STARGATE->worker_thread_count;
-
-        if(f_cpu_core_inc < 2){
-            f_cpu_core_inc = 2;
-        } else if(f_cpu_core_inc > 4){
-            f_cpu_core_inc = 4;
-        }
+    if(STARGATE->worker_thread_count >= f_cpu_count / 2){
+        f_cpu_core_inc = 1;
+    } else {
+        // Assume SMT, possibly CCX and/or chiplet design, so try to
+        // consolidate onto a single CPU or CCX or chiplet
+        f_cpu_core_inc = 2;
     }
 
     printf("Spawning %i worker threads\n", STARGATE->worker_thread_count);
@@ -218,14 +216,24 @@ void v_init_worker_threads(
         int f_applied_policy = 0;
         pthread_getschedparam(
             STARGATE->worker_threads[f_i],
-            &f_applied_policy, &param2
+            &f_applied_policy,
+            &param2
         );
 
         if(f_applied_policy == RT_SCHED){
-            printf("Scheduling successfully applied with priority %i\n ",
-                    param2.__sched_priority);
+            printf(
+                "Scheduling %i successfully applied with priority %i\n ",
+                RT_SCHED,
+                param2.__sched_priority
+            );
         } else {
-            printf("Scheduling was not successfully applied\n");
+            fprintf(
+                stderr,
+                "Scheduling %i was not successfully applied: %i, %i\n",
+                RT_SCHED,
+                f_applied_policy,
+                param2.__sched_priority
+            );
         }
 #endif
     }
