@@ -49,7 +49,8 @@ def set_seq_snap(a_val=None):
         SEQUENCER_SNAP_VAL, \
         SEQ_LINES_ENABLED, \
         SEQ_QUANTIZE_AMT, \
-        SEQ_SNAP_RANGE
+        SEQ_SNAP_RANGE, \
+        SEQUENCER_QUANTIZE_PX
     if a_val is None:
         a_val = SEQUENCER_SNAP_VAL
     else:
