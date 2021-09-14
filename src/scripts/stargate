@@ -19,9 +19,12 @@ def qt_message_handler(mode, context, message):
         f'{context.file}:{context.line}:{context.function}'
         f' "{message}"'
     )
-    if mode == QtCore.QtWarningMsg:
+    if mode == QtCore.QtMsgType.QtWarningMsg:
         LOG.warning(line)
-    elif mode in (QtCore.QtCriticalMsg, QtCore.QtFatalMsg):
+    elif mode in (
+        QtCore.QtMsgType.QtCriticalMsg,
+        QtCore.QtMsgType.QtFatalMsg,
+    ):
         LOG.error(line)
     else:
         LOG.info(line)
