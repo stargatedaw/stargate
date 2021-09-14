@@ -355,12 +355,13 @@ class hardware_dialog:
             f_thread_affinity_checkbox = QCheckBox(
                 _("Lock worker threads to own core?"))
             f_thread_affinity_checkbox.setToolTip(
-                _("This may give better performance with fewer "
-                "Xruns at low latency, "
-                "but may perform badly\non certain configurations.  "
-                "The audio engine setting must "
-                "be set to 'Elevated' or "
-                "'Elevated(Sandbox)', otherwise this setting has no effect."))
+                _(
+                    "This locks worker threads to their own CPU core and "
+                    "may give better\nperformance with fewer "
+                    "audio drop-outs at low latency,"
+                    "but may perform badly\non some configurations."
+                )
+            )
             f_window_layout.addWidget(f_thread_affinity_checkbox, 50, 1)
             f_hugepages_checkbox = QCheckBox(
                 _("Use HugePages? (You must configure HugePages on your "
