@@ -119,10 +119,6 @@ Build-Depends: {build_depends}
 Depends: {depends}
 """
 
-postinst_path = os.path.join(
-    DEBIAN,
-    'postinst',
-)
 postinst = """\
 #!/bin/sh
 
@@ -140,8 +136,13 @@ os.makedirs(DEBIAN)
 control = os.path.join(DEBIAN, 'control')
 with open(control, 'w') as f:
     f.write(CONTROL_FILE)
+postinst_path = os.path.join(
+    DEBIAN,
+    'postinst',
+)
 with open(postinst_path, 'w') as f:
     f.write(postinst)
+os.chmod(postinst_path, 0o755)
 retcode = os.system(f"dpkg-deb --build --root-owner-group {root}")
 assert not retcode, retcode
 try:

@@ -386,7 +386,7 @@ class SgMainWindow(QMainWindow):
         cb.setText(text, mode=cb.Mode.Clipboard)
 
     def copy_gdb_run_cmd(self):
-        text = "run '{}' '{}' {} 0 --sleep".format(
+        text = "run '{}' '{}' {} 0 30 --sleep".format(
             util.INSTALL_PREFIX,
             constants.PROJECT_DIR,
             os.getpid(),
