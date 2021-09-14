@@ -568,8 +568,14 @@ void v_daw_run_engine(
         //wait for the other threads to finish
         v_wait_for_threads();
 
-        v_daw_process_track(self, 0, 0, sample_count,
-            STARGATE->playback_mode, &self->ts[0]);
+        v_daw_process_track(
+            self,
+            0,
+            0,
+            sample_count,
+            STARGATE->playback_mode,
+            &self->ts[0]
+        );
 
         for(f_i = 0; f_i < sample_count; ++f_i)
         {
@@ -628,8 +634,14 @@ void v_daw_process(t_thread_args * f_args){
 
         pthread_spin_unlock(&f_track->lock);
 
-        v_daw_process_track(self, f_track->track_num, f_args->thread_num,
-            f_sample_count, f_playback_mode, f_ts);
+        v_daw_process_track(
+            self,
+            f_track->track_num,
+            f_args->thread_num,
+            f_sample_count,
+            f_playback_mode,
+            f_ts
+        );
 
         f_track->status = STATUS_PROCESSED;
 

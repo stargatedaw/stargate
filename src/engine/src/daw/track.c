@@ -173,35 +173,42 @@ void v_daw_process_track(
                 f_track->item_event_index = 0;
             }
 
-            if(f_item_ref[f_i])
-            {
-                v_daw_process_midi(self, f_item_ref[f_i], a_global_track_num,
+            if(f_item_ref[f_i]){
+                v_daw_process_midi(
+                    self,
+                    f_item_ref[f_i],
+                    a_global_track_num,
                     f_track->splitter.periods[f_i].sample_count,
                     a_playback_mode,
-                    f_track->splitter.periods[f_i].current_sample, a_ts);
+                    f_track->splitter.periods[f_i].current_sample,
+                    a_ts
+                );
             }
         }
-    }
-    else
-    {
+    } else {
         f_track->item_event_index = 0;
     }
 
-    v_daw_process_external_midi(self, f_track, a_sample_count,
-        a_thread_num, a_ts);
+    v_daw_process_external_midi(
+        self,
+        f_track,
+        a_sample_count,
+        a_thread_num,
+        a_ts
+    );
 
     v_daw_process_note_offs(self, a_global_track_num, a_ts);
 
-    if(!f_is_recording)
-    {
-        for(f_i = 0; f_i < f_track->splitter.count; ++f_i)
-        {
-            if(f_item_ref[f_i])
-            {
-                if(a_playback_mode > 0 &&
-                   f_item_ref[f_i]->start >= a_ts->ml_current_beat &&
-                   f_item_ref[f_i]->start < a_ts->ml_next_beat)
-                {
+    if(!f_is_recording){
+        for(f_i = 0; f_i < f_track->splitter.count; ++f_i){
+            if(f_item_ref[f_i]){
+                if(
+                    a_playback_mode > 0
+                    &&
+                    f_item_ref[f_i]->start >= a_ts->ml_current_beat
+                    &&
+                    f_item_ref[f_i]->start < a_ts->ml_next_beat
+                ){
                     t_daw_item * f_item =
                         self->item_pool[f_item_ref[0]->item_uid];
                     v_daw_reset_audio_item_read_heads(
@@ -331,8 +338,7 @@ void v_daw_sum_track_outputs(
             (self->is_soloed && a_track->solo)
         )
     ){
-        if(a_track->fade_state == FADE_STATE_FADED)
-        {
+        if(a_track->fade_state == FADE_STATE_FADED){
             a_track->fade_state = FADE_STATE_RETURNING;
             v_rmp_retrigger(&a_track->fade_env, 0.1f, 1.0f);
         } else if(a_track->fade_state == FADE_STATE_FADING){
@@ -396,11 +402,20 @@ void v_daw_sum_track_outputs(
         f_bus = self->track_pool[f_bus_num];
 
         if(f_route->type == ROUTE_TYPE_MIDI){
-            for(f_i2 = 0; f_i2 < a_track->event_list->len; ++f_i2){
-                shds_list_append(
-                    f_bus->event_list,
-                    a_track->event_list->data[f_i2]
-                );
+            if(
+                !a_track->mute
+                && (
+                    !self->is_soloed
+                    ||
+                    (self->is_soloed && a_track->solo)
+                )
+            ){
+                for(f_i2 = 0; f_i2 < a_track->event_list->len; ++f_i2){
+                    shds_list_append(
+                        f_bus->event_list,
+                        a_track->event_list->data[f_i2]
+                    );
+                }
             }
 
             pthread_spin_lock(&f_bus->lock);
