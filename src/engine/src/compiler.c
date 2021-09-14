@@ -52,7 +52,9 @@ NO_OPTIMIZATION void v_self_set_thread_affinity(){
 #ifdef __linux__
     pthread_attr_t threadAttr;
     struct sched_param param;
-    param.__sched_priority = sched_get_priority_max(RT_SCHED);
+    param.__sched_priority = (int)(
+        (float)sched_get_priority_max(RT_SCHED) * 0.9
+    );
     printf(
         " Attempting to set pthread_self to .__sched_priority = %i\n",
         param.__sched_priority

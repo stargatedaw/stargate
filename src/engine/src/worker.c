@@ -154,9 +154,13 @@ void v_init_worker_threads(
 
 #ifdef __linux__
     struct sched_param param;
-    param.__sched_priority = sched_get_priority_max(RT_SCHED);
-    printf(" Attempting to set .__sched_priority = %i\n",
-            param.__sched_priority);
+    param.__sched_priority = (int)(
+        (float)sched_get_priority_max(RT_SCHED) * 0.9
+    );
+    printf(
+        " Attempting to set .__sched_priority = %i\n",
+        param.__sched_priority
+    );
     pthread_attr_setschedparam(&threadAttr, &param);
 #endif
 

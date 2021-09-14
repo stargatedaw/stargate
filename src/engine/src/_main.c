@@ -385,7 +385,7 @@ NO_OPTIMIZATION void start_osc_thread(){
 NO_OPTIMIZATION void set_thread_params(){
     printf("Setting thread params\n");
  #ifdef __linux__
-    if(setpriority(PRIO_PROCESS, 0, -20))
+    if(setpriority(PRIO_PROCESS, 0, -18))
     {
         printf(
             "Unable to renice process (this was to be expected if "
@@ -406,7 +406,7 @@ NO_OPTIMIZATION void set_thread_params(){
         );
         //Attempt to set the process priority to real-time
         const struct sched_param f_proc_param = {
-            sched_get_priority_max(RT_SCHED)
+            sched_get_priority_max(RT_SCHED) / 2
         };
         printf("Attempting to set scheduler for process\n");
         sched_setscheduler(0, RT_SCHED, &f_proc_param);
