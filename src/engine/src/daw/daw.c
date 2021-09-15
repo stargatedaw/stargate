@@ -471,22 +471,30 @@ void v_daw_run_engine(
     int f_period, sample_count;
     SGFLT * output[2];
 
-    if(STARGATE->playback_mode != PLAYBACK_MODE_OFF)
-    {
-        v_sg_seq_event_list_set(&self->en_song->sequences->events,
-            &self->seq_event_result, a_output, a_input_buffers,
+    if(STARGATE->playback_mode != PLAYBACK_MODE_OFF){
+        v_sg_seq_event_list_set(
+            &self->en_song->sequences->events,
+            &self->seq_event_result,
+            a_output,
+            a_input_buffers,
             AUDIO_INPUT_TRACK_COUNT,
-            a_sample_count, self->ts[0].current_sample, self->loop_mode);
-    }
-    else
-    {
+            a_sample_count,
+            self->ts[0].current_sample,
+            self->loop_mode
+        );
+    } else {
         self->seq_event_result.count = 1;
         f_seq_period = &self->seq_event_result.sample_periods[0];
         f_seq_period->is_looping = 0;
-        v_sg_seq_event_result_set_default(&self->seq_event_result,
-            &self->en_song->sequences->events, a_output, a_input_buffers,
-            AUDIO_INPUT_TRACK_COUNT, a_sample_count,
-            self->ts[0].current_sample);
+        v_sg_seq_event_result_set_default(
+            &self->seq_event_result,
+            &self->en_song->sequences->events,
+            a_output,
+            a_input_buffers,
+            AUDIO_INPUT_TRACK_COUNT,
+            a_sample_count,
+            self->ts[0].current_sample
+        );
     }
 
     for(f_period = 0; f_period < self->seq_event_result.count; ++f_period)

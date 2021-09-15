@@ -154,9 +154,14 @@ void v_daw_process_track(
     {
         if(a_ts->input_index[f_i] == a_global_track_num)
         {
-            v_audio_input_run(f_i, f_track->buffers, f_track->sc_buffers,
-                a_ts->input_buffer, a_ts->sample_count,
-                &f_track->sc_buffers_dirty);
+            v_audio_input_run(
+                f_i,
+                f_track->buffers,
+                f_track->sc_buffers,
+                a_ts->input_buffer,
+                a_ts->sample_count,
+                &f_track->sc_buffers_dirty
+            );
             if(a_ts->playback_mode == PLAYBACK_MODE_REC)
             {
                 f_is_recording = 1;

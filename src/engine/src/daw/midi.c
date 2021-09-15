@@ -309,13 +309,13 @@ void v_daw_process_note_offs(
 }
 
 void v_daw_process_midi(
-    t_daw * self,
-    t_daw_item_ref * a_item_ref,
+    t_daw* self,
+    t_daw_item_ref* a_item_ref,
     int a_track_num,
     int sample_count,
     int a_playback_mode,
     long a_current_sample,
-    t_daw_thread_storage * a_ts
+    t_daw_thread_storage* a_ts
 ){
     t_daw_item * f_current_item;
     double f_adjusted_start;
@@ -327,19 +327,20 @@ void v_daw_process_midi(
     double f_track_next_period_beats = (a_ts->ml_next_beat);
     double f_track_beats_offset = 0.0f;
 
-    if((!self->overdub_mode) && (a_playback_mode == 2) &&
-        (f_track->extern_midi))
-    {
-
-    }
-    else if(a_playback_mode > 0)
-    {
+    if(
+        !self->overdub_mode
+        &&
+        a_playback_mode == 2
+        &&
+        f_track->extern_midi
+    ){
+        // pass
+    } else if(a_playback_mode > 0){
         while(1)
         {
             f_current_item = self->item_pool[a_item_ref->item_uid];
 
-            if((f_track->item_event_index) >= (f_current_item->event_count))
-            {
+            if(f_track->item_event_index >= f_current_item->event_count){
                 break;
             }
 
@@ -349,42 +350,45 @@ void v_daw_process_midi(
             f_adjusted_start = f_event->start + a_item_ref->start -
                 a_item_ref->start_offset;
 
-            if(f_adjusted_start < f_track_current_period_beats)
-            {
+            if(f_adjusted_start < f_track_current_period_beats){
                 ++f_track->item_event_index;
                 continue;
             }
 
-            if((f_adjusted_start >= f_track_current_period_beats) &&
-                (f_adjusted_start < f_track_next_period_beats) &&
-                (f_adjusted_start < a_item_ref->end))
-            {
-                if(f_event->type == EVENT_NOTEON)
-                {
+            if(
+                f_adjusted_start >= f_track_current_period_beats
+                &&
+                f_adjusted_start < f_track_next_period_beats
+                &&
+                f_adjusted_start < a_item_ref->end
+            ){
+                if(f_event->type == EVENT_NOTEON){
                     int f_note_sample_offset = 0;
                     double f_note_start_diff =
                         f_adjusted_start - f_track_current_period_beats +
                         f_track_beats_offset;
                     double f_note_start_frac = f_note_start_diff /
-                            (a_ts->ml_sample_period_inc_beats);
+                        a_ts->ml_sample_period_inc_beats;
                     f_note_sample_offset =  (int)(f_note_start_frac *
-                            ((SGFLT)sample_count));
+                        ((SGFLT)sample_count));
 
-                    if(f_track->note_offs[f_event->note] >= a_current_sample)
-                    {
+                    if(f_track->note_offs[f_event->note] >= a_current_sample){
                         t_seq_event * f_buff_ev;
 
                         /*There's already a note_off scheduled ahead of
                          * this one, process it immediately to avoid
                          * hung notes*/
                         f_buff_ev = &f_track->event_buffer[
-                            f_track->period_event_index];
+                            f_track->period_event_index
+                        ];
                         v_ev_clear(f_buff_ev);
-
-                        v_ev_set_noteoff(f_buff_ev, 0,
-                                (f_event->note), 0);
+                        v_ev_set_noteoff(
+                            f_buff_ev,
+                            0,
+                            f_event->note,
+                            0
+                        );
                         f_buff_ev->tick = f_note_sample_offset;
-
                         ++f_track->period_event_index;
                     }
 
@@ -393,8 +397,12 @@ void v_daw_process_midi(
 
                     v_ev_clear(f_buff_ev);
 
-                    v_ev_set_noteon(f_buff_ev, 0,
-                            f_event->note, f_event->velocity);
+                    v_ev_set_noteon(
+                        f_buff_ev,
+                        0,
+                        f_event->note,
+                        f_event->velocity
+                    );
 
                     f_buff_ev->tick = f_note_sample_offset;
 
@@ -453,16 +461,13 @@ void v_daw_process_midi(
                 }
 
                 ++f_track->item_event_index;
-            }
-            else
-            {
+            } else {
                 break;
             }
         }
     }
 
-    for(f_i = 0; f_i < f_track->period_event_index; ++f_i)
-    {
+    for(f_i = 0; f_i < f_track->period_event_index; ++f_i){
         shds_list_append(f_track->event_list, &f_track->event_buffer[f_i]);
     }
 }
