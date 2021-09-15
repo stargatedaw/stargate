@@ -38,6 +38,7 @@ static void init_run_vars(struct WMRunVars* runvars, t_widemixer* plugin){
         runvars->bass_mono_solo = (int)(*plugin->bass_mono_solo);
         runvars->bass_mono_freq = (SGFLT)(*plugin->bass_mono);
     }
+    runvars->invert_mode = (int)(*plugin->invert_mode);
     runvars->stereo_mode = (int)(*plugin->stereo_mode);
     runvars->gain = f_db_to_linear_fast((*plugin->gain) * 0.01f);
     runvars->pan_law = (*plugin->pan_law) * 0.01f;
