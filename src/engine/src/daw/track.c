@@ -169,12 +169,9 @@ void v_daw_process_track(
         }
     }
 
-    if(a_ts->playback_mode == PLAYBACK_MODE_PLAY || !f_is_recording)
-    {
-        for(f_i = 0; f_i < f_track->splitter.count; ++f_i)
-        {
-            if(f_i > 0)
-            {
+    if(a_ts->playback_mode == PLAYBACK_MODE_PLAY || !f_is_recording){
+        for(f_i = 0; f_i < f_track->splitter.count; ++f_i){
+            if(f_i > 0){
                 f_track->item_event_index = 0;
             }
 
@@ -217,9 +214,11 @@ void v_daw_process_track(
                     t_daw_item * f_item =
                         self->item_pool[f_item_ref[0]->item_uid];
                     v_daw_reset_audio_item_read_heads(
-                        self, f_item->audio_items,
+                        self,
+                        f_item->audio_items,
                         f_item_ref[0]->start_offset +
-                        (a_ts->ml_current_beat - f_item_ref[0]->start));
+                            (a_ts->ml_current_beat - f_item_ref[0]->start)
+                    );
                 }
 
                 v_daw_audio_items_run(

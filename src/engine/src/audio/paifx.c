@@ -16,6 +16,7 @@ void file_fx_controls_init(t_file_fx_controls* self){
     for(i = 0; i < 8; ++i){
         papifx_controls_init(&self->controls[i]);
     }
+    self->loaded = 0;
 }
 
 void papifx_init(t_papifx* self, SGFLT sr){
