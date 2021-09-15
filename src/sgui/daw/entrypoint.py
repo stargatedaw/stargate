@@ -257,6 +257,7 @@ class MainWindow(QScrollArea):
                     512,
                     1,
                     0,
+                    0,
                     constants.DAW_CURRENT_SEQUENCE_UID,
                 )
             ]
