@@ -120,13 +120,8 @@ class SgProject(AbstractProject):
         minor_version = META_DOT_JSON['version']['minor']
         self.create_file(
             "",
-            "version.txt",
-            f"Created with {MAJOR_VERSION}-{minor_version}",
-        )
-        self.create_file(
-            "",
             os.path.basename(a_project_file),
-            META_DOT_JSON['version']['minor'],
+            minor_version,
         )
         self.create_file("", FILE_AUDIO_POOL, terminating_char)
         self.create_file("", file_pystretch_map, terminating_char)
