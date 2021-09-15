@@ -126,8 +126,7 @@ class SgProject(AbstractProject):
         self.create_file(
             "",
             os.path.basename(a_project_file),
-            "This file is not supposed to contain any data, it is "
-            "only a placeholder for saving and opening the project",
+            META_DOT_JSON['version']['minor'],
         )
         self.create_file("", FILE_AUDIO_POOL, terminating_char)
         self.create_file("", file_pystretch_map, terminating_char)
