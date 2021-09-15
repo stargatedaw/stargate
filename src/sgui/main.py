@@ -1360,18 +1360,20 @@ def main(app, splash_screen, scaler):
                 with open(default_project_file, 'w') as f:
                     f.write(minor_version)
             else:
+                msg = _(
+                    "Please update to the latest version of Stargate.  "
+                    "This project {} was created with '{}', however, "
+                    "you are using version '{}'"
+                ).format(
+                    default_project_file,
+                    project_version,
+                    minor_version,
+                )
+                LOG.error(msg)
                 QMessageBox.warning(
                     MAIN_WINDOW.widget,
                     _("Error"),
-                    _(
-                        "Please update to the latest version of Stargate.  "
-                        "This project {} was created with '{}', however, "
-                        "you are using version '{}'"
-                    ).format(
-                        default_project_file,
-                        project_version,
-                        minor_version,
-                    )
+                    msg,
                 )
                 exit(1)
 
