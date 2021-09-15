@@ -244,10 +244,9 @@ class MainWindow(QScrollArea):
         self.vscrollbar.setValue(int(f_val))
 
     def on_offline_render(self):
-        def copy_gdb_cmd():
+        def copy_cmd_args():
             f_run_cmd = [
                 str(x) for x in (
-                    "run",
                     "daw",
                     "'{}'".format(constants.DAW_PROJECT.project_folder),
                     "test.wav",
@@ -447,12 +446,12 @@ class MainWindow(QScrollArea):
         f_ok_layout = QHBoxLayout()
 
         if util.IS_LINUX:
-            f_debug_button = QPushButton(_("Copy GDB run cmd"))
+            f_debug_button = QPushButton(_("Copy cmd args"))
             f_debug_button.setToolTip(
                 _("For developer use only")
             )
             f_ok_layout.addWidget(f_debug_button)
-            f_debug_button.pressed.connect(copy_gdb_cmd)
+            f_debug_button.pressed.connect(copy_cmd_args)
 
         f_ok_layout.addItem(
             QSpacerItem(
