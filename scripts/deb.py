@@ -140,9 +140,10 @@ postinst_path = os.path.join(
     DEBIAN,
     'postinst',
 )
-with open(postinst_path, 'w') as f:
-    f.write(postinst)
-os.chmod(postinst_path, 0o755)
+# Disable for now because it breaks Raspbian
+#with open(postinst_path, 'w') as f:
+#    f.write(postinst)
+#os.chmod(postinst_path, 0o755)
 retcode = os.system(f"dpkg-deb --build --root-owner-group {root}")
 assert not retcode, retcode
 try:
