@@ -497,22 +497,19 @@ void v_daw_run_engine(
         );
     }
 
-    for(f_period = 0; f_period < self->seq_event_result.count; ++f_period)
-    {
+    for(f_period = 0; f_period < self->seq_event_result.count; ++f_period){
         f_seq_period = &self->seq_event_result.sample_periods[f_period];
 
         sample_count = f_seq_period->period.sample_count;
         output[0] = f_seq_period->period.buffers[0];
         output[1] = f_seq_period->period.buffers[1];
         //notify the worker threads to wake up
-        int f_i = 1;
-        while(f_i < STARGATE->worker_thread_count)
-        {
+        int f_i;
+        for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
             pthread_spin_lock(&STARGATE->thread_locks[f_i]);
             pthread_mutex_lock(&STARGATE->track_block_mutexes[f_i]);
             pthread_cond_broadcast(&STARGATE->track_cond[f_i]);
             pthread_mutex_unlock(&STARGATE->track_block_mutexes[f_i]);
-            ++f_i;
         }
 
         long f_next_current_sample =
@@ -546,8 +543,11 @@ void v_daw_run_engine(
                 DAW->ts[0].current_sample, sample_count);
 
             self->ts[0].atm_tick_count = f_seq_period->period.atm_tick_count;
-            memcpy(self->ts[0].atm_ticks, f_seq_period->period.atm_ticks,
-                sizeof(t_atm_tick) * ATM_TICK_BUFFER_SIZE);
+            memcpy(
+                self->ts[0].atm_ticks,
+                f_seq_period->period.atm_ticks,
+                sizeof(t_atm_tick) * ATM_TICK_BUFFER_SIZE
+            );
         }
         else
         {
@@ -608,8 +608,7 @@ void v_daw_process(t_thread_args * f_args){
 
     t_daw_thread_storage * f_ts = &DAW->ts[f_args->thread_num];
 
-    if(f_args->thread_num > 0)
-    {
+    if(f_args->thread_num > 0){
         memcpy(f_ts, &DAW->ts[0], sizeof(t_daw_thread_storage));
     }
 

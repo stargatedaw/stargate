@@ -96,8 +96,7 @@ typedef struct
     int track_pool_sorted_count;
 }t_daw_routing_graph;
 
-typedef struct
-{
+typedef struct {
     double ml_sample_period_inc_beats;
     double ml_current_beat;
     double ml_next_beat;

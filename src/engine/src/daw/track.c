@@ -77,12 +77,13 @@ void v_daw_process_track(
             f_current_beat = f_item_ref[0]->start;
             f_next_beat = f_item_ref[0]->end;
 
-            if(f_current_beat >= a_ts->ml_current_beat &&
-            f_current_beat < a_ts->ml_next_beat)
-            {
+            if(
+                f_current_beat >= a_ts->ml_current_beat
+                &&
+                f_current_beat < a_ts->ml_next_beat
+            ){
                 f_track->item_event_index = 0;
             }
-
             break;
         case 2:
             f_current_beat = f_item_ref[0]->end;

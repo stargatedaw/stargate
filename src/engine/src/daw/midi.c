@@ -336,8 +336,7 @@ void v_daw_process_midi(
     ){
         // pass
     } else if(a_playback_mode > 0){
-        while(1)
-        {
+        while(1){
             f_current_item = self->item_pool[a_item_ref->item_uid];
 
             if(f_track->item_event_index >= f_current_item->event_count){
@@ -411,9 +410,7 @@ void v_daw_process_midi(
                     f_track->note_offs[(f_event->note)] =
                         a_current_sample + ((int)(f_event->length *
                         a_ts->samples_per_beat));
-                }
-                else if(f_event->type == EVENT_CONTROLLER)
-                {
+                } else if(f_event->type == EVENT_CONTROLLER){
                     int controller = f_event->param;
 
                     t_seq_event * f_buff_ev =
@@ -439,9 +436,7 @@ void v_daw_process_midi(
                     f_buff_ev->tick = f_note_sample_offset;
 
                     ++f_track->period_event_index;
-                }
-                else if(f_event->type == EVENT_PITCHBEND)
-                {
+                } else if(f_event->type == EVENT_PITCHBEND){
                     int f_note_sample_offset = 0;
                     double f_note_start_diff = ((f_adjusted_start) -
                         f_track_current_period_beats) + f_track_beats_offset;
