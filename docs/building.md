@@ -1,4 +1,11 @@
 # Building
+##Note
+If building for ARM or any architecture other than x86, you must override
+`PLAT_FLAGS` when calling `make`.  For example:
+```
+PLAT_FLAGS='-march=native' make
+```
+
 ## Prequisites
 ```
 # Install dependencies using one of:
