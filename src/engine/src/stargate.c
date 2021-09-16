@@ -953,23 +953,18 @@ void v_sg_seq_event_list_set(
                 self->events[self->pos].beat < self->period.end_beat
             ){
                 f_ev = &self->events[self->pos];
-                if(
-                    f_ev->beat == self->period.start_beat
-                    ||
-                    (f_ev->type == SEQ_EVENT_LOOP && !a_loop_mode)
-                ){
-                    a_result->count = 1;
-                } else {
-                    a_result->count = 2;
-                }
-
+                ++self->pos;
                 //The period that is returned to the main loop
                 if(f_ev->type == SEQ_EVENT_LOOP && a_loop_mode){
+                    if(f_ev->beat > self->period.start_beat){
+                        a_result->count = 2;
+                    }
                     f_loop_start = f_ev->start_beat;
                     f_period = &a_result->sample_periods[a_result->count - 1];
                     f_period->is_looping = 1;
                 } else if(f_ev->type == SEQ_EVENT_TEMPO_CHANGE){
-                    if(a_result->count == 2){
+                    if(f_ev->beat > self->period.start_beat){
+                        a_result->count = 2;
                         f_period = &a_result->sample_periods[0];
                         f_period->tempo = self->tempo;
                         f_period->playback_inc = self->playback_inc;
@@ -982,15 +977,16 @@ void v_sg_seq_event_list_set(
                     f_period->playback_inc = self->playback_inc;
                     f_period->samples_per_beat = self->samples_per_beat;
                 }
-                ++self->pos;
             } else if(self->events[self->pos].beat < self->period.start_beat){
                 f_ev = &self->events[self->pos];
-
+                ++self->pos;
                 if(f_ev->type == SEQ_EVENT_TEMPO_CHANGE){
                     v_sg_set_tempo(self, f_ev->tempo);
+                    f_period = &a_result->sample_periods[0];
+                    f_period->tempo = self->tempo;
+                    f_period->playback_inc = self->playback_inc;
+                    f_period->samples_per_beat = self->samples_per_beat;
                 }
-
-                ++self->pos;
             } else {
                 break;
             }
@@ -1054,7 +1050,8 @@ void v_sg_seq_event_list_set(
                 self->period.sample_count,
                 self->period.start_beat,
                 self->period.end_beat,
-                f_ev->beat, f_ev->beat,
+                f_ev->beat,
+                f_ev->beat,
                 self->period.current_sample,
                 self->period.input_buffer,
                 a_input_count

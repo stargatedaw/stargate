@@ -151,8 +151,7 @@ void v_daw_audio_items_run(
 ){
     t_daw_item * f_item = self->item_pool[a_item_ref->item_uid];
 
-    if(!f_item->audio_items->index_counts[0])
-    {
+    if(!f_item->audio_items->index_counts[0]){
         return;
     }
 
@@ -531,16 +530,18 @@ void v_daw_run_engine(
         self->ts[0].sample_count = sample_count;
         self->ts[0].input_buffer = a_input_buffers;
 
-        if(STARGATE->playback_mode > 0)
-        {
+        if(STARGATE->playback_mode > 0){
             self->ts[0].ml_sample_period_inc_beats =
                 f_seq_period->period.period_inc_beats;
             self->ts[0].ml_current_beat = f_seq_period->period.start_beat;
             self->ts[0].ml_next_beat = f_seq_period->period.end_beat;
 
             v_sample_period_set_atm_events(
-                &f_seq_period->period, &self->en_song->sequences->events,
-                DAW->ts[0].current_sample, sample_count);
+                &f_seq_period->period,
+                &self->en_song->sequences->events,
+                DAW->ts[0].current_sample,
+                sample_count
+            );
 
             self->ts[0].atm_tick_count = f_seq_period->period.atm_tick_count;
             memcpy(
@@ -548,14 +549,11 @@ void v_daw_run_engine(
                 f_seq_period->period.atm_ticks,
                 sizeof(t_atm_tick) * ATM_TICK_BUFFER_SIZE
             );
-        }
-        else
-        {
+        } else {
             self->ts[0].atm_tick_count = 0;
         }
 
-        for(f_i = 0; f_i < DN_TRACK_COUNT; ++f_i)
-        {
+        for(f_i = 0; f_i < DN_TRACK_COUNT; ++f_i){
             self->track_pool[f_i]->status = STATUS_NOT_PROCESSED;
             self->track_pool[f_i]->bus_counter =
                 self->routing_graph->bus_count[f_i];
@@ -563,8 +561,7 @@ void v_daw_run_engine(
         }
 
         //unleash the hounds
-        for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i)
-        {
+        for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
             pthread_spin_unlock(&STARGATE->thread_locks[f_i]);
         }
 
@@ -585,8 +582,7 @@ void v_daw_run_engine(
             &self->ts[0]
         );
 
-        for(f_i = 0; f_i < sample_count; ++f_i)
-        {
+        for(f_i = 0; f_i < sample_count; ++f_i){
             output[0][f_i] = f_main_buff[0][f_i];
             output[1][f_i] = f_main_buff[1][f_i];
         }
