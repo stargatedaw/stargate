@@ -329,14 +329,14 @@ class multifx_single:
         elif a_val == 16: #Chorus
             self.knobs[0].name_label.setText(_("Rate"))
             self.knobs[1].name_label.setText(_("Wet"))
-            self.knobs[2].name_label.setText("")
+            self.knobs[2].name_label.setText("Fine")
             self.knobs[0].val_conversion = _shared.KC_127_ZERO_TO_X
             self.knobs[0].set_127_min_max(0.3, 6.0)
             self.knobs[0].value_label.setText("")
             self.knobs[1].val_conversion = _shared.KC_NONE
             self.knobs[1].value_label.setText("")
-            self.knobs[2].val_conversion = _shared.KC_NONE
-            self.knobs[2].value_label.setText("")
+            self.knobs[2].val_conversion = _shared.KC_127_ZERO_TO_X
+            self.knobs[2].set_127_min_max(0.1, 1.9)
         elif a_val == 17: #Glitch
             self.knobs[0].name_label.setText(_("Pitch"))
             self.knobs[1].name_label.setText(_("Glitch"))

@@ -444,9 +444,13 @@ void v_mf3_run_chorus(
     v_mf3_commit_mod(a_mf3);
     a_mf3->control_value[0] = ((a_mf3->control[0]) * 0.04488189f) + 0.3f;
     a_mf3->control_value[1] = ((a_mf3->control[1]) * 0.1889f) - 24.0f;
+    a_mf3->control_value[2] = ((a_mf3->control[2]) * 0.0140625f) + 0.1f;
 
-    v_crs_chorus_set(&a_mf3->chorus, a_mf3->control_value[0],
-            a_mf3->control_value[1]);
+    v_crs_chorus_set(
+        &a_mf3->chorus,
+        a_mf3->control_value[0] * a_mf3->control_value[2],
+        a_mf3->control_value[1]
+    );
     v_crs_chorus_run(&a_mf3->chorus, a_in0, a_in1);
 
     a_mf3->output0 = a_mf3->chorus.output0;
