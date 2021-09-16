@@ -92,6 +92,8 @@ def svg_to_pixmap(path: str, width=None, height=None):
     svg_renderer = QSvgRenderer(path)
     pixmap = QPixmap(width, height)
     painter = QPainter()
+    pixmap.fill(QtCore.Qt.GlobalColor.transparent)
+    painter.begin(pixmap)
     painter.setRenderHints(
         (
             QPainter.RenderHint.Antialiasing
@@ -100,8 +102,6 @@ def svg_to_pixmap(path: str, width=None, height=None):
         ),
         True
     )
-    pixmap.fill(QtCore.Qt.GlobalColor.transparent)
-    painter.begin(pixmap)
     svg_renderer.render(painter)
     painter.end()
     return pixmap
