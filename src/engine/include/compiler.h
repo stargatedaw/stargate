@@ -20,7 +20,7 @@
 #endif
 
 #ifndef RT_SCHED
-    #define RT_SCHED SCHED_RR
+    #define RT_SCHED SCHED_FIFO
 #endif
 
 #ifndef SG_THREAD_LOCAL
