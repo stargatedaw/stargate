@@ -193,7 +193,7 @@ class WideMixerPluginUI(AbstractPluginUI):
             self.tab_widget = QTabWidget()
             self.layout.addWidget(self.tab_widget)
             self.in_tab = QWidget()
-            self.tab_widget.addTab(self.in_tab, _("Input"))
+            self.tab_widget.addTab(self.in_tab, _("In"))
             self.in_vlayout = QVBoxLayout(self.in_tab)
             self.in_layout = QGridLayout()
             self.in_vlayout.addLayout(self.in_layout)
@@ -201,7 +201,7 @@ class WideMixerPluginUI(AbstractPluginUI):
             self.in_vlayout.addWidget(in_out_sep)
 
             self.out_tab = QWidget()
-            self.tab_widget.addTab(self.out_tab, _("Output"))
+            self.tab_widget.addTab(self.out_tab, _("Out"))
             self.out_vlayout = QVBoxLayout(self.out_tab)
             self.out_vlayout.addWidget(self.pan_slider.control)
             self.out_layout = QGridLayout()
