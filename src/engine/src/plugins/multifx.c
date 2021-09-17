@@ -114,10 +114,14 @@ void v_multifx_connect_port(PluginHandle instance, int port,
     }
 }
 
-PluginHandle g_multifx_instantiate(PluginDescriptor * descriptor,
-        int s_rate, fp_get_audio_pool_item_from_host a_host_audio_pool_func,
-        int a_plugin_uid, fp_queue_message a_queue_func)
-{
+PluginHandle g_multifx_instantiate(
+    PluginDescriptor * descriptor,
+    int s_rate,
+    fp_get_audio_pool_item_from_host a_host_audio_pool_func,
+    int a_plugin_uid,
+    fp_queue_message
+    a_queue_func
+){
     t_multifx *plugin_data;
     hpalloc((void**)&plugin_data, sizeof(t_multifx));
 
@@ -141,49 +145,58 @@ PluginHandle g_multifx_instantiate(PluginDescriptor * descriptor,
     plugin_data->is_on = 0;
 
     plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data, descriptor);
+        (void**)plugin_data,
+        descriptor
+    );
 
     v_cc_map_init(&plugin_data->cc_map);
 
     return (PluginHandle) plugin_data;
 }
 
-void v_multifx_load(PluginHandle instance,
-        PluginDescriptor * Descriptor, char * a_file_path)
-{
+void v_multifx_load(
+    PluginHandle instance,
+    PluginDescriptor* Descriptor,
+    char * a_file_path
+){
     t_multifx *plugin_data = (t_multifx*)instance;
-    generic_file_loader(instance, Descriptor,
-        a_file_path, plugin_data->port_table, &plugin_data->cc_map);
+    generic_file_loader(
+        instance,
+        Descriptor,
+        a_file_path,
+        plugin_data->port_table,
+        &plugin_data->cc_map
+    );
 }
 
-void v_multifx_set_port_value(PluginHandle Instance,
-        int a_port, SGFLT a_value)
-{
+void v_multifx_set_port_value(
+    PluginHandle Instance,
+    int a_port,
+    SGFLT a_value
+){
     t_multifx *plugin_data = (t_multifx*)Instance;
     plugin_data->port_table[a_port] = a_value;
 }
 
-void v_multifx_check_if_on(t_multifx *plugin_data)
-{
-    int f_i = 0;
+void v_multifx_check_if_on(t_multifx *plugin_data){
+    int f_i;
 
-    while(f_i < 8)
-    {
+    for(f_i = 0; f_i < 8; ++f_i){
         plugin_data->mono_modules->fx_func_ptr[f_i] =
-            g_mf3_get_function_pointer((int)(*(plugin_data->fx_combobox[f_i])));
+            g_mf3_get_function_pointer(
+                (int)(*(plugin_data->fx_combobox[f_i]))
+            );
 
-        if(plugin_data->mono_modules->fx_func_ptr[f_i] != v_mf3_run_off)
-        {
+        if(plugin_data->mono_modules->fx_func_ptr[f_i] != v_mf3_run_off){
             plugin_data->is_on = 1;
         }
-
-        ++f_i;
     }
 }
 
 void v_multifx_process_midi_event(
-    t_multifx * plugin_data, t_seq_event * a_event)
-{
+    t_multifx * plugin_data,
+    t_seq_event * a_event
+){
     if (a_event->type == EVENT_CONTROLLER)
     {
         assert(a_event->param >= 1 && a_event->param < 128);
@@ -217,9 +230,11 @@ void v_multifx_process_midi_event(
 }
 
 void v_multifx_run(
-        PluginHandle instance, int sample_count,
-        struct ShdsList * midi_events, struct ShdsList *atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    struct ShdsList* midi_events,
+    struct ShdsList *atm_events
+){
     t_multifx *plugin_data = (t_multifx*)instance;
     t_mf3_multi * f_fx;
 
@@ -230,8 +245,7 @@ void v_multifx_run(
     int midi_event_pos = 0;
     plugin_data->midi_event_count = 0;
 
-    for(event_pos = 0; event_pos < event_count; ++event_pos)
-    {
+    for(event_pos = 0; event_pos < event_count; ++event_pos){
         v_multifx_process_midi_event(plugin_data, events[event_pos]);
     }
 
@@ -240,38 +254,34 @@ void v_multifx_run(
     v_plugin_event_queue_reset(&plugin_data->atm_queue);
 
     t_seq_event * ev_tmp;
-    for(f_i = 0; f_i < atm_events->len; ++f_i)
-    {
+    for(f_i = 0; f_i < atm_events->len; ++f_i){
         ev_tmp = (t_seq_event*)atm_events->data[f_i];
         v_plugin_event_queue_add(
-            &plugin_data->atm_queue, ev_tmp->type,
-            ev_tmp->tick, ev_tmp->value, ev_tmp->port);
+            &plugin_data->atm_queue,
+            ev_tmp->type,
+            ev_tmp->tick,
+            ev_tmp->value,
+            ev_tmp->port
+        );
     }
 
-    f_i = 0;
-
-    if(plugin_data->i_slow_index >= MULTIFX_SLOW_INDEX_ITERATIONS)
-    {
+    if(plugin_data->i_slow_index >= MULTIFX_SLOW_INDEX_ITERATIONS){
         plugin_data->i_slow_index -= MULTIFX_SLOW_INDEX_ITERATIONS;
         plugin_data->is_on = 0;
         v_multifx_check_if_on(plugin_data);
-    }
-    else
-    {
+    } else {
         ++plugin_data->i_slow_index;
     }
 
-    f_i = 0;
-
-    if(plugin_data->is_on)
-    {
+    if(plugin_data->is_on){
         int i_mono_out = 0;
 
-        while((i_mono_out) < sample_count)
-        {
-            while(midi_event_pos < plugin_data->midi_event_count &&
-                plugin_data->midi_event_ticks[midi_event_pos] == i_mono_out)
-            {
+        while((i_mono_out) < sample_count){
+            while(
+                midi_event_pos < plugin_data->midi_event_count
+                &&
+                plugin_data->midi_event_ticks[midi_event_pos] == i_mono_out
+            ){
                 if(plugin_data->midi_event_types[midi_event_pos] ==
                         EVENT_CONTROLLER)
                 {
@@ -285,42 +295,52 @@ void v_multifx_run(
             }
 
             v_plugin_event_queue_atm_set(
-                &plugin_data->atm_queue, i_mono_out,
-                plugin_data->port_table);
+                &plugin_data->atm_queue,
+                i_mono_out,
+                plugin_data->port_table)
+            ;
 
             plugin_data->mono_modules->current_sample0 =
-                    plugin_data->output0[(i_mono_out)];
+                plugin_data->output0[(i_mono_out)];
             plugin_data->mono_modules->current_sample1 =
-                    plugin_data->output1[(i_mono_out)];
+                plugin_data->output1[(i_mono_out)];
 
-            f_i = 0;
-
-            while(f_i < 8)
-            {
-                if(plugin_data->mono_modules->fx_func_ptr[f_i] != v_mf3_run_off)
-                {
+            for(f_i = 0; f_i < 8; ++f_i){
+                if(
+                    plugin_data->mono_modules->fx_func_ptr[f_i]
+                    !=
+                    v_mf3_run_off
+                ){
                     f_fx = &plugin_data->mono_modules->multieffect[f_i];
-                    v_sml_run(&plugin_data->mono_modules->smoothers[f_i][0],
-                            *plugin_data->fx_knob0[f_i]);
-                    v_sml_run(&plugin_data->mono_modules->smoothers[f_i][1],
-                            *plugin_data->fx_knob1[f_i]);
-                    v_sml_run(&plugin_data->mono_modules->smoothers[f_i][2],
-                            *plugin_data->fx_knob2[f_i]);
+                    v_sml_run(
+                        &plugin_data->mono_modules->smoothers[f_i][0],
+                        *plugin_data->fx_knob0[f_i]
+                    );
+                    v_sml_run(
+                        &plugin_data->mono_modules->smoothers[f_i][1],
+                        *plugin_data->fx_knob1[f_i]
+                    );
+                    v_sml_run(
+                        &plugin_data->mono_modules->smoothers[f_i][2],
+                        *plugin_data->fx_knob2[f_i]
+                    );
 
-                    v_mf3_set(f_fx,
-                    plugin_data->mono_modules->smoothers[f_i][0].last_value,
-                    plugin_data->mono_modules->smoothers[f_i][1].last_value,
-                    plugin_data->mono_modules->smoothers[f_i][2].last_value);
+                    v_mf3_set(
+                        f_fx,
+                        plugin_data->mono_modules->smoothers[f_i][0].last_value,
+                        plugin_data->mono_modules->smoothers[f_i][1].last_value,
+                        plugin_data->mono_modules->smoothers[f_i][2].last_value
+                    );
 
                     plugin_data->mono_modules->fx_func_ptr[f_i](
                         f_fx,
                         (plugin_data->mono_modules->current_sample0),
-                        (plugin_data->mono_modules->current_sample1));
+                        (plugin_data->mono_modules->current_sample1)
+                    );
 
                     plugin_data->mono_modules->current_sample0 = f_fx->output0;
                     plugin_data->mono_modules->current_sample1 = f_fx->output1;
                 }
-                ++f_i;
             }
 
             plugin_data->output0[(i_mono_out)] =
@@ -393,25 +413,22 @@ t_multifx_mono_modules * v_multifx_mono_init(SGFLT a_sr, int a_plugin_uid){
     t_multifx_mono_modules * a_mono;
     hpalloc((void**)&a_mono, sizeof(t_multifx_mono_modules));
 
-    int f_i = 0;
+    int f_i;
+    int f_i2;
 
-    while(f_i < 8)
-    {
+    for(f_i = 0; f_i < 8; ++f_i){
         g_mf3_init(&a_mono->multieffect[f_i], a_sr, 1);
         a_mono->fx_func_ptr[f_i] = v_mf3_run_off;
-        int f_i2 = 0;
-        while(f_i2 < 3)
-        {
-            g_sml_init(&a_mono->smoothers[f_i][f_i2],
-                a_sr, 127.0f, 0.0f, 0.1f);
-            ++f_i2;
+        for(f_i2 = 0; f_i2 < 3; ++f_i2){
+            g_sml_init(
+                &a_mono->smoothers[f_i][f_i2],
+                a_sr,
+                127.0f,
+                0.0f,
+                0.1f
+            );
         }
-        ++f_i;
     }
-
-    g_sml_init(&a_mono->time_smoother, a_sr, 100.0f, 10.0f, 0.1f);
-
-    a_mono->vol_linear = 1.0f;
 
     return a_mono;
 }

@@ -25,6 +25,7 @@ GNU General Public License for more details.
 #include "audiodsp/modules/filter/svf.h"
 #include "audiodsp/modules/modulation/env_follower.h"
 #include "audiodsp/modules/modulation/gate.h"
+#include "audiodsp/modules/multifx/multifx3knob.h"
 #include "plugin.h"
 #include "compiler.h"
 
@@ -52,25 +53,76 @@ GNU General Public License for more details.
 #define SGEQ_EQ6_GAIN 21
 #define SGEQ_SPECTRUM_ENABLED 22
 
-#define SGEQ_LAST_CONTROL_PORT 22
+#define SGEQ_PRE_FX0_KNOB0 23
+#define SGEQ_PRE_FX0_KNOB1 24
+#define SGEQ_PRE_FX0_KNOB2 25
+#define SGEQ_PRE_FX0_COMBOBOX 26
+#define SGEQ_PRE_FX1_KNOB0 27
+#define SGEQ_PRE_FX1_KNOB1 28
+#define SGEQ_PRE_FX1_KNOB2 29
+#define SGEQ_PRE_FX1_COMBOBOX 30
+#define SGEQ_PRE_FX2_KNOB0 31
+#define SGEQ_PRE_FX2_KNOB1 32
+#define SGEQ_PRE_FX2_KNOB2 33
+#define SGEQ_PRE_FX2_COMBOBOX 34
+#define SGEQ_PRE_FX3_KNOB0 35
+#define SGEQ_PRE_FX3_KNOB1 36
+#define SGEQ_PRE_FX3_KNOB2 37
+#define SGEQ_PRE_FX3_COMBOBOX 38
+#define SGEQ_PRE_FX4_KNOB0 39
+#define SGEQ_PRE_FX4_KNOB1 40
+#define SGEQ_PRE_FX4_KNOB2 41
+#define SGEQ_PRE_FX4_COMBOBOX 42
+#define SGEQ_PRE_FX5_KNOB0 43
+#define SGEQ_PRE_FX5_KNOB1 44
+#define SGEQ_PRE_FX5_KNOB2 45
+#define SGEQ_PRE_FX5_COMBOBOX 46
+
+#define SGEQ_POST_FX0_KNOB0 47
+#define SGEQ_POST_FX0_KNOB1 48
+#define SGEQ_POST_FX0_KNOB2 49
+#define SGEQ_POST_FX0_COMBOBOX 50
+#define SGEQ_POST_FX1_KNOB0 51
+#define SGEQ_POST_FX1_KNOB1 52
+#define SGEQ_POST_FX1_KNOB2 53
+#define SGEQ_POST_FX1_COMBOBOX 54
+#define SGEQ_POST_FX2_KNOB0 55
+#define SGEQ_POST_FX2_KNOB1 56
+#define SGEQ_POST_FX2_KNOB2 57
+#define SGEQ_POST_FX2_COMBOBOX 58
+#define SGEQ_POST_FX3_KNOB0 59
+#define SGEQ_POST_FX3_KNOB1 60
+#define SGEQ_POST_FX3_KNOB2 61
+#define SGEQ_POST_FX3_COMBOBOX 62
+#define SGEQ_POST_FX4_KNOB0 63
+#define SGEQ_POST_FX4_KNOB1 64
+#define SGEQ_POST_FX4_KNOB2 65
+#define SGEQ_POST_FX4_COMBOBOX 66
+#define SGEQ_POST_FX5_KNOB0 67
+#define SGEQ_POST_FX5_KNOB1 68
+#define SGEQ_POST_FX5_KNOB2 69
+#define SGEQ_POST_FX5_COMBOBOX 70
+
+#define SGEQ_LAST_CONTROL_PORT 70
 /* must be 1 + highest value above
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
-#define SGEQ_COUNT 23
+#define SGEQ_COUNT 71
 
 
-typedef struct
-{
-    SGFLT current_sample0;
-    SGFLT current_sample1;
-
-    SGFLT vol_linear;
-
+typedef struct {
     t_pkq_peak_eq eqs[SGEQ_EQ_COUNT];
     t_spa_spectrum_analyzer * spectrum_analyzer;
+
+    t_mf3_multi prefx[6];
+    t_mf3_multi postfx[6];
+    fp_mf3_run pre_fx_func_ptr[6];
+    fp_mf3_run post_fx_func_ptr[6];
+    t_smoother_linear pre_smoothers[6][3];
+    t_smoother_linear post_smoothers[6][3];
+
 }t_sgeq_mono_modules;
 
-typedef struct
-{
+typedef struct {
     PluginData *output0;
     PluginData *output1;
 
@@ -78,6 +130,16 @@ typedef struct
     PluginData *eq_res[6];
     PluginData *eq_gain[6];
     PluginData *spectrum_analyzer_on;
+
+    PluginData *pre_fx_knob0[6];
+    PluginData *pre_fx_knob1[6];
+    PluginData *pre_fx_knob2[6];
+    PluginData *pre_fx_combobox[6];
+
+    PluginData *post_fx_knob0[6];
+    PluginData *post_fx_knob1[6];
+    PluginData *post_fx_knob2[6];
+    PluginData *post_fx_combobox[6];
 
     SGFLT fs;
     t_sgeq_mono_modules * mono_modules;

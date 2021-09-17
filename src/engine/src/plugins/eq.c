@@ -73,8 +73,7 @@ void v_sgeq_connect_port(
 
     plugin = (t_sgeq *) instance;
 
-    switch (port)
-    {
+    switch (port){
         case SGEQ_EQ1_FREQ: plugin->eq_freq[0] = data; break;
         case SGEQ_EQ2_FREQ: plugin->eq_freq[1] = data; break;
         case SGEQ_EQ3_FREQ: plugin->eq_freq[2] = data; break;
@@ -96,6 +95,66 @@ void v_sgeq_connect_port(
         case SGEQ_EQ5_GAIN: plugin->eq_gain[4] = data; break;
         case SGEQ_EQ6_GAIN: plugin->eq_gain[5] = data; break;
         case SGEQ_SPECTRUM_ENABLED: plugin->spectrum_analyzer_on = data; break;
+
+        case SGEQ_PRE_FX0_KNOB0: plugin->pre_fx_knob0[0] = data; break;
+        case SGEQ_PRE_FX0_KNOB1: plugin->pre_fx_knob1[0] = data; break;
+        case SGEQ_PRE_FX0_KNOB2: plugin->pre_fx_knob2[0] = data; break;
+        case SGEQ_PRE_FX0_COMBOBOX: plugin->pre_fx_combobox[0] = data; break;
+
+        case SGEQ_PRE_FX1_KNOB0: plugin->pre_fx_knob0[1] = data; break;
+        case SGEQ_PRE_FX1_KNOB1: plugin->pre_fx_knob1[1] = data; break;
+        case SGEQ_PRE_FX1_KNOB2: plugin->pre_fx_knob2[1] = data; break;
+        case SGEQ_PRE_FX1_COMBOBOX: plugin->pre_fx_combobox[1] = data; break;
+
+        case SGEQ_PRE_FX2_KNOB0: plugin->pre_fx_knob0[2] = data; break;
+        case SGEQ_PRE_FX2_KNOB1: plugin->pre_fx_knob1[2] = data; break;
+        case SGEQ_PRE_FX2_KNOB2: plugin->pre_fx_knob2[2] = data; break;
+        case SGEQ_PRE_FX2_COMBOBOX: plugin->pre_fx_combobox[2] = data; break;
+
+        case SGEQ_PRE_FX3_KNOB0: plugin->pre_fx_knob0[3] = data; break;
+        case SGEQ_PRE_FX3_KNOB1: plugin->pre_fx_knob1[3] = data; break;
+        case SGEQ_PRE_FX3_KNOB2: plugin->pre_fx_knob2[3] = data; break;
+        case SGEQ_PRE_FX3_COMBOBOX: plugin->pre_fx_combobox[3] = data; break;
+
+        case SGEQ_PRE_FX4_KNOB0: plugin->pre_fx_knob0[4] = data; break;
+        case SGEQ_PRE_FX4_KNOB1: plugin->pre_fx_knob1[4] = data; break;
+        case SGEQ_PRE_FX4_KNOB2: plugin->pre_fx_knob2[4] = data; break;
+        case SGEQ_PRE_FX4_COMBOBOX: plugin->pre_fx_combobox[4] = data; break;
+
+        case SGEQ_PRE_FX5_KNOB0: plugin->pre_fx_knob0[5] = data; break;
+        case SGEQ_PRE_FX5_KNOB1: plugin->pre_fx_knob1[5] = data; break;
+        case SGEQ_PRE_FX5_KNOB2: plugin->pre_fx_knob2[5] = data; break;
+        case SGEQ_PRE_FX5_COMBOBOX: plugin->pre_fx_combobox[5] = data; break;
+
+        case SGEQ_POST_FX0_KNOB0: plugin->post_fx_knob0[0] = data; break;
+        case SGEQ_POST_FX0_KNOB1: plugin->post_fx_knob1[0] = data; break;
+        case SGEQ_POST_FX0_KNOB2: plugin->post_fx_knob2[0] = data; break;
+        case SGEQ_POST_FX0_COMBOBOX: plugin->post_fx_combobox[0] = data; break;
+
+        case SGEQ_POST_FX1_KNOB0: plugin->post_fx_knob0[1] = data; break;
+        case SGEQ_POST_FX1_KNOB1: plugin->post_fx_knob1[1] = data; break;
+        case SGEQ_POST_FX1_KNOB2: plugin->post_fx_knob2[1] = data; break;
+        case SGEQ_POST_FX1_COMBOBOX: plugin->post_fx_combobox[1] = data; break;
+
+        case SGEQ_POST_FX2_KNOB0: plugin->post_fx_knob0[2] = data; break;
+        case SGEQ_POST_FX2_KNOB1: plugin->post_fx_knob1[2] = data; break;
+        case SGEQ_POST_FX2_KNOB2: plugin->post_fx_knob2[2] = data; break;
+        case SGEQ_POST_FX2_COMBOBOX: plugin->post_fx_combobox[2] = data; break;
+
+        case SGEQ_POST_FX3_KNOB0: plugin->post_fx_knob0[3] = data; break;
+        case SGEQ_POST_FX3_KNOB1: plugin->post_fx_knob1[3] = data; break;
+        case SGEQ_POST_FX3_KNOB2: plugin->post_fx_knob2[3] = data; break;
+        case SGEQ_POST_FX3_COMBOBOX: plugin->post_fx_combobox[3] = data; break;
+
+        case SGEQ_POST_FX4_KNOB0: plugin->post_fx_knob0[4] = data; break;
+        case SGEQ_POST_FX4_KNOB1: plugin->post_fx_knob1[4] = data; break;
+        case SGEQ_POST_FX4_KNOB2: plugin->post_fx_knob2[4] = data; break;
+        case SGEQ_POST_FX4_COMBOBOX: plugin->post_fx_combobox[4] = data; break;
+
+        case SGEQ_POST_FX5_KNOB0: plugin->post_fx_knob0[5] = data; break;
+        case SGEQ_POST_FX5_KNOB1: plugin->post_fx_knob1[5] = data; break;
+        case SGEQ_POST_FX5_KNOB2: plugin->post_fx_knob2[5] = data; break;
+        case SGEQ_POST_FX5_COMBOBOX: plugin->post_fx_combobox[5] = data; break;
     }
 }
 
@@ -137,19 +196,21 @@ void v_sgeq_load(PluginHandle instance,
         a_file_path, plugin_data->port_table, &plugin_data->cc_map);
 }
 
-void v_sgeq_set_port_value(PluginHandle Instance,
-        int a_port, SGFLT a_value)
-{
+void v_sgeq_set_port_value(
+    PluginHandle Instance,
+    int a_port,
+    SGFLT a_value
+){
     t_sgeq *plugin_data = (t_sgeq*)Instance;
     plugin_data->port_table[a_port] = a_value;
 }
 
 
 void v_sgeq_process_midi_event(
-    t_sgeq * plugin_data, t_seq_event * a_event)
-{
-    if (a_event->type == EVENT_CONTROLLER)
-    {
+    t_sgeq * plugin_data,
+    t_seq_event * a_event
+){
+    if (a_event->type == EVENT_CONTROLLER){
         assert(a_event->param >= 1 && a_event->param < 128);
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =
@@ -164,21 +225,62 @@ void v_sgeq_process_midi_event(
     }
 }
 
+int _prefx_check_if_on(t_sgeq *plugin_data){
+    int f_i;
+    int on = 0;
+    t_sgeq_mono_modules* mm = plugin_data->mono_modules;
+
+    for(f_i = 0; f_i < 6; ++f_i){
+        mm->pre_fx_func_ptr[f_i] = g_mf3_get_function_pointer(
+            (int)(*(plugin_data->pre_fx_combobox[f_i]))
+        );
+
+        if(mm->pre_fx_func_ptr[f_i] != v_mf3_run_off){
+            on = 1;
+        }
+    }
+    return on;
+}
+
+int _postfx_check_if_on(t_sgeq *plugin_data){
+    int f_i;
+    int on = 0;
+    t_sgeq_mono_modules* mm = plugin_data->mono_modules;
+
+    for(f_i = 0; f_i < 6; ++f_i){
+        mm->post_fx_func_ptr[f_i] = g_mf3_get_function_pointer(
+            (int)(*(plugin_data->post_fx_combobox[f_i]))
+        );
+
+        if(mm->post_fx_func_ptr[f_i] != v_mf3_run_off){
+            on = 1;
+        }
+    }
+    return on;
+}
+
 void v_sgeq_run(
-        PluginHandle instance, int sample_count,
-        struct ShdsList * midi_events, struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    struct ShdsList * midi_events,
+    struct ShdsList * atm_events
+){
     t_sgeq *plugin_data = (t_sgeq*)instance;
+    t_mf3_multi * f_fx;
 
     t_seq_event **events = (t_seq_event**)midi_events->data;
     int event_count = midi_events->len;
 
     int f_i = 0;
+    int f_i2;
+    t_sgeq_mono_modules* mm;
+    int prefx_on = _prefx_check_if_on(plugin_data);
+    int postfx_on = _postfx_check_if_on(plugin_data);
+
     int midi_event_pos = 0;
     plugin_data->midi_event_count = 0;
 
-    for(f_i = 0; f_i < event_count; ++f_i)
-    {
+    for(f_i = 0; f_i < event_count; ++f_i){
         v_sgeq_process_midi_event(plugin_data, events[f_i]);
     }
 
@@ -189,60 +291,144 @@ void v_sgeq_run(
     {
         ev_tmp = (t_seq_event*)atm_events->data[f_i];
         v_plugin_event_queue_add(
-            &plugin_data->atm_queue, ev_tmp->type,
-            ev_tmp->tick, ev_tmp->value, ev_tmp->port);
+            &plugin_data->atm_queue,
+            ev_tmp->type,
+            ev_tmp->tick,
+            ev_tmp->value,
+            ev_tmp->port
+        );
     }
 
-    f_i = 0;
-
-    while(f_i < sample_count)
-    {
-        while(midi_event_pos < plugin_data->midi_event_count &&
-            plugin_data->midi_event_ticks[midi_event_pos] == f_i)
-        {
-            if(plugin_data->midi_event_types[midi_event_pos] ==
-                    EVENT_CONTROLLER)
-            {
+    for(f_i = 0; f_i < sample_count; ++f_i){
+        while(
+            midi_event_pos < plugin_data->midi_event_count
+            &&
+            plugin_data->midi_event_ticks[midi_event_pos] == f_i
+        ){
+            if(
+                plugin_data->midi_event_types[midi_event_pos]
+                ==
+                EVENT_CONTROLLER
+            ){
                 v_cc_map_translate(
-                    &plugin_data->cc_map, plugin_data->descriptor,
+                    &plugin_data->cc_map,
+                    plugin_data->descriptor,
                     plugin_data->port_table,
                     plugin_data->midi_event_ports[midi_event_pos],
-                    plugin_data->midi_event_values[midi_event_pos]);
+                    plugin_data->midi_event_values[midi_event_pos]
+                );
             }
 
             ++midi_event_pos;
         }
 
         v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue, f_i,
-            plugin_data->port_table);
+            &plugin_data->atm_queue,
+            f_i,
+            plugin_data->port_table
+        );
+        mm = plugin_data->mono_modules;
 
-        int f_i2 = 0;
+        if(prefx_on){
+            for(f_i2 = 0; f_i2 < 6; ++f_i2){
+                if(
+                    mm->pre_fx_func_ptr[f_i2]
+                    !=
+                    v_mf3_run_off
+                ){
+                    f_fx = &mm->prefx[f_i2];
+                    v_sml_run(
+                        &mm->pre_smoothers[f_i2][0],
+                        *plugin_data->pre_fx_knob0[f_i2]
+                    );
+                    v_sml_run(
+                        &mm->pre_smoothers[f_i2][1],
+                        *plugin_data->pre_fx_knob1[f_i2]
+                    );
+                    v_sml_run(
+                        &mm->pre_smoothers[f_i2][2],
+                        *plugin_data->pre_fx_knob2[f_i2]
+                    );
 
-        while(f_i2 < SGEQ_EQ_COUNT)
-        {
-            if(*plugin_data->eq_gain[f_i2] != 0.0f)
-            {
-                v_pkq_calc_coeffs(&plugin_data->mono_modules->eqs[f_i2],
-                        *plugin_data->eq_freq[f_i2],
-                        *plugin_data->eq_res[f_i2] * 0.01f,
-                        *plugin_data->eq_gain[f_i2] * 0.1f);
-                v_pkq_run(&plugin_data->mono_modules->eqs[f_i2],
+                    v_mf3_set(
+                        f_fx,
+                        mm->pre_smoothers[f_i2][0].last_value,
+                        mm->pre_smoothers[f_i2][1].last_value,
+                        mm->pre_smoothers[f_i2][2].last_value
+                    );
+
+                    mm->pre_fx_func_ptr[f_i2](
+                        f_fx,
                         plugin_data->output0[f_i],
-                        plugin_data->output1[f_i]);
-                plugin_data->output0[f_i] =
-                        plugin_data->mono_modules->eqs[f_i2].output0;
-                plugin_data->output1[f_i] =
-                        plugin_data->mono_modules->eqs[f_i2].output1;
+                        plugin_data->output1[f_i]
+                    );
+
+                    plugin_data->output0[f_i] = f_fx->output0;
+                    plugin_data->output1[f_i] = f_fx->output1;
+                }
             }
-            ++f_i2;
         }
 
-        ++f_i;
+        for(f_i2 = 0; f_i2 < SGEQ_EQ_COUNT; ++f_i2){
+            if(*plugin_data->eq_gain[f_i2] != 0.0f){
+                v_pkq_calc_coeffs(
+                    &mm->eqs[f_i2],
+                    *plugin_data->eq_freq[f_i2],
+                    *plugin_data->eq_res[f_i2] * 0.01f,
+                    *plugin_data->eq_gain[f_i2] * 0.1f
+                );
+                v_pkq_run(
+                    &mm->eqs[f_i2],
+                    plugin_data->output0[f_i],
+                    plugin_data->output1[f_i]
+                );
+                plugin_data->output0[f_i] = mm->eqs[f_i2].output0;
+                plugin_data->output1[f_i] = mm->eqs[f_i2].output1;
+            }
+        }
+
+        if(postfx_on){
+            for(f_i2 = 0; f_i2 < 6; ++f_i2){
+                if(
+                    mm->post_fx_func_ptr[f_i2]
+                    !=
+                    v_mf3_run_off
+                ){
+                    f_fx = &mm->postfx[f_i2];
+                    v_sml_run(
+                        &mm->post_smoothers[f_i2][0],
+                        *plugin_data->post_fx_knob0[f_i2]
+                    );
+                    v_sml_run(
+                        &mm->post_smoothers[f_i2][1],
+                        *plugin_data->post_fx_knob1[f_i2]
+                    );
+                    v_sml_run(
+                        &mm->post_smoothers[f_i2][2],
+                        *plugin_data->post_fx_knob2[f_i2]
+                    );
+
+                    v_mf3_set(
+                        f_fx,
+                        mm->post_smoothers[f_i2][0].last_value,
+                        mm->post_smoothers[f_i2][1].last_value,
+                        mm->post_smoothers[f_i2][2].last_value
+                    );
+
+                    mm->post_fx_func_ptr[f_i2](
+                        f_fx,
+                        plugin_data->output0[f_i],
+                        plugin_data->output1[f_i]
+                    );
+
+                    plugin_data->output0[f_i] = f_fx->output0;
+                    plugin_data->output1[f_i] = f_fx->output1;
+                }
+            }
+        }
     }
 
-    if((int)(*plugin_data->spectrum_analyzer_on))
-    {
+    if((int)(*plugin_data->spectrum_analyzer_on)){
         v_spa_run(
             plugin_data->mono_modules->spectrum_analyzer,
             plugin_data->output0,
@@ -263,7 +449,6 @@ void v_sgeq_run(
 PluginDescriptor *sgeq_plugin_descriptor(){
     PluginDescriptor *f_result = get_pyfx_descriptor(SGEQ_COUNT);
 
-
     set_pyfx_port(f_result, SGEQ_EQ1_FREQ, 24.0f, 4.0f, 123.0f);
     set_pyfx_port(f_result, SGEQ_EQ2_FREQ, 42.0f, 4.0f, 123.0f);
     set_pyfx_port(f_result, SGEQ_EQ3_FREQ, 60.0f, 4.0f, 123.0f);
@@ -283,6 +468,56 @@ PluginDescriptor *sgeq_plugin_descriptor(){
     set_pyfx_port(f_result, SGEQ_EQ5_GAIN, 0.0f, -240.0f, 240.0f);
     set_pyfx_port(f_result, SGEQ_EQ6_GAIN, 0.0f, -240.0f, 240.0f);
     set_pyfx_port(f_result, SGEQ_SPECTRUM_ENABLED, 0.0f, 0.0f, 1.0f);
+
+    set_pyfx_port(f_result, SGEQ_PRE_FX0_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX0_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX0_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX0_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_pyfx_port(f_result, SGEQ_PRE_FX1_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX1_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX1_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX1_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_pyfx_port(f_result, SGEQ_PRE_FX2_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX2_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX2_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX2_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_pyfx_port(f_result, SGEQ_PRE_FX3_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX3_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX3_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX3_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_pyfx_port(f_result, SGEQ_PRE_FX4_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX4_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX4_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX4_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_pyfx_port(f_result, SGEQ_PRE_FX5_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX5_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX5_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_PRE_FX5_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+
+    set_pyfx_port(f_result, SGEQ_POST_FX0_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX0_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX0_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX0_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_pyfx_port(f_result, SGEQ_POST_FX1_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX1_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX1_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX1_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_pyfx_port(f_result, SGEQ_POST_FX2_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX2_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX2_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX2_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_pyfx_port(f_result, SGEQ_POST_FX3_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX3_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX3_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX3_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_pyfx_port(f_result, SGEQ_POST_FX4_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX4_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX4_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX4_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_pyfx_port(f_result, SGEQ_POST_FX5_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX5_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX5_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_pyfx_port(f_result, SGEQ_POST_FX5_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
 
     f_result->cleanup = v_sgeq_cleanup;
     f_result->connect_port = v_sgeq_connect_port;
@@ -306,20 +541,45 @@ t_sgeq_mono_modules * v_sgeq_mono_init(SGFLT a_sr, int a_plugin_uid){
     t_sgeq_mono_modules * a_mono;
     hpalloc((void**)&a_mono, sizeof(t_sgeq_mono_modules));
 
-    int f_i = 0;
+    int f_i;
+    int f_i2;
 
-    while(f_i < SGEQ_EQ_COUNT)
-    {
+    for(f_i = 0; f_i < SGEQ_EQ_COUNT; ++f_i){
         g_pkq_init(&a_mono->eqs[f_i], a_sr);
-        ++f_i;
     }
-
-    a_mono->vol_linear = 1.0f;
 
     a_mono->spectrum_analyzer = g_spa_spectrum_analyzer_get(
         4096,
         a_plugin_uid
     );
+
+    for(f_i = 0; f_i < 6; ++f_i){
+        g_mf3_init(&a_mono->prefx[f_i], a_sr, 1);
+        a_mono->pre_fx_func_ptr[f_i] = v_mf3_run_off;
+        for(f_i2 = 0; f_i2 < 3; ++f_i2){
+            g_sml_init(
+                &a_mono->pre_smoothers[f_i][f_i2],
+                a_sr,
+                127.0f,
+                0.0f,
+                0.1f
+            );
+        }
+    }
+
+    for(f_i = 0; f_i < 6; ++f_i){
+        g_mf3_init(&a_mono->postfx[f_i], a_sr, 1);
+        a_mono->post_fx_func_ptr[f_i] = v_mf3_run_off;
+        for(f_i2 = 0; f_i2 < 3; ++f_i2){
+            g_sml_init(
+                &a_mono->post_smoothers[f_i][f_i2],
+                a_sr,
+                127.0f,
+                0.0f,
+                0.1f
+            );
+        }
+    }
 
     return a_mono;
 }

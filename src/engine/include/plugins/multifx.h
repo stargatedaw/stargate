@@ -73,22 +73,17 @@ GNU General Public License for more details.
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
 #define MULTIFX_COUNT 36
 
-typedef struct
-{
+typedef struct {
     t_mf3_multi multieffect[8];
     fp_mf3_run fx_func_ptr[8];
-
-    t_smoother_linear time_smoother;
 
     SGFLT current_sample0;
     SGFLT current_sample1;
 
-    SGFLT vol_linear;
     t_smoother_linear smoothers[8][3];
 }t_multifx_mono_modules;
 
-typedef struct
-{
+typedef struct {
     PluginData *output0;
     PluginData *output1;
 

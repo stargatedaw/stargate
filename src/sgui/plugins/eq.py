@@ -94,6 +94,59 @@ QPushButton:hover {
     border: 2px solid #cccccc;
 }
 
+QTabBar::tab
+{
+    background-color: #17181d;
+    border-bottom-style: none;
+    border: 1px solid #444444;
+    color: #cccccc;
+    margin-right: -1px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+}
+
+
+QTabWidget::tab-bar
+{
+    left: 5px;
+}
+
+QTabWidget::pane
+{
+    /*border: 1px solid #444;*/
+    border-top: 2px solid #C2C7CB;
+    top: 1px;
+}
+
+QTabBar::tab:last
+{
+    /* the last selected tab has nothing to overlap with on the right */
+    margin-right: 0;
+}
+
+QTabBar::tab:first:!selected
+{
+    /* the last selected tab has nothing to overlap with on the right */
+    margin-left: 0px;
+}
+
+QTabBar::tab:!selected
+{
+    background-color: #17181d;
+    border-bottom-style: solid;
+    color: #cccccc;
+}
+
+QTabBar::tab:!selected:hover,
+QTabBar::tab:selected
+{
+    background-color: #aaaaaa;
+    color: #1e1e1e;
+    margin-bottom: 0px;
+}
+
 """
 
 class sgeq_plugin_ui(AbstractPluginUI):
@@ -117,6 +170,17 @@ class sgeq_plugin_ui(AbstractPluginUI):
                 'knob.svg',
             ),
         }
+        self.tab_widget = QTabWidget()
+        self.layout.addWidget(self.tab_widget)
+        self.eq_tab = QWidget()
+        self.eq_layout = QVBoxLayout(self.eq_tab)
+        self.tab_widget.addTab(self.eq_tab, _("EQ"))
+        self.pre_tab = QWidget()
+        self.pre_layout = QGridLayout(self.pre_tab)
+        self.tab_widget.addTab(self.pre_tab, _("PreFX"))
+        self.post_tab = QWidget()
+        self.post_layout = QGridLayout(self.post_tab)
+        self.tab_widget.addTab(self.post_tab, _("PostFX"))
 
         f_knob_size = 48
 
@@ -131,7 +195,7 @@ class sgeq_plugin_ui(AbstractPluginUI):
             knob_kwargs=knob_kwargs,
         )
 
-        self.layout.addWidget(self.eq6.widget)
+        self.eq_layout.addWidget(self.eq6.widget)
 
         self.spectrum_enabled = null_control(
             SGEQ_SPECTRUM_ENABLED,
@@ -141,9 +205,54 @@ class sgeq_plugin_ui(AbstractPluginUI):
             self.port_dict,
         )
 
+        port = 23
+        port = self._populate_fx_layout(
+            port,
+            self.pre_layout,
+            knob_kwargs,
+            f_knob_size,
+        )
+        assert port == 47, port
+        self._populate_fx_layout(
+            port,
+            self.post_layout,
+            knob_kwargs,
+            f_knob_size,
+        )
+
         self.open_plugin_file()
         self.set_midi_learn(SGEQ_PORT_MAP)
         self.enable_spectrum(True)
+
+    def _populate_fx_layout(
+        self,
+        port,
+        layout,
+        knob_kwargs,
+        f_knob_size,
+    ):
+        f_column = 0
+        f_row = 0
+        for f_i in range(6):
+            f_effect = multifx_single(
+                "FX{}".format(f_i),
+                port,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                self.port_dict,
+                self.preset_manager,
+                a_knob_size=f_knob_size,
+                knob_kwargs=knob_kwargs,
+            )
+            self.effects.append(f_effect)
+            layout.addWidget(f_effect.group_box, f_row, f_column)
+            f_column += 1
+            if f_column > 1:
+                f_column = 0
+                f_row += 1
+            port += 4
+
+        return port
 
     def open_plugin_file(self):
         AbstractPluginUI.open_plugin_file(self)
