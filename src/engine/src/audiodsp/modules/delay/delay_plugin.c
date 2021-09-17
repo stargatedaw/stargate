@@ -15,8 +15,7 @@
  * SGFLT a_sr  //sample rate
  * )
  */
-t_sg_delay * g_ldl_get_delay(SGFLT a_seconds, SGFLT a_sr)
-{
+t_sg_delay * g_ldl_get_delay(SGFLT a_seconds, SGFLT a_sr){
     t_sg_delay* f_result;
     hpalloc((void**)&f_result, sizeof(t_sg_delay));
 
@@ -35,7 +34,7 @@ t_sg_delay * g_ldl_get_delay(SGFLT a_seconds, SGFLT a_sr)
     g_axf_init(&f_result->stereo_xfade0, -3.0f);
     g_axf_init(&f_result->stereo_xfade1, -3.0f);
 
-    f_result->feeback_env_follower = g_enf_get_env_follower(a_sr);
+    f_result->feedback_env_follower = g_enf_get_env_follower(a_sr);
     f_result->input_env_follower = g_enf_get_env_follower(a_sr);
     f_result->combined_inputs = 0.0f;
 
@@ -56,36 +55,50 @@ void v_ldl_run_delay(t_sg_delay* a_dly, SGFLT a_in0, SGFLT a_in1)
 {
     v_lim_run(&a_dly->limiter, a_in0, a_in1);
 
-    v_dly_run_delay(&a_dly->delay0,
-            f_axf_run_xfade(&a_dly->stereo_xfade0,
+    v_dly_run_delay(
+        &a_dly->delay0,
+        f_axf_run_xfade(
+            &a_dly->stereo_xfade0,
             (a_in0 + ((a_dly->feedback0) * (a_dly->feedback_linear))),
-            (((a_dly->feedback1) * (a_dly->feedback_linear)) +
-            ((a_in0 + a_in1) * 0.5f))
-            ));
+            (
+                (a_dly->feedback1 * a_dly->feedback_linear) +
+                ((a_in0 + a_in1) * 0.5f)
+            )
+        )
+    );
 
     v_dly_run_tap(&a_dly->delay0, &a_dly->tap0);
 
-    v_dly_run_delay(&a_dly->delay1,
-            f_axf_run_xfade(&a_dly->stereo_xfade0 ,
-            (a_in1 + ((a_dly->feedback1) * (a_dly->feedback_linear))),
-            (a_dly->tap0.output)));
+    v_dly_run_delay(
+        &a_dly->delay1,
+        f_axf_run_xfade(
+            &a_dly->stereo_xfade0 ,
+            (a_in1 + (a_dly->feedback1 * a_dly->feedback_linear)),
+            a_dly->tap0.output
+        )
+    );
 
     v_dly_run_tap(&a_dly->delay1, &a_dly->tap1);
 
-    a_dly->feedback0 = v_svf_run_2_pole_lp(&a_dly->svf0, (a_dly->tap0.output));
-    a_dly->feedback1 = v_svf_run_2_pole_lp(&a_dly->svf1, (a_dly->tap1.output));
+    a_dly->feedback0 = v_svf_run_2_pole_lp(&a_dly->svf0, a_dly->tap0.output);
+    a_dly->feedback1 = v_svf_run_2_pole_lp(&a_dly->svf1, a_dly->tap1.output);
 
     a_dly->limiter_gain =  (a_dly->limiter.gain)  * (a_dly->limiter.autogain);
 
-    if(a_dly->limiter_gain > 1.0f)
-    {
+    if(a_dly->limiter_gain > 1.0f){
         a_dly->limiter_gain = 1.0f;
     }
 
-    v_dw_run_dry_wet(a_dly->dw0, a_in0, (a_dly->feedback0) *
-            (a_dly->limiter_gain));
-    v_dw_run_dry_wet(a_dly->dw1, a_in1, (a_dly->feedback1) *
-            (a_dly->limiter_gain));
+    v_dw_run_dry_wet(
+        a_dly->dw0,
+        a_in0,
+        a_dly->feedback0 * a_dly->limiter_gain
+    );
+    v_dw_run_dry_wet(
+        a_dly->dw1,
+        a_in1,
+        a_dly->feedback1 * a_dly->limiter_gain
+    );
 
     a_dly->output0 = (a_dly->dw0->output);
     a_dly->output1 = (a_dly->dw1->output);
@@ -95,34 +108,37 @@ void v_ldl_run_delay(t_sg_delay* a_dly, SGFLT a_in0, SGFLT a_in1)
 /*void v_ldl_set_delay(
  * t_sg_delay* a_dly,
  * SGFLT a_seconds,
- * SGFLT a_feeback_db, //This should not exceed -2 or it could explode
+ * SGFLT a_feedback_db, //This should not exceed -2 or it could explode
  * int a_is_ducking,
  * SGFLT a_wet,
  * SGFLT a_dry,
  * SGFLT a_stereo)  //Crossfading between dual-mono and stereo.  0 to 1
  */
-void v_ldl_set_delay(t_sg_delay* a_dly,SGFLT a_seconds,
-        SGFLT a_feeback_db, SGFLT a_wet, SGFLT a_dry,
-        SGFLT a_stereo, SGFLT a_duck, SGFLT a_damp)
-{
+void v_ldl_set_delay(
+    t_sg_delay* a_dly,
+    SGFLT a_seconds,
+    SGFLT a_feedback_db,
+    SGFLT a_wet,
+    SGFLT a_dry,
+    SGFLT a_stereo,
+    SGFLT a_duck,
+    SGFLT a_damp
+){
     v_dly_set_delay_seconds(&a_dly->delay0, &a_dly->tap0, a_seconds);
     v_dly_set_delay_seconds(&a_dly->delay1, &a_dly->tap1, a_seconds);
 
     v_axf_set_xfade(&a_dly->stereo_xfade0, a_stereo);
     v_axf_set_xfade(&a_dly->stereo_xfade1, a_stereo);
 
-    if(a_feeback_db != (a_dly->feedback_db))
-    {
-        a_dly->feedback_db = a_feeback_db;
-        a_dly->feedback_linear = f_db_to_linear_fast(a_feeback_db);
-        if(a_dly->feedback_linear > 0.9f)
-        {
+    if(a_feedback_db != (a_dly->feedback_db)){
+        a_dly->feedback_db = a_feedback_db;
+        a_dly->feedback_linear = f_db_to_linear_fast(a_feedback_db);
+        if(a_dly->feedback_linear > 0.9f){
             a_dly->feedback_linear = 0.9f;
         }
     }
 
-    if(a_dly->last_duck != a_duck)
-    {
+    if(a_dly->last_duck != a_duck){
         a_dly->last_duck = a_duck;
         v_lim_set(&a_dly->limiter, a_duck, 0.0f, 400.0f);
     }
@@ -134,6 +150,5 @@ void v_ldl_set_delay(t_sg_delay* a_dly,SGFLT a_seconds,
 
     v_dw_set_dry_wet(a_dly->dw0, a_dry, a_wet);
     v_dw_set_dry_wet(a_dly->dw1, a_dry, a_wet);
-
 }
 

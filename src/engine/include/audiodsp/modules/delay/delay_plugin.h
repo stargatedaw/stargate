@@ -27,7 +27,7 @@ GNU General Public License for more details.
 
 /* A multi-mode delay module.  This is a complete delay with stereo,
  * ping-pong, etc... modes
- * feeback can be routed out and back into the module.
+ * feedback can be routed out and back into the module.
  */
 typedef struct
 {
@@ -44,7 +44,7 @@ typedef struct
     t_audio_xfade stereo_xfade0;
     t_audio_xfade stereo_xfade1;
 
-    t_enf_env_follower * feeback_env_follower;  //Checks for overflow
+    t_enf_env_follower * feedback_env_follower;  //Checks for overflow
     t_enf_env_follower * input_env_follower;  //Checks for overflow
     SGFLT wet_dry_diff;  //difference between wet and dry output volume
     SGFLT combined_inputs;  //Add output 0 and 1
@@ -68,7 +68,7 @@ t_sg_delay * g_ldl_get_delay(SGFLT,SGFLT);
 /*void v_ldl_set_delay(
  * t_sg_delay* a_dly,
  * SGFLT a_seconds,
- * SGFLT a_feeback_db, //This should not exceed -2 or it could explode
+ * SGFLT a_feedback_db, //This should not exceed -2 or it could explode
  * int a_is_ducking,
  * SGFLT a_wet,
  * SGFLT a_dry,

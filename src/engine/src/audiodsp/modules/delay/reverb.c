@@ -7,11 +7,15 @@
 #include "audiodsp/modules/oscillator/lfo_simple.h"
 
 
-void v_rvb_reverb_set(t_rvb_reverb * self, SGFLT a_time, SGFLT a_wet,
-        SGFLT a_color, SGFLT a_predelay, SGFLT a_hp_cutoff)
-{
-    if(unlikely(a_time != self->time))
-    {
+void v_rvb_reverb_set(
+    t_rvb_reverb* self,
+    SGFLT a_time,
+    SGFLT a_wet,
+    SGFLT a_color,
+    SGFLT a_predelay,
+    SGFLT a_hp_cutoff
+){
+    if(unlikely(a_time != self->time)){
         int f_i;
         SGFLT f_base = 30.0f - (a_time * 25.0f);
         SGFLT f_factor = 1.4f + (a_time * 0.8f);
@@ -52,17 +56,18 @@ void v_rvb_reverb_set(t_rvb_reverb * self, SGFLT a_time, SGFLT a_wet,
         }
     }
 
-    if(unlikely(self->hp_cutoff != a_hp_cutoff))
-    {
+    if(unlikely(self->hp_cutoff != a_hp_cutoff)){
         v_svf_set_cutoff_base(&self->hp, a_hp_cutoff);
         v_svf_set_cutoff(&self->hp);
         self->hp_cutoff = a_hp_cutoff;
     }
 }
 
-void v_rvb_reverb_run(t_rvb_reverb * self, SGFLT a_input0,
-        SGFLT a_input1)
-{
+void v_rvb_reverb_run(
+    t_rvb_reverb* self,
+    SGFLT a_input0,
+    SGFLT a_input1
+){
     int f_i;
     t_state_variable_filter * f_filter;
     t_comb_filter * f_comb;
@@ -71,20 +76,20 @@ void v_rvb_reverb_run(t_rvb_reverb * self, SGFLT a_input0,
     v_lfs_run(&self->lfo);
     SGFLT f_lfo_diff = self->lfo.output * 2.0f;
 
-    SGFLT f_tmp_sample = v_svf_run_2_pole_lp(&self->lp,
-            (a_input0 + a_input1));
+    SGFLT f_tmp_sample = v_svf_run_2_pole_lp(
+        &self->lp,
+        a_input0 + a_input1
+    );
     f_tmp_sample = v_svf_run_2_pole_hp(&self->hp, f_tmp_sample);
     f_tmp_sample *= (self->wet_linear);
 
-    for(f_i = 0; f_i < REVERB_TAP_COUNT; ++f_i)
-    {
+    for(f_i = 0; f_i < REVERB_TAP_COUNT; ++f_i){
         f_comb = &self->taps[f_i].tap;
         v_cmb_run(f_comb, f_tmp_sample);
         self->output += f_comb->output_sample;
     }
 
-    for(f_i = 0; f_i < REVERB_DIFFUSER_COUNT; ++f_i)
-    {
+    for(f_i = 0; f_i < REVERB_DIFFUSER_COUNT; ++f_i){
         f_filter = &self->diffusers[f_i].diffuser;
         v_svf_set_cutoff_base(f_filter,
             self->diffusers[f_i].pitch + f_lfo_diff);
@@ -94,16 +99,14 @@ void v_rvb_reverb_run(t_rvb_reverb * self, SGFLT a_input0,
 
     self->predelay_buffer[(self->predelay_counter)] = self->output;
     ++self->predelay_counter;
-    if(unlikely(self->predelay_counter >= self->predelay_size))
-    {
+    if(unlikely(self->predelay_counter >= self->predelay_size)){
         self->predelay_counter = 0;
     }
 
     self->output = self->predelay_buffer[(self->predelay_counter)];
 }
 
-void v_rvb_panic(t_rvb_reverb * self)
-{
+void v_rvb_panic(t_rvb_reverb * self){
     int f_i, f_i2;
     SGFLT * f_tmp;
     int f_count;
@@ -124,8 +127,7 @@ void v_rvb_panic(t_rvb_reverb * self)
     }
 }
 
-void g_rvb_reverb_init(t_rvb_reverb * f_result, SGFLT a_sr)
-{
+void g_rvb_reverb_init(t_rvb_reverb * f_result, SGFLT a_sr){
     int f_i;
 
     f_result->color = 1.0f;
@@ -136,8 +138,7 @@ void g_rvb_reverb_init(t_rvb_reverb * f_result, SGFLT a_sr)
 
     f_result->sr = a_sr;
 
-    for(f_i = 0; f_i < REVERB_DIFFUSER_COUNT; ++f_i)
-    {
+    for(f_i = 0; f_i < REVERB_DIFFUSER_COUNT; ++f_i){
         f_result->diffusers[f_i].pitch = 33.0f + (((SGFLT)f_i) * 7.0f);
     }
 
@@ -184,8 +185,7 @@ void g_rvb_reverb_init(t_rvb_reverb * f_result, SGFLT a_sr)
         sizeof(SGFLT) * (a_sr + 5000));
 
     f_i = 0;
-    while(f_i < (a_sr + 5000))
-    {
+    while(f_i < (a_sr + 5000)){
         f_result->predelay_buffer[f_i] = 0.0f;
         ++f_i;
     }
