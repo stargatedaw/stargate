@@ -520,7 +520,7 @@ t_widemixer_mono_modules* v_widemixer_mono_init(SGFLT a_sr, int a_plugin_uid){
     g_dco_init(&a_mono->dc_filter[0], a_sr);
     g_dco_init(&a_mono->dc_filter[1], a_sr);
     g_svf2_init(&a_mono->bass_mono_filter, a_sr);
-    v_svf2_set_res(&a_mono->bass_mono_filter, -6.0);
+    v_svf2_set_res(&a_mono->bass_mono_filter, -12.0);
     g_axf_init(&a_mono->xfade, -3.0);
 
     return a_mono;
