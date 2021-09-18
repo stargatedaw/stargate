@@ -14,6 +14,8 @@ GNU General Public License for more details.
 #ifndef VA1_PLUGIN_H
 #define VA1_PLUGIN_H
 
+#include "compiler.h"
+
 #include "audiodsp/constants.h"
 #include "audiodsp/lib/osc_core.h"
 #include "audiodsp/lib/pitch_core.h"
@@ -27,7 +29,7 @@ GNU General Public License for more details.
 #include "audiodsp/modules/oscillator/noise.h"
 #include "audiodsp/modules/oscillator/osc_simple.h"
 #include "audiodsp/modules/signal_routing/audio_xfade.h"
-#include "compiler.h"
+#include "audiodsp/modules/signal_routing/panner2.h"
 #include "plugin.h"
 
 #define VA1_ATTACK  2
@@ -84,25 +86,27 @@ GNU General Public License for more details.
 #define VA1_OSC2_PB 53
 #define VA1_DIST_TYPE 54
 #define VA1_ADSR_LIN_MAIN 55
+#define VA1_PAN 56
 
 /* must be 1 + highest value above
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
-#define VA1_COUNT 56
+#define VA1_COUNT 57
 
 #define VA1_POLYPHONY   16
 #define VA1_POLYPHONY_THRESH 12
 
 
-typedef struct
-{
+typedef struct {
     t_smoother_linear filter_smoother;
     t_smoother_linear pitchbend_smoother;
     t_smoother_linear lfo_smoother;
     t_nosvf_filter aa_filter;
+
+    t_smoother_linear pan_smoother;
+    t_pn2_panner2 panner;
 }t_va1_mono_modules;
 
-typedef struct
-{
+typedef struct {
     SGFLT amp;
     SGFLT note_f;
     int note;
@@ -220,6 +224,8 @@ typedef struct {
     PluginData *mono_mode;
     PluginData *min_note;
     PluginData *max_note;
+
+    PluginData *pan;
 
     t_va1_poly_voice data[VA1_POLYPHONY];
     t_voc_voices voices;

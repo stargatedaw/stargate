@@ -76,31 +76,33 @@ VA1_OSC1_PB = 52
 VA1_OSC2_PB = 53
 VA1_DIST_TYPE = 54
 VA1_ADSR_LIN_MAIN = 55
+VA1_PAN = 56
 
 
 VA1_PORT_MAP = {
-    "Attack": "2",
-    "Decay": "3",
-    "Sustain": "4",
-    "Release": "5",
-    "Filter Cutoff": "6",
-    "Res": "7",
-    "Dist": "8",
     "Attack Filter": "9",
+    "Attack": "2",
     "Decay Filter": "10",
-    "Sustain Filter": "11",
-    "Release Filter": "12",
-    "Noise Amp": "13",
-    "Filter Env Amt": "14",
+    "Decay": "3",
     "Dist Wet": "15",
-    "Main Glide": "27",
-    "Pitch Env Time": "29",
-    "Pitch Env Amt": "30",
-    "LFO Freq": "31",
+    "Dist": "8",
+    "Filter Cutoff": "6",
+    "Filter Env Amt": "14",
     "LFO Amp": "33",
-    "LFO Pitch": "34",
+    "LFO Filter": "35",
+    "LFO Freq": "31",
     "LFO Pitch Fine": VA1_LFO_PITCH_FINE,
-    "LFO Filter": "35"
+    "LFO Pitch": "34",
+    "Main Glide": "27",
+    "Noise Amp": "13",
+    "Pan": VA1_PAN,
+    "Pitch Env Amt": "30",
+    "Pitch Env Time": "29",
+    "Release Filter": "12",
+    "Release": "5",
+    "Res": "7",
+    "Sustain Filter": "11",
+    "Sustain": "4",
 }
 
 STYLESHEET = """\
@@ -662,6 +664,21 @@ class VA1PluginUI(AbstractPluginUI):
             knob_kwargs=knob_kwargs,
         )
         self.hlayout4.addWidget(self.main.group_box)
+        self.pan_knob = knob_control(
+            f_knob_size,
+            _("Pan"),
+            VA1_PAN,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -100,
+            100,
+            0,
+            KC_INTEGER,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
+        self.pan_knob.add_to_grid_layout(self.main.layout, 20)
 
         self.lfo = lfo_widget(
             f_knob_size,
