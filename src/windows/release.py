@@ -60,8 +60,6 @@ InstallDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 
-Var StartMenuFolder
-!insertmacro MUI_PAGE_STARTMENU "Stargate DAW" $StartMenuFolder
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 
@@ -104,17 +102,25 @@ Section "Base Install" SEC01
     ;  "$INSTDIR\{MAJOR_VERSION}.ico"
 SectionEnd
 
-Section /o "Portable Flash Drive Install" SEC02
+Section "Start Menu Shortcut" SEC02
+    createShortCut \
+      "$SMPROGRAMS\Stargate DAW.lnk" \
+      "$INSTDIR\{MAJOR_VERSION}.exe" \
+      "" \
+      "$INSTDIR\{MAJOR_VERSION}.ico"
+SectionEnd
+
+Section /o "Portable Flash Drive Install" SEC03
     SetOutPath $INSTDIR
     ; The exe looks for this empty file to choose the Stargate home folder
     FileOpen $9 _stargate_home w
     FileClose $9
 SectionEnd
 
-LangString DESC_SEC02 ${{LANG_ENGLISH}} "Store settings and projects in the same folder as the exexecutable.  Only use this if you are installing to a flash drive."
+LangString DESC_SEC03 ${{LANG_ENGLISH}} "Store settings and projects in the same folder as the exexecutable.  Only use this if you are installing to a flash drive."
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-!insertmacro MUI_DESCRIPTION_TEXT ${{SEC02}} $(DESC_SEC02)
+!insertmacro MUI_DESCRIPTION_TEXT ${{SEC03}} $(DESC_SEC03)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 Section "uninstall"
