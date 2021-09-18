@@ -91,11 +91,6 @@ INT_TO_NOTE = [
 ]
 
 TERMINAL = None
-if IS_WINDOWS:
-    PYTHON3 = 'python.exe'
-else:
-    PYTHON3 = sys.executable
-
 PAULSTRETCH_PATH = os.path.join(
     BIN_DIR,
     f"{MAJOR_VERSION}-paulstretch",
@@ -156,6 +151,13 @@ def which(a_file):
             and not os.path.isdir(f_file_path):
                 return f_file_path
     return None
+
+if IS_WINDOWS:
+    PYTHON3 = which('python.exe')
+    assert PYTHON3
+else:
+    PYTHON3 = sys.executable
+
 
 for _terminal in ("x-terminal-emulator", "gnome-terminal", "konsole"):
     if which(_terminal):

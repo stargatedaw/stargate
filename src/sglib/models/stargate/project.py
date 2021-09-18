@@ -371,7 +371,15 @@ class SgProject(AbstractProject):
                 if IS_WINDOWS:
                     startupinfo = subprocess.STARTUPINFO()
                     startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                    f_proc = subprocess.Popen(f_cmd, startupinfo=startupinfo)
+                    env = os.environ.copy()
+                    env['PATH'] = ENGINE_DIR + ';' + env['PATH']
+                    env['PYTHONPATH'] = INSTALL_PREFIX
+                    LOG.info(env)
+                    f_proc = subprocess.Popen(
+                        f_cmd, 
+                        env=env,
+                        startupinfo=startupinfo,
+                    )
                 else:
                     f_proc = subprocess.Popen(f_cmd)
                 return f_dest_path, f_uid, f_proc
