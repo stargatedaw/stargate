@@ -385,12 +385,10 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
             QColor(brush),
         )
         if self.isSelected():
-            #if _shared.SEQUENCE_EDITOR_MODE == 0:
-            #    self.setOpacity(1.0)
             item_color = QColor(
                 theme.SYSTEM_COLORS.daw.seq_selected_item,
             )
-            #self.setBrush(item_color)
+            self.setBrush(item_color)
             self.label_bg.setBrush(item_color)
             self.start_handle.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
             self.length_handle.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
@@ -413,8 +411,8 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
             self.length_handle.setBrush(handle_brush)
             self.stretch_handle.setBrush(handle_brush)
         else:
-            #if _shared.SEQUENCE_EDITOR_MODE == 0:
-            #    self.setOpacity(0.3)
+            if _shared.SEQUENCE_EDITOR_MODE == 1:
+                self.setOpacity(0.3)
             self.start_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
             self.length_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
             self.stretch_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
