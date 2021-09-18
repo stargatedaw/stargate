@@ -189,8 +189,7 @@ class multifx_plugin_ui(AbstractPluginUI):
             'arc_width_pct': 0.0,
             'fg_svg': os.path.join(
                 util.PLUGIN_ASSETS_DIR,
-                'va1',
-                'knob.svg',
+                'knob-metal-3.svg',
             ),
         }
 
