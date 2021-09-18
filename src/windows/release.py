@@ -125,7 +125,7 @@ LangString DESC_SEC03 ${{LANG_ENGLISH}} "Store settings and projects in the same
 
 Section "uninstall"
   RMDir /r $INSTDIR
-  RMDir /r $StartMenuFolder
+  Delete "$SMPROGRAMS\Stargate DAW.lnk"
 SectionEnd
 """
 
