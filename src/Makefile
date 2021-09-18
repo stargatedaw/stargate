@@ -60,6 +60,7 @@ mingw:
 	CFLAGS+=" -static-libgcc " make -C engine mingw
 
 mingw_deps:
+	# vendor/sbsms/cli/sbsms.exe
 	cp \
 		 /mingw64/bin/libFLAC-8.dll \
 		 /mingw64/bin/libfftw3f-3.dll \

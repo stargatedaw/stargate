@@ -93,13 +93,14 @@ INT_TO_NOTE = [
 TERMINAL = None
 PYTHON3 = sys.executable
 
-PAULSTRETCH_PATH = f"{MAJOR_VERSION}-paulstretch"
+PAULSTRETCH_PATH = os.path.join(
+    BIN_DIR,
+    f"{MAJOR_VERSION}-paulstretch",
+)
 
 if IS_WINDOWS:
     sbsms_util = os.path.join(
-        INSTALL_PREFIX,
-        "sgui",
-        "engine",
+        ENGINE_DIR,
         "sbsms.exe",
     )
 else:
@@ -125,7 +126,10 @@ MIDI_IN_DEVICES = []
 SAMPLE_RATE = None
 NYQUIST_FREQ = None
 
-PROJECT_HISTORY_SCRIPT = f"{MAJOR_VERSION}-project-recover"
+PROJECT_HISTORY_SCRIPT = os.path.join(
+    BIN_DIR,
+    f"{MAJOR_VERSION}-project-recover",
+)
 
 bad_chars = ["|", "\\", "~", "."]
 
@@ -155,7 +159,14 @@ for _terminal in ("x-terminal-emulator", "gnome-terminal", "konsole"):
         TERMINAL = _terminal
         break
 
-RUBBERBAND_PATH = which("rubberband")
+if IS_WINDOWS:
+    RUBBERBAND_PATH = os.path.join(
+        ENGINE_DIR,
+        'rubberband.exe',
+    )
+else:
+    RUBBERBAND_PATH = which("rubberband")
+
 
 
 class WinVolInfo:

@@ -4,6 +4,7 @@ import os
 
 # Running from the source repo
 if os.path.join("src", "sglib") in os.path.abspath(__file__):
+    IS_LOCAL_DEVEL = True
     INSTALL_PREFIX = os.path.abspath(
         os.path.join(
             os.path.dirname(__file__),
@@ -19,6 +20,7 @@ if os.path.join("src", "sglib") in os.path.abspath(__file__):
     BIN_DIR = os.path.join(INSTALL_PREFIX, 'scripts')
 # Running installed
 else:
+    IS_LOCAL_DEVEL = False
     INSTALL_PREFIX = os.path.abspath(
         os.path.join(
             os.path.dirname(__file__),
