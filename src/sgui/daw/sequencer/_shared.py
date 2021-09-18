@@ -60,10 +60,11 @@ def set_seq_snap(a_val=None):
     if a_val > 0:
         SEQ_QUANTIZE = True
         SEQ_LINES_ENABLED = False
+        SEQUENCER_QUANTIZE_PX = SEQUENCER_PX_PER_BEAT / f_divisor
     else:
         SEQ_QUANTIZE = False
         SEQ_LINES_ENABLED = False
-    SEQUENCER_QUANTIZE_PX = SEQUENCER_PX_PER_BEAT / f_divisor
+        SEQUENCER_QUANTIZE_PX = 1
     SEQUENCER_QUANTIZE_64TH = SEQUENCER_PX_PER_BEAT / 16.0
     SEQ_QUANTIZE_AMT = f_divisor
 
