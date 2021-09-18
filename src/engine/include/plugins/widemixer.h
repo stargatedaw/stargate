@@ -38,11 +38,13 @@ GNU General Public License for more details.
 #define WIDEMIXER_STEREO_EMPHASIS 9
 #define WIDEMIXER_DC_OFFSET 10
 #define WIDEMIXER_MUTE 11
+#define WIDEMIXER_BASS_MONO_LOW 12
+#define WIDEMIXER_BASS_MONO_HIGH 13
 
-#define WIDEMIXER_LAST_CONTROL_PORT 11
+#define WIDEMIXER_LAST_CONTROL_PORT 13
 /* must be 1 + highest value above
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
-#define WIDEMIXER_COUNT 12
+#define WIDEMIXER_COUNT 14
 
 #define WIDEMIXER_STEREO_MODE_STEREO 0
 #define WIDEMIXER_STEREO_MODE_LEFT 1
@@ -80,6 +82,8 @@ typedef struct {
     PluginData* bass_mono_on;
     PluginData* bass_mono;
     PluginData* bass_mono_solo;
+    PluginData* bass_mono_low;
+    PluginData* bass_mono_high;
     PluginData* mid_side;
     PluginData* dc_offset;
     PluginData* mute;

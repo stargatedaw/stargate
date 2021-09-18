@@ -31,6 +31,8 @@ WIDEMIXER_BASS_MONO_SOLO = 8
 WIDEMIXER_STEREO_EMPHASIS = 9
 WIDEMIXER_DC_OFFSET = 10
 WIDEMIXER_MUTE = 11
+WIDEMIXER_BASS_MONO_LOW = 12
+WIDEMIXER_BASS_MONO_HIGH = 13
 
 WIDEMIXER_PORT_MAP = {
     "Volume": WIDEMIXER_VOL_SLIDER,
@@ -128,6 +130,32 @@ class WideMixerPluginUI(AbstractPluginUI):
             500,
             250,
             KC_INTEGER,
+            self.port_dict,
+            None,
+        )
+        self.bass_mono_low = knob_control(
+            f_knob_size,
+            _("Low"),
+            WIDEMIXER_BASS_MONO_LOW,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -240,
+            240,
+            0,
+            KC_TENTH,
+            self.port_dict,
+            None,
+        )
+        self.bass_mono_high = knob_control(
+            f_knob_size,
+            _("High"),
+            WIDEMIXER_BASS_MONO_HIGH,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -240,
+            240,
+            0,
+            KC_TENTH,
             self.port_dict,
             None,
         )
@@ -249,6 +277,10 @@ class WideMixerPluginUI(AbstractPluginUI):
             self.bass_mono_knob.add_to_grid_layout(bass_mono_gridlayout, 0)
             bass_mono_vlayout.addWidget(self.bass_mono_on.control)
             bass_mono_vlayout.addWidget(self.bass_mono_solo.control)
+            bm_hi_lo_layout = QGridLayout()
+            self.in_vlayout.addLayout(bm_hi_lo_layout)
+            self.bass_mono_low.add_to_grid_layout(bm_hi_lo_layout, 0)
+            self.bass_mono_high.add_to_grid_layout(bm_hi_lo_layout, 1)
 
             self.in_vlayout.addItem(
                 QSpacerItem(1, 1, vPolicy=QSizePolicy.Policy.Expanding),
@@ -318,6 +350,8 @@ class WideMixerPluginUI(AbstractPluginUI):
             self.bass_mono_on.add_to_grid_layout(self.bass_mono_layout, 9)
             self.bass_mono_knob.add_to_grid_layout(self.bass_mono_layout, 10)
             self.bass_mono_solo.add_to_grid_layout(self.bass_mono_layout, 11)
+            self.bass_mono_low.add_to_grid_layout(self.bass_mono_layout, 12)
+            self.bass_mono_high.add_to_grid_layout(self.bass_mono_layout, 13)
 
             self.hlayout.addItem(
                 QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),

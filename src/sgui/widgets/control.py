@@ -99,7 +99,11 @@ class AbstractUiControl:
         elif self.val_conversion in (
         _shared.KC_DECIMAL, _shared.KC_TIME_DECIMAL,_shared.KC_HZ_DECIMAL):
             retval = (str(round(f_value * .01, 2)))
-        elif self.val_conversion in (_shared.KC_INTEGER, _shared.KC_INT_PITCH, _shared.KC_MILLISECOND):
+        elif self.val_conversion in (
+            _shared.KC_INTEGER,
+            _shared.KC_INT_PITCH,
+            _shared.KC_MILLISECOND,
+        ):
             retval = str(int(f_value))
         elif self.val_conversion == _shared.KC_PITCH:
             f_val = int(pitch_to_hz(f_value))

@@ -25,6 +25,8 @@ struct WMRunVars {
     int invert_mode;
     int dc_offset;
     SGFLT bass_mono_freq;
+    SGFLT bass_mono_low;
+    SGFLT bass_mono_high;
     SGFLT gain;
     SGFLT pan_law;
     SGFLT mid_side;
@@ -37,6 +39,12 @@ static void init_run_vars(struct WMRunVars* runvars, t_widemixer* plugin){
     if(runvars->bass_mono_on){
         runvars->bass_mono_solo = (int)(*plugin->bass_mono_solo);
         runvars->bass_mono_freq = (SGFLT)(*plugin->bass_mono);
+        runvars->bass_mono_low = f_db_to_linear_fast(
+            (*plugin->bass_mono_low) * 0.1f
+        );
+        runvars->bass_mono_high = f_db_to_linear_fast(
+            (*plugin->bass_mono_high) * 0.1f
+        );
     }
     runvars->invert_mode = (int)(*plugin->invert_mode);
     runvars->stereo_mode = (int)(*plugin->stereo_mode);
@@ -52,6 +60,7 @@ static SGFLT run_widemixer(
     int sample_num
 ){
     SGFLT tmp, mid, side[2];
+    t_svf2_filter* filter = &plugin->mono_modules->bass_mono_filter;
     while(
         *midi_event_pos < plugin->midi_event_count
         &&
@@ -166,36 +175,48 @@ static SGFLT run_widemixer(
             &plugin->mono_modules->bass_mono_filter.filter_kernels[0][1],
             plugin->buffers[1][sample_num]
         );
-
+        // 0.708 == -3dB
         if(runvars->bass_mono_solo){
             plugin->buffers[0][sample_num] = (
-                plugin->mono_modules->bass_mono_filter.filter_kernels[0][0].lp
+                filter->filter_kernels[0][0].lp
                 +
-                plugin->mono_modules->bass_mono_filter.filter_kernels[0][1].lp
-            );
+                filter->filter_kernels[0][1].lp
+            ) * runvars->bass_mono_low * 0.708;
             plugin->buffers[1][sample_num] = (
-                plugin->mono_modules->bass_mono_filter.filter_kernels[0][0].lp
+                filter->filter_kernels[0][0].lp
                 +
-                plugin->mono_modules->bass_mono_filter.filter_kernels[0][1].lp
-            );
+                filter->filter_kernels[0][1].lp
+            ) * runvars->bass_mono_low * 0.708;
         } else {
             plugin->buffers[0][sample_num] = (
-                plugin->mono_modules->bass_mono_filter.filter_kernels[0][0].lp
-                +
-                plugin->mono_modules->bass_mono_filter.filter_kernels[0][1].lp
-                +
-                plugin->mono_modules->bass_mono_filter.filter_kernels[0][0].bp
-                +
-                plugin->mono_modules->bass_mono_filter.filter_kernels[0][0].hp
+                (
+                    (
+                        filter->filter_kernels[0][0].lp
+                        +
+                        filter->filter_kernels[0][1].lp
+                    ) * runvars->bass_mono_low * 0.708
+                ) + (
+                    (
+                        filter->filter_kernels[0][0].bp
+                        +
+                        filter->filter_kernels[0][0].hp
+                    ) * runvars->bass_mono_high
+                )
             );
             plugin->buffers[1][sample_num] = (
-                plugin->mono_modules->bass_mono_filter.filter_kernels[0][0].lp
-                +
-                plugin->mono_modules->bass_mono_filter.filter_kernels[0][1].lp
-                +
-                plugin->mono_modules->bass_mono_filter.filter_kernels[0][1].bp
-                +
-                plugin->mono_modules->bass_mono_filter.filter_kernels[0][1].hp
+                (
+                    (
+                        filter->filter_kernels[0][0].lp
+                        +
+                        filter->filter_kernels[0][1].lp
+                    ) * runvars->bass_mono_low * 0.708
+                ) + (
+                    (
+                        filter->filter_kernels[0][1].bp
+                        +
+                        filter->filter_kernels[0][1].hp
+                    ) * runvars->bass_mono_high
+                )
             );
         }
 
@@ -270,6 +291,9 @@ void v_widemixer_connect_port(
         case WIDEMIXER_STEREO_EMPHASIS: plugin->mid_side = data; break;
         case WIDEMIXER_DC_OFFSET: plugin->dc_offset = data; break;
         case WIDEMIXER_MUTE: plugin->mute = data; break;
+        case WIDEMIXER_BASS_MONO_LOW: plugin->bass_mono_low = data; break;
+        case WIDEMIXER_BASS_MONO_HIGH: plugin->bass_mono_high = data; break;
+        default: assert(0); break;
     }
 }
 
@@ -489,6 +513,8 @@ PluginDescriptor *widemixer_plugin_descriptor(){
     set_pyfx_port(f_result, WIDEMIXER_STEREO_EMPHASIS, 0.0f, -100.0f, 100.0f);
     set_pyfx_port(f_result, WIDEMIXER_DC_OFFSET, 0.0f, 0.0f, 1.0f);
     set_pyfx_port(f_result, WIDEMIXER_MUTE, 0.0f, 0.0f, 1.0f);
+    set_pyfx_port(f_result, WIDEMIXER_BASS_MONO_LOW, 0.0f, -240.0f, 240.0f);
+    set_pyfx_port(f_result, WIDEMIXER_BASS_MONO_HIGH, 0.0f, -240.0f, 240.0f);
 
     f_result->cleanup = v_widemixer_cleanup;
     f_result->connect_port = v_widemixer_connect_port;
