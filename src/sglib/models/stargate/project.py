@@ -368,7 +368,12 @@ class SgProject(AbstractProject):
 
             if f_cmd is not None:
                 LOG.info("Running {}".format(" ".join(f_cmd)))
-                f_proc = subprocess.Popen(f_cmd)
+                if IS_WINDOWS:
+                    startupinfo = subprocess.STARTUPINFO()
+                    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                    f_proc = subprocess.Popen(f_cmd, startupinfo=startupinfo)
+                else:
+                    f_proc = subprocess.Popen(f_cmd)
                 return f_dest_path, f_uid, f_proc
             else:
                 return None

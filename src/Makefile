@@ -63,14 +63,18 @@ mingw_deps:
 	# vendor/sbsms/cli/sbsms.exe
 	cp \
 		 /mingw64/bin/libFLAC-8.dll \
+		 /mingw64/bin/libfftw3-3.dll \
 		 /mingw64/bin/libfftw3f-3.dll \
+		 /mingw64/bin/libgcc_s_seh-1.dll \
 		 /mingw64/bin/libogg-0.dll \
 		 /mingw64/bin/libopus-0.dll \
 		 /mingw64/bin/libportaudio.dll \
 		 /mingw64/bin/libportmidi.dll \
 		 /mingw64/bin/librubberband-2.dll \
+		 /mingw64/bin/libsamplerate-0.dll \
 		 /mingw64/bin/libsndfile-1.dll \
 		 /mingw64/bin/libssp-0.dll \
+		 /mingw64/bin/libstdc++-6.dll \
 		 /mingw64/bin/libwinpthread-1.dll \
 		 /mingw64/bin/libvorbis-0.dll \
 		 /mingw64/bin/libvorbisenc-2.dll \

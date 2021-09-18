@@ -91,7 +91,10 @@ INT_TO_NOTE = [
 ]
 
 TERMINAL = None
-PYTHON3 = sys.executable
+if IS_WINDOWS:
+    PYTHON3 = 'python.exe'
+else:
+    PYTHON3 = sys.executable
 
 PAULSTRETCH_PATH = os.path.join(
     BIN_DIR,
