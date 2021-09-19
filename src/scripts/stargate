@@ -20,8 +20,9 @@ def parse_args():
         nargs='?',
     )
     args = parser.parse_args()
-    assert os.path.basename(args.project_file) == 'stargate.project', \
-        f"File must be /path/to/stargate.project, got {args.project_file}"
+    if args.project_file is not None:
+        assert os.path.basename(args.project_file) == 'stargate.project', \
+            f"File must be /path/to/stargate.project, got {args.project_file}"
     return args
 
 def qt_message_handler(mode, context, message):
