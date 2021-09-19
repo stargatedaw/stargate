@@ -1,3 +1,4 @@
+#include "audiodsp/lib/clip.h"
 #include "daw.h"
 #include "files.h"
 
@@ -252,16 +253,19 @@ void v_daw_process_atm(
                     &f_plugin->atm_buffer[f_plugin->atm_count];
                 SGFLT val;
 
-                if(is_last_tick ||
-                   f_point->break_after ||
-                  (current_port->atm_pos == 0 && tick->tick < f_point->tick) ||
-                  (tick->tick == f_point->tick))
-                {
+                if(
+                    is_last_tick
+                    ||
+                    f_point->break_after
+                    || (
+                        current_port->atm_pos == 0
+                        &&
+                        tick->tick < f_point->tick
+                    ) ||
+                    tick->tick == f_point->tick
+                ){
                     val = f_point->val;
-                    assert(val >= 0.0f && val <= 127.0f);
-                }
-                else
-                {
+                } else {
                     next_point =
                         &current_port->points[current_port->atm_pos + 1];
                     SGFLT interpolate_pos =
@@ -269,21 +273,32 @@ void v_daw_process_atm(
                         // / (next_point->beat - f_point->beat);
                         * f_point->recip;
                     val = f_linear_interpolate(
-                        f_point->val, next_point->val, interpolate_pos);
-                    assert(val >= 0.0f && val <= 127.0f);
+                        f_point->val,
+                        next_point->val,
+                        interpolate_pos
+                    );
                 }
+                val = fclip(val, 0.0, 127.0);
 
-                if(f_plugin->uid == f_point->plugin &&
-                  (current_port->last_val != val || a_ts->is_first_period))
-                {
+                if(
+                    f_plugin->uid == f_point->plugin
+                    &&
+                    (current_port->last_val != val || a_ts->is_first_period)
+                ){
                     current_port->last_val = val;
                     SGFLT f_val = f_atm_to_ctrl_val(
-                        f_plugin->descriptor, f_point->port, val);
+                        f_plugin->descriptor,
+                        f_point->port,
+                        val
+                    );
                     v_ev_clear(f_buff_ev);
                     v_ev_set_atm(f_buff_ev, f_point->port, f_val);
                     f_buff_ev->tick = tick->sample;
                     v_set_control_from_atm(
-                        f_buff_ev, f_plugin->pool_uid, f_track);
+                        f_buff_ev,
+                        f_plugin->pool_uid,
+                        f_track
+                    );
                     ++f_plugin->atm_count;
                 }
 
