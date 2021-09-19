@@ -1270,15 +1270,17 @@ def splash_screen_opening(project_file):
     SPLASH_SCREEN.status_update(f_msg)
 
 def _load_project(project_file):
-    if not project_file:
+    if project_file:
+        util.set_file_setting("last-project", project_file)
+    else:
         project_file = util.get_file_setting("last-project", str, None)
-    if not project_file:
-        project_file = os.path.join(
-            constants.DEFAULT_PROJECT_DIR,
-            "default-project",
-            f"{constants.MAJOR_VERSION}.project",
-        )
-        LOG.info(f"No default project at '{project_file}'")
+        if not project_file:
+            project_file = os.path.join(
+                constants.DEFAULT_PROJECT_DIR,
+                "default-project",
+                f"{constants.MAJOR_VERSION}.project",
+            )
+            LOG.info(f"No default project at '{project_file}'")
 
     if (
         os.path.exists(project_file)
