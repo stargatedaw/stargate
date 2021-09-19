@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 %make_install
 
 %post
+update-mime-database /usr/share/mime/  || true
+xdg-mime default stargate.desktop text/stargate.project || true
+
 %preun
 
 %files

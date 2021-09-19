@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
+  <mime-type type="text/stargate.project">
+    <comment>Stargate DAW project file</comment>
+    <glob pattern="stargate.project"/>
+  </mime-type>
+</mime-info>
