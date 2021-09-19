@@ -122,8 +122,14 @@ Depends: {depends}
 postinst = """\
 #!/bin/sh
 
+# Disabled for now because it breaks Raspbian
 # Attempt to give the binary permissions to use realtime scheduling
-setcap CAP_SYS_NICE=+eip /usr/bin/stargate-engine* || echo "setcap: $?"
+# setcap CAP_SYS_NICE=+eip /usr/bin/stargate-engine* || echo "setcap: $?"
+
+# Create file association for stargate.project
+update-mime-database /usr/share/mime/  || true
+xdg-mime default stargate.desktop text/stargate.project || true
+
 """
 
 if args.plat_flags is None:
@@ -140,10 +146,9 @@ postinst_path = os.path.join(
     DEBIAN,
     'postinst',
 )
-# Disable for now because it breaks Raspbian
-#with open(postinst_path, 'w') as f:
-#    f.write(postinst)
-#os.chmod(postinst_path, 0o755)
+with open(postinst_path, 'w') as f:
+    f.write(postinst)
+os.chmod(postinst_path, 0o755)
 retcode = os.system(f"dpkg-deb --build --root-owner-group {root}")
 assert not retcode, retcode
 try:
