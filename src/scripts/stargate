@@ -1,17 +1,28 @@
 #!/usr/bin/env python3
 
+import argparse
 import os
 import signal
 import subprocess
 import sys
+import time
 
 stargate_version = "stargate"
 
-# When respawning, give the old process a chance to garbage collect first
-if "--delay" in sys.argv:
-    sys.argv.remove("--delay")
-    import time
-    time.sleep(2)
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Launch Stargate DAW",
+    )
+    parser.add_argument(
+        'project_file',
+        default=None,
+        help='The project file to open',
+        nargs='?',
+    )
+    args = parser.parse_args()
+    assert os.path.basename(args.project_file) == 'stargate.project', \
+        f"File must be /path/to/stargate.project, got {args.project_file}"
+    return args
 
 def qt_message_handler(mode, context, message):
     line = (
@@ -29,7 +40,7 @@ def qt_message_handler(mode, context, message):
     else:
         LOG.info(line)
 
-def start_stargate():
+def start_stargate(project_file):
     global LOG, QtCore
     from sglib.log import LOG, setup_logging
     setup_logging()
@@ -51,45 +62,15 @@ def start_stargate():
     from sgui.splash import SplashScreen
     splash_screen = SplashScreen(scaler.y_res)
     from sgui.main import main
-    main(app, splash_screen, scaler)
+    main(app, splash_screen, scaler, project_file)
 
-# Run the engine
-if len(sys.argv) > 1:
-    def sig_handle(a_1=None, a_2=None):
-        try:
-            f_proc.kill()
-        except Exception as ex:
-            print(f"Exception while stopping engine: {ex}")
+def main():
+    # When respawning, give the old process a chance to garbage collect first
+    if "--delay" in sys.argv:
+        sys.argv.remove("--delay")
+        time.sleep(1)
 
-    signal.signal(signal.SIGTERM, sig_handle)
-    signal.signal(signal.SIGINT, sig_handle)
-    signal.signal(signal.SIGABRT, sig_handle)
-
-    engine_exe = f"{stargate_version}-engine"
-    # local development
-    f_path = os.path.join(
-        os.path.dirname(__file__),
-        "..",
-        "engine",
-        engine_exe
-    )
-    if not os.path.exists(f_path):
-        # system
-        print(
-            "Could not detect local development engine, trying system engine"
-        )
-        f_path = os.path.join(
-            os.path.dirname(__file__),
-            engine_exe
-        )
-    f_path = os.path.abspath(f_path)
-    cmd_args = [f_path] + sys.argv[1:]
-    print(f"Running command {cmd_args}")
-    f_proc = subprocess.Popen(cmd_args)
-    f_proc.wait()
-    print(f"helper script:  f_proc returned with {f_proc.returncode}")
-    sys.exit(f_proc.returncode)
-else:  # Run the UI, which will run the engine
+    args = parse_args()
     f_prefix_dir = os.path.dirname(__file__)
     f_path = os.path.join(
         f_prefix_dir,
@@ -99,7 +80,7 @@ else:  # Run the UI, which will run the engine
     print(f'Adding PYTHONPATH {f_path}')
     sys.path.insert(0, f_path)
     try:
-        start_stargate()
+        start_stargate(args.project_file)
     except ImportError:
         print(
             "Did not detect local development environment, trying "
@@ -115,5 +96,7 @@ else:  # Run the UI, which will run the engine
         f_path = os.path.abspath(f_path)
         print(f'Adding PYTHONPATH {f_path}')
         sys.path.insert(0, f_path)
-        start_stargate()
+        start_stargate(args.project_file)
 
+if __name__ == "__main__":
+    main()

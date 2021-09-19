@@ -1262,14 +1262,104 @@ def respawn():
     LOG.info("Parent UI process exiting")
 
 
-def splash_screen_opening(default_project_file):
-    if len(default_project_file) > 50:
-        f_msg = "Opening\n..." + default_project_file[-50:]
+def splash_screen_opening(project_file):
+    if len(project_file) > 50:
+        f_msg = "Opening\n..." + project_file[-50:]
     else:
-        f_msg = "Opening\n" + default_project_file
+        f_msg = "Opening\n" + project_file
     SPLASH_SCREEN.status_update(f_msg)
 
-def main(app, splash_screen, scaler):
+def _load_project(project_file):
+    if not project_file:
+        project_file = util.get_file_setting("last-project", str, None)
+    if not project_file:
+        project_file = os.path.join(
+            constants.DEFAULT_PROJECT_DIR,
+            "default-project",
+            f"{constants.MAJOR_VERSION}.project",
+        )
+        LOG.info(f"No default project at '{project_file}'")
+
+    if (
+        os.path.exists(project_file)
+        and
+        not os.access(os.path.dirname(project_file), os.W_OK)
+    ):
+        QMessageBox.warning(
+            MAIN_WINDOW.widget,
+            _("Error"),
+            _(
+                "You do not have read+write permissions to {}, please correct "
+                "this and restart Stargate"
+            ).format(
+                os.path.dirname(project_file),
+            ),
+        )
+
+        MAIN_WINDOW.prepare_to_quit()
+
+    splash_screen_opening(project_file)
+
+    if os.path.exists(project_file):
+        try:
+            minor_version = util.META_DOT_JSON['version']['minor']
+            with open(project_file) as f:
+                project_version = f.read().strip()
+            if (
+                "placeholder" in project_version
+                or
+                minor_version >= project_version
+            ):
+                with open(project_file, 'w') as f:
+                    f.write(minor_version)
+            else:
+                msg = _(
+                    "Please update to the latest version of Stargate.  "
+                    "This project {} was created with '{}', however, "
+                    "you are using version '{}'"
+                ).format(
+                    project_file,
+                    project_version,
+                    minor_version,
+                )
+                LOG.error(msg)
+                QMessageBox.warning(
+                    MAIN_WINDOW.widget,
+                    _("Error"),
+                    msg,
+                )
+                exit(1)
+
+            global_open_project(project_file)
+        except Exception as ex:
+            LOG.exception(ex)
+            QMessageBox.warning(
+                MAIN_WINDOW.widget,
+                _("Error"),
+                _(
+                    "Error opening project: {}\n{}\n"
+                    "Opening project recovery dialog.  If the problem "
+                    "persists or the project can't be recovered, you may "
+                    "need to delete your settings and/or default project "
+                    "in \n{}"
+                ).format(
+                    project_file,
+                    ex,
+                    util.HOME
+                )
+            )
+            constants.PROJECT.show_project_history()
+            MAIN_WINDOW.prepare_to_quit()
+    else:
+        global_new_project(project_file)
+
+
+def main(
+    app,
+    splash_screen,
+    scaler,
+    project_file,
+):
     global MAIN_WINDOW, SPLASH_SCREEN, RESPAWN
     major_version = util.META_DOT_JSON['version']['major']
     minor_version = util.META_DOT_JSON['version']['minor']
@@ -1297,7 +1387,6 @@ def main(app, splash_screen, scaler):
         if f_answer == QMessageBox.StandardButton.Cancel:
             sys.exit(1)
         kill_engine(pid)
-    default_project_file = util.get_file_setting("last-project", str, None)
     RESPAWN = False
 
     if theme.ICON_PATH:
@@ -1319,86 +1408,7 @@ def main(app, splash_screen, scaler):
         )
         MAIN_WINDOW.prepare_to_quit()
 
-    if not default_project_file:
-        default_project_file = os.path.join(
-            constants.DEFAULT_PROJECT_DIR,
-            "default-project",
-            f"{constants.MAJOR_VERSION}.project",
-        )
-        LOG.info(f"No default project at '{default_project_file}'")
-
-    if (
-        os.path.exists(default_project_file)
-        and
-        not os.access(os.path.dirname(default_project_file), os.W_OK)
-    ):
-        QMessageBox.warning(
-            MAIN_WINDOW.widget,
-            _("Error"),
-            _(
-                "You do not have read+write permissions to {}, please correct "
-                "this and restart Stargate"
-            ).format(
-                os.path.dirname(default_project_file),
-            ),
-        )
-
-        MAIN_WINDOW.prepare_to_quit()
-
-    splash_screen_opening(default_project_file)
-
-    if os.path.exists(default_project_file):
-        try:
-            minor_version = util.META_DOT_JSON['version']['minor']
-            with open(default_project_file) as f:
-                project_version = f.read().strip()
-            if (
-                "placeholder" in project_version
-                or
-                minor_version >= project_version
-            ):
-                with open(default_project_file, 'w') as f:
-                    f.write(minor_version)
-            else:
-                msg = _(
-                    "Please update to the latest version of Stargate.  "
-                    "This project {} was created with '{}', however, "
-                    "you are using version '{}'"
-                ).format(
-                    default_project_file,
-                    project_version,
-                    minor_version,
-                )
-                LOG.error(msg)
-                QMessageBox.warning(
-                    MAIN_WINDOW.widget,
-                    _("Error"),
-                    msg,
-                )
-                exit(1)
-
-            global_open_project(default_project_file)
-        except Exception as ex:
-            LOG.exception(ex)
-            QMessageBox.warning(
-                MAIN_WINDOW.widget,
-                _("Error"),
-                _(
-                    "Error opening project: {}\n{}\n"
-                    "Opening project recovery dialog.  If the problem "
-                    "persists or the project can't be recovered, you may "
-                    "need to delete your settings and/or default project "
-                    "in \n{}"
-                ).format(
-                    default_project_file,
-                    ex,
-                    util.HOME
-                )
-            )
-            constants.PROJECT.show_project_history()
-            MAIN_WINDOW.prepare_to_quit()
-    else:
-        global_new_project(default_project_file)
+    _load_project(project_file)
 
     shared.set_window_title()
     SPLASH_SCREEN.status_update(_("Showing main window"))
