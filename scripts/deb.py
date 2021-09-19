@@ -146,9 +146,9 @@ postinst_path = os.path.join(
     DEBIAN,
     'postinst',
 )
-with open(postinst_path, 'w') as f:
-    f.write(postinst)
-os.chmod(postinst_path, 0o755)
+# with open(postinst_path, 'w') as f:
+#     f.write(postinst)
+# os.chmod(postinst_path, 0o755)
 retcode = os.system(f"dpkg-deb --build --root-owner-group {root}")
 assert not retcode, retcode
 try:
