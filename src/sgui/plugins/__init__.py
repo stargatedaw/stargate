@@ -154,6 +154,7 @@ PORTMAP_DICT = {
     "X-Fade": xfade.XFADE_PORT_MAP,
     "SG Vocoder": vocoder.SG_VOCODER_PORT_MAP,
     "SG Limiter": limiter.SG_LIM_PORT_MAP,
+    "Wide Mixer": widemixer.WIDEMIXER_PORT_MAP,
 }
 
 def get_plugin_uid_by_name(a_name):
