@@ -233,7 +233,8 @@ void v_init_worker_threads(
         } else {
             fprintf(
                 stderr,
-                "Scheduling %i was not successfully applied: %i, %i\n",
+                "WARNING: Scheduling %i was not successfully "
+                "applied: %i, %i\n",
                 RT_SCHED,
                 f_applied_policy,
                 param2.__sched_priority

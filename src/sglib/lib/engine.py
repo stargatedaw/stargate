@@ -175,24 +175,35 @@ def run_engine(cmd):
         cmd,
         **kwargs
     )
-    for log_func, fd in (
-        (LOG.info, ENGINE_SUBPROCESS.stdout),
-        (LOG.error, ENGINE_SUBPROCESS.stderr),
+    for args in (
+        (LOG.info, ENGINE_SUBPROCESS.stdout, "stdout"),
+        (_stderr_handler, ENGINE_SUBPROCESS.stderr, "stderr"),
     ):
         t = threading.Thread(
             target=_log_fd,
-            args=(log_func, fd),
+            args=args,
         )
         t.daemon = True
         t.start()
 
-def _log_fd(log_func, fd):
+def _stderr_handler(line: str):
+    lower = line.lower()
+    if (
+        "WARNING" in line
+        or
+        any(x in lower for x in ("alsa", "jack"))
+    ):
+        LOG.warn(line)
+    else:
+        LOG.error(line)
+
+def _log_fd(log_func, fd, name):
     try:
         for line in fd:
             line = line.strip()
             if line:
                 log_func(f'ENGINE PROC: "{line}"')
-        LOG.info(f"Engine finished writing to {log_func}")
+        LOG.info(f"Engine finished writing to {name}")
     except Exception as ex:
         LOG.exception(ex)
 

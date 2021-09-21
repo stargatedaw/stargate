@@ -188,7 +188,7 @@ NO_OPTIMIZATION int open_audio_device(
     if((int)f_stream_info->sampleRate != (int)config->sample_rate){
         fprintf(
             stderr,
-            "Warning: Samplerate reported by the device (%f)  does not "
+            "WARNING: Samplerate reported by the device (%f)  does not "
             "match the selected sample rate %f.\n",
             f_stream_info->sampleRate,
             config->sample_rate
@@ -256,7 +256,8 @@ int portaudioCallback(
 
     if(unlikely(framesPerBuffer > FRAMES_PER_BUFFER)){
         /*
-        printf(
+        fprintf(
+            stderr,
             "WARNING:  Audio device requested buffer size %i, "
             "truncating to max buffer size:  %i\n",
             (int)framesPerBuffer,

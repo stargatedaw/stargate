@@ -140,8 +140,10 @@ void midiReceive(
 
     if(self->midiEventReadIndex == self->midiEventWriteIndex + 1)
     {
-        printf("Warning: MIDI event buffer overflow!  "
-                "ignoring incoming event\n");
+        fprintf(
+            stderr,
+            "WARNING: MIDI event buffer overflow, ignoring incoming event\n"
+        );
         return;
     }
 

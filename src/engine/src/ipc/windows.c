@@ -108,7 +108,7 @@ void ipc_client_send(char* message){
     if(n == 0){
         fprintf(
             stderr,
-            "Warning: ipc_client_send select() returned 0, "
+            "WARNING: ipc_client_send select() returned 0, "
             "UI did not respond\n"
         );
         return;
@@ -116,7 +116,7 @@ void ipc_client_send(char* message){
     if(n == -1){
         fprintf(
             stderr,
-            "Warning: ipc_client_send select() returned -1, %i\n",
+            "WARNING: ipc_client_send select() returned -1, %i\n",
             WSAGetLastError()
         );
         return;
