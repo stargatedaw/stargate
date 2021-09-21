@@ -48,8 +48,8 @@ def show(event):
         copy_sequence_action = menu.addAction(_("Copy Region"))
         copy_sequence_action.triggered.connect(copy_sequence)
         if shared.SEQUENCER.sequence_clipboard:
-            insert_sequence_action = menu.addAction(_("Insert Region"))
-            insert_sequence_action.triggered.connect(insert_sequence)
+            insert_region_action = menu.addAction(_("Insert Region"))
+            insert_region_action.triggered.connect(insert_region)
     menu.exec(QCursor.pos())
 
 def header_time_modify():
@@ -333,7 +333,7 @@ def header_loop_end():
 def copy_sequence():
     sequence_start = shared.CURRENT_SEQUENCE.loop_marker.start_beat
     sequence_end = shared.CURRENT_SEQUENCE.loop_marker.beat
-    sequence_length = sequence_end - sequence_start
+    region_length = sequence_end - sequence_start
     item_list = [
         x.audio_item.clone()
         for x in shared.SEQUENCER.get_sequence_items()
@@ -347,14 +347,14 @@ def copy_sequence():
     for point in atm_list:
         point.beat -= sequence_start
     shared.SEQUENCER.sequence_clipboard = (
-        sequence_length,
+        region_length,
         item_list,
         atm_list,
     )
 
-def insert_sequence():
+def insert_region():
     (
-        sequence_length,
+        region_length,
         item_list,
         atm_list,
     ) = shared.SEQUENCER.sequence_clipboard
@@ -362,7 +362,11 @@ def insert_sequence():
     atm_list = [x.clone() for x in atm_list]
     shared.CURRENT_SEQUENCE.insert_space(
         shared.SEQUENCER.header_event_pos,
-        sequence_length,
+        region_length,
+    )
+    shared.ATM_SEQUENCE.insert_space(
+        shared.SEQUENCER.header_event_pos,
+        region_length,
     )
     for item in item_list:
         item.start_beat += shared.SEQUENCER.header_event_pos
@@ -370,6 +374,7 @@ def insert_sequence():
     for point in atm_list:
         point.beat += shared.SEQUENCER.header_event_pos
         shared.ATM_SEQUENCE.add_point(point)
+    # Should this come after saving?
     shared.SEQUENCER.automation_save_callback()
     constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
     constants.DAW_PROJECT.commit(_("Insert sequence"))

@@ -6,8 +6,15 @@ from sglib.lib.translate import _
 
 class DawAtmPoint:
     def __init__(
-            self, a_beat, a_port_num, a_cc_val, a_index, a_plugin_index,
-            a_break_after=0, a_curve=0.0):
+        self,
+        a_beat,
+        a_port_num,
+        a_cc_val,
+        a_index,
+        a_plugin_index,
+        a_break_after=0,
+        a_curve=0.0,
+    ):
         self.beat = round(float(a_beat), 4)
         self.port_num = int(a_port_num)
         self.cc_val = round(float(a_cc_val), 4)

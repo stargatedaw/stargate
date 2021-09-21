@@ -28,6 +28,10 @@ class DawAtmRegion:
         f_result.append(f_list)
         return f_result
 
+    def insert_space(self, start, length):
+        for point in (x for x in self.points if x.beat >= start):
+            point.beat += length
+
     def copy_range_all(self, a_start, a_end):
         return [
             x.clone()
