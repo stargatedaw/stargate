@@ -46,22 +46,19 @@ class preset_manager_widget:
         self.layout.addWidget(self.presets_label)
         self.layout.setContentsMargins(3, 3, 3, 3)
         self.program_combobox = QComboBox()
-        self.program_combobox.setEditable(True)
         self.program_combobox.setMinimumWidth(300)
         self.layout.addWidget(self.program_combobox)
-        self.save_button = QPushButton("Save")
-        self.save_button.setToolTip(
-            _("Save the current settings to a preset.  "
-            "Plugin settings are saved to the project automatically\n"
-            "when you close the plugin window, this button is only for "
-            "presets."),
-        )
-        self.save_button.pressed.connect(self.save_presets)
-        self.layout.addWidget(self.save_button)
         self.more_button = QPushButton(_("Menu"))
 
         self.more_menu = QMenu(self.more_button)
 
+        save_preset_action = self.more_menu.addAction(_("Save Preset"))
+        save_preset_action.triggered.connect(self.save_preset)
+        save_preset_as_action = self.more_menu.addAction(
+            _("Save Preset As...")
+        )
+        save_preset_as_action.triggered.connect(self.save_preset_as)
+        self.more_menu.addSeparator()
         f_new_bank_action = self.more_menu.addAction(_("New Bank..."))
         f_new_bank_action.triggered.connect(self.on_new_bank)
         f_reload_bank_action = self.more_menu.addAction(_("Reload Bank..."))
@@ -302,13 +299,61 @@ class preset_manager_widget:
                 self.presets_delimited[f_name] = f_arr[1:]
                 self.program_combobox.addItem(f_name)
 
-    def save_presets(self):
+    def save_preset_as(self):
+        def ok_handler():
+            preset_name = str(f_lineedit.text())
+            preset_name = util.remove_bad_chars(preset_name).strip()
+            if not preset_name:
+                QMessageBox.warning(
+                    self.group_box,
+                    _("Error"),
+                    _("You must name the preset"),
+                )
+                return
+            LOG.info(f"Saving preset '{preset_name}'")
+            f_result_values = []
+            for k in sorted(self.controls.keys()):
+                f_control = self.controls[k]
+                f_result_values.append(
+                    "{}:{}".format(f_control.port_num, f_control.get_value())
+                )
+            if self.configure_dict is not None:
+                for k in self.configure_dict.keys():
+                    v = self.configure_dict[k]
+                    f_result_values.append(
+                        "c:{}:{}".format(k, v.replace("|", ":")))
+
+            self.presets_delimited[preset_name] = f_result_values
+            self.commit_presets()
+            self.suppress_change = True
+            self.program_combobox.setCurrentIndex(
+                self.program_combobox.findText(preset_name),
+            )
+            self.suppress_change = False
+            f_dialog.close()
+
+        f_dialog = QDialog(self.group_box)
+        f_dialog.setWindowTitle(_("Save Preset"))
+        f_groupbox_layout = QGridLayout(f_dialog)
+        f_groupbox_layout.addWidget(QLabel(_("Name")), 0, 0)
+        f_lineedit = QLineEdit()
+        f_groupbox_layout.addWidget(f_lineedit, 0, 1, 1, 2)
+        f_sync_button = QPushButton(_("OK"))
+        f_sync_button.pressed.connect(ok_handler)
+        f_cancel_button = QPushButton(_("Cancel"))
+        f_cancel_button.pressed.connect(f_dialog.close)
+        f_groupbox_layout.addWidget(f_cancel_button, 2, 1)
+        f_groupbox_layout.addWidget(f_sync_button, 2, 2)
+        f_dialog.exec()
+
+    def save_preset(self):
         LOG.info("saving preset")
         f_index = self.program_combobox.currentIndex()
         f_preset_name = str(self.program_combobox.currentText())
         if not f_index and not f_preset_name:
             QMessageBox.warning(
-                self.group_box, _("Error"),
+                self.group_box,
+                _("Error"),
                 _("You must name the preset"))
             return
         f_result_values = []
@@ -326,7 +371,8 @@ class preset_manager_widget:
         self.commit_presets()
         self.suppress_change = True
         self.program_combobox.setCurrentIndex(
-            self.program_combobox.findText(f_preset_name))
+            self.program_combobox.findText(f_preset_name),
+        )
         self.suppress_change = False
 
     def commit_presets(self):
