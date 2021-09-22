@@ -33,7 +33,7 @@ if True:  # PyQt
                 f"The platform you are using does not support Qt HiDpi: {ex}",
             )
     else:
-        LOG.info("Using PyQt5")
+        LOG.info("Using PyQt6")
         def qt_event_pos(x):
             if hasattr(x, 'pos'):
                 return x.pos()
