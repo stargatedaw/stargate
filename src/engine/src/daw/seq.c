@@ -5,24 +5,19 @@
 #include "files.h"
 
 
-void v_daw_set_is_soloed(t_daw * self)
-{
-    int f_i = 0;
+void v_daw_set_is_soloed(t_daw * self){
+    int f_i;
     self->is_soloed = 0;
 
-    while(f_i < DN_TRACK_COUNT)
-    {
-        if(self->track_pool[f_i]->solo)
-        {
+    for(f_i = 0; f_i < DN_TRACK_COUNT; ++f_i){
+        if(self->track_pool[f_i]->solo){
             self->is_soloed = 1;
             break;
         }
-        ++f_i;
     }
 }
 
-void v_daw_set_loop_mode(t_daw * self, int a_mode)
-{
+void v_daw_set_loop_mode(t_daw * self, int a_mode){
     self->loop_mode = a_mode;
 }
 

@@ -95,24 +95,20 @@ void v_daw_offline_render(
 
         v_daw_run_engine(f_block_size, f_buffer, NULL);
 
-        if(a_stem)
-        {
-            for(f_i2 = 0; f_i2 < f_stem_count; ++f_i2)
-            {
+        if(a_stem){
+            for(f_i2 = 0; f_i2 < f_stem_count; ++f_i2){
                 f_size = 0;
                 int f_track_num = f_tps[f_i2];
                 SGFLT ** f_track_buff = self->track_pool[f_track_num]->buffers;
                 /*Interleave the samples...*/
-                for(f_i = 0; f_i < f_block_size; ++f_i)
-                {
+                for(f_i = 0; f_i < f_block_size; ++f_i){
                     f_output[f_size] = f_track_buff[0][f_i];
                     ++f_size;
                     f_output[f_size] = f_track_buff[1][f_i];
                     ++f_size;
                 }
 
-                if(a_create_file)
-                {
+                if(a_create_file){
                     sg_write_audio(f_stems[f_i2], f_output, f_block_size);
                 }
             }
@@ -120,16 +116,14 @@ void v_daw_offline_render(
 
         f_size = 0;
         /*Interleave the samples...*/
-        for(f_i = 0; f_i < f_block_size; ++f_i)
-        {
+        for(f_i = 0; f_i < f_block_size; ++f_i){
             f_output[f_size] = f_buffer[0][f_i];
             ++f_size;
             f_output[f_size] = f_buffer[1][f_i];
             ++f_size;
         }
 
-        if(a_create_file)
-        {
+        if(a_create_file){
             sg_write_audio(f_sndfile, f_output, f_block_size);
         }
 
@@ -145,12 +139,9 @@ void v_daw_offline_render(
 
     printf("Realtime: %f\n", f_realtime);
 
-    if(f_elapsed > 0.0f)
-    {
+    if(f_elapsed > 0.0f){
         printf("Ratio:  %f : 1\n\n", f_realtime / f_elapsed);
-    }
-    else
-    {
+    } else {
         printf("Ratio:  infinity : 1");
     }
 
@@ -159,10 +150,8 @@ void v_daw_offline_render(
     v_daw_set_playback_mode(self, PLAYBACK_MODE_OFF, a_start_beat, 0);
     v_daw_set_loop_mode(self, f_old_loop_mode);
 
-    if(a_stem)
-    {
-        for(f_i2 = 0; f_i2 < f_stem_count; ++f_i2)
-        {
+    if(a_stem){
+        for(f_i2 = 0; f_i2 < f_stem_count; ++f_i2){
             sf_close(f_stems[f_i2]);
         }
     }
@@ -176,12 +165,9 @@ void v_daw_offline_render(
 
     char f_tmp_finished[1024];
 
-    if(a_stem)
-    {
+    if(a_stem){
         sprintf(f_tmp_finished, "%s/finished", a_file_out);
-    }
-    else
-    {
+    } else {
         sprintf(f_tmp_finished, "%s.finished", a_file_out);
     }
 
@@ -196,25 +182,21 @@ void v_daw_offline_render(
 
 void v_daw_offline_render_prep(t_daw * self){
     printf("Warming up plugins for offline rendering...\n");
-    int f_i = 0;
+    int f_i;
+    int f_i2;
     t_pytrack * f_track;
     t_plugin * f_plugin;
 
-    while(f_i < DN_TRACK_COUNT)
-    {
+    for(f_i = 0; f_i < DN_TRACK_COUNT; ++f_i){
         f_track = self->track_pool[f_i];
-        int f_i2 = 0;
-        while(f_i2 < MAX_PLUGIN_TOTAL_COUNT)
-        {
+        for(f_i2 = 0; f_i2 < MAX_PLUGIN_TOTAL_COUNT; ++f_i2){
             f_plugin = f_track->plugins[f_i2];
-            if(f_plugin && f_plugin->descriptor->offline_render_prep)
-            {
+            if(f_plugin && f_plugin->descriptor->offline_render_prep){
                 f_plugin->descriptor->offline_render_prep(
-                    f_plugin->plugin_handle);
+                    f_plugin->plugin_handle
+                );
             }
-            ++f_i2;
         }
-        ++f_i;
     }
     printf("Finished warming up plugins\n");
 }
