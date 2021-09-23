@@ -375,9 +375,8 @@ def on_ready():
     # Ensure that loop mode is restored in the engine
     # to the same setting as the UI, since this is not part
     # of the saved data
-    TRANSPORT.on_loop_mode_changed(
-        TRANSPORT.loop_mode_checkbox.checkState(),
-    )
+    check_state = TRANSPORT.loop_mode_checkbox.checkState()
+    TRANSPORT.on_loop_mode_changed(check_state)
 
 def get_mixer_peak_meters():
     for k, v in MIXER_WIDGET.tracks.items():

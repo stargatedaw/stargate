@@ -304,7 +304,10 @@ class TransportWidget(AbstractTransportWidget):
 
     def on_loop_mode_changed(self, a_loop_mode):
         # The states we expect are 0 or 2, not 0 or 1
-        a_loop_mode = 1 if a_loop_mode else 0
+        if a_loop_mode in (0, QtCore.Qt.CheckState.Unchecked):
+            a_loop_mode = 0
+        else:
+            a_loop_mode = 1
         if not self.suppress_osc:
             constants.DAW_PROJECT.ipc().set_loop_mode(a_loop_mode)
 
