@@ -118,7 +118,7 @@ clean:
 	# Remove all temporary files
 	rm -rf $(NAME)* \
 		html/* *.gcda *.gcno *.out *.out.* pahole.txt \
-		profile.txt bench.out vgcore*
+		profile.txt bench.out vgcore* test.wav*
 
 debug:
 	# Compile the binary with the appropriate flags to debug in GDB

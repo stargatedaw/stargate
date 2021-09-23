@@ -7,11 +7,9 @@
 #include "audiodsp/modules/filter/svf.h"
 
 
-void v_svf_reset(t_state_variable_filter * a_svf)
-{
-    int f_i = 0;
-    while(f_i < SVF_MAX_CASCADE)
-    {
+void v_svf_reset(t_state_variable_filter * a_svf){
+    int f_i;
+    for(f_i = 0; f_i < SVF_MAX_CASCADE; ++f_i){
         a_svf->filter_kernels[f_i].bp = 0.0f;
         a_svf->filter_kernels[f_i].bp_m1 = 0.0f;
         a_svf->filter_kernels[f_i].filter_input = 0.0f;
@@ -19,7 +17,26 @@ void v_svf_reset(t_state_variable_filter * a_svf)
         a_svf->filter_kernels[f_i].hp = 0.0f;
         a_svf->filter_kernels[f_i].lp = 0.0f;
         a_svf->filter_kernels[f_i].lp_m1 = 0.0f;
-        ++f_i;
+    }
+}
+
+void v_svf_set_output(t_state_variable_filter * a_svf, SGFLT value){
+    int f_i;
+    SGFLT output;
+    for(f_i = 0; f_i < SVF_MAX_CASCADE; ++f_i){
+        a_svf->filter_kernels[f_i].bp = value;
+        a_svf->filter_kernels[f_i].bp_m1 = value;
+        a_svf->filter_kernels[f_i].filter_input = value;
+        a_svf->filter_kernels[f_i].filter_last_input = value;
+        a_svf->filter_kernels[f_i].hp = value;
+        a_svf->filter_kernels[f_i].lp = value;
+        a_svf->filter_kernels[f_i].lp_m1 = value;
+    }
+    for(f_i = 0; f_i < 10; ++f_i){
+        output = v_svf_run_2_pole_lp(a_svf, value);
+        if(output == value){
+            break;
+        }
     }
 }
 
@@ -31,32 +48,30 @@ void v_svf_reset(t_state_variable_filter * a_svf)
  * function pointer.  a_in is returned unmodified.
  */
 SGFLT v_svf_run_no_filter(
-    t_state_variable_filter* a_svf, SGFLT a_in)
-{
+    t_state_variable_filter* a_svf,
+    SGFLT a_in
+){
     return a_in;
 }
 
-void v_svf_set_eq(t_state_variable_filter* a_svf, SGFLT a_gain)
-{
-    if(a_gain != (a_svf->gain_db))
-    {
+void v_svf_set_eq(t_state_variable_filter* a_svf, SGFLT a_gain){
+    if(a_gain != (a_svf->gain_db)){
         a_svf->gain_db = a_gain;
         a_svf->gain_linear = f_db_to_linear_fast(a_gain);
     }
 }
 
-void v_svf_set_eq4(t_state_variable_filter* a_svf,
-        SGFLT a_gain)
-{
-    if(a_gain != (a_svf->gain_db))
-    {
+void v_svf_set_eq4(
+    t_state_variable_filter* a_svf,
+    SGFLT a_gain
+){
+    if(a_gain != a_svf->gain_db){
         a_svf->gain_db = a_gain;
         a_svf->gain_linear = f_db_to_linear_fast((a_gain * .05));
     }
 }
 
-void g_svf_filter_kernel_init(t_svf_kernel * f_result)
-{
+void g_svf_filter_kernel_init(t_svf_kernel * f_result){
     f_result->bp = 0.0f;
     f_result->hp = 0.0f;
     f_result->lp = 0.0f;
@@ -79,56 +94,29 @@ void g_svf_filter_kernel_init(t_svf_kernel * f_result)
  * SVF_FILTER_TYPE_HP 1
  * SVF_FILTER_TYPE_BP 2
  */
-fp_svf_run_filter svf_get_run_filter_ptr(int a_cascades, int a_filter_type)
-{
-    /*Lowpass*/
-    if((a_cascades == 1) && (a_filter_type == SVF_FILTER_TYPE_LP))
-    {
+fp_svf_run_filter svf_get_run_filter_ptr(int a_cascades, int a_filter_type){
+    if((a_cascades == 1) && (a_filter_type == SVF_FILTER_TYPE_LP)){
         return v_svf_run_2_pole_lp;
-    }
-    else if((a_cascades == 2) && (a_filter_type == SVF_FILTER_TYPE_LP))
-    {
+    } else if((a_cascades == 2) && (a_filter_type == SVF_FILTER_TYPE_LP)){
         return v_svf_run_4_pole_lp;
-    }
-    /*Highpass*/
-    else if((a_cascades == 1) && (a_filter_type == SVF_FILTER_TYPE_HP))
-    {
+    } else if((a_cascades == 1) && (a_filter_type == SVF_FILTER_TYPE_HP)){
         return v_svf_run_2_pole_hp;
-    }
-    else if((a_cascades == 2) && (a_filter_type == SVF_FILTER_TYPE_HP))
-    {
+    } else if((a_cascades == 2) && (a_filter_type == SVF_FILTER_TYPE_HP)){
         return v_svf_run_4_pole_hp;
-    }
-    /*Bandpass*/
-    else if((a_cascades == 1) && (a_filter_type == SVF_FILTER_TYPE_BP))
-    {
+    } else if((a_cascades == 1) && (a_filter_type == SVF_FILTER_TYPE_BP)){
         return v_svf_run_2_pole_bp;
-    }
-    else if((a_cascades == 2) && (a_filter_type == SVF_FILTER_TYPE_BP))
-    {
+    } else if((a_cascades == 2) && (a_filter_type == SVF_FILTER_TYPE_BP)){
         return v_svf_run_4_pole_bp;
-    }
-    /*Notch*/
-    else if((a_cascades == 1) && (a_filter_type == SVF_FILTER_TYPE_NOTCH))
-    {
+    } else if((a_cascades == 1) && (a_filter_type == SVF_FILTER_TYPE_NOTCH)){
         return v_svf_run_2_pole_notch;
-    }
-    else if((a_cascades == 2) && (a_filter_type == SVF_FILTER_TYPE_NOTCH))
-    {
+    } else if((a_cascades == 2) && (a_filter_type == SVF_FILTER_TYPE_NOTCH)){
         return v_svf_run_4_pole_notch;
-    }
-    /*EQ*/
-    else if((a_cascades == 1) && (a_filter_type == SVF_FILTER_TYPE_EQ))
-    {
+    } else if((a_cascades == 1) && (a_filter_type == SVF_FILTER_TYPE_EQ)){
         return v_svf_run_2_pole_eq;
-    }
-    else if((a_cascades == 2) && (a_filter_type == SVF_FILTER_TYPE_EQ))
-    {
+    } else if((a_cascades == 2) && (a_filter_type == SVF_FILTER_TYPE_EQ)){
         return v_svf_run_4_pole_eq;
-    }
-    /*This means that you entered invalid settings*/
-    else
-    {
+    } else {
+        // This means that you entered invalid settings
         return v_svf_run_2_pole_lp;
     }
 }
@@ -170,93 +158,112 @@ void v_svf_set_input_value(
 
 
 
-SGFLT v_svf_run_2_pole_lp(t_state_variable_filter* a_svf,
-        SGFLT a_input)
-{
+SGFLT v_svf_run_2_pole_lp(
+    t_state_variable_filter* a_svf,
+    SGFLT a_input
+){
     v_svf_set_input_value(a_svf, &a_svf->filter_kernels[0], a_input);
-
     return (a_svf->filter_kernels[0].lp);
 }
 
 
-SGFLT v_svf_run_4_pole_lp(t_state_variable_filter* a_svf,
-        SGFLT a_input)
-{
+SGFLT v_svf_run_4_pole_lp(
+    t_state_variable_filter* a_svf,
+    SGFLT a_input
+){
     v_svf_set_input_value(a_svf, &a_svf->filter_kernels[0], a_input);
-    v_svf_set_input_value(a_svf, &a_svf->filter_kernels[1],
-            (a_svf->filter_kernels[0].lp));
+    v_svf_set_input_value(
+        a_svf,
+        &a_svf->filter_kernels[1],
+        a_svf->filter_kernels[0].lp
+    );
 
     return (a_svf->filter_kernels[1].lp);
 }
 
-SGFLT v_svf_run_2_pole_hp(t_state_variable_filter* a_svf,
-        SGFLT a_input)
-{
+SGFLT v_svf_run_2_pole_hp(
+    t_state_variable_filter* a_svf,
+    SGFLT a_input
+){
     v_svf_set_input_value(a_svf, &a_svf->filter_kernels[0], a_input);
     return (a_svf->filter_kernels[0].hp);
 }
 
 
-SGFLT v_svf_run_4_pole_hp(t_state_variable_filter* a_svf,
-        SGFLT a_input)
-{
+SGFLT v_svf_run_4_pole_hp(
+    t_state_variable_filter* a_svf,
+    SGFLT a_input
+){
     v_svf_set_input_value(a_svf, &a_svf->filter_kernels[0], a_input);
-    v_svf_set_input_value(a_svf, &a_svf->filter_kernels[1],
-            (a_svf->filter_kernels[0].hp));
+    v_svf_set_input_value(
+        a_svf,
+        &a_svf->filter_kernels[1],
+        a_svf->filter_kernels[0].hp
+    );
 
     return (a_svf->filter_kernels[1].hp);
 }
 
 
-SGFLT v_svf_run_2_pole_bp(t_state_variable_filter* a_svf,
-        SGFLT a_input)
-{
+SGFLT v_svf_run_2_pole_bp(
+    t_state_variable_filter* a_svf,
+    SGFLT a_input
+){
     v_svf_set_input_value(a_svf, &a_svf->filter_kernels[0], a_input);
-
     return (a_svf->filter_kernels[0].bp);
 }
 
-SGFLT v_svf_run_4_pole_bp(t_state_variable_filter* a_svf,
-        SGFLT a_input)
-{
+SGFLT v_svf_run_4_pole_bp(
+    t_state_variable_filter* a_svf,
+    SGFLT a_input
+){
     v_svf_set_input_value(a_svf, &a_svf->filter_kernels[0], a_input);
-    v_svf_set_input_value(a_svf, &a_svf->filter_kernels[1],
-            (a_svf->filter_kernels[0].bp));
+    v_svf_set_input_value(
+        a_svf,
+        &a_svf->filter_kernels[1],
+        a_svf->filter_kernels[0].bp
+    );
 
     return (a_svf->filter_kernels[1].bp);
 }
 
-SGFLT v_svf_run_2_pole_notch(t_state_variable_filter* a_svf,
-        SGFLT a_input)
-{
+SGFLT v_svf_run_2_pole_notch(
+    t_state_variable_filter* a_svf,
+    SGFLT a_input
+){
     v_svf_set_input_value(a_svf, &a_svf->filter_kernels[0], a_input);
-
     return (a_svf->filter_kernels[0].hp) + (a_svf->filter_kernels[0].lp);
 }
 
-SGFLT v_svf_run_4_pole_notch(t_state_variable_filter* a_svf,
-        SGFLT a_input)
-{
+SGFLT v_svf_run_4_pole_notch(
+    t_state_variable_filter* a_svf,
+    SGFLT a_input
+){
     v_svf_set_input_value(a_svf, &a_svf->filter_kernels[0], a_input);
 
-    v_svf_set_input_value(a_svf, &a_svf->filter_kernels[1],
-            (a_svf->filter_kernels[0].hp) + (a_svf->filter_kernels[0].lp));
+    v_svf_set_input_value(
+        a_svf,
+        &a_svf->filter_kernels[1],
+        a_svf->filter_kernels[0].hp + a_svf->filter_kernels[0].lp
+    );
 
     return (a_svf->filter_kernels[1].hp) + (a_svf->filter_kernels[1].lp);
 }
 
-SGFLT v_svf_run_2_pole_allpass(t_state_variable_filter* a_svf,
-        SGFLT a_input)
-{
+SGFLT v_svf_run_2_pole_allpass(
+    t_state_variable_filter* a_svf,
+    SGFLT a_input
+){
     v_svf_set_input_value(a_svf, &a_svf->filter_kernels[0], a_input);
 
     return (a_svf->filter_kernels[0].hp) + (a_svf->filter_kernels[0].lp) +
             (a_svf->filter_kernels[0].bp);
 }
 
-SGFLT v_svf_run_2_pole_eq(t_state_variable_filter* a_svf,
-        SGFLT a_input)
-{
+SGFLT v_svf_run_2_pole_eq(
+    t_state_variable_filter* a_svf,
+    SGFLT a_input
+){
     v_svf_set_input_value(a_svf, &a_svf->filter_kernels[0], a_input);
 
     return (((a_svf->filter_kernels[0].lp) + (a_svf->filter_kernels[0].hp)) +

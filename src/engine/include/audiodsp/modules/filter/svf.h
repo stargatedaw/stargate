@@ -99,5 +99,9 @@ t_state_variable_filter * g_svf_get(SGFLT);
 void v_svf_set_cutoff_base(t_state_variable_filter*, SGFLT);
 void v_svf_add_cutoff_mod(t_state_variable_filter*, SGFLT);
 void v_svf_velocity_mod(t_state_variable_filter*,SGFLT);
+/* When using a filter as a smoother, use this to set it to the current value
+ * to avoid a jump in value
+ */
+void v_svf_set_output(t_state_variable_filter * a_svf, SGFLT value);
 
 #endif /* SVF_H */

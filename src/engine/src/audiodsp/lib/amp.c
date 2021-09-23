@@ -114,13 +114,11 @@ SG_THREAD_LOCAL SGFLT arr_amp_db2a[arr_amp_db2a_count] = {
  * will be clipped
  */
 SGFLT f_db_to_linear_fast(SGFLT a_db){
-    SGFLT f_result = ((a_db + 100.0f) * 4.0f) - 1.0f;
+    SGFLT f_result = ((a_db + 100.0f) * 4.0f);
 
     if((f_result) > arr_amp_db2a_count_m1_f){
         f_result = arr_amp_db2a_count_m1_f;
-    }
-
-    if((f_result) < 0.0f){
+    } else if((f_result) < 0.0f){
         f_result = 0.0f;
     }
 

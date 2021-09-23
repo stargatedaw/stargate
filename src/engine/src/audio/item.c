@@ -483,6 +483,12 @@ void v_audio_item_set_fade_vol(
             self->fade_vols[a_send_num] =
                 ((SGFLT)(self->sample_read_heads[a_send_num].whole_number -
                 self->sample_fade_out_start)) * self->sample_fade_out_divisor;
+            if(self->fade_vols[a_send_num] == 0.0){
+                v_svf_set_output(
+                    &self->lp_filters[a_send_num],
+                    1.0
+                );
+            }
 
             if(self->is_linear_fade_out){
                 self->fade_vols[a_send_num] =
@@ -492,11 +498,13 @@ void v_audio_item_set_fade_vol(
                     ((1.0f - self->fade_vols[a_send_num]) *
                     self->fadeout_vol) - self->fadeout_vol;
                 //self->fade_vol = (self->fade_vol * 40.0f) - 40.0f;
-                self->fade_vols[a_send_num] =
-                    f_db_to_linear_fast(self->fade_vols[a_send_num]);
-                self->fade_vols[a_send_num] =
-                    v_svf_run_2_pole_lp(&self->lp_filters[a_send_num],
-                    self->fade_vols[a_send_num]);
+                self->fade_vols[a_send_num] = f_db_to_linear_fast(
+                    self->fade_vols[a_send_num]
+                );
+                self->fade_vols[a_send_num] = v_svf_run_2_pole_lp(
+                    &self->lp_filters[a_send_num],
+                    self->fade_vols[a_send_num]
+                );
             }
         } else {
             self->fade_vols[a_send_num] = 1.0f;
