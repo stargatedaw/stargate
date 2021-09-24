@@ -171,8 +171,7 @@ void v_daw_audio_items_run(
         //f_send_num = f_sequence->indexes[0][f_index_pos].send_num;
         ++f_index_pos;
 
-        if(!f_sequence->items[f_i])
-        {
+        if(!f_sequence->items[f_i]){
             ++f_i;
             continue;
         }
@@ -181,8 +180,7 @@ void v_daw_audio_items_run(
         int f_output_mode = f_audio_item->outputs[0];
         t_audio_pool_item* ap_item = f_audio_item->audio_pool_item;
 
-        if(f_output_mode > 0)
-        {
+        if(f_output_mode > 0){
             *a_sc_dirty = 1;
         }
 
