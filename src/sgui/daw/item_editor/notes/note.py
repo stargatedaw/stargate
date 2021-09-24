@@ -144,9 +144,6 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
         QApplication.restoreOverrideCursor()
 
     def mousePressEvent(self, a_event):
-        if not self.isSelected():
-            shared.PIANO_ROLL_EDITOR.scene.clearSelection()
-            self.setSelected(True)
         if shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
             _shared.piano_roll_set_delete_mode(True)
             self.delete_later()
@@ -161,8 +158,10 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
             |
             QtCore.Qt.KeyboardModifier.ShiftModifier
         ):
-            f_list = [x.note_item.start
-                for x in shared.PIANO_ROLL_EDITOR.get_selected_items()]
+            f_list = [
+                x.note_item.start
+                for x in shared.PIANO_ROLL_EDITOR.get_selected_items()
+            ]
             if len(f_list) > 1:
                 f_list.sort()
                 self.is_velocity_curving = True
@@ -344,11 +343,13 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
         if self.is_copying:
             for f_new_item in f_new_selection:
                 shared.PIANO_ROLL_EDITOR.selected_note_strings.append(
-                    f_new_item.get_selected_string())
+                    f_new_item.get_selected_string(),
+                )
         else:
             for f_item in shared.PIANO_ROLL_EDITOR.get_selected_items():
                 shared.PIANO_ROLL_EDITOR.selected_note_strings.append(
-                    f_item.get_selected_string())
+                    f_item.get_selected_string(),
+                )
         for f_item in shared.PIANO_ROLL_EDITOR.note_items:
             f_item.is_resizing = False
             f_item.is_copying = False

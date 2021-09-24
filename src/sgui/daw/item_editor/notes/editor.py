@@ -133,8 +133,11 @@ class PianoRollEditor(AbstractItemEditor):
                 f_item.set_brush()
 
     def set_selected_strings(self):
-        self.selected_note_strings = [x.get_selected_string()
-            for x in self.note_items if x.isSelected()]
+        self.selected_note_strings = [
+            x.get_selected_string()
+            for x in self.note_items
+            if x.isSelected()
+        ]
 
     def keyPressEvent(self, a_event):
         QGraphicsView.keyPressEvent(self, a_event)
@@ -662,8 +665,11 @@ class PianoRollEditor(AbstractItemEditor):
                 f_note_item.resize_last_mouse_pos = \
                     f_note_item.scenePos().x()
                 f_note_item.resize_pos = f_note_item.scenePos()
-                if f_note_item.get_selected_string() in \
-                self.selected_note_strings:
+                if (
+                    f_note_item.get_selected_string()
+                    in
+                    self.selected_note_strings
+                ):
                     f_note_item.setSelected(True)
             if shared.DRAW_LAST_ITEMS and shared.LAST_ITEM:
                 f_offset = (
