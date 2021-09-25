@@ -102,7 +102,10 @@ class SeqTrack:
                 PLUGIN_UIDS_REVERSE[plugins.plugins[i].plugin_index]
                 for i in range(10)
             ]
-            for i in range(10, 14):
+            for i in range(10, 26):
+                if i >= len(plugins.plugins):
+                    names.append("None")
+                    continue
                 plugin_index = plugins.plugins[i].plugin_index
                 if plugin_index:
                     name = PLUGIN_UIDS_REVERSE[plugin_index]
@@ -121,6 +124,7 @@ class SeqTrack:
         self.automation_combobox.clear()
         self.automation_combobox.addItems(names)
         self.automation_combobox.setCurrentIndex(index)
+        self.automation_combobox.insertSeparator(10)
         if names[index] == "None":
             self.control_combobox.clear()
         self.suppress_ccs_in_use = False

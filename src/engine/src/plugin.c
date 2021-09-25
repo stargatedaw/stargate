@@ -129,8 +129,9 @@ void v_plugin_event_queue_reset(t_plugin_event_queue * self)
 }
 
 t_plugin_event_queue_item * v_plugin_event_queue_iter(
-    t_plugin_event_queue *self, int a_sample_num)
-{
+    t_plugin_event_queue *self,
+    int a_sample_num
+){
     t_plugin_event_queue_item * f_item = &self->items[self->pos];
     if(self->pos < self->count &&
        a_sample_num == f_item->tick)
@@ -274,8 +275,6 @@ void set_pyfx_port(
     a_desc->PortRangeHints[a_port].LowerBound = a_min;
     a_desc->PortRangeHints[a_port].UpperBound = a_max;
 }
-
-
 
 PluginData g_get_port_default(PluginDescriptor *plugin, int port)
 {

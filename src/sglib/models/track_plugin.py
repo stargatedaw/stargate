@@ -57,5 +57,14 @@ class track_plugins:
                 f_result.plugins.append(track_plugin(*f_line_arr[1:]))
             else:
                 assert(False)
+        # TODO: STARGATEv2:  Remove this kludge for handing the track send
+        #                    limit increase from 4 to 16
+        if len(f_result.plugins) < 26:
+            for i in range(len(f_result.plugins), 26):
+                f_result.plugins.append(track_plugin(i, 0, -1))
+        assert len(f_result.plugins) == 26, (
+            len(f_result.plugins),
+            f_result.plugins,
+        )
         return f_result
 

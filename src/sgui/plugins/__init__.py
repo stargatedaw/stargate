@@ -825,7 +825,9 @@ class MixerChannel:
         f_result = self.PROJECT.get_track_plugins(self.track_number)
 
         for index, plugin in (
-        (k + PLUGINS_PER_TRACK, v.get_value()) for k, v in self.sends.items()):
+            (k + PLUGINS_PER_TRACK, v.get_value())
+            for k, v in self.sends.items()
+        ):
             f_result.plugins[index] = plugin
         self.PROJECT.save_track_plugins(self.track_number, f_result)
         self.PROJECT.commit(

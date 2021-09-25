@@ -4,7 +4,7 @@ try:
 except ImportError:
     from pymarshal import pm_assert
 
-MAX_SENDS = 4
+MAX_TRACK_SENDS = 16
 
 class RoutingGraph:
     def __init__(self, graph=None):
