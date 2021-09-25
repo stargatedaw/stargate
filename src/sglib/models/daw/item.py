@@ -356,7 +356,11 @@ class item:
                 f_inc = (f_val_diff / (f_start_diff * 16.0))
                 if (f_cc1.cc_val) > (f_cc2.cc_val):
                     f_inc *= -1.0
-                f_new_val = f_cc1.cc_val + f_inc
+                f_new_val = clip_value(
+                    f_cc1.cc_val + f_inc,
+                    0.,
+                    127.,
+                )
                 while True:
                     f_interpolated_cc = cc(f_start, f_cc_num, f_new_val)
                     f_new_val += f_inc
