@@ -833,21 +833,28 @@ class MixerChannel:
         self.PROJECT.commit(
             "Update mixer plugins for track {}".format(self.track_number))
 
-    def set_name(self, a_name, a_dict):
+    def set_name(self, a_name, a_dict, routing_graph):
         """ Set the track name label and the send labels
 
             @a_name: The name of this track
             @a_dict: A dictionary of {track_number: track_name, ...} for
                      all tracks
+            @routing_graph: The routing graph for the project
         """
         if not self.output_labels:
             return # not loaded yet
+
         self.name_label.setText(a_name)
         for k in self.outputs:
             if self.outputs[k] == -1:
                 self.output_labels[k].setText("")
             else:
-                self.output_labels[k].setText(a_dict[self.outputs[k]])
+                track_index = self.outputs[k]
+                name = a_dict[track_index]
+                send = routing_graph.graph[self.track_number][k]
+                if send.conn_type == 1:
+                    name += ": SC"
+                self.output_labels[k].setText(name)
 
     def get_plugin_uids(self):
         return [x.plugin_uid for x in self.sends.values()]
@@ -953,9 +960,13 @@ class MixerWidget:
     def set_tooltips(self, a_enabled):
         self.widget.setToolTip(sg_strings.Mixer if a_enabled else "")
 
-    def update_track_names(self, a_track_names_dict):
+    def update_track_names(self, a_track_names_dict, routing_graph):
         for k, v in a_track_names_dict.items():
-            self.tracks[k].set_name(v, a_track_names_dict)
+            self.tracks[k].set_name(
+                v,
+                a_track_names_dict,
+                routing_graph,
+            )
 
     def clear(self):
         for v in self.tracks.values():

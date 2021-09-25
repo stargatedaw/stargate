@@ -424,8 +424,15 @@ def global_open_mixer():
             f_plugins[k] = {x.index:x for x in f_track_plugins.plugins}
     MIXER_WIDGET.update_sends(f_graph, f_plugins)
     MIXER_WIDGET.update_track_names(
-        {f_i:x for f_i, x in zip(
-        range(len(TRACK_NAMES)), TRACK_NAMES)})
+        {
+            f_i: x
+            for f_i, x in zip(
+                range(len(TRACK_NAMES)),
+                TRACK_NAMES
+            )
+        },
+        f_graph,
+    )
 
 def set_piano_roll_quantize(a_index=None):
     global PIANO_ROLL_SNAP, PIANO_ROLL_SNAP_VALUE, PIANO_ROLL_SNAP_DIVISOR, \
