@@ -37,6 +37,7 @@ class RoutingGraphNode(QGraphicsRectItem):
 class RoutingGraphWidget(QGraphicsView):
     def __init__(self, a_toggle_callback=None):
         QGraphicsView.__init__(self)
+        self.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.scene = QGraphicsScene(self)
         self.setScene(self.scene)
         self.scene.setBackgroundBrush(
