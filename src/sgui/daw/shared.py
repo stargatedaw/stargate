@@ -382,9 +382,9 @@ def get_mixer_peak_meters():
     for k, v in MIXER_WIDGET.tracks.items():
         ALL_PEAK_METERS[k].append(v.peak_meter)
 
-def routing_graph_toggle_callback(a_src, a_dest, a_sidechain):
+def routing_graph_toggle_callback(a_src, a_dest, conn_type):
     f_graph = constants.DAW_PROJECT.get_routing_graph()
-    f_result = f_graph.toggle(a_src, a_dest, a_sidechain)
+    f_result = f_graph.toggle(a_src, a_dest, conn_type)
     if f_result:
         QMessageBox.warning(MAIN_WINDOW, _("Error"), f_result)
     else:

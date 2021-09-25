@@ -57,12 +57,12 @@ class RoutingGraph:
         self,
         a_src,
         a_dest,
-        a_sidechain=0,
+        conn_type=0,
     ):
         """
-            a_src:       int, The track number of the source
-            a_dest:      int, The track number of the destination
-            a_sidechain: int, 1 if this is a sidechain connection, otherwise 0
+            a_src:     int, The track number of the source
+            a_dest:    int, The track number of the destination
+            conn_type: int, 0: normal, 1 sidechain, 2: MIDI
         """
         f_connected = (
             a_src in self.graph
@@ -70,12 +70,12 @@ class RoutingGraph:
             a_dest in [
                 x.output
                 for x in self.graph[a_src].values()
-                if x.sidechain == a_sidechain
+                if x.conn_type == conn_type
             ]
         )
         if f_connected:
             for k, v in self.graph[a_src].copy().items():
-                if v.output == a_dest and v.sidechain == a_sidechain:
+                if v.output == a_dest and v.conn_type == conn_type:
                     self.graph[a_src].pop(k)
         else:
             if self.check_for_feedback(a_src, a_dest):
@@ -90,7 +90,7 @@ class RoutingGraph:
                 for f_i in range(4):
                     if f_i not in self.graph[a_src]:
                         break
-            f_result = TrackSend(a_src, f_i, a_dest, a_sidechain)
+            f_result = TrackSend(a_src, f_i, a_dest, conn_type)
             self.graph[a_src][f_i] = f_result
             self.set_node(a_src, self.graph[a_src])
         return None

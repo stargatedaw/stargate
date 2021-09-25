@@ -65,8 +65,12 @@ def save_recorded_items(
                 sg = constants.PROJECT.get_sample_graph_by_uid(f_uid)
 
                 f_audio_files_dict[f_i] = (
-                    f_new_path, f_uid, sg.frame_count,
-                    f_val.output, f_val.sidechain)
+                    f_new_path,
+                    f_uid,
+                    sg.frame_count,
+                    f_val.output,
+                    f_val.sidechain,
+                )
             else:
                 LOG.error("Error, path did not exist: {}".format(f_path))
 

@@ -118,7 +118,7 @@ class RoutingGraphWidget(QGraphicsView):
         )
         self.node_width = self.graph_width / 32.0
         self.node_height = self.graph_height / 32.0
-        self.wire_width = self.node_height / 4.0  #max conns
+        self.wire_width = self.node_height * 0.25
         self.wire_width_div2 = self.wire_width * 0.5
         ROUTING_GRAPH_WIRE_INPUT = ((self.node_width * 0.5) -
             (self.wire_width * 0.5))
@@ -204,55 +204,95 @@ class RoutingGraphWidget(QGraphicsView):
             if f_i == 0 or f_i not in a_graph.graph:
                 continue
             f_connections = [
-                (x.output, x.index, x.sidechain)
+                (x.output, x.index, x.conn_type)
                 for x in a_graph.graph[f_i].values()
             ]
-            for f_dest_pos, f_wire_index, f_sidechain in f_connections:
+            for f_dest_pos, f_wire_index, conn_type in f_connections:
                 if f_dest_pos < 0:
                     continue
-                f_pen = pen_dict[f_sidechain]
+                f_pen = pen_dict[conn_type]
+                f_y_wire_offset = (
+                    conn_type * self.wire_width) + self.wire_width_div2
                 if f_dest_pos > f_i:
                     f_src_x = f_x + self.node_width
-                    f_y_wire_offset = (f_wire_index *
-                        self.wire_width) + self.wire_width_div2
                     f_src_y = f_y + f_y_wire_offset
                     f_wire_width = ((f_dest_pos - f_i - 1) *
                         self.node_width) + ROUTING_GRAPH_WIRE_INPUT
                     f_v_wire_x = f_src_x + f_wire_width
-                    if f_sidechain:
+                    if conn_type == 1:  # sidechain
                         f_v_wire_x += self.wire_width_div2 * 2
-                    else:
+                    elif conn_type == 2:  # MIDI
                         f_v_wire_x -= self.wire_width_div2 * 2
                     f_wire_height = ((f_dest_pos - f_i) *
                         self.node_height) - f_y_wire_offset
                     f_dest_y = f_src_y + f_wire_height
-                    line = self.scene.addLine( # horizontal wire
-                        f_src_x, f_src_y, f_v_wire_x, f_src_y, f_pen)
+                    # horizontal wire
+                    line = self.scene.addLine(
+                        f_src_x,
+                        f_src_y,
+                        f_v_wire_x,
+                        f_src_y,
+                        f_pen,
+                    )
                     line.setZValue(2000)
-                    line = self.scene.addLine( # vertical wire
-                        f_v_wire_x, f_src_y, f_v_wire_x, f_dest_y, f_pen)
+                    # vertical wire
+                    line = self.scene.addLine(
+                        f_v_wire_x,
+                        f_src_y,
+                        f_v_wire_x,
+                        f_dest_y,
+                        f_pen,
+                    )
                     line.setZValue(2000)
+                    # Connection circle
+                    circle = self.scene.addEllipse(
+                        f_v_wire_x - self.wire_width_div2,
+                        f_src_y - self.wire_width_div2,
+                        self.wire_width,
+                        self.wire_width,
+                        f_pen,
+                    )
+                    circle.setZValue(2000)
                 else:
                     f_src_x = f_x
-                    f_y_wire_offset = (f_wire_index *
-                        self.wire_width) + self.wire_width_div2
                     f_src_y = f_y + f_y_wire_offset
                     f_wire_width = ((f_i - f_dest_pos - 1) *
                         self.node_width) + ROUTING_GRAPH_WIRE_INPUT
                     f_v_wire_x = f_src_x - f_wire_width
-                    if f_sidechain:
+                    if conn_type == 1:  # sidechain
                         f_v_wire_x += self.wire_width_div2 * 2
-                    else:
+                    elif conn_type == 2:  # MIDI
                         f_v_wire_x -= self.wire_width_div2 * 2
                     f_wire_height = ((f_i - f_dest_pos - 1) *
                         self.node_height) + f_y_wire_offset
                     f_dest_y = f_src_y - f_wire_height
-                    line = self.scene.addLine( # horizontal wire
-                        f_v_wire_x, f_src_y, f_src_x, f_src_y, f_pen)
+                    # horizontal wire
+                    line = self.scene.addLine(
+                        f_v_wire_x,
+                        f_src_y,
+                        f_src_x,
+                        f_src_y,
+                        f_pen,
+                    )
                     line.setZValue(2000)
-                    line = self.scene.addLine( # vertical wire
-                        f_v_wire_x, f_dest_y, f_v_wire_x, f_src_y, f_pen)
+                    # vertical wire
+                    line = self.scene.addLine(
+                        f_v_wire_x,
+                        f_dest_y,
+                        f_v_wire_x,
+                        f_src_y,
+                        f_pen,
+                    )
                     line.setZValue(2000)
+                    # Connection circle
+                    circle = self.scene.addEllipse(
+                        f_v_wire_x - self.wire_width_div2,
+                        f_src_y - self.wire_width_div2,
+                        self.wire_width,
+                        self.wire_width,
+                        f_pen,
+                    )
+                    circle.setZValue(2000)
 
         self.setUpdatesEnabled(True)
         self.update()

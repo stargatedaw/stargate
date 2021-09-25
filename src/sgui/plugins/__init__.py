@@ -888,7 +888,7 @@ class MixerChannel:
         self.outputs = {
             k: v.output
             for k, v in a_graph_dict.items()
-            if v.sidechain != 2
+            if v.conn_type != 2
         }
         for i in range(len(self.sends)):
             hidden = not (i in self.outputs and self.outputs[i] != -1)
