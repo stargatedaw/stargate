@@ -61,42 +61,33 @@ PROJECT_FILE = None
 
 def handle_engine_error(exit_code):
     if exit_code == 0:
-        LOG.info("Engine exited with return code 0, no errors.")
+        LOG.info("Audio engine stopped with exit code 0, no errors.")
         return
 
     if exit_code == 1000:
-        QMessageBox.warning(
-            shared.MAIN_WINDOW.widget,
-            "Error",
-            "Audio device not found",
-        )
+        msg = "Audio device not found"
     elif exit_code == 1001:
-        QMessageBox.warning(
-            shared.MAIN_WINDOW.widget,
-            "Error",
-            "Device config not found",
-        )
+        msg = "Device config not found"
     elif exit_code == 1002:
-        QMessageBox.warning(
-            shared.MAIN_WINDOW.widget,
-            "Error",
-            "Unknown error opening audio device",
-        )
+        msg = "Unknown error opening audio device"
     if exit_code == 1003:
-        QMessageBox.warning(
-            shared.MAIN_WINDOW.widget,
-            "Error",
+        msg = (
             "The audio device was busy, make sure that no other applications "
-            "are using the device and try restarting Stargate",
+            "are using the device and try restarting Stargate"
         )
     else:
-        QMessageBox.warning(
-            shared.MAIN_WINDOW.widget,
-            "Error",
-            f"The audio engine died with error code {exit_code}, "
-            "please try restarting Stargate",
+        msg = (
+            f"The audio engine stopped with exit code {exit_code}, "
+             "please try restarting Stargate"
         )
         shared.TRANSPORT.stop_button.setChecked(True)
+
+    LOG.error(msg)
+    QMessageBox.warning(
+        shared.MAIN_WINDOW.widget,
+        "Error",
+        msg,
+    )
     if exit_code >= 1000 and exit_code <= 1002:
         shared.MAIN_WINDOW.on_change_audio_settings()
 

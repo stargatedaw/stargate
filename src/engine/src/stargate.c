@@ -1142,7 +1142,11 @@ void v_sg_configure(const char* a_key, const char* a_value){
         }
         else
         {
-            printf("Error, no valid plugin instance\n");
+            fprintf(
+                stderr,
+                "pc: no valid plugin instance: %i\n",
+                f_plugin_uid
+            );
         }
         pthread_spin_unlock(&STARGATE->main_lock);
         g_free_1d_char_array(f_val_arr);
@@ -1167,7 +1171,11 @@ void v_sg_configure(const char* a_key, const char* a_value){
                 &STARGATE->main_lock
             );
         } else {
-            printf("Error, no valid plugin instance\n");
+            fprintf(
+                stderr,
+                "Error, no valid plugin instance %i\n",
+                f_plugin_uid
+            );
         }
 
         g_free_1d_char_array(f_val_arr);
