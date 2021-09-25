@@ -351,21 +351,20 @@ class preset_manager_widget:
         f_index = self.program_combobox.currentIndex()
         f_preset_name = str(self.program_combobox.currentText())
         if not f_index and not f_preset_name:
-            QMessageBox.warning(
-                self.group_box,
-                _("Error"),
-                _("You must name the preset"))
+            self.save_preset_as()
             return
         f_result_values = []
         for k in sorted(self.controls.keys()):
             f_control = self.controls[k]
             f_result_values.append(
-                "{}:{}".format(f_control.port_num, f_control.get_value()))
+                f"{f_control.port_num}:{f_control.get_value()}",
+            )
         if self.configure_dict is not None:
             for k in self.configure_dict.keys():
                 v = self.configure_dict[k]
                 f_result_values.append(
-                    "c:{}:{}".format(k, v.replace("|", ":")))
+                    "c:{}:{}".format(k, v.replace("|", ":")),
+                )
 
         self.presets_delimited[f_preset_name] = f_result_values
         self.commit_presets()
