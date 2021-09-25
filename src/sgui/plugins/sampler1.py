@@ -434,6 +434,202 @@ QLineEdit {
     background: 2px solid #6a6a6a;
     border: 2px solid #333333;
 }
+
+QTabBar::tab
+{
+    background-color: #17181d;
+    border-bottom-style: none;
+    border: 1px solid #444444;
+    color: #cccccc;
+    margin-right: -1px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+}
+
+
+QTabWidget::tab-bar
+{
+    left: 5px;
+}
+
+QTabWidget::pane
+{
+    /*border: 1px solid #444;*/
+    border-top: 2px solid #C2C7CB;
+    top: 1px;
+}
+
+QTabBar::tab:last
+{
+    /* the last selected tab has nothing to overlap with on the right */
+    margin-right: 0;
+}
+
+QTabBar::tab:first:!selected
+{
+    /* the last selected tab has nothing to overlap with on the right */
+    margin-left: 0px;
+}
+
+QTabBar::tab:!selected
+{
+    background-color: #17181d;
+    border-bottom-style: solid;
+    color: #cccccc;
+}
+
+QTabBar::tab:!selected:hover,
+QTabBar::tab:selected
+{
+    background-color: #aaaaaa;
+    color: #1e1e1e;
+    margin-bottom: 0px;
+}
+
+QCheckBox,
+QRadioButton
+{
+    background-color: none;
+    margin: 3px;
+    padding: 0px;
+}
+
+QCheckBox::indicator,
+QRadioButton::indicator
+{
+    background-color: #aaaaaa;
+    border-radius: 6px;
+    border: 1px solid #222222;
+    color: #cccccc;
+    height: 18px;
+    margin-left: 6px;
+    width: 18px;
+}
+
+QCheckBox::indicator:checked,
+QRadioButton::indicator:checked
+{
+    background-color: qradialgradient(
+        cx: 0.5, cy: 0.5,
+        fx: 0.5, fy: 0.5,
+        radius: 1.0,
+        stop: 0.25 #222222,
+        stop: 0.3 #aaaaaa
+    );
+}
+
+QRadioButton::indicator:hover,
+QCheckBox::indicator:hover
+{
+    border: 1px solid #ffffff;
+}
+
+QHeaderView::section {
+    background-color: #aaaaaa;
+	color: #222222;
+    border: 1px solid #222222;
+    padding: 4px;
+}
+
+QScrollBar:horizontal
+{
+    background: #aaaaaa;
+    border: 1px solid #222222;
+    height: 15px;
+    margin: 0px 16px 0 16px;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::handle:horizontal,
+QScrollBar::sub-line:horizontal
+{
+    background: #aaaaaa;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::handle:vertical,
+QScrollBar::sub-line:vertical
+{
+    background: #aaaaaa;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::add-line:vertical,
+QScrollBar::handle:horizontal,
+QScrollBar::handle:vertical,
+QScrollBar::sub-line:horizontal,
+QScrollBar::sub-line:vertical
+{
+    min-height: 20px;
+}
+
+QScrollBar::add-line:horizontal
+{
+    border: 1px solid #222222;
+    subcontrol-origin: margin;
+    subcontrol-position: right;
+    width: 14px;
+}
+
+QScrollBar::sub-line:horizontal
+{
+    border: 1px solid #222222;
+    subcontrol-origin: margin;
+    subcontrol-position: left;
+    width: 14px;
+}
+
+QScrollBar[hide="true"]::down-arrow:vertical,
+QScrollBar[hide="true"]::left-arrow:horizontal,
+QScrollBar[hide="true"]::right-arrow:horizontal,
+QScrollBar[hide="true"]::up-arrow:vertical
+{
+}
+
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal
+{
+    background: #222222;
+    border: 1px solid #222222;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical
+{
+    background: #222222;
+    border: 1px solid #222222;
+}
+
+QScrollBar:vertical
+{
+    background: #666666;
+    border: 1px solid #222222;
+    margin: 16px 0 16px 0;
+    width: 15px;
+}
+
+QScrollBar::handle:vertical
+{
+    min-height: 20px;
+}
+
+QScrollBar::add-line:vertical
+{
+    border: 1px solid #222222;
+    height: 14px;
+    subcontrol-origin: margin;
+    subcontrol-position: bottom;
+}
+
+QScrollBar::sub-line:vertical
+{
+    border: 1px solid #222222;
+    height: 14px;
+    subcontrol-origin: margin;
+    subcontrol-position: top;
+}
 """
 
 class sampler1_plugin_ui(AbstractPluginUI):

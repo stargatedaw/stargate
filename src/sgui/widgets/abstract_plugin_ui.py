@@ -11,12 +11,174 @@ from sglib.lib import util
 from jinja2 import Template
 
 DEFAULT_STYLE = """\
+QWidget {
+    background-color: #222222;
+    color: #cccccc;
+}
+
 QLabel#screw {
     background-color: none;
     border: none;
     border-image: url({{ PLUGIN_ASSETS_DIR }}/screw.svg) 0 0 0 0 stretch stretch;
 }
 
+QComboBox::drop-down
+{
+    border-bottom-right-radius: 3px;
+    border-left-color: #222222;
+    border-left-style: solid; /* just a single line */
+    border-left-width: 0px;
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    color: #cccccc;
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+}
+
+QComboBox::down-arrow
+{
+    image: url({{ PLUGIN_ASSETS_DIR }}/drop-down.svg);
+}
+
+QScrollBar:horizontal
+{
+    background: #aaaaaa;
+    border: 1px solid #222222;
+    height: 15px;
+    margin: 0px 16px 0 16px;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::handle:horizontal,
+QScrollBar::sub-line:horizontal
+{
+    background: #aaaaaa;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::handle:vertical,
+QScrollBar::sub-line:vertical
+{
+    background: #aaaaaa;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::add-line:vertical,
+QScrollBar::handle:horizontal,
+QScrollBar::handle:vertical,
+QScrollBar::sub-line:horizontal,
+QScrollBar::sub-line:vertical
+{
+    min-height: 20px;
+}
+
+QScrollBar::add-line:horizontal
+{
+    border: 1px solid #222222;
+    subcontrol-origin: margin;
+    subcontrol-position: right;
+    width: 14px;
+}
+
+QScrollBar::sub-line:horizontal
+{
+    border: 1px solid #222222;
+    subcontrol-origin: margin;
+    subcontrol-position: left;
+    width: 14px;
+}
+
+QScrollBar[hide="true"]::down-arrow:vertical,
+QScrollBar[hide="true"]::left-arrow:horizontal,
+QScrollBar[hide="true"]::right-arrow:horizontal,
+QScrollBar[hide="true"]::up-arrow:vertical
+{
+}
+
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal
+{
+    background: #222222;
+    border: 1px solid #222222;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical
+{
+    background: #222222;
+    border: 1px solid #222222;
+}
+
+QScrollBar:vertical
+{
+    background: #666666;
+    border: 1px solid #222222;
+    margin: 16px 0 16px 0;
+    width: 15px;
+}
+
+QScrollBar::handle:vertical
+{
+    min-height: 20px;
+}
+
+QScrollBar::add-line:vertical
+{
+    border: 1px solid #222222;
+    height: 14px;
+    subcontrol-origin: margin;
+    subcontrol-position: bottom;
+}
+
+QScrollBar::sub-line:vertical
+{
+    border: 1px solid #222222;
+    height: 14px;
+    subcontrol-origin: margin;
+    subcontrol-position: top;
+}
+
+QAbstractItemView
+{
+    background-color: #222222;
+    border: 2px solid #aaaaaa;
+    selection-background-color: #cccccc;
+}
+
+QWidget::item:hover,
+QWidget::item:selected,
+QMenu::item:hover,
+QMenu::item:selected
+{
+    background-color: #cccccc;
+    color: #222222;
+}
+
+QWidget::item,
+QMenu::item
+{
+    background-color: #222222;
+    color: #cccccc;
+}
+
+QMenu::separator
+{
+    height: 2px;
+    background-color: #cccccc;
+}
+
+QMenu,
+QMenu::item,
+QPushButton,
+QWidget#plugin_window {
+    background: #222222;
+    color: #cccccc;
+}
+
+QToolTip {
+    background: #222222;
+    color: #cccccc;
+}
 """
 
 STYLESHEET_CACHE = {}

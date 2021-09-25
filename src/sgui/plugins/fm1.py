@@ -856,6 +856,34 @@ QWidget#right_logo {
     border: none;
 }
 
+QWidget::item:hover,
+QWidget::item:selected,
+QMenu::item:hover,
+QMenu::item:selected
+{
+    background-color: #222222;
+    color: #aaaaaa;
+}
+
+QWidget::item,
+QMenu::item
+{
+    background-color: #aaaaaa;
+    color: #222222;
+}
+
+QMenu::separator
+{
+    height: 2px;
+    background-color: #222222;
+}
+
+QMenu,
+QMenu::item,
+QWidget#plugin_window {
+    background: #aaaaaa;
+    color: #222222;
+}
 """
 
 

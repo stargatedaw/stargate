@@ -82,14 +82,11 @@ MULTIFX_PORT_MAP = {
 }
 
 STYLESHEET = """\
-QWidget#plugin_window{
+QWidget {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
         stop: 0 #2a2a2a, stop: 0.5 #3a3a3f, stop: 1 #2a2a2a
     );
-    background-image: url({{ PLUGIN_ASSETS_DIR }}/sidechain_compressor/logo.svg);
-    background-position: left;
-    background-repeat: no-repeat;
     border: none;
 }
 
@@ -200,7 +197,6 @@ class multifx_plugin_ui(AbstractPluginUI):
         self.presets_hlayout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
-        self.layout.addLayout(self.presets_hlayout)
         self.spectrum_enabled = None
 
         self.main_hlayout = QHBoxLayout()
@@ -215,12 +211,15 @@ class multifx_plugin_ui(AbstractPluginUI):
         left_logo.setLayout(left_screws)
         self.main_hlayout.addWidget(left_logo)
 
+        self.main_vlayout = QVBoxLayout()
+        self.main_hlayout.addLayout(self.main_vlayout)
+        self.main_vlayout.addLayout(self.presets_hlayout)
         self.fx_tab = QWidget()
         self.fx_tab.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Expanding,
         )
-        self.main_hlayout.addWidget(self.fx_tab)
+        self.main_vlayout.addWidget(self.fx_tab)
 
         right_screws = get_screws()
         right_logo = QWidget()

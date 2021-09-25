@@ -53,7 +53,7 @@ class AbstractFileBrowserWidget:
         self.back_button.pressed.connect(self.on_back)
 
         self.menu_button = QPushButton(_("Menu"))
-        self.menu_button_menu = QMenu()
+        self.menu_button_menu = QMenu(self.folders_tab_widget)
         self.menu_button.setMenu(self.menu_button_menu)
         self.folder_buttons_hlayout.addWidget(self.menu_button)
 
