@@ -244,7 +244,7 @@ class DawProject(AbstractProject):
         else:
             return None
 
-    def get_routing_graph(self):
+    def get_routing_graph(self) -> RoutingGraph:
         if os.path.isfile(self.routing_graph_file):
             with open(self.routing_graph_file) as f_handle:
                 return RoutingGraph.from_str(f_handle.read())

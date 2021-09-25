@@ -92,15 +92,32 @@ class SeqTrack:
             self.create_menu()
 
         self.suppress_ccs_in_use = True
-        index = self.automation_combobox.currentIndex()
         plugins = constants.DAW_PROJECT.get_track_plugins(self.track_number)
+        routing_graph = constants.DAW_PROJECT.get_routing_graph()
+        routes = routing_graph.graph.get(self.track_number, {})
+        route_types = {0: "Normal", 1: "Sidechain"}
+        tracks = constants.DAW_PROJECT.get_tracks()
         if plugins:
             names = [
-                PLUGIN_UIDS_REVERSE[x.plugin_index]
-                for x in plugins.plugins
+                PLUGIN_UIDS_REVERSE[plugins.plugins[i].plugin_index]
+                for i in range(10)
             ]
+            for i in range(10, 14):
+                plugin_index = plugins.plugins[i].plugin_index
+                if plugin_index:
+                    name = PLUGIN_UIDS_REVERSE[plugin_index]
+                    route = routes[i - 10]
+                    entry = "{}: {} -> {}".format(
+                        name,
+                        route_types[route.conn_type],
+                        tracks.tracks[route.output].name,
+                    )
+                    names.append(entry)
+                else:
+                    names.append("None")
         else:
-            names = ["None" for x in range(10)]
+            names = ["None" for x in range(14)]
+        index = self.automation_combobox.currentIndex()
         self.automation_combobox.clear()
         self.automation_combobox.addItems(names)
         self.automation_combobox.setCurrentIndex(index)

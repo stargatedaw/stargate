@@ -4,6 +4,7 @@ try:
 except ImportError:
     from pymarshal import pm_assert
 
+MAX_SENDS = 4
 
 class RoutingGraph:
     def __init__(self, graph=None):
@@ -11,7 +12,7 @@ class RoutingGraph:
             @graph:
                 {int(track_num): {int(send_index): TrackSend}}
                 , where send_index is an arbitrary number starting from zero.
-                There may not be more than 4 track sends.
+                There may not be more than MAX_TRACK_SENDS track sends.
         """
         self.graph = graph if graph is not None else {}
 
@@ -80,14 +81,14 @@ class RoutingGraph:
         else:
             if self.check_for_feedback(a_src, a_dest):
                 return "Can't make connection, it would create a feedback loop"
-            if a_src in self.graph and len(self.graph[a_src]) >= 4:
+            if a_src in self.graph and len(self.graph[a_src]) >= MAX_TRACK_SENDS:
                 return ("All available sends already in use for "
                     "track {}".format(a_src))
             if not a_src in self.graph:
                 f_i = 0
                 self.graph[a_src] = {}
             else:
-                for f_i in range(4):
+                for f_i in range(MAX_TRACK_SENDS):
                     if f_i not in self.graph[a_src]:
                         break
             f_result = TrackSend(a_src, f_i, a_dest, conn_type)
