@@ -363,7 +363,11 @@ class item:
                 )
                 while True:
                     f_interpolated_cc = cc(f_start, f_cc_num, f_new_val)
-                    f_new_val += f_inc
+                    f_new_val = clip_value(
+                        f_new_val + f_inc,
+                        0.,
+                        127.,
+                    )
                     f_result_arr.append(f_interpolated_cc)
                     f_start += f_time_inc
                     if f_start >= (f_cc2.start - 0.0625):
