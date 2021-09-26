@@ -398,10 +398,10 @@ t_audio_item * g_audio_item_load_single(
 
 void v_audio_item_set_fade_vol(
     t_audio_item *self,
-    int a_send_num
+    int a_send_num,
+    t_sg_thread_storage* sg_ts
 ){
-    t_int_frac_read_head * read_head =
-        &self->sample_read_heads[a_send_num];
+    t_int_frac_read_head* read_head = &self->sample_read_heads[a_send_num];
 
     if(self->is_reversed){
         if(
@@ -410,7 +410,7 @@ void v_audio_item_set_fade_vol(
             self->sample_fade_in_divisor != 0.0f
         ){
             self->fade_vols[a_send_num] =
-                ((SGFLT)(self->sample_read_heads[a_send_num].whole_number) -
+                ((SGFLT)(read_head->whole_number) -
                 self->sample_fade_in_end - AUDIO_ITEM_PADDING_DIV2)
                 * self->sample_fade_in_divisor;
 
@@ -431,8 +431,8 @@ void v_audio_item_set_fade_vol(
             self->sample_fade_out_divisor != 0.0f
         ){
             self->fade_vols[a_send_num] = ((SGFLT)(
-                    self->sample_fade_out_start - read_head->whole_number)
-                ) * self->sample_fade_out_divisor;
+                self->sample_fade_out_start - read_head->whole_number
+            )) * self->sample_fade_out_divisor;
 
             if(self->is_linear_fade_out){
                 self->fade_vols[a_send_num] =
@@ -481,7 +481,7 @@ void v_audio_item_set_fade_vol(
             self->sample_fade_out_divisor != 0.0f
         ){
             self->fade_vols[a_send_num] =
-                ((SGFLT)(self->sample_read_heads[a_send_num].whole_number -
+                ((SGFLT)(read_head->whole_number -
                 self->sample_fade_out_start)) * self->sample_fade_out_divisor;
             if(self->fade_vols[a_send_num] == 0.0){
                 v_svf_set_output(
@@ -490,7 +490,14 @@ void v_audio_item_set_fade_vol(
                 );
             }
 
-            if(self->is_linear_fade_out){
+            if(
+                self->is_linear_fade_out
+                || (
+                    read_head->whole_number
+                    >
+                    self->sample_end_offset - sg_ts->five_ms
+                )
+            ){
                 self->fade_vols[a_send_num] =
                     1.0f - self->fade_vols[a_send_num];
             } else {

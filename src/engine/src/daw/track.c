@@ -229,7 +229,8 @@ void v_daw_process_track(
                     f_track->buffers,
                     f_track->sc_buffers,
                     &f_track->sc_buffers_dirty,
-                    a_ts
+                    a_ts,
+                    &STARGATE->thread_storage[a_thread_num]
                 );
             }
         }

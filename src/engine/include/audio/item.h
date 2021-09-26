@@ -99,7 +99,8 @@ t_audio_item * g_audio_item_load_single(
 
 void v_audio_item_set_fade_vol(
     t_audio_item *self,
-    int a_send_num
+    int a_send_num,
+    t_sg_thread_storage* sg_ts
 );
 void v_audio_items_free(t_audio_items *a_audio_items);
 #endif

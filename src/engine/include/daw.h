@@ -169,7 +169,8 @@ void v_daw_audio_items_run(
     SGFLT**,
     SGFLT**,
     int*,
-    t_daw_thread_storage*
+    t_daw_thread_storage*,
+    t_sg_thread_storage*
 );
 
 void v_daw_paif_set_control(t_daw*, int, int, int, SGFLT);

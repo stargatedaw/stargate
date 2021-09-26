@@ -198,15 +198,6 @@ typedef struct{
 }t_sg_host;
 
 typedef struct {
-    char padding1[CACHE_LINE_SIZE];
-    SGFLT sample_rate;
-    int current_host;
-    int five_ms;  // Standard 5ms audio fade out, in samples
-    SGFLT five_ms_recip;
-    char padding2[CACHE_LINE_SIZE];
-} t_sg_thread_storage;
-
-typedef struct {
     t_sg_thread_storage thread_storage[MAX_WORKER_THREADS];
     t_sg_host * current_host;
     t_sg_host hosts[SG_HOST_COUNT];

@@ -141,15 +141,16 @@ void v_daw_open_project(int a_first_load){
 }
 
 void v_daw_audio_items_run(
-    t_daw * self,
-    t_daw_item_ref * a_item_ref,
+    t_daw* self,
+    t_daw_item_ref* a_item_ref,
     int a_sample_count,
     SGFLT** a_buff,
-    SGFLT ** a_sc_buff,
-    int * a_sc_dirty,
-    t_daw_thread_storage * a_ts
+    SGFLT** a_sc_buff,
+    int* a_sc_dirty,
+    t_daw_thread_storage* daw_ts,
+    t_sg_thread_storage*  sg_ts
 ){
-    t_daw_item * f_item = self->item_pool[a_item_ref->item_uid];
+    t_daw_item* f_item = self->item_pool[a_item_ref->item_uid];
 
     if(!f_item->audio_items->index_counts[0]){
         return;
@@ -185,7 +186,7 @@ void v_daw_audio_items_run(
         }
 
         if(
-            a_ts->suppress_new_audio_items
+            daw_ts->suppress_new_audio_items
             &&
             f_audio_item->adsrs[f_send_num].stage == ADSR_STAGE_OFF
         ){
@@ -204,7 +205,7 @@ void v_daw_audio_items_run(
         double f_audio_start = f_audio_item->adjusted_start_beat +
             a_item_ref->start - a_item_ref->start_offset;
 
-        if(f_audio_start >= a_ts->ml_next_beat){
+        if(f_audio_start >= daw_ts->ml_next_beat){
             ++f_i;
             continue;
         }
@@ -215,9 +216,9 @@ void v_daw_audio_items_run(
         if(
             f_playback_mode != PLAYBACK_MODE_OFF
             &&
-            f_audio_start >= a_ts->ml_current_beat
+            f_audio_start >= daw_ts->ml_current_beat
             &&
-            f_audio_start < a_ts->ml_next_beat
+            f_audio_start < daw_ts->ml_next_beat
             &&
             f_audio_start < a_item_ref->end
         ){
@@ -226,9 +227,7 @@ void v_daw_audio_items_run(
                     &f_audio_item->sample_read_heads[f_send_num],
                     f_audio_item->sample_end_offset
                 );
-            }
-            else
-            {
+            } else {
                 v_ifh_retrigger(
                     &f_audio_item->sample_read_heads[f_send_num],
                     f_audio_item->sample_start_offset
@@ -239,8 +238,8 @@ void v_daw_audio_items_run(
 
             v_adsr_retrigger(&f_audio_item->adsrs[f_send_num]);
 
-            double f_diff = (a_ts->ml_next_beat - a_ts->ml_current_beat);
-            double f_distance = f_audio_start - a_ts->ml_current_beat;
+            double f_diff = (daw_ts->ml_next_beat - daw_ts->ml_current_beat);
+            double f_distance = f_audio_start - daw_ts->ml_current_beat;
 
             f_i2 = (int)((f_distance / f_diff) * ((double)(a_sample_count)));
 
@@ -273,7 +272,7 @@ void v_daw_audio_items_run(
                 )
             ){
                 assert(f_i2 < a_sample_count);
-                v_audio_item_set_fade_vol(f_audio_item, f_send_num);
+                v_audio_item_set_fade_vol(f_audio_item, f_send_num, sg_ts);
 
                 if(f_audio_item->audio_pool_item->channels == 1){
                     SGFLT f_tmp_sample0 = f_cubic_interpolate_ptr_ifh(
@@ -413,7 +412,7 @@ void v_daw_audio_items_run(
                         "invalid number of channels %i\n",
                         f_audio_item->audio_pool_item->channels
                     );
-                    assert(0);
+                    sg_assert(0, "Invalid number of channels");
                 }
 
                 if(f_audio_item->is_reversed){

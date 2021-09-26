@@ -314,7 +314,11 @@ void v_run_wave_editor(
                 self->ab_audio_item->sample_end_offset
             ){
                 v_adsr_run(&self->ab_audio_item->adsrs[0]);
-                v_audio_item_set_fade_vol(self->ab_audio_item, 0);
+                v_audio_item_set_fade_vol(
+                    self->ab_audio_item,
+                    0,
+                    &STARGATE->thread_storage[0]
+                );
 
                 if(self->ab_wav_item->channels == 1)
                 {
