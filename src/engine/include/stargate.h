@@ -197,14 +197,16 @@ typedef struct{
     void (*mix)();
 }t_sg_host;
 
-typedef struct
-{
+typedef struct {
+    char padding1[CACHE_LINE_SIZE];
     SGFLT sample_rate;
     int current_host;
-    char padding[CACHE_LINE_SIZE - sizeof(SGFLT) - sizeof(int)];
-}t_sg_thread_storage ;
+    int five_ms;  // Standard 5ms audio fade out, in samples
+    SGFLT five_ms_recip;
+    char padding2[CACHE_LINE_SIZE];
+} t_sg_thread_storage;
 
-typedef struct{
+typedef struct {
     t_sg_thread_storage thread_storage[MAX_WORKER_THREADS];
     t_sg_host * current_host;
     t_sg_host hosts[SG_HOST_COUNT];
@@ -254,7 +256,7 @@ typedef struct{
     char * audio_pool_file;
     char * plugins_folder;
     pthread_mutex_t exit_mutex;
-}t_stargate;
+} t_stargate;
 
 typedef struct
 {

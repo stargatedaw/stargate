@@ -12,21 +12,18 @@
 #define DN_LOOP_MODE_SEQUENCE 1
 #define DAW_MAX_SONG_COUNT 20
 
-typedef struct
-{
+typedef struct {
     t_midi_routing routes[DN_TRACK_COUNT];
 }t_daw_midi_routing_list;
 
-typedef struct
-{
+typedef struct {
     t_seq_event * events;
     int event_count;
     t_audio_items * audio_items;
     int uid;
 }t_daw_item;
 
-typedef struct
-{
+typedef struct {
     int item_uid;
     double start;
     double start_offset;
@@ -34,21 +31,18 @@ typedef struct
     double end;
 }t_daw_item_ref;
 
-typedef struct
-{
+typedef struct {
     int pos;
     int count;
     t_daw_item_ref * refs;
 }t_daw_track_seq;
 
-typedef struct
-{
+typedef struct {
     t_daw_track_seq tracks[DN_TRACK_COUNT];
     t_sg_seq_event_list events;
 }t_daw_sequence;
 
-typedef struct
-{
+typedef struct {
     double beat;      // the beat position within the song 0-N
     double recip;     // 1.0 / self->beat - next->beat
     int tick;         // self->beat / SG_AUTOMATION_RESOLUTION
@@ -59,8 +53,7 @@ typedef struct
     int break_after;  // Don't smooth to the next point
 }t_daw_atm_point;
 
-typedef struct
-{
+typedef struct {
     int atm_pos;  //position within the automation sequence
     t_daw_atm_point * points;
     int point_count;
@@ -68,42 +61,37 @@ typedef struct
     SGFLT last_val;
 }t_daw_atm_port;
 
-typedef struct
-{
+typedef struct {
     t_daw_atm_port * ports;
     int port_count;
     char padding[CACHE_LINE_SIZE - sizeof(int) - sizeof(void*)];
 }t_daw_atm_plugin;
 
-typedef struct
-{
+typedef struct {
     t_daw_atm_plugin plugins[MAX_PLUGIN_POOL_COUNT];
 }t_daw_atm_sequence;
 
-typedef struct
-{
+typedef struct {
     t_daw_sequence * sequences;
     t_daw_atm_sequence * sequences_atm;
 }t_daw_song;
 
-typedef struct
-{
-    int track_pool_sorted[MAX_WORKER_THREADS][DN_TRACK_COUNT]
-        ;
-    t_pytrack_routing routes[DN_TRACK_COUNT][MAX_ROUTING_COUNT]
-        ;
+typedef struct {
+    int track_pool_sorted[MAX_WORKER_THREADS][DN_TRACK_COUNT];
+    t_pytrack_routing routes[DN_TRACK_COUNT][MAX_ROUTING_COUNT];
     int bus_count[DN_TRACK_COUNT];
     int track_pool_sorted_count;
 }t_daw_routing_graph;
 
 typedef struct {
+    const char padding1[CACHE_LINE_SIZE];
     double ml_sample_period_inc_beats;
     double ml_current_beat;
     double ml_next_beat;
     long current_sample;
     long f_next_current_sample;
     int is_looping;
-    int is_first_period;   //since playback started
+    int is_first_period;  // since playback started
     int playback_mode;
     int suppress_new_audio_items;
     int sample_count;
@@ -115,10 +103,9 @@ typedef struct {
     int input_count;
     int * input_index;
     int atm_tick_count;
-    // This also pads the cache line, since most of these
-    // bytes will never be used
     t_atm_tick atm_ticks[ATM_TICK_BUFFER_SIZE];
-}t_daw_thread_storage;
+    const char padding2[CACHE_LINE_SIZE];
+} t_daw_thread_storage;
 
 typedef struct
 {

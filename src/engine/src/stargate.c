@@ -350,9 +350,13 @@ void g_stargate_get(SGFLT a_sr, t_midi_device_list * a_midi_devices)
         );
     }
 
+    t_sg_thread_storage* ts;
     for(f_i = 0; f_i < MAX_WORKER_THREADS; ++f_i){
-        STARGATE->thread_storage[f_i].sample_rate = a_sr;
-        STARGATE->thread_storage[f_i].current_host = SG_HOST_DAW;
+        ts = &STARGATE->thread_storage[f_i];
+        ts->sample_rate = a_sr;
+        ts->five_ms = (int)(a_sr * 0.005);
+        ts->five_ms_recip = 1. / (SGFLT)ts->five_ms;
+        ts->current_host = SG_HOST_DAW;
     }
 
     /* Create OSC thread */
