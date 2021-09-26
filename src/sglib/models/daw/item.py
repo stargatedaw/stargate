@@ -350,7 +350,7 @@ class item:
                 f_start = f_cc1.start + f_time_inc
 
                 f_start_diff = f_cc2.start - f_cc1.start
-                if f_start_diff == 0.0:
+                if f_start_diff <= f_time_inc:
                     continue
 
                 f_inc = (f_val_diff / (f_start_diff * 16.0))
