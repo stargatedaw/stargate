@@ -375,8 +375,13 @@ class preset_manager_widget:
         self.suppress_change = False
 
     def commit_presets(self):
-        f_presets = "\n".join("|".join([x] + self.presets_delimited[x])
-            for x in sorted(self.presets_delimited, key=lambda s: s.lower()))
+        f_presets = "\n".join(
+            "|".join([x] + self.presets_delimited[x])
+            for x in sorted(
+                self.presets_delimited,
+                key=lambda s: s.lower(),
+            )
+        )
         f_result = "{}\n{}".format(self.plugin_name, f_presets)
         util.write_file_text(self.preset_path, f_result)
         self.load_presets()
