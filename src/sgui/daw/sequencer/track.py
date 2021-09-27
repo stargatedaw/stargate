@@ -109,12 +109,16 @@ class SeqTrack:
                 plugin_index = plugins.plugins[i].plugin_index
                 if plugin_index:
                     name = PLUGIN_UIDS_REVERSE[plugin_index]
-                    route = routes[i - 10]
-                    entry = "{}: {} -> {}".format(
-                        name,
-                        route_types[route.conn_type],
-                        tracks.tracks[route.output].name,
-                    )
+                    idx = i - 10
+                    if idx in routes:
+                        route = routes[idx]
+                        entry = "{}: {} -> {}".format(
+                            name,
+                            route_types[route.conn_type],
+                            tracks.tracks[route.output].name,
+                        )
+                    else:
+                        entry = "None"
                     names.append(entry)
                 else:
                     names.append("None")
