@@ -62,7 +62,7 @@ DEBUGGER ?= gdb
 # Coverage report flags
 GCOVARGS ?= -fprofile-arcs -ftest-coverage  # -fPIC
 # Coverage reports will open in this browser
-BROWSER ?= firefox-wayland
+BROWSER ?= firefox
 
 # Install and packaging flags
 DESTDIR ?=

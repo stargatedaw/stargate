@@ -10,6 +10,7 @@ sudo dnf install \
     fftw-devel \
     gcc \
     gcc-c++ \
+	gcovr \
     gettext \
     git \
     lame \
@@ -21,6 +22,8 @@ sudo dnf install \
     python3-devel \
     python3-numpy \
     python3-qt5 \
+	python3-pytest4 \
+	python3-pytest-cov \
     rubberband \
     spin-kickstarts \
     vorbis-tools

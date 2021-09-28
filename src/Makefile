@@ -9,7 +9,7 @@ DESTDIR ?=
 SBSMS_PREFIX = $(PREFIX)/lib/$(MAJOR)/sbsms
 SG_DIR = $(DESTDIR)$(PREFIX)/lib/$(MAJOR)
 PIP ?= pip3
-BROWSER ?= firefox-wayland
+BROWSER ?= firefox
 
 # --------------------------------------------------------------
 
