@@ -640,7 +640,7 @@ QPushButton:pressed
     background-color: {{ button_pressed }};
 }
 
-QPushButton#plugin_menu::menu-indicator
+QPushButton#nested_combobox::menu-indicator
 {
     image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/drop-down.svg);
     left: -2px;
@@ -654,7 +654,7 @@ QComboBox
 }
 
 QComboBox,
-QPushButton#plugin_menu
+QPushButton#nested_combobox
 {
     background-color: {{ combobox }};
     border: 1px solid {{ border_color }};
@@ -736,7 +736,7 @@ QScrollBar::sub-line:vertical
 }
 
 QComboBox:enabled,
-QPushButton#plugin_menu,
+QPushButton#nested_combobox,
 QScrollBar::add-line:horizontal,
 QScrollBar::add-line:vertical,
 QScrollBar::handle:horizontal,

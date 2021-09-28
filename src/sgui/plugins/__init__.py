@@ -16,6 +16,7 @@ import sys
 
 from sglib.math import clip_value
 from sgui import shared, widgets
+from sgui.widgets.nested_combobox import NestedComboBox
 from sglib.models.stargate import *
 from sglib.models.track_plugin import track_plugin
 from sglib.lib import strings as sg_strings
@@ -250,42 +251,6 @@ class SgPluginUiDict:
 PLUGIN_SETTINGS_COPY_OBJ = None
 PLUGIN_SETTINGS_IS_CUT = False
 
-class PluginComboBox(QPushButton):
-    def __init__(self, a_callback):
-        self.callback = a_callback
-        QPushButton.__init__(self, _("None"))
-        self.setObjectName("plugin_menu")
-        self.menu = QMenu()
-        self.setMenu(self.menu)
-        f_action = self.menu.addAction("None")
-        f_action.plugin_name = "None"
-        self._index = 0
-        self.menu.triggered.connect(self.action_triggered)
-
-    def currentIndex(self):
-        return self._index
-
-    def currentText(self):
-        return PLUGIN_UIDS_REVERSE[self._index]
-
-    def setCurrentIndex(self, a_index):
-        a_index = int(a_index)
-        self._index = a_index
-        self.setText(PLUGIN_UIDS_REVERSE[a_index])
-
-    def action_triggered(self, a_val):
-        a_val = a_val.plugin_name
-        self._index = PLUGIN_UIDS[a_val]
-        self.setText(a_val)
-        self.callback()
-
-    def addItems(self, a_items):
-        for k, v in a_items:
-            f_menu = self.menu.addMenu(k)
-            for f_name in v:
-                f_action = f_menu.addAction(f_name)
-                f_action.plugin_name = f_name
-
 
 class AbstractPluginSettings:
     def __init__(
@@ -312,8 +277,9 @@ class AbstractPluginSettings:
         if a_qcbox:
             self.plugin_combobox = QComboBox()
         else:
-            self.plugin_combobox = PluginComboBox(
+            self.plugin_combobox = NestedComboBox(
                 self.on_plugin_combobox_change,
+                PLUGIN_UIDS,
             )
         self.plugin_combobox.setMinimumWidth(150)
         self.plugin_combobox.wheelEvent = self.wheel_event
