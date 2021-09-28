@@ -11,7 +11,7 @@ def test_to_from_str():
         "track_num": 1,
         "index": 0,
         "output": 0,
-        "sidechain": 0,
+        "conn_type": 0,
     }, node.__dict__
 
 def test_toggle():
@@ -26,15 +26,15 @@ def test_toggle():
         "track_num": 1,
         "index": 0,
         "output": 0,
-        "sidechain": 0,
+        "conn_type": 0,
     }, node.__dict__
     graph.toggle(1, 0)
     assert not graph.graph[1]
 
 def test_toggle_too_many_sends():
     graph = RoutingGraph()
-    for i in range(5):
-        msg = graph.toggle(10, i)
+    for i in range(18):
+        msg = graph.toggle(20, i)
     assert msg is not None, msg
 
 def test_sort_all_paths_no_master():
@@ -52,7 +52,7 @@ def test_set_default_output():
         "track_num": 1,
         "index": 0,
         "output": 0,
-        "sidechain": 0,
+        "conn_type": 0,
     }, node.__dict__
 
 def test_reorder():
@@ -64,6 +64,6 @@ def test_reorder():
         "track_num": 2,
         "index": 0,
         "output": 0,
-        "sidechain": 0,
+        "conn_type": 0,
     }, node.__dict__
 
