@@ -713,6 +713,10 @@ QComboBox::down-arrow
     image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/drop-down.svg);
 }
 
+QScrollBar::handle {
+    border: 1px solid {{ border_color }};
+}
+
 QScrollBar:horizontal
 {
     background: {{ hscrollbar }};
