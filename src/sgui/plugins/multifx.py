@@ -113,7 +113,9 @@ QLabel#plugin_value_label {
     color: #cccccc;
 }
 
-QComboBox{
+QComboBox,
+QPushButton#nested_combobox
+{
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
@@ -130,7 +132,8 @@ QAbstractItemView
     selection-background-color: #cccccc;
 }
 
-QComboBox::drop-down
+QComboBox::drop-down,
+QMenu
 {
     border-bottom-right-radius: 3px;
     border-left-color: #222222;

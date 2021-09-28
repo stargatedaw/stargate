@@ -6,6 +6,7 @@ from sglib.math import (
     ratio_to_pitch,
 )
 from .knob import PixmapKnob
+from .nested_combobox import NestedComboBox
 from sgui import shared as glbl_shared
 from sglib.lib import util
 from sglib.lib.translate import _
@@ -795,4 +796,67 @@ class combobox_control(AbstractUiControl):
     def get_value(self):
         return self.control.currentIndex()
 
+
+class NestedComboboxControl(AbstractUiControl):
+    def __init__(
+        self,
+        a_size,
+        a_label,
+        a_port_num,
+        a_rel_callback,
+        a_val_callback,
+        lookup,
+        items,
+        callback=None,
+        a_port_dict=None,
+        a_default_index=None,
+        a_preset_mgr=None,
+    ):
+        self.suppress_changes = True
+        self.callback = callback
+        self.name_label = QLabel(str(a_label))
+        self.name_label.setObjectName("plugin_name_label")
+        self.name_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.control = NestedComboBox(
+            self.control_value_changed,
+            lookup,
+        )
+        self.control.wheelEvent = self.wheel_event
+        self.widget = self.control
+        self.control.setMinimumWidth(a_size)
+        self.control.addItems(items)
+        self.control.setCurrentIndex(0)
+        self.port_num = int(a_port_num)
+        self.rel_callback = a_rel_callback
+        self.val_callback = a_val_callback
+        self.suppress_changes = False
+        if a_port_dict is not None:
+            a_port_dict[self.port_num] = self
+        self.value_label = None
+        self.default_value = a_default_index
+        if a_default_index is not None:
+            self.set_value(a_default_index)
+        if a_preset_mgr is not None:
+            a_preset_mgr.add_control(self)
+
+    def wheel_event(self, a_event=None):
+        pass
+
+    def control_value_changed(self):
+        if self.callback:
+            self.callback()
+        val = self.control.currentIndex()
+        if not self.suppress_changes:
+            self.val_callback(self.port_num, val)
+            if self.rel_callback is not None:
+                self.rel_callback(self.port_num, val)
+
+    def set_value(self, a_val, a_changed=False):
+        if not a_changed:
+            self.suppress_changes = True
+        self.control.setCurrentIndex(int(a_val))
+        self.suppress_changes = False
+
+    def get_value(self):
+        return self.control.currentIndex()
 

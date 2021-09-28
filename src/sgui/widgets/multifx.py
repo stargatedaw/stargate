@@ -6,8 +6,40 @@ from sgui.sgqt import *
 
 
 MULTIFX_CLIPBOARD = None
-MULTIFX_EFFECTS_LIST = [
-    "Off",
+MULTIFX_EFFECTS_LOOKUP = {
+    "None": 0,
+    "LP2": 1,
+    "LP4": 2,
+    "HP2": 3,
+    "HP4": 4,
+    "BP2": 5,
+    "BP4": 6,
+    "Notch2": 7,
+    "Notch4": 8,
+    "EQ": 9,
+    "Distortion": 10,
+    "Comb Filter": 11,
+    "Amp/Pan": 12,
+    "Limiter": 13,
+    "Saturator": 14,
+    "Formant": 15,
+    "Chorus": 16,
+    "Glitch": 17,
+    "RingMod": 18,
+    "LoFi": 19,
+    "S/H": 20,
+    "LP-D/W": 21,
+    "HP-D/W": 22,
+    "Monofier": 23,
+    "LP<-->HP": 24,
+    "Growl Filter": 25,
+    "Screech LP": 26,
+    "Metal Comb": 27,
+    "Notch-D/W": 28,
+    "Foldback": 29,
+}
+
+MULTIFX_FILTERS = [
     "LP2",
     "LP4",
     "HP2",
@@ -17,26 +49,41 @@ MULTIFX_EFFECTS_LIST = [
     "Notch2",
     "Notch4",
     "EQ",
-    "Distortion",
-    "Comb Filter",
-    "Amp/Pan",
-    "Limiter",
-    "Saturator",
     "Formant",
-    "Chorus",
+    "LP-D/W",
+    "HP-D/W",
+    "LP<-->HP",
+    "Growl Filter",
+    "Screech LP",
+    "Notch-D/W",
+]
+
+MULTIFX_DISTORTION = [
+    "Distortion",
     "Glitch",
     "RingMod",
     "LoFi",
     "S/H",
-    "LP-D/W",
-    "HP-D/W",
-    "Monofier",
-    "LP<-->HP",
-    "Growl Filter",
-    "Screech LP",
-    "Metal Comb",
-    "Notch-D/W",
     "Foldback",
+]
+
+MULTIFX_DELAY = [
+    "Comb Filter",
+    "Chorus",
+    "Metal Comb",
+]
+
+MULTIFX_DYNAMICS = [
+    "Amp/Pan",
+    "Limiter",
+    "Monofier",
+]
+
+MULTIFX_ITEMS = [
+    ("Filters", MULTIFX_FILTERS),
+    ("Distortion", MULTIFX_DISTORTION),
+    ("Delay", MULTIFX_DELAY),
+    ("Dynamics", MULTIFX_DYNAMICS),
 ]
 
 class multifx_single:
@@ -77,20 +124,20 @@ class multifx_single:
             )
             f_knob.add_to_grid_layout(self.layout, f_i)
             self.knobs.append(f_knob)
-        self.combobox = combobox_control(
+        self.combobox = NestedComboboxControl(
             132,
             "Type",
             a_port_k1 + 3,
             a_rel_callback,
             a_val_callback,
-            MULTIFX_EFFECTS_LIST,
+            MULTIFX_EFFECTS_LOOKUP,
+            MULTIFX_ITEMS,
+            self.type_combobox_changed,
             a_port_dict=a_port_dict,
             a_preset_mgr=a_preset_mgr,
             a_default_index=0,
         )
         self.layout.addWidget(self.combobox.name_label, 0, 3)
-        self.combobox.control.currentIndexChanged.connect(
-            self.type_combobox_changed)
         self.layout.addWidget(self.combobox.control, 1, 3)
 
     def wheel_event(self, a_event=None):
@@ -170,9 +217,11 @@ class multifx_single:
             self.knobs[0].control.value(),
             self.knobs[1].control.value(),
             self.knobs[2].control.value(),
-            self.combobox.control.currentIndex())
+            self.combobox.control.currentIndex(),
+        )
 
-    def type_combobox_changed(self, a_val):
+    def type_combobox_changed(self):
+        a_val = self.combobox.control.currentIndex()
         if a_val == 0: #Off
             self.knobs[0].name_label.setText("")
             self.knobs[1].name_label.setText("")
