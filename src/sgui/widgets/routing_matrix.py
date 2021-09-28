@@ -190,7 +190,8 @@ class RoutingGraphWidget(QGraphicsView):
             range(len(a_track_names)),
         ):
             f_node_item = RoutingGraphNode(
-                k, self.node_width,
+                k,
+                self.node_width,
                 self.node_height)
             self.node_dict[f_i] = f_node_item
             self.scene.addItem(f_node_item)
@@ -198,9 +199,19 @@ class RoutingGraphWidget(QGraphicsView):
             f_y = self.node_height * f_i
             if f_i != 0:
                 self.scene.addLine(
-                    0.0, f_y, self.graph_width, f_y, f_line_pen)
+                    0.0,
+                    f_y,
+                    self.graph_width,
+                    f_y,
+                    f_line_pen
+                )
                 self.scene.addLine(
-                    f_x, 0.0, f_x, self.graph_height, f_line_pen)
+                    f_x,
+                    0.0,
+                    f_x,
+                    self.graph_height,
+                    f_line_pen,
+                )
             f_node_item.setPos(f_x, f_y)
             if f_i == 0 or f_i not in a_graph.graph:
                 continue
@@ -213,17 +224,22 @@ class RoutingGraphWidget(QGraphicsView):
                     continue
                 f_pen = pen_dict[conn_type]
                 f_y_wire_offset = (
-                    conn_type * self.wire_width) + self.wire_width_div2
+                    conn_type * self.wire_width) + self.wire_width
                 if f_dest_pos > f_i:
                     f_src_x = f_x + self.node_width
                     f_src_y = f_y + f_y_wire_offset
-                    f_wire_width = ((f_dest_pos - f_i - 1) *
-                        self.node_width) + ROUTING_GRAPH_WIRE_INPUT
+                    f_wire_width = (
+                        (f_dest_pos - f_i - 1) * self.node_width
+                    ) + (
+                        (self.node_width * 0.5)
+                        +
+                        (self.wire_width_div2 * 0.5)
+                    )
                     f_v_wire_x = f_src_x + f_wire_width
                     if conn_type == 1:  # sidechain
-                        f_v_wire_x += self.wire_width_div2 * 2
+                        f_v_wire_x += self.wire_width
                     elif conn_type == 2:  # MIDI
-                        f_v_wire_x -= self.wire_width_div2 * 2
+                        f_v_wire_x -= self.wire_width
                     f_wire_height = ((f_dest_pos - f_i) *
                         self.node_height) - f_y_wire_offset
                     f_dest_y = f_src_y + f_wire_height
@@ -258,12 +274,16 @@ class RoutingGraphWidget(QGraphicsView):
                     f_src_x = f_x
                     f_src_y = f_y + f_y_wire_offset
                     f_wire_width = ((f_i - f_dest_pos - 1) *
-                        self.node_width) + ROUTING_GRAPH_WIRE_INPUT
+                        self.node_width) + (
+                        (self.node_width * 0.5)
+                        +
+                        (self.wire_width_div2 * 0.5)
+                    )
                     f_v_wire_x = f_src_x - f_wire_width
                     if conn_type == 1:  # sidechain
-                        f_v_wire_x += self.wire_width_div2 * 2
+                        f_v_wire_x += self.wire_width
                     elif conn_type == 2:  # MIDI
-                        f_v_wire_x -= self.wire_width_div2 * 2
+                        f_v_wire_x -= self.wire_width
                     f_wire_height = ((f_i - f_dest_pos - 1) *
                         self.node_height) + f_y_wire_offset
                     f_dest_y = f_src_y - f_wire_height
