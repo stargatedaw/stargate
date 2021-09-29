@@ -185,6 +185,7 @@ class RoutingGraphWidget(QGraphicsView):
         self.background_item.hoverLeaveEvent = self.backgroundHoverLeaveEvent
         self.background_item.setAcceptHoverEvents(True)
         self.background_item.mousePressEvent = self.backgroundMousePressEvent
+        conn_type_y_pos = {0: 1, 1:0, 2: 2}
         for k, f_i in zip(
             a_track_names,
             range(len(a_track_names)),
@@ -224,7 +225,8 @@ class RoutingGraphWidget(QGraphicsView):
                     continue
                 f_pen = pen_dict[conn_type]
                 f_y_wire_offset = (
-                    conn_type * self.wire_width) + self.wire_width
+                    conn_type_y_pos[conn_type] * self.wire_width
+                ) + self.wire_width
                 if f_dest_pos > f_i:
                     f_src_x = f_x + self.node_width
                     f_src_y = f_y + f_y_wire_offset
