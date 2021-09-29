@@ -7,7 +7,7 @@ from sgui.sgqt import *
 
 MULTIFX_CLIPBOARD = None
 MULTIFX_EFFECTS_LOOKUP = {
-    "None": 0,
+    "Off": 0,
     "LP2": 1,
     "LP4": 2,
     "HP2": 3,
@@ -80,6 +80,7 @@ MULTIFX_DYNAMICS = [
 ]
 
 MULTIFX_ITEMS = [
+    "Off",
     ("Filters", MULTIFX_FILTERS),
     ("Distortion", MULTIFX_DISTORTION),
     ("Delay", MULTIFX_DELAY),

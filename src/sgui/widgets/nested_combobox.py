@@ -24,8 +24,6 @@ class NestedComboBox(QPushButton):
         self.setObjectName("nested_combobox")
         self.menu = QMenu()
         self.setMenu(self.menu)
-        f_action = self.menu.addAction("None")
-        f_action.plugin_name = "None"
         self._index = 0
         self.menu.triggered.connect(self.action_triggered)
 
@@ -51,9 +49,14 @@ class NestedComboBox(QPushButton):
 
             items: [("Submenu Name" ["EntryName1", "EntryName2"])]
         """
-        for k, v in items:
-            menu = self.menu.addMenu(k)
-            for name in v:
-                action = menu.addAction(name)
-                action.plugin_name = name
+        for v in items:
+            if isinstance(v, str):
+                action = self.menu.addAction(v)
+                action.plugin_name = v
+            else:
+                k, v = v
+                menu = self.menu.addMenu(k)
+                for name in v:
+                    action = menu.addAction(name)
+                    action.plugin_name = name
 

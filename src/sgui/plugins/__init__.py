@@ -99,6 +99,7 @@ PLUGINS_SIDECHAIN = ["Sidechain Comp.", "X-Fade", "SG Vocoder",]
 PLUGINS_MIXER = ["Simple Fader", "SG Channel", 'Wide Mixer']
 
 MAIN_PLUGIN_NAMES = [
+    "None",
     ("Synth", PLUGINS_SYNTH),
     ("Sampler", PLUGINS_SAMPLER),
     ("Effects", PLUGINS_EFFECTS),
@@ -109,12 +110,16 @@ MAIN_PLUGIN_NAMES = [
 ]
 
 WAVE_EDITOR_PLUGIN_NAMES = [
+    "None",
     ("Effects", PLUGINS_EFFECTS),
     ("Dynamics", PLUGINS_DYNAMICS),
     ("Mixer", PLUGINS_MIXER)
 ]
 
-MIXER_PLUGIN_NAMES = [("Mixer", PLUGINS_MIXER)]
+MIXER_PLUGIN_NAMES = [
+    "None",
+    ("Mixer", PLUGINS_MIXER),
+]
 PLUGIN_UIDS_REVERSE = {v:k for k, v in PLUGIN_UIDS.items()}
 CC_NAMES = {x:[] for x in PLUGIN_NAMES}
 CONTROLLER_PORT_NAME_DICT = {x:{} for x in PLUGIN_NAMES}
