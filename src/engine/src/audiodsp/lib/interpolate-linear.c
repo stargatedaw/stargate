@@ -25,9 +25,11 @@ SGFLT f_linear_interpolate(
  * This method uses a pointer instead of an array the SGFLT* must be malloc'd
  * to (sizeof(SGFLT) * a_table_size)
  */
-SGFLT f_linear_interpolate_ptr_wrap(SGFLT * a_table, int a_table_size,
-        SGFLT a_ptr)
-{
+SGFLT f_linear_interpolate_ptr_wrap(
+    SGFLT* a_table,
+    int a_table_size,
+    SGFLT a_ptr
+){
     int int_pos = (int)a_ptr;
     int int_pos_plus_1 = int_pos + 1;
 
@@ -66,8 +68,7 @@ SGFLT f_linear_interpolate_ptr_wrap(SGFLT * a_table, int a_table_size,
  *
  * THIS DOES NOT CHECK THAT YOU PROVIDED A VALID POSITION
  */
-SGFLT f_linear_interpolate_ptr(SGFLT * a_table, SGFLT a_ptr)
-{
+SGFLT f_linear_interpolate_ptr(SGFLT * a_table, SGFLT a_ptr){
     int int_pos = (int)a_ptr;
     int int_pos_plus_1 = int_pos + 1;
 
@@ -85,9 +86,11 @@ SGFLT f_linear_interpolate_ptr(SGFLT * a_table, SGFLT a_ptr)
  *
  * For use with the read_head type in Sampler1 Sampler
  */
-SGFLT f_linear_interpolate_ptr_ifh(SGFLT * a_table, int a_whole_number,
-        SGFLT a_frac)
-{
+SGFLT f_linear_interpolate_ptr_ifh(
+    SGFLT * a_table,
+    int a_whole_number,
+    SGFLT a_frac
+){
     int int_pos = a_whole_number;
     int int_pos_plus_1 = int_pos + 1;
 
