@@ -21,9 +21,9 @@ GNU General Public License for more details.
 #include "files.h"
 
 void v_run_fm1_voice(
-    t_fm1 *,
+    t_fm1*,
     t_voc_single_voice*,
-    t_fm1_poly_voice *,
+    t_fm1_poly_voice*,
     PluginData*,
     PluginData*,
     int,
@@ -97,8 +97,100 @@ void fm1Panic(PluginHandle instance)
     }
 }
 
-void v_fm1_on_stop(PluginHandle instance)
-{
+struct FM1OscArg {
+    t_fm1* plugin_data;
+    t_fm1_poly_voice* a_voice;
+};
+
+SGFLT fm1_run_voice_osc(void* arg){
+    struct FM1OscArg* _arg = (struct FM1OscArg*)arg;
+    t_fm1* plugin_data = _arg->plugin_data;
+    t_fm1_poly_voice* a_voice = _arg->a_voice;
+    SGFLT result = 0.0;
+    int f_osc_num;
+    SGFLT f_macro_amp;
+    SGFLT f_osc_amp;
+    t_fm1_osc* f_osc;
+    t_fm1_mono_modules* mm = plugin_data->mono_modules;
+
+    for(f_osc_num = 0; f_osc_num < FM1_OSC_COUNT; ++f_osc_num){
+        f_macro_amp = 0.0f;
+        f_osc = &a_voice->osc[f_osc_num];
+
+        if(f_osc->osc_on){
+            v_osc_wav_set_unison_pitch(
+                &f_osc->osc_wavtable, f_osc->osc_uni_spread,
+                (a_voice->base_pitch + (*plugin_data->osc_pitch[f_osc_num]) +
+                ((*plugin_data->osc_tune[f_osc_num]) * 0.01f)));
+
+            int f_i;
+            for(f_i = 0; f_i < FM1_OSC_COUNT; ++f_i)
+            {
+                f_osc->fm_osc_values[f_i] = f_osc->osc_fm[f_i];
+            }
+
+            for(f_i = 0; f_i < 2; ++f_i){
+                if(mm->fm_macro_smoother[f_i].last_value > 0.0f){
+                    int f_i2;
+                    for(f_i2 = 0; f_i2 < FM1_OSC_COUNT; ++f_i2){
+                        f_osc->fm_osc_values[f_i2] +=
+                          ((*plugin_data->fm_macro_values[f_i][f_osc_num][f_i2]
+                                * 0.005f) *
+                            mm->fm_macro_smoother[f_i].last_value);
+                    }
+
+                    if(f_osc->osc_macro_amp[f_i] != 0.0f){
+                        f_macro_amp += mm->fm_macro_smoother[f_i].last_value *
+                            f_osc->osc_macro_amp[f_i];
+                    }
+                }
+            }
+
+            for(f_i = 0; f_i < FM1_OSC_COUNT; ++f_i){
+                if(f_osc->fm_osc_values[f_i] < 0.0f){
+                    f_osc->fm_osc_values[f_i] = 0.0f;
+                } else if(f_osc->fm_osc_values[f_i] > 0.5f){
+                    f_osc->fm_osc_values[f_i] = 0.5f;
+                }
+
+                if(f_i <= f_osc_num){
+                    v_osc_wav_apply_fm(
+                        &f_osc->osc_wavtable,
+                        a_voice->osc[f_i].fm_last,
+                        f_osc->fm_osc_values[f_i]
+                    );
+                } else {
+                    v_osc_wav_apply_fm_direct(
+                        &f_osc->osc_wavtable,
+                        a_voice->osc[f_i].fm_last,
+                        f_osc->fm_osc_values[f_i]
+                    );
+                }
+            }
+
+            if(f_osc->adsr_amp_on){
+                v_adsr_run_db(&f_osc->adsr_amp_osc);
+                f_osc->fm_last = f_osc_wav_run_unison(&f_osc->osc_wavtable)
+                    * (f_osc->adsr_amp_osc.output);
+            } else {
+                f_osc->fm_last = f_osc_wav_run_unison(&f_osc->osc_wavtable);
+            }
+
+            if(f_osc->osc_audible || f_macro_amp >= 1.0f){
+                f_osc_amp = f_osc->osc_linamp * f_db_to_linear(f_macro_amp);
+
+                if(f_osc_amp > 1.0f){  //clip at 0dB
+                    result += f_osc->fm_last;
+                } else {
+                    result += f_osc->fm_last * f_osc_amp;
+                }
+            }
+        }
+    }
+    return result;
+}
+
+void v_fm1_on_stop(PluginHandle instance){
     t_fm1 *plugin = (t_fm1 *)instance;
     int f_i = 0;
     while(f_i < FM1_POLYPHONY)
@@ -1292,7 +1384,6 @@ void v_run_fm1_voice(
     }
 
     a_voice->adsr_run_func(&a_voice->adsr_main);
-    a_voice->current_sample = 0.0f;
 
     f_rmp_run_ramp(&a_voice->glide_env);
 
@@ -1338,125 +1429,20 @@ void v_run_fm1_voice(
             (a_voice->lfo_pitch_output);
     }
 
-    int f_osc_num = 0;
-    SGFLT f_macro_amp;
-    SGFLT f_osc_amp;
-    t_fm1_osc * f_osc;
+    struct FM1OscArg osc_arg = (struct FM1OscArg){
+        .plugin_data = plugin_data,
+        .a_voice = a_voice,
+    };
 
-    while(f_osc_num < FM1_OSC_COUNT)
-    {
-        f_macro_amp = 0.0f;
-        f_osc = &a_voice->osc[f_osc_num];
+    a_voice->current_sample = fm1_run_voice_osc(&osc_arg);
 
-        if(f_osc->osc_on)
-        {
-            v_osc_wav_set_unison_pitch(
-                &f_osc->osc_wavtable, f_osc->osc_uni_spread,
-                (a_voice->base_pitch + (*plugin_data->osc_pitch[f_osc_num]) +
-                ((*plugin_data->osc_tune[f_osc_num]) * 0.01f)));
-
-            int f_i = 0;
-            while(f_i < FM1_OSC_COUNT)
-            {
-                f_osc->fm_osc_values[f_i] = f_osc->osc_fm[f_i];
-                ++f_i;
-            }
-
-            f_i = 0;
-
-            while(f_i < 2)
-            {
-                if(plugin_data->mono_modules->fm_macro_smoother[f_i].last_value
-                        > 0.0f)
-                {
-                    int f_i2 = 0;
-                    while(f_i2 < FM1_OSC_COUNT)
-                    {
-                        f_osc->fm_osc_values[f_i2] +=
-                          ((*plugin_data->fm_macro_values[f_i][f_osc_num][f_i2]
-                                * 0.005f) *
-                            plugin_data->mono_modules->
-                                fm_macro_smoother[f_i].last_value);
-                        ++f_i2;
-                    }
-
-                    if(f_osc->osc_macro_amp[f_i] != 0.0f)
-                    {
-                        f_macro_amp +=
-                            plugin_data->mono_modules->fm_macro_smoother[
-                            f_i].last_value * f_osc->osc_macro_amp[f_i];
-                    }
-                }
-
-                ++f_i;
-            }
-
-            f_i = 0;
-
-            while(f_i < FM1_OSC_COUNT)
-            {
-                if(f_osc->fm_osc_values[f_i] < 0.0f)
-                {
-                    f_osc->fm_osc_values[f_i] = 0.0f;
-                }
-                else if(f_osc->fm_osc_values[f_i] > 0.5f)
-                {
-                    f_osc->fm_osc_values[f_i] = 0.5f;
-                }
-
-                if(f_i <= f_osc_num)
-                {
-                    v_osc_wav_apply_fm(
-                        &f_osc->osc_wavtable,
-                        a_voice->osc[f_i].fm_last,
-                        f_osc->fm_osc_values[f_i]
-                    );
-                }
-                else
-                {
-                    v_osc_wav_apply_fm_direct(
-                        &f_osc->osc_wavtable,
-                        a_voice->osc[f_i].fm_last,
-                        f_osc->fm_osc_values[f_i]
-                    );
-                }
-
-                ++f_i;
-            }
-
-            if(f_osc->adsr_amp_on){
-                v_adsr_run_db(&f_osc->adsr_amp_osc);
-                f_osc->fm_last = f_osc_wav_run_unison(&f_osc->osc_wavtable)
-                    * (f_osc->adsr_amp_osc.output);
-            } else {
-                f_osc->fm_last = f_osc_wav_run_unison(&f_osc->osc_wavtable);
-            }
-
-            if(f_osc->osc_audible || f_macro_amp >= 1.0f){
-                f_osc_amp = f_osc->osc_linamp * f_db_to_linear(f_macro_amp);
-
-                if(f_osc_amp > 1.0f){  //clip at 0dB
-                    a_voice->current_sample += f_osc->fm_last;
-                } else {
-                    a_voice->current_sample += f_osc->fm_last * f_osc_amp;
-                }
-            }
-        }
-
-        ++f_osc_num;
-    }
-
-    if(a_voice->noise_prefx)
-    {
-        if(a_voice->adsr_noise_on)
-        {
+    if(a_voice->noise_prefx){
+        if(a_voice->adsr_noise_on){
             v_adsr_run(&a_voice->adsr_noise);
             a_voice->current_sample +=
                 a_voice->noise_func_ptr(&a_voice->white_noise1) *
                 (a_voice->noise_linamp) * a_voice->adsr_noise.output;
-        }
-        else
-        {
+        } else {
             a_voice->current_sample +=
                 (a_voice->noise_func_ptr(&a_voice->white_noise1) *
                 (a_voice->noise_linamp));
