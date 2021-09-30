@@ -826,9 +826,10 @@ void v_fm1_process_midi_event(
                 a_event->tick
             );
 
-            t_fm1_osc * f_pfx_osc = NULL;
-            t_fm1_poly_voice * f_fm1_voice = &plugin_data->data[f_voice];
+            t_fm1_osc* f_pfx_osc = NULL;
+            t_fm1_poly_voice* f_fm1_voice = &plugin_data->data[f_voice];
 
+            resampler_linear_reset(&f_fm1_voice->resampler);
             int f_adsr_main_lin = (int)(*plugin_data->adsr_lin_main);
             f_fm1_voice->adsr_run_func = FP_ADSR_RUN[f_adsr_main_lin];
 
@@ -1000,14 +1001,21 @@ void v_fm1_process_midi_event(
                 SGFLT f_sustain = (*plugin_data->lfo_sustain) * 0.01f;
                 SGFLT f_release = *(plugin_data->lfo_release) * .01f;
                 f_release = (f_release) * (f_release);
-                v_adsr_set_adsr(&f_fm1_voice->adsr_lfo,
-                        f_attack, f_decay, f_sustain, f_release);
+                v_adsr_set_adsr(
+                    &f_fm1_voice->adsr_lfo,
+                    f_attack,
+                    f_decay,
+                    f_sustain,
+                    f_release
+                );
                 v_adsr_set_delay_time(
-                        &f_fm1_voice->adsr_lfo,
-                        (*plugin_data->lfo_delay) * 0.01f);
+                    &f_fm1_voice->adsr_lfo,
+                    (*plugin_data->lfo_delay) * 0.01f
+                );
                 v_adsr_set_hold_time(
-                        &f_fm1_voice->adsr_lfo,
-                        (*plugin_data->lfo_hold) * 0.01f);
+                    &f_fm1_voice->adsr_lfo,
+                    (*plugin_data->lfo_hold) * 0.01f
+                );
             }
 
             v_adsr_retrigger(&f_fm1_voice->adsr_main);
@@ -1019,15 +1027,20 @@ void v_fm1_process_midi_event(
             SGFLT f_release = *(plugin_data->release_main) * .01f;
             f_release = (f_release) * (f_release);
 
-            FP_ADSR_SET[f_adsr_main_lin](&f_fm1_voice->adsr_main,
-                (f_attack), (f_decay), *(plugin_data->sustain_main),
-                    (f_release));
+            FP_ADSR_SET[f_adsr_main_lin](
+                &f_fm1_voice->adsr_main,
+                f_attack,
+                f_decay,
+                *(plugin_data->sustain_main),
+                f_release
+            );
 
-            v_adsr_set_hold_time(&f_fm1_voice->adsr_main,
-                    (*plugin_data->hold_main) * 0.01f);
+            v_adsr_set_hold_time(
+                &f_fm1_voice->adsr_main,
+                (*plugin_data->hold_main) * 0.01f
+            );
 
-            f_fm1_voice->noise_amp =
-                f_db_to_linear(*(plugin_data->noise_amp));
+            f_fm1_voice->noise_amp = f_db_to_linear(*(plugin_data->noise_amp));
 
             /*Set the last_note property, so the next note can glide from
              * it if glide is turned on*/
@@ -1037,15 +1050,13 @@ void v_fm1_process_midi_event(
 
             f_fm1_voice->active_polyfx_count = 0;
             //Determine which PolyFX have been enabled
-            for(i_dst = 0; i_dst < FM1_MODULAR_POLYFX_COUNT; ++i_dst)
-            {
+            for(i_dst = 0; i_dst < FM1_MODULAR_POLYFX_COUNT; ++i_dst){
                 int f_pfx_combobox_index =
                     (int)(*(plugin_data->fx_combobox[(i_dst)]));
                 f_fm1_voice->effects[i_dst].fx_func_ptr =
                     g_mf3_get_function_pointer(f_pfx_combobox_index);
 
-                if(f_pfx_combobox_index != 0)
-                {
+                if(f_pfx_combobox_index != 0){
                     f_fm1_voice->active_polyfx[
                         f_fm1_voice->active_polyfx_count] = i_dst;
                     ++f_fm1_voice->active_polyfx_count;
@@ -1469,8 +1480,7 @@ void v_run_fm1_voice(
     t_fm1_pfx_group * f_pfx_group;
     int i_dst, f_dst;
     //Modular PolyFX, processed from the index created during note_on
-    for(i_dst = 0; (i_dst) < (a_voice->active_polyfx_count); ++i_dst)
-    {
+    for(i_dst = 0; (i_dst) < (a_voice->active_polyfx_count); ++i_dst){
         f_dst = a_voice->active_polyfx[(i_dst)];
         f_pfx_group = &a_voice->effects[f_dst];
 
