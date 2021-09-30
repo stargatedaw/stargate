@@ -17,6 +17,7 @@ GNU General Public License for more details.
 #include "audiodsp/constants.h"
 #include "audiodsp/lib/osc_core.h"
 #include "audiodsp/lib/pitch_core.h"
+#include "audiodsp/lib/resampler_linear.h"
 #include "audiodsp/lib/smoother-linear.h"
 #include "audiodsp/lib/voice.h"
 #include "audiodsp/modules/distortion/clipper.h"
@@ -498,15 +499,14 @@ typedef struct{
 
     t_adsr adsr_amp_osc;
     int adsr_amp_on;
-}t_fm1_osc;
+} t_fm1_osc;
 
-typedef struct{
+typedef struct {
     t_mf3_multi multieffect;
     fp_mf3_run fx_func_ptr;
-}t_fm1_pfx_group;
+} t_fm1_pfx_group;
 
-typedef struct
-{
+typedef struct {
     fp_adsr_run adsr_run_func;
     t_adsr adsr_main;
     /*This corresponds to the current sample being processed on this voice.
@@ -533,6 +533,8 @@ typedef struct
     SGFLT target_pitch;
     //For simplicity, this is used whether glide is turned on or not
     SGFLT last_pitch;
+
+    struct ResamplerLinear resampler;
 
     int perc_env_on;
     t_pnv_perc_env perc_env;
@@ -578,10 +580,9 @@ typedef struct
     SGFLT polyfx_mod_matrix_values[FM1_MODULAR_POLYFX_COUNT]
     [(FM1_CONTROLS_PER_MOD_EFFECT * FM1_MODULATOR_COUNT)];
 
-}t_fm1_poly_voice  ;
+}t_fm1_poly_voice;
 
-typedef struct
-{
+typedef struct {
     PluginData *output0;
     PluginData *output1;
     PluginData *adsr_lin_main;
@@ -683,21 +684,22 @@ typedef struct
     //Corresponds to the actual knobs on the effects themselves,
     //not the mod matrix
     PluginData *pfx_mod_knob
-        [FM1_MODULAR_POLYFX_COUNT][FM1_CONTROLS_PER_MOD_EFFECT];
+        [FM1_MODULAR_POLYFX_COUNT]
+        [FM1_CONTROLS_PER_MOD_EFFECT];
 
     PluginData *fx_combobox[FM1_MODULAR_POLYFX_COUNT];
 
     //PolyFX Mod Matrix
     //Corresponds to the mod matrix spinboxes
     PluginData *polyfx_mod_matrix
-            [FM1_MODULAR_POLYFX_COUNT][FM1_MODULATOR_COUNT]
-            [FM1_CONTROLS_PER_MOD_EFFECT];
+        [FM1_MODULAR_POLYFX_COUNT]
+        [FM1_MODULATOR_COUNT]
+        [FM1_CONTROLS_PER_MOD_EFFECT];
 
-    t_fm1_poly_voice * data[FM1_POLYPHONY];
-
+    t_fm1_poly_voice* data[FM1_POLYPHONY];
     t_voc_voices * voices;
 
-    long         sampleNo;
+    long sampleNo;
 
     SGFLT fs;
     t_fm1_mono_modules * mono_modules;

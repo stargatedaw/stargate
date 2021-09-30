@@ -29,11 +29,10 @@ void TestResamplerLinearSameValue(){
             &self,
             test_case->internal_rate,
             test_case->target_rate,
-            fake_generator,
-            &value
+            fake_generator
         );
         for(j = 0; j < 10; ++j){
-            ret = resampler_linear_run_mono(&self);
+            ret = resampler_linear_run_mono(&self, &value);
             assert(ret == value);
         }
         resampler_linear_reset(&self);

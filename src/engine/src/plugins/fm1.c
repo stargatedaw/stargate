@@ -1434,7 +1434,11 @@ void v_run_fm1_voice(
         .a_voice = a_voice,
     };
 
-    a_voice->current_sample = fm1_run_voice_osc(&osc_arg);
+    //a_voice->current_sample = fm1_run_voice_osc(&osc_arg);
+    a_voice->current_sample = resampler_linear_run_mono(
+        &a_voice->resampler,
+        &osc_arg
+    );
 
     if(a_voice->noise_prefx){
         if(a_voice->adsr_noise_on){
@@ -1965,6 +1969,13 @@ t_fm1_poly_voice * g_fm1_poly_init(
     }
 
     g_adsr_init(&f_voice->adsr_main, a_sr);
+
+    resampler_linear_init(
+        &f_voice->resampler,
+        44100,
+        a_sr,
+        fm1_run_voice_osc
+    );
 
     g_white_noise_init(&f_voice->white_noise1, a_sr);
     f_voice->noise_amp = 0;

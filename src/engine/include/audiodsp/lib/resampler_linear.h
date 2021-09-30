@@ -23,7 +23,6 @@ struct ResamplerLinear {
     SGFLT previous;
     SGFLT next;
     resample_generate func;
-    void* func_arg;
 };
 
 /* internal_rate: The internal sample rate to run @func at
@@ -35,12 +34,12 @@ void resampler_linear_init(
     struct ResamplerLinear* self,
     int internal_rate,
     int target_rate,
-    resample_generate func,
-    void* func_arg
+    resample_generate func
 );
 
 SGFLT resampler_linear_run_mono(
-    struct ResamplerLinear* self
+    struct ResamplerLinear* self,
+    void* func_arg
 );
 
 // Reset the resampler at note-on
