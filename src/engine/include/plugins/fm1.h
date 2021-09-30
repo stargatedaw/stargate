@@ -696,7 +696,7 @@ typedef struct {
         [FM1_MODULATOR_COUNT]
         [FM1_CONTROLS_PER_MOD_EFFECT];
 
-    t_fm1_poly_voice* data[FM1_POLYPHONY];
+    t_fm1_poly_voice data[FM1_POLYPHONY];
     t_voc_voices * voices;
 
     long sampleNo;
@@ -713,7 +713,8 @@ typedef struct {
     PluginDescriptor * descriptor;
 } t_fm1;
 
-t_fm1_poly_voice* g_fm1_poly_init(
+void g_fm1_poly_init(
+    t_fm1_poly_voice* voice,
     SGFLT a_sr,
     t_fm1_mono_modules* a_mono,
     int voice_num

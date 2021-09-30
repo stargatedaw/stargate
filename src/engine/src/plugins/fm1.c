@@ -56,12 +56,10 @@ void v_fm1_or_prep(PluginHandle instance)
         ++f_i;
     }
 
-    while(f_i2 < FM1_POLYPHONY)
-    {
-        t_fm1_poly_voice * f_voice = plugin->data[f_i2];
+    while(f_i2 < FM1_POLYPHONY){
+        t_fm1_poly_voice * f_voice = &plugin->data[f_i2];
         f_i = 0;
-        while(f_i < 1000000)
-        {
+        while(f_i < 1000000){
             f_i3 = 0;
             while(f_i3 < FM1_OSC_COUNT)
             {
@@ -91,8 +89,8 @@ void fm1Panic(PluginHandle instance)
     int f_i = 0;
     while(f_i < FM1_POLYPHONY)
     {
-        v_adsr_kill(&plugin->data[f_i]->adsr_amp);
-        v_adsr_kill(&plugin->data[f_i]->adsr_main);
+        v_adsr_kill(&plugin->data[f_i].adsr_amp);
+        v_adsr_kill(&plugin->data[f_i].adsr_main);
         ++f_i;
     }
 }
@@ -195,7 +193,7 @@ void v_fm1_on_stop(PluginHandle instance){
     int f_i = 0;
     while(f_i < FM1_POLYPHONY)
     {
-        v_fm1_poly_note_off(plugin->data[f_i], 0);
+        v_fm1_poly_note_off(&plugin->data[f_i], 0);
         ++f_i;
     }
 
@@ -756,12 +754,12 @@ PluginHandle g_fm1_instantiate(
     );
 
     for (i = 0; i < FM1_POLYPHONY; ++i){
-        plugin_data->data[i] = g_fm1_poly_init(
+        g_fm1_poly_init(
+            &plugin_data->data[i],
             plugin_data->fs,
             plugin_data->mono_modules,
             i
         );
-        plugin_data->data[i]->note_f = i;
     }
     plugin_data->sampleNo = 0;
 
@@ -829,7 +827,7 @@ void v_fm1_process_midi_event(
             );
 
             t_fm1_osc * f_pfx_osc = NULL;
-            t_fm1_poly_voice * f_fm1_voice = plugin_data->data[f_voice];
+            t_fm1_poly_voice * f_fm1_voice = &plugin_data->data[f_voice];
 
             int f_adsr_main_lin = (int)(*plugin_data->adsr_lin_main);
             f_fm1_voice->adsr_run_func = FP_ADSR_RUN[f_adsr_main_lin];
@@ -1196,6 +1194,7 @@ void v_run_fm1(
     struct ShdsList* atm_events
 ){
     t_fm1 *plugin_data = (t_fm1*) instance;
+    t_fm1_poly_voice* pvoice;
 
     t_seq_event **events = (t_seq_event**)midi_events->data;
     int event_count = midi_events->len;
@@ -1287,11 +1286,12 @@ void v_run_fm1(
 
             while(f_voice < FM1_POLYPHONY){
                 f_i = 0;
+                pvoice = &plugin_data->data[f_voice];
 
                 while(f_i < FM1_OSC_COUNT){
                     if(f_osc_type[f_i] >= 0){
                         v_osc_wav_set_waveform(
-                            &plugin_data->data[f_voice]->osc[f_i].osc_wavtable,
+                            &pvoice->osc[f_i].osc_wavtable,
                             plugin_data->mono_modules->wavetables->tables[
                                 f_osc_type[f_i]
                             ]->wavetable,
@@ -1325,11 +1325,12 @@ void v_run_fm1(
         );
 
         for(f_i = 0; f_i < FM1_POLYPHONY; ++f_i){
-            if(plugin_data->data[f_i]->adsr_main.stage != ADSR_STAGE_OFF){
+            pvoice = &plugin_data->data[f_i];
+            if(pvoice->adsr_main.stage != ADSR_STAGE_OFF){
                 v_run_fm1_voice(
                     plugin_data,
                     &plugin_data->voices->voices[f_i],
-                    plugin_data->data[f_i],
+                    pvoice,
                     plugin_data->output0,
                     plugin_data->output1,
                     i_iterator,
@@ -1936,19 +1937,18 @@ PluginDescriptor *fm1_plugin_descriptor(){
 
 /*initialize all of the modules in an instance of poly_voice*/
 
-t_fm1_poly_voice * g_fm1_poly_init(
+void g_fm1_poly_init(
+    t_fm1_poly_voice* voice,
     SGFLT a_sr,
     t_fm1_mono_modules* a_mono,
     int voice_num
 ){
-    t_fm1_poly_voice* f_voice;
-    hpalloc((void**)&f_voice, sizeof(t_fm1_poly_voice));
     t_fm1_osc* f_osc;
     int f_i, f_i2;
 
     for(f_i = 0; f_i < FM1_OSC_COUNT; ++f_i){
-        f_voice->osc[f_i] = (t_fm1_osc){};
-        f_osc = &f_voice->osc[f_i];
+        voice->osc[f_i] = (t_fm1_osc){};
+        f_osc = &voice->osc[f_i];
         g_osc_init_osc_wav_unison(
             &f_osc->osc_wavtable,
             a_sr,
@@ -1968,75 +1968,73 @@ t_fm1_poly_voice * g_fm1_poly_init(
         }
     }
 
-    g_adsr_init(&f_voice->adsr_main, a_sr);
+    g_adsr_init(&voice->adsr_main, a_sr);
 
     resampler_linear_init(
-        &f_voice->resampler,
+        &voice->resampler,
         44100,
         a_sr,
         fm1_run_voice_osc
     );
 
-    g_white_noise_init(&f_voice->white_noise1, a_sr);
-    f_voice->noise_amp = 0;
+    g_white_noise_init(&voice->white_noise1, a_sr);
+    voice->noise_amp = 0;
 
-    g_rmp_init(&f_voice->glide_env, a_sr);
+    g_rmp_init(&voice->glide_env, a_sr);
 
-    //f_voice->real_pitch = 60.0f;
+    //voice->real_pitch = 60.0f;
 
-    f_voice->target_pitch = 66.0f;
-    f_voice->last_pitch = 66.0f;
-    f_voice->base_pitch = 66.0f;
+    voice->target_pitch = 66.0f;
+    voice->last_pitch = 66.0f;
+    voice->base_pitch = 66.0f;
 
-    f_voice->current_sample = 0.0f;
+    voice->current_sample = 0.0f;
 
-    f_voice->amp = 1.0f;
-    f_voice->note_f = 1.0f;
+    voice->amp = 1.0f;
+    voice->note_f = voice_num;
 
-    f_voice->noise_linamp = 1.0f;
-    f_voice->adsr_prefx = 0;
+    voice->noise_linamp = 1.0f;
+    voice->adsr_prefx = 0;
 
-    f_voice->lfo_amount_output = 0.0f;
-    f_voice->lfo_amp_output = 0.0f;
-    f_voice->lfo_pitch_output = 0.0f;
+    voice->lfo_amount_output = 0.0f;
+    voice->lfo_amp_output = 0.0f;
+    voice->lfo_pitch_output = 0.0f;
 
-    g_adsr_init(&f_voice->adsr_amp, a_sr);
-    g_adsr_init(&f_voice->adsr_filter, a_sr);
-    g_adsr_init(&f_voice->adsr_noise, a_sr);
-    g_adsr_init(&f_voice->adsr_lfo, a_sr);
-    f_voice->adsr_noise_on = 0;
-    f_voice->adsr_lfo_on = 0;
+    g_adsr_init(&voice->adsr_amp, a_sr);
+    g_adsr_init(&voice->adsr_filter, a_sr);
+    g_adsr_init(&voice->adsr_noise, a_sr);
+    g_adsr_init(&voice->adsr_lfo, a_sr);
+    voice->adsr_noise_on = 0;
+    voice->adsr_lfo_on = 0;
 
-    f_voice->noise_amp = 0.0f;
+    voice->noise_amp = 0.0f;
 
-    g_rmp_init(&f_voice->glide_env, a_sr);
-    g_rmp_init(&f_voice->ramp_env, a_sr);
+    g_rmp_init(&voice->glide_env, a_sr);
+    g_rmp_init(&voice->ramp_env, a_sr);
 
-    g_lfs_init(&f_voice->lfo1, a_sr);
+    g_lfs_init(&voice->lfo1, a_sr);
 
-    f_voice->noise_sample = 0.0f;
+    voice->noise_sample = 0.0f;
 
 
     for(f_i = 0; f_i < FM1_MODULAR_POLYFX_COUNT; ++f_i){
-        g_mf3_init(&f_voice->effects[f_i].multieffect, a_sr, 1);
-        f_voice->effects[f_i].fx_func_ptr = v_mf3_run_off;
+        g_mf3_init(&voice->effects[f_i].multieffect, a_sr, 1);
+        voice->effects[f_i].fx_func_ptr = v_mf3_run_off;
     }
 
-    f_voice->modulator_outputs[0] = &(f_voice->adsr_amp.output);
-    f_voice->modulator_outputs[1] = &(f_voice->adsr_filter.output);
-    f_voice->modulator_outputs[2] = &(f_voice->ramp_env.output);
-    f_voice->modulator_outputs[3] = &(f_voice->lfo_amount_output);
-    f_voice->modulator_outputs[4] = &(f_voice->keyboard_track);
-    f_voice->modulator_outputs[5] = &(f_voice->velocity_track);
-    f_voice->modulator_outputs[6] = &(a_mono->fm_macro_smoother[0].last_value);
-    f_voice->modulator_outputs[7] = &(a_mono->fm_macro_smoother[1].last_value);
+    voice->modulator_outputs[0] = &(voice->adsr_amp.output);
+    voice->modulator_outputs[1] = &(voice->adsr_filter.output);
+    voice->modulator_outputs[2] = &(voice->ramp_env.output);
+    voice->modulator_outputs[3] = &(voice->lfo_amount_output);
+    voice->modulator_outputs[4] = &(voice->keyboard_track);
+    voice->modulator_outputs[5] = &(voice->velocity_track);
+    voice->modulator_outputs[6] = &(a_mono->fm_macro_smoother[0].last_value);
+    voice->modulator_outputs[7] = &(a_mono->fm_macro_smoother[1].last_value);
 
-    f_voice->noise_func_ptr = f_run_noise_off;
+    voice->noise_func_ptr = f_run_noise_off;
 
-    f_voice->perc_env_on = 0;
-    g_pnv_init(&f_voice->perc_env, a_sr);
-
-    return f_voice;
+    voice->perc_env_on = 0;
+    g_pnv_init(&voice->perc_env, a_sr);
 }
 
 
