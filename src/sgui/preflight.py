@@ -4,6 +4,7 @@
 from sgui.sgqt import QMessageBox
 from sglib.hardware import rpi
 from sglib.lib.translate import _
+from sglib.log import LOG
 
 __all__ = ['preflight']
 
@@ -28,5 +29,19 @@ def _preflight_rpi():
     except Exception as ex:
         LOG.exception(ex)
 
+def _log_system_info():
+    try:
+        import distro
+        LOG.info(distro.info())
+    except Exception as ex:
+        LOG.warn(ex)
+    try:
+        import platform
+        LOG.info(f"Python version: {platform.python_version()}")
+        LOG.info(f"Platform: {platform.platform()}")
+    except Exception as ex:
+        LOG.warn(ex)
+
 def preflight():
     _preflight_rpi()
+    _log_system_info()
