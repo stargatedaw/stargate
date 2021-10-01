@@ -133,10 +133,12 @@ class multifx_single:
             a_val_callback,
             MULTIFX_EFFECTS_LOOKUP,
             MULTIFX_ITEMS,
-            self.type_combobox_changed,
             a_port_dict=a_port_dict,
             a_preset_mgr=a_preset_mgr,
             a_default_index=0,
+        )
+        self.combobox.control.currentIndexChanged_connect(
+            self.type_combobox_changed,
         )
         self.layout.addWidget(self.combobox.name_label, 0, 3)
         self.layout.addWidget(self.combobox.control, 1, 3)
@@ -221,8 +223,7 @@ class multifx_single:
             self.combobox.control.currentIndex(),
         )
 
-    def type_combobox_changed(self):
-        a_val = self.combobox.control.currentIndex()
+    def type_combobox_changed(self, a_val):
         if a_val == 0: #Off
             self.knobs[0].name_label.setText("")
             self.knobs[1].name_label.setText("")

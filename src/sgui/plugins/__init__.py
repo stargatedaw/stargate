@@ -282,9 +282,9 @@ class AbstractPluginSettings:
         if a_qcbox:
             self.plugin_combobox = QComboBox()
         else:
-            self.plugin_combobox = NestedComboBox(
+            self.plugin_combobox = NestedComboBox(PLUGIN_UIDS)
+            self.plugin_combobox.currentIndexChanged_connect(
                 self.on_plugin_combobox_change,
-                PLUGIN_UIDS,
             )
         self.plugin_combobox.setMinimumWidth(150)
         self.plugin_combobox.wheelEvent = self.wheel_event

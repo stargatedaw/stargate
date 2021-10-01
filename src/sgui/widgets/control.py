@@ -807,18 +807,15 @@ class NestedComboboxControl(AbstractUiControl):
         a_val_callback,
         lookup,
         items,
-        callback=None,
         a_port_dict=None,
         a_default_index=None,
         a_preset_mgr=None,
     ):
         self.suppress_changes = True
-        self.callback = callback
         self.name_label = QLabel(str(a_label))
         self.name_label.setObjectName("plugin_name_label")
         self.name_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.control = NestedComboBox(
-            self.control_value_changed,
             lookup,
         )
         self.control.wheelEvent = self.wheel_event
@@ -826,6 +823,9 @@ class NestedComboboxControl(AbstractUiControl):
         self.control.setMinimumWidth(a_size)
         self.control.addItems(items)
         self.control.setCurrentIndex(0)
+        self.control.currentIndexChanged_connect(
+            self.control_value_changed,
+        )
         self.port_num = int(a_port_num)
         self.rel_callback = a_rel_callback
         self.val_callback = a_val_callback
@@ -842,10 +842,7 @@ class NestedComboboxControl(AbstractUiControl):
     def wheel_event(self, a_event=None):
         pass
 
-    def control_value_changed(self):
-        if self.callback:
-            self.callback()
-        val = self.control.currentIndex()
+    def control_value_changed(self, val):
         if not self.suppress_changes:
             self.val_callback(self.port_num, val)
             if self.rel_callback is not None:

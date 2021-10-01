@@ -4,14 +4,12 @@ from sgui.sgqt import QMenu, QPushButton
 class NestedComboBox(QPushButton):
     def __init__(
         self,
-        callback,
         lookup: dict,
     ):
         """
-            callback: Callable with no args to call when the value changes
             lookup:   A dictionary of str: int that maps names to UIDs
         """
-        self.callback = callback
+        self._callbacks = []
         self.lookup = lookup
         self.reverse_lookup = {v: k for k, v in lookup.items()}
         assert len(lookup) == len(self.reverse_lookup), (
@@ -30,6 +28,13 @@ class NestedComboBox(QPushButton):
     def currentIndex(self):
         return self._index
 
+    def currentIndexChanged_connect(self, callback):
+        self._callbacks.append(callback)
+
+    def _emit_currentIndexChanged(self, index):
+        for callback in self._callbacks:
+            callback(index)
+
     def currentText(self):
         return self.reverse_lookup[self._index]
 
@@ -37,12 +42,13 @@ class NestedComboBox(QPushButton):
         a_index = int(a_index)
         self._index = a_index
         self.setText(self.reverse_lookup[a_index])
+        self._emit_currentIndexChanged(a_index)
 
     def action_triggered(self, a_val):
         a_val = a_val.plugin_name
         self._index = self.lookup[a_val]
         self.setText(a_val)
-        self.callback()
+        self._emit_currentIndexChanged(self._index)
 
     def addItems(self, items):
         """ Add entries to the dropdown
