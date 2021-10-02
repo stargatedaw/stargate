@@ -120,6 +120,17 @@ class AbstractUiControl:
             if f_val >= 1000:
                 f_val = str(round(f_val * 0.001, 1)) + "k"
             retval = (str(f_val))
+        elif self.val_conversion == _shared.KC_127_PITCH_MIN_MAX:
+            mult = (
+                self.max_label_value_127 - self.min_label_value_127
+            ) / 128.
+            LOG.info(f"{self.max_label_value_127} {self.min_label_value_127}")
+            pitch = (f_value * mult) + self.min_label_value_127
+            f_val = int(pitch_to_hz(pitch))
+            LOG.info(f"{f_value} {f_val} {pitch} {mult}")
+            if f_val >= 1000:
+                f_val = str(round(f_val * 0.001, 1)) + "k"
+            retval = str(f_val)
         elif self.val_conversion == _shared.KC_127_ZERO_TO_X:
             f_dec_value = (float(f_value) *
                 self.label_value_127_multiply_by) - \

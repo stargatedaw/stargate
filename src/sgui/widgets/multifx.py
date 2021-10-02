@@ -521,11 +521,12 @@ class multifx_single:
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText(_("Spread"))
-            self.knobs[0].val_conversion = _shared.KC_127_PITCH
+            self.knobs[0].val_conversion = _shared.KC_127_PITCH_MIN_MAX
+            self.knobs[0].set_127_min_max(44.0, 100.0)
             self.knobs[1].val_conversion = _shared.KC_127_ZERO_TO_X
-            self.knobs[1].set_127_min_max(-30.0, 0.0)
-            self.knobs[2].val_conversion = _shared.KC_NONE
-            self.knobs[2].value_label.setText("")
+            self.knobs[1].set_127_min_max(-18.0, 0.0)
+            self.knobs[2].val_conversion = _shared.KC_127_ZERO_TO_X
+            self.knobs[2].set_127_min_max(0.0, 36.0)
 
         self.knobs[0].set_value(self.knobs[0].control.value())
         self.knobs[1].set_value(self.knobs[1].control.value())

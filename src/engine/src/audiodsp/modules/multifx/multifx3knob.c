@@ -294,9 +294,9 @@ void v_mf3_run_notch_spread(
 ){
     v_mf3_commit_mod(a_mf3);
     // cutoff
-    a_mf3->control_value[0] = (((a_mf3->control[0]) * 0.818897638) + 20.0f);
+    a_mf3->control_value[0] = (((a_mf3->control[0]) * 0.4375) + 44.0f);
     // res
-    a_mf3->control_value[1] = ((a_mf3->control[1]) * 0.236220472) - 30.0f;
+    a_mf3->control_value[1] = ((a_mf3->control[1]) * 0.140625) - 18.0f;
     // spread
     a_mf3->control_value[2] = ((a_mf3->control[2]) * 0.28125);
 
