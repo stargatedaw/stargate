@@ -37,6 +37,7 @@ MULTIFX_EFFECTS_LOOKUP = {
     "Metal Comb": 27,
     "Notch-D/W": 28,
     "Foldback": 29,
+    "Notch Spread": 30,
 }
 
 MULTIFX_FILTERS = [
@@ -56,6 +57,7 @@ MULTIFX_FILTERS = [
     "Growl Filter",
     "Screech LP",
     "Notch-D/W",
+    "Notch Spread",
 ]
 
 MULTIFX_DISTORTION = [
@@ -513,6 +515,15 @@ class multifx_single:
             self.knobs[0].set_127_min_max(-12.0, 0.0)
             self.knobs[1].val_conversion = _shared.KC_127_ZERO_TO_X
             self.knobs[1].set_127_min_max(0.0, 12.0)
+            self.knobs[2].val_conversion = _shared.KC_NONE
+            self.knobs[2].value_label.setText("")
+        elif a_val == 30: #Notch Spread
+            self.knobs[0].name_label.setText(_("Freq"))
+            self.knobs[1].name_label.setText(_("Res"))
+            self.knobs[2].name_label.setText(_("Spread"))
+            self.knobs[0].val_conversion = _shared.KC_127_PITCH
+            self.knobs[1].val_conversion = _shared.KC_127_ZERO_TO_X
+            self.knobs[1].set_127_min_max(-30.0, 0.0)
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
 

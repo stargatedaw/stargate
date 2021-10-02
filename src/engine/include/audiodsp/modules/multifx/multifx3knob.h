@@ -15,7 +15,7 @@ GNU General Public License for more details.
 #define MULTIFX3KNOB_H
 
 /*This is actually count, not index TODO:  Rename*/
-#define MULTIFX3KNOB_MAX_INDEX 30
+#define MULTIFX3KNOB_MAX_INDEX 31
 #define MULTIFX3KNOB_KNOB_COUNT 3
 
 #include "audiodsp/lib/amp.h"
@@ -38,11 +38,11 @@ GNU General Public License for more details.
 
 /*BIG TODO:  Add a function to modify for the modulation sources*/
 
-typedef struct
-{
+typedef struct {
     int effect_index;
     int channels;  //Currently only 1 or 2 are supported
     t_svf2_filter svf;
+    t_svf2_filter svf2;
     t_comb_filter comb_filter0;
     t_comb_filter comb_filter1;
     t_pkq_peak_eq eq0;
@@ -104,6 +104,7 @@ void v_mf3_run_growl_filter(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_screech_lp(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_metal_comb(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_notch_dw(t_mf3_multi*,SGFLT,SGFLT);
+void v_mf3_run_notch_spread(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_foldback(t_mf3_multi*,SGFLT,SGFLT);
 
 void f_mfx_transform_svf_filter(t_mf3_multi*);
