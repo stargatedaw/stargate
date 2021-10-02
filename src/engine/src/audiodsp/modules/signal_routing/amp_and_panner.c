@@ -26,11 +26,13 @@ void v_app_run(t_amp_and_panner* a_app, SGFLT a_in0, SGFLT a_in1)
     a_app->output1 = a_in1 * (a_app->amp_linear1);
 }
 
-void v_app_run_monofier(t_amp_and_panner* a_app, SGFLT a_in0, SGFLT a_in1)
-{
-    v_app_run(a_app, a_in0, a_in1);
-    a_app->output0 = a_app->output0 + a_app->output1;
-    a_app->output1 = a_app->output0;
+void v_app_run_monofier(
+    t_amp_and_panner* a_app,
+    SGFLT a_in0,
+    SGFLT a_in1
+){
+    SGFLT mono = a_in0 + a_in1;
+    v_app_run(a_app, mono, mono);
 }
 
 void g_app_init(t_amp_and_panner * f_result)
