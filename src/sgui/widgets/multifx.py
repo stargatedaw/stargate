@@ -60,6 +60,7 @@ MULTIFX_FILTERS = [
 
 MULTIFX_DISTORTION = [
     "Distortion",
+    "Saturator",
     "Glitch",
     "RingMod",
     "LoFi",
