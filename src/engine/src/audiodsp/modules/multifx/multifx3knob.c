@@ -47,7 +47,8 @@ const fp_mf3_run mf3_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
         v_mf3_run_metal_comb,   //27
         v_mf3_run_notch_dw, //28
         v_mf3_run_foldback, //29
-        v_mf3_run_notch_spread //30
+        v_mf3_run_notch_spread, //30
+        v_mf3_run_dc_offset //31
 };
 
 const fp_mf3_reset mf3_reset_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
@@ -81,7 +82,8 @@ const fp_mf3_reset mf3_reset_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
         v_mf3_reset_null, //27
         v_mf3_reset_svf, //28
         v_mf3_reset_null, //29
-        v_mf3_reset_svf //30
+        v_mf3_reset_svf, //30
+        v_mf3_reset_dc_offset //31
 };
 
 void v_mf3_reset_null(t_mf3_multi* a_mf3){
@@ -95,6 +97,11 @@ void v_mf3_reset_svf(t_mf3_multi* a_mf3){
 
 void v_mf3_reset_glitch(t_mf3_multi* a_mf3){
     v_glc_glitch_retrigger(&a_mf3->glitch);
+}
+
+void v_mf3_reset_dc_offset(t_mf3_multi* a_mf3){
+    v_dco_reset(&a_mf3->dc_offset[0]);
+    v_dco_reset(&a_mf3->dc_offset[1]);
 }
 
 /* void v_mf3_set(t_fx3_multi* a_mf3, int a_fx_index)
@@ -827,6 +834,16 @@ void v_mf3_run_metal_comb(
     a_mf3->output1 = (a_mf3->comb_filter1.output_sample);
 }
 
+void v_mf3_run_dc_offset(
+    t_mf3_multi* a_mf3,
+    SGFLT a_in0,
+    SGFLT a_in1
+){
+    // No knobs
+    a_mf3->output0 = f_dco_run(&a_mf3->dc_offset[0], a_in0);
+    a_mf3->output1 = f_dco_run(&a_mf3->dc_offset[1], a_in1);
+}
+
 void g_mf3_init(
     t_mf3_multi * f_result,
     SGFLT a_sample_rate,
@@ -865,7 +882,8 @@ void g_mf3_init(
     g_sah_init(&f_result->s_and_h, a_sample_rate);
     g_grw_init(&f_result->growl_filter, a_sample_rate);
     g_fbk_init(&f_result->foldback);
-
+    g_dco_init(&f_result->dc_offset[0], a_sample_rate);
+    g_dco_init(&f_result->dc_offset[1], a_sample_rate);
 }
 
 /* t_mf3_multi g_mf3_get(

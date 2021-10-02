@@ -15,7 +15,7 @@ GNU General Public License for more details.
 #define MULTIFX3KNOB_H
 
 /*This is actually count, not index TODO:  Rename*/
-#define MULTIFX3KNOB_MAX_INDEX 31
+#define MULTIFX3KNOB_MAX_INDEX 32
 #define MULTIFX3KNOB_KNOB_COUNT 3
 
 #include "audiodsp/lib/amp.h"
@@ -29,6 +29,7 @@ GNU General Public License for more details.
 #include "audiodsp/modules/distortion/saturator.h"
 #include "audiodsp/modules/dynamics/limiter.h"
 #include "audiodsp/modules/filter/comb_filter.h"
+#include "audiodsp/modules/filter/dc_offset_filter.h"
 #include "audiodsp/modules/filter/formant_filter.h"
 #include "audiodsp/modules/filter/peak_eq.h"
 #include "audiodsp/modules/filter/svf_stereo.h"
@@ -64,6 +65,7 @@ typedef struct {
     t_sah_sample_and_hold s_and_h;
     t_grw_growl_filter growl_filter;
     t_fbk_foldback foldback;
+    t_dco_dc_offset_filter dc_offset[2];
 }t_mf3_multi;
 
 typedef void (*fp_mf3_reset)(t_mf3_multi*);
@@ -106,6 +108,7 @@ void v_mf3_run_metal_comb(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_notch_dw(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_notch_spread(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_foldback(t_mf3_multi*,SGFLT,SGFLT);
+void v_mf3_run_dc_offset(t_mf3_multi*,SGFLT,SGFLT);
 
 void f_mfx_transform_svf_filter(t_mf3_multi*);
 
@@ -120,6 +123,7 @@ fp_mf3_run g_mf3_get_function_pointer( int);
 void v_mf3_reset_null(t_mf3_multi*);
 void v_mf3_reset_svf(t_mf3_multi*);
 void v_mf3_reset_glitch(t_mf3_multi*);
+void v_mf3_reset_dc_offset(t_mf3_multi*);
 void g_mf3_init(
     t_mf3_multi * f_result,
     SGFLT a_sample_rate,
