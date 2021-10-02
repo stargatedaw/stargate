@@ -1246,7 +1246,7 @@ def respawn():
             sys.executable,
         ])
     else:
-        args = sys.argv[:]
+        args = sys.argv[:1]
         if "--delay" not in args:
             args.append("--delay")
         CHILD_PROC = subprocess.Popen(args)
