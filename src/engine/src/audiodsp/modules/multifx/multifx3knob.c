@@ -303,7 +303,7 @@ void v_mf3_run_notch_spread(
     // cutoff
     self->control_value[0] = (((self->control[0]) * 0.4375) + 44.0f);
     // res
-    self->control_value[1] = ((self->control[1]) * 0.140625) - 18.0f;
+    self->control_value[1] = ((self->control[1]) * 0.0703125) - 10.0f;
     // spread
     self->control_value[2] = ((self->control[2]) * 0.28125);
 
