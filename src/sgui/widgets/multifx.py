@@ -28,52 +28,52 @@ MULTIFX_EFFECTS_LOOKUP = {
     "RingMod": 18,
     "LoFi": 19,
     "S/H": 20,
-    "LP-D/W": 21,
-    "HP-D/W": 22,
+    "LP D/W": 21,
+    "HP D/W": 22,
     "Monofier": 23,
     "LP<-->HP": 24,
     "Growl Filter": 25,
-    "Screech LP": 26,
+    "LP Screech": 26,
     "Metal Comb": 27,
-    "Notch-D/W": 28,
+    "Notch D/W": 28,
     "Foldback": 29,
     "Notch Spread": 30,
     "DC Offset": 31,
 }
 
 MULTIFX_FILTERS = [
-    "LP2",
-    "LP4",
-    "HP2",
-    "HP4",
     "BP2",
     "BP4",
-    "Notch2",
-    "Notch4",
     "EQ",
     "Formant",
-    "LP-D/W",
-    "HP-D/W",
-    "LP<-->HP",
     "Growl Filter",
-    "Screech LP",
-    "Notch-D/W",
+    "HP D/W",
+    "HP2",
+    "HP4",
+    "LP D/W",
+    "LP Screech",
+    "LP2",
+    "LP4",
+    "LP<-->HP",
+    "Notch D/W",
     "Notch Spread",
+    "Notch2",
+    "Notch4",
 ]
 
 MULTIFX_DISTORTION = [
     "Distortion",
-    "Saturator",
-    "Glitch",
-    "RingMod",
-    "LoFi",
-    "S/H",
     "Foldback",
+    "Glitch",
+    "LoFi",
+    "RingMod",
+    "S/H",
+    "Saturator",
 ]
 
 MULTIFX_DELAY = [
-    "Comb Filter",
     "Chorus",
+    "Comb Filter",
     "Metal Comb",
 ]
 
@@ -481,7 +481,7 @@ class multifx_single:
             self.knobs[1].value_label.setText("")
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
-        elif a_val == 26: #Screech LP
+        elif a_val == 26: #LP Screech
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText("")
