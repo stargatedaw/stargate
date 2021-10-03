@@ -440,6 +440,62 @@ FM1_MAIN_PITCH = 371
 
 FM1_ADSR_LIN_MAIN = 372
 
+OSC_TYPE_LOOKUP = {
+    "Off": 0,
+    "Plain Saw": 1,
+    "SuperbSaw": 2,
+    "Viral Saw": 3,
+    "Soft Saw": 4,
+    "Mid Saw": 5,
+    "Lush Saw": 6,
+    "Evil Square": 7,
+    "Punchy Square": 8,
+    "Soft Square": 9,
+    "Pink Glitch": 10,
+    "White Glitch": 11,
+    "Acid": 12,
+    "Screetch": 13,
+    "Thick Bass": 14,
+    "Rattler": 15,
+    "Deep Saw": 16,
+    "Sine": 17,
+    "(Additive 1)": 18,
+    "(Additive 2)": 19,
+    "(Additive 3)": 20,
+}
+OSC_TYPES = [
+    "Off",
+    ("Saw", [
+        "Plain Saw",
+        "SuperbSaw",
+        "Viral Saw",
+        "Soft Saw",
+        "Mid Saw",
+        "Lush Saw",
+    ]),
+    ("Square", [
+        "Evil Square",
+        "Punchy Square",
+        "Soft Square",
+    ]),
+    ("Glitch", [
+        "Pink Glitch",
+        "White Glitch",
+        "Acid",
+        "Screetch",
+    ]),
+    ("Sine", [
+        "Thick Bass",
+        "Rattler",
+        "Deep Saw",
+        "Sine",
+    ]),
+    ("Custom", [
+        "(Additive 1)",
+        "(Additive 2)",
+        "(Additive 3)",
+    ]),
+]
 
 FM1_PORT_MAP = {
     "Main Attack": FM1_ATTACK_MAIN,
@@ -898,34 +954,6 @@ class fm1_plugin_ui(AbstractPluginUI):
         self._plugin_name = "FM1"
         self.is_instrument = True
 
-        f_osc_types = [
-            _("Off"),
-            #Saw-like waves
-            _("Plain Saw"),
-            _("SuperbSaw"),
-            _("Viral Saw"),
-            _("Soft Saw"),
-            _("Mid Saw"),
-            _("Lush Saw"),
-            #Square-like waves
-            _("Evil Square"),
-            _("Punchy Square"),
-            _("Soft Square"),
-            #Glitchy and distorted waves
-            _("Pink Glitch"),
-            _("White Glitch"),
-            _("Acid"),
-            _("Screetch"),
-            #Sine and triangle-like waves
-            _("Thick Bass"),
-            _("Rattler"),
-            _("Deep Saw"),
-            _("Sine"),
-            #The custom additive oscillator tab
-            _("(Additive 1)"),
-            _("(Additive 2)"),
-            _("(Additive 3)"),
-        ]
         knob_kwargs = {
             'arc_brush': QColor('#222222'),
             'arc_bg_brush': QColor("#5a5a5a"),
@@ -1006,7 +1034,7 @@ class fm1_plugin_ui(AbstractPluginUI):
                     "FM1_OSC{}_VOLUME".format(f_i)
                 ),
                 getattr(sys.modules[__name__], "FM1_OSC{}_TYPE".format(f_i)),
-                f_osc_types,
+                OSC_TYPES,
                 self.plugin_rel_callback,
                 self.plugin_val_callback,
                 _("Oscillator {}".format(f_i)),
@@ -1014,9 +1042,8 @@ class fm1_plugin_ui(AbstractPluginUI):
                 self.preset_manager,
                 1 if f_i == 1 else 0,
                 knob_kwargs=knob_kwargs,
+                nested_lookup=OSC_TYPE_LOOKUP,
             )
-            f_osc1.osc_type_combobox.control.setMaxVisibleItems(
-                len(f_osc_types))
             f_osc1.pitch_knob.control.setRange(-72, 72)
             f_osc1_uni_voices = knob_control(
                 f_knob_size, _("Unison"),
