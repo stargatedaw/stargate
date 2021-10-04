@@ -39,7 +39,12 @@ int ZERO = 0;
 void v_ui_send(char * a_path, char * a_msg){
     int msg_len = strlen(a_path) + strlen(a_msg);
     char dbg[512];
-    sprintf(dbg, "%s: %i", a_path, msg_len);
+    sprintf(
+        dbg,
+        "Message exceeded 60,000 size limit: %s: %i",
+        a_path,
+        msg_len
+    );
     sg_assert(
         msg_len < 60000,
         dbg

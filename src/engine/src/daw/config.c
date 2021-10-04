@@ -286,7 +286,13 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
     a_buffers->f_tmp2[0] = '\0';
 
     f_pkm = DAW->track_pool[0]->peak_meter;
-    sprintf(a_buffers->f_tmp2, "%i:%f:%f", 0, f_pkm->value[0], f_pkm->value[1]);
+    sprintf(
+        a_buffers->f_tmp2,
+        "%i:%f:%f",
+        0,
+        f_pkm->value[0],
+        f_pkm->value[1]
+    );
     v_pkm_reset(f_pkm);
 
     for(f_i = 1; f_i < DN_TRACK_COUNT; ++f_i){
@@ -309,7 +315,11 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
     a_buffers->f_tmp1[0] = '\0';
     a_buffers->f_tmp2[0] = '\0';
 
-    if(STARGATE->playback_mode > 0 && !STARGATE->is_offline_rendering){
+    if(
+        STARGATE->playback_mode > 0
+        &&
+        !STARGATE->is_offline_rendering
+    ){
         sprintf(
             a_buffers->f_msg,
             "%f",
@@ -334,8 +344,7 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
 
         //Now grab any that may have been written since the previous copy
 
-        while(f_i < STARGATE->osc_queue_index)
-        {
+        for(;f_i < STARGATE->osc_queue_index; ++f_i){
             strcpy(
                 a_buffers->osc_queue_keys[f_i],
                 STARGATE->osc_queue_keys[f_i]
@@ -344,7 +353,6 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
                 a_buffers->osc_queue_vals[f_i],
                 STARGATE->osc_queue_vals[f_i]
             );
-            ++f_i;
         }
 
         int f_index = STARGATE->osc_queue_index;
@@ -352,22 +360,16 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
 
         pthread_spin_unlock(&STARGATE->main_lock);
 
-        a_buffers->f_tmp1[0] = '\0';
-
-        for(f_i = 0; f_i < f_index; ++f_i)
-        {
-            sprintf(
-                a_buffers->f_tmp2,
-                "%s|%s\n",
-                a_buffers->osc_queue_keys[f_i],
-                a_buffers->osc_queue_vals[f_i]
-            );
-            strcat(a_buffers->f_tmp1, a_buffers->f_tmp2);
-        }
-
-        if(!STARGATE->is_offline_rendering)
-        {
-            v_ui_send("stargate/daw", a_buffers->f_tmp1);
+        if(!STARGATE->is_offline_rendering){
+            for(f_i = 0; f_i < f_index; ++f_i){
+                sprintf(
+                    a_buffers->f_tmp1,
+                    "%s|%s\n",
+                    a_buffers->osc_queue_keys[f_i],
+                    a_buffers->osc_queue_vals[f_i]
+                );
+                v_ui_send("stargate/daw", a_buffers->f_tmp1);
+            }
         }
     }
 }
