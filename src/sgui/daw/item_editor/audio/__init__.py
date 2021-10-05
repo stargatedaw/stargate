@@ -24,6 +24,7 @@ from sglib.models.stargate.audio_pool import PerFileFX
 from sgui.util import get_font
 
 
+
 def papifx_val_callback(a_port, a_val):
     if _shared.CURRENT_ITEM is not None:
         constants.DAW_PROJECT.ipc().audio_per_file_fx(
@@ -258,13 +259,19 @@ class AudioItemSeq(AbstractItemEditor):
                 shared.AUDIO_SEQ_WIDGET.papifx.set_from_list(fx.controls)
             else:
                 shared.AUDIO_SEQ_WIDGET.papifx.clear_effects()
+            shared.AUDIO_SEQ_WIDGET.paifx_stack.setCurrentIndex(0)
+            shared.AUDIO_SEQ_WIDGET.papifx_stack.setCurrentIndex(0)
         elif len(f_selected_items) == 0:
             _shared.CURRENT_AUDIO_ITEM_INDEX = None
             _shared.CURRENT_ITEM = None
+            shared.AUDIO_SEQ_WIDGET.paifx_stack.setCurrentIndex(1)
+            shared.AUDIO_SEQ_WIDGET.papifx_stack.setCurrentIndex(1)
             shared.AUDIO_SEQ_WIDGET.papifx.widget.setDisabled(True)
             shared.AUDIO_SEQ_WIDGET.paifx.widget.setDisabled(True)
         else:
             _shared.CURRENT_ITEM = None
+            shared.AUDIO_SEQ_WIDGET.paifx_stack.setCurrentIndex(1)
+            shared.AUDIO_SEQ_WIDGET.papifx_stack.setCurrentIndex(1)
             shared.AUDIO_SEQ_WIDGET.papifx.widget.setDisabled(True)
             shared.AUDIO_SEQ_WIDGET.paifx.widget.setDisabled(True)
 
@@ -540,7 +547,12 @@ class AudioItemSeqWidget(FileDragDropper):
         self.papifx_widget = QWidget()
         self.papifx_widget.setObjectName("plugin_ui")
         self.papifx_vlayout = QVBoxLayout(self.papifx_widget)
-        self.folders_tab_widget.addTab(self.papifx_widget, _("File FX"))
+        fx_text = "Select exactly one item to use"
+        self.papifx_stack = QStackedWidget(self.folders_tab_widget)
+        self.papifx_stack.addWidget(self.papifx_widget)
+        self.papifx_stack.addWidget(QLabel(fx_text))
+        self.papifx_stack.setCurrentIndex(1)
+        self.folders_tab_widget.addTab(self.papifx_stack, _("File FX"))
         self.papifx.widget.setDisabled(True)
         self.papifx_vlayout.addWidget(self.papifx.scroll_area)
 
@@ -551,7 +563,11 @@ class AudioItemSeqWidget(FileDragDropper):
         self.paifx_widget = QWidget()
         self.paifx_widget.setObjectName("plugin_ui")
         self.paifx_vlayout = QVBoxLayout(self.paifx_widget)
-        self.folders_tab_widget.addTab(self.paifx_widget, _("Item FX"))
+        self.paifx_stack = QStackedWidget(self.folders_tab_widget)
+        self.paifx_stack.addWidget(self.paifx_widget)
+        self.paifx_stack.addWidget(QLabel(fx_text))
+        self.paifx_stack.setCurrentIndex(1)
+        self.folders_tab_widget.addTab(self.paifx_stack, _("Item FX"))
         self.paifx.widget.setDisabled(True)
         self.paifx_vlayout.addWidget(self.paifx.scroll_area)
 
