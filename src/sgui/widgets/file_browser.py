@@ -9,6 +9,8 @@ from sgui.sgqt import *
 import os
 import shutil
 
+BM_FILE_DIALOG_STRING = 'Stargate Bookmarks (*.pybm4)'
+
 class AbstractFileBrowserWidget:
     def __init__(self, a_filter_func=util.is_audio_file):
         self.scroll_dict = {}

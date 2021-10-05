@@ -7,7 +7,6 @@ import os
 import shutil
 
 PRESET_FILE_DIALOG_STRING = 'Stargate Presets (*.sgp)'
-BM_FILE_DIALOG_STRING = 'Stargate Bookmarks (*.pybm4)'
 PLUGIN_SETTINGS_CLIPBOARD = {}
 PLUGIN_CONFIGURE_CLIPBOARD = None
 
