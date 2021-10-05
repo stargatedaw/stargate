@@ -20,7 +20,7 @@ class NestedComboBox(QPushButton):
         )
         QPushButton.__init__(self, _("None"))
         self.setObjectName("nested_combobox")
-        self.menu = QMenu()
+        self.menu = QMenu(self)
         self.setMenu(self.menu)
         self._index = 0
         self.menu.triggered.connect(self.action_triggered)
