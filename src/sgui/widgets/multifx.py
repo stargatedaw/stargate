@@ -39,11 +39,13 @@ MULTIFX_EFFECTS_LOOKUP = {
     "Foldback": 29,
     "Notch Spread": 30,
     "DC Offset": 31,
+    "BP Spread": 32,
 }
 
 MULTIFX_FILTERS = [
     "BP2",
     "BP4",
+    "BP Spread",
     "EQ",
     "Formant",
     "Growl Filter",
@@ -536,6 +538,16 @@ class multifx_single:
             self.knobs[0].val_conversion = _shared.KC_NONE
             self.knobs[1].val_conversion = _shared.KC_NONE
             self.knobs[2].val_conversion = _shared.KC_NONE
+        elif a_val == 32: # BP Spread
+            self.knobs[0].name_label.setText(_("Freq"))
+            self.knobs[1].name_label.setText(_("Res"))
+            self.knobs[2].name_label.setText(_("Spread"))
+            self.knobs[0].val_conversion = _shared.KC_127_PITCH_MIN_MAX
+            self.knobs[0].set_127_min_max(44.0, 100.0)
+            self.knobs[1].val_conversion = _shared.KC_127_ZERO_TO_X
+            self.knobs[1].set_127_min_max(-10.0, -1.0)
+            self.knobs[2].val_conversion = _shared.KC_127_ZERO_TO_X
+            self.knobs[2].set_127_min_max(0.0, 48.0)
 
         self.knobs[0].set_value(self.knobs[0].control.value())
         self.knobs[1].set_value(self.knobs[1].control.value())

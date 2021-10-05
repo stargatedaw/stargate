@@ -48,7 +48,8 @@ const fp_mf3_run mf3_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
         v_mf3_run_notch_dw, //28
         v_mf3_run_foldback, //29
         v_mf3_run_notch_spread, //30
-        v_mf3_run_dc_offset //31
+        v_mf3_run_dc_offset, //31
+        v_mf3_run_bp_spread, //32
 };
 
 const fp_mf3_reset mf3_reset_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
@@ -331,6 +332,49 @@ void v_mf3_run_notch_spread(
 
     self->output0 = self->svf.output0 + self->svf2.output0;
     self->output1 = self->svf.output1 + self->svf2.output1;
+}
+
+void v_mf3_run_bp_spread(
+    t_mf3_multi* self,
+    SGFLT a_in0,
+    SGFLT a_in1
+){
+    v_mf3_commit_mod(self);
+    // cutoff
+    self->control_value[0] = (((self->control[0]) * 0.4375) + 44.0f);
+    // res
+    self->control_value[1] = ((self->control[1]) * 0.0703125) - 10.0f;
+    // spread
+    self->control_value[2] = ((self->control[2]) * 0.375);
+
+    v_svf2_set_cutoff_base(
+        &self->svf,
+        self->control_value[0] + self->control_value[2]
+    );
+    v_svf2_set_res(
+        &self->svf,
+        self->control_value[1]
+    );
+    v_svf2_set_cutoff(&self->svf);
+    v_svf2_run_4_pole_lp(&self->svf, a_in0, a_in1);
+
+    v_svf2_set_cutoff_base(
+        &self->svf2,
+        self->control_value[0] - self->control_value[2]
+    );
+    v_svf2_set_res(
+        &self->svf2,
+        self->control_value[1]
+    );
+    v_svf2_set_cutoff(&self->svf2);
+    v_svf2_run_4_pole_hp(
+        &self->svf2,
+        self->svf.output0,
+        self->svf.output1
+    );
+
+    self->output0 = self->svf2.output0;
+    self->output1 = self->svf2.output1;
 }
 
 void v_mf3_run_eq(
