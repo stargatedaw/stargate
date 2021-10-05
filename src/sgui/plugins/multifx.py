@@ -132,8 +132,7 @@ QAbstractItemView
     selection-background-color: #cccccc;
 }
 
-QComboBox::drop-down,
-QMenu
+QComboBox::drop-down
 {
     border-bottom-right-radius: 3px;
     border-left-color: #222222;
@@ -171,6 +170,18 @@ QWidget#right_logo {
     background-position: center;
     background-repeat: no-repeat;
     border: none;
+}
+
+QMenu,
+QMenu::item {
+    background-color: #222222;
+	color: #cccccc;
+}
+
+QMenu::separator
+{
+    height: 2px;
+    background-color: #cccccc;
 }
 """
 
