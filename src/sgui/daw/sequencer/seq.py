@@ -867,40 +867,25 @@ class ItemSequencer(QGraphicsView):
         self.scene.addItem(self.header)
 
         for f_marker in shared.CURRENT_SEQUENCE.get_markers():
-            if f_marker.type == 1:  # Loop
+            if f_marker.type == 1:  # Loop/Region
                 self.loop_start = f_marker.start_beat
                 self.loop_end = f_marker.beat
                 f_x = f_marker.start_beat * _shared.SEQUENCER_PX_PER_BEAT
-                f_start = QGraphicsLineItem(
+                width = (
+                    f_marker.beat - f_marker.start_beat
+                ) * _shared.SEQUENCER_PX_PER_BEAT
+                region = QGraphicsRectItem(
                     f_x,
                     0,
-                    f_x,
+                    width,
                     _shared.SEQUENCE_EDITOR_HEADER_HEIGHT,
                     self.header,
                 )
-                start_pen = QPen(
-                    QColor(
-                        theme.SYSTEM_COLORS.daw.seq_header_sequence_start,
-                    ),
-                    6.0,
+                region.setZValue(0.)
+                region_brush = QColor(
+                    theme.SYSTEM_COLORS.daw.seq_header_region,
                 )
-                f_start.setPen(start_pen)
-
-                f_x = f_marker.beat * _shared.SEQUENCER_PX_PER_BEAT
-                f_end = QGraphicsLineItem(
-                    f_x,
-                    0,
-                    f_x,
-                    _shared.SEQUENCE_EDITOR_HEADER_HEIGHT,
-                    self.header,
-                )
-                end_pen = QPen(
-                    QColor(
-                        theme.SYSTEM_COLORS.daw.seq_header_sequence_end,
-                    ),
-                    6.0,
-                )
-                f_end.setPen(end_pen)
+                region.setBrush(region_brush)
             elif f_marker.type == 2:  # Tempo
                 f_text = "{} : {}/{}".format(
                     f_marker.tempo,
@@ -911,6 +896,7 @@ class ItemSequencer(QGraphicsView):
                     0., 0., 12., 12.,
                     self.header,
                 )
+                item.setZValue(1.0)
                 item.setBrush(
                     QColor(
                         theme.SYSTEM_COLORS.daw.seq_tempo_marker,
@@ -930,6 +916,7 @@ class ItemSequencer(QGraphicsView):
                     f_marker.text,
                     self.header,
                 )
+                f_item.setZValue(1.0)
                 f_item.setBrush(
                     QColor(
                         theme.SYSTEM_COLORS.daw.seq_header_text,

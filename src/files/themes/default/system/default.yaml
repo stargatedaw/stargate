@@ -70,10 +70,10 @@ daw:
   seq_beat_line: "#090909"
   # Sequencer header
   seq_header: "#1d1e22"
-  # Sequencer header sequence end marker
-  seq_header_sequence_end: "#ff3c3c"
-  # Sequencer header sequence start marker
-  seq_header_sequence_start: "#7878ff"
+  # Sequencer header context menu event position marker
+  seq_header_event_pos: "#cccccc"
+  # Sequencer header region
+  seq_header_region: "#6212a2"
   # Sequencer header text
   seq_header_text: "{{ text_color }}"
   # Sequencer item handle

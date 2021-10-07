@@ -62,7 +62,7 @@ def show(event):
     )
     pos_line_pen = QPen(
         QColor(
-            theme.SYSTEM_COLORS.daw.seq_header_sequence_start,
+            theme.SYSTEM_COLORS.daw.seq_header_event_pos,
         ),
         6.0,
     )

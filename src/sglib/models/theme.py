@@ -188,8 +188,8 @@ class DawColors:
         seq_selected_item="#eeeeee",
         seq_header="#1d1e22",
         seq_header_text="#ffffff",
-        seq_header_sequence_start="#7878ff",
-        seq_header_sequence_end="#ff3c3c",
+        seq_header_region="#7878ff",
+        seq_header_event_pos="#7878ff",
         seq_item_handle="#ffffff",
         seq_item_handle_selected="#ffffff",
         seq_tempo_marker="#ffffff",
@@ -291,12 +291,12 @@ class DawColors:
             seq_header_text,
             str,
         )
-        self.seq_header_sequence_start = type_assert(
-            seq_header_sequence_start,
+        self.seq_header_region = type_assert(
+            seq_header_region,
             str,
         )
-        self.seq_header_sequence_end = type_assert(
-            seq_header_sequence_end,
+        self.seq_header_event_pos = type_assert(
+            seq_header_event_pos,
             str,
         )
         self.seq_item_handle = type_assert(
