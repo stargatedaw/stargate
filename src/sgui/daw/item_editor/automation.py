@@ -232,7 +232,7 @@ class AutomationEditor(AbstractItemEditor):
             )
             start_pen = QPen(
                 QColor(
-                    theme.SYSTEM_COLORS.daw.seq_header_sequence_start,
+                    theme.SYSTEM_COLORS.daw.seq_header_region,
                 ),
                 6.0,
             )
@@ -241,7 +241,7 @@ class AutomationEditor(AbstractItemEditor):
                 f_end_x, 0.0, f_end_x, self.axis_size, self.header)
             end_pen = QPen(
                 QColor(
-                    theme.SYSTEM_COLORS.daw.seq_header_sequence_end,
+                    theme.SYSTEM_COLORS.daw.seq_header_region,
                 ),
                 6.0,
             )

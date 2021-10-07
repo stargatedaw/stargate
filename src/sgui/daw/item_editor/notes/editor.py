@@ -420,7 +420,7 @@ class PianoRollEditor(AbstractItemEditor):
             )
             start_pen = QPen(
                 QColor(
-                    theme.SYSTEM_COLORS.daw.seq_header_sequence_start,
+                    theme.SYSTEM_COLORS.daw.seq_header_region,
                 ),
                 6.0,
             )
@@ -434,7 +434,7 @@ class PianoRollEditor(AbstractItemEditor):
             )
             end_pen = QPen(
                 QColor(
-                    theme.SYSTEM_COLORS.daw.seq_header_sequence_end,
+                    theme.SYSTEM_COLORS.daw.seq_header_region,
                 ),
                 6.0,
             )
