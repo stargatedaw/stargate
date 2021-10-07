@@ -851,7 +851,11 @@ class ItemSequencer(QGraphicsView):
             _shared.SEQUENCE_EDITOR_TOTAL_HEIGHT,
         )
         self.header = QGraphicsRectItem(
-            0, 0, f_size, _shared.SEQUENCE_EDITOR_HEADER_HEIGHT)
+            0,
+            0,
+            f_size,
+            _shared.SEQUENCE_EDITOR_HEADER_HEIGHT,
+        )
         self.header.setZValue(1500.0)
         self.header.setBrush(
             QColor(
