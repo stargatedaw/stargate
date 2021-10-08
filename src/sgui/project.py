@@ -60,15 +60,13 @@ def new_project(a_parent=None):
         QMessageBox.warning(a_parent, "Error", str(ex))
 
 def clone_project(parent):
-    clone = open_project_dialog(parent)
+    clone, _ = open_project_dialog(parent)
     if not clone:
         return False
-    new = new_project_dialog(parent, DEFAULT_PROJECT_DIR)
+    new, _ = new_project_dialog(parent, DEFAULT_PROJECT_DIR)
     if not new:
         return False
-    clone = clone[0]
     clone_dir = os.path.dirname(clone)
-    new = new[0]
     shutil.copytree(clone_dir, new)
     set_project(
         os.path.join(new, f"{MAJOR_VERSION}.project"),
