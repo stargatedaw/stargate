@@ -1,5 +1,7 @@
-from .project import new_project, open_project
 from sgui.sgqt import *
+from .project import new_project, open_project
+from sglib.lib import util
+import os
 
 
 class Welcome:
@@ -15,7 +17,10 @@ class Welcome:
         rp_vlayout = QVBoxLayout()
         hlayout.addLayout(rp_vlayout)
         rp_vlayout.addWidget(QLabel("Recent Projects"))
-        self.rp_list = QListView()
+        self.rp_list = QListWidget()
+        self.rp_list.doubleClicked.connect(
+            self.rp_doubleclick,
+        )
         rp_vlayout.addWidget(self.rp_list)
         self.load_rp()
         buttons_vlayout = QVBoxLayout()
@@ -45,14 +50,41 @@ class Welcome:
 
         self.widget.exec()
 
+    def rp_doubleclick(self, index):
+        util.set_file_setting(
+            'last-project',
+            str(self.rp_list.item(index.row()).text()),
+        )
+        self.close()
+
     def load_rp(self):
         """ Load a list of recent projects
         """
-        #raise NotImplementedError
+        history = util.get_file_setting("project-history", str, "")
+        history = [
+            x for x in history.split("\n")
+            if (
+                x.strip()
+                and
+                os.path.exists(x)
+            )
+        ]
+        if history:
+            self.rp_list.addItems(history)
+        self.history = history
 
     def close(self):
         self.widget.close()
         self.loaded = True
+        project = util.get_file_setting('last-project', str, None)
+        assert project, project
+        if project in self.history:
+            self.history.remove(project)
+        self.history.insert(0, project)
+        history = util.set_file_setting(
+            "project-history",
+            "\n".join(self.history[:20]),
+        )
 
     def on_new(self):
         if new_project(self.widget):

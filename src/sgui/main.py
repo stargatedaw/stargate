@@ -1240,15 +1240,19 @@ def global_new_project(a_project_file, a_wait=True):
     open_engine(a_project_file, get_fps())
 
 def respawn():
-    LOG.info("Spawning child UI process {}".format(sys.argv))
+    LOG.info("Spawning child UI process")
+    project_file = util.get_file_setting("last-project", str, None)
     if util.IS_WINDOWS:
         CHILD_PROC = subprocess.Popen([
             sys.executable,
+            project_file,
         ])
     else:
-        args = sys.argv[:1]
-        if "--delay" not in args:
-            args.append("--delay")
+        args = [
+            sys.argv[0],
+            '--delay',
+            project_file,
+        ]
         CHILD_PROC = subprocess.Popen(args)
     LOG.info("Parent UI process exiting")
 
