@@ -1,5 +1,5 @@
 from sgui.sgqt import *
-from .project import new_project, open_project
+from .project import new_project, open_project, get_history, set_project
 from sglib.lib import util
 import os
 
@@ -51,40 +51,20 @@ class Welcome:
         self.widget.exec()
 
     def rp_doubleclick(self, index):
-        util.set_file_setting(
-            'last-project',
-            str(self.rp_list.item(index.row()).text()),
-        )
+        project = str(self.rp_list.item(index.row()).text())
+        set_project(project)
         self.close()
 
     def load_rp(self):
         """ Load a list of recent projects
         """
-        history = util.get_file_setting("project-history", str, "")
-        history = [
-            x for x in history.split("\n")
-            if (
-                x.strip()
-                and
-                os.path.exists(x)
-            )
-        ]
-        if history:
-            self.rp_list.addItems(history)
-        self.history = history
+        self.history = get_history()
+        if self.history:
+            self.rp_list.addItems(self.history)
 
     def close(self):
         self.widget.close()
         self.loaded = True
-        project = util.get_file_setting('last-project', str, None)
-        assert project, project
-        if project in self.history:
-            self.history.remove(project)
-        self.history.insert(0, project)
-        history = util.set_file_setting(
-            "project-history",
-            "\n".join(self.history[:20]),
-        )
 
     def on_new(self):
         if new_project(self.widget):

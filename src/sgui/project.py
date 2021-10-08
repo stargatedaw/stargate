@@ -13,6 +13,8 @@ from sgui.sgqt import *
 __all__ = [
     'new_project',
     'open_project',
+    'set_project',
+    'get_history',
 ]
 
 def new_project(a_parent=None):
@@ -44,7 +46,7 @@ def new_project(a_parent=None):
                     f_file,
                     f"{MAJOR_VERSION}.project",
                 )
-                set_file_setting("last-project", f_file)
+                set_project(f_file)
                 return True
             else:
                 return False
@@ -69,9 +71,32 @@ def open_project(a_parent=None):
         if not util.check_for_rw_perms(f_file):
             return False
         #global_open_project(f_file_str)
-        set_file_setting("last-project", f_file_str)
+        set_project(f_file_str)
         return True
     except Exception as ex:
         LOG.exception(ex)
         QMessageBox.warning(a_parent, "Error", str(ex))
+
+def set_project(project):
+    set_file_setting("last-project", str(project))
+    history = get_history()
+    if project in history:
+        history.remove(project)
+    history.insert(0, project)
+    util.set_file_setting(
+        "project-history",
+        "\n".join(history[:20]),
+    )
+
+def get_history():
+    history = util.get_file_setting("project-history", str, "")
+    history = [
+        x for x in history.split("\n")
+        if (
+            x.strip()
+            and
+            os.path.exists(x)
+        )
+    ]
+    return history
 

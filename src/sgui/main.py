@@ -31,7 +31,7 @@ from sgui.transport import TransportWidget
 from sglib.lib import engine
 from sglib.lib.engine import *
 from sglib.lib import strings as sg_strings
-from sgui.project import new_project, open_project
+from sgui.project import new_project, open_project, set_project
 from sgui.util import (
     check_for_empty_directory,
     check_for_rw_perms,
@@ -1268,7 +1268,7 @@ def splash_screen_opening(project_file):
 
 def _load_project(project_file):
     if project_file:
-        util.set_file_setting("last-project", project_file)
+        set_project(project_file)
     else:
         project_file = util.get_file_setting("last-project", str, None)
         if not project_file:
