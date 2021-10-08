@@ -19,13 +19,20 @@ def parse_args():
         help='The project file to open',
         nargs='?',
     )
+    parser.add_argument(
+        '--create',
+        action='store_true',
+        default=False,
+        dest='create',
+        help='Create the project if it does not exist',
+    )
     args = parser.parse_args()
     if args.project_file is not None:
         assert os.path.basename(args.project_file) == f'{VERSION}.project', (
             f"File must be in the format '/path/to/{VERSION}.project', "
             f"got '{args.project_file}'"
         )
-        assert os.path.isfile(args.project_file), \
+        assert args.create or os.path.isfile(args.project_file), \
             f"{args.project_file} does not exist"
     return args
 

@@ -1245,12 +1245,14 @@ def respawn():
     if util.IS_WINDOWS:
         CHILD_PROC = subprocess.Popen([
             sys.executable,
+            '--create',
             project_file,
         ])
     else:
         args = [
             sys.argv[0],
             '--delay',
+            '--create',
             project_file,
         ]
         CHILD_PROC = subprocess.Popen(args)
