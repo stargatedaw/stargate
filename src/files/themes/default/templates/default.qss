@@ -5,6 +5,12 @@ QWidget:focus
     outline: none;
 }
 
+QWidget#welcome_screen {
+    background-image: url({{ ASSETS_DIR }}/icon.svg);
+    background-position: top right;
+    background-repeat: no-repeat;
+}
+
 QFrame#separator_h {
 	background-color: {{ text_color }};
 	border: none;

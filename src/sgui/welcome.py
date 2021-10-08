@@ -11,6 +11,7 @@ class Welcome:
         self.loaded = False
 
         self.widget = QDialog()
+        self.widget.setObjectName('welcome_screen')
         self.widget.setWindowTitle("Stargate")
         self.widget.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
         hlayout = QHBoxLayout(self.widget)
