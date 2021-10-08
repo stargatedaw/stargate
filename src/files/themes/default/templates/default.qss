@@ -751,6 +751,12 @@ QScrollBar::sub-line:vertical
     min-height: 20px;
 }
 
+QPushButton#huge_button {
+    font-size: 36px;
+    height: 150px;
+    width: 150px;
+}
+
 QScrollBar::add-line:horizontal
 {
     border: 1px solid {{ border_color }};

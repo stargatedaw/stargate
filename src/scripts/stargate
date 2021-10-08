@@ -7,7 +7,7 @@ import subprocess
 import sys
 import time
 
-stargate_version = "stargate"
+VERSION = "stargate"
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -21,8 +21,8 @@ def parse_args():
     )
     args = parser.parse_args()
     if args.project_file is not None:
-        assert os.path.basename(args.project_file) == 'stargate.project', (
-            "File must be in the format '/path/to/stargate.project', "
+        assert os.path.basename(args.project_file) == f'{VERSION}.project', (
+            f"File must be in the format '/path/to/{VERSION}.project', "
             f"got '{args.project_file}'"
         )
         assert os.path.isfile(args.project_file), \
@@ -45,7 +45,7 @@ def qt_message_handler(mode, context, message):
     else:
         LOG.info(line)
 
-def start_stargate(project_file):
+def _setup():
     global LOG, QtCore
     from sglib.log import LOG, setup_logging
     setup_logging()
@@ -59,11 +59,21 @@ def start_stargate(project_file):
         )
     except Exception as ex:
         LOG.warning(
-            "Unable to set QGuiApplication.setHighDpiScaleFactorRoundingPolicy"
+            "Unable to set "
+            "QGuiApplication.setHighDpiScaleFactorRoundingPolicy"
             f" {ex}"
         )
     app = QApplication(sys.argv)
     scaler = setup_theme(app)
+    return app, scaler
+
+def start_stargate(project_file):
+    app, scaler = _setup()
+    if not project_file:
+        from sgui.welcome import Welcome
+        w = Welcome(app, scaler)
+        if not w.loaded:
+            exit(0)
     from sgui.splash import SplashScreen
     splash_screen = SplashScreen(scaler.y_res)
     from sgui.main import main
@@ -95,7 +105,7 @@ def main():
             f_prefix_dir,
             "..",
             "lib",
-            stargate_version,
+            VERSION,
             "stargate",
         )
         f_path = os.path.abspath(f_path)
