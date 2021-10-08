@@ -4,7 +4,9 @@ from sgui import util
 from sglib.constants import (
     DEFAULT_PROJECT_DIR,
     MAJOR_VERSION,
+    IS_PORTABLE_INSTALL,
 )
+from sglib.lib import portable
 from sglib.lib.translate import _
 from sglib.lib.util import set_file_setting, PROJECT_FILE_TYPE
 from sglib.log import LOG
@@ -102,6 +104,8 @@ def open_project(a_parent=None):
 
 def set_project(project):
     set_file_setting("last-project", str(project))
+    if IS_PORTABLE_INSTALL:
+        project = portable.escape_path(project)
     history = get_history()
     if project in history:
         history.remove(project)
@@ -121,5 +125,10 @@ def get_history():
             os.path.exists(x)
         )
     ]
+    if IS_PORTABLE_INSTALL:
+        history = [
+            portable.unescape_path(x)
+            for x in history
+        ]
     return history
 
