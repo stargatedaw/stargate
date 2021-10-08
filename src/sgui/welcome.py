@@ -1,5 +1,11 @@
 from sgui.sgqt import *
-from .project import new_project, open_project, get_history, set_project
+from .project import (
+    clone_project,
+    get_history,
+    new_project,
+    open_project,
+    set_project,
+)
 from sglib.lib import util
 import os
 

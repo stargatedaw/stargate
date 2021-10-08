@@ -9,6 +9,7 @@ from sglib.lib.translate import _
 from sglib.lib.util import set_file_setting, PROJECT_FILE_TYPE
 from sglib.log import LOG
 from sgui.sgqt import *
+import shutil
 
 __all__ = [
     'new_project',
@@ -17,20 +18,24 @@ __all__ = [
     'get_history',
 ]
 
+def new_project_dialog(parent, last_dir):
+    f_file, _filter = QFileDialog.getSaveFileName(
+        parent,
+        _('Create a new project'),
+        last_dir,
+        options=(
+            QFileDialog.Option.ShowDirsOnly
+            |
+            QFileDialog.Option.DontUseNativeDialog
+        ),
+    )
+    return f_file, _filter
+
 def new_project(a_parent=None):
     try:
         f_last_dir = DEFAULT_PROJECT_DIR
         while True:
-            f_file, _filter = QFileDialog.getSaveFileName(
-                a_parent,
-                _('Create a new project'),
-                f_last_dir,
-                options=(
-                    QFileDialog.Option.ShowDirsOnly
-                    |
-                    QFileDialog.Option.DontUseNativeDialog
-                ),
-            )
+            f_file, _filter = new_project_dialog(a_parent, f_last_dir)
             if f_file and str(f_file):
                 f_file = str(f_file)
                 f_last_dir = f_file
@@ -54,15 +59,35 @@ def new_project(a_parent=None):
         LOG.exception(ex)
         QMessageBox.warning(a_parent, "Error", str(ex))
 
+def clone_project(parent):
+    clone = open_project_dialog(parent)
+    if not clone:
+        return False
+    new = new_project_dialog(parent, DEFAULT_PROJECT_DIR)
+    if not new:
+        return False
+    clone = clone[0]
+    clone_dir = os.path.dirname(clone)
+    new = new[0]
+    shutil.copytree(clone_dir, new)
+    set_project(
+        os.path.join(new, f"{MAJOR_VERSION}.project"),
+    )
+    return True
+
+def open_project_dialog(parent):
+    f_file, f_filter = QFileDialog.getOpenFileName(
+        parent=parent,
+        caption='Open Project',
+        directory=DEFAULT_PROJECT_DIR,
+        filter=PROJECT_FILE_TYPE,
+        options=QFileDialog.Option.DontUseNativeDialog,
+    )
+    return f_file, f_filter
+
 def open_project(a_parent=None):
     try:
-        f_file, f_filter = QFileDialog.getOpenFileName(
-            parent=a_parent,
-            caption='Open Project',
-            directory=DEFAULT_PROJECT_DIR,
-            filter=PROJECT_FILE_TYPE,
-            options=QFileDialog.Option.DontUseNativeDialog,
-        )
+        f_file, f_filter = open_project_dialog(a_parent)
         if f_file is None:
             return False
         f_file_str = str(f_file)
