@@ -84,8 +84,11 @@ class SequencerWidget:
             [_("None"), _("Beat"), "1/8", "1/12", "1/16"])
         self.snap_combobox.currentIndexChanged.connect(self.set_snap)
 
-        self.menu_layout.addWidget(QLabel(_("Snap:")), 5, 0)
-        self.menu_layout.addWidget(self.snap_combobox, 5, 1)
+        # Not currently doing this because the items snap to a new position
+        # When clicked after different snap settings.  Fine positioning should
+        # be done within the items and not at the sequencer level
+        # self.menu_layout.addWidget(QLabel(_("Snap:")), 5, 0)
+        # self.menu_layout.addWidget(self.snap_combobox, 5, 1)
 
         self.follow_checkbox = QCheckBox(_("Follow"))
         self.follow_checkbox.setChecked(True)
