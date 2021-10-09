@@ -199,7 +199,7 @@ class SeqTrack:
             QColor(
                 shared.TRACK_COLORS.get_color(a_track_num),
             ),
-            options=QColorDialog.DontUseNativeDialog,
+            options=QColorDialog.ColorDialogOption.DontUseNativeDialog,
             parent=glbl_shared.MAIN_WINDOW.widget,
         )
         if color.isValid():
