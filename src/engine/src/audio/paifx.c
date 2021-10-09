@@ -50,7 +50,10 @@ void papifx_reset(t_file_fx_controls* self){
 
 void papifx_paste(const char* _str){
     t_1d_char_array* arr = c_split_str(_str, '|', 34, 32);
-    assert(!strcmp(arr->array[0], "f"));
+    sg_assert(
+        !strcmp(arr->array[0], "f"),
+        (char*)_str
+    );
 
     int ap_uid = atoi(arr->array[1]);
     SGFLT val;

@@ -37,9 +37,12 @@ void v_sg_lim_on_stop(PluginHandle instance)
     //t_sg_lim *plugin = (t_sg_lim*)instance;
 }
 
-void v_sg_lim_connect_buffer(PluginHandle instance, int a_index,
-        SGFLT * DataLocation, int a_is_sidechain)
-{
+void v_sg_lim_connect_buffer(
+    PluginHandle instance,
+    int a_index,
+    SGFLT* DataLocation,
+    int a_is_sidechain
+){
     t_sg_lim *plugin = (t_sg_lim*)instance;
 
     if(!a_is_sidechain)
@@ -53,7 +56,7 @@ void v_sg_lim_connect_buffer(PluginHandle instance, int a_index,
                 plugin->output1 = DataLocation;
                 break;
             default:
-                assert(0);
+                sg_assert(0, "v_sg_lim_connect_buffer: unknown port");
                 break;
         }
     }
@@ -114,11 +117,15 @@ void v_sg_lim_set_port_value(PluginHandle Instance,
 }
 
 void v_sg_lim_process_midi_event(
-    t_sg_lim * plugin_data, t_seq_event * a_event)
-{
+    t_sg_lim * plugin_data,
+    t_seq_event * a_event
+){
     if (a_event->type == EVENT_CONTROLLER)
     {
-        assert(a_event->param >= 1 && a_event->param < 128);
+        sg_assert(
+            a_event->param >= 1 && a_event->param < 128,
+            "v_sg_lim_process_midi_event: param out of range"
+        );
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =
                 EVENT_CONTROLLER;

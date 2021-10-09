@@ -66,7 +66,7 @@ void v_sgdelay_connect_buffer(
             plugin->output1 = DataLocation;
             break;
         default:
-            assert(0);
+            sg_assert(0, "v_sgdelay_connect_buffer: unknown port");
             break;
     }
 }
@@ -145,7 +145,10 @@ void v_sgdelay_process_midi_event(
 ){
     if (a_event->type == EVENT_CONTROLLER)
     {
-        assert(a_event->param >= 1 && a_event->param < 128);
+        sg_assert(
+            a_event->param >= 1 && a_event->param < 128,
+            "v_sgdelay_process_midi_event: param out of range"
+        );
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =
                 EVENT_CONTROLLER;

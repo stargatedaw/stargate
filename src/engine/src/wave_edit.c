@@ -109,7 +109,7 @@ void v_we_set_playback_mode(
             }
             break;
         default:
-            assert(0);
+            sg_assert(0, "v_we_set_playback_mode: invalid playback mode");
             break;
     }
 }
@@ -518,7 +518,10 @@ void v_we_configure(const char* a_key, const char* a_value){
     else if(!strcmp(a_key, WN_CONFIGURE_KEY_WN_PLAYBACK))
     {
         int f_mode = atoi(a_value);
-        assert(f_mode >= 0 && f_mode <= 2);
+        sg_assert(
+            f_mode >= 0 && f_mode <= 2,
+            "v_we_configure: WN_CONFIGURE_KEY_WN_PLAYBACK invalid mode"
+        );
         v_we_set_playback_mode(wave_edit, f_mode, 1);
     }
     else if(!strcmp(a_key, WN_CONFIGURE_KEY_PLUGIN_INDEX))

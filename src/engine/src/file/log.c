@@ -2,7 +2,7 @@
 /*
 void write_log(char * a_string)
 {
-    assert(a_string);
+    sg_assert(a_string, a_string);
     char buff[LMS_LARGE_STRING];
     time_t now = time (0);
     strftime (buff, 100, "%Y-%m-%d %H:%M:%S.000", localtime (&now));

@@ -29,7 +29,7 @@ SG_THREAD_LOCAL fp_multi_dist MULTI_DIST_FP[]
 
 fp_multi_dist g_mds_get_fp(int index)
 {
-    assert(index >= 0 && index <= 2);
+    sg_assert(index >= 0 && index <= 2, "g_mds_get_fp: out of range");
     return MULTI_DIST_FP[index];
 }
 

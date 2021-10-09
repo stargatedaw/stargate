@@ -113,15 +113,23 @@ void v_sfader_set_port_value(PluginHandle Instance,
 }
 
 void v_sfader_process_midi_event(
-    t_sfader * plugin_data, t_seq_event * a_event)
-{
+    t_sfader * plugin_data,
+    t_seq_event * a_event
+){
 
     if (a_event->type == EVENT_CONTROLLER)
     {
-        assert(a_event->param >= 1 && a_event->param < 128);
-        v_plugin_event_queue_add(&plugin_data->midi_queue,
-            EVENT_CONTROLLER, a_event->tick,
-            a_event->value, a_event->param);
+        sg_assert(
+            a_event->param >= 1 && a_event->param < 128,
+            "v_sfader_process_midi_event: out of range"
+        );
+        v_plugin_event_queue_add(
+            &plugin_data->midi_queue,
+            EVENT_CONTROLLER,
+            a_event->tick,
+            a_event->value,
+            a_event->param
+        );
     }
 }
 

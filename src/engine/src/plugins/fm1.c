@@ -200,9 +200,12 @@ void v_fm1_on_stop(PluginHandle instance){
     plugin->sv_pitch_bend_value = 0.0f;
 }
 
-void v_fm1_connect_buffer(PluginHandle instance, int a_index,
-        SGFLT * DataLocation, int a_is_sidechain)
-{
+void v_fm1_connect_buffer(
+    PluginHandle instance,
+    int a_index,
+    SGFLT * DataLocation,
+    int a_is_sidechain
+){
     if(a_is_sidechain)
     {
         return;
@@ -219,7 +222,7 @@ void v_fm1_connect_buffer(PluginHandle instance, int a_index,
             plugin->output1 = DataLocation;
             break;
         default:
-            assert(0);
+            sg_assert(0, "v_fm1_connect_buffer: unknown port");
             break;
     }
 }
@@ -1184,7 +1187,10 @@ void v_fm1_process_midi_event(
     }
     else if (a_event->type == EVENT_CONTROLLER)
     {
-        assert(a_event->param >= 1 && a_event->param < 128);
+        sg_assert(
+            a_event->param >= 1 && a_event->param < 128,
+            "v_fm1_process_midi_event: param out of range"
+        );
 
         v_plugin_event_queue_add(&plugin_data->midi_queue,
             EVENT_CONTROLLER, a_event->tick,

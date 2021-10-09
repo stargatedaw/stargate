@@ -40,9 +40,12 @@ void v_multifx_on_stop(PluginHandle instance)
     //t_multifx *plugin = (t_multifx*)instance;
 }
 
-void v_multifx_connect_buffer(PluginHandle instance, int a_index,
-        SGFLT * DataLocation, int a_is_sidechain)
-{
+void v_multifx_connect_buffer(
+    PluginHandle instance,
+    int a_index,
+    SGFLT * DataLocation,
+    int a_is_sidechain
+){
     if(a_is_sidechain)
     {
         return;
@@ -58,7 +61,7 @@ void v_multifx_connect_buffer(PluginHandle instance, int a_index,
             plugin->output1 = DataLocation;
             break;
         default:
-            assert(0);
+            sg_assert(0, "v_multifx_connect_buffer: unknown port");
             break;
     }
 }
@@ -199,7 +202,10 @@ void v_multifx_process_midi_event(
 ){
     if (a_event->type == EVENT_CONTROLLER)
     {
-        assert(a_event->param >= 1 && a_event->param < 128);
+        sg_assert(
+            a_event->param >= 1 && a_event->param < 128,
+            "v_multifx_process_midi_event: param out of range"
+        );
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =
                 EVENT_CONTROLLER;

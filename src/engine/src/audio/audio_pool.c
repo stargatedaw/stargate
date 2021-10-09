@@ -326,15 +326,17 @@ void v_audio_pool_add_items(
                 for(j = 0; j < 3; ++j){
                     v_iterate_2d_char_array(f_arr);
                     control = atof(f_arr->current_str);
-                    assert(control >= 0. && control <= 127.);
+                    sg_assert(
+                        control >= 0. && control <= 127.,
+                        "v_audio_pool_add_items: control out of range"
+                    );
                     item->fx_controls.controls[i].knobs[j] = control;
                 }
                 v_iterate_2d_char_array(f_arr);
                 fx_type = atoi(f_arr->current_str);
-                assert(
-                    fx_type >= 0
-                    &&
-                    fx_type <= 36  // TODO: get the real count
+                sg_assert(
+                    fx_type >= 0 && fx_type <= 42,  // TODO: get the real count
+                    "v_audio_pool_add_items: Invalid fx_type"
                 );
                 item->fx_controls.controls[i].fx_type = fx_type;
                 item->fx_controls.controls[i].func_ptr =

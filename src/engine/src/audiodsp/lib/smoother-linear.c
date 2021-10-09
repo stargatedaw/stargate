@@ -5,10 +5,14 @@
 #include "audiodsp/lib/smoother-linear.h"
 
 
-void g_sml_init(t_smoother_linear * f_result, SGFLT a_sample_rate,
-        SGFLT a_high, SGFLT a_low, SGFLT a_time_in_seconds)
-{
-    assert(a_high > a_low);
+void g_sml_init(
+    t_smoother_linear* f_result,
+    SGFLT a_sample_rate,
+    SGFLT a_high,
+    SGFLT a_low,
+    SGFLT a_time_in_seconds
+){
+    sg_assert(a_high > a_low, "g_sml_init: high >= low");
     f_result->last_value = (((a_high - a_low) * .5f) + a_low);
 
     /*Rate is the time it would take to complete if the knob was all

@@ -50,7 +50,10 @@ t_daw * g_daw_get(){
         //AUDIO_INPUT_TRACK_COUNT
     }
 
-    assert(AUDIO_INPUT_TRACK_COUNT < MAX_AUDIO_INPUT_COUNT);
+    sg_assert(
+        AUDIO_INPUT_TRACK_COUNT < MAX_AUDIO_INPUT_COUNT,
+        "g_daw_get: Too many audio input tracks"
+    );
 
     g_seq_event_result_init(&f_result->seq_event_result);
 
@@ -271,7 +274,10 @@ void v_daw_audio_items_run(
                     )
                 )
             ){
-                assert(f_i2 < a_sample_count);
+                sg_assert(
+                    f_i2 < a_sample_count,
+                    "v_daw_audio_items_run: f_i2 >= a_sample_count"
+                );
                 v_audio_item_set_fade_vol(f_audio_item, f_send_num, sg_ts);
 
                 if(f_audio_item->audio_pool_item->channels == 1){
@@ -329,16 +335,18 @@ void v_daw_audio_items_run(
                         a_sc_buff[1][f_i2] += f_tmp_sample1;
                     }
                 } else if(f_audio_item->audio_pool_item->channels == 2){
-                    assert(
+                    sg_assert(
                         f_audio_item->sample_read_heads[f_send_num].whole_number
                         <=
-                        f_audio_item->audio_pool_item->length
+                        f_audio_item->audio_pool_item->length,
+                        "v_daw_audio_items_run: read head > length"
                     );
 
-                    assert(
+                    sg_assert(
                         f_audio_item->sample_read_heads[f_send_num].whole_number
                         >=
-                        AUDIO_ITEM_PADDING_DIV2
+                        AUDIO_ITEM_PADDING_DIV2,
+                        "v_daw_audio_items_run: read head < start padding"
                     );
 
                     SGFLT f_tmp_sample0 = f_cubic_interpolate_ptr_ifh(
@@ -412,7 +420,10 @@ void v_daw_audio_items_run(
                         "invalid number of channels %i\n",
                         f_audio_item->audio_pool_item->channels
                     );
-                    sg_assert(0, "Invalid number of channels");
+                    sg_assert(
+                        0,
+                        "v_daw_audio_items_run: Invalid number of channels"
+                    );
                 }
 
                 if(f_audio_item->is_reversed){
@@ -684,9 +695,15 @@ void g_daw_instantiate()
 }
 
 void daw_set_sequence(t_daw* self, int uid){
-    assert(uid >= 0 && uid < DAW_MAX_SONG_COUNT);
+    sg_assert(
+        uid >= 0 && uid < DAW_MAX_SONG_COUNT,
+        "daw_set_sequence: uid out of range"
+    );
     // Must be loaded
-    assert(self->seq_pool[uid]);
+    sg_assert_ptr(
+        self->seq_pool[uid],
+        "daw_set_sequence: sequence not loaded"
+    );
 
     pthread_spin_lock(&STARGATE->main_lock);
     self->en_song->sequences = self->seq_pool[uid];

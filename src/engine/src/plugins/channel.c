@@ -106,12 +106,16 @@ void v_sgchnl_set_port_value(PluginHandle Instance,
 }
 
 void v_sgchnl_process_midi_event(
-    t_sgchnl * plugin_data, t_seq_event * a_event)
-{
+    t_sgchnl * plugin_data,
+    t_seq_event * a_event
+){
 
     if (a_event->type == EVENT_CONTROLLER)
     {
-        assert(a_event->param >= 1 && a_event->param < 128);
+        sg_assert(
+            a_event->param >= 1 && a_event->param < 128,
+            "v_sgchnl_process_midi_event: param out of range"
+        );
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =
                 EVENT_CONTROLLER;

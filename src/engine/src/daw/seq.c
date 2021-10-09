@@ -214,7 +214,10 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
                 f_current_string->current_str
             );
 
-            assert(!f_result->tracks[f_track_num].refs);
+            sg_assert(
+                !f_result->tracks[f_track_num].refs,
+                "g_daw_sequence_get: track already has refs"
+            );
 
             lmalloc(
                 (void**)&f_result->tracks[f_track_num].refs,
@@ -223,7 +226,10 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
         }
         else if(f_current_string->current_str[0] == 'M')  //marker count
         {
-            assert(!f_result->events.events);
+            sg_assert(
+                !f_result->events.events,
+                "g_daw_sequence_get: already has events"
+            );
             v_iterate_2d_char_array(f_current_string);
             f_result->events.count = atoi(f_current_string->current_str);
 
@@ -232,7 +238,10 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
         }
         else if(f_current_string->current_str[0] == 'E')  //sequencer event
         {
-            assert(f_result->events.events);
+            sg_assert_ptr(
+                f_result->events.events,
+                "g_daw_sequence_get: no events"
+            );
             v_iterate_2d_char_array(f_current_string);
             int f_type = atoi(f_current_string->current_str);
 
@@ -274,14 +283,21 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
         {
             int f_track_num = atoi(f_current_string->current_str);
 
-            assert(f_result->tracks[f_track_num].refs);
+            sg_assert_ptr(
+                f_result->tracks[f_track_num].refs,
+                "g_daw_sequence_get: no refs"
+            );
 
             t_daw_item_ref * f_item_ref =
                 &f_result->tracks[f_track_num].refs[
                     f_item_counters[f_track_num]];
 
-            assert(f_item_counters[f_track_num] <
-                f_result->tracks[f_track_num].count);
+            sg_assert(
+                f_item_counters[f_track_num]
+                <
+                f_result->tracks[f_track_num].count,
+                "g_daw_sequence_get: track counter out of range"
+            );
 
             v_iterate_2d_char_array(f_current_string);
             f_item_ref->start = atof(f_current_string->current_str);
@@ -348,9 +364,18 @@ NO_OPTIMIZATION void v_daw_open_tracks(){
             v_iterate_2d_char_array(f_2d_array);  //ignored
             v_iterate_2d_char_array(f_2d_array); //ignored
 
-            assert(f_track_index >= 0 && f_track_index < DN_TRACK_COUNT);
-            assert(f_solo == 0 || f_solo == 1);
-            assert(f_mute == 0 || f_mute == 1);
+            sg_assert(
+                f_track_index >= 0 && f_track_index < DN_TRACK_COUNT,
+                "v_daw_open_tracks: track index out of range"
+            );
+            sg_assert(
+                f_solo == 0 || f_solo == 1,
+                "v_daw_open_tracks: invalid solo value"
+            );
+            sg_assert(
+                f_mute == 0 || f_mute == 1,
+                "v_daw_open_tracks: invalid mute value"
+            );
 
             v_open_track(
                 DAW->track_pool[f_track_index],

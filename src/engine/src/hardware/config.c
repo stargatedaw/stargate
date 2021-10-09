@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -133,10 +132,11 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
         } else if(!strcmp(f_key_char, "audioInputs")){
             result->audio_input_count = atoi(f_value_char);
             printf("audioInputs: %s\n", f_value_char);
-            assert(
+            sg_assert(
                 result->audio_input_count >= 0
                 &&
-                result->audio_input_count <= 128
+                result->audio_input_count <= 128,
+                "load_hardware_config: audio_input_count out of range"
             );
             AUDIO_INPUT_TRACK_COUNT = result->audio_input_count;
         } else if(!strcmp(f_key_char, "audioOutputs")){
@@ -154,29 +154,36 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
             printf("audioOutputs: %s\n", f_value_char);
 
             result->audio_output_count = atoi(f_line->str_arr[0]);
-            assert(
+            sg_assert(
                 result->audio_output_count >= 1
                 &&
-                result->audio_output_count <= 128
+                result->audio_output_count <= 128,
+                "load_hardware_config: audio output count out of range"
             );
             OUTPUT_CH_COUNT = result->audio_output_count;
             MAIN_OUT_L = atoi(f_line->str_arr[1]);
             MAIN_OUT_R = atoi(f_line->str_arr[2]);
-            assert(
+            sg_assert(
                 MAIN_OUT_L >= 0
                 &&
-                MAIN_OUT_L < result->audio_output_count
+                MAIN_OUT_L < result->audio_output_count,
+                "load_hardware_config: MAIN_OUT_L out of range"
             );
-            assert(
+            sg_assert(
                 MAIN_OUT_R >= 0
                 &&
-                MAIN_OUT_R < result->audio_output_count
+                MAIN_OUT_R < result->audio_output_count,
+                "load_hardware_config: MAIN_OUT_R out of range"
             );
 
             v_free_split_line(f_line);
         } else {
-            printf("Unknown key|value pair: %s|%s\n",
-                f_key_char, f_value_char);
+            fprintf(
+                stderr,
+                "WARNING: Unknown key|value pair: %s|%s\n",
+                f_key_char,
+                f_value_char
+            );
         }
     }
 

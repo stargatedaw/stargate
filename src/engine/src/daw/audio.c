@@ -32,11 +32,17 @@ void v_daw_papifx_set_control(
     t_papifx_controls* controls = &ap_item->fx_controls.controls[fx_index];
     if(control_index == 3){
         int fx_type = (int)port_val;
-        assert(fx_type >= 0 && fx_type <= 36);  // TODO: get the real count
+        sg_assert(
+            fx_type >= 0 && fx_type <= 42,  // TODO: get the real count
+            "v_daw_papifx_set_control: invalid fx type"
+        );
         controls->fx_type = fx_type;
         controls->func_ptr = g_mf3_get_function_pointer(fx_type);
     } else {
-        assert(port_val >= 0. && port_val <= 127.);
+        sg_assert(
+            port_val >= 0. && port_val <= 127.,
+            "v_daw_papifx_set_control: port out of range"
+        );
         controls->knobs[control_index] = port_val;
     }
     ap_item->fx_controls.loaded = 1;

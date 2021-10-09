@@ -134,7 +134,7 @@ void sampler1ConnectBuffer(PluginHandle instance, int a_index,
             plugin->output[1] = DataLocation;
             break;
         default:
-            assert(0);
+            sg_assert(0, "sampler1ConnectBuffer: unknown port");
             break;
     }
 }
@@ -1327,7 +1327,10 @@ void v_sampler1_process_midi_event(
     }
     else if (a_event->type == EVENT_CONTROLLER)
     {
-        assert(a_event->param >= 1 && a_event->param < 128);
+        sg_assert(
+            a_event->param >= 1 && a_event->param < 128,
+            "v_sampler1_process_midi_event: param out of range"
+        );
 
         v_plugin_event_queue_add(&plugin_data->midi_queue,
             EVENT_CONTROLLER, a_event->tick,

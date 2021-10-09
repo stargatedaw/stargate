@@ -47,9 +47,12 @@ void v_sreverb_on_stop(PluginHandle instance)
     //t_sreverb *plugin = (t_sreverb*)instance;
 }
 
-void v_sreverb_connect_buffer(PluginHandle instance, int a_index,
-        SGFLT * DataLocation, int a_is_sidechain)
-{
+void v_sreverb_connect_buffer(
+    PluginHandle instance,
+    int a_index,
+    SGFLT * DataLocation,
+    int a_is_sidechain
+){
     if(a_is_sidechain)
     {
         return;
@@ -66,14 +69,16 @@ void v_sreverb_connect_buffer(PluginHandle instance, int a_index,
             plugin->output1 = DataLocation;
             break;
         default:
-            assert(0);
+            sg_assert(0, "v_sreverb_connect_buffer: unknown port");
             break;
     }
 }
 
-void v_sreverb_connect_port(PluginHandle instance, int port,
-        PluginData * data)
-{
+void v_sreverb_connect_port(
+    PluginHandle instance,
+    int port,
+    PluginData * data
+){
     t_sreverb *plugin = (t_sreverb*)instance;
 
     switch (port)
@@ -84,6 +89,7 @@ void v_sreverb_connect_port(PluginHandle instance, int port,
         case SREVERB_REVERB_DRY: plugin->reverb_dry = data; break;
         case SREVERB_REVERB_PRE_DELAY: plugin->reverb_predelay = data; break;
         case SREVERB_REVERB_HP: plugin->reverb_hp = data; break;
+        default: sg_assert(0, "v_sreverb_connect_port: unknown port"); break;
     }
 }
 
@@ -125,11 +131,15 @@ void v_sreverb_set_port_value(PluginHandle Instance,
 }
 
 void v_sreverb_process_midi_event(
-    t_sreverb * plugin_data, t_seq_event * a_event)
-{
+    t_sreverb* plugin_data,
+    t_seq_event* a_event
+){
     if (a_event->type == EVENT_CONTROLLER)
     {
-        assert(a_event->param >= 1 && a_event->param < 128);
+        sg_assert(
+            a_event->param >= 1 && a_event->param < 128,
+            "v_sreverb_process_midi_event: param out of range"
+        );
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =
                 EVENT_CONTROLLER;

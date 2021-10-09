@@ -59,7 +59,7 @@ void v_sgeq_connect_buffer(
             plugin->output1 = DataLocation;
             break;
         default:
-            assert(0);
+            sg_assert(0, "v_sgeq_connect_buffer: Unknown port");
             break;
     }
 }
@@ -211,7 +211,10 @@ void v_sgeq_process_midi_event(
     t_seq_event * a_event
 ){
     if (a_event->type == EVENT_CONTROLLER){
-        assert(a_event->param >= 1 && a_event->param < 128);
+        sg_assert(
+            a_event->param >= 1 && a_event->param < 128,
+            "v_sgeq_process_midi_event: param out of range"
+        );
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =
                 EVENT_CONTROLLER;

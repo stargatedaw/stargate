@@ -14,7 +14,10 @@ void v_osc_set_uni_voice_count(
     t_osc_simple_unison* a_osc_ptr,
     int a_value
 ){
-    assert(a_value <= OSC_UNISON_MAX_VOICES && a_value >= 1);
+    sg_assert(
+        a_value <= OSC_UNISON_MAX_VOICES && a_value >= 1,
+        "v_osc_set_uni_voice_count: value out of range"
+    );
 
     if(a_osc_ptr->voice_count != a_value){
         // Force a recalculation of v_osc_set_unison_pitch

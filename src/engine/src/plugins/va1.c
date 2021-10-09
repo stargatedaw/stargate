@@ -89,7 +89,7 @@ void v_va1_connect_buffer(
             plugin->output1 = DataLocation;
             break;
         default:
-            assert(0);
+            sg_assert(0, "v_va1_connect_buffer: port out of range");
             break;
     }
 }
@@ -97,7 +97,7 @@ void v_va1_connect_buffer(
 void v_va1_connect_port(
     PluginHandle instance,
     int port,
-        PluginData * data
+    PluginData * data
 ){
     t_va1* plugin = (t_va1*)instance;
 
@@ -236,9 +236,7 @@ void v_va1_connect_port(
         case VA1_DIST_TYPE: plugin->dist_type = data; break;
         case VA1_ADSR_LIN_MAIN: plugin->adsr_lin_main = data; break;
         case VA1_PAN: plugin->pan = data; break;
-        default:
-            assert(0);
-            break;
+        default: sg_assert(0, "v_va1_connect_port: unknown port"); break;
     }
 }
 
@@ -521,7 +519,10 @@ void v_va1_process_midi_event(
             a_event->tick
         );
     } else if (a_event->type == EVENT_CONTROLLER){
-        assert(a_event->param >= 1 && a_event->param < 128);
+        sg_assert(
+            a_event->param >= 1 && a_event->param < 128,
+            "v_va1_process_midi_event: param out of range"
+        );
 
         v_plugin_event_queue_add(
             &plugin_data->midi_queue,

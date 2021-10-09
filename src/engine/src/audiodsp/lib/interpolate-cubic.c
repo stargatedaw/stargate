@@ -110,8 +110,14 @@ SGFLT f_cubic_interpolate_ptr(SGFLT * a_table, SGFLT a_ptr)
     // Check this when run with no hardware, but otherwise save the CPU.
     // Anything sending a position to this should already know that the
     // position is valid.
-    assert(int_pos_minus1 >= 0);
-    assert(int_pos_minus2 >= 0);
+    sg_assert(
+        int_pos_minus1 >= 0,
+        "f_cubic_interpolate_ptr: m1 underrun"
+    );
+    sg_assert(
+        int_pos_minus2 >= 0,
+        "f_cubic_interpolate_ptr: m2 underrun"
+    );
 #endif
 
     SGFLT mu = a_ptr - (SGFLT)int_pos;

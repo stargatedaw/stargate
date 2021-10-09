@@ -5,18 +5,15 @@
 #include "files.h"
 
 
-void g_daw_item_free(t_daw_item * self)
-{
-    if(self->events)
-    {
+void g_daw_item_free(t_daw_item * self){
+    if(self->events){
         free(self->events);
     }
 
     free(self);
 }
 
-void g_daw_item_get(t_daw* self, int a_uid)
-{
+void g_daw_item_get(t_daw* self, int a_uid){
     SGFLT f_sr = STARGATE->thread_storage[0].sample_rate;
 
     t_daw_item * f_result;
@@ -29,13 +26,16 @@ void g_daw_item_get(t_daw* self, int a_uid)
     char f_full_path[2048];
     sprintf(f_full_path, "%s%i", self->item_folder, a_uid);
 
-    t_2d_char_array * f_current_string = g_get_2d_array_from_file(f_full_path,
-            LARGE_STRING);
+    t_2d_char_array * f_current_string = g_get_2d_array_from_file(
+        f_full_path,
+        LARGE_STRING
+    );
 
     int f_event_pos = 0;
 
     f_result->audio_items = g_audio_items_get(
-        STARGATE->thread_storage[0].sample_rate);
+        STARGATE->thread_storage[0].sample_rate
+    );
 
     while(1)
     {
@@ -46,24 +46,26 @@ void g_daw_item_get(t_daw* self, int a_uid)
             break;
         }
 
-        assert(f_event_pos <= f_result->event_count);
+        sg_assert(
+            f_event_pos <= f_result->event_count,
+            "g_daw_item_get: event pos > count"
+        );
 
         char f_type = f_current_string->current_str[0];
 
         if(f_type == 'M')  //MIDI event count
         {
-            assert(!f_result->events);
+            sg_assert(!f_result->events, "g_daw_item_get: have events");
             v_iterate_2d_char_array(f_current_string);
             f_result->event_count = atoi(f_current_string->current_str);
 
-            if(f_result->event_count)
-            {
-                lmalloc((void**)&f_result->events,
-                    sizeof(t_seq_event) * f_result->event_count);
+            if(f_result->event_count){
+                lmalloc(
+                    (void**)&f_result->events,
+                    sizeof(t_seq_event) * f_result->event_count
+                );
             }
-        }
-        else if(f_type == 'n')  //note
-        {
+        } else if(f_type == 'n'){  //note
             v_iterate_2d_char_array(f_current_string);
             SGFLT f_start = atof(f_current_string->current_str);
             v_iterate_2d_char_array(f_current_string);
@@ -170,11 +172,18 @@ void g_daw_item_get(t_daw* self, int a_uid)
         {
             v_iterate_2d_char_array(f_current_string);
             f_result->uid = atoi(f_current_string->current_str);
-            assert(f_result->uid == a_uid);
+            sg_assert(
+                f_result->uid == a_uid,
+                "g_daw_item_get: file UID does not match file name"
+            );
         }
         else
         {
-            printf("Invalid event type %c\n", f_type);
+            fprintf(
+                stderr,
+                "g_daw_item_get: Invalid event type %c\n",
+                f_type
+            );
         }
     }
 

@@ -51,9 +51,11 @@ void v_sg_vocoder_connect_buffer(PluginHandle instance, int a_index,
     }
 }
 
-void v_sg_vocoder_connect_port(PluginHandle instance, int port,
-        PluginData * data)
-{
+void v_sg_vocoder_connect_port(
+    PluginHandle instance,
+    int port,
+    PluginData * data
+){
     t_sg_vocoder *plugin = (t_sg_vocoder*)instance;
 
     switch (port)
@@ -61,7 +63,9 @@ void v_sg_vocoder_connect_port(PluginHandle instance, int port,
         case SG_VOCODER_WET: plugin->wet = data; break;
         case SG_VOCODER_MODULATOR: plugin->modulator = data; break;
         case SG_VOCODER_CARRIER: plugin->carrier = data; break;
-        default: assert(0); break;
+        default:
+            sg_assert(0, "v_sg_vocoder_connect_port: unknown port");
+            break;
     }
 }
 
@@ -104,16 +108,24 @@ void v_sg_vocoder_set_port_value(PluginHandle Instance,
 }
 
 void v_sg_vocoder_process_midi_event(
-    t_sg_vocoder * plugin_data, t_seq_event * a_event)
-{
+    t_sg_vocoder* plugin_data,
+    t_seq_event* a_event
+){
 
     if (a_event->type == EVENT_CONTROLLER)
     {
-        assert(a_event->param >= 1 && a_event->param < 128);
+        sg_assert(
+            a_event->param >= 1 && a_event->param < 128,
+            "v_sg_vocoder_process_midi_event: param out of range"
+        );
 
-        v_plugin_event_queue_add(&plugin_data->midi_queue,
-            EVENT_CONTROLLER, a_event->tick,
-            a_event->value, a_event->param);
+        v_plugin_event_queue_add(
+            &plugin_data->midi_queue,
+            EVENT_CONTROLLER,
+            a_event->tick,
+            a_event->value,
+            a_event->param
+        );
     }
 }
 

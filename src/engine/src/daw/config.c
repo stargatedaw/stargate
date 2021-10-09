@@ -68,7 +68,10 @@ void v_daw_configure(const char* a_key, const char* a_value){
             SMALL_STRING
         );
         int f_mode = atoi(f_arr->array[0]);
-        assert(f_mode >= 0 && f_mode <= 2);
+        sg_assert(
+            f_mode >= 0 && f_mode <= 2,
+            "v_daw_configure: DN_CONFIGURE_KEY_DN_PLAYBACK invalid mode"
+        );
         double f_beat = atof(f_arr->array[1]);
         v_daw_set_playback_mode(self, f_mode, f_beat, 1);
         g_free_1d_char_array(f_arr);
@@ -87,10 +90,16 @@ void v_daw_configure(const char* a_key, const char* a_value){
         pthread_spin_unlock(&STARGATE->main_lock);
 
         int uid = atoi(a_value);
-        assert(uid >= 0 && uid < DAW_MAX_SONG_COUNT);
+        sg_assert(
+            uid >= 0 && uid < DAW_MAX_SONG_COUNT,
+            "v_daw_configure: DN_CONFIGURE_KEY_NS uid out of range"
+        );
         t_daw_sequence * f_result = g_daw_sequence_get(self, uid);
         // Should not already be set
-        assert(!self->seq_pool[uid]);
+        sg_assert(
+            !self->seq_pool[uid],
+            "v_daw_configure: DN_CONFIGURE_KEY_NS seq already set"
+        );
 
         pthread_spin_lock(&STARGATE->main_lock);
         self->seq_pool[uid] = f_result;
@@ -102,12 +111,18 @@ void v_daw_configure(const char* a_key, const char* a_value){
         pthread_spin_unlock(&STARGATE->main_lock);
 
         int uid = atoi(a_value);
-        assert(uid >= 0 && uid < DAW_MAX_SONG_COUNT);
+        sg_assert(
+            uid >= 0 && uid < DAW_MAX_SONG_COUNT,
+            "v_daw_configure: DN_CONFIGURE_KEY_SR uid out of range"
+        );
         t_daw_sequence * f_result = g_daw_sequence_get(self, uid);
 
         // It is assumed that the current sequence is the only sequence that
         // can be edited.  Ensure that is the case.
-        assert(self->en_song->sequences == self->seq_pool[uid]);
+        sg_assert(
+            self->en_song->sequences == self->seq_pool[uid],
+            "v_daw_configure: DN_CONFIGURE_KEY_SR not editing current song"
+        );
         t_daw_sequence * f_old_sequence = NULL;
         f_old_sequence = self->en_song->sequences;
 
@@ -170,7 +185,10 @@ void v_daw_configure(const char* a_key, const char* a_value){
                 TINY_STRING);
         int f_track_num = atoi(f_val_arr->array[0]);
         int f_mode = atoi(f_val_arr->array[1]);
-        assert(f_mode == 0 || f_mode == 1);
+        sg_assert(
+            f_mode == 0 || f_mode == 1,
+            "v_daw_configure: DN_CONFIGURE_KEY_SOLO invalid mode"
+        );
 
         pthread_spin_lock(&STARGATE->main_lock);
 
@@ -184,11 +202,18 @@ void v_daw_configure(const char* a_key, const char* a_value){
     }
     else if(!strcmp(a_key, DN_CONFIGURE_KEY_MUTE)) //Set track mute
     {
-        t_1d_char_array * f_val_arr = c_split_str(a_value, '|', 2,
-                TINY_STRING);
+        t_1d_char_array * f_val_arr = c_split_str(
+            a_value,
+            '|',
+            2,
+            TINY_STRING
+        );
         int f_track_num = atoi(f_val_arr->array[0]);
         int f_mode = atoi(f_val_arr->array[1]);
-        assert(f_mode == 0 || f_mode == 1);
+        sg_assert(
+            f_mode == 0 || f_mode == 1,
+            "v_daw_configure: DN_CONFIGURE_KEY_MUTE invalid mode"
+        );
         pthread_spin_lock(&STARGATE->main_lock);
 
         self->track_pool[f_track_num]->mute = f_mode;
@@ -225,7 +250,10 @@ void v_daw_configure(const char* a_key, const char* a_value){
     else if(!strcmp(a_key, DN_CONFIGURE_KEY_SET_OVERDUB_MODE))
     {
         int f_bool = atoi(a_value);
-        assert(f_bool == 0 || f_bool == 1);
+        sg_assert(
+            f_bool == 0 || f_bool == 1,
+            "v_daw_configure: DN_CONFIGURE_KEY_SET_OVERDUB_MODE invalid value"
+        );
         pthread_spin_lock(&STARGATE->main_lock);
         self->overdub_mode = f_bool;
         pthread_spin_unlock(&STARGATE->main_lock);

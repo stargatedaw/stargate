@@ -51,7 +51,10 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self)
                 int f_port_count = atoi(f_current_string->current_str);
 
                 //sanity check
-                assert(f_port_count >= 1 && f_port_count < 100000);
+                sg_assert(
+                    f_port_count >= 1 && f_port_count < 100000,
+                    "g_daw_atm_sequence_get: port number is not sane"
+                );
 
                 current_plugin = &f_result->plugins[f_plugin_uid];
                 current_plugin->port_count = f_port_count;
@@ -81,8 +84,14 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self)
                 int f_point_count = atoi(f_current_string->current_str);
 
                 //sanity check
-                assert(f_point_count >= 1 && f_point_count < 100000);
-                assert(f_port_pos < current_plugin->port_count);
+                sg_assert(
+                    f_point_count >= 1 && f_point_count < 100000,
+                    "g_daw_atm_sequence_get: point count is not sane"
+                );
+                sg_assert(
+                    f_port_pos < current_plugin->port_count,
+                    "g_daw_atm_sequence_get: port out of range"
+                );
                 current_port = &current_plugin->ports[f_port_pos];
 
                 current_port->port = f_port_num;
@@ -118,10 +127,22 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self)
                 */
                 v_iterate_2d_char_array(f_current_string);
 
-                assert(f_port == current_port->port);
-                assert(f_pos < current_port->point_count);
-                assert(current_port->points);
-                assert(f_break_after == 0 || f_break_after == 1);
+                sg_assert(
+                    f_port == current_port->port,
+                    "g_daw_atm_sequence_get: port != current port"
+                );
+                sg_assert(
+                    f_pos < current_port->point_count,
+                    "g_daw_atm_sequence_get: point out of range"
+                );
+                sg_assert_ptr(
+                    current_port->points,
+                    "g_daw_atm_sequence_get: current port has no points"
+                );
+                sg_assert(
+                    f_break_after == 0 || f_break_after == 1,
+                    "g_daw_atm_sequence_get: invalid f_break_after value"
+                );
 
                 f_point = &current_port->points[f_pos];
 

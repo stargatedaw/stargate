@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <portmidi.h>
 #include <string.h>
 #include <sys/time.h>
@@ -416,7 +415,7 @@ void midiDeviceRead(
             }
             else
             {
-                assert(0);
+                sg_assert(0, "midiDeviceRead: Unknown controller");
             }
         }
         else
@@ -432,6 +431,9 @@ void midiDeviceRead(
         }
     }
 
-    assert(self->instanceEventCounts < MIDI_EVENT_BUFFER_SIZE);
+    sg_assert(
+        self->instanceEventCounts < MIDI_EVENT_BUFFER_SIZE,
+        "midiDeviceRead: instance event count out of range"
+    );
 }
 

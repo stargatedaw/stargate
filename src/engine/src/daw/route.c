@@ -106,7 +106,7 @@ t_daw_routing_graph * g_daw_routing_graph_get(t_daw * self)
                 int f_count = atoi(f_2d_array->current_str);
                 f_result->track_pool_sorted_count = f_count;
             } else {
-                assert(0);
+                sg_assert(0, "g_daw_routing_graph_get, unknown field");
             }
         }
         g_free_2d_char_array(f_2d_array);
