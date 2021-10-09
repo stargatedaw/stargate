@@ -305,15 +305,17 @@ void v_sample_period_split(
                     &a_input_buffer[f_split * a_input_count];
             }
         } else {
-            sg_assert(0, NULL);
+            sg_assert(0, "v_sample_period_split: else 1");
         }
     } else {
-        sg_assert(0, NULL);
+        sg_assert(0, "v_sample_period_split: else 2");
     }
 }
 
-void g_stargate_get(SGFLT a_sr, t_midi_device_list * a_midi_devices)
-{
+void g_stargate_get(
+    SGFLT a_sr,
+    t_midi_device_list* a_midi_devices
+){
     clalloc((void**)&STARGATE, sizeof(t_stargate));
     STARGATE->audio_pool = g_audio_pool_get(a_sr);
     STARGATE->midi_devices = a_midi_devices;
@@ -526,7 +528,7 @@ NO_OPTIMIZATION void v_open_track(
                     "Invalid track identifier '%c'\n",
                     f_2d_array->current_str[0]
                 );
-                sg_assert(0, NULL);
+                sg_assert(0, "v_open_track: invalid track identifier");
             }
         }
 
@@ -787,7 +789,7 @@ void v_sample_period_set_atm_events(
     ){
         sg_assert(
             (int)self->atm_tick_count < ATM_TICK_BUFFER_SIZE,
-            NULL
+            "v_sample_period_set_atm_events: atm tick count out of range"
         );
 
         pos = (a_event_list->atm_pos - current_sample);
@@ -900,7 +902,7 @@ void v_sg_set_playback_pos(
          }
     }
 
-    sg_assert(f_found_tempo, NULL);
+    sg_assert(f_found_tempo, "v_sg_set_playback_pos: did not find tempo");
 }
 
 
@@ -1113,12 +1115,12 @@ void v_sg_seq_event_list_set(
             } else if(a_result->splitter.count == 1){
                 // TODO:  Debug how and why this happens
             } else {
-                sg_assert(0, NULL);
+                sg_assert(0, "v_sg_seq_event_list_set: else 1");
             }
 
             self->period.end_beat = f_period->period.end_beat;
         } else {
-            sg_assert(0, NULL);
+            sg_assert(0, "v_sg_seq_event_list_set: else 2");
         }
     }
 }
@@ -1209,7 +1211,7 @@ void v_sg_configure(const char* a_key, const char* a_value){
         f_input->vol_linear = f_vol_linear;
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_KILL_ENGINE)){
         pthread_spin_lock(&STARGATE->main_lock);
-        sg_assert(0, NULL);
+        sg_assert(0, "v_sg_configure: SG_CONFIGURE_KEY_KILL_ENGINE");
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_EXIT)){
         pthread_mutex_lock(&STARGATE->exit_mutex);
         exiting = 1;

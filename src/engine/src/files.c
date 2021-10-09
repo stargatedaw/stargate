@@ -35,7 +35,7 @@ void get_string_from_file(
     //write_log(log_buff);
     FILE * f_file;
     f_file = fopen(a_file, "r");
-    sg_assert_ptr(f_file, (char*)a_file);
+    sg_assert_ptr(f_file, "get_string_from_file: fopen returned NULL");
     size_t f_char_count = fread(
         a_buf,
         sizeof(char),
@@ -44,7 +44,7 @@ void get_string_from_file(
     );
     sg_assert(
         (int)((int)f_char_count < a_size),
-        NULL
+        "get_string_from_file: length > size"
     );
     a_buf[f_char_count] = '\0';
     fclose(f_file);
@@ -52,7 +52,7 @@ void get_string_from_file(
 
 void v_write_to_file(char * a_file, char * a_string){
     FILE* pFile = fopen(a_file, "w");
-    sg_assert_ptr(pFile, a_file);
+    sg_assert_ptr(pFile, "v_write_to_file: fopen returned NULL ptr");
     fprintf(pFile, "%s",a_string);
     fclose(pFile);
 
@@ -67,7 +67,7 @@ void v_write_to_file(char * a_file, char * a_string){
 
 void v_append_to_file(char * a_file, char * a_string){
     FILE* pFile = fopen(a_file, "a");
-    sg_assert_ptr(pFile, a_file);
+    sg_assert_ptr(pFile, "v_append_to_file: fopen returned NULL ptr");
     fprintf(pFile, "%s", a_string);
     fclose(pFile);
 }
@@ -97,9 +97,9 @@ t_dir_list* g_get_dir_list(char * a_dir){
 
     DIR *dir;
     struct dirent *ent;
-    dir = opendir (a_dir);
+    dir = opendir(a_dir);
 
-    sg_assert_ptr(dir, NULL);
+    sg_assert_ptr(dir, "g_get_dir_list: opendir returned NULL");
     //if (dir != NULL)
     //{
       while ((ent = readdir (dir)) != NULL)
