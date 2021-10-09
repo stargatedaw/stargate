@@ -31,7 +31,13 @@ from sgui.transport import TransportWidget
 from sglib.lib import engine
 from sglib.lib.engine import *
 from sglib.lib import strings as sg_strings
-from sgui.project import new_project, open_project, set_project
+from sgui.project import (
+    check_project_version,
+    new_project,
+    open_project,
+    set_project,
+    StargateProjectVersionError,
+)
 from sgui.util import (
     check_for_empty_directory,
     check_for_rw_perms,
@@ -1301,35 +1307,13 @@ def _load_project(project_file):
 
     if os.path.exists(project_file):
         try:
-            minor_version = util.META_DOT_JSON['version']['minor']
-            with open(project_file) as f:
-                project_version = f.read().strip()
-            if (
-                "placeholder" in project_version
-                or
-                minor_version >= project_version
-            ):
-                with open(project_file, 'w') as f:
-                    f.write(minor_version)
-            else:
-                msg = _(
-                    "Please update to the latest version of Stargate.  "
-                    "This project {} was created with '{}', however, "
-                    "you are using version '{}'"
-                ).format(
-                    project_file,
-                    project_version,
-                    minor_version,
-                )
-                LOG.error(msg)
-                QMessageBox.warning(
-                    MAIN_WINDOW.widget,
-                    _("Error"),
-                    msg,
-                )
-                exit(1)
-
+            check_project_version(
+                MAIN_WINDOW.widget,
+                project_file,
+            )
             global_open_project(project_file)
+        except StargateProjectVersionError:
+            exit(1)
         except Exception as ex:
             LOG.exception(ex)
             QMessageBox.warning(

@@ -1,10 +1,12 @@
 from sgui.sgqt import *
 from .project import (
+    check_project_version,
     clone_project,
     get_history,
     new_project,
     open_project,
     set_project,
+    StargateProjectVersionError,
 )
 from sglib.lib import util
 import os
@@ -59,6 +61,10 @@ class Welcome:
 
     def rp_doubleclick(self, index):
         project = str(self.rp_list.item(index.row()).text())
+        try:
+            check_project_version(self.widget, project)
+        except StargateProjectVersionError:
+            return
         set_project(project)
         self.close()
 

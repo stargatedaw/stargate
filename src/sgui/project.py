@@ -3,12 +3,16 @@ import os
 from sgui import util
 from sglib.constants import (
     DEFAULT_PROJECT_DIR,
-    MAJOR_VERSION,
     IS_PORTABLE_INSTALL,
+    MAJOR_VERSION,
 )
 from sglib.lib import portable
 from sglib.lib.translate import _
-from sglib.lib.util import set_file_setting, PROJECT_FILE_TYPE
+from sglib.lib.util import (
+    META_DOT_JSON,
+    PROJECT_FILE_TYPE,
+    set_file_setting,
+)
 from sglib.log import LOG
 from sgui.sgqt import *
 import shutil
@@ -62,7 +66,10 @@ def new_project(a_parent=None):
         QMessageBox.warning(a_parent, "Error", str(ex))
 
 def clone_project(parent):
-    clone, _ = open_project_dialog(parent)
+    try:
+        clone, _ = open_project_dialog(parent)
+    except StargateProjectVersionError:
+        return False
     if not clone:
         return False
     new, _ = new_project_dialog(parent, DEFAULT_PROJECT_DIR)
@@ -83,6 +90,7 @@ def open_project_dialog(parent):
         filter=PROJECT_FILE_TYPE,
         options=QFileDialog.Option.DontUseNativeDialog,
     )
+    check_project_version(parent, f_file)
     return f_file, f_filter
 
 def open_project(a_parent=None):
@@ -98,9 +106,12 @@ def open_project(a_parent=None):
         #global_open_project(f_file_str)
         set_project(f_file_str)
         return True
+    except StargateProjectVersionError:
+        return False
     except Exception as ex:
         LOG.exception(ex)
         QMessageBox.warning(a_parent, "Error", str(ex))
+        return False
 
 def set_project(project):
     set_file_setting("last-project", str(project))
@@ -131,4 +142,40 @@ def get_history():
             for x in history
         ]
     return history
+
+class StargateProjectVersionError(Exception):
+    """ Raised when the project has been opened in a newer version
+        of Stargate than the version being run
+    """
+
+def check_project_version(parent, project_file):
+    minor_version = META_DOT_JSON['version']['minor']
+    with open(project_file) as f:
+        project_version = f.read().strip()
+    if (
+        "placeholder" in project_version
+        or
+        minor_version > project_version
+    ):
+        with open(project_file, 'w') as f:
+            f.write(minor_version)
+    elif minor_version == project_version:
+        pass
+    else:
+        msg = _(
+            "Please update to the latest version of Stargate.  "
+            "This project {} was created with version '{}', however, "
+            "you are using version '{}'"
+        ).format(
+            project_file,
+            project_version,
+            minor_version,
+        )
+        LOG.error(msg)
+        QMessageBox.warning(
+            parent,
+            _("Error"),
+            msg,
+        )
+        raise StargateProjectVersionError
 
