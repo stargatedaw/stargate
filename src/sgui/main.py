@@ -50,13 +50,12 @@ from sgui.util import (
     ui_scaler_factory,
 )
 from sgui.sgqt import *
-import datetime
+from sgui.widgets.file_browser import open_bookmarks
 import gc
 import os
 import subprocess
 import sys
 import time
-import traceback
 
 
 HOST_INDEX_DAW = 0
@@ -1227,6 +1226,7 @@ def global_open_project(a_project_file, a_wait=True):
 
     for f_module in shared.HOST_MODULES:
         f_module.global_open_project(a_project_file)
+    open_bookmarks()
 
 
 def global_new_project(a_project_file, a_wait=True):

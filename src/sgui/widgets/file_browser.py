@@ -11,6 +11,12 @@ import shutil
 
 BM_FILE_DIALOG_STRING = 'Stargate Bookmarks (*.pybm4)'
 
+FILE_BROWSER_WIDGETS = []
+
+def open_bookmarks():
+    for widget in FILE_BROWSER_WIDGETS:
+        widget.open_bookmarks()
+
 class AbstractFileBrowserWidget:
     def __init__(self, a_filter_func=util.is_audio_file):
         self.scroll_dict = {}
@@ -132,10 +138,10 @@ class AbstractFileBrowserWidget:
         self.last_open_dir = USER_HOME
         self.history = [USER_HOME]
         self.set_folder(".")
-        self.open_bookmarks()
         self.multifx_clipboard = None
         self.audio_items_clipboard = []
         self.hsplitter.setSizes([300, 9999])
+        FILE_BROWSER_WIDGETS.append(self)
 
     def set_multiselect(self, a_bool):
         mode = (
@@ -276,15 +282,21 @@ class AbstractFileBrowserWidget:
             f_text = str(f_category.currentText()).strip()
             if not f_text:
                 QMessageBox.warning(
-                    f_window, _("Error"), _("Category cannot be empty"))
+                    f_window,
+                    _("Error"),
+                    _("Category cannot be empty"),
+                )
             if a_recursive:
                 added_bm = False
                 for f_i in range(dir_list_widget.count()):
                     item = dir_list_widget.item(f_i)
                     if not item.isHidden() and item.isSelected():
-                         bookmark.add_file_bookmark(
-                             item.dirname_abbrev[-30:], item.dir_name, f_text)
-                         added_bm = True
+                        bookmark.add_file_bookmark(
+                            item.dirname_abbrev[-30:],
+                            item.dir_name,
+                            f_text,
+                        )
+                        added_bm = True
                 if not added_bm:
                     QMessageBox.warning(
                         f_window, _("Error"), _("No folders selected"))

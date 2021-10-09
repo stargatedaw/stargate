@@ -1,43 +1,49 @@
 from .util import (
     read_file_text,
     write_file_text,
+
 )
-from sglib.constants import CONFIG_DIR, IS_PORTABLE_INSTALL
+from sglib import constants
 from sglib.lib import portable
 from sglib.log import LOG
 import os
 import pathlib
 
-BOOKMARKS_FILE = os.path.join(CONFIG_DIR, "file_browser_bookmarks.txt")
+BOOKMARKS_FILE = os.path.join(
+    constants.CONFIG_DIR,
+    "file_browser_bookmarks.txt",
+)
 
 def get_file_bookmarks():
-    try:
-        f_result = {}
-        if os.path.isfile(BOOKMARKS_FILE):
-            f_text = read_file_text(BOOKMARKS_FILE)
-            f_arr = f_text.split("\n")
-            for f_line in f_arr:
-                if not f_line.strip():
-                    continue
-                name, category, path = f_line.split("|||", 2)
-                if IS_PORTABLE_INSTALL:
-                    path = portable.unescape_path(path)
-                if os.path.isdir(path):
-                    if category not in f_result:
-                        f_result[category] = {}
-                    f_result[category][name] = path
-                else:
-                    LOG.warning(
-                        f"Not loading bookmark '{name}' "
-                        f"because the directory '{path}' does not "
-                        "exist."
-                    )
-        return f_result
-    except Exception as ex:
-        LOG.error("Error getting bookmarks:\n".format(ex))
-        return {}
+    f_result = {
+        "system": {
+            "project user folder": constants.PROJECT.user_folder,
+        }
+    }
+    if os.path.isfile(BOOKMARKS_FILE):
+        f_text = read_file_text(BOOKMARKS_FILE)
+        f_arr = f_text.split("\n")
+        for f_line in f_arr:
+            if not f_line.strip():
+                continue
+            name, category, path = f_line.split("|||", 2)
+            if constants.IS_PORTABLE_INSTALL:
+                path = portable.unescape_path(path)
+            if os.path.isdir(path):
+                if category not in f_result:
+                    f_result[category] = {}
+                f_result[category][name] = path
+            else:
+                LOG.warning(
+                    f"Not loading bookmark '{name}' "
+                    f"because the directory '{path}' does not "
+                    "exist."
+                )
+    return f_result
 
 def write_file_bookmarks(a_dict):
+    if 'system' in a_dict:
+        a_dict.pop('system')
     f_result = []
     for k in sorted(a_dict.keys()):
         v = a_dict[k]
@@ -51,7 +57,7 @@ def add_file_bookmark(a_name, a_folder, a_category):
     f_category = str(a_category)
     if not f_category in f_dict:
         f_dict[f_category] = {}
-    if IS_PORTABLE_INSTALL:
+    if constants.IS_PORTABLE_INSTALL:
         a_folder = portable.escape_path(a_folder)
     f_dict[f_category][str(a_name)] = str(a_folder)
     write_file_bookmarks(f_dict)
