@@ -19,7 +19,7 @@ class TempoMarkerEvent:
 
     def mouse_press(self, event):
         shared.SEQUENCER.header_event_pos = self.beat
-        shared.SEQUENCER.header_time_modify()
+        header_time_modify()
 
 def show(event):
     shared.SEQUENCER.context_menu_enabled = False
