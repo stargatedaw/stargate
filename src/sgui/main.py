@@ -18,6 +18,7 @@ from sglib.models import stargate as sg_project
 from sglib.models import theme
 from sglib.ipc import *
 from sglib.lib import util
+from sglib.lib.process import run_process
 from sglib.lib.util import *
 from sglib.lib.translate import _
 from sglib.log import LOG
@@ -536,12 +537,7 @@ class SgMainWindow(QMainWindow):
                 f_elapsed_time = time.time() - f_start_time
                 clock.display(str(round(f_elapsed_time, 1)))
 
-        f_proc = subprocess.Popen(
-            a_cmd_list,
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        )
+        f_proc = run_process(a_cmd_list)
         f_start_time = time.time()
         f_window = QDialog(
             MAIN_WINDOW,

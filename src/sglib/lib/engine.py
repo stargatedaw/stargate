@@ -1,12 +1,11 @@
 import os
 import signal
-import subprocess
 import sys
-import threading
 import time
 
 import psutil
 
+from .process import run_process
 from sglib import constants
 from sglib.constants import ENGINE_PIDFILE, MAJOR_VERSION
 from sglib.hardware.rpi import is_rpi
@@ -156,54 +155,5 @@ def reopen_engine():
 
 def run_engine(cmd):
     global ENGINE_SUBPROCESS
-    LOG.info(f"Starting engine subprocess with: {cmd}")
-    kwargs = {
-        "bufsize": 1024*1024,
-        "stdout": subprocess.PIPE,
-        "stderr": subprocess.PIPE,
-        "shell": isinstance(cmd, str),
-        "universal_newlines": True,
-    }
-    if util.IS_WINDOWS:
-        kwargs["creationflags"] = (
-            subprocess.REALTIME_PRIORITY_CLASS
-            |
-            subprocess.CREATE_NO_WINDOW
-        )
-        kwargs['stdin'] = subprocess.DEVNULL
-    ENGINE_SUBPROCESS = subprocess.Popen(
-        cmd,
-        **kwargs
-    )
-    for args in (
-        (LOG.info, ENGINE_SUBPROCESS.stdout, "stdout"),
-        (_stderr_handler, ENGINE_SUBPROCESS.stderr, "stderr"),
-    ):
-        t = threading.Thread(
-            target=_log_fd,
-            args=args,
-        )
-        t.daemon = True
-        t.start()
-
-def _stderr_handler(line: str):
-    lower = line.lower()
-    if (
-        "WARNING" in line
-        or
-        any(x in lower for x in ("alsa", "jack"))
-    ):
-        LOG.warn(line)
-    else:
-        LOG.error(line)
-
-def _log_fd(log_func, fd, name):
-    try:
-        for line in fd:
-            line = line.strip()
-            if line:
-                log_func(f'ENGINE PROC: "{line}"')
-        LOG.info(f"Engine finished writing to {name}")
-    except Exception as ex:
-        LOG.exception(ex)
+    ENGINE_SUBPROCESS = run_process(cmd)
 
