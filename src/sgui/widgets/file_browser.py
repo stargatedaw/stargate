@@ -286,6 +286,14 @@ class AbstractFileBrowserWidget:
                     _("Error"),
                     _("Category cannot be empty"),
                 )
+                return
+            elif f_text.lower() == "system":
+                QMessageBox.warning(
+                    f_window,
+                    _("Error"),
+                    _("Category cannot be 'system'"),
+                )
+                return
             if a_recursive:
                 added_bm = False
                 for f_i in range(dir_list_widget.count()):
@@ -331,6 +339,7 @@ class AbstractFileBrowserWidget:
         f_grid_layout = QGridLayout()
         f_layout.addLayout(f_grid_layout)
         f_dict = bookmark.get_file_bookmarks()
+        f_dict.pop('system')
         if not f_dict:
             f_dict = {'default':None}
         f_grid_layout.addWidget(QLabel(_("Category:")), 0, 0)
