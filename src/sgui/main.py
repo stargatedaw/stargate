@@ -645,8 +645,13 @@ class SgMainWindow(QMainWindow):
                     f_window.close()
                 else:
                     QMessageBox.warning(
-                        self, _("Error"), _("This name already exists, "
-                        "please choose another name"))
+                        self,
+                        _("Error"),
+                        _(
+                            "This name already exists, please choose "
+                            "another name"
+                        ),
+                    )
 
         f_window = QDialog(parent=MAIN_WINDOW.widget)
         f_window.setWindowTitle(_("Save As..."))

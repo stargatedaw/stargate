@@ -74,7 +74,7 @@ class MainWindow(QScrollArea):
         QScrollArea.__init__(self)
         self.first_offline_render = True
         self.last_offline_dir = HOME
-        self.copy_to_clipboard_checked = True
+        self.copy_to_clipboard_checked = False
         self.last_midi_dir = None
 
         self.setObjectName("plugin_ui")
@@ -439,8 +439,8 @@ class MainWindow(QScrollArea):
             "Menu->Tools->MP3/Ogg Converter")),
             6, 1)
         f_copy_to_clipboard_checkbox = QCheckBox(
-        _("Copy export path to clipboard? (useful for right-click pasting "
-        "back into the audio sequencer)"))
+            _("Copy export path to clipboard?"),
+        )
         f_copy_to_clipboard_checkbox.setChecked(self.copy_to_clipboard_checked)
         f_layout.addWidget(f_copy_to_clipboard_checkbox, 7, 1)
         f_ok_layout = QHBoxLayout()
