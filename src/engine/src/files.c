@@ -52,15 +52,20 @@ void get_string_from_file(
 
 void v_write_to_file(char * a_file, char * a_string){
     FILE* pFile = fopen(a_file, "w");
-    sg_assert_ptr(pFile, "v_write_to_file: fopen returned NULL ptr");
+    char msg[1024];
+    sprintf(
+        msg,
+        "v_write_to_file: fopen(%s) returned NULL ptr",
+        a_file
+    );
+    sg_assert_ptr(pFile, msg);
     fprintf(pFile, "%s",a_string);
     fclose(pFile);
 
     char mode[] = "0777";
     int i = strtol(mode, 0, 8);
 
-    if (chmod (a_file,i) < 0)
-    {
+    if(chmod(a_file,i) < 0){
         fprintf(stderr, "Error chmod'ing file %s.\n", a_file);
     }
 }
