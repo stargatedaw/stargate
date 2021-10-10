@@ -538,6 +538,7 @@ class SgMainWindow(QMainWindow):
 
         f_proc = subprocess.Popen(
             a_cmd_list,
+            stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
         )
