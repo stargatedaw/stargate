@@ -1,4 +1,5 @@
 from sgui.sgqt import *
+from sgui.widgets.hardware_dialog import hardware_dialog
 from .project import (
     check_project_version,
     clone_project,
@@ -40,9 +41,6 @@ class Welcome:
         )
         buttons_hlayout = QHBoxLayout()
         buttons_vlayout.addLayout(buttons_hlayout)
-        buttons_vlayout.addItem(
-            QSpacerItem(10, 10, vPolicy=QSizePolicy.Policy.Expanding),
-        )
         new_button = QPushButton("New")
         new_button.setObjectName("huge_button")
         new_button.pressed.connect(self.on_new)
@@ -57,6 +55,11 @@ class Welcome:
         clone_button.setObjectName("huge_button")
         clone_button.pressed.connect(self.on_clone)
         buttons_hlayout.addWidget(clone_button)
+
+        hardware_button = QPushButton("Hardware\nSettings")
+        hardware_button.setObjectName("huge_button")
+        hardware_button.pressed.connect(self.on_hardware_settings)
+        buttons_vlayout.addWidget(hardware_button)
 
         self.widget.exec()
 
@@ -92,4 +95,10 @@ class Welcome:
     def on_clone(self):
         if clone_project(self.widget):
             self.close()
+
+    def on_hardware_settings(self):
+        hardware = hardware_dialog(True)
+        hardware.show_hardware_dialog(
+            notify_of_restart=False,
+        )
 

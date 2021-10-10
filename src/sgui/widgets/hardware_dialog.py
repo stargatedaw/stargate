@@ -283,6 +283,7 @@ class hardware_dialog:
         self,
         a_msg=None,
         a_exit_on_cancel=False,
+        notify_of_restart=True,
     ):
         self.dialog_result = False
         self.open_devices()
@@ -700,7 +701,7 @@ class hardware_dialog:
         def notify_restart():
             if self.splash_screen:
                 self.splash_screen.show()
-            else:
+            elif notify_of_restart:
                 QMessageBox.warning(
                     f_window,
                     _("Info"),
