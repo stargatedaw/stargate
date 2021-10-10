@@ -122,8 +122,8 @@ class hardware_dialog:
 
     def open_devices(self):
         if util.IS_LINUX:
-            f_portaudio_so_path = "libportaudio.so"
-            f_pm_dll = "libportmidi.so"
+            f_portaudio_so_path = "libportaudio.so.2"
+            f_pm_dll = "libportmidi.so.0"
         elif util.IS_MAC_OSX:
             f_portaudio_so_path = "libportaudio.dylib"
             f_pm_dll = "libportmidi.dylib"
@@ -134,7 +134,7 @@ class hardware_dialog:
                 util.ENGINE_DIR, "libportaudio.dll")
         else:
             LOG.error(
-                "Unsupported platform {}, don't know where to look "
+                "Unsupported platform, don't know where to look "
                 "for shared libraries."
             )
             raise NotImplementedError
