@@ -80,7 +80,7 @@ def start_stargate(project_file):
         from sgui.welcome import Welcome
         w = Welcome(app, scaler)
         if not w.loaded:
-            exit(0)
+            sys.exit(0)
     from sgui.splash import SplashScreen
     splash_screen = SplashScreen(scaler.y_res)
     from sgui.main import main
