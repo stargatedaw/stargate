@@ -18,8 +18,9 @@ music on a computer.  To understand what Stargate is, and why, read the
   other platform) if there is sufficient demand
 - Everything you need to create music in a single package, no need to install
   additional software
-- Lightweight, minimum recommended hardware: Raspberry Pi 4, or a 10 year
-  old laptop.
+- Revolutionary CPU efficiency for DAW and plugins, minimum recommended
+  hardware: Raspberry Pi 4, or a 15 year old laptop with a
+  dual core CPU, 1GB of RAM and a 720p display.
 - Support for display resolution from 1366x768 to 4k and above.
 - Optional portable flash drive install on Windows
 

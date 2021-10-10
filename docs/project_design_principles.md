@@ -48,7 +48,7 @@ experience you could get anywhere else?
   to make drastic changes as needed, without the bureaucracy of managing
   public standards and abandoned (but still widely used) plugins.
 
-## 2. Base hardware requirements: Raspberry Pi 4, 10 year old laptop
+## 2. Base hardware requirements: Raspberry Pi 4, 15 year old laptop
 Stargate is a DAW for everybody, regardless of socio-economic status.
 
 The development team regularly tests against these 2 targets to ensure that
@@ -71,7 +71,7 @@ heavy synthesizer patches with many unison voices.
   There should be a gradient of usability all the way back to 20 year old
   hardware, but we do not have any such hardware to test.
 - Stargate is regularly tested against the following display resolutions:
-  1366x768, 1920x1080 (HD), 3840x2160 (4k), to ensure that users of new
+  1280x720 (720p), 1920x1080 (HD), 3840x2160 (4k), to ensure that users of new
   hardware and old hardware both have a great experience.
 
 ## 3. Cutting corners on sound quality is not the way to achieve #2
