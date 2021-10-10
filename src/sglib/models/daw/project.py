@@ -4,7 +4,6 @@ from .audio_item import DawAudioItem
 from .item import item
 from .seq_item import sequencer_item
 from .sequencer import sequencer
-from pymarshal.json import *
 from sglib import constants
 from sglib.math import clip_value
 from sglib.models.daw.playlist import Playlist
@@ -22,6 +21,11 @@ from sglib.log import LOG
 import math
 import os
 import re
+
+try:
+    from sg_py_vendor.pymarshal.json import *
+except ImportError:
+    from pymarshal.json import *
 
 
 folder_daw = os.path.join("projects", "daw")

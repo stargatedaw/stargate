@@ -1,4 +1,7 @@
-from pymarshal.csv import *
+try:
+    from sg_py_vendor.pymarshal.csv import *
+except ImportError:
+    from pymarshal.csv import *
 from sglib.lib.util import pi_path
 from sglib.models.multifx_settings import multifx_settings
 import os
