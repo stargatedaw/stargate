@@ -116,9 +116,13 @@ def open_project(a_parent=None):
 
 def set_project(project):
     set_file_setting("last-project", str(project))
+    history = get_history()
     if IS_PORTABLE_INSTALL:
         project = portable.escape_path(project)
-    history = get_history()
+        history = [
+            portable.escape_path(x)
+            for x in history
+        ]
     if project in history:
         history.remove(project)
     history.insert(0, project)
