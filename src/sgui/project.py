@@ -90,7 +90,8 @@ def open_project_dialog(parent):
         filter=PROJECT_FILE_TYPE,
         options=QFileDialog.Option.DontUseNativeDialog,
     )
-    check_project_version(parent, f_file)
+    if f_file:
+        check_project_version(parent, f_file)
     return f_file, f_filter
 
 def open_project(a_parent=None):
