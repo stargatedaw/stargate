@@ -9,6 +9,7 @@ from .project import (
     StargateProjectVersionError,
 )
 from sglib.lib import util
+from sglib.log import LOG
 import os
 
 
@@ -72,6 +73,7 @@ class Welcome:
         """ Load a list of recent projects
         """
         self.history = get_history()
+        LOG.info(f"Project history: {self.history}")
         if self.history:
             self.rp_list.addItems(self.history)
 

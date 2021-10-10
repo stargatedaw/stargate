@@ -129,18 +129,24 @@ def set_project(project):
 
 def get_history():
     history = util.get_file_setting("project-history", str, "")
-    history = [
-        x for x in history.split("\n")
-        if (
-            x.strip()
-            and
-            os.path.exists(x)
-        )
-    ]
     if IS_PORTABLE_INSTALL:
         history = [
             portable.unescape_path(x)
-            for x in history
+            for x in history.split("\n")
+            if x.strip()
+        ]
+        history = [
+            x for x in history
+            if os.path.exists(x)
+        ]
+    else:
+        history = [
+            x for x in history.split("\n")
+            if (
+                x.strip()
+                and
+                os.path.exists(x)
+            )
         ]
     return history
 
