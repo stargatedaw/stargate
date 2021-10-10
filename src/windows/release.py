@@ -95,11 +95,6 @@ Section "Base Install" SEC01
     writeUninstaller "$INSTDIR\uninstall.exe"
     File "dist\stargate.exe"
     File "files\share\pixmaps\{MAJOR_VERSION}.ico"
-    ;createShortCut \
-    ;  "$SMPROGRAMS\Stargate DAW.lnk" \
-    ;  "$INSTDIR\{MAJOR_VERSION}.exe" \
-    ;  "" \
-    ;  "$INSTDIR\{MAJOR_VERSION}.ico"
 SectionEnd
 
 Section "Start Menu Shortcut" SEC02
