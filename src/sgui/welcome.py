@@ -21,6 +21,7 @@ class Welcome:
         self.loaded = False
 
         self.widget = QDialog()
+        self.widget.setModal(False)
         self.widget.setObjectName('welcome_screen')
         self.widget.setWindowTitle("Stargate")
         self.widget.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
@@ -100,5 +101,6 @@ class Welcome:
         hardware = hardware_dialog(True)
         hardware.show_hardware_dialog(
             notify_of_restart=False,
+            modal=False,
         )
 

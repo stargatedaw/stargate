@@ -284,11 +284,13 @@ class hardware_dialog:
         a_msg=None,
         a_exit_on_cancel=False,
         notify_of_restart=True,
+        modal=True,
     ):
         self.dialog_result = False
         self.open_devices()
         if self.is_running:
             f_window = QDialog()
+            f_window.setModal(modal)
         else:
             f_window = QWidget()
             f_window.setObjectName("plugin_ui")
