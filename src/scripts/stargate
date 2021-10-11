@@ -53,7 +53,7 @@ def qt_message_handler(mode, context, message):
         LOG.info(line)
 
 def _setup():
-    global LOG, QtCore
+    global LOG, QtCore, QApplication
     from sglib.log import LOG, setup_logging
     setup_logging()
     LOG.info(f"sys.argv == {sys.argv}")
@@ -79,8 +79,11 @@ def start_stargate(project_file):
     if not project_file:
         from sgui.welcome import Welcome
         w = Welcome(app, scaler)
+        app.exec()
         if not w.loaded:
             sys.exit(0)
+    # Refresh the app we just exec'd
+    app = QApplication(sys.argv)
     from sgui.splash import SplashScreen
     splash_screen = SplashScreen(scaler.y_res)
     from sgui.main import main

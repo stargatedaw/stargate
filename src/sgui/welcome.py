@@ -20,7 +20,7 @@ class Welcome:
         self.scaler = scaler
         self.loaded = False
 
-        self.widget = QDialog()
+        self.widget = QWidget()
         self.widget.setObjectName('welcome_screen')
         self.widget.setWindowTitle("Stargate")
         self.widget.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
@@ -61,7 +61,7 @@ class Welcome:
         hardware_button.pressed.connect(self.on_hardware_settings)
         buttons_vlayout.addWidget(hardware_button)
 
-        self.widget.exec()
+        self.widget.show()
 
     def rp_doubleclick(self, index):
         project = str(self.rp_list.item(index.row()).text())
