@@ -14,7 +14,7 @@
  * This runs the filter.  You can then use the output sample in your plugin*/
 void v_cmb_run(t_comb_filter* a_cmb_ptr, SGFLT a_value){
     a_cmb_ptr->delay_pointer =
-        (a_cmb_ptr->input_pointer) - (a_cmb_ptr->delay_samples);
+        a_cmb_ptr->input_pointer - a_cmb_ptr->delay_samples;
 
     if((a_cmb_ptr->delay_pointer) < 0.0f){
         a_cmb_ptr->delay_pointer =
@@ -35,7 +35,7 @@ void v_cmb_run(t_comb_filter* a_cmb_ptr, SGFLT a_value){
         a_cmb_ptr->output_sample = a_value;
     } else {
         a_cmb_ptr->output_sample =
-            (a_value + ((a_cmb_ptr->wet_sample) * (a_cmb_ptr->wet_linear)));
+            a_value + (a_cmb_ptr->wet_sample * a_cmb_ptr->wet_linear);
     }
 
     ++a_cmb_ptr->input_pointer;

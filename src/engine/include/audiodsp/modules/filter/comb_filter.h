@@ -14,7 +14,6 @@ GNU General Public License for more details.
 #ifndef COMB_FILTER_H
 #define COMB_FILTER_H
 
-
 #include "audiodsp/lib/amp.h"
 #include "audiodsp/lib/pitch_core.h"
 #include "audiodsp/lib/interpolate-linear.h"
@@ -25,8 +24,7 @@ GNU General Public License for more details.
 
 #define MC_CMB_COUNT 4
 
-typedef struct st_comb_filter
-{
+typedef struct st_comb_filter {
     SGFLT delay_pointer;
     int input_pointer;  //The index where the current sample is written to
     int buffer_size;  //The size of input_buffer
@@ -58,10 +56,7 @@ void v_cmb_run(t_comb_filter*, SGFLT);
 void v_cmb_set_all(t_comb_filter*, SGFLT, SGFLT, SGFLT);
 void v_cmb_free(t_comb_filter*);
 
-
 void v_cmb_mc_run(t_comb_filter* a_cmb_ptr, SGFLT a_value);
-
-
 void v_cmb_mc_set_all(
     t_comb_filter* a_cmb,
     SGFLT a_wet_db,

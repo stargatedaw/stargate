@@ -16,75 +16,79 @@
 #include "audiodsp/modules/signal_routing/amp_and_panner.h"
 #include "audiodsp/modules/signal_routing/audio_xfade.h"
 
+
 const fp_mf3_run mf3_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
-        v_mf3_run_off, //0
-        v_mf3_run_lp2, //1
-        v_mf3_run_lp4, //2
-        v_mf3_run_hp2, //3
-        v_mf3_run_hp4, //4
-        v_mf3_run_bp2, //5
-        v_mf3_run_bp4, //6
-        v_mf3_run_notch2, //7
-        v_mf3_run_notch4, //8
-        v_mf3_run_eq, //9
-        v_mf3_run_dist, //10
-        v_mf3_run_comb, //11
-        v_mf3_run_amp_panner, //12
-        v_mf3_run_limiter, //13
-        v_mf3_run_saturator, //14
-        v_mf3_run_formant_filter, //15
-        v_mf3_run_chorus, //16
-        v_mf3_run_glitch, //17
-        v_mf3_run_ring_mod, //18
-        v_mf3_run_lofi, //19
-        v_mf3_run_s_and_h, //20
-        v_mf3_run_lp_dw, //21
-        v_mf3_run_hp_dw, //22
-        v_mf3_run_monofier, //23
-        v_mf3_run_lp_hp, //24
-        v_mf3_run_growl_filter, //25
-        v_mf3_run_screech_lp, //26
-        v_mf3_run_metal_comb,   //27
-        v_mf3_run_notch_dw, //28
-        v_mf3_run_foldback, //29
-        v_mf3_run_notch_spread, //30
-        v_mf3_run_dc_offset, //31
-        v_mf3_run_bp_spread, //32
+    v_mf3_run_off, //0
+    v_mf3_run_lp2, //1
+    v_mf3_run_lp4, //2
+    v_mf3_run_hp2, //3
+    v_mf3_run_hp4, //4
+    v_mf3_run_bp2, //5
+    v_mf3_run_bp4, //6
+    v_mf3_run_notch2, //7
+    v_mf3_run_notch4, //8
+    v_mf3_run_eq, //9
+    v_mf3_run_dist, //10
+    v_mf3_run_comb, //11
+    v_mf3_run_amp_panner, //12
+    v_mf3_run_limiter, //13
+    v_mf3_run_saturator, //14
+    v_mf3_run_formant_filter, //15
+    v_mf3_run_chorus, //16
+    v_mf3_run_glitch, //17
+    v_mf3_run_ring_mod, //18
+    v_mf3_run_lofi, //19
+    v_mf3_run_s_and_h, //20
+    v_mf3_run_lp_dw, //21
+    v_mf3_run_hp_dw, //22
+    v_mf3_run_monofier, //23
+    v_mf3_run_lp_hp, //24
+    v_mf3_run_growl_filter, //25
+    v_mf3_run_screech_lp, //26
+    v_mf3_run_metal_comb,   //27
+    v_mf3_run_notch_dw, //28
+    v_mf3_run_foldback, //29
+    v_mf3_run_notch_spread, //30
+    v_mf3_run_dc_offset, //31
+    v_mf3_run_bp_spread, //32
+    v_mf3_run_phaser_static, //33
 };
 
 const fp_mf3_reset mf3_reset_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
-        v_mf3_reset_null, //0
-        v_mf3_reset_svf, //1
-        v_mf3_reset_svf, //2
-        v_mf3_reset_svf, //3
-        v_mf3_reset_svf, //4
-        v_mf3_reset_svf, //5
-        v_mf3_reset_svf, //6
-        v_mf3_reset_svf, //7
-        v_mf3_reset_svf, //8
-        v_mf3_reset_null, //9
-        v_mf3_reset_null, //10
-        v_mf3_reset_null, //11
-        v_mf3_reset_null, //12
-        v_mf3_reset_null, //13
-        v_mf3_reset_null, //14
-        v_mf3_reset_null, //15
-        v_mf3_reset_null, //16
-        v_mf3_reset_glitch, //17
-        v_mf3_reset_null, //18
-        v_mf3_reset_null, //19
-        v_mf3_reset_null, //20
-        v_mf3_reset_svf, //21
-        v_mf3_reset_svf, //22
-        v_mf3_reset_null, //23
-        v_mf3_reset_svf, //24
-        v_mf3_reset_null, //25
-        v_mf3_reset_svf, //26
-        v_mf3_reset_null, //27
-        v_mf3_reset_svf, //28
-        v_mf3_reset_null, //29
-        v_mf3_reset_svf, //30
-        v_mf3_reset_dc_offset //31
+    v_mf3_reset_null, //0
+    v_mf3_reset_svf, //1
+    v_mf3_reset_svf, //2
+    v_mf3_reset_svf, //3
+    v_mf3_reset_svf, //4
+    v_mf3_reset_svf, //5
+    v_mf3_reset_svf, //6
+    v_mf3_reset_svf, //7
+    v_mf3_reset_svf, //8
+    v_mf3_reset_null, //9
+    v_mf3_reset_null, //10
+    v_mf3_reset_null, //11
+    v_mf3_reset_null, //12
+    v_mf3_reset_null, //13
+    v_mf3_reset_null, //14
+    v_mf3_reset_null, //15
+    v_mf3_reset_null, //16
+    v_mf3_reset_glitch, //17
+    v_mf3_reset_null, //18
+    v_mf3_reset_null, //19
+    v_mf3_reset_null, //20
+    v_mf3_reset_svf, //21
+    v_mf3_reset_svf, //22
+    v_mf3_reset_null, //23
+    v_mf3_reset_svf, //24
+    v_mf3_reset_null, //25
+    v_mf3_reset_svf, //26
+    v_mf3_reset_null, //27
+    v_mf3_reset_svf, //28
+    v_mf3_reset_null, //29
+    v_mf3_reset_svf, //30
+    v_mf3_reset_dc_offset, //31
+    v_mf3_reset_svf, //32
+    v_mf3_reset_null, //33
 };
 
 void v_mf3_reset_null(t_mf3_multi* self){
@@ -418,7 +422,6 @@ void v_mf3_run_dist(
             (f_clp_clip(&self->clipper, a_in1))) * (self->outgain);
 }
 
-
 void v_mf3_run_comb(
     t_mf3_multi* self,
     SGFLT a_in0,
@@ -426,16 +429,59 @@ void v_mf3_run_comb(
 ){
     v_mf3_commit_mod(self);
 
-    //cutoff
+    // Freq
     self->control_value[0] = (((self->control[0]) * 0.692913386) + 20.0f);
-    //res
+    // Amt
     self->control_value[1] = ((self->control[1]) * 0.157480315) - 20.0f;
 
-    v_cmb_set_all(&self->comb_filter0, (self->control_value[1]),
-            (self->control_value[1]), (self->control_value[0]));
+    v_cmb_set_all(
+        &self->comb_filter0,
+        self->control_value[1],
+        self->control_value[1],
+        self->control_value[0]
+    );
 
-    v_cmb_set_all(&self->comb_filter1, (self->control_value[1]),
-            (self->control_value[1]), (self->control_value[0]));
+    v_cmb_set_all(
+        &self->comb_filter1,
+        self->control_value[1],
+        self->control_value[1],
+        self->control_value[0]
+    );
+
+    v_cmb_run(&self->comb_filter0, a_in0);
+    v_cmb_run(&self->comb_filter1, a_in1);
+
+    self->output0 = self->comb_filter0.output_sample;
+    self->output1 = self->comb_filter1.output_sample;
+}
+
+void v_mf3_run_phaser_static(
+    t_mf3_multi* self,
+    SGFLT a_in0,
+    SGFLT a_in1
+){
+    v_mf3_commit_mod(self);
+
+    // Freq: pitch
+    self->control_value[0] = (((self->control[0]) * 0.692913386) + 20.0f);
+    // Wet -20dB to 0dB
+    self->control_value[1] = ((self->control[1]) * 0.157480315) - 20.0f;
+    // Feedback -20dB to -1dB
+    self->control_value[2] = ((self->control[2]) * 0.1484375) - 20.0f;
+
+    v_cmb_set_all(
+        &self->comb_filter0,
+        self->control_value[1],
+        self->control_value[2],
+        self->control_value[0]
+    );
+
+    v_cmb_set_all(
+        &self->comb_filter1,
+        self->control_value[1],
+        self->control_value[2],
+        self->control_value[0]
+    );
 
     v_cmb_run(&self->comb_filter0, a_in0);
     v_cmb_run(&self->comb_filter1, a_in1);

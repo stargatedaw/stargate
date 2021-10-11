@@ -40,6 +40,7 @@ MULTIFX_EFFECTS_LOOKUP = {
     "Notch Spread": 30,
     "DC Offset": 31,
     "BP Spread": 32,
+    "Phaser Static": 33,
 }
 
 MULTIFX_FILTERS = [
@@ -77,6 +78,7 @@ MULTIFX_DELAY = [
     "Chorus",
     "Comb Filter",
     "Metal Comb",
+    "Phaser Static",
 ]
 
 MULTIFX_DYNAMICS = [
@@ -548,9 +550,18 @@ class multifx_single:
             self.knobs[1].set_127_min_max(-10.0, -1.0)
             self.knobs[2].val_conversion = _shared.KC_127_ZERO_TO_X
             self.knobs[2].set_127_min_max(0.0, 48.0)
+        elif a_val == 33: # Phaser Static
+            self.knobs[0].name_label.setText(_("Freq"))
+            self.knobs[1].name_label.setText(_("Wet"))
+            self.knobs[2].name_label.setText(_("Feed"))
+            self.knobs[0].val_conversion = _shared.KC_NONE
+            self.knobs[1].val_conversion = _shared.KC_NONE
+            self.knobs[2].val_conversion = _shared.KC_NONE
+            self.knobs[0].value_label.setText("")
+            self.knobs[1].value_label.setText("")
+            self.knobs[2].value_label.setText("")
 
         self.knobs[0].set_value(self.knobs[0].control.value())
         self.knobs[1].set_value(self.knobs[1].control.value())
         self.knobs[2].set_value(self.knobs[2].control.value())
-
 
