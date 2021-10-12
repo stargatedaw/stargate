@@ -1413,8 +1413,13 @@ NO_OPTIMIZATION void v_set_plugin_index(
     int a_power,
     int a_lock
 ){
-    int f_i = 0;
+    int f_i, i;
+    SGFLT buffer[2][512] = {{}, {}};
+    int sample_rate = (int)STARGATE->thread_storage[0].sample_rate;
     t_plugin * f_plugin = NULL;
+    struct ShdsList midi_list, atm_list;
+    shds_list_init(&midi_list, 0, NULL);
+    shds_list_init(&atm_list, 0, NULL);
 
     if(a_plugin_index){
         printf("Plugin %i index set to %i\n", a_index, a_plugin_index);
@@ -1424,7 +1429,7 @@ NO_OPTIMIZATION void v_set_plugin_index(
             printf("Initializing plugin\n");
             g_plugin_init(
                 f_plugin,
-                (int)STARGATE->thread_storage[0].sample_rate,
+                sample_rate,
                 a_plugin_index,
                 g_audio_pool_item_get_plugin,
                 a_plugin_uid,
@@ -1447,6 +1452,29 @@ NO_OPTIMIZATION void v_set_plugin_index(
                     f_plugin->plugin_handle,
                     f_plugin->descriptor,
                     f_file_name
+                );
+            }
+            // Warm up control smoothers and anything else by running for
+            // one second, avoids strangeness at the beginning of playback
+            // or render
+            f_plugin->descriptor->connect_buffer(
+                f_plugin->plugin_handle,
+                0,
+                buffer[0],
+                0
+            );
+            f_plugin->descriptor->connect_buffer(
+                f_plugin->plugin_handle,
+                1,
+                buffer[1],
+                0
+            );
+            for(i = 0; i < (sample_rate / 512); ++i){
+                f_plugin->descriptor->run_replacing(
+                    f_plugin->plugin_handle,
+                    512,
+                    &midi_list,
+                    &atm_list
                 );
             }
         }

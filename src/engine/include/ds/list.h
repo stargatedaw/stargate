@@ -61,12 +61,22 @@ struct ShdsList {
 
 /* The constructor for the list data structure
  *
+ * See shds_list_init for args
+ */
+struct ShdsList * shds_list_new(size_t default_size, shds_dtor dtor);
+
+/* Initialize a list
+ *
+ * @self:        A pointer to the list to initialize
  * @default_size The initial maximum size of the list length will be zero
  * @dtor         The destructor to call on the stored values when
  *               freeing the list
  */
-struct ShdsList * shds_list_new(size_t default_size, shds_dtor dtor);
-
+void shds_list_init(
+    struct ShdsList* self,
+    size_t default_size,
+    shds_dtor dtor
+);
 /* Append an object to the end of the list in O(1),
  * with an amoritized worst-case of O(n) if the list must be grown */
 void shds_list_append(struct ShdsList *self, void *value);

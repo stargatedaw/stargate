@@ -38,11 +38,13 @@ void v_sgchnl_on_stop(PluginHandle instance)
     //t_sgchnl *plugin = (t_sgchnl*)instance;
 }
 
-void v_sgchnl_connect_buffer(PluginHandle instance, int a_index,
-        SGFLT * DataLocation, int a_is_sidechain)
-{
-    if(a_is_sidechain)
-    {
+void v_sgchnl_connect_buffer(
+    PluginHandle instance,
+    int a_index,
+    SGFLT * DataLocation,
+    int a_is_sidechain
+){
+    if(a_is_sidechain){
         return;
     }
 
@@ -50,9 +52,11 @@ void v_sgchnl_connect_buffer(PluginHandle instance, int a_index,
     plugin->buffers[a_index] = DataLocation;
 }
 
-void v_sgchnl_connect_port(PluginHandle instance, int port,
-        PluginData * data)
-{
+void v_sgchnl_connect_port(
+    PluginHandle instance,
+    int port,
+    PluginData * data
+){
     t_sgchnl *plugin;
 
     plugin = (t_sgchnl *) instance;
@@ -66,10 +70,13 @@ void v_sgchnl_connect_port(PluginHandle instance, int port,
     }
 }
 
-PluginHandle g_sgchnl_instantiate(PluginDescriptor * descriptor,
-        int s_rate, fp_get_audio_pool_item_from_host a_host_audio_pool_func,
-        int a_plugin_uid, fp_queue_message a_queue_func)
-{
+PluginHandle g_sgchnl_instantiate(
+    PluginDescriptor * descriptor,
+    int s_rate,
+    fp_get_audio_pool_item_from_host a_host_audio_pool_func,
+    int a_plugin_uid,
+    fp_queue_message a_queue_func
+){
     t_sgchnl *plugin_data;
     hpalloc((void**)&plugin_data, sizeof(t_sgchnl));
     hpalloc((void**)&plugin_data->buffers, sizeof(SGFLT*) * 2);
@@ -90,17 +97,25 @@ PluginHandle g_sgchnl_instantiate(PluginDescriptor * descriptor,
     return (PluginHandle) plugin_data;
 }
 
-void v_sgchnl_load(PluginHandle instance,
-        PluginDescriptor * Descriptor, char * a_file_path)
-{
+void v_sgchnl_load(
+    PluginHandle instance,
+    PluginDescriptor* Descriptor,
+    char* a_file_path
+){
     t_sgchnl *plugin_data = (t_sgchnl*)instance;
-    generic_file_loader(instance, Descriptor,
-        a_file_path, plugin_data->port_table, &plugin_data->cc_map);
+    generic_file_loader(
+        instance, Descriptor,
+        a_file_path,
+        plugin_data->port_table,
+        &plugin_data->cc_map
+    );
 }
 
-void v_sgchnl_set_port_value(PluginHandle Instance,
-        int a_port, SGFLT a_value)
-{
+void v_sgchnl_set_port_value(
+    PluginHandle Instance,
+    int a_port,
+    SGFLT a_value
+){
     t_sgchnl *plugin_data = (t_sgchnl*)Instance;
     plugin_data->port_table[a_port] = a_value;
 }
@@ -109,7 +124,6 @@ void v_sgchnl_process_midi_event(
     t_sgchnl * plugin_data,
     t_seq_event * a_event
 ){
-
     if (a_event->type == EVENT_CONTROLLER)
     {
         sg_assert(
@@ -130,11 +144,11 @@ void v_sgchnl_process_midi_event(
     }
 }
 
-
 void v_sgchnl_process_midi(
-        PluginHandle instance, struct ShdsList * events,
-        struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    struct ShdsList * events,
+    struct ShdsList * atm_events
+){
     t_sgchnl *plugin_data = (t_sgchnl*)instance;
     int f_i = 0;
     plugin_data->midi_event_count = 0;

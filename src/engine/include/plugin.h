@@ -80,17 +80,28 @@ typedef struct _PluginDescriptor {
      above). Valid indices vary from 0 to PortCount-1. */
     PluginPortRangeHint * PortRangeHints;
 
-    PluginHandle (*instantiate)(struct _PluginDescriptor * Descriptor,
-        int SampleRate, fp_get_audio_pool_item_from_host a_host_audio_pool_func,
-        int a_plugin_uid, fp_queue_message);
+    PluginHandle (*instantiate)(
+        struct _PluginDescriptor * Descriptor,
+        int SampleRate,
+        fp_get_audio_pool_item_from_host a_host_audio_pool_func,
+        int a_plugin_uid,
+        fp_queue_message
+    );
 
-    void (*connect_port)(PluginHandle Instance, int Port,
-        PluginData * DataLocation);
+    void (*connect_port)(
+        PluginHandle Instance,
+        int Port,
+        PluginData * DataLocation
+    );
 
     /* Assign the audio buffer at DataLocation to index a_index
      */
-    void (*connect_buffer)(PluginHandle Instance, int a_index,
-            SGFLT * DataLocation, int a_is_sidechain);
+    void (*connect_buffer)(
+        PluginHandle Instance,
+        int a_index,
+        SGFLT* DataLocation,
+        int a_is_sidechain
+    );
 
     void (*cleanup)(PluginHandle Instance);
 
@@ -116,9 +127,11 @@ typedef struct _PluginDescriptor {
 
     // Plugins NOT part of a send channel will always call this
     void (*run_replacing)(
-        PluginHandle Instance, int SampleCount,
-        struct ShdsList * midi_events,
-        struct ShdsList * atm_events);
+        PluginHandle Instance,
+        int SampleCount,
+        struct ShdsList* midi_events,
+        struct ShdsList* atm_events
+    );
 
     // Plugins that ARE part of a send channel will always call this,
     // any plugin that isn't a fader/channel type plugin do not need
