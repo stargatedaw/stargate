@@ -100,6 +100,45 @@ def handle_engine_error(exit_code):
 def engine_lib_callback(a_path, a_msg):
     MAIN_WINDOW.engine_lib_callback(a_path, a_msg)
 
+def offline_operation(func):
+    """ Decorator for operations that require stopping the engine
+        before the operation can proceed, and optionally restarting it after
+
+        @func:
+            function(), returns True to continue, False to leave the engine
+            turned off
+    """
+    def wrapper(*args, **kwargs):
+        # Stop the engine
+        shared.PLUGIN_UI_DICT.save_all_plugin_state()
+        if MAIN_WINDOW.current_module.CLOSE_ENGINE_ON_RENDER:
+            close_engine()
+        # Run the wrapped function
+        LOG.info((args, kwargs))
+        # For some reason this passes in (self, False) for *args, I have
+        # no idea where False comes from
+        # func_result = func(*args, **kwargs)
+        func_result = func(args[0])
+        if not func_result:
+            return
+        # Restart the engine
+        if MAIN_WINDOW.current_module.CLOSE_ENGINE_ON_RENDER:
+            open_engine(PROJECT_FILE, get_fps())
+            constants.IPC_ENABLED = True
+            for i in range(30):
+                time.sleep(0.1)
+                if constants.READY:
+                    break
+            if not constants.READY:
+                LOG.error(
+                    "Engine did not send the ready signal after 3 seconds"
+                )
+        # Kludge to get the correct playlist loaded
+        # Consider making this a file setting the engine can read
+        constants.DAW_IPC.change_sequence(
+            constants.DAW_CURRENT_SEQUENCE_UID,
+        )
+    return wrapper
 
 class SgMainWindow(QMainWindow):
     daw_callback = Signal(str)
@@ -732,16 +771,17 @@ class SgMainWindow(QMainWindow):
         else:
             event.accept()
 
+    @offline_operation
     def on_change_audio_settings(self):
-        close_engine()
-        time.sleep(1.0)
         f_dialog = widgets.hardware_dialog(True)
-        f_dialog.show_hardware_dialog()
-        # Doesn't re-send the 'ready' message?
-        #open_engine(PROJECT_FILE)
-        global RESPAWN
-        RESPAWN = True
-        self.prepare_to_quit()
+        if f_dialog.show_hardware_dialog():
+            # Doesn't re-send the 'ready' message?
+            #open_engine(PROJECT_FILE)
+            global RESPAWN
+            RESPAWN = True
+            self.prepare_to_quit()
+            return False
+        return True
 
     def on_use_default_theme(self):
         util.clear_file_setting("default-style")
@@ -1108,29 +1148,10 @@ class SgMainWindow(QMainWindow):
         f_layout.addWidget(f_status_label, 15, 1)
         f_window.exec()
 
+    @offline_operation
     def on_offline_render(self):
-        shared.PLUGIN_UI_DICT.save_all_plugin_state()
-        if self.current_module.CLOSE_ENGINE_ON_RENDER:
-            close_engine()
         self.current_window.on_offline_render()
-        if self.current_module.CLOSE_ENGINE_ON_RENDER:
-            open_engine(PROJECT_FILE, get_fps())
-            constants.IPC_ENABLED = True
-            for i in range(30):
-                time.sleep(0.1)
-                if constants.READY:
-                    break
-            if not constants.READY:
-                LOG.error(
-                    "Engine did not send the ready signal after 3 seconds"
-                )
-        # Kludge to get the correct playlist loaded
-        # Consider making this a file setting the engine can read
-        constants.DAW_IPC.change_sequence(
-            constants.DAW_CURRENT_SEQUENCE_UID,
-        )
-
-
+        return True
 
     def on_undo(self):
         self.current_window.on_undo()

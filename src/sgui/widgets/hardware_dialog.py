@@ -311,7 +311,7 @@ class hardware_dialog:
         a_msg=None,
         a_exit_on_cancel=False,
         notify_of_restart=True,
-    ):
+    ) -> bool:
         self.dialog_result = False
         self.open_devices()
         if self.is_running:
@@ -680,16 +680,20 @@ class hardware_dialog:
                     util.DEVICE_CONFIG_PATH, "w", newline="\n")
                 f_file.write("hostApi|{}\n".format(self.subsystem))
                 f_file.write("name|{}\n".format(self.device_name))
-                if (util.IS_WINDOWS or util.IS_MAC_OSX) \
-                and self.input_name:
+                if (
+                    util.IS_WINDOWS
+                    or
+                    util.IS_MAC_OSX
+                ) and self.input_name:
                     f_file.write("inputName|{}\n".format(self.input_name))
                 f_file.write("bufferSize|{}\n".format(f_buffer_size))
                 f_file.write("sampleRate|{}\n".format(f_samplerate))
                 f_file.write("threads|{}\n".format(f_worker_threads))
 
                 if util.IS_LINUX:
-                    f_file.write("threadAffinity|{}\n".format(
-                        f_thread_affinity))
+                    f_file.write(
+                        "threadAffinity|{}\n".format(f_thread_affinity)
+                    )
                     f_file.write("hugePages|{}\n".format(f_hugepages))
                 f_file.write("audioInputs|{}\n".format(f_audio_inputs))
                 f_file.write("audioOutputs|{}\n".format(f_audio_outputs))
@@ -706,6 +710,7 @@ class hardware_dialog:
                 time.sleep(1.0)
                 util.read_device_config()
                 notify_restart()
+                f_window.setResult(QDialog.DialogCode.Accepted)
                 f_window.close()
 
             except Exception as ex:
@@ -722,7 +727,7 @@ class hardware_dialog:
                 )
 
         def on_cancel(a_self=None):
-            notify_restart()
+            # notify_restart()
             f_window.close()
 
         def notify_restart():
@@ -824,7 +829,11 @@ class hardware_dialog:
         latency_changed()
         LOG.info("Showing dialog")
         if self.is_running:
+            f_window.setResult(QDialog.DialogCode.Rejected)
             f_window.exec()
+            result =f_window.result()
+            LOG.info(f"hardware dialog returned {result}")
+            return result == QDialog.DialogCode.Accepted
         else:
             f_window.show()
 
