@@ -122,16 +122,24 @@ class hardware_dialog:
 
     def open_devices(self):
         if util.IS_LINUX:
-            f_portaudio_so_path = "libportaudio.so.2"
-            f_pm_dll = "libportmidi.so.0"
+            pa_paths = ("libportaudio.so.2", "libportaudio.so.2")
+            pm_paths = ("libportmidi.so.0", "libportmidi.so.0")
         elif util.IS_MAC_OSX:
-            f_portaudio_so_path = "libportaudio.dylib"
-            f_pm_dll = "libportmidi.dylib"
+            pa_paths = ("libportaudio.dylib",)
+            pm_paths = ("libportmidi.dylib",)
         elif util.IS_WINDOWS:
-            f_pm_dll = os.path.join(
-                util.ENGINE_DIR, "libportmidi.dll")
-            f_portaudio_so_path = os.path.join(
-                util.ENGINE_DIR, "libportaudio.dll")
+            pm_paths = (
+                os.path.join(
+                    util.ENGINE_DIR,
+                    "libportmidi.dll",
+                ),
+            )
+            pa_paths = (
+                os.path.join(
+                    util.ENGINE_DIR,
+                    "libportaudio.dll",
+                ),
+            )
         else:
             LOG.error(
                 "Unsupported platform, don't know where to look "
@@ -140,8 +148,18 @@ class hardware_dialog:
             raise NotImplementedError
 
         LOG.info("Loading Portaudio library")
-        ctypes.cdll.LoadLibrary(f_portaudio_so_path)
-        self.pyaudio = ctypes.CDLL(f_portaudio_so_path)
+        self.pyaudio = None
+        for path in pa_paths:
+            try:
+                ctypes.cdll.LoadLibrary(path)
+                self.pyaudio = ctypes.CDLL(path)
+            except Exception as ex:
+                LOG.warn(f"Failed to load portaudio: {ex}")
+        if not self.pyaudio:
+            raise ImportError(
+                f"Cannot find one of {pa_paths}, please "
+                "install Portaudio"
+            )
         self.pyaudio.Pa_GetDeviceInfo.restype = ctypes.POINTER(
             portaudio.PaDeviceInfo)
         self.pyaudio.Pa_GetDeviceInfo.argstype = [ctypes.c_int]
@@ -157,8 +175,17 @@ class hardware_dialog:
         self.pyaudio.Pa_Initialize()
 
         LOG.info("Loading PortMIDI library")
-        ctypes.cdll.LoadLibrary(f_pm_dll)
-        self.pypm = ctypes.CDLL(f_pm_dll)
+        self.pypm = None
+        for path in pm_paths:
+            try:
+                ctypes.cdll.LoadLibrary(path)
+                self.pypm = ctypes.CDLL(path)
+            except Exception as ex:
+                LOG.warn(f"Could not find {path}")
+        if not self.pypm:
+            raise ImportError(
+                f"Unable to find one of {pm_paths}, please install Portmidi"
+            )
         self.pypm.Pm_GetDeviceInfo.restype = ctypes.POINTER(
             portmidi.PmDeviceInfo,
         )
