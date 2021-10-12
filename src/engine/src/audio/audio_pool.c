@@ -2,6 +2,7 @@
 
 #include "audiodsp/lib/amp.h"
 #include "audiodsp/lib/lmalloc.h"
+#include "audiodsp/modules/multifx/multifx3knob.h"
 #include "plugin.h"
 #include "audio/item.h"
 #include "audio/audio_pool.h"
@@ -335,7 +336,7 @@ void v_audio_pool_add_items(
                 v_iterate_2d_char_array(f_arr);
                 fx_type = atoi(f_arr->current_str);
                 sg_assert(
-                    fx_type >= 0 && fx_type <= 42,  // TODO: get the real count
+                    fx_type >= 0 && fx_type < MULTIFX3KNOB_MAX_INDEX,
                     "v_audio_pool_add_items: Invalid fx_type"
                 );
                 item->fx_controls.controls[i].fx_type = fx_type;

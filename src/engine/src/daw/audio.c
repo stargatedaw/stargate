@@ -1,3 +1,4 @@
+#include "audiodsp/modules/multifx/multifx3knob.h"
 #include "stargate.h"
 #include "daw.h"
 
@@ -33,7 +34,7 @@ void v_daw_papifx_set_control(
     if(control_index == 3){
         int fx_type = (int)port_val;
         sg_assert(
-            fx_type >= 0 && fx_type <= 42,  // TODO: get the real count
+            fx_type >= 0 && fx_type < MULTIFX3KNOB_MAX_INDEX,
             "v_daw_papifx_set_control: invalid fx type"
         );
         controls->fx_type = fx_type;

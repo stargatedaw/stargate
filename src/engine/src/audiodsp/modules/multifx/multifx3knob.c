@@ -52,6 +52,7 @@ const fp_mf3_run mf3_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
     v_mf3_run_dc_offset, //31
     v_mf3_run_bp_spread, //32
     v_mf3_run_phaser_static, //33
+    v_mf3_run_flanger_static, //34
 };
 
 const fp_mf3_reset mf3_reset_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
@@ -89,6 +90,7 @@ const fp_mf3_reset mf3_reset_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
     v_mf3_reset_dc_offset, //31
     v_mf3_reset_svf, //32
     v_mf3_reset_null, //33
+    v_mf3_reset_null, //34
 };
 
 void v_mf3_reset_null(t_mf3_multi* self){
@@ -462,12 +464,47 @@ void v_mf3_run_phaser_static(
 ){
     v_mf3_commit_mod(self);
 
-    // Freq: pitch
-    self->control_value[0] = (((self->control[0]) * 0.692913386) + 20.0f);
+    // Freq: pitch 71 to 123
+    self->control_value[0] = (((self->control[0]) * 0.40625) + 71.);
     // Wet -20dB to 0dB
-    self->control_value[1] = ((self->control[1]) * 0.157480315) - 20.0f;
+    self->control_value[1] = ((self->control[1]) * 0.157480315) - 20.;
     // Feedback -20dB to -1dB
-    self->control_value[2] = ((self->control[2]) * 0.1484375) - 20.0f;
+    self->control_value[2] = ((self->control[2]) * 0.1484375) - 20.;
+
+    v_cmb_set_all(
+        &self->comb_filter0,
+        self->control_value[1],
+        self->control_value[2],
+        self->control_value[0]
+    );
+
+    v_cmb_set_all(
+        &self->comb_filter1,
+        self->control_value[1],
+        self->control_value[2],
+        self->control_value[0]
+    );
+
+    v_cmb_run(&self->comb_filter0, a_in0);
+    v_cmb_run(&self->comb_filter1, a_in1);
+
+    self->output0 = self->comb_filter0.output_sample;
+    self->output1 = self->comb_filter1.output_sample;
+}
+
+void v_mf3_run_flanger_static(
+    t_mf3_multi* self,
+    SGFLT a_in0,
+    SGFLT a_in1
+){
+    v_mf3_commit_mod(self);
+
+    // Freq: pitch 20 to 83
+    self->control_value[0] = (((self->control[0]) * 0.4921875) + 20.);
+    // Wet -20dB to 0dB
+    self->control_value[1] = ((self->control[1]) * 0.157480315) - 20.;
+    // Feedback -20dB to -1dB
+    self->control_value[2] = ((self->control[2]) * 0.1484375) - 20.;
 
     v_cmb_set_all(
         &self->comb_filter0,
