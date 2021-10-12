@@ -21,7 +21,7 @@ music on a computer.  To understand what Stargate is, and why, read the
 - Revolutionary CPU efficiency for DAW and plugins, minimum recommended
   hardware: Raspberry Pi 4, or a 15 year old laptop with a
   dual core CPU, 1GB of RAM and a 720p display.
-- Support for display resolution from 1366x768 to 4k and above.
+- Support for display resolution from 720p to 4k and above.
 - Optional portable flash drive install on Windows
 
 # Building
