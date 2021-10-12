@@ -1139,6 +1139,8 @@ class sampler1_plugin_ui(AbstractPluginUI):
         action_copy_instrument = menuFile.addAction(_("Copy Instrument"))
         action_paste_instrument = menuFile.addAction(_("Paste Instrument"))
         menuFile.addSeparator()
+        actionMapToKeys = menuFile.addAction(
+            _("Map All Samples to 1 Key"))
         actionMapToWhiteKeys = menuFile.addAction(
             _("Map All Samples to 1 White Key"))
         actionMapToMonoFX = menuFile.addAction(
@@ -1176,6 +1178,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         actionOpen_instrument_from_file.triggered.connect(self.openFromFile)
         action_copy_instrument.triggered.connect(self.copy_instrument)
         action_paste_instrument.triggered.connect(self.paste_instrument)
+        actionMapToKeys.triggered.connect(self.mapAllSamplesToOneKey)
         actionMapToWhiteKeys.triggered.connect(self.mapAllSamplesToOneWhiteKey)
         actionMapToMonoFX.triggered.connect(self.mapAllSamplesToOneMonoFXgroup)
         actionClearAllSamples.triggered.connect(self.clearAllSamples)
@@ -1996,6 +1999,16 @@ class sampler1_plugin_ui(AbstractPluginUI):
             self.monofx_groups[f_i].set_value(f_i, True)
         self.mono_fx_tab_selected_sample.setCurrentIndex(1)
         self.mono_fx_tab_selected_sample.setCurrentIndex(0)
+
+    def mapAllSamplesToOneKey(self):
+        f_current_note = 36
+        for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
+            self.sample_base_pitches[f_i].set_value(f_current_note, True)
+            self.sample_high_notes[f_i].set_value(f_current_note, True)
+            self.sample_low_notes[f_i].set_value(f_current_note, True)
+            f_current_note += 1
+            if f_current_note >= 120:
+                break
 
     def mapAllSamplesToOneWhiteKey(self):
         f_current_note = 36
