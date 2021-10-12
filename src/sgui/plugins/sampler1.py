@@ -1094,6 +1094,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.sample_tab_layout = QVBoxLayout(self.sample_tab)
 
         self.file_browser = FileBrowserWidget()
+        self.file_browser.open_bookmarks()
         self.sample_tab_layout.addWidget(self.file_browser.hsplitter)
 
         self.file_browser.load_button.pressed.connect(
