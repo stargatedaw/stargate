@@ -387,7 +387,7 @@ class MainWindow(QScrollArea):
         f_start_beat, f_end_beat = f_marker_pos
 
         f_window = QDialog(MAIN_WINDOW)
-        f_window.setWindowTitle(_("Offline Render"))
+        f_window.setWindowTitle(_("Render"))
         f_layout = QGridLayout()
         f_window.setLayout(f_layout)
 

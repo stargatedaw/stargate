@@ -269,7 +269,7 @@ class SgMainWindow(QMainWindow):
         self.menu_file.addSeparator()
 
         self.offline_render_action = self.menu_file.addAction(
-            _("Offline Render..."))
+            _("Render..."))
         self.offline_render_action.triggered.connect(self.on_offline_render)
 
         self.audio_device_action = self.menu_file.addAction(
@@ -570,7 +570,7 @@ class SgMainWindow(QMainWindow):
                     QMessageBox.warning(
                         self,
                         _("Error"),
-                        _(f"Offline render exited with code {exit_code}"),
+                        _(f"Render exited with code {exit_code}"),
                     )
             else:
                 f_elapsed_time = time.time() - f_start_time

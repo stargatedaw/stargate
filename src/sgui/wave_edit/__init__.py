@@ -1042,7 +1042,7 @@ class wave_editor_widget:
         PLUGIN_RACK.save_callback()
 
         f_window = QDialog(MAIN_WINDOW)
-        f_window.setWindowTitle(_("Offline Render"))
+        f_window.setWindowTitle(_("Render"))
         f_layout = QGridLayout()
         f_window.setLayout(f_layout)
 
