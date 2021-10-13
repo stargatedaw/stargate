@@ -124,11 +124,6 @@ MIDI_IN_DEVICES = []
 SAMPLE_RATE = None
 NYQUIST_FREQ = None
 
-PROJECT_HISTORY_SCRIPT = os.path.join(
-    BIN_DIR,
-    f"{MAJOR_VERSION}-project-recover",
-)
-
 bad_chars = ["|", "\\", "~", "."]
 
 def pi_path(a_file):

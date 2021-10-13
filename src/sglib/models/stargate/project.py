@@ -158,18 +158,6 @@ class SgProject(AbstractProject):
             )
         return True
 
-    def show_project_history(self):
-        self.create_backup()
-        f_file = os.path.join(self.project_folder, "stargate.project")
-        cmd = [PROJECT_HISTORY_SCRIPT, '-p', f_file]
-        LOG.info(f"Running {cmd}")
-        proc = subprocess.Popen(cmd)
-        time.sleep(0.05)
-        if proc.poll():
-            stdout = proc.stdout.read()
-            stderr = proc.stderr.read()
-            LOG.error(f"{cmd} returned immediately, {stdout}, {stderr}")
-
     def get_next_glued_file_name(self):
         while True:
             self.glued_name_index += 1
@@ -376,7 +364,7 @@ class SgProject(AbstractProject):
                     env['PYTHONPATH'] = INSTALL_PREFIX
                     LOG.info(env)
                     f_proc = subprocess.Popen(
-                        f_cmd, 
+                        f_cmd,
                         env=env,
                         startupinfo=startupinfo,
                     )
