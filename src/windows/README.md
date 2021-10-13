@@ -23,6 +23,9 @@ cd stargate
 ./scripts/msys2_deps.sh
 cd src/
 make mingw_deps
+# Because git submodule init does not seem to work on Windows
+cd vendor
+git clone https://github.com/stargateaudio/libcds.git
 ```
 
 ## Windows cmd.exe
