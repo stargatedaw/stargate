@@ -93,7 +93,7 @@ class ProjectRecoveryWidget(QListWidget):
 
 
 def project_recover_dialog(a_file):
-    f_window = QMainWindow()
+    f_window = QDialog()
     f_window.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
     f_window.setWindowTitle("Project History")
     if a_file is None:
@@ -139,9 +139,7 @@ def project_recover_dialog(a_file):
             util.run_stargate()
             exit(0)
         exit(1)
-    f_central_widget = QWidget()
-    f_layout = QVBoxLayout(f_central_widget)
-    f_window.setCentralWidget(f_central_widget)
+    f_layout = QVBoxLayout(f_window)
     f_widget = ProjectRecoveryWidget(
         f_backup_dir,
         f_project_dir,
@@ -158,7 +156,7 @@ def project_recover_dialog(a_file):
         QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
     )
     print("showing")
-    f_window.show()
+    f_window.exec()
     return f_window
 
 def parse_args():

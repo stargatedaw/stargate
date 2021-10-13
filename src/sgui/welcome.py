@@ -6,9 +6,11 @@ from .project import (
     get_history,
     new_project,
     open_project,
+    open_project_dialog,
     set_project,
     StargateProjectVersionError,
 )
+from .project_recovery import project_recover_dialog
 from sglib.lib import util
 from sglib.log import LOG
 import os
@@ -56,10 +58,18 @@ class Welcome:
         clone_button.pressed.connect(self.on_clone)
         buttons_hlayout.addWidget(clone_button)
 
+        buttons_hlayout2 = QHBoxLayout()
+        buttons_vlayout.addLayout(buttons_hlayout2)
+
         hardware_button = QPushButton("Hardware\nSettings")
         hardware_button.setObjectName("huge_button")
         hardware_button.pressed.connect(self.on_hardware_settings)
-        buttons_vlayout.addWidget(hardware_button)
+        buttons_hlayout2.addWidget(hardware_button)
+
+        project_recovery_button = QPushButton("Project\nRecovery")
+        project_recovery_button.setObjectName("huge_button")
+        project_recovery_button.pressed.connect(self.on_project_recovery)
+        buttons_hlayout2.addWidget(project_recovery_button)
 
         self.widget.show()
 
@@ -101,4 +111,9 @@ class Welcome:
         hardware.show_hardware_dialog(
             notify_of_restart=False,
         )
+
+    def on_project_recovery(self):
+        path, _ = open_project_dialog(self.widget)
+        if path:
+            project_recover_dialog(path)
 

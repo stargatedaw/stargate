@@ -261,13 +261,6 @@ class SgMainWindow(QMainWindow):
 
         self.menu_file.addSeparator()
 
-        self.project_history_action = self.menu_file.addAction(
-            _("Project History...("
-            "This shows a list of all backups)"))
-        self.project_history_action.triggered.connect(self.on_project_history)
-
-        self.menu_file.addSeparator()
-
         self.offline_render_action = self.menu_file.addAction(
             _("Render..."))
         self.offline_render_action.triggered.connect(self.on_offline_render)
@@ -646,26 +639,6 @@ class SgMainWindow(QMainWindow):
         if open_project(self):
             global RESPAWN
             RESPAWN = True
-            self.prepare_to_quit()
-
-    def on_project_history(self):
-        f_result = QMessageBox.warning(
-            self,
-            _("Warning"),
-            _(
-                "This will close the application, "
-                "restart the application after you're done with the "
-                "project history editor"
-            ),
-            buttons=(
-                QMessageBox.StandardButton.Ok
-                |
-                QMessageBox.StandardButton.Cancel
-            ),
-        )
-        if f_result == QMessageBox.StandardButton.Ok:
-            constants.PROJECT.show_project_history()
-            self.ignore_close_event = False
             self.prepare_to_quit()
 
     def on_save(self):
@@ -1343,18 +1316,11 @@ def _load_project(project_file):
                 MAIN_WINDOW.widget,
                 _("Error"),
                 _(
-                    "Error opening project: {}\n{}\n"
-                    "Opening project recovery dialog.  If the problem "
-                    "persists or the project can't be recovered, you may "
-                    "need to delete your settings and/or default project "
-                    "in \n{}"
-                ).format(
-                    project_file,
-                    ex,
-                    util.HOME
+                    "Error opening project, check the logs for details.  "
+                    "If the problem persists, you may need to use the "
+                    "project recovery tool on the welcome screen"
                 )
             )
-            constants.PROJECT.show_project_history()
             MAIN_WINDOW.prepare_to_quit()
     else:
         global_new_project(project_file)
