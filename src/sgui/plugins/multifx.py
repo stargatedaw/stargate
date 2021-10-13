@@ -255,7 +255,7 @@ class multifx_plugin_ui(AbstractPluginUI):
         f_column = 0
         f_row = 0
         for f_i in range(8):
-            f_effect = multifx_single(
+            f_effect = MultiFXSingle(
                 "FX{}".format(f_i),
                 f_port,
                 self.plugin_rel_callback,
@@ -264,6 +264,7 @@ class multifx_plugin_ui(AbstractPluginUI):
                 self.preset_manager,
                 a_knob_size=f_knob_size,
                 knob_kwargs=knob_kwargs,
+                fixed_height=True,
             )
             self.effects.append(f_effect)
             self.fx_layout.addWidget(f_effect.group_box, f_row, f_column)

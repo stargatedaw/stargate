@@ -1,4 +1,4 @@
-from .multifx import multifx_single
+from .multifx import MultiFXSingle
 from sglib.models.multifx_settings import multifx_settings
 from sglib.lib.translate import _
 from sgui.sgqt import *
@@ -17,11 +17,13 @@ class per_audio_item_fx_widget:
         self.widget.setLayout(self.layout)
         f_port = 0
         for f_i in range(8):
-            f_effect = multifx_single(
+            f_effect = MultiFXSingle(
                 _("FX{}").format(f_i),
                 f_port,
                 a_rel_callback,
                 a_val_callback,
+                fixed_height=True,
+                fixed_width=True,
             )
             f_effect.disable_mousewheel()
             self.effects.append(f_effect)

@@ -1319,7 +1319,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
 
         self.hlayout0 = QHBoxLayout()
         self.main_layout.addLayout(self.hlayout0)
-        self.fx0 = multifx_single(
+        self.fx0 = MultiFXSingle(
             _("FX0"),
             SAMPLER1_FX0_KNOB0,
             self.plugin_rel_callback,
@@ -1327,9 +1327,11 @@ class sampler1_plugin_ui(AbstractPluginUI):
             self.port_dict,
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
+            fixed_height=False,
+            fixed_width=False,
         )
         self.hlayout0.addWidget(self.fx0.group_box)
-        self.fx1 = multifx_single(
+        self.fx1 = MultiFXSingle(
             _("FX1"),
             SAMPLER1_FX1_KNOB0,
             self.plugin_rel_callback,
@@ -1337,9 +1339,11 @@ class sampler1_plugin_ui(AbstractPluginUI):
             self.port_dict,
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
+            fixed_height=False,
+            fixed_width=False,
         )
         self.hlayout0.addWidget(self.fx1.group_box)
-        self.fx2 = multifx_single(
+        self.fx2 = MultiFXSingle(
             _("FX2"),
             SAMPLER1_FX2_KNOB0,
             self.plugin_rel_callback,
@@ -1347,9 +1351,11 @@ class sampler1_plugin_ui(AbstractPluginUI):
             self.port_dict,
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
+            fixed_height=False,
+            fixed_width=False,
         )
         self.hlayout0.addWidget(self.fx2.group_box)
-        self.fx3 = multifx_single(
+        self.fx3 = MultiFXSingle(
             _("FX3"),
             SAMPLER1_FX3_KNOB0,
             self.plugin_rel_callback,
@@ -1357,6 +1363,8 @@ class sampler1_plugin_ui(AbstractPluginUI):
             self.port_dict,
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
+            fixed_height=False,
+            fixed_width=False,
         )
         self.hlayout0.addWidget(self.fx3.group_box)
 
@@ -1516,50 +1524,50 @@ class sampler1_plugin_ui(AbstractPluginUI):
             self.monofx_sub_tab_fx_widget)
         self.monofx_sub_tab_fx_main_layout.addWidget(
             self.monofx_sub_tab_fx_widget,
-            alignment=(
-                QtCore.Qt.AlignmentFlag.AlignLeft
-                |
-                QtCore.Qt.AlignmentFlag.AlignTop
-            ),
+            alignment=QtCore.Qt.AlignmentFlag.AlignTop,
         )
         self.hlayout11 = QHBoxLayout()
         self.monofx_sub_tab_fx_layout.addLayout(self.hlayout11)
-        self.mono_fx0 = multifx_single(
+        self.mono_fx0 = MultiFXSingle(
             _("FX0"),
             0,
             None,
             self.monofx0_callback,
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
+            fixed_height=True,
         )
         self.hlayout11.addWidget(self.mono_fx0.group_box)
-        self.mono_fx1 = multifx_single(
+        self.mono_fx1 = MultiFXSingle(
             _("FX1"),
             0,
             None,
             self.monofx1_callback,
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
+            fixed_height=True,
         )
         self.hlayout11.addWidget(self.mono_fx1.group_box)
         self.hlayout12 = QHBoxLayout()
         self.monofx_sub_tab_fx_layout.addLayout(self.hlayout12)
-        self.mono_fx2 = multifx_single(
+        self.mono_fx2 = MultiFXSingle(
             _("FX2"),
             0,
             None,
             self.monofx2_callback,
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
+            fixed_height=True,
         )
         self.hlayout12.addWidget(self.mono_fx2.group_box)
-        self.mono_fx3 = multifx_single(
+        self.mono_fx3 = MultiFXSingle(
             _("FX3"),
             0,
             None,
             self.monofx3_callback,
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
+            fixed_height=True,
         )
         self.hlayout12.addWidget(self.mono_fx3.group_box)
 

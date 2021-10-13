@@ -1444,7 +1444,7 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.hlayout6 = QHBoxLayout()
         self.main_layout.addLayout(self.hlayout6)
         #From MultiFX
-        self.fx0 = multifx_single(
+        self.fx0 = MultiFXSingle(
             _("FX0"),
             FM1_FX0_KNOB0,
             self.plugin_rel_callback,
@@ -1455,7 +1455,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             knob_kwargs=knob_kwargs,
         )
         self.hlayout5.addWidget(self.fx0.group_box)
-        self.fx1 = multifx_single(
+        self.fx1 = MultiFXSingle(
             _("FX1"),
             FM1_FX1_KNOB0,
             self.plugin_rel_callback,
@@ -1466,7 +1466,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             knob_kwargs=knob_kwargs,
         )
         self.hlayout5.addWidget(self.fx1.group_box)
-        self.fx2 = multifx_single(
+        self.fx2 = MultiFXSingle(
             _("FX2"),
             FM1_FX2_KNOB0,
             self.plugin_rel_callback,
@@ -1477,7 +1477,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             knob_kwargs=knob_kwargs,
         )
         self.hlayout6.addWidget(self.fx2.group_box)
-        self.fx3 = multifx_single(
+        self.fx3 = MultiFXSingle(
             _("FX3"),
             FM1_FX3_KNOB0,
             self.plugin_rel_callback,

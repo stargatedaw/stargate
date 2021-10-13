@@ -98,7 +98,7 @@ MULTIFX_ITEMS = [
     ("Dynamics", MULTIFX_DYNAMICS),
 ]
 
-class multifx_single:
+class MultiFXSingle:
     def __init__(
         self,
         a_title,
@@ -109,6 +109,8 @@ class multifx_single:
         a_preset_mgr=None,
         a_knob_size=51,
         knob_kwargs={},
+        fixed_height=False,
+        fixed_width=False,
     ):
         self.group_box = QGroupBox()
         self.group_box.contextMenuEvent = self.contextMenuEvent
@@ -136,6 +138,18 @@ class multifx_single:
             )
             f_knob.add_to_grid_layout(self.layout, f_i)
             self.knobs.append(f_knob)
+        if fixed_height:
+            self.group_box.adjustSize()
+            self.group_box.setFixedHeight(
+                self.group_box.height(),
+            )
+        if fixed_width:
+            self.group_box.adjustSize()
+            self.group_box.setFixedHeight(
+                self.group_box.height(),
+            )
+        for knob in self.knobs:
+            knob.control.hide()
         self.combobox = NestedComboboxControl(
             132,
             "Type",
@@ -236,6 +250,9 @@ class multifx_single:
 
     def type_combobox_changed(self, a_val):
         if a_val == 0: #Off
+            self.knobs[0].control.hide()
+            self.knobs[1].control.hide()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText("")
             self.knobs[1].name_label.setText("")
             self.knobs[2].name_label.setText("")
@@ -246,6 +263,9 @@ class multifx_single:
             self.knobs[1].value_label.setText("")
             self.knobs[2].value_label.setText("")
         elif a_val == 1: #LP2
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText("")
@@ -255,6 +275,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 2: #LP4
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText("")
@@ -264,6 +287,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 3: #HP2
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText("")
@@ -273,6 +299,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 4: #HP4
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText("")
@@ -282,6 +311,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 5: #BP2
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText("")
@@ -291,6 +323,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 6: #BP4
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText("")
@@ -300,6 +335,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 7: #Notch2
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText("")
@@ -309,6 +347,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 8: #Notch4
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText("")
@@ -318,6 +359,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 9: #EQ
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("BW"))
             self.knobs[2].name_label.setText(_("Gain"))
@@ -328,6 +372,9 @@ class multifx_single:
             self.knobs[2].set_127_min_max(-24.0, 24.0)
             self.knobs[1].value_label.setText("")
         elif a_val == 10: #Distortion
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Gain"))
             self.knobs[1].name_label.setText(_("D/W"))
             self.knobs[2].name_label.setText(_("Out"))
@@ -338,6 +385,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_127_ZERO_TO_X
             self.knobs[2].set_127_min_max(-30.0, 0.0)
         elif a_val == 11: #Comb Filter
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Amt"))
             self.knobs[2].name_label.setText("")
@@ -348,6 +398,9 @@ class multifx_single:
             self.knobs[1].value_label.setText("")
             self.knobs[2].value_label.setText("")
         elif a_val == 12: #Amp/Panner
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Pan"))
             self.knobs[1].name_label.setText(_("Amp"))
             self.knobs[2].name_label.setText("")
@@ -359,6 +412,9 @@ class multifx_single:
             self.knobs[1].value_label.setText("")
             self.knobs[2].value_label.setText("")
         elif a_val == 13: #Limiter
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Thresh"))
             self.knobs[1].name_label.setText(_("Ceil"))
             self.knobs[2].name_label.setText(_("Rel"))
@@ -369,6 +425,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_127_ZERO_TO_X_INT
             self.knobs[2].set_127_min_max(50.0, 1500.0)
         elif a_val == 14: #Saturator
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Gain"))
             self.knobs[1].name_label.setText(_("Wet"))
             self.knobs[2].name_label.setText(_("Out"))
@@ -379,6 +438,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_127_ZERO_TO_X
             self.knobs[2].set_127_min_max(-12.0, 12.0)
         elif a_val == 15: #Formant Filter
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Vowel"))
             self.knobs[1].name_label.setText(_("Wet"))
             self.knobs[2].name_label.setText("")
@@ -389,6 +451,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 16: #Chorus
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Rate"))
             self.knobs[1].name_label.setText(_("Wet"))
             self.knobs[2].name_label.setText("Fine")
@@ -400,6 +465,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_127_ZERO_TO_X
             self.knobs[2].set_127_min_max(0.1, 1.9)
         elif a_val == 17: #Glitch
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Pitch"))
             self.knobs[1].name_label.setText(_("Glitch"))
             self.knobs[2].name_label.setText(_("Wet"))
@@ -410,6 +478,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 18: #RingMod
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Pitch"))
             self.knobs[1].name_label.setText(_("Wet"))
             self.knobs[2].name_label.setText("")
@@ -420,6 +491,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 19: #LoFi
+            self.knobs[0].control.show()
+            self.knobs[1].control.hide()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Bits"))
             self.knobs[1].name_label.setText("")
             self.knobs[2].name_label.setText("")
@@ -430,6 +504,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 20: #Sample and Hold
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Pitch"))
             self.knobs[1].name_label.setText(_("Wet"))
             self.knobs[2].name_label.setText("")
@@ -440,6 +517,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 21: #LP2-Dry/Wet
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText(_("Wet"))
@@ -449,6 +529,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 22: #HP2-Dry/Wet
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText(_("Wet"))
@@ -458,6 +541,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 23: #Monofier
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Pan"))
             self.knobs[1].name_label.setText(_("Amp"))
             self.knobs[2].name_label.setText("")
@@ -469,6 +555,9 @@ class multifx_single:
             self.knobs[1].value_label.setText("")
             self.knobs[2].value_label.setText("")
         elif a_val == 24: #LP<-->HP
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText(("LP/HP"))
@@ -478,6 +567,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 25: #Growl Filter
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Vowel"))
             self.knobs[1].name_label.setText(_("Wet"))
             self.knobs[2].name_label.setText(_("Type"))
@@ -488,6 +580,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 26: #LP Screech
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText("")
@@ -497,6 +592,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 27: #Metal Comb
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Amt"))
             self.knobs[2].name_label.setText(_("Spread"))
@@ -507,6 +605,9 @@ class multifx_single:
             self.knobs[1].value_label.setText("")
             self.knobs[2].value_label.setText("")
         elif a_val == 28: #Notch4-Dry/Wet
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText(_("Wet"))
@@ -516,6 +617,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 29: #Foldback Distortion
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Thresh"))
             self.knobs[1].name_label.setText(_("Gain"))
             self.knobs[2].name_label.setText(_("Wet"))
@@ -526,6 +630,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_NONE
             self.knobs[2].value_label.setText("")
         elif a_val == 30: #Notch Spread
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText(_("Spread"))
@@ -536,6 +643,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_127_ZERO_TO_X
             self.knobs[2].set_127_min_max(0.0, 36.0)
         elif a_val == 31: # DC Offset
+            self.knobs[0].control.hide()
+            self.knobs[1].control.hide()
+            self.knobs[2].control.hide()
             self.knobs[0].name_label.setText("")
             self.knobs[1].name_label.setText("")
             self.knobs[2].name_label.setText("")
@@ -543,6 +653,9 @@ class multifx_single:
             self.knobs[1].val_conversion = _shared.KC_NONE
             self.knobs[2].val_conversion = _shared.KC_NONE
         elif a_val == 32: # BP Spread
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText(_("Spread"))
@@ -553,6 +666,9 @@ class multifx_single:
             self.knobs[2].val_conversion = _shared.KC_127_ZERO_TO_X
             self.knobs[2].set_127_min_max(0.0, 48.0)
         elif a_val == 33: # Phaser Static
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Wet"))
             self.knobs[2].name_label.setText(_("Feed"))
@@ -563,6 +679,9 @@ class multifx_single:
             self.knobs[1].value_label.setText("")
             self.knobs[2].value_label.setText("")
         elif a_val == 34: # Flanger Static
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Wet"))
             self.knobs[2].name_label.setText(_("Feed"))

@@ -234,7 +234,7 @@ class sgeq_plugin_ui(AbstractPluginUI):
         f_column = 0
         f_row = 0
         for f_i in range(6):
-            f_effect = multifx_single(
+            f_effect = MultiFXSingle(
                 "FX{}".format(f_i),
                 port,
                 self.plugin_rel_callback,
@@ -243,6 +243,8 @@ class sgeq_plugin_ui(AbstractPluginUI):
                 self.preset_manager,
                 a_knob_size=f_knob_size,
                 knob_kwargs=knob_kwargs,
+                fixed_height=False,
+                fixed_width=False,
             )
             self.effects.append(f_effect)
             layout.addWidget(f_effect.group_box, f_row, f_column)
