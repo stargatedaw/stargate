@@ -1415,6 +1415,7 @@ NO_OPTIMIZATION void v_set_plugin_index(
 ){
     int f_i, i;
     SGFLT buffer[2][512] = {{}, {}};
+    SGFLT sc_buffer[2][512] = {{}, {}};
     int sample_rate = (int)STARGATE->thread_storage[0].sample_rate;
     t_plugin * f_plugin = NULL;
     struct ShdsList midi_list, atm_list;
@@ -1468,6 +1469,18 @@ NO_OPTIMIZATION void v_set_plugin_index(
                 1,
                 buffer[1],
                 0
+            );
+            f_plugin->descriptor->connect_buffer(
+                f_plugin->plugin_handle,
+                0,
+                sc_buffer[0],
+                1
+            );
+            f_plugin->descriptor->connect_buffer(
+                f_plugin->plugin_handle,
+                1,
+                sc_buffer[1],
+                1
             );
             for(i = 0; i < (sample_rate / 512); ++i){
                 f_plugin->descriptor->run_replacing(
