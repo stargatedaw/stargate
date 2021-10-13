@@ -62,13 +62,14 @@ void shds_list_isort(struct ShdsList * self, shds_cmpfunc cmpfunc){
 }
 
 void shds_list_grow(struct ShdsList * self){
-    self->max_size *= 2;
     if(self->data){
+        self->max_size *= 2;
         self->data = (void**)shds_realloc(
             self->data,
             sizeof(void*) * self->max_size
         );
     } else {
+        self->max_size = 10;
         self->data = (void**)shds_alloc(sizeof(void*) * self->max_size);
     }
 }
