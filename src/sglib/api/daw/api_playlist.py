@@ -26,7 +26,8 @@ def load():
         playlist_names.append(
             by_uid[entry.seq_uid].name,
         )
-    return playlist_names, pool_names
+    selected = by_uid[0].name
+    return playlist_names, pool_names, selected
 
 def new_seq(name):
     """ Add a new sequence

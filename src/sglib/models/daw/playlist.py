@@ -36,7 +36,7 @@ class Playlist:
     def __init__(
         self,
         pool,
-        playlist
+        playlist,
     ):
         self.pool = type_assert_iter(
             pool,

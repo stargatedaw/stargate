@@ -922,6 +922,12 @@ QTableWidget
     background-color: {{ background_color_alt }};
 }
 
+QListWidget
+{
+    alternate-background-color: {{ background_color }};
+    background-color: {{ background_color }};
+}
+
 QCheckBox,
 QRadioButton
 {

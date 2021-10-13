@@ -124,7 +124,7 @@ class PlaylistWidget:
             |
             QtCore.Qt.ItemFlag.ItemIsSelectable
         )
-        self.add_item(
+        return self.add_item(
             name,
             self.sequence_widget,
             flags,
@@ -149,12 +149,15 @@ class PlaylistWidget:
         item.orig_name = name
         item.setFlags(flags)
         self.suppress_changes = False
+        return item
 
     def open(self):
         """ Populate the widgets from the project files
         """
         self.sequence_widget.clear()
-        playlist_names, sequence_names = api_playlist.load()
+        playlist_names, sequence_names, selected = api_playlist.load()
         for name in sequence_names:
-            self.add_sequence_item(name)
+            item = self.add_sequence_item(name)
+            if name == selected:
+                item.setSelected(True)
 
