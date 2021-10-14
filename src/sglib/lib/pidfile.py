@@ -30,8 +30,10 @@ def check_pidfile(path):
             return None
         return pid
 
-def create_pidfile(path):
-    pid = str(os.getpid())
+def create_pidfile(
+    path,
+    pid=str(os.getpid()),
+):
     LOG.info(f"Creating pidfile {path} : {pid}")
     with open(path, 'w') as f:
         f.write(pid)

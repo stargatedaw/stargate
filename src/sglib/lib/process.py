@@ -1,9 +1,10 @@
 from . import util
+from .pidfile import create_pidfile
 from sglib.log import LOG
 import subprocess
 import threading
 
-def run_process(cmd):
+def run_process(cmd, pidfile=None):
     exe = "SUBPROCESS" if isinstance(cmd, str) else cmd[0]
     kwargs = {
         "bufsize": 1024*1024,
@@ -34,6 +35,11 @@ def run_process(cmd):
         )
         t.daemon = True
         t.start()
+    if pidfile:
+        create_pidfile(
+            pidfile,
+            str(process.pid),
+        )
     return process
 
 def _stderr_handler(line: str):

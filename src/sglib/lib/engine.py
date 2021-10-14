@@ -53,6 +53,8 @@ def close_engine():
                 )
                 LOG.exception(ex)
         ENGINE_SUBPROCESS = None
+    if os.path.exists(ENGINE_PIDFILE):
+        os.remove(ENGINE_PIDFILE)
 
 def check_engine():
     """ Check if the engine is running.  Only works for subprocess engine mode
@@ -75,6 +77,7 @@ def kill_engine(pid):
                 f"Failed to kill {pid} with SIGTERM, sending SIGKILL"
             )
             os.kill(pid, signal.SIGKILL)
+        os.remove(ENGINE_PIDFILE)
     except Exception as ex:
         LOG.exception(ex)
     time.sleep(2.0)
@@ -135,5 +138,5 @@ def reopen_engine():
 
 def run_engine(cmd):
     global ENGINE_SUBPROCESS
-    ENGINE_SUBPROCESS = run_process(cmd)
+    ENGINE_SUBPROCESS = run_process(cmd, ENGINE_PIDFILE)
 

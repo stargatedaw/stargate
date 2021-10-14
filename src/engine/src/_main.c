@@ -34,7 +34,6 @@ GNU General Public License for more details.
 #include "csv/split.h"
 #include "daw.h"
 #include "file/path.h"
-#include "file/pidfile.h"
 #include "files.h"
 #include "globals.h"
 #include "ipc.h"
@@ -200,14 +199,8 @@ int _main(int argc, char** argv){
 #endif
     start_osc_thread();
 
-    char* _pidfile_path = pidfile_path();
-    create_pidfile(_pidfile_path);
-
     start_engine(argv[2]);
     int result = main_loop();
-
-    delete_file(_pidfile_path);
-    free(_pidfile_path);
 
     return result;
 }
