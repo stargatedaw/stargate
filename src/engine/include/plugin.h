@@ -150,7 +150,7 @@ typedef struct _PluginDescriptor {
      * for offline rendering.  This must be called after loading
      * the project.
      */
-    void (*offline_render_prep)(PluginHandle Instance);
+    void (*offline_render_prep)(PluginHandle Instance, SGFLT sample_rate);
 
     /* Force any notes to off, etc...  and anything else you may want to
      * do when the transport stops

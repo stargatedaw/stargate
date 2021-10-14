@@ -30,50 +30,38 @@ void v_run_fm1_voice(
     int
 );
 
-void v_cleanup_fm1(PluginHandle instance)
-{
+void v_cleanup_fm1(PluginHandle instance){
     free(instance);
 }
 
-void v_fm1_set_cc_map(PluginHandle instance, char * a_msg)
-{
+void v_fm1_set_cc_map(PluginHandle instance, char * a_msg){
     t_fm1 *plugin = (t_fm1 *)instance;
     v_generic_cc_map_set(&plugin->cc_map, a_msg);
 }
 
-void v_fm1_or_prep(PluginHandle instance)
-{
+void v_fm1_or_prep(PluginHandle instance, SGFLT sample_rate){
     t_fm1 *plugin = (t_fm1 *)instance;
-    int f_i = 0;
-    int f_i2 = 0;
-    int f_i3 = 0;
+    int f_i;
+    int f_i2;
+    int f_i3;
 
     int f_osc_on[FM1_OSC_COUNT];
 
-    while(f_i < FM1_OSC_COUNT)
-    {
+    for(f_i = 0; f_i < FM1_OSC_COUNT; ++f_i){
         f_osc_on[f_i] = ((int)(*plugin->osc_type[f_i]) - 1);
-        ++f_i;
     }
 
-    while(f_i2 < FM1_POLYPHONY){
+    for(f_i2 = 0; f_i2 < FM1_POLYPHONY; ++f_i2){
         t_fm1_poly_voice * f_voice = &plugin->data[f_i2];
-        f_i = 0;
-        while(f_i < 1000000){
-            f_i3 = 0;
-            while(f_i3 < FM1_OSC_COUNT)
-            {
-                if(f_osc_on[f_i3] >= 0)
-                {
+        for(f_i = 0; f_i < (int)(sample_rate * 3.); ++f_i){
+            for(f_i3 = 0; f_i3 < FM1_OSC_COUNT; ++f_i3){
+                if(f_osc_on[f_i3] >= 0){
                     v_osc_wav_run_unison_core_only(
-                        &f_voice->osc[f_i3].osc_wavtable);
+                        &f_voice->osc[f_i3].osc_wavtable
+                    );
                 }
-                ++f_i3;
             }
-
-            ++f_i;
         }
-        ++f_i2;
     }
 
     plugin->mono_modules->fm_macro_smoother[0].last_value =
@@ -83,8 +71,7 @@ void v_fm1_or_prep(PluginHandle instance)
             (*plugin->fm_macro[1] * 0.01f);
 }
 
-void fm1Panic(PluginHandle instance)
-{
+void fm1Panic(PluginHandle instance){
     t_fm1 *plugin = (t_fm1 *)instance;
     int f_i = 0;
     while(f_i < FM1_POLYPHONY)
@@ -190,11 +177,9 @@ SGFLT fm1_run_voice_osc(void* arg){
 
 void v_fm1_on_stop(PluginHandle instance){
     t_fm1 *plugin = (t_fm1 *)instance;
-    int f_i = 0;
-    while(f_i < FM1_POLYPHONY)
-    {
+    int f_i;
+    for(f_i = 0; f_i < FM1_POLYPHONY; ++f_i){
         v_fm1_poly_note_off(&plugin->data[f_i], 0);
-        ++f_i;
     }
 
     plugin->sv_pitch_bend_value = 0.0f;
@@ -206,15 +191,13 @@ void v_fm1_connect_buffer(
     SGFLT * DataLocation,
     int a_is_sidechain
 ){
-    if(a_is_sidechain)
-    {
+    if(a_is_sidechain){
         return;
     }
 
     t_fm1 *plugin = (t_fm1*)instance;
 
-    switch(a_index)
-    {
+    switch(a_index){
         case 0:
             plugin->output0 = DataLocation;
             break;

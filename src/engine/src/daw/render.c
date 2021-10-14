@@ -186,6 +186,7 @@ void v_daw_offline_render_prep(t_daw * self){
     int f_i2;
     t_pytrack * f_track;
     t_plugin * f_plugin;
+    SGFLT sample_rate = STARGATE->thread_storage[0].sample_rate;
 
     for(f_i = 0; f_i < DN_TRACK_COUNT; ++f_i){
         f_track = self->track_pool[f_i];
@@ -193,7 +194,8 @@ void v_daw_offline_render_prep(t_daw * self){
             f_plugin = f_track->plugins[f_i2];
             if(f_plugin && f_plugin->descriptor->offline_render_prep){
                 f_plugin->descriptor->offline_render_prep(
-                    f_plugin->plugin_handle
+                    f_plugin->plugin_handle,
+                    sample_rate
                 );
             }
         }

@@ -32,12 +32,12 @@ void v_cleanup_va1(PluginHandle instance){
     free(instance);
 }
 
-void v_va1_or_prep(PluginHandle instance){
+void v_va1_or_prep(PluginHandle instance, SGFLT sample_rate){
     t_va1 *plugin = (t_va1*)instance;
     int f_i, f_i2;
     for(f_i2 = 0; f_i2 < VA1_POLYPHONY; ++f_i2){
         t_va1_poly_voice* f_voice = &plugin->data[f_i2];
-        for(f_i = 0; f_i < 1000000; ++f_i){
+        for(f_i = 0; f_i < (int)(sample_rate * 3); ++f_i){
             f_osc_run_unison_osc_core_only(&f_voice->osc_unison1);
             f_osc_run_unison_osc_core_only(&f_voice->osc_unison2);
         }
