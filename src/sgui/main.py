@@ -22,6 +22,7 @@ from sglib.lib.process import run_process
 from sglib.lib.util import *
 from sglib.lib.translate import _
 from sglib.log import LOG
+from sglib.lib.pidfile import create_pidfile
 from sglib import constants
 from sglib.math import clip_value, db_to_lin
 from sgui import widgets
@@ -1402,6 +1403,7 @@ def main(
     if RESPAWN:
         respawn()
     LOG.info("Calling os._exit()")
+    os.remove(constants.UI_PIDFILE)
     # Work around PyQt SEGFAULT-on-exit issues
     os._exit(exit_code)
 

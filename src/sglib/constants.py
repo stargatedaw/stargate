@@ -61,6 +61,7 @@ CONFIG_DIR = os.path.join(HOME, "config")
 PRESET_DIR = os.path.join(CONFIG_DIR, "preset")
 LOG_DIR = os.path.join(HOME, "log")
 ENGINE_PIDFILE = os.path.join(HOME, 'engine.pid')
+UI_PIDFILE = os.path.join(HOME, 'ui.pid')
 
 for _f_dir in (
     CONFIG_DIR,

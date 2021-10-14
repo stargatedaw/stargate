@@ -143,8 +143,7 @@ Select 1+ items, CTRL+SHIFT+Click and drag up/down:
 See the menu button above for additional actions""")
 
 multiple_instances_warning = _("""\
-Detected that there are instances of the Stargate
-audio engine already running.
+Detected that there are instances of the Stargate audio engine already running.
 This could mean that you already have Stargate running, if so you
 should click 'Cancel' and close the other instance.
 

@@ -76,11 +76,25 @@ def _setup():
 
 def start_stargate(project_file):
     app, scaler = _setup()
+    from sglib.constants import UI_PIDFILE
+    from sglib.lib.pidfile import check_pidfile, create_pidfile
+    pid = check_pidfile(UI_PIDFILE)
+    if pid is not None:
+        from sgui.sgqt import QMessageBox
+        QMessageBox.warning(
+            None,
+            "Error",
+            f"Detected Stargate is already running with pid {pid}, "
+            "please close the other instance first",
+        )
+        sys.exit(0)
+    create_pidfile(UI_PIDFILE)
     if not project_file:
         from sgui.welcome import Welcome
         w = Welcome(app, scaler)
         app.exec()
         if not w.loaded:
+            os.remove(UI_PIDFILE)
             sys.exit(0)
     # Refresh the app we just exec'd
     app = QApplication(sys.argv)

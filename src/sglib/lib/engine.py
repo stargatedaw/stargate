@@ -5,6 +5,7 @@ import time
 
 import psutil
 
+from .pidfile import check_pidfile
 from .process import run_process
 from sglib import constants
 from sglib.constants import ENGINE_PIDFILE, MAJOR_VERSION
@@ -57,28 +58,7 @@ def check_engine():
     """ Check if the engine is running.  Only works for subprocess engine mode
         @return: int, the pid of the process, or None if not running
     """
-    if os.path.exists(ENGINE_PIDFILE):
-        with open(ENGINE_PIDFILE) as f:
-            text = f.read().strip()
-            try:
-                pid = int(text)
-            except Exception as ex:
-                LOG.exception(ex)
-                LOG.error(f"Invalid pidfile: {text}")
-                os.remove(ENGINE_PIDFILE)
-                return
-        LOG.warning(f"{ENGINE_PIDFILE} exists with pid {pid}")
-        if not psutil.pid_exists(pid):
-            LOG.info(f"pid {pid} no longer exists, deleting pidfile")
-            os.remove(ENGINE_PIDFILE)
-            return None
-        proc = psutil.Process(pid)
-        cmdline = " ".join(proc.cmdline())
-        if MAJOR_VERSION not in cmdline:
-            LOG.info(f"Another process reclaimed {pid}: {cmdline}")
-            os.remove(ENGINE_PIDFILE)
-            return
-        return pid
+    return check_pidfile(ENGINE_PIDFILE)
 
 def kill_engine(pid):
     """ Kill any zombie instances of the engine if they exist.
