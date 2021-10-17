@@ -16,6 +16,10 @@ void v_rvb_reverb_set(
     SGFLT a_hp_cutoff
 ){
     if(unlikely(a_time != self->time)){
+        self->time = a_time;
+        // Changes to the comb filters now cause it to play forever at 1.0
+        // so adjust it here
+        a_time *= 0.93;
         int f_i;
         SGFLT f_base = 30.0f - (a_time * 25.0f);
         SGFLT f_factor = 1.4f + (a_time * 0.8f);
@@ -23,35 +27,33 @@ void v_rvb_reverb_set(
         self->feedback = a_time - 1.03f;
         v_lfs_set(&self->lfo, 1.0f - (a_time * 0.9f));
 
-        for(f_i = 0; f_i < REVERB_TAP_COUNT; ++f_i)
-        {
+        for(f_i = 0; f_i < REVERB_TAP_COUNT; ++f_i){
             self->taps[f_i].pitch = f_base + (((SGFLT)f_i) * f_factor);
-            v_cmb_set_all(&self->taps[f_i].tap, 0.0f, self->feedback,
-                self->taps[f_i].pitch);
+            v_cmb_set_all(
+                &self->taps[f_i].tap,
+                0.0f,
+                self->feedback,
+                self->taps[f_i].pitch
+            );
         }
 
-        self->time = a_time;
     }
 
-    if(unlikely(a_wet != self->wet))
-    {
+    if(unlikely(a_wet != self->wet)){
         self->wet = a_wet;
         self->wet_linear =  a_wet * (self->volume_factor);
     }
 
-    if(unlikely(a_color != self->color))
-    {
+    if(unlikely(a_color != self->color)){
         self->color = a_color;
         v_svf_set_cutoff_base(&self->lp, a_color);
         v_svf_set_cutoff(&self->lp);
     }
 
-    if(unlikely(self->last_predelay != a_predelay))
-    {
+    if(unlikely(self->last_predelay != a_predelay)){
         self->last_predelay = a_predelay;
         self->predelay_size = (int)(self->sr * a_predelay);
-        if(self->predelay_counter >= self->predelay_size)
-        {
+        if(self->predelay_counter >= self->predelay_size){
             self->predelay_counter = 0;
         }
     }
@@ -91,13 +93,15 @@ void v_rvb_reverb_run(
 
     for(f_i = 0; f_i < REVERB_DIFFUSER_COUNT; ++f_i){
         f_filter = &self->diffusers[f_i].diffuser;
-        v_svf_set_cutoff_base(f_filter,
-            self->diffusers[f_i].pitch + f_lfo_diff);
+        v_svf_set_cutoff_base(
+            f_filter,
+            self->diffusers[f_i].pitch + f_lfo_diff
+        );
         v_svf_set_cutoff(f_filter);
         self->output = v_svf_run_2_pole_allpass(f_filter, self->output);
     }
 
-    self->predelay_buffer[(self->predelay_counter)] = self->output;
+    self->predelay_buffer[self->predelay_counter] = self->output;
     ++self->predelay_counter;
     if(unlikely(self->predelay_counter >= self->predelay_size)){
         self->predelay_counter = 0;
@@ -111,17 +115,14 @@ void v_rvb_panic(t_rvb_reverb * self){
     SGFLT * f_tmp;
     int f_count;
     int f_pre_count = self->sr + 5000;
-    for(f_i = 0; f_i < f_pre_count; ++f_i)
-    {
+    for(f_i = 0; f_i < f_pre_count; ++f_i){
         self->predelay_buffer[f_i] = 0.0f;
     }
 
-    for(f_i = 0; f_i < REVERB_TAP_COUNT; ++f_i)
-    {
+    for(f_i = 0; f_i < REVERB_TAP_COUNT; ++f_i){
         f_tmp = self->taps[f_i].tap.input_buffer;
         f_count = self->taps[f_i].tap.buffer_size;
-        for(f_i2 = 0; f_i2 < f_count; ++f_i2)
-        {
+        for(f_i2 = 0; f_i2 < f_count; ++f_i2){
             f_tmp[f_i2] = 0.0f;
         }
     }
@@ -131,7 +132,8 @@ void g_rvb_reverb_init(t_rvb_reverb * f_result, SGFLT a_sr){
     int f_i;
 
     f_result->color = 1.0f;
-    f_result->time = 0.5f;
+    // Force set it the first time
+    f_result->time = -123.5f;
     f_result->wet = 0.0f;
     f_result->wet_linear = 0.0f;
     f_result->hp_cutoff = -12345.0f;
@@ -157,38 +159,33 @@ void g_rvb_reverb_init(t_rvb_reverb * f_result, SGFLT a_sr){
 
     f_result->volume_factor = (1.0f / (SGFLT)REVERB_DIFFUSER_COUNT) * 0.5;
 
-    f_i = 0;
-
-    while(f_i < REVERB_TAP_COUNT)
-    {
+    for(f_i = 0; f_i < REVERB_TAP_COUNT; ++f_i){
         g_cmb_init(&f_result->taps[f_i].tap, a_sr, 1);
-        ++f_i;
     }
 
-    f_i = 0;
-
-    while(f_i < REVERB_DIFFUSER_COUNT)
-    {
+    for(f_i = 0; f_i < REVERB_DIFFUSER_COUNT; ++f_i){
         g_svf_init(&f_result->diffusers[f_i].diffuser, a_sr);
-        v_svf_set_cutoff_base(&f_result->diffusers[f_i].diffuser,
-            f_result->diffusers[f_i].pitch);
+        v_svf_set_cutoff_base(
+            &f_result->diffusers[f_i].diffuser,
+            f_result->diffusers[f_i].pitch
+        );
         v_svf_set_res(&f_result->diffusers[f_i].diffuser, -6.0f);
         v_svf_set_cutoff(&f_result->diffusers[f_i].diffuser);
-        ++f_i;
     }
 
     f_result->predelay_counter = 0;
     f_result->last_predelay = -1234.0f;
     f_result->predelay_size = (int)(a_sr * 0.01f);
 
-    hpalloc((void**)&f_result->predelay_buffer,
-        sizeof(SGFLT) * (a_sr + 5000));
+    hpalloc(
+        (void**)&f_result->predelay_buffer,
+        sizeof(SGFLT) * (a_sr + 5000)
+    );
 
-    f_i = 0;
-    while(f_i < (a_sr + 5000)){
+    for(f_i = 0; f_i < (a_sr + 5000); ++f_i){
         f_result->predelay_buffer[f_i] = 0.0f;
-        ++f_i;
     }
 
     v_rvb_reverb_set(f_result, 0.5f, 0.0f, 55.5f, 0.01f, 60.0f);
 }
+
