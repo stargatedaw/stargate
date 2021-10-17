@@ -16,24 +16,20 @@ GNU General Public License for more details.
 #include "plugins/compressor.h"
 
 
-void v_sg_comp_cleanup(PluginHandle instance)
-{
+void v_sg_comp_cleanup(PluginHandle instance){
     free(instance);
 }
 
-void v_sg_comp_set_cc_map(PluginHandle instance, char * a_msg)
-{
+void v_sg_comp_set_cc_map(PluginHandle instance, char* a_msg){
     t_sg_comp *plugin = (t_sg_comp *)instance;
     v_generic_cc_map_set(&plugin->cc_map, a_msg);
 }
 
-void v_sg_comp_panic(PluginHandle instance)
-{
+void v_sg_comp_panic(PluginHandle instance){
     //t_sg_comp *plugin = (t_sg_comp*)instance;
 }
 
-void v_sg_comp_on_stop(PluginHandle instance)
-{
+void v_sg_comp_on_stop(PluginHandle instance){
     //t_sg_comp *plugin = (t_sg_comp*)instance;
 }
 
@@ -43,12 +39,10 @@ void v_sg_comp_connect_buffer(
     SGFLT * DataLocation,
     int a_is_sidechain
 ){
-    t_sg_comp *plugin = (t_sg_comp*)instance;
+    t_sg_comp* plugin = (t_sg_comp*)instance;
 
-    if(!a_is_sidechain)
-    {
-        switch(a_index)
-        {
+    if(!a_is_sidechain){
+        switch(a_index){
             case 0:
                 plugin->output0 = DataLocation;
                 break;
@@ -145,14 +139,11 @@ void v_sg_comp_process_midi_event(
             "v_sg_comp_process_midi_event: param out of range"
         );
 
-        plugin_data->midi_event_types[plugin_data->midi_event_count] =
-                EVENT_CONTROLLER;
-        plugin_data->midi_event_ticks[plugin_data->midi_event_count] =
-                a_event->tick;
-        plugin_data->midi_event_ports[plugin_data->midi_event_count] =
-                a_event->param;
-        plugin_data->midi_event_values[plugin_data->midi_event_count] =
-                a_event->value;
+        int c = plugin_data->midi_event_count;
+        plugin_data->midi_event_types[c] = EVENT_CONTROLLER;
+        plugin_data->midi_event_ticks[c] = a_event->tick;
+        plugin_data->midi_event_ports[c] = a_event->param;
+        plugin_data->midi_event_values[c] = a_event->value;
 
         ++plugin_data->midi_event_count;
     }
@@ -271,7 +262,7 @@ void v_sg_comp_run(
 PluginDescriptor *sg_comp_plugin_descriptor(){
     PluginDescriptor *f_result = get_pyfx_descriptor(SG_COMP_COUNT);
 
-    set_pyfx_port(f_result, SG_COMP_THRESHOLD, -240.0f, -360.0f, -60.0f);
+    set_pyfx_port(f_result, SG_COMP_THRESHOLD, -120.0f, -360.0f, -60.0f);
     set_pyfx_port(f_result, SG_COMP_RATIO, 20.0f, 10.0f, 100.0f);
     set_pyfx_port(f_result, SG_COMP_KNEE, 0.0f, 0.0f, 120.0f);
     set_pyfx_port(f_result, SG_COMP_ATTACK, 50.0f, 0.0f, 500.0f);

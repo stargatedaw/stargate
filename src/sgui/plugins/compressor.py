@@ -111,7 +111,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             self.plugin_val_callback,
             -360,
             -60,
-            -240,
+            -120,
             KC_TENTH,
             self.port_dict,
             self.preset_manager,
