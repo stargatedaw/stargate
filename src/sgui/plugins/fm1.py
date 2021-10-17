@@ -1333,6 +1333,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             a_pitch_port=FM1_MAIN_PITCH,
             knob_kwargs=knob_kwargs,
         )
+        knob_kwargs['arc_type'] = ArcType.BIDIRECTIONAL
         self.pan_knob = knob_control(
             f_knob_size,
             _("Pan"),
@@ -1347,6 +1348,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.preset_manager,
             knob_kwargs=knob_kwargs,
         )
+        knob_kwargs.pop('arc_type')
         self.pan_knob.add_to_grid_layout(self.main.layout, 20)
 
         self.hlayout_main.addWidget(self.main.group_box)
