@@ -32,6 +32,7 @@ GNU General Public License for more details.
 #include "audiodsp/modules/oscillator/osc_wavetable.h"
 #include "audiodsp/modules/oscillator/wavetables.h"
 #include "audiodsp/modules/signal_routing/audio_xfade.h"
+#include "audiodsp/modules/signal_routing/panner2.h"
 #include "plugin.h"
 #include "compiler.h"
 
@@ -467,10 +468,11 @@ GNU General Public License for more details.
 #define FM1_MAX_NOTE 370
 #define FM1_MAIN_PITCH 371
 #define FM1_ADSR_LIN_MAIN 372
+#define FM1_MAIN_PAN 373
 
 /* must be 1 + highest value above
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
-#define FM1_COUNT 373
+#define FM1_COUNT 374
 
 #define FM1_POLYPHONY   16
 #define FM1_POLYPHONY_THRESH 12
@@ -482,6 +484,8 @@ typedef struct
     t_smoother_linear fm_macro_smoother[FM1_FM_MACRO_COUNT];
     int reset_wavetables;
     t_svf2_filter aa_filter;
+    t_smoother_linear pan_smoother;
+    t_pn2_panner2 panner;
 }t_fm1_mono_modules;
 
 typedef struct{
@@ -610,6 +614,7 @@ typedef struct {
     PluginData *osc_fm[FM1_OSC_COUNT][FM1_OSC_COUNT];
 
     PluginData *main_vol;
+    PluginData *pan;
 
     PluginData *pfx_delay;
     PluginData *pfx_attack;

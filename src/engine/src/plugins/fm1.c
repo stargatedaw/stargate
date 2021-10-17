@@ -717,6 +717,7 @@ void v_fm1_connect_port(
         case FM1_MAIN_PITCH: plugin->main_pitch = data; break;
 
         case FM1_ADSR_LIN_MAIN: plugin->adsr_lin_main = data; break;
+        case FM1_MAIN_PAN: plugin->pan = data; break;
     }
 }
 
@@ -896,6 +897,12 @@ void v_fm1_process_midi_event(
                 for(f_i2 = 0; f_i2 < FM1_OSC_COUNT; ++f_i2){
                     f_pfx_osc->osc_fm[f_i2] =
                         (*plugin_data->osc_fm[f_i][f_i2]) * 0.005;
+                    // TODO: FM2
+                    // Make this control exponential, will break backwards
+                    // compatibility of old projects and presets
+                    // f_pfx_osc->osc_fm[f_i2] =
+                    //     (*plugin_data->osc_fm[f_i][f_i2]) * 0.0075;
+                    // f_pfx_osc->osc_fm[f_i2] *= f_pfx_osc->osc_fm[f_i2];
                 }
 
                 f_db = (*plugin_data->osc_vol[f_i]);
@@ -1343,10 +1350,22 @@ void v_run_fm1(
             plugin_data->output0[i_iterator],
             plugin_data->output1[i_iterator]
         );
+        v_sml_run(
+            &plugin_data->mono_modules->pan_smoother,
+            (*plugin_data->pan * 0.01f)
+        );
+
+        v_pn2_set(
+            &plugin_data->mono_modules->panner,
+            plugin_data->mono_modules->pan_smoother.last_value,
+            -3.0
+        );
         plugin_data->output0[i_iterator] =
-            plugin_data->mono_modules->aa_filter.output0;
+            plugin_data->mono_modules->aa_filter.output0 *
+            plugin_data->mono_modules->panner.gainL;
         plugin_data->output1[i_iterator] =
-            plugin_data->mono_modules->aa_filter.output1;
+            plugin_data->mono_modules->aa_filter.output1 *
+            plugin_data->mono_modules->panner.gainR;
 
         ++plugin_data->sampleNo;
     }
@@ -1866,6 +1885,7 @@ PluginDescriptor *fm1_plugin_descriptor(){
     set_pyfx_port(f_result, FM1_MAX_NOTE, 120.0f, 0.0f, 120.0f);
     set_pyfx_port(f_result, FM1_MAIN_PITCH, 0.0f, -36.0f, 36.0f);
     set_pyfx_port(f_result, FM1_ADSR_LIN_MAIN, 1.0f, 0.0f, 1.0f);
+    set_pyfx_port(f_result, FM1_MAIN_PAN, 0.0f, -100.0f, 100.0f);
 
     f_port = FM1_FM_MACRO1_OSC1_FM5;
 
@@ -2077,6 +2097,10 @@ t_fm1_mono_modules * v_fm1_mono_init(SGFLT a_sr)
     v_svf2_add_cutoff_mod(&a_mono->aa_filter, 0.0f);
     v_svf2_set_res(&a_mono->aa_filter, -6.0f);
     v_svf2_set_cutoff(&a_mono->aa_filter);
+
+    g_sml_init(&a_mono->pan_smoother, a_sr, 100.0f, -100.0f, 0.1f);
+    a_mono->pan_smoother.last_value = 0.0f;
+    g_pn2_init(&a_mono->panner);
 
     return a_mono;
 }
