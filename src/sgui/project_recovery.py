@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 This file is part of the Stargate project, Copyright Stargate Team
 
@@ -89,56 +87,23 @@ class ProjectRecoveryWidget(QListWidget):
             _("Complete"),
             _(f"Reverted project to {fname}"),
         )
-        exit(0)
-
 
 def project_recover_dialog(a_file):
     f_window = QDialog()
     f_window.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
     f_window.setWindowTitle("Project History")
-    if a_file is None:
-        f_file, f_filter = QFileDialog.getOpenFileName(
-            caption='Open Project',
-            filter=util.PROJECT_FILE_TYPE,
-            directory=DEFAULT_PROJECT_DIR,
-            options=QFileDialog.Option.DontUseNativeDialog,
-        )
-        if f_file is None or not str(f_file):
-            exit(0)
-    else:
-        f_file = a_file
-    f_project_dir = os.path.dirname(str(f_file))
+    f_project_dir = os.path.dirname(str(a_file))
     f_backup_dir = os.path.join(f_project_dir, "backups")
     if not os.listdir(f_backup_dir):
-        f_answer = QMessageBox.question(
+        QMessageBox.warning(
             f_window,
             _("Error"),
             _(
                 "No backups exist for this project, recovery is not "
-                "possible.\nPress 'Yes' to open another project,\n"
-                "'No' to create a new project,\nor 'Cancel' to close Stargate"
+                "possible."
             ),
-            (
-                QMessageBox.StandardButton.Yes
-                |
-                QMessageBox.StandardButton.No
-                |
-                QMessageBox.StandardButton.Cancel
-            ),
-            QMessageBox.StandardButton.Cancel,
         )
-        if (
-            f_answer == QMessageBox.StandardButton.Yes
-            and
-            util.open_project()
-        ) or (
-            f_answer == QMessageBox.StandardButton.No
-            and
-            util.new_project()
-        ):
-            util.run_stargate()
-            exit(0)
-        exit(1)
+        return
     f_layout = QVBoxLayout(f_window)
     f_widget = ProjectRecoveryWidget(
         f_backup_dir,
@@ -157,7 +122,6 @@ def project_recover_dialog(a_file):
     )
     print("showing")
     f_window.exec()
-    return f_window
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -171,16 +135,3 @@ def parse_args():
     )
     return parser.parse_args()
 
-if __name__ == "__main__":
-    def _main():
-        args = parse_args()
-        app = QApplication(sys.argv)
-        theme.setup_globals()
-        qss, _ = theme.open_theme(theme.THEME_FILE)
-        app.setStyleSheet(qss)
-        f_window = project_recover_dialog(
-            args.project_file,
-        )
-        exit(app.exec())
-
-    _main()
