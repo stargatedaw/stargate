@@ -80,7 +80,6 @@ build_depends = ", ".join([
 ])
 
 depends = [
-    "ffmpeg",
     "fftw3",
     "lame",
     "libasound2",
@@ -118,6 +117,7 @@ Description: A holistic audio production solution.
   Everything you need to create music on a computer.
 Build-Depends: {build_depends}
 Depends: {depends}
+Recommends: ffmpeg
 """
 
 postinst = """\
