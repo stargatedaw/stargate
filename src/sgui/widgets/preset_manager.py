@@ -108,14 +108,16 @@ class preset_manager_widget:
             self.commit_presets()
 
     def load_banks(self):
-        if not os.path.exists(self.factory_preset_path):
-            LOG.error(f"Missing factory presets {self.factory_preset_path}")
-            return
-        if not os.path.isfile(self.user_factory_presets):
-            shutil.copy(
-                self.factory_preset_path,
-                self.user_factory_presets,
-            )
+        if os.path.exists(self.factory_preset_path):
+            if not os.path.isfile(self.user_factory_presets):
+                shutil.copy(
+                    self.factory_preset_path,
+                    self.user_factory_presets,
+                )
+        elif not os.path.exists(self.user_factory_presets):
+            LOG.info("No factory presets found, loading empty bank")
+            with open(self.user_factory_presets, 'w') as f:
+                f.write(self.plugin_name)
         self.bank_combobox.clear()
         self.bank_combobox.addItems(
             sorted(
@@ -126,7 +128,8 @@ class preset_manager_widget:
         )
         self.suppress_bank_changes = True
         self.bank_combobox.setCurrentIndex(
-            self.bank_combobox.findText(self.bank_name))
+            self.bank_combobox.findText(self.bank_name),
+        )
         self.suppress_bank_changes = False
 
     def bank_changed(self, a_val=None):

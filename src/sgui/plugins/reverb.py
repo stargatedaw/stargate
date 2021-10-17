@@ -34,7 +34,11 @@ SREVERB_PORT_MAP = {
 }
 
 STYLESHEET = """\
-QWidget#plugin_window{
+QWidget#transparent {
+    background: none;
+}
+
+QWidget#plugin_window {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 0,
         stop: 0 #E1EF87, stop: 0.33 #ADC038,
@@ -46,7 +50,8 @@ QWidget#plugin_window{
     border: none;
 }
 
-QComboBox{
+QComboBox,
+QPushButton {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
@@ -77,22 +82,40 @@ class ReverbPluginUI(AbstractPluginUI):
         self._plugin_name = "SREVERB"
         self.is_instrument = False
 
-        self.preset_manager = None
-
+        self.preset_manager = preset_manager_widget(
+            self.get_plugin_name(),
+        )
         self.main_hlayout = QHBoxLayout()
         left_screws = get_screws()
         self.main_hlayout.addLayout(left_screws)
-        self.main_hlayout.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
         self.layout.addLayout(self.main_hlayout)
 
         f_knob_size = 75
 
-        self.reverb_groupbox_gridlayout = QGridLayout()
-        self.main_hlayout.addLayout(self.reverb_groupbox_gridlayout)
-        self.main_hlayout.addItem(
+        self.main_vlayout = QVBoxLayout()
+        self.main_hlayout.addLayout(self.main_vlayout)
+
+        self.preset_manager.group_box.setObjectName('transparent')
+        self.preset_manager.bank_label.setObjectName('plugin_name_label')
+        self.preset_manager.presets_label.setObjectName('plugin_name_label')
+        self.hlayout0 = QHBoxLayout()
+        self.main_vlayout.addLayout(self.hlayout0)
+
+        self.hlayout0.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
+        self.hlayout0.addWidget(self.preset_manager.group_box)
+        self.reverb_groupbox_gridlayout = QGridLayout()
+        self.main_vlayout.addLayout(self.reverb_groupbox_gridlayout)
+        self.reverb_groupbox_gridlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+            1,
+            0,
+        )
+        self.reverb_groupbox_gridlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+            1,
+            30,
         )
         right_screws = get_screws()
         self.main_hlayout.addLayout(right_screws)

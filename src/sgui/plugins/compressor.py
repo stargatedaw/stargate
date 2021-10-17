@@ -32,6 +32,10 @@ SG_COMP_UI_MSG_ENABLED = 8
 SG_COMP_PORT_MAP = {}
 
 STYLESHEET = """\
+QWidget#transparent {
+    background: none;
+}
+
 QWidget#plugin_window{
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
@@ -88,20 +92,43 @@ class sg_comp_plugin_ui(AbstractPluginUI):
         self._plugin_name = "SG Compressor"
         self.is_instrument = False
 
-        self.preset_manager = None
+        self.preset_manager = preset_manager_widget(
+            self.get_plugin_name(),
+        )
 
         self.main_hlayout = QHBoxLayout()
         left_screws = get_screws()
         self.main_hlayout.addLayout(left_screws)
-        self.main_hlayout.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
         self.layout.addLayout(self.main_hlayout)
 
         f_knob_size = DEFAULT_LARGE_KNOB_SIZE
 
+        self.main_vlayout = QVBoxLayout()
+        self.main_hlayout.addLayout(self.main_vlayout)
+
+        self.preset_manager.group_box.setObjectName('transparent')
+        self.preset_manager.bank_label.setObjectName('plugin_name_label')
+        self.preset_manager.presets_label.setObjectName('plugin_name_label')
+        self.hlayout0 = QHBoxLayout()
+        self.main_vlayout.addLayout(self.hlayout0)
+
+        self.hlayout0.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
+        self.hlayout0.addWidget(self.preset_manager.group_box)
+
         self.groupbox_gridlayout = QGridLayout()
-        self.main_hlayout.addLayout(self.groupbox_gridlayout)
+        self.groupbox_gridlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+            1,
+            0,
+        )
+        self.groupbox_gridlayout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+            1,
+            30,
+        )
+        self.main_vlayout.addLayout(self.groupbox_gridlayout)
 
         self.thresh_knob = knob_control(
             f_knob_size,
@@ -238,9 +265,6 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             False,
             invert=True,
             brush=peak_gradient,
-        )
-        self.main_hlayout.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
         self.main_hlayout.addWidget(self.peak_meter.widget)
         right_screws = get_screws()
