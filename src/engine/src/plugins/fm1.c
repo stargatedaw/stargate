@@ -34,8 +34,8 @@ void v_cleanup_fm1(PluginHandle instance){
     free(instance);
 }
 
-void v_fm1_set_cc_map(PluginHandle instance, char * a_msg){
-    t_fm1 *plugin = (t_fm1 *)instance;
+void v_fm1_set_cc_map(PluginHandle instance, char* a_msg){
+    t_fm1 *plugin = (t_fm1*)instance;
     v_generic_cc_map_set(&plugin->cc_map, a_msg);
 }
 
@@ -65,20 +65,18 @@ void v_fm1_or_prep(PluginHandle instance, SGFLT sample_rate){
     }
 
     plugin->mono_modules->fm_macro_smoother[0].last_value =
-            (*plugin->fm_macro[0] * 0.01f);
+        (*plugin->fm_macro[0] * 0.01f);
 
     plugin->mono_modules->fm_macro_smoother[1].last_value =
-            (*plugin->fm_macro[1] * 0.01f);
+        (*plugin->fm_macro[1] * 0.01f);
 }
 
 void fm1Panic(PluginHandle instance){
     t_fm1 *plugin = (t_fm1 *)instance;
-    int f_i = 0;
-    while(f_i < FM1_POLYPHONY)
-    {
+    int f_i;
+    for(f_i = 0; f_i < FM1_POLYPHONY; ++f_i){
         v_adsr_kill(&plugin->data[f_i].adsr_amp);
         v_adsr_kill(&plugin->data[f_i].adsr_main);
-        ++f_i;
     }
 }
 
@@ -104,13 +102,17 @@ SGFLT fm1_run_voice_osc(void* arg){
 
         if(f_osc->osc_on){
             v_osc_wav_set_unison_pitch(
-                &f_osc->osc_wavtable, f_osc->osc_uni_spread,
-                (a_voice->base_pitch + (*plugin_data->osc_pitch[f_osc_num]) +
-                ((*plugin_data->osc_tune[f_osc_num]) * 0.01f)));
+                &f_osc->osc_wavtable,
+                f_osc->osc_uni_spread,
+                (
+                    a_voice->base_pitch +
+                    (*plugin_data->osc_pitch[f_osc_num]) +
+                    ((*plugin_data->osc_tune[f_osc_num]) * 0.01f)
+                )
+            );
 
             int f_i;
-            for(f_i = 0; f_i < FM1_OSC_COUNT; ++f_i)
-            {
+            for(f_i = 0; f_i < FM1_OSC_COUNT; ++f_i){
                 f_osc->fm_osc_values[f_i] = f_osc->osc_fm[f_i];
             }
 
@@ -155,8 +157,9 @@ SGFLT fm1_run_voice_osc(void* arg){
 
             if(f_osc->adsr_amp_on){
                 v_adsr_run_db(&f_osc->adsr_amp_osc);
-                f_osc->fm_last = f_osc_wav_run_unison(&f_osc->osc_wavtable)
-                    * (f_osc->adsr_amp_osc.output);
+                f_osc->fm_last = f_osc_wav_run_unison(
+                    &f_osc->osc_wavtable
+                ) * f_osc->adsr_amp_osc.output;
             } else {
                 f_osc->fm_last = f_osc_wav_run_unison(&f_osc->osc_wavtable);
             }
@@ -892,7 +895,7 @@ void v_fm1_process_midi_event(
                 int f_i2;
                 for(f_i2 = 0; f_i2 < FM1_OSC_COUNT; ++f_i2){
                     f_pfx_osc->osc_fm[f_i2] =
-                        (*plugin_data->osc_fm[f_i][f_i2]) * 0.005f;
+                        (*plugin_data->osc_fm[f_i][f_i2]) * 0.005;
                 }
 
                 f_db = (*plugin_data->osc_vol[f_i]);
@@ -1051,20 +1054,21 @@ void v_fm1_process_midi_event(
 
             int f_dst;
 
-            for(i_dst = 0; i_dst < f_fm1_voice->active_polyfx_count; ++i_dst)
-            {
+            for(i_dst = 0; i_dst < f_fm1_voice->active_polyfx_count; ++i_dst){
                 f_dst = f_fm1_voice->active_polyfx[i_dst];
                 f_fm1_voice->polyfx_mod_counts[f_dst] = 0;
 
-                for(i_src = 0; i_src < FM1_MODULATOR_COUNT; ++i_src)
-                {
-                    for(i_ctrl = 0; i_ctrl < FM1_CONTROLS_PER_MOD_EFFECT;
-                            ++i_ctrl)
-                    {
-                        if((*plugin_data->polyfx_mod_matrix[
-                            f_fm1_voice->active_polyfx[i_dst]][i_src][i_ctrl])
-                                != 0)
-                        {
+                for(i_src = 0; i_src < FM1_MODULATOR_COUNT; ++i_src){
+                    for(
+                        i_ctrl = 0;
+                        i_ctrl < FM1_CONTROLS_PER_MOD_EFFECT;
+                        ++i_ctrl
+                    ){
+                        if(
+                            (*plugin_data->polyfx_mod_matrix[
+                                f_fm1_voice->active_polyfx[i_dst]
+                            ][i_src][i_ctrl]) != 0
+                        ){
                             f_fm1_voice->polyfx_mod_ctrl_indexes[f_dst][
                                 f_fm1_voice->polyfx_mod_counts[f_dst]] =
                                     i_ctrl;
@@ -1247,17 +1251,13 @@ void v_run_fm1(
                 &plugin_data->midi_queue,
                 i_iterator
             );
-            if(!f_midi_item)
-            {
+            if(!f_midi_item){
                 break;
             }
 
-            if(f_midi_item->type == EVENT_PITCHBEND)
-            {
+            if(f_midi_item->type == EVENT_PITCHBEND){
                 plugin_data->sv_pitch_bend_value = f_midi_item->value;
-            }
-            else if(f_midi_item->type == EVENT_CONTROLLER)
-            {
+            } else if(f_midi_item->type == EVENT_CONTROLLER){
                 v_cc_map_translate(
                     &plugin_data->cc_map,
                     plugin_data->descriptor,
@@ -1271,24 +1271,24 @@ void v_run_fm1(
         }
 
         v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue, i_iterator,
-            plugin_data->port_table);
+            &plugin_data->atm_queue,
+            i_iterator,
+            plugin_data->port_table
+        );
 
         if(plugin_data->mono_modules->reset_wavetables){
             int f_voice = 0;
             int f_osc_type[FM1_OSC_COUNT];
             int f_i = 0;
 
-            while(f_i < FM1_OSC_COUNT){
+            for(f_i = 0; f_i < FM1_OSC_COUNT; ++f_i){
                 f_osc_type[f_i] = (int)(*plugin_data->osc_type[f_i]) - 1;
-                ++f_i;
             }
 
-            while(f_voice < FM1_POLYPHONY){
-                f_i = 0;
+            for(f_voice = 0; f_voice < FM1_POLYPHONY; ++f_voice){
                 pvoice = &plugin_data->data[f_voice];
 
-                while(f_i < FM1_OSC_COUNT){
+                for(f_i = 0; f_i < FM1_OSC_COUNT; ++f_i){
                     if(f_osc_type[f_i] >= 0){
                         v_osc_wav_set_waveform(
                             &pvoice->osc[f_i].osc_wavtable,
@@ -1300,10 +1300,7 @@ void v_run_fm1(
                             ]->length
                         );
                     }
-                    ++f_i;
                 }
-
-                ++f_voice;
             }
 
             plugin_data->mono_modules->reset_wavetables = 0;
@@ -1456,8 +1453,7 @@ void v_run_fm1_voice(
 
     prefetch(&a_voice->multifx_current_sample, 1);
 
-    if(a_voice->adsr_prefx)
-    {
+    if(a_voice->adsr_prefx){
         a_voice->current_sample *= (a_voice->adsr_main.output);
     }
 
@@ -1473,30 +1469,35 @@ void v_run_fm1_voice(
         f_dst = a_voice->active_polyfx[(i_dst)];
         f_pfx_group = &a_voice->effects[f_dst];
 
-        v_mf3_set(&f_pfx_group->multieffect,
+        v_mf3_set(
+            &f_pfx_group->multieffect,
             *(plugin_data->pfx_mod_knob[f_dst][0]),
-                *(plugin_data->pfx_mod_knob[f_dst][1]),
-                *(plugin_data->pfx_mod_knob[f_dst][2]));
+            *(plugin_data->pfx_mod_knob[f_dst][1]),
+            *(plugin_data->pfx_mod_knob[f_dst][2])
+        );
 
         int f_mod_test;
 
-        for(f_mod_test = 0;
+        for(
+            f_mod_test = 0;
             f_mod_test < (a_voice->polyfx_mod_counts[f_dst]);
-            f_mod_test++)
-        {
+            f_mod_test++
+        ){
             v_mf3_mod_single(
                 &f_pfx_group->multieffect,
                 *(a_voice->modulator_outputs[
-                    (a_voice->polyfx_mod_src_index[f_dst][f_mod_test])]),
-                (a_voice->polyfx_mod_matrix_values[f_dst][f_mod_test]),
-                (a_voice->polyfx_mod_ctrl_indexes[f_dst][f_mod_test])
-                );
+                    (a_voice->polyfx_mod_src_index[f_dst][f_mod_test])]
+                ),
+                a_voice->polyfx_mod_matrix_values[f_dst][f_mod_test],
+                a_voice->polyfx_mod_ctrl_indexes[f_dst][f_mod_test]
+            );
         }
 
         f_pfx_group->fx_func_ptr(
             &f_pfx_group->multieffect,
-            (a_voice->multifx_current_sample[0]),
-            (a_voice->multifx_current_sample[1]));
+            a_voice->multifx_current_sample[0],
+            a_voice->multifx_current_sample[1]
+        );
 
         a_voice->multifx_current_sample[0] = f_pfx_group->multieffect.output0;
         a_voice->multifx_current_sample[1] = f_pfx_group->multieffect.output1;
@@ -1505,10 +1506,8 @@ void v_run_fm1_voice(
     a_voice->multifx_current_sample[0] *= a_voice->lfo_amp_output;
     a_voice->multifx_current_sample[1] *= a_voice->lfo_amp_output;
 
-    if(!a_voice->noise_prefx)
-    {
-        if(a_voice->adsr_noise_on)
-        {
+    if(!a_voice->noise_prefx){
+        if(a_voice->adsr_noise_on){
             v_adsr_run(&a_voice->adsr_noise);
             SGFLT f_noise =
                 a_voice->noise_func_ptr(&a_voice->white_noise1) *
@@ -1516,9 +1515,7 @@ void v_run_fm1_voice(
                 a_voice->adsr_main.output;
             out0[(i_voice)] += f_noise;
             out1[(i_voice)] += f_noise;
-        }
-        else
-        {
+        } else {
             SGFLT f_noise =
                 (a_voice->noise_func_ptr(&a_voice->white_noise1) *
                 (a_voice->noise_linamp)) *
@@ -1528,15 +1525,12 @@ void v_run_fm1_voice(
         }
     }
 
-    if(a_voice->adsr_prefx)
-    {
+    if(a_voice->adsr_prefx){
         out0[(i_voice)] += (a_voice->multifx_current_sample[0]) *
             (a_voice->main_vol_lin);
         out1[(i_voice)] += (a_voice->multifx_current_sample[1]) *
             (a_voice->main_vol_lin);
-    }
-    else
-    {
+    } else {
         out0[(i_voice)] += (a_voice->multifx_current_sample[0]) *
             (a_voice->adsr_main.output) * (a_voice->main_vol_lin);
         out1[(i_voice)] += (a_voice->multifx_current_sample[1]) *
@@ -1545,8 +1539,7 @@ void v_run_fm1_voice(
 }
 
 
-SGFLT * f_char_to_wavetable(char * a_char)
-{
+SGFLT* f_char_to_wavetable(char * a_char){
     SGFLT * f_result;
 
     lmalloc((void**)&f_result, sizeof(SGFLT) * 1024);
@@ -1557,8 +1550,7 @@ SGFLT * f_char_to_wavetable(char * a_char)
 
     //int f_count = atoi(f_arr->array[0]);
 
-    while(f_i < 1025)
-    {
+    while(f_i < 1025){
         f_result[f_i - 1] = atof(f_arr->array[f_i]);
         ++f_i;
     }

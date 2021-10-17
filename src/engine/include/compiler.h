@@ -48,6 +48,11 @@
     #define sg_read_audio sf_readf_float
 #endif
 
+struct SamplePair {
+    SGFLT left;
+    SGFLT right;
+};
+
 #ifdef __APPLE__
 
     #include <libkern/OSAtomic.h>
