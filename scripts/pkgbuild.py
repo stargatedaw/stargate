@@ -6,8 +6,8 @@ from jinja2 import Template
 
 
 PKGBUILD = """\
-pkgname={{ NAME }}
-pkgver={{ VERSION }}
+pkgname={{ name }}
+pkgver={{ version }}
 pkgrel=1
 pkgdesc="A DAW, plugins and wave editor"
 arch=('i686' 'x86_64')
@@ -23,11 +23,10 @@ depends=(
     portmidi
     python
     python-jinja
-    python-mido
     python-mutagen
     python-numpy
     python-psutil
-    python-pyyaml
+    python-pyaml
     python-pyqt6
     rubberband
     vorbis-tools
@@ -36,7 +35,6 @@ makedepends=(
     alsa-lib
     fftw
     gcc
-    gcc-c++
     libsndfile
     portaudio
     portmidi
@@ -77,7 +75,6 @@ orig_wd = os.path.abspath(
 )
 
 os.chdir(orig_wd)
-os.system("scripts/src.sh")
 
 with open("src/meta.json") as f:
     j = json.load(f)
@@ -89,7 +86,9 @@ output = t.render(
 	name=MAJOR_VERSION,
 	version=MINOR_VERSION,
 )
-with open('PKBUILD', 'w') as f:
+with open('PKGBUILD', 'w') as f:
 	f.write(output)
 
-os.system('makepkg')
+os.system('scripts/src.sh')
+os.system('makepkg -g >>PKGBUILD')
+os.system('makepkg -s')
