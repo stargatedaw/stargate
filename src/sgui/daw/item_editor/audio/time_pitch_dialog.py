@@ -211,7 +211,6 @@ class TimePitchDialogWidget:
         f_selected_count = 0
 
         f_was_stretching = False
-        f_stretched_items = []
 
         for f_item in shared.AUDIO_SEQ.audio_items:
             if f_item.isSelected():
@@ -251,36 +250,35 @@ class TimePitchDialogWidget:
                 f_item.audio_item.timestretch_amt_end = f_new_ts_end
                 f_item.draw()
                 f_item.clip_at_sequence_end()
-                if (f_new_ts_mode >= 3) or \
-                (f_new_ts_mode == 1 and f_new_ps != f_new_ps_end) or \
-                (f_new_ts_mode == 2 and f_new_ts != f_new_ts_end) and \
-                (f_item.orig_string != str(f_item.audio_item)):
+                if (
+                    f_new_ts_mode >= 3
+                    or
+                    (f_new_ts_mode == 1 and f_new_ps != f_new_ps_end)
+                    or
+                    (f_new_ts_mode == 2 and f_new_ts != f_new_ts_end)
+                    and
+                    f_item.orig_string != str(f_item.audio_item)
+                ):
                     f_was_stretching = True
-                    f_ts_result = constants.PROJECT.timestretch_audio_item(
-                        f_item.audio_item)
-                    if f_ts_result is not None:
-                        f_stretched_items.append(
-                            (f_ts_result, f_item.audio_item))
+                    try:
+                        constants.PROJECT.timestretch_audio_item(
+                            f_item.audio_item,
+                        )
+                    except FileNotFoundError as ex:
+                        QMessageBox.warning(
+                            self.widget,
+                            _("Error"),
+                            str(ex),
+                        )
+                        global_open_audio_items(True)
+                        return
+
                 f_item.draw()
                 f_selected_count += 1
         if f_selected_count == 0:
             QMessageBox.warning(
                 self.widget, _("Error"), _("No items selected"))
         else:
-            if f_was_stretching:
-#                f_current_sequence_length = get_current_sequence_length()
-#                f_global_tempo = float(TRANSPORT.tempo_spinbox.value())
-                constants.PROJECT.save_stretch_dicts()
-                for f_stretch_item, f_audio_item in f_stretched_items:
-                    f_stretch_item[2].wait()
-                    constants.PROJECT.get_wav_uid_by_name(
-                        f_stretch_item[0], a_uid=f_stretch_item[1])
-#                    f_new_uid = constants.PROJECT.get_wav_uid_by_name(
-#                        f_stretch_item[0], a_uid=f_stretch_item[1])
-#                    f_graph = constants.PROJECT.get_sample_graph_by_uid(f_new_uid)
-#                    f_audio_item.clip_at_sequence_end(
-#                        f_current_sequence_length, f_global_tempo,
-#                        f_graph.length_in_seconds)
             item_lib.save_item(shared.CURRENT_ITEM_NAME, shared.CURRENT_ITEM)
             global_open_audio_items(True)
             constants.DAW_PROJECT.commit(_("Update audio items"))

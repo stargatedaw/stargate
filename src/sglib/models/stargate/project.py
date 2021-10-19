@@ -261,7 +261,7 @@ class SgProject(AbstractProject):
                     a_audio_item.timestretch_amt_end
             ):
                 #Don't process if the file is not being stretched/shifted yet
-                return None
+                return
         f_key = (
             a_audio_item.time_stretch_mode,
             a_audio_item.timestretch_amt,
@@ -273,7 +273,7 @@ class SgProject(AbstractProject):
         )
         if f_key in self.timestretch_cache:
             a_audio_item.uid = self.timestretch_cache[f_key]
-            return None
+            return
         else:
             f_wavs_dict = self.get_audio_pool()
             f_uid = f_wavs_dict.next_uid()
@@ -294,8 +294,11 @@ class SgProject(AbstractProject):
                 self.save_audio_pool(f_wavs_dict)
             elif a_audio_item.time_stretch_mode == 2:
                 constants.IPC.rate_env(
-                    f_src_path, f_dest_path, a_audio_item.timestretch_amt,
-                    a_audio_item.timestretch_amt_end)
+                    f_src_path,
+                    f_dest_path,
+                    a_audio_item.timestretch_amt,
+                    a_audio_item.timestretch_amt_end,
+                )
                 f_wavs_dict.add_entry(f_dest_path, uid=f_uid)
                 self.save_audio_pool(f_wavs_dict)
             elif a_audio_item.time_stretch_mode == 3:
@@ -352,7 +355,6 @@ class SgProject(AbstractProject):
 
             self.timestretch_cache[f_key] = f_uid
             self.timestretch_reverse_lookup[f_dest_path] = f_src_path
-            a_audio_item.uid = self.timestretch_cache[f_key]
 
             if f_cmd is not None:
                 LOG.info("Running {}".format(" ".join(f_cmd)))
@@ -370,9 +372,24 @@ class SgProject(AbstractProject):
                     )
                 else:
                     f_proc = subprocess.Popen(f_cmd)
-                return f_dest_path, f_uid, f_proc
-            else:
-                return None
+                stdout, stderr = f_proc.communicate()
+                if not (
+                    f_proc.returncode == 0
+                    and
+                    os.path.exists(f_dest_path)
+                ):
+                    LOG.error(f"{f_cmd} failed with {f_proc.returncode}")
+                    LOG.error(stdout)
+                    LOG.error(stderr)
+                    raise FileNotFoundError(
+                        f"Could not time stretch file, {f_cmd} returned "
+                        f"{f_proc.returncode}"
+                    )
+                a_audio_item.uid = self.timestretch_cache[f_key]
+                self.get_wav_uid_by_name(
+                    f_dest_path,
+                    a_uid=f_uid,
+                )
 
     def timestretch_get_orig_file_uid(self, a_uid):
         """ Return the UID of the original file """

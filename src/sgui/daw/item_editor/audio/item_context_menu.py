@@ -411,21 +411,21 @@ def crisp_menu_triggered(a_action):
     timestretch_items(f_list)
 
 def timestretch_items(a_list):
-    f_stretched_items = []
     for f_item in a_list:
         if f_item.time_stretch_mode >= 3:
-            f_ts_result = constants.PROJECT.timestretch_audio_item(f_item)
-            if f_ts_result is not None:
-                f_stretched_items.append(f_ts_result)
+            try:
+                constants.PROJECT.timestretch_audio_item(f_item)
+            except FileNotFoundError as ex:
+                QMessageBox.warning(
+                    glbl_shared.MAIN_WINDOW.widget,
+                    _("Error"),
+                    str(ex),
+                )
+                global_open_audio_items(True)
+                return
 
     constants.PROJECT.save_stretch_dicts()
 
-    for f_stretch_item in f_stretched_items:
-        f_stretch_item[2].wait()
-        constants.PROJECT.get_wav_uid_by_name(
-            f_stretch_item[0],
-            a_uid=f_stretch_item[1],
-        )
     for f_audio_item in shared.AUDIO_SEQ.get_selected():
         f_new_graph = constants.PROJECT.get_sample_graph_by_uid(
             f_audio_item.audio_item.uid,

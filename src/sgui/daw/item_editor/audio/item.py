@@ -1106,7 +1106,6 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         f_reset_selection = True
         f_did_change = False
         f_was_stretching = False
-        f_stretched_items = []
         f_event_pos = qt_event_pos(a_event).x()
         f_event_diff = f_event_pos - self.event_pos_orig
 
@@ -1189,11 +1188,16 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
                     f_audio_item.orig_string != str(f_item)
                 ):
                     f_was_stretching = True
-                    f_ts_result = constants.PROJECT.timestretch_audio_item(
-                        f_item,
-                    )
-                    if f_ts_result is not None:
-                        f_stretched_items.append(f_ts_result)
+                    try:
+                        constants.PROJECT.timestretch_audio_item(f_item)
+                    except FileNotFoundError as ex:
+                        QMessageBox.warning(
+                            glbl_shared.MAIN_WINDOW.widget,
+                            _("Error"),
+                            str(ex),
+                        )
+                        global_open_audio_items(f_reset_selection)
+                        return
                 f_audio_item.setRect(
                     0.0,
                     0.0,
@@ -1269,33 +1273,6 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
                 # everything to redraw
                 daw_painter_path.clear_caches()
             elif f_was_stretching:
-                for f_stretch_item in f_stretched_items:
-                    dest_path, uid, proc = f_stretch_item
-                    LOG.info(f'Waiting for time stretch file {dest_path}')
-                    stdout, stderr = proc.communicate()
-                    LOG.info(stdout)
-                    if stderr:
-                        LOG.error(stderr)
-                    if (
-                        proc.returncode != 0
-                        or
-                        not os.path.exists(dest_path)
-                    ):
-                        LOG.error(f"Error creating {dest_path}")
-                        QMessageBox.warning(
-                            glbl_shared.MAIN_WINDOW.widget,
-                            _("Error"),
-                            _(
-                                f"Unable to create {dest_path}: {stderr}"
-                            )
-                        )
-                        global_open_audio_items(f_reset_selection)
-                        return
-                    else:
-                        constants.PROJECT.get_wav_uid_by_name(
-                            dest_path,
-                            a_uid=uid,
-                        )
                 constants.PROJECT.save_stretch_dicts()
             item_lib.save_item(
                 shared.CURRENT_ITEM_NAME,
