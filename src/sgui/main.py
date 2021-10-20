@@ -1241,6 +1241,7 @@ def global_new_project(a_project_file, a_wait=True):
     for f_module in shared.HOST_MODULES:
         f_module.global_new_project(a_project_file)
     open_engine(a_project_file, get_fps())
+    open_bookmarks()
 
 def respawn():
     LOG.info("Spawning child UI process")

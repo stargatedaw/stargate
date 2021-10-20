@@ -7,7 +7,6 @@ from sglib import constants
 from sglib.lib import portable
 from sglib.log import LOG
 import os
-import pathlib
 
 BOOKMARKS_FILE = os.path.join(
     constants.CONFIG_DIR,
@@ -20,6 +19,8 @@ def get_file_bookmarks():
             "project user folder": constants.PROJECT.user_folder,
         }
     }
+    if constants.IS_PORTABLE_INSTALL:
+        f_result['system']['portable root'] = constants.PORTABLE_ROOT
     if os.path.isfile(BOOKMARKS_FILE):
         f_text = read_file_text(BOOKMARKS_FILE)
         f_arr = f_text.split("\n")
