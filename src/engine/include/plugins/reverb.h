@@ -21,8 +21,9 @@ GNU General Public License for more details.
 #include "audiodsp/modules/delay/reverb.h"
 #include "audiodsp/modules/filter/svf.h"
 #include "audiodsp/modules/modulation/env_follower.h"
-#include "plugin.h"
+#include "audiodsp/modules/signal_routing/panner2.h"
 #include "compiler.h"
+#include "plugin.h"
 
 #define SREVERB_FIRST_CONTROL_PORT 0
 
@@ -32,21 +33,22 @@ GNU General Public License for more details.
 #define SREVERB_REVERB_DRY 3
 #define SREVERB_REVERB_PRE_DELAY 4
 #define SREVERB_REVERB_HP 5
+#define SREVERB_PAN 6
 
-#define SREVERB_LAST_CONTROL_PORT 5
+#define SREVERB_LAST_CONTROL_PORT 6
 /* must be 1 + highest value above
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
-#define SREVERB_COUNT 6
+#define SREVERB_COUNT 7
 
-typedef struct
-{
+typedef struct {
     t_smoother_linear reverb_smoother;
     t_smoother_linear reverb_dry_smoother;
+    t_smoother_linear pan_smoother;
+    t_pn2_panner2 panner;
     t_rvb_reverb reverb;
-}t_sreverb_mono_modules;
+} t_sreverb_mono_modules;
 
-typedef struct
-{
+typedef struct {
     PluginData *output0;
     PluginData *output1;
 
@@ -56,9 +58,10 @@ typedef struct
     PluginData *reverb_color;
     PluginData *reverb_hp;
     PluginData *reverb_predelay;
+    PluginData *pan;
 
     SGFLT fs;
-    t_sreverb_mono_modules * mono_modules;
+    t_sreverb_mono_modules mono_modules;
 
     int midi_event_types[200];
     int midi_event_ticks[200];
@@ -74,7 +77,7 @@ typedef struct
     PluginDescriptor * descriptor;
 } t_sreverb;
 
-t_sreverb_mono_modules * v_sreverb_mono_init(SGFLT, int);
+void v_sreverb_mono_init(t_sreverb_mono_modules*, SGFLT, int);
 PluginDescriptor *sreverb_plugin_descriptor();
 
 #endif /* SREVERB_PLUGIN_H */

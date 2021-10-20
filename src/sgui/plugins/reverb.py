@@ -24,13 +24,15 @@ SREVERB_REVERB_COLOR = 2
 SREVERB_REVERB_DRY = 3
 SREVERB_REVERB_PRE_DELAY = 4
 SREVERB_REVERB_HP = 5
+SREVERB_PAN = 6
 
 
 SREVERB_PORT_MAP = {
-    "Reverb Wet": SREVERB_REVERB_WET,
-    "Reverb Dry": SREVERB_REVERB_DRY,
-    "Reverb LP": SREVERB_REVERB_COLOR,
-    "Reverb HP": SREVERB_REVERB_HP,
+    "Wet": SREVERB_REVERB_WET,
+    "Dry": SREVERB_REVERB_DRY,
+    "LP": SREVERB_REVERB_COLOR,
+    "HP": SREVERB_REVERB_HP,
+    "Pan": SREVERB_PAN,
 }
 
 STYLESHEET = """\
@@ -243,6 +245,21 @@ class ReverbPluginUI(AbstractPluginUI):
             self.reverb_groupbox_gridlayout,
             21,
         )
+        self.pan_knob = knob_control(
+            f_knob_size,
+            _("Wet Pan"),
+            SREVERB_PAN,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -100,
+            100,
+            0,
+            KC_INTEGER,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
+        self.pan_knob.add_to_grid_layout(self.reverb_groupbox_gridlayout, 24)
 
         self.open_plugin_file()
         self.set_midi_learn(SREVERB_PORT_MAP)
