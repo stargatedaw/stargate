@@ -82,7 +82,8 @@ void v_sreverb_connect_port(
         case SREVERB_REVERB_DRY: plugin->reverb_dry = data; break;
         case SREVERB_REVERB_PRE_DELAY: plugin->reverb_predelay = data; break;
         case SREVERB_REVERB_HP: plugin->reverb_hp = data; break;
-        case SREVERB_PAN: plugin->pan = data; break;
+        case SREVERB_DRY_PAN: plugin->dry_pan = data; break;
+        case SREVERB_WET_PAN: plugin->wet_pan = data; break;
         default: sg_assert(0, "v_sreverb_connect_port: unknown port"); break;
     }
 }
@@ -259,22 +260,33 @@ void v_sreverb_run(
         );
 
         v_sml_run(
-            &mm->pan_smoother,
-            (*plugin_data->pan * 0.01f)
+            &mm->dry_pan_smoother,
+            (*plugin_data->dry_pan * 0.01f)
         );
 
         v_pn2_set(
-            &mm->panner,
-            mm->pan_smoother.last_value,
+            &mm->dry_panner,
+            mm->dry_pan_smoother.last_value,
+            -3.0
+        );
+
+        v_sml_run(
+            &mm->wet_pan_smoother,
+            (*plugin_data->wet_pan * 0.01f)
+        );
+
+        v_pn2_set(
+            &mm->wet_panner,
+            mm->wet_pan_smoother.last_value,
             -3.0
         );
 
         plugin_data->output0[f_i] =
-            (plugin_data->output0[f_i] * f_dry_vol) +
-            (mm->reverb.output[0] * mm->panner.gainL);
+            (plugin_data->output0[f_i] * f_dry_vol * mm->dry_panner.gainL) +
+            (mm->reverb.output[0] * mm->wet_panner.gainL);
         plugin_data->output1[f_i] =
-            (plugin_data->output1[f_i] * f_dry_vol) +
-            (mm->reverb.output[1] * mm->panner.gainR);
+            (plugin_data->output1[f_i] * f_dry_vol * mm->dry_panner.gainR) +
+            (mm->reverb.output[1] * mm->wet_panner.gainR);
     }
 }
 
@@ -287,7 +299,8 @@ PluginDescriptor *sreverb_plugin_descriptor(){
     set_pyfx_port(f_result, SREVERB_REVERB_DRY, 0.0f, -500.0f, 0.0f);
     set_pyfx_port(f_result, SREVERB_REVERB_PRE_DELAY, 10.0f, 0.0f, 1000.0f);
     set_pyfx_port(f_result, SREVERB_REVERB_HP, 50.0f, 20.0f, 96.0f);
-    set_pyfx_port(f_result, SREVERB_PAN, 0.0f, -100.0f, 100.0f);
+    set_pyfx_port(f_result, SREVERB_DRY_PAN, 0.0f, -100.0f, 100.0f);
+    set_pyfx_port(f_result, SREVERB_WET_PAN, 0.0f, -100.0f, 100.0f);
 
 
     f_result->cleanup = v_sreverb_cleanup;
@@ -313,9 +326,13 @@ void v_sreverb_mono_init(
     SGFLT a_sr,
     int a_plugin_uid
 ){
-    g_sml_init(&self->pan_smoother, a_sr, 100.0f, -100.0f, 0.1f);
-    self->pan_smoother.last_value = 0.0f;
-    g_pn2_init(&self->panner);
+    g_sml_init(&self->dry_pan_smoother, a_sr, 100.0f, -100.0f, 0.1f);
+    self->dry_pan_smoother.last_value = 0.0f;
+    g_pn2_init(&self->dry_panner);
+
+    g_sml_init(&self->wet_pan_smoother, a_sr, 100.0f, -100.0f, 0.1f);
+    self->wet_pan_smoother.last_value = 0.0f;
+    g_pn2_init(&self->wet_panner);
 
     g_sml_init(&self->reverb_smoother, a_sr, 100.0f, 0.0f, 0.001f);
     self->reverb_smoother.last_value = 0.0f;

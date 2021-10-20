@@ -24,7 +24,8 @@ SREVERB_REVERB_COLOR = 2
 SREVERB_REVERB_DRY = 3
 SREVERB_REVERB_PRE_DELAY = 4
 SREVERB_REVERB_HP = 5
-SREVERB_PAN = 6
+SREVERB_WET_PAN = 6
+SREVERB_DRY_PAN = 7
 
 
 SREVERB_PORT_MAP = {
@@ -32,7 +33,8 @@ SREVERB_PORT_MAP = {
     "Dry": SREVERB_REVERB_DRY,
     "LP": SREVERB_REVERB_COLOR,
     "HP": SREVERB_REVERB_HP,
-    "Pan": SREVERB_PAN,
+    "Dry Pan": SREVERB_DRY_PAN,
+    "Wet Pan": SREVERB_WET_PAN,
 }
 
 STYLESHEET = """\
@@ -246,10 +248,10 @@ class ReverbPluginUI(AbstractPluginUI):
             21,
         )
         knob_kwargs['arc_type'] = ArcType.BIDIRECTIONAL
-        self.pan_knob = knob_control(
+        self.dry_pan_knob = knob_control(
             f_knob_size,
-            _("Wet Pan"),
-            SREVERB_PAN,
+            _("Dry Pan"),
+            SREVERB_DRY_PAN,
             self.plugin_rel_callback,
             self.plugin_val_callback,
             -100,
@@ -260,8 +262,30 @@ class ReverbPluginUI(AbstractPluginUI):
             self.preset_manager,
             knob_kwargs=knob_kwargs,
         )
+        self.dry_pan_knob.add_to_grid_layout(
+            self.reverb_groupbox_gridlayout,
+            23,
+        )
+        self.wet_pan_knob = knob_control(
+            f_knob_size,
+            _("Wet Pan"),
+            SREVERB_WET_PAN,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -100,
+            100,
+            0,
+            KC_INTEGER,
+            self.port_dict,
+            self.preset_manager,
+            knob_kwargs=knob_kwargs,
+        )
+        self.wet_pan_knob.add_to_grid_layout(
+            self.reverb_groupbox_gridlayout,
+            24,
+        )
+
         knob_kwargs.pop('arc_type')
-        self.pan_knob.add_to_grid_layout(self.reverb_groupbox_gridlayout, 24)
 
         self.open_plugin_file()
         self.set_midi_learn(SREVERB_PORT_MAP)

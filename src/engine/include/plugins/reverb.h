@@ -33,18 +33,21 @@ GNU General Public License for more details.
 #define SREVERB_REVERB_DRY 3
 #define SREVERB_REVERB_PRE_DELAY 4
 #define SREVERB_REVERB_HP 5
-#define SREVERB_PAN 6
+#define SREVERB_WET_PAN 6
+#define SREVERB_DRY_PAN 7
 
-#define SREVERB_LAST_CONTROL_PORT 6
+#define SREVERB_LAST_CONTROL_PORT 7
 /* must be 1 + highest value above
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
-#define SREVERB_COUNT 7
+#define SREVERB_COUNT 8
 
 typedef struct {
     t_smoother_linear reverb_smoother;
     t_smoother_linear reverb_dry_smoother;
-    t_smoother_linear pan_smoother;
-    t_pn2_panner2 panner;
+    t_smoother_linear dry_pan_smoother;
+    t_pn2_panner2 dry_panner;
+    t_smoother_linear wet_pan_smoother;
+    t_pn2_panner2 wet_panner;
     t_rvb_reverb reverb;
 } t_sreverb_mono_modules;
 
@@ -58,7 +61,8 @@ typedef struct {
     PluginData *reverb_color;
     PluginData *reverb_hp;
     PluginData *reverb_predelay;
-    PluginData *pan;
+    PluginData *dry_pan;
+    PluginData *wet_pan;
 
     SGFLT fs;
     t_sreverb_mono_modules mono_modules;
