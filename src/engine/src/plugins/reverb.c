@@ -25,25 +25,21 @@ GNU General Public License for more details.
 #include "plugins/reverb.h"
 
 
-void v_sreverb_cleanup(PluginHandle instance)
-{
+void v_sreverb_cleanup(PluginHandle instance){
     free(instance);
 }
 
-void v_sreverb_set_cc_map(PluginHandle instance, char * a_msg)
-{
+void v_sreverb_set_cc_map(PluginHandle instance, char * a_msg){
     t_sreverb *plugin = (t_sreverb *)instance;
     v_generic_cc_map_set(&plugin->cc_map, a_msg);
 }
 
-void v_sreverb_panic(PluginHandle instance)
-{
+void v_sreverb_panic(PluginHandle instance){
     t_sreverb *plugin = (t_sreverb*)instance;
     v_rvb_panic(&plugin->mono_modules->reverb);
 }
 
-void v_sreverb_on_stop(PluginHandle instance)
-{
+void v_sreverb_on_stop(PluginHandle instance){
     //t_sreverb *plugin = (t_sreverb*)instance;
 }
 
@@ -93,10 +89,13 @@ void v_sreverb_connect_port(
     }
 }
 
-PluginHandle g_sreverb_instantiate(PluginDescriptor * descriptor,
-        int s_rate, fp_get_audio_pool_item_from_host a_host_audio_pool_func,
-        int a_plugin_uid, fp_queue_message a_queue_func)
-{
+PluginHandle g_sreverb_instantiate(
+    PluginDescriptor * descriptor,
+    int s_rate,
+    fp_get_audio_pool_item_from_host a_host_audio_pool_func,
+    int a_plugin_uid,
+    fp_queue_message a_queue_func
+){
     t_sreverb *plugin_data;
     hpalloc((void**)&plugin_data, sizeof(t_sreverb));
 
@@ -108,24 +107,30 @@ PluginHandle g_sreverb_instantiate(PluginDescriptor * descriptor,
     plugin_data->mono_modules = v_sreverb_mono_init(s_rate, a_plugin_uid);
 
     plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data, descriptor);
+        (void**)plugin_data,
+        descriptor
+    );
 
     v_cc_map_init(&plugin_data->cc_map);
 
     return (PluginHandle) plugin_data;
 }
 
-void v_sreverb_load(PluginHandle instance,
-        PluginDescriptor * Descriptor, char * a_file_path)
-{
+void v_sreverb_load(
+    PluginHandle instance,
+    PluginDescriptor * Descriptor,
+    char * a_file_path
+){
     t_sreverb *plugin_data = (t_sreverb*)instance;
     generic_file_loader(instance, Descriptor,
         a_file_path, plugin_data->port_table, &plugin_data->cc_map);
 }
 
-void v_sreverb_set_port_value(PluginHandle Instance,
-        int a_port, SGFLT a_value)
-{
+void v_sreverb_set_port_value(
+    PluginHandle Instance,
+    int a_port,
+    SGFLT a_value
+){
     t_sreverb *plugin_data = (t_sreverb*)Instance;
     plugin_data->port_table[a_port] = a_value;
 }
@@ -155,9 +160,11 @@ void v_sreverb_process_midi_event(
 }
 
 void v_sreverb_run(
-        PluginHandle instance, int sample_count,
-        struct ShdsList * midi_events, struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    struct ShdsList* midi_events,
+    struct ShdsList * atm_events
+){
     t_sreverb *plugin_data = (t_sreverb*)instance;
 
     t_seq_event **events = (t_seq_event**)midi_events->data;
@@ -167,70 +174,88 @@ void v_sreverb_run(
     int midi_event_pos = 0;
     plugin_data->midi_event_count = 0;
 
-    for(f_i = 0; f_i < event_count; ++f_i)
-    {
+    for(f_i = 0; f_i < event_count; ++f_i){
         v_sreverb_process_midi_event(plugin_data, events[f_i]);
     }
 
     v_plugin_event_queue_reset(&plugin_data->atm_queue);
 
     t_seq_event * ev_tmp;
-    for(f_i = 0; f_i < atm_events->len; ++f_i)
-    {
+    for(f_i = 0; f_i < atm_events->len; ++f_i){
         ev_tmp = (t_seq_event*)atm_events->data[f_i];
         v_plugin_event_queue_add(
-            &plugin_data->atm_queue, ev_tmp->type,
-            ev_tmp->tick, ev_tmp->value, ev_tmp->port);
+            &plugin_data->atm_queue,
+            ev_tmp->type,
+            ev_tmp->tick,
+            ev_tmp->value,
+            ev_tmp->port
+        );
     }
 
     SGFLT f_dry_vol;
 
-    for(f_i = 0; f_i < sample_count; ++f_i)
-    {
-        while(midi_event_pos < plugin_data->midi_event_count &&
-                plugin_data->midi_event_ticks[midi_event_pos] == f_i)
-        {
-            if(plugin_data->midi_event_types[midi_event_pos] ==
-                    EVENT_CONTROLLER)
-            {
+    for(f_i = 0; f_i < sample_count; ++f_i){
+        while(
+            midi_event_pos < plugin_data->midi_event_count
+            &&
+            plugin_data->midi_event_ticks[midi_event_pos] == f_i
+        ){
+            if(
+                plugin_data->midi_event_types[midi_event_pos]
+                ==
+                EVENT_CONTROLLER
+            ){
                 v_cc_map_translate(
                     &plugin_data->cc_map, plugin_data->descriptor,
                     plugin_data->port_table,
                     plugin_data->midi_event_ports[midi_event_pos],
-                    plugin_data->midi_event_values[midi_event_pos]);
+                    plugin_data->midi_event_values[midi_event_pos]
+                );
             }
             ++midi_event_pos;
         }
 
         v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue, f_i, plugin_data->port_table);
+            &plugin_data->atm_queue,
+            f_i,
+            plugin_data->port_table
+        );
 
-        v_sml_run(&plugin_data->mono_modules->reverb_smoother,
-            (*plugin_data->reverb_wet) * 0.1f);
+        v_sml_run(
+            &plugin_data->mono_modules->reverb_smoother,
+            (*plugin_data->reverb_wet) * 0.1f
+        );
 
-        v_sml_run(&plugin_data->mono_modules->reverb_dry_smoother,
-            (*plugin_data->reverb_dry) * 0.1f);
+        v_sml_run(
+            &plugin_data->mono_modules->reverb_dry_smoother,
+            (*plugin_data->reverb_dry) * 0.1f
+        );
         f_dry_vol = f_db_to_linear_fast(
-            plugin_data->mono_modules->reverb_dry_smoother.last_value);
+            plugin_data->mono_modules->reverb_dry_smoother.last_value
+        );
 
-        v_rvb_reverb_set(&plugin_data->mono_modules->reverb,
+        v_rvb_reverb_set(
+            &plugin_data->mono_modules->reverb,
             (*plugin_data->reverb_time) * 0.01f,
             f_db_to_linear_fast(
-                plugin_data->mono_modules->reverb_smoother.last_value),
+                plugin_data->mono_modules->reverb_smoother.last_value
+            ),
             (*plugin_data->reverb_color),
             (*plugin_data->reverb_predelay) * 0.001f,
             (*plugin_data->reverb_hp));
 
-        v_rvb_reverb_run(&plugin_data->mono_modules->reverb,
+        v_rvb_reverb_run(
+            &plugin_data->mono_modules->reverb,
             plugin_data->output0[f_i],
-            plugin_data->output1[f_i]);
+            plugin_data->output1[f_i]
+        );
 
         plugin_data->output0[f_i] =
-                (plugin_data->output0[f_i] * f_dry_vol) +
-                plugin_data->mono_modules->reverb.output;
+            (plugin_data->output0[f_i] * f_dry_vol) +
+            plugin_data->mono_modules->reverb.output[0];
         plugin_data->output1[f_i] =
-                (plugin_data->output1[f_i] * f_dry_vol) +
-                plugin_data->mono_modules->reverb.output;
+            (plugin_data->output1[f_i] * f_dry_vol) +
+            plugin_data->mono_modules->reverb.output[1];
     }
 }
 

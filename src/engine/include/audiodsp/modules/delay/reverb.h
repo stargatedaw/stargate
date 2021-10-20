@@ -26,21 +26,18 @@ GNU General Public License for more details.
 #include "audiodsp/modules/oscillator/lfo_simple.h"
 #include "compiler.h"
 
-typedef struct
-{
+typedef struct {
     t_comb_filter tap;
     SGFLT pitch;
 }t_rvb_tap;
 
-typedef struct
-{
+typedef struct {
     t_state_variable_filter diffuser;
     SGFLT pitch;
 }t_rvb_diffuser;
 
-typedef struct
-{
-    SGFLT output;
+typedef struct {
+    SGFLT output[2];
     SGFLT feedback;
     t_lfs_lfo lfo;
     t_state_variable_filter lp;
@@ -48,7 +45,7 @@ typedef struct
     SGFLT wet_linear;
     t_rvb_tap taps[REVERB_TAP_COUNT];
     t_rvb_diffuser diffusers[REVERB_DIFFUSER_COUNT];
-    SGFLT * predelay_buffer;
+    SGFLT* predelay_buffer[2];
     int predelay_counter;
     int predelay_size;
     SGFLT color;
@@ -60,11 +57,10 @@ typedef struct
     SGFLT hp_cutoff;
 } t_rvb_reverb;
 
-t_rvb_reverb * g_rvb_reverb_get(SGFLT);
-void v_rvb_reverb_set(t_rvb_reverb *, SGFLT, SGFLT, SGFLT, SGFLT, SGFLT);
-void v_rvb_reverb_run(t_rvb_reverb *, SGFLT, SGFLT);
-void v_rvb_panic(t_rvb_reverb * self);
-void g_rvb_reverb_init(t_rvb_reverb * f_result, SGFLT a_sr);
+void v_rvb_reverb_set(t_rvb_reverb*, SGFLT, SGFLT, SGFLT, SGFLT, SGFLT);
+void v_rvb_reverb_run(t_rvb_reverb*, SGFLT, SGFLT);
+void v_rvb_panic(t_rvb_reverb* self);
+void g_rvb_reverb_init(t_rvb_reverb* f_result, SGFLT a_sr);
 
 #endif /* REVERB_H */
 
