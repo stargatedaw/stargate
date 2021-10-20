@@ -245,6 +245,7 @@ class ReverbPluginUI(AbstractPluginUI):
             self.reverb_groupbox_gridlayout,
             21,
         )
+        knob_kwargs['arc_type'] = ArcType.BIDIRECTIONAL
         self.pan_knob = knob_control(
             f_knob_size,
             _("Wet Pan"),
@@ -259,6 +260,7 @@ class ReverbPluginUI(AbstractPluginUI):
             self.preset_manager,
             knob_kwargs=knob_kwargs,
         )
+        knob_kwargs.pop('arc_type')
         self.pan_knob.add_to_grid_layout(self.reverb_groupbox_gridlayout, 24)
 
         self.open_plugin_file()
