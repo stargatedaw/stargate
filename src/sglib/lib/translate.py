@@ -20,31 +20,33 @@ import gettext
 import locale
 import os
 
-try:
-    LOCALE, TEXT_ENCODING = locale.getdefaultlocale()
-    LOG.info("locale: {}".format(LOCALE))
-    LOG.info("encoding: {}".format(TEXT_ENCODING))
-    LANGUAGE = gettext.translation(
-        "stargate",
-        os.path.join(SHARE_DIR, "locale"),
-        [LOCALE],
-    )
-    LOG.info("LANGUAGE.info: {}".format(LANGUAGE.info()))
-    LANGUAGE.install()
-    LOG.info("Installed language for {}".format(LOCALE))
-    if not "_" in globals():
-        LOG.info(
-            "'_' not defined by Python gettext module, setting to "
-            "LANGUAGE.gettext",
-        )
-        _ = LANGUAGE.gettext
-except Exception as ex:
-    LOG.warning(
-        f"Could not set locale '{ex}', falling back to English"
-    )
 
-if not "_" in globals():
-    LOG.info(
-        "'_' not defined by Python gettext module, setting to lambda x: x",
-    )
-    _ = lambda x: x
+LOCALE, TEXT_ENCODING = locale.getdefaultlocale()
+# Fixes an issue with the Korean version of Windows 10, probably others
+TEXT_ENCODING = 'UTF-8'
+LANGUAGE = None
+_ = lambda x: x
+
+def _gettext():
+    """ Deprecated.  Probably will not use gettext when I implement translation
+        again, but keeping this just in case
+    """
+    try:
+        global LOCALE, TEXT_ENCODING, _, LANGUAGE
+        LOCALE, TEXT_ENCODING = locale.getdefaultlocale()
+        LOG.info("locale: {}".format(LOCALE))
+        LOG.info("encoding: {}".format(TEXT_ENCODING))
+        LANGUAGE = gettext.translation(
+            "stargate",
+            os.path.join(SHARE_DIR, "locale"),
+            [LOCALE],
+        )
+        LOG.info("LANGUAGE.info: {}".format(LANGUAGE.info()))
+        LANGUAGE.install()
+        LOG.info("Installed language for {}".format(LOCALE))
+        _ = LANGUAGE.gettext
+    except Exception as ex:
+        LOG.warning(
+            f"Could not set locale '{ex}', falling back to English"
+        )
+
