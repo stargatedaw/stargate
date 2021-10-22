@@ -129,6 +129,7 @@ void print_help(){
 }
 
 int _main(int argc, char** argv){
+    printf("Calling engine _main()\n");
     int j;
 
     for(j = 0; j < argc; ++j){
