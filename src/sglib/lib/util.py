@@ -201,10 +201,6 @@ def get_win_drives():
         bitmask >>= 1
     return drives
 
-def run_stargate():
-    f_bin = which(MAJOR_VERSION)
-    subprocess.Popen([f_bin])
-
 def set_bin_path():
     global BIN_PATH
     # Try the local dev version first, if one is running stargate.py from
@@ -360,7 +356,7 @@ def rubberband(
             a_dest_path,
         ]
     LOG.info("Running {}".format(" ".join(f_cmd)))
-    f_proc = subprocess.Popen(f_cmd)
+    f_proc = subprocess.Popen(f_cmd, encoding='UTF-8')
     return f_proc
 
 def sbsms(
@@ -378,7 +374,7 @@ def sbsms(
         str(a_pitch_shift), str(a_pitch_shift)
     ]
     LOG.info("Running {}".format(" ".join(f_cmd)))
-    f_proc = subprocess.Popen(f_cmd)
+    f_proc = subprocess.Popen(f_cmd, encoding='UTF-8')
     return f_proc
 
 def read_file_text(a_file):

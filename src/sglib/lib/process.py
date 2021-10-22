@@ -8,6 +8,7 @@ def run_process(cmd, pidfile=None):
     exe = "SUBPROCESS" if isinstance(cmd, str) else cmd[0]
     kwargs = {
         "bufsize": 1024*1024,
+        'encoding': 'UTF-8',
         "stdout": subprocess.PIPE,
         "stderr": subprocess.PIPE,
         "shell": isinstance(cmd, str),

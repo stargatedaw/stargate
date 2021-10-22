@@ -367,11 +367,15 @@ class SgProject(AbstractProject):
                     LOG.info(env)
                     f_proc = subprocess.Popen(
                         f_cmd,
+                        encoding='UTF-8',
                         env=env,
                         startupinfo=startupinfo,
                     )
                 else:
-                    f_proc = subprocess.Popen(f_cmd)
+                    f_proc = subprocess.Popen(
+                        f_cmd,
+                        encoding='UTF-8',
+                    )
                 stdout, stderr = f_proc.communicate()
                 if not (
                     f_proc.returncode == 0
