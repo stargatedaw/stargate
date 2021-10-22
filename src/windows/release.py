@@ -50,6 +50,8 @@ InstallDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
   !define MUI_STARTMENUPAGE_DEFAULTFOLDER "Stargate DAW"
 
 !include MUI2.nsh
+!include WinVer.nsh
+!include x64.nsh
 
 ;--------------------------------
 ;Modern UI Configuration
@@ -75,6 +77,17 @@ InstallDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
 ;--------------------------------
 ;Languages
   !insertmacro MUI_LANGUAGE "English"
+
+Function .onInit
+  ${{IfNot}} ${{AtLeastWin10}}
+    MessageBox MB_OK "Windows 10 or later required, 64 bit only"
+    Quit
+  ${{EndIf}}
+  ${{IfNot}} ${{RunningX64}}
+    MessageBox MB_OK "64 bit Windows 10 or later required, 32 bit is not supported"
+    Quit
+  ${{EndIf}}
+FunctionEnd
 
 ;Section
 ;    UserInfo::getAccountType
