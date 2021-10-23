@@ -13,7 +13,7 @@
 
 void v_daw_configure(const char* a_key, const char* a_value){
     t_daw * self = DAW;
-    printf("v_daw_configure:  key: \"%s\", value: \"%s\"\n", a_key, a_value);
+    log_info("v_daw_configure:  key: \"%s\", value: \"%s\"\n", a_key, a_value);
 
     if(!strcmp(a_key, DN_CONFIGURE_KEY_PER_FILE_FX)){
         t_1d_char_array * f_arr = c_split_str(
@@ -302,7 +302,7 @@ void v_daw_configure(const char* a_key, const char* a_value){
     }
     else
     {
-        printf("Unknown configure message key: %s, value %s\n", a_key, a_value);
+        log_info("Unknown configure message key: %s, value %s\n", a_key, a_value);
     }
 }
 

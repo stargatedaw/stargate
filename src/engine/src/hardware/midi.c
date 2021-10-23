@@ -25,13 +25,12 @@ NO_OPTIMIZATION void open_midi_devices(
         );
 
         if(f_device_result == 0){
-            printf(
+            log_info(
                 "Initialized MIDI device '%s'\n",
                 f_midi_device_name
             );
         } else if(f_device_result == 1){
-            fprintf(
-                stderr,
+            log_error(
                 "Did not find MIDI device '%s'\n",
                 f_midi_device_name
             );
@@ -42,8 +41,7 @@ NO_OPTIMIZATION void open_midi_devices(
             system(f_cmd_buffer);
             continue;*/
         } else if(f_device_result == 2){
-            fprintf(
-                stderr,
+            log_error(
                 "Could not open MIDI device '%s'\n",
                 f_midi_device_name
             );
@@ -101,7 +99,7 @@ NO_OPTIMIZATION int midiDeviceInit(
             return 1;
         }
 
-        printf("Opening MIDI device ID: %i\n", self->f_device_id);
+        log_info("Opening MIDI device ID: %i\n", self->f_device_id);
         self->f_midi_err = Pm_OpenInput(
             &self->f_midi_stream, self->f_device_id, NULL,
             MIDI_EVENT_BUFFER_SIZE, NULL, NULL);
@@ -139,10 +137,7 @@ void midiReceive(
 
     if(self->midiEventReadIndex == self->midiEventWriteIndex + 1)
     {
-        fprintf(
-            stderr,
-            "WARNING: MIDI event buffer overflow, ignoring incoming event\n"
-        );
+        log_warn("MIDI event buffer overflow, ignoring incoming event\n");
         return;
     }
 
@@ -156,7 +151,7 @@ void midiReceive(
                 &self->midiEventBuffer[self->midiEventWriteIndex],
                 channel, f_pb_val);
             ++self->midiEventWriteIndex;
-            //printf("MIDI PITCHBEND status %i ch %i, value %i\n",
+            //log_info("MIDI PITCHBEND status %i ch %i, value %i\n",
             //      status, channel+1, f_pb_val);
         }
             break;
@@ -165,7 +160,7 @@ void midiReceive(
                 &self->midiEventBuffer[self->midiEventWriteIndex],
                 channel, control, value);
             ++self->midiEventWriteIndex;
-            /*printf("MIDI NOTE_OFF status %i (ch %i, opcode %i), ctrl %i, "
+            /*log_info("MIDI NOTE_OFF status %i (ch %i, opcode %i), ctrl %i, "
                     "val %i\n", status, channel+1, (status & 255)>>4, control,
                     value);*/
             break;
@@ -183,7 +178,7 @@ void midiReceive(
                     channel, control, value);
             }
             ++self->midiEventWriteIndex;
-            /*printf("MIDI NOTE_ON status %i (ch %i, opcode %i), ctrl %i, "
+            /*log_info("MIDI NOTE_ON status %i (ch %i, opcode %i), ctrl %i, "
                     "val %i\n", status, channel+1, (status & 255)>>4, control,
                     value);*/
             break;
@@ -193,7 +188,7 @@ void midiReceive(
                 &self->midiEventBuffer[self->midiEventWriteIndex],
                 channel, control, value);
             ++self->midiEventWriteIndex;
-            /*printf("MIDI CC status %i (ch %i, opcode %i), ctrl %i, "
+            /*log_info("MIDI CC status %i (ch %i, opcode %i), ctrl %i, "
                     "val %i\n", status, channel+1, (status & 255)>>4, control,
                     value);*/
             break;
@@ -230,7 +225,7 @@ void midiPoll(t_midi_device * self){
     f_poll_result = Pm_Poll(self->f_midi_stream);
     if(f_poll_result < 0)
     {
-        printf("Portmidi error %s\n", Pm_GetErrorText(f_poll_result));
+        log_info("Portmidi error %s\n", Pm_GetErrorText(f_poll_result));
     }
     else if(f_poll_result > 0)
     {
@@ -239,7 +234,7 @@ void midiPoll(t_midi_device * self){
 
         if (numEvents < 0)
         {
-            printf("PortMidi error: %s\n", Pm_GetErrorText((PmError)numEvents));
+            log_info("PortMidi error: %s\n", Pm_GetErrorText((PmError)numEvents));
         }
         else if(numEvents > 0)
         {
@@ -276,7 +271,7 @@ void midiPoll(t_midi_device * self){
                     {
                         f_bInSysex = 0;
                         //f_cReceiveMsg_index = 0;
-                        printf("Buggy MIDI device: SysEx interrupted!\n");
+                        log_info("Buggy MIDI device: SysEx interrupted!\n");
                         goto reprocessMessage;    // Don't lose the new message
                     }
 
@@ -302,7 +297,7 @@ void midiPoll(t_midi_device * self){
                     if (data == MIDI_EOX)
                     {
                         f_bInSysex = 0;
-                        printf("Dropping MIDI message in if "
+                        log_info("Dropping MIDI message in if "
                                 "(data == MIDI_EOX)\n");
                         //const char* buffer =
                                 //reinterpret_cast<const char*>(m_cReceiveMsg);

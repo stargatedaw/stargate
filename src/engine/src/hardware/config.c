@@ -22,7 +22,7 @@ NO_OPTIMIZATION char* default_device_file_path(){
 
     char * f_home = get_home_dir();
 
-    printf("using home folder: %s\n", f_home);
+    log_info("using home folder: %s\n", f_home);
 
     char * path_list[4] = {
         f_home, STARGATE_VERSION, "config", "device.txt"
@@ -57,10 +57,10 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
     char * f_value_char = (char*)malloc(sizeof(char) * TINY_STRING);
 
     if(!i_file_exists(config_path)){
-        printf("%s does not exist\n", config_path);
+        log_info("%s does not exist\n", config_path);
         return NULL;
     }
-    printf("%s exists, loading\n", config_path);
+    log_info("%s exists, loading\n", config_path);
 
     t_2d_char_array * f_current_string = g_get_2d_array_from_file(
         config_path,
@@ -90,13 +90,13 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
             strncpy(result->device_name, f_value_char, 255);
         } else if(!strcmp(f_key_char, "inputName")){
             strncpy(result->input_name, f_value_char, 255);
-            printf("input name: %s\n", result->input_name);
+            log_info("input name: %s\n", result->input_name);
         } else if(!strcmp(f_key_char, "bufferSize")){
             result->frame_count = atoi(f_value_char);
-            printf("bufferSize: %i\n", result->frame_count);
+            log_info("bufferSize: %i\n", result->frame_count);
         } else if(!strcmp(f_key_char, "audioEngine")){
             int f_engine = atoi(f_value_char);
-            printf("audioEngine: %i\n", f_engine);
+            log_info("audioEngine: %i\n", f_engine);
             if(f_engine == 4 || f_engine == 5 || f_engine == 7){
                 NO_HARDWARE = 1;
             } else {
@@ -104,7 +104,7 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
             }
         } else if(!strcmp(f_key_char, "sampleRate")){
             result->sample_rate = atof(f_value_char);
-            printf("sampleRate: %i\n", (int)result->sample_rate);
+            log_info("sampleRate: %i\n", (int)result->sample_rate);
         } else if(!strcmp(f_key_char, "threads")){
             result->thread_count = atoi(f_value_char);
             if(result->thread_count > 8){
@@ -112,15 +112,15 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
             } else if(result->thread_count < 0){
                 result->thread_count = 0;
             }
-            printf("threads: %i\n", result->thread_count);
+            log_info("threads: %i\n", result->thread_count);
         } else if(!strcmp(f_key_char, "threadAffinity")){
             result->thread_affinity = atoi(f_value_char);
             THREAD_AFFINITY = result->thread_affinity;
-            printf("threadAffinity: %i\n", result->thread_affinity);
+            log_info("threadAffinity: %i\n", result->thread_affinity);
         } else if(!strcmp(f_key_char, "performance")){
             result->performance = atoi(f_value_char);
 
-            printf("performance: %i\n", result->performance);
+            log_info("performance: %i\n", result->performance);
         } else if(!strcmp(f_key_char, "midiInDevice")){
             snprintf(
                 result->midi_in_device_names[result->midi_in_device_count],
@@ -131,7 +131,7 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
             result->midi_in_device_count++;
         } else if(!strcmp(f_key_char, "audioInputs")){
             result->audio_input_count = atoi(f_value_char);
-            printf("audioInputs: %s\n", f_value_char);
+            log_info("audioInputs: %s\n", f_value_char);
             sg_assert(
                 result->audio_input_count >= 0
                 &&
@@ -145,13 +145,13 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
                 f_value_char
             );
             if(f_line->count != 3){
-                printf(
+                log_info(
                     "audioOutputs: invalid value: '%s'\n",
                     f_value_char
                 );
                 return NULL;
             }
-            printf("audioOutputs: %s\n", f_value_char);
+            log_info("audioOutputs: %s\n", f_value_char);
 
             result->audio_output_count = atoi(f_line->str_arr[0]);
             sg_assert(
@@ -178,9 +178,8 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
 
             v_free_split_line(f_line);
         } else {
-            fprintf(
-                stderr,
-                "WARNING: Unknown key|value pair: %s|%s\n",
+            log_warn(
+                "Unknown key|value pair: %s|%s\n",
                 f_key_char,
                 f_value_char
             );

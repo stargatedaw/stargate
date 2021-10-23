@@ -51,7 +51,7 @@ void v_daw_offline_render(
     daw_set_sequence(self, sequence_uid);
     v_daw_set_playback_mode(self, PLAYBACK_MODE_PLAY, a_start_beat, 0);
 
-    printf("\nOpening SNDFILE with sample rate %i\n", (int)f_sample_rate);
+    log_info("\nOpening SNDFILE with sample rate %i\n", (int)f_sample_rate);
 
     SF_INFO f_sf_info;
     f_sf_info.channels = 2;
@@ -69,7 +69,7 @@ void v_daw_offline_render(
                 f_tps[f_i]
             );
             f_stems[f_i] = sf_open(f_file, SFM_WRITE, &f_sf_info);
-            printf("Successfully opened %s\n", f_file);
+            log_info("Successfully opened %s\n", f_file);
         }
 
         snprintf(f_file, 2048, "%s%s0.wav", a_file_out, REAL_PATH_SEP);
@@ -78,7 +78,7 @@ void v_daw_offline_render(
     }
 
     f_sndfile = sf_open(f_file, SFM_WRITE, &f_sf_info);
-    printf("\nSuccessfully opened SNDFILE\n\n");
+    log_info("\nSuccessfully opened SNDFILE\n\n");
 
 #ifdef __linux__
     struct timespec f_start, f_finish;
@@ -137,12 +137,12 @@ void v_daw_offline_render(
         "v_daw_offline_render", f_start, f_finish);
     SGFLT f_realtime = f_sample_count / f_sample_rate;
 
-    printf("Realtime: %f\n", f_realtime);
+    log_info("Realtime: %f\n", f_realtime);
 
     if(f_elapsed > 0.0f){
-        printf("Ratio:  %f : 1\n\n", f_realtime / f_elapsed);
+        log_info("Ratio:  %f : 1\n\n", f_realtime / f_elapsed);
     } else {
-        printf("Ratio:  infinity : 1");
+        log_info("Ratio:  infinity : 1");
     }
 
 #endif
@@ -181,7 +181,7 @@ void v_daw_offline_render(
 }
 
 void v_daw_offline_render_prep(t_daw * self){
-    printf("Warming up plugins for offline rendering...\n");
+    log_info("Warming up plugins for offline rendering...\n");
     int f_i;
     int f_i2;
     t_pytrack * f_track;
@@ -200,6 +200,6 @@ void v_daw_offline_render_prep(t_daw * self){
             }
         }
     }
-    printf("Finished warming up plugins\n");
+    log_info("Finished warming up plugins\n");
 }
 

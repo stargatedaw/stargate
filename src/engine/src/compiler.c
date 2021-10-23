@@ -84,7 +84,7 @@ void v_pre_fault_thread_stack(int stacksize){
 
 void sg_print_stack_trace(){
 #ifdef _WIN32
-    fprintf(stderr, "Unable to print stack trace on Windows\n");
+    log_error("Unable to print stack trace on Windows\n");
 #else
     void* callstack[128];
     int frames;
@@ -96,9 +96,9 @@ void sg_print_stack_trace(){
 
 static void _sg_assert_failed(char* msg){
     if(msg){
-        fprintf(stderr, "Assertion failed: %s\n", msg);
+        log_error("Assertion failed: %s\n", msg);
     } else {
-        fprintf(stderr, "Assertion failed: no message provided");
+        log_error("Assertion failed: no message provided");
     }
     sg_print_stack_trace();
     abort();

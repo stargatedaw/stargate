@@ -54,8 +54,7 @@ int i_audio_pool_item_load(
     file = sf_open(a_audio_pool_item->path, SFM_READ, &info);
 
     if (!file){
-        fprintf(
-            stderr,
+        log_error(
             "Unable to load sample file '%s'\n",
             a_audio_pool_item->path
         );
@@ -204,7 +203,7 @@ void v_audio_pool_remove_item(
     int a_uid
 ){
     if(USE_HUGEPAGES){
-        printf("Using hugepages, not freeing audio_pool uid %i\n", a_uid);
+        log_info("Using hugepages, not freeing audio_pool uid %i\n", a_uid);
         return;
     }
 
@@ -216,7 +215,7 @@ void v_audio_pool_remove_item(
             SGFLT * f_data = f_item->samples[f_i];
             if(f_data){
                 free(f_data);
-                printf("free'd %f MB\n",
+                log_info("free'd %f MB\n",
                     ((SGFLT)f_item->length / (1024. * 1024.)) * 4.0);
                 f_item->samples[f_i] = NULL;
             }
@@ -246,7 +245,7 @@ t_audio_pool_item * v_audio_pool_add_item(
             ++f_pos;
         }
 
-        printf(
+        log_info(
             "v_audio_pool_add_item:  '%s' '%s'\n",
             a_audio_pool->samples_folder,
             f_file_path
@@ -350,7 +349,7 @@ void v_audio_pool_add_items(
             SGFLT volume = atof(f_arr->current_str);
             volume = f_db_to_linear(volume);
             v_iterate_2d_char_array_to_next_line(f_arr);
-            printf("Audio Pool: Loading file '%s'\n", f_arr->current_str);
+            log_info("Audio Pool: Loading file '%s'\n", f_arr->current_str);
             v_audio_pool_add_item(
                 a_audio_pool,
                 f_uid,
@@ -368,8 +367,7 @@ t_audio_pool_item * g_audio_pool_get_item_by_uid(
     if(a_audio_pool->items[a_uid].uid == a_uid){
         if(!a_audio_pool->items[a_uid].is_loaded){
             if(!i_audio_pool_item_load(&a_audio_pool->items[a_uid], 1)){
-                fprintf(
-                    stderr,
+                log_error(
                     "g_audio_pool_get_item_by_uid: Failed to load file "
                     "for %i\n",
                     a_uid
@@ -379,8 +377,7 @@ t_audio_pool_item * g_audio_pool_get_item_by_uid(
         }
         return &a_audio_pool->items[a_uid];
     } else {
-        fprintf(
-            stderr,
+        log_error(
             "g_audio_pool_get_item_by_uid: Couldn't find uid %i\n",
             a_uid
         );

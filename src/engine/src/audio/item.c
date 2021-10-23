@@ -116,13 +116,11 @@ t_audio_item * g_audio_item_load_single(
         );
 
         if(!f_result->audio_pool_item){
-            printf("####################\n\n");
-            printf(
-                "ERROR:  g_audio_item_load_single failed for uid %i, "
-                "not found\n\n",
+            log_error(
+                "g_audio_item_load_single failed for uid %i, "
+                "not found\n",
                 f_result->uid
             );
-            printf("####################\n\n");
             return 0;
         }
     }
@@ -234,7 +232,7 @@ t_audio_item * g_audio_item_load_single(
     f_result->sidechain[2] = atoi(f_current_string->current_str);
 
     if(f_result->sample_start_offset < AUDIO_ITEM_PADDING_DIV2){
-        printf(
+        log_info(
             "f_result->sample_start_offset <= AUDIO_ITEM_PADDING_DIV2"
             " %i %i\n",
             f_result->sample_start_offset,
@@ -244,7 +242,7 @@ t_audio_item * g_audio_item_load_single(
     }
 
     if(f_result->sample_end_offset < AUDIO_ITEM_PADDING_DIV2){
-        printf(
+        log_info(
             "f_result->sample_end_offset <= AUDIO_ITEM_PADDING_DIV2"
             " %i %i\n",
             f_result->sample_end_offset,
@@ -254,7 +252,7 @@ t_audio_item * g_audio_item_load_single(
     }
 
     if(f_result->sample_start_offset > f_result->audio_pool_item->length){
-        printf(
+        log_info(
             "f_result->sample_start_offset >= "
             "f_result->audio_pool_item->length %i %i\n",
             f_result->sample_start_offset,
@@ -264,7 +262,7 @@ t_audio_item * g_audio_item_load_single(
     }
 
     if(f_result->sample_end_offset > f_result->audio_pool_item->length){
-        printf(
+        log_info(
             "f_result->sample_end_offset >= f_result->audio_pool_item->length"
             " %i %i\n",
             f_result->sample_end_offset,
@@ -299,7 +297,7 @@ t_audio_item * g_audio_item_load_single(
     if(f_result->sample_fade_in_end < max_linear){
         f_result->is_linear_fade_in = 1;
     } else {
-        printf("Non-linear fade in\n");
+        log_info("Non-linear fade in\n");
         f_result->is_linear_fade_in = 0;
     }
 
@@ -325,7 +323,7 @@ t_audio_item * g_audio_item_load_single(
     if(f_fade_diff < max_linear){
         f_result->is_linear_fade_out = 1;
     } else {
-        printf("Non-linear fade out\n");
+        log_info("Non-linear fade out\n");
         f_result->is_linear_fade_out = 0;
     }
 

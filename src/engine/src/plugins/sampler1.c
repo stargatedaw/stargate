@@ -1179,7 +1179,7 @@ void v_sampler1_process_midi_event(
                                 calculate_ratio_none;
                             break;
                         default:
-                            printf("Error, invalid interpolation mode %i\n",
+                            log_info("Error, invalid interpolation mode %i\n",
                                 ((int)(*f_sample->sample_interpolation_mode)));
                     }
                 }
@@ -1587,7 +1587,7 @@ void v_sampler1_configure(PluginHandle instance, char *key,
     }
     else
     {
-        printf("ERROR: Sampler1 unrecognized configure key %s\n", key);
+        log_info("ERROR: Sampler1 unrecognized configure key %s\n", key);
     }
 }
 

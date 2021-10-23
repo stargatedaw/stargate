@@ -66,7 +66,7 @@ void v_write_to_file(char * a_file, char * a_string){
     int i = strtol(mode, 0, 8);
 
     if(chmod(a_file,i) < 0){
-        fprintf(stderr, "Error chmod'ing file %s.\n", a_file);
+        log_error("Error chmod'ing file %s.\n", a_file);
     }
 }
 
@@ -157,7 +157,7 @@ void get_file_setting(
 
     path_join(f_path, 4, path_list);
 
-    printf("get_file_setting:  %s \n", f_path);
+    log_info("get_file_setting:  %s \n", f_path);
 
     if(i_file_exists(f_path))
     {
@@ -172,9 +172,9 @@ void get_file_setting(
 void delete_file(char* path){
     int retcode = remove(path);
     if(retcode == 0){
-        printf("Deleted file '%s'\n", path);
+        log_info("Deleted file '%s'\n", path);
     } else {
-        printf(
+        log_info(
             "Failed to delete file '%s'. remove() returned %i\n",
             path,
             retcode

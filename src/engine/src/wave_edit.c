@@ -139,7 +139,7 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
 
     v_we_set_playback_mode(self, PLAYBACK_MODE_PLAY, 0);
 
-    printf("\nOpening SNDFILE with sample rate %f\n", f_sample_rate);
+    log_info("\nOpening SNDFILE with sample rate %f\n", f_sample_rate);
 
     SF_INFO f_sf_info;
     f_sf_info.channels = 2;
@@ -148,7 +148,7 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
 
     SNDFILE * f_sndfile = sf_open(a_file_out, SFM_WRITE, &f_sf_info);
 
-    printf("\nSuccessfully opened SNDFILE\n\n");
+    log_info("\nSuccessfully opened SNDFILE\n\n");
 
 #ifdef __linux__
     struct timespec f_start, f_finish;
@@ -189,7 +189,7 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
     clock_gettime(CLOCK_REALTIME, &f_finish);
 
     v_print_benchmark("v_offline_render ", f_start, f_finish);
-    printf("f_size = %ld\n", f_size);
+    log_info("f_size = %ld\n", f_size);
 
 #endif
 
@@ -237,7 +237,7 @@ void v_set_we_file(t_wave_edit * self, const char * a_uid)
     }
     else
     {
-        printf("i_audio_pool_item_load failed in v_set_we_file\n");
+        log_info("i_audio_pool_item_load failed in v_set_we_file\n");
     }
 }
 
@@ -497,7 +497,7 @@ void v_we_update_audio_inputs(){
 }
 
 void v_we_configure(const char* a_key, const char* a_value){
-    printf("v_we_configure:  key: \"%s\", value: \"%s\"\n", a_key, a_value);
+    log_info("v_we_configure:  key: \"%s\", value: \"%s\"\n", a_key, a_value);
 
     if(!strcmp(a_key, WN_CONFIGURE_KEY_LOAD_AB_OPEN))
     {
@@ -543,13 +543,13 @@ void v_we_configure(const char* a_key, const char* a_value){
     }
     else
     {
-        printf("Unknown configure message key: %s, value %s\n", a_key, a_value);
+        log_info("Unknown configure message key: %s, value %s\n", a_key, a_value);
     }
 }
 
 void v_we_test()
 {
-    printf("Begin Wave-Next test\n");
+    log_info("Begin Wave-Next test\n");
 
     STARGATE->sample_count = 512;
 
@@ -584,7 +584,7 @@ void v_we_test()
 
     v_we_set_playback_mode(wave_edit, PLAYBACK_MODE_OFF, 0);
 
-    printf("End Wave-Next test\n");
+    log_info("End Wave-Next test\n");
 }
 
 

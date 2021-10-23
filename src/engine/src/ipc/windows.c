@@ -28,16 +28,15 @@ static struct SocketData SOCKET_DATA;
 void ipc_init(){
     WSADATA wsa;
 
-    printf("Initializing Winsock...\n");
+    log_info("Initializing Winsock...\n");
     if(WSAStartup(MAKEWORD(2,2), &wsa) != 0){
-        fprintf(
-            stderr,
+        log_error(
             "Failed to initialize winsock. Error Code : %d\n",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
     }
-    printf("Initialised winsock.\n");
+    log_info("Initialised winsock.\n");
 
     SOCKET_DATA.slen=sizeof(SOCKET_DATA.si_other);
     if(
@@ -47,8 +46,7 @@ void ipc_init(){
             IPPROTO_UDP
         )) == SOCKET_ERROR
     ){
-        fprintf(
-            stderr,
+        log_error(
             "socket() failed with error code : %d\n" ,
             WSAGetLastError()
         );
@@ -87,8 +85,7 @@ void ipc_client_send(char* message){
             SOCKET_DATA.slen
         ) == SOCKET_ERROR
     ){
-        fprintf(
-            stderr,
+        log_error(
             "ipc_client_send: sendto() failed with error code : %d\n",
             WSAGetLastError()
         );
@@ -106,17 +103,12 @@ void ipc_client_send(char* message){
         &SOCKET_DATA.tv
     );
     if(n == 0){
-        fprintf(
-            stderr,
-            "WARNING: ipc_client_send select() returned 0, "
-            "UI did not respond\n"
-        );
+        log_warn("ipc_client_send select() returned 0, UI did not respond\n");
         return;
     }
     if(n == -1){
-        fprintf(
-            stderr,
-            "WARNING: ipc_client_send select() returned -1, %i\n",
+        log_warn(
+            "ipc_client_send select() returned -1, %i\n",
             WSAGetLastError()
         );
         return;
@@ -131,8 +123,7 @@ void ipc_client_send(char* message){
             &SOCKET_DATA.slen
         ) == SOCKET_ERROR
     ){
-        fprintf(
-            stderr,
+        log_error(
             "ipc_client_send: recvfrom() failed with error code : %d\n",
             WSAGetLastError()
         );
@@ -162,14 +153,13 @@ void* ipc_server_thread(void* _arg){
     slen = sizeof(si_other) ;
 
     if((s = socket(AF_INET , SOCK_DGRAM , 0 )) == INVALID_SOCKET){
-        fprintf(
-            stderr,
+        log_error(
             "ipc_server_thread: Could not create socket : %d\n",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
     }
-    printf("ipc_server_thread: Socket created.\n");
+    log_info("ipc_server_thread: Socket created.\n");
 
     // Prepare the sockaddr_in structure
     server.sin_family = AF_INET;
@@ -190,8 +180,7 @@ void* ipc_server_thread(void* _arg){
         optsize
     );
     if(err){
-        fprintf(
-            stderr,
+        log_error(
             "ipc_server_thread: Unable to set recvbuf size, %i\n",
             WSAGetLastError()
         );
@@ -205,13 +194,12 @@ void* ipc_server_thread(void* _arg){
         &optsize
     );
     if(err){
-        fprintf(
-            stderr,
+        log_error(
             "ipc_server_thread: Unable to get recvbuf size, %i\n",
             WSAGetLastError()
         );
     } else {
-        printf(
+        log_info(
             "ipc_server_thread: recv buffer size: %i\n",
             bufsize
         );
@@ -226,13 +214,12 @@ void* ipc_server_thread(void* _arg){
         &optsize
     );
     if(err){
-        fprintf(
-            stderr,
+        log_error(
             "ipc_server_thread: Unable to get max_msg_size, %i\n",
             WSAGetLastError()
         );
     } else {
-        printf(
+        log_info(
             "ipc_server_thread: max_msg_size: %i\n",
             max_msg_size
         );
@@ -245,14 +232,13 @@ void* ipc_server_thread(void* _arg){
             sizeof(server)
         ) == SOCKET_ERROR
     ){
-        fprintf(
-            stderr,
+        log_error(
             "ipc_server_thread: Bind failed with error code : %d\n",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
     }
-    printf("UDP server bind finished\n");
+    log_info("UDP server bind finished\n");
 
     while(!exiting){
         memset(buffer,'\0', IPC_MAX_MESSAGE_SIZE);
@@ -263,8 +249,7 @@ void* ipc_server_thread(void* _arg){
         if(n == 0){  // timeout
             continue;
         } else if(n == -1){  // error
-            fprintf(
-                stderr,
+            log_error(
                 "ipc_server_thread: select() returned -1, %i\n",
                 WSAGetLastError()
             );
@@ -281,8 +266,7 @@ void* ipc_server_thread(void* _arg){
                 &slen
             )) == SOCKET_ERROR
         ){
-            fprintf(
-                stderr,
+            log_error(
                 "ipc_server_thread: recvfrom() failed with error code : %d\n",
                 WSAGetLastError()
             );
@@ -299,8 +283,7 @@ void* ipc_server_thread(void* _arg){
                 slen
             ) == SOCKET_ERROR
         ){
-            fprintf(
-                stderr,
+            log_error(
                 "ipc_server_thread: sendto() failed with error code : %d\n",
                 WSAGetLastError()
             );

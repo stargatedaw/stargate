@@ -271,7 +271,7 @@ void v_update_audio_inputs(char * a_project_folder){
         pthread_mutex_unlock(&STARGATE->audio_inputs_mutex);
         g_free_2d_char_array(f_2d_array);
     } else {
-        printf("%s not found, setting default values\n", f_inputs_file);
+        log_info("%s not found, setting default values\n", f_inputs_file);
         pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
         int f_i;
         for(f_i = 0; f_i < AUDIO_INPUT_TRACK_COUNT; ++f_i){
@@ -313,7 +313,7 @@ void * v_audio_recording_thread(void* a_arg){
 
         if(STARGATE->audio_recording_quit_notifier){
             pthread_mutex_unlock(&STARGATE->audio_inputs_mutex);
-            printf("audio recording thread exiting...\n");
+            log_info("audio recording thread exiting...\n");
             break;
         }
 
@@ -330,7 +330,7 @@ void * v_audio_recording_thread(void* a_arg){
                         "v_audio_recording_thread: channel mismatch"
                     );
 
-                    printf(
+                    log_info(
                         "Flushing record buffer of "
                         "%i frames, %i channels for input %i\n",
                         f_frames,
@@ -344,7 +344,7 @@ void * v_audio_recording_thread(void* a_arg){
                         f_frames
                     );
 
-                    printf("sg_write_audio returned %i\n", f_count);
+                    log_info("sg_write_audio returned %i\n", f_count);
 
                     f_ai->flush_last_buffer_pending = 0;
                     f_ai->buffer_iterator[f_ai->buffer_to_flush] = 0;
@@ -369,7 +369,7 @@ void v_stop_record_audio(){
     char f_file_name_new[2048];
 
     pthread_mutex_lock(&STARGATE->exit_mutex);
-    printf("Stopping recording, shutdown is inhibited.\n");
+    log_info("Stopping recording, shutdown is inhibited.\n");
     pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
 
     for(f_i = 0; f_i < AUDIO_INPUT_TRACK_COUNT; ++f_i){
@@ -390,7 +390,7 @@ void v_stop_record_audio(){
                     )
                 );
 
-                printf("sg_write_audio returned %i\n", f_count);
+                log_info("sg_write_audio returned %i\n", f_count);
             }
 
             sf_close(f_ai->sndfile);
@@ -421,7 +421,7 @@ void v_stop_record_audio(){
 
     pthread_mutex_unlock(&STARGATE->audio_inputs_mutex);
     pthread_mutex_unlock(&STARGATE->exit_mutex);
-    printf("Finished stopping recording, shutdown is no longer inhibited.\n");
+    log_info("Finished stopping recording, shutdown is no longer inhibited.\n");
 }
 
 void v_prepare_to_record_audio(){

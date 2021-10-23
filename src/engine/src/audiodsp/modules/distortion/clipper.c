@@ -17,7 +17,7 @@ void v_clp_set_clip_sym(t_clipper * a_clp, SGFLT a_db){
     SGFLT f_value = f_db_to_linear_fast(a_db);
 
 #ifdef CLP_DEBUG_MODE
-        printf("Clipper value == %f", f_value);
+        log_info("Clipper value == %f", f_value);
 #endif
 
     a_clp->clip_high = f_value;

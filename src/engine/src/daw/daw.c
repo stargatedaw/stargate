@@ -95,7 +95,7 @@ void g_daw_seq_pool_load(t_daw* self){
 }
 
 void v_daw_open_project(int a_first_load){
-    printf("Setting DAW project folders\n");
+    log_info("Setting DAW project folders\n");
     sprintf(DAW->project_folder, "%s%sprojects%sdaw",
         STARGATE->project_folder, PATH_SEP, PATH_SEP);
     sprintf(DAW->item_folder, "%s%sitems%s",
@@ -109,7 +109,7 @@ void v_daw_open_project(int a_first_load){
 
     int f_i;
 
-    printf("Clearing item pool\n");
+    log_info("Clearing item pool\n");
     for(f_i = 0; f_i < DN_MAX_ITEM_COUNT; ++f_i)
     {
         if(DAW->item_pool[f_i]){
@@ -118,25 +118,25 @@ void v_daw_open_project(int a_first_load){
         }
     }
 
-    printf("Opening tracks\n");
+    log_info("Opening tracks\n");
     v_daw_open_tracks();
 
-    printf("Loading sequence pool\n");
+    log_info("Loading sequence pool\n");
     g_daw_seq_pool_load(DAW);
 
-    printf("Loading song\n");
+    log_info("Loading song\n");
     g_daw_song_get(DAW, 0);
 
-    printf("Updating track routing\n");
+    log_info("Updating track routing\n");
     v_daw_update_track_send(DAW, 0);
 
     v_daw_set_is_soloed(DAW);
 
-    printf("Setting up MIDI devices\n");
+    log_info("Setting up MIDI devices\n");
     v_daw_set_midi_devices();
 
     if(!a_first_load){
-        printf("Updating audio inputs\n");
+        log_info("Updating audio inputs\n");
         v_daw_update_audio_inputs();
     }
 
@@ -415,8 +415,7 @@ void v_daw_audio_items_run(
                 } else {
                     // TODO:  Catch this during load and
                     // do something then...
-                    fprintf(
-                        stderr,
+                    log_error(
                         "invalid number of channels %i\n",
                         f_audio_item->audio_pool_item->channels
                     );

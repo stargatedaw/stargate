@@ -23,6 +23,8 @@
     #endif
 #endif
 
+#include "log.h"
+
 #ifndef SG_THREAD_LOCAL
     #define SG_THREAD_LOCAL
 #endif

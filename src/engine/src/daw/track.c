@@ -305,14 +305,14 @@ void v_daw_wait_for_bus(t_pytrack * a_track){
         }
 
         if(f_i == 100000000){
-            printf(
+            log_info(
                 "Detected deadlock waiting for bus %i\n",
                 a_track->track_num
             );
         }
 
         if(a_track->bus_counter < 0){
-            printf(
+            log_info(
                 "Bus %i had bus_counter < 0: %i\n",
                 a_track->track_num,
                 a_track->bus_counter

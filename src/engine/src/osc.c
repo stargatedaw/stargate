@@ -43,7 +43,7 @@ void* v_osc_send_thread(void* a_arg){
         usleep(UI_SEND_USLEEP);
     }
 
-    printf("osc send thread exiting\n");
+    log_info("osc send thread exiting\n");
 
     return (void*)1;
 }
@@ -60,7 +60,7 @@ void v_queue_osc_message(
     char * a_val
 ){
     if(STARGATE->osc_queue_index >= OSC_SEND_QUEUE_SIZE){
-        printf(
+        log_info(
             "Dropping OSC event to prevent buffer overrun:\n%s|%s\n\n",
             a_key,
             a_val

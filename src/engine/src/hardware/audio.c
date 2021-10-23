@@ -16,11 +16,10 @@ NO_OPTIMIZATION int open_audio_device(
     PaStreamParameters outputParameters = (PaStreamParameters){};
     PaStream* stream = NULL;
     PaError err;
-    printf("Opening audio device\n");
+    log_info("Opening audio device\n");
     err = Pa_Initialize();
     if(err != paNoError){
-        fprintf(
-            stderr,
+        log_error(
             "Pa_Initialize error:  %s\n",
             Pa_GetErrorText(err)
         );
@@ -29,8 +28,7 @@ NO_OPTIMIZATION int open_audio_device(
     /* default input device */
     int f_api_count = Pa_GetHostApiCount();
     if(f_api_count <= 0){
-        fprintf(
-            stderr,
+        log_error(
             "Pa_GetHostApiCount error:  %s\n",
             Pa_GetErrorText(f_api_count)
         );
@@ -53,8 +51,8 @@ NO_OPTIMIZATION int open_audio_device(
             break;
         }
     }
-    printf("host api: %s\n", config->host_api_name);
-    printf("host api index %i\n", f_host_api_index);
+    log_info("host api: %s\n", config->host_api_name);
+    log_info("host api index %i\n", f_host_api_index);
 
     inputParameters.channelCount = config->audio_input_count;
     inputParameters.sampleFormat = PA_SAMPLE_TYPE;
@@ -68,7 +66,7 @@ NO_OPTIMIZATION int open_audio_device(
     for(f_i = 0; f_i < Pa_GetDeviceCount(); ++f_i){
         const PaDeviceInfo* f_padevice = Pa_GetDeviceInfo(f_i);
         const PaHostApiInfo* host_api = Pa_GetHostApiInfo(f_padevice->hostApi);
-        printf(
+        log_info(
             "device: '%s' host api: '%s' output channels: %i\n",
             f_padevice->name,
             host_api->name,
@@ -80,8 +78,7 @@ NO_OPTIMIZATION int open_audio_device(
             f_host_api_index == f_padevice->hostApi
         ){
             if(!f_padevice->maxOutputChannels){
-                fprintf(
-                    stderr,
+                log_error(
                     "PaDevice->maxOutputChannels == 0, "
                     "device may already be open by another application\n"
                 );
@@ -96,7 +93,7 @@ NO_OPTIMIZATION int open_audio_device(
     }
 
     if(!f_found_index){
-        fprintf(stderr, "'%s' not found\n", config->device_name);
+        log_error("'%s' not found\n", config->device_name);
         return RET_CODE_DEVICE_NOT_FOUND;
     }
 
@@ -127,7 +124,7 @@ NO_OPTIMIZATION int open_audio_device(
         }
 
         if(!f_found_index){
-            fprintf(stderr, "Device not found\n");
+            log_error("Device not found\n");
             return RET_CODE_DEVICE_NOT_FOUND;
         }
 
@@ -159,8 +156,7 @@ NO_OPTIMIZATION int open_audio_device(
         );
 
         if(err != paNoError){
-            fprintf(
-                stderr,
+            log_error(
                 "Error while opening audio device: %s",
                 Pa_GetErrorText(err)
             );
@@ -170,8 +166,7 @@ NO_OPTIMIZATION int open_audio_device(
 
     err = Pa_StartStream(stream);
     if(err != paNoError){
-        fprintf(
-            stderr,
+        log_error(
             "'%s' while starting device.  Please "
             "re-configure your device and try starting Stargate again.\n",
             Pa_GetErrorText(err)
@@ -179,16 +174,15 @@ NO_OPTIMIZATION int open_audio_device(
         return RET_CODE_AUDIO_DEVICE_ERROR;
     }
     const PaStreamInfo * f_stream_info = Pa_GetStreamInfo(stream);
-    printf(
+    log_info(
         "Actual output latency: %fs, %fms, %i samples\n",
         f_stream_info->outputLatency,
         f_stream_info->outputLatency * 1000.0,
         (int)(f_stream_info->outputLatency * f_stream_info->sampleRate)
     );
     if((int)f_stream_info->sampleRate != (int)config->sample_rate){
-        fprintf(
-            stderr,
-            "WARNING: Samplerate reported by the device (%f)  does not "
+        log_warn(
+            "Samplerate reported by the device (%f)  does not "
             "match the selected sample rate %f.\n",
             f_stream_info->sampleRate,
             config->sample_rate
@@ -200,12 +194,11 @@ NO_OPTIMIZATION int open_audio_device(
 }
 
 NO_OPTIMIZATION void close_audio_device(){
-    printf("Closing audio device\n");
+    log_info("Closing audio device\n");
     PaError err;
     err = Pa_CloseStream(PA_STREAM);
     if(err != paNoError){
-        fprintf(
-            stderr,
+        log_error(
             "Pa_CloseStream error:  %s\n",
             Pa_GetErrorText(err)
         );
@@ -217,17 +210,15 @@ NO_OPTIMIZATION void close_audio_device(){
         if(err < 1)
         {
             if(err == 0)
-                printf("Pa_IsStreamStopped returned 0\n");
+                log_info("Pa_IsStreamStopped returned 0\n");
             if(err < 0)
-                fprintf(
-                    stderr,
+                log_error(
                     "Pa_IsStreamStopped error:  %s\n",
                     Pa_GetErrorText(err)
                 );
             err = Pa_AbortStream(PA_STREAM);
             if(err != paNoError)
-                fprintf(
-                    stderr,
+                log_error(
                     "Pa_AbortStream error:  %s\n",
                     Pa_GetErrorText(err)
                 );
@@ -235,8 +226,7 @@ NO_OPTIMIZATION void close_audio_device(){
     }
     err = Pa_Terminate();
     if(err != paNoError){
-        fprintf(
-            stderr,
+        log_error(
             "Pa_Terminate error:  %s\n",
             Pa_GetErrorText(err)
         );

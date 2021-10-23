@@ -26,9 +26,8 @@ void v_daw_set_midi_devices(){
     );
 
     if(!i_file_exists(f_path)){
-        fprintf(
-            stderr,
-            "WARNING: Did not find MIDI device config file '%s', not "
+        log_warn(
+            "Did not find MIDI device config file '%s', not "
             "loading MIDI devices\n",
             f_path
         );
@@ -63,9 +62,8 @@ void v_daw_set_midi_devices(){
             }
         }
         if(!found_device){
-            fprintf(
-                stderr,
-                "WARNING, did not find MIDI device '%s' in %i devices\n",
+            log_warn(
+                "Did not find MIDI device '%s' in %i devices\n",
                 f_current_string->current_str,
                 STARGATE->midi_devices->count
             );

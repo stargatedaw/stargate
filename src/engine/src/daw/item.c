@@ -159,8 +159,7 @@ void g_daw_item_get(t_daw* self, int a_uid){
                     ++f_i2;
                 }
             } else {
-                fprintf(
-                    stderr,
+                log_error(
                     "per-audio-item-fx %i does not correspond to "
                     "an audio item, skipping.\n",
                     f_index
@@ -179,8 +178,7 @@ void g_daw_item_get(t_daw* self, int a_uid){
         }
         else
         {
-            fprintf(
-                stderr,
+            log_error(
                 "g_daw_item_get: Invalid event type %c\n",
                 f_type
             );

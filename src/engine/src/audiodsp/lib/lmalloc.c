@@ -51,12 +51,12 @@ int alloc_hugepage_data()
         MAP_POPULATE | MAP_HUGETLB, -1, 0);
     if(f_data->start == MAP_FAILED)
     {
-        printf("Attempt to allocate hugepages failed, falling back to "
+        log_info("Attempt to allocate hugepages failed, falling back to "
             "normal pages\n");
         USE_HUGEPAGES = 0;
         return 0;
     }
-    printf("Successfully allocated 100MB of hugepages\n");
+    log_info("Successfully allocated 100MB of hugepages\n");
     ++HUGE_PAGE_DATA_COUNT;
     f_data->pos = hugepage_align(f_data->start, HUGEPAGE_MIN_ALIGN);
     f_data->end = f_data->start + HUGEPAGE_ALLOC_SIZE;
