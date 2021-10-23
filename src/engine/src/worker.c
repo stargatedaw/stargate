@@ -1,10 +1,4 @@
-//Required for sched.h
-#ifndef __USE_GNU
-    #define __USE_GNU
-#endif
-
 #include <pthread.h>
-#include <sched.h>
 
 #include "audio/item.h"
 #include "audio/audio_pool.h"
@@ -152,24 +146,12 @@ void v_init_worker_threads(
     pthread_attr_t threadAttr;
     pthread_attr_init(&threadAttr);
 
-#ifdef __linux__
-    struct sched_param param;
-    param.__sched_priority = (int)(
-        (float)sched_get_priority_max(RT_SCHED) * 0.9
-    );
-    printf(
-        " Attempting to set .__sched_priority = %i\n",
-        param.__sched_priority
-    );
-    pthread_attr_setschedparam(&threadAttr, &param);
-#endif
 
     pthread_attr_setstacksize(&threadAttr, f_stack_size);
     pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_DETACHED);
+#ifndef __linux__
     pthread_attr_setschedpolicy(&threadAttr, RT_SCHED);
-
-    //pthread_t f_self = pthread_self();
-    //pthread_setschedparam(f_self, RT_SCHED, &param);
+#endif
 
     int f_cpu_core = 0;
     int f_i;
@@ -216,30 +198,6 @@ void v_init_worker_threads(
             f_cpu_core += f_cpu_core_inc;
         }
 
-        struct sched_param param2;
-        int f_applied_policy = 0;
-        pthread_getschedparam(
-            STARGATE->worker_threads[f_i],
-            &f_applied_policy,
-            &param2
-        );
-
-        if(f_applied_policy == RT_SCHED){
-            printf(
-                "Scheduling %i successfully applied with priority %i\n ",
-                RT_SCHED,
-                param2.__sched_priority
-            );
-        } else {
-            fprintf(
-                stderr,
-                "WARNING: Scheduling %i was not successfully "
-                "applied: %i, %i\n",
-                RT_SCHED,
-                f_applied_policy,
-                param2.__sched_priority
-            );
-        }
 #endif
     }
 

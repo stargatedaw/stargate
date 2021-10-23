@@ -12,15 +12,15 @@
 
 
 #include <pthread.h>
-#include <sched.h>
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef __linux__
     #include <sys/resource.h>
-#endif
-
-#ifndef RT_SCHED
-    #define RT_SCHED SCHED_FIFO
+#else
+    #include <sched.h>
+    #ifndef RT_SCHED
+        #define RT_SCHED SCHED_FIFO
+    #endif
 #endif
 
 #ifndef SG_THREAD_LOCAL

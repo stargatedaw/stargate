@@ -51,27 +51,15 @@ NO_OPTIMIZATION void v_self_set_thread_affinity(){
 
 #ifdef __linux__
     pthread_attr_t threadAttr;
-    struct sched_param param;
-    param.__sched_priority = (int)(
-        (float)sched_get_priority_max(RT_SCHED) * 0.9
-    );
-    printf(
-        " Attempting to set pthread_self to .__sched_priority = %i\n",
-        param.__sched_priority
-    );
     pthread_attr_init(&threadAttr);
-    pthread_attr_setschedparam(&threadAttr, &param);
     pthread_attr_setstacksize(&threadAttr, 1024 * 1024);
     pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_DETACHED);
-    pthread_attr_setschedpolicy(&threadAttr, RT_SCHED);
 
     pthread_t f_self = pthread_self();
-    pthread_setschedparam(f_self, RT_SCHED, &param);
     cpu_set_t cpuset;
     CPU_ZERO(&cpuset);
     CPU_SET(0, &cpuset);
     pthread_setaffinity_np(f_self, sizeof(cpu_set_t), &cpuset);
-
     pthread_attr_destroy(&threadAttr);
 #endif
 }

@@ -326,10 +326,6 @@ NO_OPTIMIZATION void start_osc_thread(){
         pthread_attr_t f_ui_threadAttr;
         pthread_attr_init(&f_ui_threadAttr);
 
-        struct sched_param param;
-        param.__sched_priority = 1; //90;
-        pthread_attr_setschedparam(&f_ui_threadAttr, &param);
-
         pthread_attr_setstacksize(&f_ui_threadAttr, 1000000); //8388608);
         pthread_attr_setdetachstate(&f_ui_threadAttr, PTHREAD_CREATE_DETACHED);
 
@@ -385,17 +381,8 @@ NO_OPTIMIZATION void start_osc_thread(){
 
 
 NO_OPTIMIZATION void set_thread_params(){
+#ifndef __linux__
     printf("Setting thread params\n");
- #ifdef __linux__
-    if(setpriority(PRIO_PROCESS, 0, -18))
-    {
-        printf(
-            "Unable to renice process (this was to be expected if "
-            "the process is not running as root)\n"
-        );
-    }
-#endif
-
     int f_current_proc_sched = sched_getscheduler(0);
 
     if(f_current_proc_sched == RT_SCHED){
@@ -414,6 +401,7 @@ NO_OPTIMIZATION void set_thread_params(){
         sched_setscheduler(0, RT_SCHED, &f_proc_param);
         printf("Process scheduler is now %i\n\n", sched_getscheduler(0));
     }
+#endif
 }
 
 NO_OPTIMIZATION void alloc_output_buffers(){
