@@ -342,6 +342,7 @@ NO_OPTIMIZATION void start_osc_thread(){
 #endif
 
 NO_OPTIMIZATION void sigsegv_handler(int sig){
+    fprintf(stderr, "Engine received SIGSEGV\n");
     sg_print_stack_trace();
     exit(SIGSEGV);
 }
