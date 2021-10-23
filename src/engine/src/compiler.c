@@ -93,12 +93,8 @@ void v_pre_fault_thread_stack(int stacksize){
 #endif
 }
 
-static void _sg_assert_failed(char* msg){
-    if(msg){
-        fprintf(stderr, "Assertion failed: %s\n", msg);
-    } else {
-        fprintf(stderr, "Assertion failed: no message provided");
-    }
+
+void sg_print_stack_trace(){
 #ifndef _WIN32
     void* callstack[128];
     int frames;
@@ -106,6 +102,15 @@ static void _sg_assert_failed(char* msg){
     frames = backtrace(callstack, 128);
     backtrace_symbols_fd(callstack + 2, frames - 2, STDERR_FILENO);
 #endif
+}
+
+static void _sg_assert_failed(char* msg){
+    if(msg){
+        fprintf(stderr, "Assertion failed: %s\n", msg);
+    } else {
+        fprintf(stderr, "Assertion failed: no message provided");
+    }
+    sg_print_stack_trace();
     abort();
 }
 

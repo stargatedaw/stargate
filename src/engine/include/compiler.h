@@ -125,4 +125,5 @@ typedef struct {
     char padding2[CACHE_LINE_SIZE];
 } t_sg_thread_storage;
 
+void sg_print_stack_trace();
 #endif

@@ -130,6 +130,9 @@ void print_help(){
 
 int _main(int argc, char** argv){
     printf("Calling engine _main()\n");
+#if defined(__linux__)
+    setup_signal_handling();
+#endif
     int j;
 
     for(j = 0; j < argc; ++j){
@@ -195,7 +198,6 @@ int _main(int argc, char** argv){
 
     set_thread_params();
 #if defined(__linux__)
-    setup_signal_handling();
     start_ui_thread(ui_pid);
 #endif
     start_osc_thread();
@@ -346,6 +348,11 @@ NO_OPTIMIZATION void start_osc_thread(){
 #endif
 
 #if defined(__linux__)
+    NO_OPTIMIZATION void sigsegv_handler(int sig){
+        sg_print_stack_trace();
+        exit(SIGSEGV);
+    }
+
     NO_OPTIMIZATION void setup_signal_handling(){
         printf("Setting up signal handling\n");
         setsid();
@@ -363,6 +370,7 @@ NO_OPTIMIZATION void start_osc_thread(){
         signal(SIGTERM, signalHandler);
         signal(SIGHUP, signalHandler);
         signal(SIGQUIT, signalHandler);
+        signal(SIGSEGV, sigsegv_handler);
         pthread_sigmask(SIG_UNBLOCK, &_signals, 0);
     }
 
