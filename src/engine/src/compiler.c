@@ -83,7 +83,9 @@ void v_pre_fault_thread_stack(int stacksize){
 
 
 void sg_print_stack_trace(){
-#ifndef _WIN32
+#ifdef _WIN32
+    fprintf(stderr, "Unable to print stack trace on Windows\n");
+#else
     void* callstack[128];
     int frames;
 

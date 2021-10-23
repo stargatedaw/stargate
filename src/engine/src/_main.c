@@ -49,7 +49,7 @@ GNU General Public License for more details.
     #include "hardware/midi.h"
 #endif
 
-#if defined(__linux__)
+#ifdef __linux__
     sigset_t _signals;
 #endif
 
@@ -130,9 +130,7 @@ void print_help(){
 
 int _main(int argc, char** argv){
     printf("Calling engine _main()\n");
-#if defined(__linux__)
     setup_signal_handling();
-#endif
     int j;
 
     for(j = 0; j < argc; ++j){
@@ -343,41 +341,45 @@ NO_OPTIMIZATION void start_osc_thread(){
     }
 #endif
 
-#if defined(__linux__)
-    NO_OPTIMIZATION void sigsegv_handler(int sig){
-        sg_print_stack_trace();
-        exit(SIGSEGV);
-    }
+NO_OPTIMIZATION void sigsegv_handler(int sig){
+    sg_print_stack_trace();
+    exit(SIGSEGV);
+}
 
-    NO_OPTIMIZATION void setup_signal_handling(){
-        printf("Setting up signal handling\n");
-        setsid();
-        sigemptyset (&_signals);
-        sigaddset(&_signals, SIGHUP);
-        sigaddset(&_signals, SIGINT);
-        sigaddset(&_signals, SIGQUIT);
-        sigaddset(&_signals, SIGPIPE);
-        sigaddset(&_signals, SIGTERM);
-        sigaddset(&_signals, SIGUSR1);
-        sigaddset(&_signals, SIGUSR2);
-        pthread_sigmask(SIG_BLOCK, &_signals, 0);
-
-        signal(SIGINT, signalHandler);
-        signal(SIGTERM, signalHandler);
-        signal(SIGHUP, signalHandler);
-        signal(SIGQUIT, signalHandler);
-        signal(SIGSEGV, sigsegv_handler);
-        pthread_sigmask(SIG_UNBLOCK, &_signals, 0);
-    }
-
-    NO_OPTIMIZATION void destruct_signal_handling(){
-        printf("Destroying signal handling\n");
-        sigemptyset(&_signals);
-        sigaddset(&_signals, SIGHUP);
-        pthread_sigmask(SIG_BLOCK, &_signals, 0);
-        kill(0, SIGHUP);
-    }
+NO_OPTIMIZATION void setup_signal_handling(){
+    printf("Setting up signal handling\n");
+#ifdef __linux__
+    setsid();
+    sigemptyset (&_signals);
+    sigaddset(&_signals, SIGHUP);
+    sigaddset(&_signals, SIGINT);
+    sigaddset(&_signals, SIGQUIT);
+    sigaddset(&_signals, SIGPIPE);
+    sigaddset(&_signals, SIGTERM);
+    sigaddset(&_signals, SIGUSR1);
+    sigaddset(&_signals, SIGUSR2);
+    pthread_sigmask(SIG_BLOCK, &_signals, 0);
 #endif
+    signal(SIGINT, signalHandler);
+    signal(SIGTERM, signalHandler);
+    signal(SIGSEGV, sigsegv_handler);
+#ifdef __linux__
+    signal(SIGHUP, signalHandler);
+    signal(SIGQUIT, signalHandler);
+    pthread_sigmask(SIG_UNBLOCK, &_signals, 0);
+#endif
+}
+
+
+NO_OPTIMIZATION void destruct_signal_handling(){
+#ifdef __linux__
+    printf("Destroying signal handling\n");
+    sigemptyset(&_signals);
+    sigaddset(&_signals, SIGHUP);
+    pthread_sigmask(SIG_BLOCK, &_signals, 0);
+    kill(0, SIGHUP);
+#endif
+}
 
 
 NO_OPTIMIZATION void set_thread_params(){
@@ -481,9 +483,7 @@ void stop_engine(){
 
     v_destructor();
 
-#if defined(__linux__)
     destruct_signal_handling();
-#endif
     ipc_dtor();
 }
 
