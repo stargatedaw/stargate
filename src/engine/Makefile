@@ -51,7 +51,7 @@ LINK_FLAGS  ?= \
 
 MINGW_LINK_FLAGS ?= \
 	-I/mingw64/include -lpthread $(PORTMIDI_FLAG) -lportaudio $(LDFLAGS) \
-	-lsndfile -lfftw3f -lfftw3 $(MATH_LIB_FLAG) -lws2_32
+	-lsndfile -lfftw3f -lfftw3 $(MATH_LIB_FLAG) -lws2_32 -lDbgHelp
 
 
 # Debugging flags
