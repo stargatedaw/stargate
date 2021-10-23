@@ -61,7 +61,7 @@ void ipc_init(){
         sizeof(SOCKET_DATA.si_other)
     );
     SOCKET_DATA.si_other.sin_family = AF_INET;
-    SOCKET_DATA.si_other.sin_port = htons(30321);
+    SOCKET_DATA.si_other.sin_port = htons(IPC_UI_SERVER_PORT);
     SOCKET_DATA.si_other.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
 
     SOCKET_DATA.tv.tv_sec = 0;
@@ -174,7 +174,7 @@ void* ipc_server_thread(void* _arg){
     // Prepare the sockaddr_in structure
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = inet_addr("127.0.0.1");
-    server.sin_port = htons(19271);
+    server.sin_port = htons(IPC_ENGINE_SERVER_PORT);
 
     int bufsize;
     unsigned int max_msg_size;

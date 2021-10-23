@@ -13,6 +13,8 @@ __all__ = [
 ]
 
 SOCKET_IPC_SERVER = None
+IPC_ENGINE_SERVER_PORT = 31999
+IPC_UI_SERVER_PORT = 31909
 
 class SocketIPCServerSignal(QtCore.QObject):
     handled = Signal(str)
@@ -39,7 +41,7 @@ class SocketIPCServer:
         daw_callback,
         we_callback,
         host='127.0.0.1',
-        port=30321,
+        port=IPC_UI_SERVER_PORT,
         server=None,
         signal=None,
     ):
@@ -82,7 +84,7 @@ class SocketIPCTransport(AbstractIPCTransport):
     def __init__(
         self,
         host='127.0.0.1',
-        port=19271,
+        port=IPC_ENGINE_SERVER_PORT,
     ):
         self.host = host
         self.port = port

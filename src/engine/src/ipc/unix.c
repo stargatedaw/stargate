@@ -34,7 +34,7 @@ void ipc_init(){
         sizeof(SOCKET_DATA.servaddr)
     );
     SOCKET_DATA.servaddr.sin_family = AF_INET;
-    SOCKET_DATA.servaddr.sin_port = htons(30321);
+    SOCKET_DATA.servaddr.sin_port = htons(IPC_UI_SERVER_PORT);
     SOCKET_DATA.servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     SOCKET_DATA.len = (socklen_t)sizeof(SOCKET_DATA.servaddr);
 }
@@ -113,7 +113,7 @@ void* ipc_server_thread(void* _arg){
     // Filling server information
     servaddr.sin_family = AF_INET; // IPv4
     servaddr.sin_addr.s_addr = INADDR_ANY;
-    servaddr.sin_port = htons(19271);
+    servaddr.sin_port = htons(IPC_ENGINE_SERVER_PORT);
 
     // Bind the socket with the server address
     if(

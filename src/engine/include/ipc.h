@@ -2,6 +2,8 @@
 #define SG_IPC_H
 
 #define IPC_MAX_MESSAGE_SIZE 60000
+#define IPC_ENGINE_SERVER_PORT 31999
+#define IPC_UI_SERVER_PORT 31909
 
 struct IpcServerThreadArgs{
     int (*callback)(char*, char*, char*);
