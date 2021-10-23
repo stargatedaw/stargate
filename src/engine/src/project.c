@@ -16,7 +16,7 @@ void v_open_project(const char* a_project_folder, int a_first_load){
     clock_gettime(CLOCK_REALTIME, &f_start);
 #endif
 
-    log_info("Setting files and folders\n");
+    log_info("Setting files and folders");
     sprintf(STARGATE->project_folder, "%s", a_project_folder);
     sprintf(
         STARGATE->plugins_folder,
@@ -72,18 +72,18 @@ void v_open_project(const char* a_project_folder, int a_first_load){
     );
 
     if(a_first_load && i_file_exists(STARGATE->audio_pool_file)){
-        log_info("Loading wave pool\n");
+        log_info("Loading wave pool");
         v_audio_pool_add_items(
             STARGATE->audio_pool,
             STARGATE->audio_pool_file
         );
     }
 
-    log_info("Opening wave editor project\n");
+    log_info("Opening wave editor project");
     v_we_open_project();
-    log_info("Opening DAW project\n");
+    log_info("Opening DAW project");
     v_daw_open_project(a_first_load);
-    log_info("Finished opening projects\n");
+    log_info("Finished opening projects");
 
 #ifdef __linux__
     clock_gettime(CLOCK_REALTIME, &f_finish);

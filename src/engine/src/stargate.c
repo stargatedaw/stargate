@@ -460,7 +460,7 @@ double v_print_benchmark(
     elapsed = (f_finish.tv_sec - f_start.tv_sec);
     elapsed += (f_finish.tv_nsec - f_start.tv_nsec) / 1000000000.0;
 
-    log_info ( "\n\nCompleted %s in %lf seconds\n", a_message, elapsed);
+    log_info("Completed %s in %lf seconds", a_message, elapsed);
 
     return elapsed;
 }
@@ -488,7 +488,7 @@ NO_OPTIMIZATION void v_open_track(
     sprintf(f_file_name, "%s%s%i", a_tracks_folder, PATH_SEP, a_index);
 
     if(i_file_exists(f_file_name)){
-        log_info("%s exists, opening track\n", f_file_name);
+        log_info("%s exists, opening track", f_file_name);
         t_2d_char_array * f_2d_array = g_get_2d_array_from_file(
             f_file_name,
             LARGE_STRING
@@ -524,7 +524,7 @@ NO_OPTIMIZATION void v_open_track(
                 );
             } else {
                 log_error(
-                    "Invalid track identifier '%c'\n",
+                    "Invalid track identifier '%c'",
                     f_2d_array->current_str[0]
                 );
                 sg_assert(0, "v_open_track: invalid track identifier");
@@ -533,7 +533,7 @@ NO_OPTIMIZATION void v_open_track(
 
         g_free_2d_char_array(f_2d_array);
     } else {
-        log_info("%s does not exist, resetting track\n", f_file_name);
+        log_info("%s does not exist, resetting track", f_file_name);
         int f_i;
         for(f_i = 0; f_i < MAX_PLUGIN_COUNT; ++f_i){
             v_set_plugin_index(a_track, f_i, 0, -1, 0, 0);
@@ -645,14 +645,14 @@ void v_set_preview_file(const char * a_file){
         } else {
             log_error(
                 "i_audio_pool_item_load(f_result) failed in "
-                "v_set_preview_file\n"
+                "v_set_preview_file"
             );
         }
     } else {
         STARGATE->is_previewing = 0;
         log_error(
             "g_audio_pool_item_get returned zero. could not load "
-            "preview item.\n"
+            "preview item."
         );
     }
 }
@@ -1124,7 +1124,7 @@ void v_sg_seq_event_list_set(
 
 
 void v_sg_configure(const char* a_key, const char* a_value){
-    log_info("v_sg_configure:  key: \"%s\", value: \"%s\"\n", a_key, a_value);
+    log_info("v_sg_configure:  key: \"%s\", value: \"%s\"", a_key, a_value);
 
     if(!strcmp(a_key, SG_CONFIGURE_KEY_UPDATE_PLUGIN_CONTROL)){
         t_1d_char_array * f_val_arr = c_split_str(
@@ -1151,7 +1151,7 @@ void v_sg_configure(const char* a_key, const char* a_value){
         else
         {
             log_error(
-                "pc: no valid plugin instance: %i\n",
+                "pc: no valid plugin instance: %i",
                 f_plugin_uid
             );
         }
@@ -1179,7 +1179,7 @@ void v_sg_configure(const char* a_key, const char* a_value){
             );
         } else {
             log_error(
-                "No valid plugin instance %i\n",
+                "No valid plugin instance %i",
                 f_plugin_uid
             );
         }
@@ -1384,7 +1384,11 @@ void v_sg_configure(const char* a_key, const char* a_value){
     }
     else
     {
-        log_info("Unknown configure message key: %s, value %s\n", a_key, a_value);
+        log_info(
+            "Unknown configure message key: %s, value %s",
+            a_key,
+            a_value
+        );
     }
 
 }
@@ -1418,11 +1422,11 @@ NO_OPTIMIZATION void v_set_plugin_index(
     shds_list_init(&atm_list, 0, NULL);
 
     if(a_plugin_index){
-        log_info("Plugin %i index set to %i\n", a_index, a_plugin_index);
+        log_info("Plugin %i index set to %i", a_index, a_plugin_index);
         f_plugin = &STARGATE->plugin_pool[a_plugin_uid];
 
         if(!f_plugin->active){
-            log_info("Initializing plugin\n");
+            log_info("Initializing plugin");
             g_plugin_init(
                 f_plugin,
                 sample_rate,
@@ -1431,7 +1435,7 @@ NO_OPTIMIZATION void v_set_plugin_index(
                 a_plugin_uid,
                 v_queue_osc_message
             );
-            log_info("Finished initializing plugin\n");
+            log_info("Finished initializing plugin");
 
             char f_file_name[1024];
             snprintf(
@@ -1443,7 +1447,7 @@ NO_OPTIMIZATION void v_set_plugin_index(
             );
 
             if(i_file_exists(f_file_name)){
-                log_info("Loading plugin\n");
+                log_info("Loading plugin");
                 f_plugin->descriptor->load(
                     f_plugin->plugin_handle,
                     f_plugin->descriptor,
@@ -1489,14 +1493,14 @@ NO_OPTIMIZATION void v_set_plugin_index(
     }
 
     if(a_lock){
-        log_info("Locking main_lock\n");
+        log_info("Locking main_lock");
         pthread_spin_lock(&STARGATE->main_lock);
     }
 
     if(f_plugin){
         f_plugin->power = a_power;
 
-        log_info("Connecting buffers\n");
+        log_info("Connecting buffers");
         for(f_i = 0; f_i < f_track->channels; ++f_i){
             f_plugin->descriptor->connect_buffer(
                 f_plugin->plugin_handle,
@@ -1515,7 +1519,7 @@ NO_OPTIMIZATION void v_set_plugin_index(
     f_track->plugins[a_index] = f_plugin;
 
     if(a_lock){
-        log_info("Unlocking main_lock\n");
+        log_info("Unlocking main_lock");
         pthread_spin_unlock(&STARGATE->main_lock);
     }
 }

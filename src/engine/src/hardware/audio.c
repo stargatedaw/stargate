@@ -16,11 +16,11 @@ NO_OPTIMIZATION int open_audio_device(
     PaStreamParameters outputParameters = (PaStreamParameters){};
     PaStream* stream = NULL;
     PaError err;
-    log_info("Opening audio device\n");
+    log_info("Opening audio device");
     err = Pa_Initialize();
     if(err != paNoError){
         log_error(
-            "Pa_Initialize error:  %s\n",
+            "Pa_Initialize error:  %s",
             Pa_GetErrorText(err)
         );
         return 1;
@@ -29,7 +29,7 @@ NO_OPTIMIZATION int open_audio_device(
     int f_api_count = Pa_GetHostApiCount();
     if(f_api_count <= 0){
         log_error(
-            "Pa_GetHostApiCount error:  %s\n",
+            "Pa_GetHostApiCount error:  %s",
             Pa_GetErrorText(f_api_count)
         );
         return 1;
@@ -51,8 +51,8 @@ NO_OPTIMIZATION int open_audio_device(
             break;
         }
     }
-    log_info("host api: %s\n", config->host_api_name);
-    log_info("host api index %i\n", f_host_api_index);
+    log_info("host api: %s", config->host_api_name);
+    log_info("host api index %i", f_host_api_index);
 
     inputParameters.channelCount = config->audio_input_count;
     inputParameters.sampleFormat = PA_SAMPLE_TYPE;
@@ -67,7 +67,7 @@ NO_OPTIMIZATION int open_audio_device(
         const PaDeviceInfo* f_padevice = Pa_GetDeviceInfo(f_i);
         const PaHostApiInfo* host_api = Pa_GetHostApiInfo(f_padevice->hostApi);
         log_info(
-            "device: '%s' host api: '%s' output channels: %i\n",
+            "device: '%s' host api: '%s' output channels: %i",
             f_padevice->name,
             host_api->name,
             f_padevice->maxOutputChannels
@@ -80,7 +80,7 @@ NO_OPTIMIZATION int open_audio_device(
             if(!f_padevice->maxOutputChannels){
                 log_error(
                     "PaDevice->maxOutputChannels == 0, "
-                    "device may already be open by another application\n"
+                    "device may already be open by another application"
                 );
                 return RET_CODE_AUDIO_DEVICE_BUSY;
             }
@@ -93,7 +93,7 @@ NO_OPTIMIZATION int open_audio_device(
     }
 
     if(!f_found_index){
-        log_error("'%s' not found\n", config->device_name);
+        log_error("'%s' not found", config->device_name);
         return RET_CODE_DEVICE_NOT_FOUND;
     }
 
@@ -124,7 +124,7 @@ NO_OPTIMIZATION int open_audio_device(
         }
 
         if(!f_found_index){
-            log_error("Device not found\n");
+            log_error("Device not found");
             return RET_CODE_DEVICE_NOT_FOUND;
         }
 
@@ -168,14 +168,14 @@ NO_OPTIMIZATION int open_audio_device(
     if(err != paNoError){
         log_error(
             "'%s' while starting device.  Please "
-            "re-configure your device and try starting Stargate again.\n",
+            "re-configure your device and try starting Stargate again.",
             Pa_GetErrorText(err)
         );
         return RET_CODE_AUDIO_DEVICE_ERROR;
     }
     const PaStreamInfo * f_stream_info = Pa_GetStreamInfo(stream);
     log_info(
-        "Actual output latency: %fs, %fms, %i samples\n",
+        "Actual output latency: %fs, %fms, %i samples",
         f_stream_info->outputLatency,
         f_stream_info->outputLatency * 1000.0,
         (int)(f_stream_info->outputLatency * f_stream_info->sampleRate)
@@ -183,7 +183,7 @@ NO_OPTIMIZATION int open_audio_device(
     if((int)f_stream_info->sampleRate != (int)config->sample_rate){
         log_warn(
             "Samplerate reported by the device (%f)  does not "
-            "match the selected sample rate %f.\n",
+            "match the selected sample rate %f.",
             f_stream_info->sampleRate,
             config->sample_rate
         );
@@ -194,12 +194,12 @@ NO_OPTIMIZATION int open_audio_device(
 }
 
 NO_OPTIMIZATION void close_audio_device(){
-    log_info("Closing audio device\n");
+    log_info("Closing audio device");
     PaError err;
     err = Pa_CloseStream(PA_STREAM);
     if(err != paNoError){
         log_error(
-            "Pa_CloseStream error:  %s\n",
+            "Pa_CloseStream error:  %s",
             Pa_GetErrorText(err)
         );
 
@@ -210,16 +210,16 @@ NO_OPTIMIZATION void close_audio_device(){
         if(err < 1)
         {
             if(err == 0)
-                log_info("Pa_IsStreamStopped returned 0\n");
+                log_info("Pa_IsStreamStopped returned 0");
             if(err < 0)
                 log_error(
-                    "Pa_IsStreamStopped error:  %s\n",
+                    "Pa_IsStreamStopped error:  %s",
                     Pa_GetErrorText(err)
                 );
             err = Pa_AbortStream(PA_STREAM);
             if(err != paNoError)
                 log_error(
-                    "Pa_AbortStream error:  %s\n",
+                    "Pa_AbortStream error:  %s",
                     Pa_GetErrorText(err)
                 );
         }
@@ -227,7 +227,7 @@ NO_OPTIMIZATION void close_audio_device(){
     err = Pa_Terminate();
     if(err != paNoError){
         log_error(
-            "Pa_Terminate error:  %s\n",
+            "Pa_Terminate error:  %s",
             Pa_GetErrorText(err)
         );
     }

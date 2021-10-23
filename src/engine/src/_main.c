@@ -64,7 +64,7 @@ pthread_t SOCKET_SERVER_THREAD;
 static int NO_HARDWARE_USLEEP = 0;
 
 void signalHandler(int sig){
-    log_info("signal %d caught, trying to clean up and exit\n", sig);
+    log_info("signal %d caught, trying to clean up and exit", sig);
     pthread_mutex_lock(&STARGATE->exit_mutex);
     exiting = 1;
     pthread_mutex_unlock(&STARGATE->exit_mutex);
@@ -88,7 +88,7 @@ NO_OPTIMIZATION void * ui_process_monitor_thread(
     while(!exiting){
         sleep(1);
         if (stat(f_proc_path, &sts) == -1 && errno == ENOENT){
-            log_info("UI process doesn't exist, exiting.\n");
+            log_info("UI process doesn't exist, exiting.");
             pthread_mutex_lock(&STARGATE->exit_mutex);
             exiting = 1;
             pthread_mutex_unlock(&STARGATE->exit_mutex);
@@ -109,18 +109,18 @@ NO_OPTIMIZATION void * ui_process_monitor_thread(
 #endif
 
 void print_help(){
-    log_info("Usage:\n\nStart the engine:\n");
-    log_info(
+    printf("Usage:\n\nStart the engine:\n");
+    printf(
         "%s-engine install_prefix project_dir ui_pid "
         "huge_pages frames_per_second [--sleep --no-hardware]\n",
         STARGATE_VERSION
     );
-    log_info(
+    printf(
         "--no-hardware: Do not use audio or MIDI hardware, for debugging\n"
     );
-    log_info("--sleep: Sleep for 1ms between loops.  Implies --no-hardware\n\n");
-    log_info("Offline render:\n");
-    log_info(
+    printf("--sleep: Sleep for 1ms between loops.  Implies --no-hardware\n\n");
+    printf("Offline render:\n");
+    printf(
         "%s daw [project_dir] [output_file] [start_beat] "
         "[end_beat] [sample_rate] [buffer_size] [thread_count] "
         "[huge_pages] [stem] [sequence_uid]\n\n",
@@ -129,12 +129,12 @@ void print_help(){
 }
 
 int _main(int argc, char** argv){
-    log_info("Calling engine _main()\n");
+    log_info("Calling engine _main()");
     setup_signal_handling();
     int j;
 
     for(j = 0; j < argc; ++j){
-        log_info("%i: %s\n", j, argv[j]);
+        log_info("%i: %s", j, argv[j]);
     }
 
     if(argc < 2){
@@ -155,20 +155,20 @@ int _main(int argc, char** argv){
     );
 
     if(f_huge_pages){
-        log_info("Attempting to use hugepages\n");
+        log_info("Attempting to use hugepages");
     }
     int fps = atoi(argv[5]);
-    log_info("UI Frames per second: %i\n", fps);
+    log_info("UI Frames per second: %i", fps);
     int ui_send_usleep = (int)(1000000. / (float)fps);
     if(ui_send_usleep < 15000){
         log_error(
-            "Invalid FPS received: %i\n",
+            "Invalid FPS received: %i",
             fps
         );
         ui_send_usleep = 10000;
     } else if(ui_send_usleep > 100000){
         log_error(
-            "Invalid FPS received: %i\n",
+            "Invalid FPS received: %i",
             fps
         );
         ui_send_usleep = 100000;
@@ -187,7 +187,7 @@ int _main(int argc, char** argv){
             } else if(!strcmp(argv[j], "--single-thread")){
                 SINGLE_THREAD = 1;
             } else {
-                log_info("Invalid argument [%i] %s\n", j, argv[j]);
+                log_info("Invalid argument [%i] %s", j, argv[j]);
             }
         }
     }
@@ -229,7 +229,7 @@ int daw_render(int argc, char** argv){
     );
 
     if(f_huge_pages){
-        log_info("Attempting to use hugepages\n");
+        log_info("Attempting to use hugepages");
     }
 
     USE_HUGEPAGES = f_huge_pages;
@@ -286,19 +286,19 @@ int daw_render(int argc, char** argv){
 }
 
 NO_OPTIMIZATION void init_main_vol(){
-    log_info("Setting main volume\n");
+    log_info("Setting main volume");
     char * f_main_vol_str = (char*)malloc(sizeof(char) * TINY_STRING);
     get_file_setting(f_main_vol_str, "main_vol", "0.0");
     SGFLT f_main_vol = atof(f_main_vol_str);
     free(f_main_vol_str);
 
     MAIN_VOL = f_db_to_linear(f_main_vol * 0.1);
-    log_info("MAIN_VOL = %f\n", MAIN_VOL);
+    log_info("MAIN_VOL = %f", MAIN_VOL);
 }
 
 NO_OPTIMIZATION void start_osc_thread(){
     ipc_init();
-    log_info("Starting socket server thread\n");
+    log_info("Starting socket server thread");
     struct IpcServerThreadArgs* args = (struct IpcServerThreadArgs*)malloc(
         sizeof(struct IpcServerThreadArgs)
     );
@@ -318,7 +318,7 @@ NO_OPTIMIZATION void start_osc_thread(){
 
 #if defined(__linux__)
     NO_OPTIMIZATION void start_ui_thread(int pid){
-        log_info("Starting UI monitor thread\n");
+        log_info("Starting UI monitor thread");
         pthread_attr_t f_ui_threadAttr;
         pthread_attr_init(&f_ui_threadAttr);
 
@@ -340,13 +340,13 @@ NO_OPTIMIZATION void start_osc_thread(){
 #endif
 
 NO_OPTIMIZATION void sigsegv_handler(int sig){
-    log_error("Engine received SIGSEGV\n");
+    log_error("Engine received SIGSEGV");
     sg_print_stack_trace();
     exit(SIGSEGV);
 }
 
 NO_OPTIMIZATION void setup_signal_handling(){
-    log_info("Setting up signal handling\n");
+    log_info("Setting up signal handling");
 #ifdef __linux__
     setsid();
     sigemptyset (&_signals);
@@ -372,7 +372,7 @@ NO_OPTIMIZATION void setup_signal_handling(){
 
 NO_OPTIMIZATION void destruct_signal_handling(){
 #ifdef __linux__
-    log_info("Destroying signal handling\n");
+    log_info("Destroying signal handling");
     sigemptyset(&_signals);
     sigaddset(&_signals, SIGHUP);
     pthread_sigmask(SIG_BLOCK, &_signals, 0);
@@ -383,30 +383,30 @@ NO_OPTIMIZATION void destruct_signal_handling(){
 
 NO_OPTIMIZATION void set_thread_params(){
 #ifndef __linux__
-    log_info("Setting thread params\n");
+    log_info("Setting thread params");
     int f_current_proc_sched = sched_getscheduler(0);
 
     if(f_current_proc_sched == RT_SCHED){
         log_info("Process scheduler already set to real-time.");
     } else {
         log_info(
-            "\n\nProcess scheduler set to %i, attempting to set "
-            "real-time scheduler.\n",
+            "Process scheduler set to %i, attempting to set "
+            "real-time scheduler.",
             f_current_proc_sched
         );
         //Attempt to set the process priority to real-time
         const struct sched_param f_proc_param = {
             sched_get_priority_max(RT_SCHED) / 2
         };
-        log_info("Attempting to set scheduler for process\n");
+        log_info("Attempting to set scheduler for process");
         sched_setscheduler(0, RT_SCHED, &f_proc_param);
-        log_info("Process scheduler is now %i\n\n", sched_getscheduler(0));
+        log_info("Process scheduler is now %i", sched_getscheduler(0));
     }
 #endif
 }
 
 NO_OPTIMIZATION void alloc_output_buffers(){
-    log_info("Allocating output buffers\n");
+    log_info("Allocating output buffers");
     hpalloc(
         (void**)&pluginOutputBuffers,
         2 * sizeof(SGFLT*)
@@ -424,7 +424,7 @@ NO_OPTIMIZATION void alloc_output_buffers(){
 NO_OPTIMIZATION int init_audio_hardware(
     struct HardwareConfig* hardware_config
 ){
-    log_info("Initializing audio hardware\n");
+    log_info("Initializing audio hardware");
     int result = open_audio_device(hardware_config);
     return result;
 }
@@ -436,7 +436,7 @@ int start_engine(char* project_dir){
     );
     alloc_output_buffers();
     init_main_vol();
-    log_info("Activating\n");
+    log_info("Activating");
 #ifdef NO_MIDI
     v_activate(
         hardware_config->thread_count,
@@ -448,7 +448,7 @@ int start_engine(char* project_dir){
     );
 #else
     if(!NO_HARDWARE){
-        log_info("Initializing MIDI hardware\n");
+        log_info("Initializing MIDI hardware");
         open_midi_devices(hardware_config);
     }
     v_activate(
@@ -465,7 +465,7 @@ int start_engine(char* project_dir){
         retcode = init_audio_hardware(hardware_config);
     }
 
-    log_info("Sending ready message to the UI\n");
+    log_info("Sending ready message to the UI");
     v_queue_osc_message("ready", "");
 
     return retcode;
@@ -507,7 +507,7 @@ NO_OPTIMIZATION int main_loop(){
             f_portaudio_output_buffer[f_i] = 0.0f;
         }
     }
-    log_info("Entering main loop\n");
+    log_info("Entering main loop");
     while(1){
         pthread_mutex_lock(&STARGATE->exit_mutex);
         if(exiting){
@@ -534,9 +534,9 @@ NO_OPTIMIZATION int main_loop(){
         }
     }
 
-    log_info("Exiting main loop\n");
+    log_info("Exiting main loop");
     stop_engine();
-    log_info("Stargate main() returning\n\n\n");
+    log_info("Stargate main() returning");
     return 0;
 }
 

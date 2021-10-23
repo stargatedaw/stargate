@@ -63,7 +63,7 @@ void * v_worker_thread(void* a_arg){
         {
             pthread_spin_unlock(f_lock);
             STARGATE->track_thread_quit_notifier[f_thread_num] = 2;
-            log_info("Worker thread %i exiting...\n", f_thread_num);
+            log_info("Worker thread %i exiting...", f_thread_num);
             break;
         }
 
@@ -88,7 +88,7 @@ void v_init_worker_threads(
     int f_stack_size = (1024 * 1024);
     int f_cpu_core_inc = 1;
     int f_cpu_count = getNumberOfCores();
-    log_info("Detected %i cpu cores\n", f_cpu_count);
+    log_info("Detected %i cpu cores", f_cpu_count);
 
     if(f_cpu_count < 1)
     {
@@ -127,7 +127,7 @@ void v_init_worker_threads(
         f_cpu_core_inc = 2;
     }
 
-    log_info("Spawning %i worker threads\n", STARGATE->worker_thread_count);
+    log_info("Spawning %i worker threads", STARGATE->worker_thread_count);
 
     STARGATE->track_block_mutexes = (pthread_mutex_t*)malloc(
         sizeof(pthread_mutex_t) * (STARGATE->worker_thread_count));
@@ -190,7 +190,7 @@ void v_init_worker_threads(
                 &cpuset
             );
             log_info(
-                "Locked thread %i to core %i\n",
+                "Locked thread %i to core %i",
                 f_i,
                 f_cpu_core
             );
@@ -252,18 +252,18 @@ NO_OPTIMIZATION void v_activate(
     g_daw_instantiate();
     g_wave_edit_get();
 
-    log_info("Opening project\n");
+    log_info("Opening project");
     v_open_project(a_project_path, 1);
 
     char * f_host_str = (char*)malloc(sizeof(char) * TINY_STRING);
     get_file_setting(f_host_str, "host", "0");
     int f_host = atoi(f_host_str);
-    log_info("Last host:  %i\n", f_host);
+    log_info("Last host:  %i", f_host);
     free(f_host_str);
 
     v_set_host(f_host);
 
-    log_info("Initializing worker threads\n");
+    log_info("Initializing worker threads");
     v_init_worker_threads(
         a_thread_count,
         a_set_thread_affinity,
@@ -296,7 +296,7 @@ void v_destructor(){
                 STARGATE->audio_tmp_folder,
                 f_i
             );
-            log_info("Deleting %s\n", tmp_sndfile_name);
+            log_info("Deleting %s", tmp_sndfile_name);
             remove(tmp_sndfile_name);
         }
     }

@@ -161,7 +161,7 @@ void g_daw_item_get(t_daw* self, int a_uid){
             } else {
                 log_error(
                     "per-audio-item-fx %i does not correspond to "
-                    "an audio item, skipping.\n",
+                    "an audio item, skipping.",
                     f_index
                 );
                 v_iterate_2d_char_array_to_next_line(f_current_string);
@@ -179,7 +179,7 @@ void g_daw_item_get(t_daw* self, int a_uid){
         else
         {
             log_error(
-                "g_daw_item_get: Invalid event type %c\n",
+                "g_daw_item_get: Invalid event type %c",
                 f_type
             );
         }

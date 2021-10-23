@@ -28,15 +28,15 @@ static struct SocketData SOCKET_DATA;
 void ipc_init(){
     WSADATA wsa;
 
-    log_info("Initializing Winsock...\n");
+    log_info("Initializing Winsock...");
     if(WSAStartup(MAKEWORD(2,2), &wsa) != 0){
         log_error(
-            "Failed to initialize winsock. Error Code : %d\n",
+            "Failed to initialize winsock. Error Code : %d",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
     }
-    log_info("Initialised winsock.\n");
+    log_info("Initialised winsock.");
 
     SOCKET_DATA.slen=sizeof(SOCKET_DATA.si_other);
     if(
@@ -47,7 +47,7 @@ void ipc_init(){
         )) == SOCKET_ERROR
     ){
         log_error(
-            "socket() failed with error code : %d\n" ,
+            "socket() failed with error code : %d" ,
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
@@ -86,7 +86,7 @@ void ipc_client_send(char* message){
         ) == SOCKET_ERROR
     ){
         log_error(
-            "ipc_client_send: sendto() failed with error code : %d\n",
+            "ipc_client_send: sendto() failed with error code : %d",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
@@ -103,12 +103,12 @@ void ipc_client_send(char* message){
         &SOCKET_DATA.tv
     );
     if(n == 0){
-        log_warn("ipc_client_send select() returned 0, UI did not respond\n");
+        log_warn("ipc_client_send select() returned 0, UI did not respond");
         return;
     }
     if(n == -1){
         log_warn(
-            "ipc_client_send select() returned -1, %i\n",
+            "ipc_client_send select() returned -1, %i",
             WSAGetLastError()
         );
         return;
@@ -124,7 +124,7 @@ void ipc_client_send(char* message){
         ) == SOCKET_ERROR
     ){
         log_error(
-            "ipc_client_send: recvfrom() failed with error code : %d\n",
+            "ipc_client_send: recvfrom() failed with error code : %d",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
@@ -154,12 +154,12 @@ void* ipc_server_thread(void* _arg){
 
     if((s = socket(AF_INET , SOCK_DGRAM , 0 )) == INVALID_SOCKET){
         log_error(
-            "ipc_server_thread: Could not create socket : %d\n",
+            "ipc_server_thread: Could not create socket : %d",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
     }
-    log_info("ipc_server_thread: Socket created.\n");
+    log_info("ipc_server_thread: Socket created.");
 
     // Prepare the sockaddr_in structure
     server.sin_family = AF_INET;
@@ -181,7 +181,7 @@ void* ipc_server_thread(void* _arg){
     );
     if(err){
         log_error(
-            "ipc_server_thread: Unable to set recvbuf size, %i\n",
+            "ipc_server_thread: Unable to set recvbuf size, %i",
             WSAGetLastError()
         );
     }
@@ -195,12 +195,12 @@ void* ipc_server_thread(void* _arg){
     );
     if(err){
         log_error(
-            "ipc_server_thread: Unable to get recvbuf size, %i\n",
+            "ipc_server_thread: Unable to get recvbuf size, %i",
             WSAGetLastError()
         );
     } else {
         log_info(
-            "ipc_server_thread: recv buffer size: %i\n",
+            "ipc_server_thread: recv buffer size: %i",
             bufsize
         );
     }
@@ -215,12 +215,12 @@ void* ipc_server_thread(void* _arg){
     );
     if(err){
         log_error(
-            "ipc_server_thread: Unable to get max_msg_size, %i\n",
+            "ipc_server_thread: Unable to get max_msg_size, %i",
             WSAGetLastError()
         );
     } else {
         log_info(
-            "ipc_server_thread: max_msg_size: %i\n",
+            "ipc_server_thread: max_msg_size: %i",
             max_msg_size
         );
     }
@@ -233,12 +233,12 @@ void* ipc_server_thread(void* _arg){
         ) == SOCKET_ERROR
     ){
         log_error(
-            "ipc_server_thread: Bind failed with error code : %d\n",
+            "ipc_server_thread: Bind failed with error code : %d",
             WSAGetLastError()
         );
         exit(EXIT_FAILURE);
     }
-    log_info("UDP server bind finished\n");
+    log_info("UDP server bind finished");
 
     while(!exiting){
         memset(buffer,'\0', IPC_MAX_MESSAGE_SIZE);
@@ -250,7 +250,7 @@ void* ipc_server_thread(void* _arg){
             continue;
         } else if(n == -1){  // error
             log_error(
-                "ipc_server_thread: select() returned -1, %i\n",
+                "ipc_server_thread: select() returned -1, %i",
                 WSAGetLastError()
             );
             continue;
@@ -267,7 +267,7 @@ void* ipc_server_thread(void* _arg){
             )) == SOCKET_ERROR
         ){
             log_error(
-                "ipc_server_thread: recvfrom() failed with error code : %d\n",
+                "ipc_server_thread: recvfrom() failed with error code : %d",
                 WSAGetLastError()
             );
             exit(EXIT_FAILURE);
@@ -284,7 +284,7 @@ void* ipc_server_thread(void* _arg){
             ) == SOCKET_ERROR
         ){
             log_error(
-                "ipc_server_thread: sendto() failed with error code : %d\n",
+                "ipc_server_thread: sendto() failed with error code : %d",
                 WSAGetLastError()
             );
             exit(EXIT_FAILURE);

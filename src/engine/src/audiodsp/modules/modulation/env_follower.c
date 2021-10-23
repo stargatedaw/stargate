@@ -33,9 +33,9 @@ void v_enf_run_env_follower(t_enf_env_follower * a_enf, SGFLT a_input)
     {
         a_enf->debug_counter = 0;
 
-        log_info("\n\nEnv Follower info:\n");
-        log_info("a_enf->input == %f\n", a_enf->input);
-        log_info("a_enf->output_smoothed == %f\n", a_enf->output_smoothed);
+        log_info("Env Follower info:");
+        log_info("a_enf->input == %f", a_enf->input);
+        log_info("a_enf->output_smoothed == %f", a_enf->output_smoothed);
     }
 #endif
 }

@@ -55,7 +55,7 @@ int i_audio_pool_item_load(
 
     if (!file){
         log_error(
-            "Unable to load sample file '%s'\n",
+            "Unable to load sample file '%s'",
             a_audio_pool_item->path
         );
         return 0;
@@ -203,7 +203,7 @@ void v_audio_pool_remove_item(
     int a_uid
 ){
     if(USE_HUGEPAGES){
-        log_info("Using hugepages, not freeing audio_pool uid %i\n", a_uid);
+        log_info("Using hugepages, not freeing audio_pool uid %i", a_uid);
         return;
     }
 
@@ -215,7 +215,7 @@ void v_audio_pool_remove_item(
             SGFLT * f_data = f_item->samples[f_i];
             if(f_data){
                 free(f_data);
-                log_info("free'd %f MB\n",
+                log_info("free'd %f MB",
                     ((SGFLT)f_item->length / (1024. * 1024.)) * 4.0);
                 f_item->samples[f_i] = NULL;
             }
@@ -246,7 +246,7 @@ t_audio_pool_item * v_audio_pool_add_item(
         }
 
         log_info(
-            "v_audio_pool_add_item:  '%s' '%s'\n",
+            "v_audio_pool_add_item:  '%s' '%s'",
             a_audio_pool->samples_folder,
             f_file_path
         );
@@ -349,7 +349,7 @@ void v_audio_pool_add_items(
             SGFLT volume = atof(f_arr->current_str);
             volume = f_db_to_linear(volume);
             v_iterate_2d_char_array_to_next_line(f_arr);
-            log_info("Audio Pool: Loading file '%s'\n", f_arr->current_str);
+            log_info("Audio Pool: Loading file '%s'", f_arr->current_str);
             v_audio_pool_add_item(
                 a_audio_pool,
                 f_uid,
@@ -369,7 +369,7 @@ t_audio_pool_item * g_audio_pool_get_item_by_uid(
             if(!i_audio_pool_item_load(&a_audio_pool->items[a_uid], 1)){
                 log_error(
                     "g_audio_pool_get_item_by_uid: Failed to load file "
-                    "for %i\n",
+                    "for %i",
                     a_uid
                 );
                 return NULL;
@@ -378,7 +378,7 @@ t_audio_pool_item * g_audio_pool_get_item_by_uid(
         return &a_audio_pool->items[a_uid];
     } else {
         log_error(
-            "g_audio_pool_get_item_by_uid: Couldn't find uid %i\n",
+            "g_audio_pool_get_item_by_uid: Couldn't find uid %i",
             a_uid
         );
     }

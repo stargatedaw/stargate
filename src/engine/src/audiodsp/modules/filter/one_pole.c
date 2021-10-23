@@ -60,14 +60,14 @@ void v_opl_run(t_opl_one_pole* a_opl, SGFLT a_input)
     {
         a_opl->debug_counter = 0;
 
-        log_info("\n\nOne pole info\n");
-        log_info("a_opl->a0 == %f\n", a_opl->a0);
-        log_info("a_opl->a1 == %f\n", a_opl->a1);
-        log_info("a_opl->b1 == %f\n", a_opl->b1);
-        log_info("a_opl->cutoff == %f\n", a_opl->cutoff);
-        log_info("a_opl->hp == %f\n", a_opl->hp);
-        log_info("a_opl->output == %f\n", a_opl->output);
-        log_info("a_opl->x == %f\n", a_opl->x);
+        log_info("One pole info");
+        log_info("a_opl->a0 == %f", a_opl->a0);
+        log_info("a_opl->a1 == %f", a_opl->a1);
+        log_info("a_opl->b1 == %f", a_opl->b1);
+        log_info("a_opl->cutoff == %f", a_opl->cutoff);
+        log_info("a_opl->hp == %f", a_opl->hp);
+        log_info("a_opl->output == %f", a_opl->output);
+        log_info("a_opl->x == %f", a_opl->x);
 
     }
 #endif

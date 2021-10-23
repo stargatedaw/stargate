@@ -456,7 +456,7 @@ NO_OPTIMIZATION void g_plugin_init(
         f_result->descriptor,
         NULL
     );
-    log_info("Calling descriptor->instantiate()\n");
+    log_info("Calling descriptor->instantiate()");
     f_result->plugin_handle = (PluginHandle)f_result->descriptor->instantiate(
         f_result->descriptor,
         a_sample_rate,
@@ -464,7 +464,7 @@ NO_OPTIMIZATION void g_plugin_init(
         a_plugin_uid,
         a_queue_func
     );
-    log_info("Finished calling descriptor->instantiate()\n");
+    log_info("Finished calling descriptor->instantiate()");
 
     f_result->solo = 0;
     f_result->mute = 0;
@@ -492,7 +492,7 @@ void v_free_plugin(t_plugin * a_plugin)
     else
     {
         log_info("Error, attempted to free NULL plugin "
-                "with v_free_plugin()\n");
+                "with v_free_plugin()");
     }
 }
 */
