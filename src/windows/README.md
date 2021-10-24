@@ -59,6 +59,7 @@ make mingw
 - When prompted to open a project or folder,
   open folder `C:\msys64\home\starg\src\stargate\src\engine`
 - View -> Terminal
+- Ensure that `Developer Command Prompt` is selected (not PowerShell)
 - `.\cv2pdb\cv2pdb.exe .\stargate-engine.exe`
 
 ## Windows cmd.exe
