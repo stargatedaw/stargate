@@ -171,6 +171,7 @@ mac_osx:
 	CC=clang make engine
 
 mingw:
+	rm -f *.pdb
 	LINK_FLAGS="$(MINGW_LINK_FLAGS)" make engine
 
 pahole:

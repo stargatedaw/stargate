@@ -88,6 +88,9 @@ void v_pre_fault_thread_stack(int stacksize){
 void sg_print_stack_trace(){
 #ifdef _WIN32
     size_t i;
+    int line_num;
+    char sym_name[256];
+    char file_name[1024];
     HANDLE process = GetCurrentProcess();
     HANDLE thread = GetCurrentThread();
   
@@ -100,6 +103,7 @@ void sg_print_stack_trace(){
   
     DWORD image;
     STACKFRAME64 stackframe;
+    IMAGEHLP_LINE64 line64;
     ZeroMemory(&stackframe, sizeof(STACKFRAME64));
   
 #ifdef _M_IX86
@@ -142,12 +146,32 @@ void sg_print_stack_trace(){
         symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
         symbol->MaxNameLen = MAX_SYM_NAME;
     
-        DWORD64 displacement = 0;
-        if(SymFromAddr(process, stackframe.AddrPC.Offset, &displacement, symbol)) {
-            log_info("[%i] %s\n", i, symbol->Name);
+        DWORD64 displacement64 = 0;
+        DWORD displacement32 = 0;
+        if(SymFromAddr(
+            process, 
+            stackframe.AddrPC.Offset, 
+            &displacement64, 
+            symbol
+        )){
+            strcpy(sym_name, symbol->Name);
         } else {
-            log_info("[%i] ???\n", i);
+            strcpy(sym_name, "???");
         }
+        if(SymGetLineFromAddr(
+            process, 
+            stackframe.AddrPC.Offset, 
+            &displacement32, 
+            &line64
+        )){
+            line_num = line64.LineNumber;
+            strcpy(file_name, line64.FileName);
+        } else {
+            line_num = -1; 
+            sprintf(file_name, "???");
+        }
+
+        log_info("[%i] %s %s:%i", i, sym_name, file_name, line_num);
     }
   
     SymCleanup(process);

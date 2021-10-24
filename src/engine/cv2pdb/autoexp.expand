@@ -1,0 +1,33 @@
+;; added to [AutoExpand] for cv2pdb - keep this line for uninstaller
+;; add DO NOT REMOVE to the line above after the '-' to not remove/update 
+;;  this section by the installer/uninstaller
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; load helper dll C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll to display D strings
+;;
+;; add the following lines to the [AutoExpand] section
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+object_viewhelper=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DObjectView@28)
+object@Object=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DObjectView@28)
+string=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DStringView@28)
+wstring=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DWStringView@28)
+dstring=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DDStringView@28)
+char[]=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DStringView@28)
+wchar[]=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DWStringView@28)
+dchar[]=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DDStringView@28)
+const(char)[]=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DStringView@28)
+const(wchar)[]=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DWStringView@28)
+const(dchar)[]=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DDStringView@28)
+const(char[])=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DStringView@28)
+const(wchar[])=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DWStringView@28)
+const(dchar[])=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DDStringView@28)
+immutable(char)[]=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DStringView@28)
+immutable(wchar)[]=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DWStringView@28)
+immutable(dchar)[]=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DDStringView@28)
+immutable(char[])=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DStringView@28)
+immutable(wchar[])=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DWStringView@28)
+immutable(dchar[])=$ADDIN(C:\PROGRA~2\VisualD\cv2pdb\DViewHelper.dll,_DDStringView@28)
+
+;; eo section AutoExpand for D variables ;;;;;;;;;;;;;;;;;;;;;;
+;; eo added for cv2pdb - keep this line for uninstaller

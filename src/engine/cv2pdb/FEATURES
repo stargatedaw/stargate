@@ -1,0 +1,33 @@
+Main Features
+
+* conversion of DMD/DMC CodeView information to PDB file
+* converted line number info allows setting breakpoints
+* display of variables, fields and objects in watch, local and auto
+  window and in data tooltips
+* convenient display of dynamic and associative arrays in watch windows
+* demangled function names for convenient display of callstack 
+
+More features
+
+This list is a bit more technical and shows what is actually done to
+achieve the desired functionality:
+
+* replaces '.' in class names with '@' to avoid confusing debugger
+* converts class pointers to reference for "clss.field" syntax
+* converts the type of member function, so that "this" is an object 
+  pointer, allowing the debugger to display fields without "this."
+* generates generic debug info for dynamic arrays, associative arrays
+  and delegates
+* creates readable type names for display of D specific types
+* autoexp.dat formats output for dynamic and associative arrays in
+  watch windows
+* autoexp.dat filters display of null references
+* adds object class debug info
+* "char[]", "wchar[]" and "dchar[]" (D1) or "const char[]", 
+  "const wchar[]" and "const dchar[]" (D2) translated to "string", 
+  "wstring" and "dstring", respectively
+* converts type delegate<void*,int> to __int64
+* addin dviewhelper.dll allows correct display of D style strings 
+  and derived object type 
+* maps D basic types to enumerators to overload C style names
+* add struct definitions for complex data types

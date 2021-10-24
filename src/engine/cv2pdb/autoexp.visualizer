@@ -1,0 +1,243 @@
+;; added to [Visualizer] for cv2pdb - keep this line for uninstaller
+;; add DO NOT REMOVE to the line above after the '-' to not remove/update 
+;;  this section by the installer/uninstaller
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;	 D types visualizer
+;; 
+;; add the remainder of this file to the [Visualizer] section
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; strings not as dynamic arrays, use dviewhelper instead
+char[]|const(char)[]|immutable(char)[] {
+	preview ( [(string)$e] )
+}
+		
+wchar[]|const(wchar)[]|immutable(wchar)[] {
+	preview ( [(wstring)$e] )
+}
+
+dchar[]|const(dchar)[]|immutable(dchar)[] {
+	preview ( [(dstring)$e] )
+}
+
+const void[]|void[] {
+	preview ( 
+		#if ($e.ptr == 0) ( "null" )
+		#elif($e.length > 4096) (
+			#( "[", $e.length, "] ", (void*) $e.ptr, " too large for expansion" )
+		)
+		#elif($e.length > 64) (
+			#( "[", $e.length, "]( ",
+			   	#array( expr:((unsigned char*)$e.ptr)[$i], size:64 ),
+			   	",...)" 
+			)
+		)
+		#else (
+			#(
+				"[", $e.length, "](",
+				#array ( expr : ((unsigned char*)$e.ptr)[$i], size : $e.length ),
+				")"
+			)
+		)
+	)
+	children (
+		#if($e.length > 4096) (
+			#(
+				length: [$e.length],
+				ptr: [(void*) $e.ptr]
+			)
+		)
+		#else (
+			#(
+				length: [$e.length],
+				#array (
+					expr: ((unsigned char*)$e.ptr)[$i],
+					size: $e.length
+				)
+			)
+		)
+	)
+}
+
+; dynamic array
+*[]|dArray* {
+	preview ( 
+		#if ($e.ptr == 0) ( "null" )
+		#elif($e.length > 4096) (
+			#( "[", $e.length, "] ", (void*) $e.ptr, " too large for expansion" )
+		)
+		#elif($e.length > 64) (
+			#( "[", $e.length, "]( ",
+			   	#array( expr:($e.ptr)[$i], size:64 ),
+			   	",...)" 
+			)
+		)
+		#else (
+			#(
+				"[", $e.length, "](",
+				#array ( expr : ($e.ptr)[$i], size : $e.length ),
+				")"
+			)
+		)
+	)
+	children (
+		#if($e.length > 4096) (
+			#(
+				length: [$e.length],
+				ptr: [$e.ptr]
+			)
+		)
+		#else (
+			#(
+				length: [$e.length],
+				#array (
+					expr: $e.ptr[$i],
+					size: $e.length
+				)
+			)
+		)
+	)
+}
+
+;; display associative array
+;;
+;; the "magic" sizes of the basic dynamic array are used to check for uninitialized
+;; arrays
+;;              97UL,            389UL,
+;;           1_543UL,          6_151UL,
+;;          24_593UL,         98_317UL,
+;;          393_241UL,      1_572_869UL,
+;;        6_291_469UL,     25_165_843UL,
+;;      100_663_319UL,    402_653_189UL,
+;;    1_610_612_741UL,  4_294_967_291UL,
+aa<*> {
+	preview(
+		#if($e.a == 0 || $e.a->b.ptr == 0) ( "null" )
+		; expressions must be in a single line (sigh)
+		#elif($e.a->b.length == 97 || $e.a->b.length == 389 || $e.a->b.length == 1543 || $e.a->b.length == 6151 || $e.a->b.length == 24593 || $e.a->b.length == 98317 || $e.a->b.length == 393241 || $e.a->b.length == 1572869 || $e.a->b.length == 6291469 || $e.a->b.length == 25165843)
+		(
+			#if($e.a->nodes > 1024) (
+				#( "[", $e.a->nodes, "] ", [(void*) $e.a], " too large for expansion" )
+			)
+			#else (
+				#( "[", $e.a->nodes, "] ", [(void*) $e.a] )
+			)
+		)
+		#elif (1)  ; no #else in a series of #elif !?
+		(
+			#( "[", $e.a->nodes, "] ", [(void*) $e.a], " uninitialized" )
+		)
+	)
+	children(
+		#if($e.a == 0 || $e.a->b.ptr == 0 || $e.a->nodes > 1024) 
+			( #array( expr: 0, size: 0 ) )
+		#else (
+			#( 
+				#array (
+					expr: &$e.a->b.ptr[$i],
+					size: $e.a->b.length
+				) : 
+				#tree (
+					head : $e,
+					left : left,
+					right : right
+; limit size for sanity, hope rehashing takes care of not long lists
+; limiting the number does not work, it will try to show the given number of elements
+;					size : 32
+				) : $e
+			)
+		)
+	)
+}
+
+;; display associative array (starting with with dmd2.043, new sizes 4 and 31 were added, and
+;;  a list is used per hash entry instead of a tree
+;; remember to pass -D 2.043 to cv2pdb to produce suitable debug info
+;;
+aa2<*> {
+	preview(
+		#if($e.a == 0 || $e.a->b.ptr == 0) ( "null" )
+		; expressions must be in a single line (sigh)
+		#elif($e.a->b.length == 4 || $e.a->b.length == 31 || $e.a->b.length == 97 || $e.a->b.length == 389 || $e.a->b.length == 1543 || $e.a->b.length == 6151 || $e.a->b.length == 24593 || $e.a->b.length == 98317 || $e.a->b.length == 393241 || $e.a->b.length == 1572869 || $e.a->b.length == 6291469 || $e.a->b.length == 25165843)
+		(
+			#if($e.a->nodes > 1024) (
+				#( "[", $e.a->nodes, "] ", [(void*) $e.a], " too large for expansion" )
+			)
+			#else (
+				#( "[", $e.a->nodes, "] ", [(void*) $e.a] )
+			)
+		)
+		#elif (1)  ; no #else in a series of #elif !?
+		(
+			#( "[", $e.a->nodes, "] ", [(void*) $e.a], " uninitialized" )
+		)
+	)
+	children(
+		#if($e.a == 0 || $e.a->b.ptr == 0) 
+			( #array( expr: 0, size: 0 ) )
+		; expressions must be in a single line (sigh)
+		#elif($e.a->b.length == 4 || $e.a->b.length == 31 || $e.a->b.length == 97 || $e.a->b.length == 389 || $e.a->b.length == 1543 || $e.a->b.length == 6151 || $e.a->b.length == 24593 || $e.a->b.length == 98317 || $e.a->b.length == 393241 || $e.a->b.length == 1572869 || $e.a->b.length == 6291469 || $e.a->b.length == 25165843)
+		(
+			#( 
+				#array (
+					expr: &$e.a->b.ptr[$i],
+					size: $e.a->b.length
+				) : 
+				; DMD 2.043+
+				#list (
+					head : $e,
+					next : next
+; limit size for sanity, hope rehashing takes care of not long lists
+; limiting the number does not work, it will try to show the given number of elements
+;					size : 32
+				) : $e
+			)
+		)
+		#elif (1)  ; no #else in a series of #elif !?
+		(
+			#( "[", $e.a->nodes, "] ", [(void*) $e.a], " uninitialized" )
+		)
+	)
+}
+
+; display tree
+internal@aaA<*,*> {
+	preview(
+		#( "<", $e.key, ", ", $e.value, ">" )
+	)
+	children (
+		#(
+			key: [$e.key],
+			value: [$e.value]
+		)
+	)
+}
+
+; display null references and class name for class objects
+*@* {
+	preview(
+		#( 
+			#if (&$e == 0) ( "null" )
+			#elif ($e.__classtype == 1) ( ;;; classes
+				#( "[", [$e.__viewhelper], "] ", [$e,!] ) 
+			)
+			#elif ($e.__classtype == 2) ( ;;; DInterface
+				#( "[D-Interface ", [**(object_viewhelper**)&$e], "] " ) 
+			)
+			#elif ($e.__classtype == 3) ( ;;; CppInterface
+				#( "[C++Interface]") 
+			)
+			#elif ($e.__classtype == 4) ( ;;; Struct
+				#( [$e,!] ) 
+			)
+			#elif (1) (
+				#( [$e,!] ) 
+			)
+		)
+	)
+}
+
+;; eo section Visualizer for D variables ;;;;;;;;;;;;;;;;;;;;;;
+;; eo added for cv2pdb - keep this line for uninstaller

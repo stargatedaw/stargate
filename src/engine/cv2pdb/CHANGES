@@ -1,0 +1,302 @@
+
+This is the CHANGES file for cv2pdb, a 
+converter of DMD CodeView/DWARF debug information to PDB files
+
+Copyright (c) 2009-2012 by Rainer Schuetze, All Rights Reserved
+
+Version history
+---------------
+
+2009-05-08 Version 0.1
+
+  * initial release
+
+2009-05-16 Version 0.2
+
+  * replace .debug section in executable rather than rename it. (only works
+    if it is the last section).
+  * support for field type LF_VFUNCTAB and symbol type S_CONSTANT used by DMC.
+  * added stringview to autoexp.dat for full length text display.
+
+2009-06-04 Version 0.3
+
+  * static members' debug info was not correctly converted, causing debugger confusion
+  * now works on executables compiled by DMC
+    - added command line switch -C to disable some D feature and 
+      to remove function name from local variables
+    - added support for type LF_BITFIELD.
+  * added fields __viewhelper to classes string and object
+  * new addin dviewhelper.dll to display correctly terminated strings
+    and derived object type
+
+2009-06-05 Version 0.4
+
+  * fixed crash when long is used as index or element type of dynamic or 
+    associative arrays
+
+2009-06-06 Version 0.5
+
+  * fixed error in __viewhelper field of string type, that could screw up type info
+  * added support for wstring and dstring
+  * fixed problems with debug info inside library by combining debug info of different modules 
+    into a single pseudo-module
+  * now also replaces '.' by '@' in enumerator types for more consistent debug info
+
+2009-06-07 Version 0.6
+
+  * removed LF_DERIVED info from debug info, as it is inconsistent in DMD generated info
+    with more than 4096 type entries
+
+2009-06-08 Version 0.7
+
+  * corrected number of field entries in classes or struct, because DMD miscounts private members
+
+2009-06-11 Version 0.8
+
+  * tweaked visualizer macros to detect uninitialized associative arrays and to limit expansion
+    to arrays with less than 1024 entries
+  * renamed data pointer member of dynamic arrays to "ptr" to be consistent with the array property
+    in D.
+
+2009-06-19 Version 0.9
+
+  * fixed line number info at the end of a segment or when switching to another file 
+    because of inline expansion
+  * fixed line numbers > 32767 and sections with 0 line number entries
+
+2009-08-12 Version 0.10
+
+  * better support for DMC:
+    - entries LF_FRIENDFCN removed
+    - entries LF_FRIENDCLS, LF_VBCLASS and LF_IVBCLASS converted
+    thanks to Andrew.
+  * derived-classes info in class entry now cleared to be consistent with removal of LF_DERIVED
+
+2009-12-29 Version 0.11
+
+  * basic types now show with their D names, not as C types
+  * "enum" prefix removed from type names of enumerator types
+  * added type information for complex data types
+  * dmd-patch needed for long/ulong support (http://d.puremagic.com/issues/show_bug.cgi?id=3373)
+  * experimental hack to add lexical scope to local variables (dmd patch in
+    http://d.puremagic.com/issues/show_bug.cgi?id=3657 needed)
+
+2010-04-13 Version 0.12
+
+  * added patch to convert binaries produced by Metroworks CodeWarrior
+  * names of local function are now demangled
+  * dmd 2.041 fixes long/ulong support (patch http://d.puremagic.com/issues/show_bug.cgi?id=3373
+    no longer needed)
+  * added managed C++ project to integrate cv2pdb with CLR (thanks to Alexander Bothe)
+  * dmd 2.043 uses different implementation of associative arrays, use command line
+    option -D 2.043 or above to produce the respective debug info 
+
+2010-06-03 Version 0.13
+
+  * adapted to mspdb100.dll which comes with VS2010
+  * tweaked autoexp.dat modifications to be more stable with uninitialized data
+  * autoexp.snippet now split into two files: autoexp.expand and autoexp.visualizer
+
+2010-06-23 Version 0.14
+
+  * 64-integer types are now displayed as "dlong" and "ulong" instead of "__int64" and
+    "unsigned __int64"
+  * improved support for long and ulong for DMD versions before 1.057 and 2.041
+  * DMC also emits D-types for "long long" and "unsigned long long", these are
+    translated back to the correct types if command option -C is used
+  * now adding properties "has nested type" and "is nested type" to class/struct/union/enum types
+  * better support for enumerators: now added as user defined types (DMD patch needed)
+
+2010-08-08 Version 0.15
+
+  * thanks to patches by Z3N, the resulting pdb is now usable by more debuggers 
+  * now uses shared file access to executable
+  * incomplete structs/classes are now added as user defined types to avoid confusing
+    debugger for following symbols
+  * fixed name demangling of very long names
+  * added name demangling support for @safe/@trusted/@property/pure/nothrow/ref
+  * base classes are added to D/cpp-interfaces to allow viewing the virtual function 
+    table pointer
+  * structs, classes and interfaces now have an internal qualifier attached that allows
+    the preview in autoexp.dat to show better info for structs and interfaces
+
+2010-08-10 Version 0.16
+
+  * fixed crash when working with -C (introduced in last version)
+
+2010-09-04 Version 0.17
+
+  * fixed crash that could occur for user-defined types longer than 90 characters
+
+2010-10-24 Version 0.18
+
+  * fixed error with nested types longer than 255 characters
+  * more fixes for names longer than 300 characters
+
+2010-12-10 Version 0.19
+
+  * now converting only class pointers to references, not pointers to structs or void
+  * changed default D-version to 2.043 to create correct associative array type 
+    information for recent compilers by default
+
+2010-12-30 Version 0.20
+
+  * fixed another issue with user defined type names longer than 300 characters
+  * now corrects the debug info when dmc/optlink emits multiple struct definitions,
+    but only one UDT record.
+
+2010-05-08 Version 0.21
+
+  * fixed decoding of compressed symbols
+  * added command line switch -n to disable symbol demangling 
+  * fixed crash with more than 32767 types
+
+unreleased Version 0.22
+
+  * added command line switch -s to specify the replacement character for '.' in symbols
+  * fixed another crash where compressed symbols expand to more than 4096 characters
+
+2012-02-12 Version 0.23
+
+  * disabled named enumerator for D basic types to avoid debugger troubles displaying arrays
+  * added command line switch -e to enable using named enumerator for D basic types
+  * added DWARF support
+  * added x64 support
+  * tweaked visualizer for associative array element to just show key and value
+
+2012-05-01 Version 0.24
+
+  * supports unicode characters in file names
+  * improve interpretation of DWARF location expression 
+
+2012-06-18 Version 0.25
+
+  * new option -p allows to specify the embedded PDB reference in the binary
+  * added support for VS2012
+
+2012-11-09 Version 0.26
+
+  * now iterating over multiple entries in the debug directory to find CV info
+
+2013-05-11 Version 0.27
+
+  * fixed crash when converting DWARF locations using 8 bytes or more
+
+2013-11-16 Version 0.28
+
+  * added searching mspdb120.dll for VS 2013
+  * changed search order for mspdb*.dll: trying to load through PATH first
+    newest VS versions preferred, then trying through installation paths for VS 2013-2005
+  * dviewhelper.dll now avoids being reloaded for every expression
+
+2014-02-19 Version 0.29
+
+  * fix DWARF conversion for newer gcc versions (4.8.0 or even earlier)
+
+2014-02-25 Version 0.30
+
+  * fixed crash when converting DWARF for executables without .reloc segment
+
+2014-03-01 Version 0.31
+
+  * added support for local variables accessed through esp
+
+2014-09-24 Version 0.32
+
+  * DWARF: fixed relocations in .debug_line section
+  * tweaked visualizer macros to display void[], limit array preview to 64 entries
+
+2014-12-19 Version 0.33
+
+  * DWARF: revamped location expression evaluator by Vadim Chugunov
+
+2015-02-17 Version 0.34
+
+  * DWARF: fixed issues with DW_FORM_strp, DW_AT_upper_bound and DW_AT_lower_bound
+  * DWARF: translate __int128 to CV code 0x14, just a wild guesss
+
+  * DWARF: add support for DW_ATE_UTF, remove bad assert
+
+2015-05-08 Version 0.35
+
+  * new tool dumplines to display the debug line number info
+
+2015-06-03 Version 0.36
+
+  * last version introduced a regression that could cause DWARF conversion to crash
+  * DWARF sections now stripped from image (if last sections)
+  * add support for VS 2015
+
+2015-06-17 Version 0.37
+
+  * DWARF: improved support for gcc 4.9.0 and clang 3.6
+  * DWARF: support debug_frame (CFA) and debug_loc (for frame base) for better support for locals
+  * write correct machine type for x64 to PDB
+
+2016-08-09 Version 0.38
+
+  * allow anonymous typedefs
+  * cv2pdb now builds as x64 application
+  * truncate symbols that are to long
+  * better support for symbols that contain non-ascii characters: do not uncompress names in field lists
+  * copy symbol unmodified if uncompression fails
+
+2017-01-20 Version 0.39
+
+  * do not assume sorted line numbers per segment
+
+2017-05-13 Version 0.40
+
+  * set source language 'D' in compilation unit
+  * for D version >= 2.068, write AA debug info compatible with dmd COFF output
+  * prefer struct over class for internal structs
+  * handle class/struct property "uniquename"
+
+2017-05-13 Version 0.41
+
+  * when using mspdb120.dll (VS2013) or later, do not emit view helpers
+  * remove method declarations from struct or class records (they confuse mspdb*.dll if having forward references?)
+
+2017-09-02 Version 0.42
+
+  * search VS2017 registry entries to find mspdb140.dll
+  * when using mspdb140.dll (VS2015) or later, use symbols to emit line numbers
+  * translate S_UDT_V1 to V3 version
+  * translate S_BLOCK_V1 to V3 version
+  * remove "this" from delegate parameter list if inconsistent with procedure type
+
+2017-11-30 Version 0.43
+
+  * DWARF: fix crash with AUX data in symbol table
+  * improve reallocation strategy
+
+2018-03-30 Version 0.44
+
+  * DWARF: improvements for ADA: better enumerator types, improved lexical scope (thanks to @pmderodat)
+  * if no debug information found in executable, now looks for epononymous DBG file 
+    to load CV from (thanks to @AlexWhiter)
+
+2019-01-25 Version 0.45
+
+  * support converting DBG file to PDB
+  * fiexd alignment of debug section.
+  * DWARF: add support for local variables with location list via DW_FORM_sec_offset
+  * fixed some minor DWARF issues/crashes
+  * detect Visual Studio through COM API
+  * set architecture of .pdb for a 64 bit .dbg
+  * always convert S_BPREL_V1 to S_BPREL_V3 (no longer supported by mspdb 14.16.27012/VS 15.9)
+  * emit "elemtype[keytype]" instead of "dAssocArray"
+  * DWARF: fixed converting unnamed structs/unions as part of other structs
+
+2019-09-03 Version 0.46
+
+  * DWARF: fix writing info for aggregates larger than 32kB
+
+2019-11-02 Version 0.47
+
+  * add support for char16_t and char32_t (emitted by dmd 2.089+ for dchar)
+  * fix loading 64-bit mspdb140.dll in VS2019
+
+2020-03-26 Version 0.48
+
+  * DWARF: add support for data symbols imported from DLL

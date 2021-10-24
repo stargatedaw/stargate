@@ -1,0 +1,71 @@
+
+This is the INSTALL file for cv2pdb, a 
+converter of DMD CodeView/DWARF debug information to PDB files
+
+Copyright (c) 2009-2010 by Rainer Schuetze, All Rights Reserved
+
+Prerequisites
+-------------
+
+For this program to be useful, you should have you should have the 
+Digital Mars D Compiler (http://www.digitalmars.com/d/2.0/dmd-windows.html)
+and either Microsoft Visual Studio 2005, 2008 or 2010 or one of the Express 
+versions installed. cv2pdb uses one of the Microsoft DLLs to actually
+write the PDB file.
+
+If you are using some other program, you'll still need some
+files from one of the distributions. These are mspdb80.dll, mspdbsrv.exe, 
+msobj80.dll, mspdbcore.dll and msvcr90.dll from the VS2008 installation or
+mspdb100.dll, mspdbsrv.exe, msobj100.dll, mspdbcore.dll and msvcr100.dll
+from VS2010. They should be accessible through the PATH environment variable.
+(The VS Shell is missing the msobj80.dll/msobj100.dll only). 
+
+Installation
+------------
+You might want to consider installing Visual D (www.dsource.org/projects/visuald)
+instead of cv2pdb. Visual D provides both project and language integration
+into Visual Studio and comes with an installer that includes cv2pdb.
+
+There is no full featured installer available for cv2pdb, you'll have
+to do some simple manual steps to use cv2pdb.
+
+1. The binary package of cv2pdb contains an executable cv2pdb.exe, which
+should be copied somewhere accessible through your PATH environment
+variable.
+
+2. cv2pdb.exe must be able to locate the DLL mspdb80.dll/mspdb100.dll from the Visual
+Studio installation. It tries to read the installation path of the latter from the registry, but
+if this fails, mspdb80.dll/mspdb100.dll should also be accessible through your PATH 
+environment variable.
+
+3. For best debugging experience, you should configure Visual Studio 
+to use C/C++ syntax highlighting for D files. This is done by
+navigating to the file extensions option page (found in Tools -> Options
+-> Text editor -> File Extensions) and adding extensions "d" and "di"
+with editor "Microsoft Visual C++". This will also enable display of
+variables in the "Auto" watch window.
+
+4. You should also add the contents of the files autoexp.expand and 
+autoexp.visualizer to the respective [AutoExpand] and [Visualizer]
+sections of the file autoexp.dat found in 
+<Visual Studio Installation Path>\Common7\Packages\Debugger.
+Please note that in a standard installation of Visual Studio, the
+section [AutoExpand] is at the beginning of that file, followed by
+the section [Visualizer], which extends to the bottom of the file but a few lines
+for the section [hresult].
+These lines will enable a convenient display of strings, dynamic arrays, 
+associative arrays, object types and null references.
+
+5. The file dviewhelper.dll must be copied into a directory where
+the debugger can find it. This can be any directory accessible through your
+PATH variable or <Visual Studio Installation Path>\Common7\IDE. Alternatively,
+the full path can be specified in the corresponding entries in the
+[AutoExpand] section of autoexp.dat.
+
+
+Building from source
+--------------------
+The source package comes with a Visual Studio 2008 project and solution
+that work with both the Standard and the Express version. These won't
+work in VS2005, but creating VS2005 projects should be easy.
+
