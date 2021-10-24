@@ -124,6 +124,7 @@ void sg_print_stack_trace(){
     stackframe.AddrStack.Mode = AddrModeFlat;
 #endif
 
+    log_info("Traceback (most recent call first):");
     for(i = 0; i < 25; i++){
         BOOL result = StackWalk64(
             image, 
