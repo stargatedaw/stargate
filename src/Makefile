@@ -94,6 +94,9 @@ py_vendor:
 	$(PIP) install \
 		--ignore-installed --target=./sg_py_vendor --no-deps wavefile
 
+tag_release:
+	git tag release-$(MINOR)
+
 tests:
 	./test_parse.sh
 	make -C engine test
