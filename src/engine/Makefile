@@ -171,9 +171,16 @@ mac_osx:
 	CC=clang make engine
 
 mingw:
+	# Build the Windows engine using MSYS2
 	rm -f *.pdb
 	LINK_FLAGS="$(MINGW_LINK_FLAGS)" make engine
 	make -C .. commit_hash
+	###################
+	#### IMPORTANT ####
+	###################
+	# Go run the following command in the Visual Studio shell from
+	# this directory:
+	# .\cv2pdb\cv2pdb.exe .\stargate-engine.exe
 
 pahole:
 	# Check struct alignnment using pahole
