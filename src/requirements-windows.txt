@@ -4,6 +4,6 @@ mutagen
 numpy
 psutil
 pymarshal
-PyQt5
+PyQt6
 PyYAML
 wavefile
