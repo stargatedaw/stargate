@@ -12,7 +12,7 @@ a = Analysis(['scripts\\stargate'],
                  ('engine/*.dll', 'engine')
              ],
              datas=[
-                 ('meta.json', '.')
+                 ('meta.json', '.'),
                  ('COMMIT', '.')
              ],
              hiddenimports=[],
