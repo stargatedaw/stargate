@@ -1,7 +1,21 @@
 # Overview
-This is the procedure for creating Windows build artifacts, both the installer.
-Note that it may be possible to compile for 32 bit Windows, but at the
-present time it is untested and unsupported
+This is the procedure for creating the Windows portable executable and
+installer.  Note that it may be possible to compile for 32 bit Windows, but at
+the present time it is untested and unsupported
+
+The following components must be setup and configured prior to building:
+- Python
+- MSYS2
+- NSIS
+- Visual Studio
+- Stargate repo and dependencies
+
+The build steps proceed as follows:
+- Pull the source code
+- Build the engine exe
+- Strip the DWARF debug symbols and convert them to PDB
+- Run pyinstaller to create the portable executable
+- Run NSIS to create the Windows installer
 
 # Initial Setup
 ## Create a fresh 64 bit Windows 10 VM
@@ -55,11 +69,20 @@ make mingw
 ```
 
 ## Visual Studio Terminal
+There are 2 different ways to execute this command.
+
+Either:
 - Open Visual Studio
 - When prompted to open a project or folder,
   open folder `C:\msys64\home\starg\src\stargate\src\engine`
 - View -> Terminal
 - Ensure that `Developer Command Prompt` is selected (not PowerShell)
+
+Or:
+- Open Developer Command Prompt for VS 20XX` from the Start Menu
+- `cd C:\msys64\home\starg\src\stargate\src\engine`
+
+Finally, execute the command:
 - `.\cv2pdb\cv2pdb.exe .\stargate-engine.exe`
 
 ## Windows cmd.exe
