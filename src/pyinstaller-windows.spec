@@ -13,6 +13,7 @@ a = Analysis(['scripts\\stargate'],
              ],
              datas=[
                  ('meta.json', '.')
+                 ('COMMIT', '.')
              ],
              hiddenimports=[],
              hookspath=[],

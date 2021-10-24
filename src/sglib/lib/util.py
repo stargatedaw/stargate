@@ -66,11 +66,17 @@ CPU_COUNT = multiprocessing.cpu_count()
 if CPU_COUNT < 1:
     CPU_COUNT = 1
 
-def _meta_dot_json():
+def _meta():
     with open(META_DOT_JSON_PATH) as f:
-        return json.load(f)
+        meta_dot_json = json.load(f)
+    if os.path.exists(COMMIT_PATH):
+        with open(COMMIT_PATH) as f:
+            commit_hash = f.read()
+    else:
+        commit_hash = 'unknown'
+    return meta_dot_json, commit_hash
 
-META_DOT_JSON = _meta_dot_json()
+META_DOT_JSON, COMMIT_HASH = _meta()
 
 LOG.info("install prefix:  {}".format(INSTALL_PREFIX))
 

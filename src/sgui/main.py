@@ -1337,7 +1337,7 @@ def main(
     global MAIN_WINDOW, SPLASH_SCREEN, RESPAWN
     major_version = util.META_DOT_JSON['version']['major']
     minor_version = util.META_DOT_JSON['version']['minor']
-    LOG.info(f"Starting {major_version}-{minor_version}")
+    LOG.info(f"Starting {major_version}-{minor_version}:{util.COMMIT_HASH}")
     log_screen_info()
     SPLASH_SCREEN = splash_screen
     widgets.knob_setup()

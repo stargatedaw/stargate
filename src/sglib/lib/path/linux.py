@@ -16,6 +16,7 @@ if os.path.join("src", "sglib") in os.path.abspath(__file__):
     PRESETS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'presets')
     PLUGIN_ASSETS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'plugin_assets')
     THEMES_DIR = os.path.join(INSTALL_PREFIX, 'files', 'themes')
+    COMMIT_PATH = os.path.join(INSTALL_PREFIX, "COMMIT")
     META_DOT_JSON_PATH = os.path.join(INSTALL_PREFIX, "meta.json")
     BIN_DIR = os.path.join(INSTALL_PREFIX, 'scripts')
 # Running installed
@@ -34,5 +35,6 @@ else:
     THEMES_DIR = os.path.join(_STARGATE_DIR, 'themes')
     PLUGIN_ASSETS_DIR = os.path.join(_STARGATE_DIR, 'plugin_assets')
     META_DOT_JSON_PATH = os.path.join(_STARGATE_DIR, "meta.json")
+    COMMIT_PATH = os.path.join(_STARGATE_DIR, "COMMIT")
     BIN_DIR = os.path.join(INSTALL_PREFIX, 'bin')
 

@@ -13,7 +13,7 @@ BROWSER ?= firefox
 
 # --------------------------------------------------------------
 
-all: deps py_vendor
+all: deps py_vendor commit_hash
 	make -C engine
 
 clean: clean_pyc
@@ -24,6 +24,9 @@ clean: clean_pyc
 
 clean_pyc:
 	find . -type d -name __pycache__ -exec rm -rf {} \; ; true
+
+commit_hash:
+	git rev-parse --short HEAD > COMMIT || true
 
 deps:
 	cd vendor/sbsms && ( ./configure || ./configure --enable-sse=no ) && make
@@ -48,6 +51,7 @@ install: clean_pyc
 	cp -r files/themes files/plugin_assets files/fonts $(SG_DIR)
 	cp -r files/share $(DESTDIR)/$(PREFIX)
 	install -m 644 meta.json $(SG_DIR)
+	install -m 644 COMMIT $(SG_DIR)
 
 lines-of-code:
 	./loc.sh

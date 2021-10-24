@@ -173,6 +173,7 @@ mac_osx:
 mingw:
 	rm -f *.pdb
 	LINK_FLAGS="$(MINGW_LINK_FLAGS)" make engine
+	make -C .. commit_hash
 
 pahole:
 	# Check struct alignnment using pahole

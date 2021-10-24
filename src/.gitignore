@@ -1,5 +1,6 @@
 .coverage
 .eggs/
+COMMIT
 dist/
 htmlcov/
 sg_py_vendor/
