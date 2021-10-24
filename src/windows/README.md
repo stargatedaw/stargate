@@ -14,7 +14,7 @@ The VM should have at least 100GB of hard disk space
   to select the option to add Python to PATH / environment variables
 - Install [NSIS](https://nsis.sourceforge.io/Download)
 - Install [Visual Studio](https://visualstudio.microsoft.com/downloads/),
-  select the `C++ desktop application` package
+  select the `Desktop Development with C++` package
 
 ## MSYS2 Terminal
 ```
@@ -24,12 +24,13 @@ pacman -S git make
 git clone https://github.com/stargateaudio/stargate.git
 cd stargate
 ./scripts/msys2_deps.sh
-cd src/
-make mingw_deps
+cd src/vendor
 # Because git submodule init does not seem to work on Windows
-cd vendor
 git clone https://github.com/stargateaudio/libcds.git
 git clone https://github.com/spatialaudio/portaudio-binaries.git
+# Build our dependencies
+cd ..
+make mingw_deps
 ```
 
 ## Windows cmd.exe
