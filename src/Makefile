@@ -80,9 +80,8 @@ mingw_deps:
 		 /mingw64/bin/libvorbisenc-2.dll \
 		 /mingw64/bin/rubberband.exe \
 		 engine/
-	wget -O engine/libportaudio.dll \
-		https://github.com/spatialaudio/portaudio-binaries/raw/master/libportaudio64bit.dll \
-		|| echo "Could not download portaudio with ASIO support"
+	cp vendor/portaudio-binaries/libportaudio64bit.dll engine/ \
+		|| echo "Could not install portaudio with ASIO support"
 
 
 mingw_deps_clean:
