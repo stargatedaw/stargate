@@ -178,6 +178,7 @@ def save_recorded_items(
         f_type, f_beat, f_track = f_event[:3]
         f_track = int(f_track)
         f_beat = float(f_beat)
+        f_beat -= a_start_beat
         if not f_track in f_note_tracker:
             f_note_tracker[f_track] = {}
 

@@ -94,18 +94,20 @@ NO_OPTIMIZATION int midiDeviceInit(
             }
         }
 
-        if(self->f_device_id == pmNoDevice)
-        {
+        if(self->f_device_id == pmNoDevice){
             return 1;
         }
 
         log_info("Opening MIDI device ID: %i", self->f_device_id);
         self->f_midi_err = Pm_OpenInput(
-            &self->f_midi_stream, self->f_device_id, NULL,
-            MIDI_EVENT_BUFFER_SIZE, NULL, NULL);
+            &self->f_midi_stream,
+            self->f_device_id, NULL,
+            MIDI_EVENT_BUFFER_SIZE,
+            NULL,
+            NULL
+        );
 
-        if(self->f_midi_err != pmNoError)
-        {
+        if(self->f_midi_err != pmNoError){
             return 2;
         }
     }
@@ -223,23 +225,19 @@ void midiPoll(t_midi_device * self){
     int i;
 
     f_poll_result = Pm_Poll(self->f_midi_stream);
-    if(f_poll_result < 0)
-    {
+    if(f_poll_result < 0){
         log_info("Portmidi error %s", Pm_GetErrorText(f_poll_result));
-    }
-    else if(f_poll_result > 0)
-    {
-        int numEvents = Pm_Read(self->f_midi_stream, self->portMidiBuffer,
-                MIDI_EVENT_BUFFER_SIZE);
+    } else if(f_poll_result > 0){
+        int numEvents = Pm_Read(
+            self->f_midi_stream,
+            self->portMidiBuffer,
+            MIDI_EVENT_BUFFER_SIZE
+        );
 
-        if (numEvents < 0)
-        {
+        if (numEvents < 0){
             log_info("PortMidi error: %s", Pm_GetErrorText((PmError)numEvents));
-        }
-        else if(numEvents > 0)
-        {
-            for (i = 0; i < numEvents; i++)
-            {
+        } else if(numEvents > 0){
+            for (i = 0; i < numEvents; i++){
                 status = Pm_MessageStatus(self->portMidiBuffer[i].message);
 
                 if ((status & 0xF8) == 0xF8) {
@@ -249,7 +247,7 @@ void midiPoll(t_midi_device * self){
 
                 reprocessMessage:
 
-                if (!f_bInSysex) {
+                if (!f_bInSysex){
                     if (status == 0xF0) {
                         f_bInSysex = 1;
                         status = 0;
@@ -263,12 +261,10 @@ void midiPoll(t_midi_device * self){
                     }
                 }
 
-                if(f_bInSysex)
-                {
+                if(f_bInSysex){
                     // Abort (drop) the current System Exclusive message if a
                     //  non-realtime status byte was received
-                    if (status > 0x7F && status < 0xF7)
-                    {
+                    if (status > 0x7F && status < 0xF7){
                         f_bInSysex = 0;
                         //f_cReceiveMsg_index = 0;
                         log_info("Buggy MIDI device: SysEx interrupted");
@@ -278,24 +274,22 @@ void midiPoll(t_midi_device * self){
                     // Collect bytes from PmMessage
                     int data = 0;
                     int shift;
-                    for (shift = 0; shift < 32 && (data != MIDI_EOX);
-                            shift += 8)
-                    {
-                        if ((data & 0xF8) == 0xF8)
-                        {
+                    for(
+                        shift = 0;
+                        shift < 32 && (data != MIDI_EOX);
+                        shift += 8
+                    ){
+                        if ((data & 0xF8) == 0xF8){
                             // Handle real-time messages at any time
                             midiReceive(self, data, 0, 0);
-                        }
-                        else
-                        {
+                        } else {
                             //m_cReceiveMsg[m_cReceiveMsg_index++] = data =
                             //    (portMidiBuffer[i].message >> shift) & 0xFF;
                         }
                     }
 
                     // End System Exclusive message if the EOX byte was received
-                    if (data == MIDI_EOX)
-                    {
+                    if (data == MIDI_EOX){
                         f_bInSysex = 0;
                         log_info(
                             "Dropping MIDI message in if (data == MIDI_EOX)"
@@ -324,8 +318,7 @@ void midiDeviceRead(
 
     self->instanceEventCounts = 0;
 
-    while(self->midiEventReadIndex != self->midiEventWriteIndex)
-    {
+    while(self->midiEventReadIndex != self->midiEventWriteIndex){
         t_seq_event *ev =
             &self->midiEventBuffer[self->midiEventReadIndex];
 
@@ -340,8 +333,9 @@ void midiDeviceRead(
 
         /* Stop processing incoming MIDI if an instance's event buffer is
          * full. */
-        if (self->instanceEventCounts == MIDI_EVENT_BUFFER_SIZE)
+        if (self->instanceEventCounts == MIDI_EVENT_BUFFER_SIZE){
             break;
+        }
 
         /* Each event has a real-time timestamp indicating when it was
          * received (set by midi_callback).  We need to calculate the
@@ -353,20 +347,19 @@ void midiDeviceRead(
         evtv.tv_sec = ev->tv_sec;
         evtv.tv_usec = ev->tv_nsec / 1000;
 
-        if (evtv.tv_sec > tv.tv_sec ||
-            (evtv.tv_sec == tv.tv_sec && evtv.tv_usec > tv.tv_usec))
-        {
+        if (
+            evtv.tv_sec > tv.tv_sec
+            ||
+            (evtv.tv_sec == tv.tv_sec && evtv.tv_usec > tv.tv_usec)
+        ){
             break;
         }
 
         diff.tv_sec = tv.tv_sec - evtv.tv_sec;
-        if (tv.tv_usec < evtv.tv_usec)
-        {
+        if (tv.tv_usec < evtv.tv_usec){
             --diff.tv_sec;
             diff.tv_usec = tv.tv_usec + 1000000 - evtv.tv_usec;
-        }
-        else
-        {
+        } else {
             diff.tv_usec = tv.tv_usec - evtv.tv_usec;
         }
 
@@ -376,8 +369,11 @@ void midiDeviceRead(
             ((diff.tv_usec - 1000 * (diff.tv_usec / 1000)) * sample_rate)
             / 1000000;
 
-        if (framediff >= framesPerBuffer) framediff = framesPerBuffer - 1;
-        else if (framediff < 0) framediff = 0;
+        if (framediff >= framesPerBuffer){
+            framediff = framesPerBuffer - 1;
+        } else if (framediff < 0){
+            framediff = 0;
+        }
 
         ev->tick = framesPerBuffer - framediff - 1;
         int f_max_tick = framesPerBuffer - 1;

@@ -580,7 +580,9 @@ class MainWindow(QScrollArea):
                 shared.PIANO_ROLL_EDITOR.highlight_keys(f_state, f_note)
             elif a_key == "ml":
                 glbl_shared.PLUGIN_UI_DICT.midi_learn_control[0].update_cc_map(
-                    a_val, glbl_shared.PLUGIN_UI_DICT.midi_learn_control[1])
+                    a_val,
+                    glbl_shared.PLUGIN_UI_DICT.midi_learn_control[1],
+                )
             elif a_key == "ready":
                 glbl_shared.on_ready()
         #This prevents multiple events from moving the same control,
@@ -594,7 +596,9 @@ class MainWindow(QScrollArea):
             f_plugin_uid, f_port = (int(x) for x in k)
             if f_plugin_uid in glbl_shared.PLUGIN_UI_DICT:
                 glbl_shared.PLUGIN_UI_DICT[f_plugin_uid].set_control_val(
-                    f_port, float(f_val))
+                    f_port,
+                    float(f_val),
+                )
         for k, f_val in f_cc_dict.items():
             f_track_num, f_cc = (int(x) for x in k)
             uids = []
