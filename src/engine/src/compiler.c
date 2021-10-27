@@ -125,7 +125,7 @@ void sg_print_stack_trace(){
 #endif
 
     log_info("Traceback (most recent call first):");
-    for(i = 0; i < 25; i++){
+    for(i = 0; i < 100; i++){
         BOOL result = StackWalk64(
             image, 
             process, 
@@ -159,10 +159,10 @@ void sg_print_stack_trace(){
         } else {
             strcpy(sym_name, "???");
         }
-        if(SymGetLineFromAddr(
-            process, 
-            stackframe.AddrPC.Offset, 
-            &displacement32, 
+        if(SymGetLineFromAddr64(
+            process,
+            stackframe.AddrPC.Offset,
+            &displacement32,
             &line64
         )){
             line_num = line64.LineNumber;

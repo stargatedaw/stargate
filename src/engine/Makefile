@@ -172,7 +172,7 @@ mac_osx:
 
 mingw:
 	# Build the Windows engine using MSYS2
-	rm -f *.pdb
+	rm -f stargate-engine.pdb
 	LINK_FLAGS="$(MINGW_LINK_FLAGS)" make engine
 	make -C .. commit_hash
 	###################

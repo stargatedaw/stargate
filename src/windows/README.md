@@ -30,6 +30,11 @@ The VM should have at least 100GB of hard disk space
 - Install [Visual Studio](https://visualstudio.microsoft.com/downloads/),
   select the `Desktop Development with C++` package
 
+### Optional
+- Install [WinDbg](
+    https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools
+  ).  Useful for debugging
+
 ## MSYS2 Terminal
 ```
 cd ~

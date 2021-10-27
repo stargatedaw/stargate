@@ -1,6 +1,7 @@
 .vs
 *.gcda
 *.gcno
+*.pdb
 *.rpm
 *.so
 *.swp
