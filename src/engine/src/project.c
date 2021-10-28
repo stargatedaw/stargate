@@ -11,7 +11,7 @@ void v_open_tracks(){
 }
 
 void v_open_project(const char* a_project_folder, int a_first_load){
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     struct timespec f_start, f_finish;
     clock_gettime(CLOCK_REALTIME, &f_start);
 #endif
@@ -85,7 +85,7 @@ void v_open_project(const char* a_project_folder, int a_first_load){
     v_daw_open_project(a_first_load);
     log_info("Finished opening projects");
 
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     clock_gettime(CLOCK_REALTIME, &f_finish);
     v_print_benchmark("v_open_project", f_start, f_finish);
 #endif

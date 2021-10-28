@@ -1,5 +1,5 @@
 #include "compiler.h"
-#ifdef _WIN32
+#ifdef SG_OS_WINDOWS
     #include <windows.h>
     #include <DbgHelp.h>
 #else
@@ -12,28 +12,27 @@
 
 
 
-#ifdef __APPLE__
-
-void pthread_spin_init(OSSpinLock * a_lock, void * a_opts){
-    *a_lock = 0;
-}
-
-#endif
-
-#ifdef __linux__
-
-void prefetch_range(void *addr, size_t len){
-    char *cp;
-    char *end = (char*)addr + len;
-
-    for(cp = (char*)addr; cp < end; cp += PREFETCH_STRIDE){
-        prefetch(cp);
+#ifdef SG_OS_MAC_OS_X
+    #define SG_OS_MACOSX
+    void pthread_spin_init(OSSpinLock * a_lock, void * a_opts){
+        *a_lock = 0;
     }
-}
+#endif
+
+#ifdef SG_OS_LINUX
+    #define SG_OS_LINUX
+    void prefetch_range(void *addr, size_t len){
+        char *cp;
+        char *end = (char*)addr + len;
+
+        for(cp = (char*)addr; cp < end; cp += PREFETCH_STRIDE){
+            prefetch(cp);
+        }
+    }
 
 #endif
 
-#if defined(_WIN32)
+#if defined(SG_OS_WINDOWS)
     #define REAL_PATH_SEP "\\"
     char * get_home_dir(){
         char * f_result = getenv("USERPROFILE");
@@ -52,7 +51,7 @@ void prefetch_range(void *addr, size_t len){
 NO_OPTIMIZATION void v_self_set_thread_affinity(){
     v_pre_fault_thread_stack(1024 * 512);
 
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     pthread_attr_t threadAttr;
     pthread_attr_init(&threadAttr);
     pthread_attr_setstacksize(&threadAttr, 1024 * 1024);
@@ -68,7 +67,7 @@ NO_OPTIMIZATION void v_self_set_thread_affinity(){
 }
 
 void v_pre_fault_thread_stack(int stacksize){
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     int pagesize = sysconf(_SC_PAGESIZE);
     stacksize -= pagesize * 20;
 
@@ -86,26 +85,26 @@ void v_pre_fault_thread_stack(int stacksize){
 
 
 void sg_print_stack_trace(){
-#ifdef _WIN32
+#ifdef SG_OS_WINDOWS
     size_t i;
     int line_num;
     char sym_name[256];
     char file_name[1024];
     HANDLE process = GetCurrentProcess();
     HANDLE thread = GetCurrentThread();
-  
+
     CONTEXT context;
     memset(&context, 0, sizeof(CONTEXT));
     context.ContextFlags = CONTEXT_FULL;
     RtlCaptureContext(&context);
-  
+
     SymInitialize(process, NULL, TRUE);
-  
+
     DWORD image;
     STACKFRAME64 stackframe;
     IMAGEHLP_LINE64 line64;
     ZeroMemory(&stackframe, sizeof(STACKFRAME64));
-  
+
 #ifdef _M_IX86
     image = IMAGE_FILE_MACHINE_I386;
     stackframe.AddrPC.Offset = context.Eip;
@@ -127,32 +126,32 @@ void sg_print_stack_trace(){
     log_info("Traceback (most recent call first):");
     for(i = 0; i < 100; i++){
         BOOL result = StackWalk64(
-            image, 
-            process, 
+            image,
+            process,
             thread,
-            &stackframe, 
-            &context, 
-            NULL, 
-            SymFunctionTableAccess64, 
-            SymGetModuleBase64, 
+            &stackframe,
+            &context,
+            NULL,
+            SymFunctionTableAccess64,
+            SymGetModuleBase64,
             NULL
         );
-    
+
         if(!result){
             break;
         }
-    
+
         char buffer[sizeof(SYMBOL_INFO) + MAX_SYM_NAME * sizeof(TCHAR)];
         PSYMBOL_INFO symbol = (PSYMBOL_INFO)buffer;
         symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
         symbol->MaxNameLen = MAX_SYM_NAME;
-    
+
         DWORD64 displacement64 = 0;
         DWORD displacement32 = 0;
         if(SymFromAddr(
-            process, 
-            stackframe.AddrPC.Offset, 
-            &displacement64, 
+            process,
+            stackframe.AddrPC.Offset,
+            &displacement64,
             symbol
         )){
             strcpy(sym_name, symbol->Name);
@@ -168,13 +167,13 @@ void sg_print_stack_trace(){
             line_num = line64.LineNumber;
             strcpy(file_name, line64.FileName);
         } else {
-            line_num = -1; 
+            line_num = -1;
             sprintf(file_name, "???");
         }
 
         log_info("[%i] %s %s:%i", i, sym_name, file_name, line_num);
     }
-  
+
     SymCleanup(process);
 #else
     void* callstack[128];

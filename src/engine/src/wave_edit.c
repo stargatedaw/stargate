@@ -150,7 +150,7 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
 
     log_info("Successfully opened SNDFILE");
 
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     struct timespec f_start, f_finish;
     clock_gettime(CLOCK_REALTIME, &f_start);
 #endif
@@ -184,7 +184,7 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
         sg_write_audio(f_sndfile, f_output, f_block_size);
     }
 
-#ifdef __linux__
+#ifdef SG_OS_LINUX
 
     clock_gettime(CLOCK_REALTIME, &f_finish);
 
@@ -211,7 +211,7 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
     STARGATE->is_offline_rendering = 0;
     pthread_spin_unlock(&STARGATE->main_lock);
 
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     chown_file(a_file_out);
 #endif
 

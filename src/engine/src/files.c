@@ -9,7 +9,7 @@
 #include "file/path.h"
 #include "files.h"
 
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     #include <sys/types.h>
     #include <unistd.h>
 

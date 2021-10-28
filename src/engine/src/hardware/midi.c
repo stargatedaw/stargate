@@ -101,7 +101,8 @@ NO_OPTIMIZATION int midiDeviceInit(
         log_info("Opening MIDI device ID: %i", self->f_device_id);
         self->f_midi_err = Pm_OpenInput(
             &self->f_midi_stream,
-            self->f_device_id, NULL,
+            self->f_device_id,
+            NULL,
             MIDI_EVENT_BUFFER_SIZE,
             NULL,
             NULL
@@ -254,21 +255,23 @@ void midiPoll(t_midi_device * self){
                     } else {
                         //unsigned char channel = status & 0x0F;
                         unsigned char note = Pm_MessageData1(
-                                self->portMidiBuffer[i].message);
+                            self->portMidiBuffer[i].message
+                        );
                         unsigned char velocity = Pm_MessageData2(
-                                self->portMidiBuffer[i].message);
+                            self->portMidiBuffer[i].message
+                        );
                         midiReceive(self, status, note, velocity);
                     }
                 }
 
                 if(f_bInSysex){
                     // Abort (drop) the current System Exclusive message if a
-                    //  non-realtime status byte was received
+                    // non-realtime status byte was received
                     if (status > 0x7F && status < 0xF7){
                         f_bInSysex = 0;
                         //f_cReceiveMsg_index = 0;
                         log_info("Buggy MIDI device: SysEx interrupted");
-                        goto reprocessMessage;    // Don't lose the new message
+                        goto reprocessMessage;  // Don't lose the new message
                     }
 
                     // Collect bytes from PmMessage

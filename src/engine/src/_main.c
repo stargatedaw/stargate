@@ -49,7 +49,7 @@ GNU General Public License for more details.
     #include "hardware/midi.h"
 #endif
 
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     sigset_t _signals;
 #endif
 
@@ -74,7 +74,7 @@ typedef struct{
     int pid;
 }ui_thread_args;
 
-#if defined(__linux__)
+#if defined(SG_OS_LINUX)
 NO_OPTIMIZATION void * ui_process_monitor_thread(
     void * a_thread_args
 ){
@@ -193,7 +193,7 @@ int _main(int argc, char** argv){
     }
 
     set_thread_params();
-#if defined(__linux__)
+#if defined(SG_OS_LINUX)
     start_ui_thread(ui_pid);
 #endif
     start_osc_thread();
@@ -316,7 +316,7 @@ NO_OPTIMIZATION void start_osc_thread(){
     );
 }
 
-#if defined(__linux__)
+#if defined(SG_OS_LINUX)
     NO_OPTIMIZATION void start_ui_thread(int pid){
         log_info("Starting UI monitor thread");
         pthread_attr_t f_ui_threadAttr;
@@ -347,7 +347,7 @@ NO_OPTIMIZATION void sigsegv_handler(int sig){
 
 NO_OPTIMIZATION void setup_signal_handling(){
     log_info("Setting up signal handling");
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     setsid();
     sigemptyset (&_signals);
     sigaddset(&_signals, SIGHUP);
@@ -362,7 +362,7 @@ NO_OPTIMIZATION void setup_signal_handling(){
     signal(SIGINT, signalHandler);
     signal(SIGTERM, signalHandler);
     signal(SIGSEGV, sigsegv_handler);
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     signal(SIGHUP, signalHandler);
     signal(SIGQUIT, signalHandler);
     pthread_sigmask(SIG_UNBLOCK, &_signals, 0);
@@ -371,7 +371,7 @@ NO_OPTIMIZATION void setup_signal_handling(){
 
 
 NO_OPTIMIZATION void destruct_signal_handling(){
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     log_info("Destroying signal handling");
     sigemptyset(&_signals);
     sigaddset(&_signals, SIGHUP);
@@ -382,7 +382,7 @@ NO_OPTIMIZATION void destruct_signal_handling(){
 
 
 NO_OPTIMIZATION void set_thread_params(){
-#ifndef __linux__
+#ifndef SG_OS_LINUX
     log_info("Setting thread params");
     int f_current_proc_sched = sched_getscheduler(0);
 

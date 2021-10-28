@@ -4,14 +4,14 @@
 #include "audiodsp/lib/lmalloc.h"
 #include "compiler.h"
 
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     #include <sys/mman.h>
 #endif
 
 
 void small_page_aligned_alloc(void ** a_ptr, size_t a_size, int a_alignment)
 {
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     sg_assert(
         (int)(posix_memalign(a_ptr, a_alignment, a_size) == 0),
         NULL
@@ -44,7 +44,7 @@ char * hugepage_align(char * a_pos, int a_alignment)
 
 int alloc_hugepage_data()
 {
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     huge_page_data * f_data = &HUGE_PAGE_DATA[HUGE_PAGE_DATA_COUNT];
     f_data->start = (char*)mmap(NULL, HUGEPAGE_ALLOC_SIZE,
         PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS |
@@ -73,7 +73,7 @@ int alloc_hugepage_data()
 
 void hp_aligned_alloc(void ** a_ptr, size_t a_size, int a_alignment)
 {
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     if(USE_HUGEPAGES)
     {
         if(!HUGE_PAGE_DATA_COUNT && !alloc_hugepage_data())

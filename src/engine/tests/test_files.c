@@ -11,7 +11,7 @@ static void TestWriteChownReadDelete(){
     char buffer[50];
 
     v_write_to_file(path, text);
-#ifdef __linux__
+#ifdef SG_OS_LINUX
     chown_file(path);
 #endif
     get_string_from_file(

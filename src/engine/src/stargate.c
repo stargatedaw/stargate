@@ -448,7 +448,7 @@ void v_set_host(int a_mode){
     }
 }
 
-#ifdef __linux__
+#ifdef SG_OS_LINUX
 /* Create a clock_t with clock() when beginning some work,
  * and use this function to print the completion time*/
 double v_print_benchmark(

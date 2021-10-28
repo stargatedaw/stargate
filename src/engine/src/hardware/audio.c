@@ -103,7 +103,7 @@ NO_OPTIMIZATION int open_audio_device(
 
     outputParameters.suggestedLatency = f_device_info->defaultLowOutputLatency;
 
-#if defined(_WIN32) || defined(__APPLE__)
+#if defined(SG_OS_WINDOWS) || defined(SG_OS_MAC_OS_X)
     if(config->input_name[0] == '\0'){
         inputParameters.channelCount = 0;
     } else {
