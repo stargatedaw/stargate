@@ -83,8 +83,8 @@ def svg_to_pixmap(path: str, width=None, height=None):
         svg_width = float(root.attrib['width'])
         svg_height = float(root.attrib['height'])
         if not width and not height:  # no scaling
-            width = svg_width
-            height = svg_height
+            width = int(round(svg_width))
+            height = int(round(svg_height))
         elif not width:  # scale to height, preserve aspect ratio
             width = int(svg_width * (height / svg_height))
         elif not height:  # scale to width, preserve aspect ratio

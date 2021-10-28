@@ -605,7 +605,10 @@ class AudioItemViewerWidget(QGraphicsView):
         )
         if not self.pixmaps:
             for f_path in self.path_list:
-                f_pixmap = QPixmap(AUDIO_ITEM_SCENE_WIDTH, f_path_inc)
+                f_pixmap = QPixmap(
+                    int(AUDIO_ITEM_SCENE_WIDTH),
+                    int(f_path_inc),
+                )
                 f_painter = QPainter(f_pixmap)
                 f_painter.setRenderHint(
                     QPainter.RenderHint.Antialiasing,

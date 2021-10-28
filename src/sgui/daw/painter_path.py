@@ -146,7 +146,10 @@ def painter_path(
     f_pen.setCosmetic(True)
 
     for f_i in range(f_count):
-        f_pixmap = QPixmap(min(f_width, PIXMAP_TILE_WIDTH), a_height)
+        f_pixmap = QPixmap(
+            int(min(f_width, PIXMAP_TILE_WIDTH)),
+            int(a_height),
+        )
         f_width -= PIXMAP_TILE_WIDTH
         f_pixmap.fill(
             QColor(
