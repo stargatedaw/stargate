@@ -66,7 +66,12 @@ class additive_osc_amp_bar(QGraphicsRectItem):
         self.setPen(QPen(QtCore.Qt.GlobalColor.white))
         self.x_pos = a_x_pos
         self.setPos(a_x_pos, ADDITIVE_OSC_HEIGHT - ADDITIVE_OSC_INC)
-        self.setRect(0.0, 0.0, ADDITIVE_OSC_BAR_WIDTH, ADDITIVE_OSC_INC)
+        self.setRect(
+            0.0, 
+            0.0, 
+            float(ADDITIVE_OSC_BAR_WIDTH), 
+            float(ADDITIVE_OSC_INC),
+        )
         self.value = ADDITIVE_OSC_MIN_AMP
         self.extend_to_bottom()
 
@@ -93,8 +98,8 @@ class additive_osc_amp_bar(QGraphicsRectItem):
         self.setRect(
             0.0,
             0.0,
-            ADDITIVE_OSC_BAR_WIDTH,
-            ADDITIVE_OSC_HEIGHT - f_pos_y - 1.0,
+            float(ADDITIVE_OSC_BAR_WIDTH),
+            float(ADDITIVE_OSC_HEIGHT - f_pos_y - 1.0),
         )
 
 class additive_wav_viewer(QGraphicsView):
@@ -107,7 +112,11 @@ class additive_wav_viewer(QGraphicsView):
         self.setScene(self.scene)
         self.scene.setBackgroundBrush(ADD_OSC_BACKGROUND)
         self.setSceneRect(
-            0.0, 0.0, ADDITIVE_WAVETABLE_SIZE, ADDITIVE_OSC_HEIGHT)
+            0.0, 
+            0.0, 
+            float(ADDITIVE_WAVETABLE_SIZE), 
+            float(ADDITIVE_OSC_HEIGHT),
+        )
         self.setHorizontalScrollBarPolicy(
             QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
         )
@@ -171,7 +180,11 @@ class additive_osc_viewer(QGraphicsView):
         self.scene.mouseMoveEvent = self.scene_mouseMoveEvent
         self.scene.setBackgroundBrush(ADD_OSC_BACKGROUND)
         self.setSceneRect(
-            0.0, 0.0, ADDITIVE_OSC_WIDTH, ADDITIVE_OSC_HEIGHT)
+            0.0, 
+            0.0, 
+            float(ADDITIVE_OSC_WIDTH), 
+            float(ADDITIVE_OSC_HEIGHT),
+        )
         self.bars = []
         for f_i in range(
         0, ADDITIVE_OSC_WIDTH, int(ADDITIVE_OSC_BAR_WIDTH)):

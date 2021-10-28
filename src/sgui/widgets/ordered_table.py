@@ -79,7 +79,7 @@ class OrderedTableItem(QGraphicsRectItem):
         self.text = str(a_text)
         self.text_item = QGraphicsTextItem(a_text, self)
         self.text_item.setDefaultTextColor(QtCore.Qt.GlobalColor.black)
-        self.setRect(0, 0, a_width, a_height)
+        self.setRect(0., 0., float(a_width), float(a_height))
         self.setPos(0, a_y)
         self.default_brush = a_brush
         self.setBrush(a_brush)

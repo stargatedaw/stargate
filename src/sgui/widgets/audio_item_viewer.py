@@ -44,8 +44,12 @@ class audio_marker_widget(QGraphicsRectItem):
         """ a_type:  0 == start, 1 == end, more types eventually... """
         self.audio_item_marker_height = 66.0
         QGraphicsRectItem.__init__(
-            self, 0, 0, self.audio_item_marker_height,
-            self.audio_item_marker_height)
+            self, 
+            0., 
+            0., 
+            float(self.audio_item_marker_height),
+            float(self.audio_item_marker_height),
+        )
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         self.callback = a_callback
         self.graph_object = a_graph_object
@@ -195,8 +199,12 @@ class audio_fade_marker_widget(QGraphicsRectItem):
         """ a_type:  0 == start, 1 == end, more types eventually... """
         self.audio_item_marker_height = 66.0
         QGraphicsRectItem.__init__(
-            self, 0, 0, self.audio_item_marker_height,
-            self.audio_item_marker_height)
+            self, 
+            0., 
+            0., 
+            float(self.audio_item_marker_height),
+            float(self.audio_item_marker_height),
+        )
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         self.callback = a_callback
         self.line = QGraphicsLineItem(
@@ -618,8 +626,8 @@ class AudioItemViewerWidget(QGraphicsView):
                 f_painter.fillRect(
                     0,
                     0,
-                    AUDIO_ITEM_SCENE_WIDTH,
-                    f_path_inc,
+                    int(AUDIO_ITEM_SCENE_WIDTH),
+                    int(f_path_inc),
                     scene_background_brush,
                 )
                 f_painter.drawPath(f_path)

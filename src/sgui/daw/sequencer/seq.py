@@ -848,13 +848,13 @@ class ItemSequencer(QGraphicsView):
             -3.0,
             0.0,
             f_size + self.width() + 3.0,
-            _shared.SEQUENCE_EDITOR_TOTAL_HEIGHT,
+            float(_shared.SEQUENCE_EDITOR_TOTAL_HEIGHT),
         )
         self.header = QGraphicsRectItem(
-            0,
-            0,
-            f_size,
-            _shared.SEQUENCE_EDITOR_HEADER_HEIGHT,
+            0.,
+            0.,
+            float(f_size),
+            float(_shared.SEQUENCE_EDITOR_HEADER_HEIGHT),
         )
         self.header.setZValue(1500.0)
         self.header.setBrush(
@@ -875,10 +875,10 @@ class ItemSequencer(QGraphicsView):
                     f_marker.beat - f_marker.start_beat
                 ) * _shared.SEQUENCER_PX_PER_BEAT
                 region = QGraphicsRectItem(
-                    f_x,
-                    0,
-                    width,
-                    _shared.SEQUENCE_EDITOR_HEADER_HEIGHT,
+                    float(f_x),
+                    0.,
+                    float(width),
+                    float(_shared.SEQUENCE_EDITOR_HEADER_HEIGHT),
                     self.header,
                 )
                 region.setZValue(0.)

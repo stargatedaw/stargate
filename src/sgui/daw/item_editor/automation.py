@@ -216,7 +216,11 @@ class AutomationEditor(AbstractItemEditor):
         self.header.setPos(self.axis_size, 0)
         self.scene.addItem(self.header)
         self.y_axis = QGraphicsRectItem(
-            0, 0, self.axis_size, self.viewer_height)
+            0., 
+            0., 
+            float(self.axis_size), 
+            float(self.viewer_height),
+        )
         self.y_axis.setPos(0, self.axis_size)
         self.scene.addItem(self.y_axis)
         if shared.ITEM_REF_POS:
@@ -365,7 +369,11 @@ class AutomationEditor(AbstractItemEditor):
             self.scene.addItem(f_note_item)
 
         self.setSceneRect(
-            0.0, 0.0, self.grid_max_start_time + 20.0, self.height())
+            0.0, 
+            0.0, 
+            float(self.grid_max_start_time + 20.0), 
+            float(self.height()),
+        )
         self.setUpdatesEnabled(True)
         self.update()
 

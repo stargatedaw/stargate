@@ -9,7 +9,13 @@ ROUTING_GRAPH_FROM_BRUSH = None
 
 class RoutingGraphNode(QGraphicsRectItem):
     def __init__(self, a_text, a_width, a_height):
-        QGraphicsRectItem.__init__(self, 0, 0, a_width, a_height)
+        QGraphicsRectItem.__init__(
+            self, 
+            0., 
+            0., 
+            float(a_width), 
+            float(a_height),
+        )
         self.text = get_font().QGraphicsSimpleTextItem(a_text, self)
         self.setToolTip(a_text)
         self.text.setPos(3.0, 3.0)
@@ -114,8 +120,8 @@ class RoutingGraphWidget(QGraphicsView):
         self.scene.setSceneRect(
             0.0,
             0.0,
-            self.width(),
-            self.height(),
+            float(self.width()),
+            float(self.height()),
         )
         self.node_width = self.graph_width / 32.0
         self.node_height = self.graph_height / 32.0
@@ -175,8 +181,8 @@ class RoutingGraphWidget(QGraphicsView):
         self.background_item = QGraphicsRectItem(
             0.0,
             0.0,
-            self.graph_width,
-            self.graph_height,
+            float(self.graph_width),
+            float(self.graph_height),
         )
         self.background_item.setBrush(QtCore.Qt.GlobalColor.transparent)
         self.background_item.setPen(QPen(QtCore.Qt.GlobalColor.black))

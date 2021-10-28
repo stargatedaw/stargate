@@ -447,10 +447,10 @@ class PianoRollEditor(AbstractItemEditor):
         f_piano_label = QFont()
         f_piano_label.setPointSize(8)
         self.piano = QGraphicsRectItem(
-            0,
-            0,
-            self.piano_width,
-            self.piano_height,
+            0.,
+            0.,
+            float(self.piano_width),
+            float(self.piano_height),
         )
         self.scene.addItem(self.piano)
         self.piano.mapToScene(
@@ -538,10 +538,10 @@ class PianoRollEditor(AbstractItemEditor):
                 f_octave_brushes[f_index:] + f_octave_brushes[:f_index]
         self.first_open = False
         f_note_bar = QGraphicsRectItem(
-            0,
-            0,
-            self.viewer_width,
-            self.note_height,
+            0.,
+            0.,
+            float(self.viewer_width),
+            float(self.note_height),
         )
         f_note_bar.hoverMoveEvent = self.hover_restore_cursor_event
         f_note_bar.setBrush(f_base_brush)
@@ -556,10 +556,10 @@ class PianoRollEditor(AbstractItemEditor):
         ):
             for j in range(self.notes_in_octave, 0, -1):
                 f_note_bar = QGraphicsRectItem(
-                    0,
-                    0,
-                    self.viewer_width,
-                    self.note_height,
+                    0.,
+                    0.,
+                    float(self.viewer_width),
+                    float(self.note_height),
                 )
                 f_note_bar.setZValue(60.0)
                 self.scene.addItem(f_note_bar)
@@ -653,8 +653,8 @@ class PianoRollEditor(AbstractItemEditor):
         self.setSceneRect(
             0.0,
             0.0,
-            self.viewer_width + 200.0,
-            self.piano_height + _shared.PIANO_ROLL_HEADER_HEIGHT + 24.0,
+            float(self.viewer_width + 200.0),
+            float(self.piano_height + _shared.PIANO_ROLL_HEADER_HEIGHT + 24.0),
         )
         shared.PIANO_ROLL_GRID_MAX_START_TIME = (shared.PIANO_ROLL_GRID_WIDTH -
             1.0) + shared.PIANO_KEYS_WIDTH

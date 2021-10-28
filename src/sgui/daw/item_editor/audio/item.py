@@ -97,8 +97,8 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
             QtCore.QRectF(
                 0.0,
                 0.0,
-                shared.AUDIO_ITEM_HANDLE_SIZE,
-                shared.AUDIO_ITEM_HANDLE_HEIGHT,
+                float(shared.AUDIO_ITEM_HANDLE_SIZE),
+                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
             ),
         )
         self.start_handle.mousePressEvent = self.start_handle_mouseClickEvent
@@ -119,8 +119,13 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         self.length_handle.hoverEnterEvent = self.generic_hoverEnterEvent
         self.length_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
         self.length_handle.setRect(
-            QtCore.QRectF(0.0, 0.0, shared.AUDIO_ITEM_HANDLE_SIZE,
-                          shared.AUDIO_ITEM_HANDLE_HEIGHT))
+            QtCore.QRectF(
+                0.0, 
+                0.0, 
+                float(shared.AUDIO_ITEM_HANDLE_SIZE),
+                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
+            ),
+        )
         self.length_handle.mousePressEvent = self.length_handle_mouseClickEvent
         self.length_handle_line = QGraphicsLineItem(
             shared.AUDIO_ITEM_HANDLE_SIZE, shared.AUDIO_ITEM_HANDLE_HEIGHT,
@@ -133,12 +138,22 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         self.fade_in_handle.hoverEnterEvent = self.generic_hoverEnterEvent
         self.fade_in_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
         self.fade_in_handle.setRect(
-            QtCore.QRectF(0.0, 0.0, shared.AUDIO_ITEM_HANDLE_SIZE,
-                          shared.AUDIO_ITEM_HANDLE_HEIGHT))
+            QtCore.QRectF(
+                0.0, 
+                0.0, 
+                shared.AUDIO_ITEM_HANDLE_SIZE,
+                shared.AUDIO_ITEM_HANDLE_HEIGHT,
+            ),
+        )
         self.fade_in_handle.mousePressEvent = \
             self.fade_in_handle_mouseClickEvent
         self.fade_in_handle_line = QGraphicsLineItem(
-            0.0, 0.0, 0.0, 0.0, self)
+            0.0, 
+            0.0, 
+            0.0, 
+            0.0, 
+            self,
+        )
 
         self.fade_out_handle = QGraphicsRectItem(parent=self)
         self.fade_out_handle.setAcceptHoverEvents(True)
@@ -148,8 +163,8 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
             QtCore.QRectF(
                 0.0,
                 0.0,
-                shared.AUDIO_ITEM_HANDLE_SIZE,
-                shared.AUDIO_ITEM_HANDLE_HEIGHT,
+                float(shared.AUDIO_ITEM_HANDLE_SIZE),
+                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
             ),
         )
         self.fade_out_handle.mousePressEvent = \
@@ -170,8 +185,8 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
             QtCore.QRectF(
                 0.0,
                 0.0,
-                shared.AUDIO_ITEM_HANDLE_SIZE,
-                shared.AUDIO_ITEM_HANDLE_HEIGHT,
+                float(shared.AUDIO_ITEM_HANDLE_SIZE),
+                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
             ),
         )
         self.stretch_handle.mousePressEvent = \
@@ -258,8 +273,8 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         self.rect_orig = QtCore.QRectF(
             0.0,
             0.0,
-            f_length_seconds,
-            shared.AUDIO_ITEM_HEIGHT,
+            float(f_length_seconds),
+            float(shared.AUDIO_ITEM_HEIGHT),
         )
         self.length_px_start = (self.audio_item.sample_start *
             0.001 * f_length_seconds)
@@ -273,7 +288,12 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
 
         f_fade_in = self.audio_item.fade_in * 0.001
         f_fade_out = self.audio_item.fade_out * 0.001
-        self.setRect(0.0, 0.0, f_length, shared.AUDIO_ITEM_HEIGHT)
+        self.setRect(
+            0.0, 
+            0.0, 
+            float(f_length), 
+            float(shared.AUDIO_ITEM_HEIGHT),
+        )
         f_fade_in_handle_pos = (f_length * f_fade_in)
         f_fade_in_handle_pos = clip_value(
             f_fade_in_handle_pos, 0.0, (f_length - 6.0))
@@ -396,7 +416,12 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         f_end = f_pos_x + self.rect().width()
         if f_end > f_max_x:
             f_end_px = f_max_x - f_pos_x
-            self.setRect(0.0, 0.0, f_end_px, shared.AUDIO_ITEM_HEIGHT)
+            self.setRect(
+                0.0, 
+                0.0, 
+                float(f_end_px), 
+                float(shared.AUDIO_ITEM_HEIGHT),
+            )
             self.audio_item.sample_end = \
                 ((self.rect().width() + self.length_px_start) /
                 self.length_seconds_orig_px) * 1000.0
@@ -1127,7 +1152,12 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
                 )
                 f_x = f_audio_item.quantize(f_x)
                 f_x -= f_audio_item.quantize_offset
-                f_audio_item.setRect(0.0, 0.0, f_x, shared.AUDIO_ITEM_HEIGHT)
+                f_audio_item.setRect(
+                    0.0, 
+                    0.0, 
+                    float(f_x), 
+                    float(shared.AUDIO_ITEM_HEIGHT),
+                )
                 f_item.sample_end = (
                     (
                         f_audio_item.rect().width()
@@ -1201,8 +1231,8 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
                 f_audio_item.setRect(
                     0.0,
                     0.0,
-                    f_x,
-                    shared.AUDIO_ITEM_HEIGHT,
+                    float(f_x),
+                    float(shared.AUDIO_ITEM_HEIGHT),
                 )
             elif (
                 self.is_amp_curving

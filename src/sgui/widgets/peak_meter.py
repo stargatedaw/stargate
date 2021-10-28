@@ -81,10 +81,10 @@ class peak_meter:
                 self.set_tooltip()
             f_rect_x = f_i * f_rect_width
             f_rect = QtCore.QRectF(
-                f_rect_x,
-                f_rect_y,
-                f_rect_width,
-                f_rect_height,
+                float(f_rect_x),
+                float(f_rect_y),
+                float(f_rect_width),
+                float(f_rect_height),
             )
             p.drawRect(f_rect)
 

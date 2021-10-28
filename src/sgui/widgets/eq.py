@@ -120,10 +120,10 @@ class eq_viewer(QGraphicsView):
         self.eq_points = []
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.setSceneRect(
-            -_shared.EQ_POINT_RADIUS,
-            -_shared.EQ_POINT_RADIUS,
-            _shared.EQ_WIDTH + _shared.EQ_POINT_RADIUS,
-            _shared.EQ_HEIGHT + _shared.EQ_POINT_DIAMETER,
+            float(-_shared.EQ_POINT_RADIUS),
+            float(-_shared.EQ_POINT_RADIUS),
+            float(_shared.EQ_WIDTH + _shared.EQ_POINT_RADIUS),
+            float(_shared.EQ_HEIGHT + _shared.EQ_POINT_DIAMETER),
         )
 
     def set_spectrum(self, a_message):

@@ -104,8 +104,8 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
             QtCore.QRectF(
                 0.0,
                 0.0,
-                shared.AUDIO_ITEM_HANDLE_SIZE,
-                shared.AUDIO_ITEM_HANDLE_HEIGHT,
+                float(shared.AUDIO_ITEM_HANDLE_SIZE),
+                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
             ),
         )
         self.start_handle.mousePressEvent = self.start_handle_mouseClickEvent
@@ -127,8 +127,13 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
         self.length_handle.hoverEnterEvent = self.generic_hoverEnterEvent
         self.length_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
         self.length_handle.setRect(
-            QtCore.QRectF(0.0, 0.0, shared.AUDIO_ITEM_HANDLE_SIZE,
-                          shared.AUDIO_ITEM_HANDLE_HEIGHT))
+            QtCore.QRectF(
+                0.0, 
+                0.0, 
+                float(shared.AUDIO_ITEM_HANDLE_SIZE),
+                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
+            ),
+        )
         self.length_handle.mousePressEvent = self.length_handle_mouseClickEvent
         self.length_handle_line = QGraphicsLineItem(
             shared.AUDIO_ITEM_HANDLE_SIZE,
@@ -148,8 +153,8 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
             QtCore.QRectF(
                 0.0,
                 0.0,
-                shared.AUDIO_ITEM_HANDLE_SIZE,
-                shared.AUDIO_ITEM_HANDLE_HEIGHT,
+                float(shared.AUDIO_ITEM_HANDLE_SIZE),
+                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
             ),
         )
         self.stretch_handle.mousePressEvent = \
@@ -266,12 +271,12 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
         self.rect_orig = QtCore.QRectF(
             0.0,
             0.0,
-            f_length,
-            shared.SEQUENCE_EDITOR_TRACK_HEIGHT,
+            float(f_length),
+            float(shared.SEQUENCE_EDITOR_TRACK_HEIGHT),
         )
         self.setRect(self.rect_orig)
 
-        label_rect = QtCore.QRectF(0.0, 0.0, f_length, 20)
+        label_rect = QtCore.QRectF(0.0, 0.0, float(f_length), 20.)
         self.label_bg.setRect(label_rect)
         if f_length < 20:
             self.label.hide()
@@ -358,8 +363,8 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
             self.setRect(
                 0.0,
                 0.0,
-                f_end_px,
-                shared.SEQUENCE_EDITOR_TRACK_HEIGHT,
+                float(f_end_px),
+                float(shared.SEQUENCE_EDITOR_TRACK_HEIGHT),
             )
             self.audio_item.sample_end = \
                 ((self.rect().width() + self.length_px_start) /
@@ -843,7 +848,11 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
                 f_x = f_audio_item.quantize(f_x)
                 f_x -= f_audio_item.quantize_offset
                 f_audio_item.setRect(
-                    0.0, 0.0, f_x, shared.SEQUENCE_EDITOR_TRACK_HEIGHT)
+                    0.0, 
+                    0.0, 
+                    float(f_x), 
+                    float(shared.SEQUENCE_EDITOR_TRACK_HEIGHT),
+                )
                 f_item.length_beats = f_x /_shared.SEQUENCER_PX_PER_BEAT
                 LOG.info(f_item.length_beats)
                 f_did_change = True
@@ -891,8 +900,8 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
                 f_audio_item.setRect(
                     0.0,
                     0.0,
-                    f_x,
-                    shared.SEQUENCE_EDITOR_TRACK_HEIGHT,
+                    float(f_x),
+                    float(shared.SEQUENCE_EDITOR_TRACK_HEIGHT),
                 )
             else:
                 f_item.modified = True

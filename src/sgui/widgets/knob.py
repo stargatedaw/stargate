@@ -147,7 +147,7 @@ class PixmapKnob(QDial):
         )
         f_rotate_value = f_frac_val * 270.0
         f_rect = self.rect()
-        arc_width = self.arc_width_pct * f_rect.width() * 0.01
+        arc_width = float(self.arc_width_pct * f_rect.width() * 0.01)
         f_rect.setWidth(int(f_rect.width() - arc_width))
         f_rect.setHeight(int(f_rect.height() - arc_width))
         f_rect.setX(int(f_rect.x() + arc_width))

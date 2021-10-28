@@ -854,7 +854,7 @@ def set_audio_seq_zoom(a_horizontal, a_vertical):
     shared.AUDIO_SEQ.scene.setSceneRect(
         0.0,
         0.0,
-        shared.AUDIO_PX_PER_BEAT * f_sequence_length,
-        shared.AUDIO_ITEM_HEIGHT * shared.AUDIO_ITEM_MAX_LANE,
+        float(shared.AUDIO_PX_PER_BEAT * f_sequence_length),
+        float(shared.AUDIO_ITEM_HEIGHT * shared.AUDIO_ITEM_MAX_LANE),
     )
 

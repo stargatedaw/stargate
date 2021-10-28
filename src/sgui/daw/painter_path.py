@@ -74,7 +74,7 @@ def painter_path(
 ):
     f_seconds_per_beat = 60.0 / a_tempo
     f_audio_path = QPainterPath()
-    f_audio_path.addRect(0, 0, 1, 1)
+    f_audio_path.addRect(0., 0., 1., 1.)
     for f_item in sorted(
         item.items.values(),
         key=lambda x: x.start_beat
@@ -101,7 +101,7 @@ def painter_path(
             f_y_pos += f_y_inc
 
     f_notes_path = QPainterPath()
-    f_notes_path.addRect(0, 0, 1, 1)
+    f_notes_path.addRect(0., 0., 1., 1.)
     if item.notes:
         f_note_set = sorted(
             set(x.note_num for x in item.notes),
@@ -125,7 +125,12 @@ def painter_path(
             f_y_pos = f_note_dict[f_note.note_num]
             f_x_pos = f_note.start * a_px_per_beat
             f_width = f_note.length * a_px_per_beat
-            f_notes_path.addRect(f_x_pos, f_y_pos, f_width, f_note_height)
+            f_notes_path.addRect(
+                float(f_x_pos), 
+                float(f_y_pos), 
+                float(f_width), 
+                float(f_note_height),
+            )
 
     f_audio_width = f_audio_path.boundingRect().width()
     f_notes_width = f_notes_path.boundingRect().width()
