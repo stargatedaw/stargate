@@ -90,7 +90,7 @@ TAB_IE_PB = 3
 SEQUENCE_EDITOR_TRACK_HEIGHT = 64
 constants.DAW_PROJECT = DawProject(util.WITH_AUDIO)
 TRACK_NAMES = [
-    "Audio Output" if x == 0 else "track{}".format(x)
+    "Main" if x == 0 else "track{}".format(x)
     for x in range(TRACK_COUNT_ALL)
 ]
 
@@ -416,7 +416,14 @@ def global_open_mixer():
     """ Update the mixer to reflect the current routing and track names """
     f_graph = constants.DAW_PROJECT.get_routing_graph()
     f_track_names = {
-        f_i:x for f_i, x in zip(range(len(TRACK_NAMES)), TRACK_NAMES)}
+        f_i:x
+        for f_i, x in zip(
+            range(
+                len(TRACK_NAMES),
+            ),
+            TRACK_NAMES
+        )
+    }
     f_plugins = {}
     for k in f_track_names:
         f_track_plugins = constants.DAW_PROJECT.get_track_plugins(k)
