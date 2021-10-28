@@ -22,7 +22,7 @@ sudo dnf install \
     python3-devel \
     python3-numpy \
     python3-qt5 \
-	python3-pytest4 \
+	python3-pytest \
 	python3-pytest-cov \
     rubberband \
     spin-kickstarts \
