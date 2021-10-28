@@ -229,7 +229,7 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
                         f_pos_x,
                         shared.PIANO_ROLL_MIN_NOTE_LENGTH,
                     )
-                f_item.resize_rect.setWidth(f_adjusted_width)
+                f_item.resize_rect.setWidth(int(f_adjusted_width))
                 f_item.setRect(f_item.resize_rect)
                 f_item.setPos(f_item.resize_pos.x(), f_item.resize_pos.y())
                 # Does not work on Wayland

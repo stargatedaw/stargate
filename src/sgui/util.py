@@ -83,14 +83,14 @@ def svg_to_pixmap(path: str, width=None, height=None):
         svg_width = float(root.attrib['width'])
         svg_height = float(root.attrib['height'])
         if not width and not height:  # no scaling
-            width = int(round(svg_width))
-            height = int(round(svg_height))
+            width = round(svg_width)
+            height = round(svg_height)
         elif not width:  # scale to height, preserve aspect ratio
             width = int(svg_width * (height / svg_height))
         elif not height:  # scale to width, preserve aspect ratio
             height = int(svg_height * (width / svg_width))
     svg_renderer = QSvgRenderer(path)
-    pixmap = QPixmap(width, height)
+    pixmap = QPixmap(int(width), int(height))
     painter = QPainter()
     pixmap.fill(QtCore.Qt.GlobalColor.transparent)
     painter.begin(pixmap)

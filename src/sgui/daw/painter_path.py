@@ -48,8 +48,8 @@ def get_item_path(
             PIXMAP_CACHE[a_uid] = {}
         PIXMAP_CACHE[a_uid][f_key] = [
             x.scaled(
-                a_px_per_beat * f_item_obj.get_length(a_tempo),
-                a_height,
+                int(a_px_per_beat * f_item_obj.get_length(a_tempo)),
+                int(a_height),
             )
             for x in PIXMAP_CACHE_UNSCALED[a_uid]
         ]

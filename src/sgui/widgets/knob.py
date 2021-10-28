@@ -148,10 +148,10 @@ class PixmapKnob(QDial):
         f_rotate_value = f_frac_val * 270.0
         f_rect = self.rect()
         arc_width = self.arc_width_pct * f_rect.width() * 0.01
-        f_rect.setWidth(f_rect.width() - arc_width)
-        f_rect.setHeight(f_rect.height() - arc_width)
-        f_rect.setX(f_rect.x() + arc_width)
-        f_rect.setY(f_rect.y() + arc_width)
+        f_rect.setWidth(int(f_rect.width() - arc_width))
+        f_rect.setHeight(int(f_rect.height() - arc_width))
+        f_rect.setX(int(f_rect.x() + arc_width))
+        f_rect.setY(int(f_rect.y() + arc_width))
 
         if self.arc_width_pct:
             knob_arc_pen = QPen(
@@ -170,7 +170,7 @@ class PixmapKnob(QDial):
                 p.drawArc(
                     f_rect,
                     -135 * 16,
-                    (f_rotate_value + 1.0) * -16,
+                    int((f_rotate_value + 1.0) * -16),
                 )
             elif self.arc_type == ArcType.BIDIRECTIONAL:
                 if f_rotate_value < 135.:
@@ -180,7 +180,7 @@ class PixmapKnob(QDial):
                 p.drawArc(
                     f_rect,
                     90 * 16,
-                    span_angle,
+                    int(span_angle),
                 )
             else:
                 raise ValueError(f"Invalid arc_type: {self.arc_type}")
@@ -205,7 +205,7 @@ class PixmapKnob(QDial):
             p.setPen(knob_arc_pen)
 
         if self.pixmap_bg:
-            p.drawPixmap(arc_width, arc_width, self.pixmap_bg)
+            p.drawPixmap(int(arc_width), int(arc_width), self.pixmap_bg)
 
         if self.pixmap_fg:
             # xc and yc are the center of the widget's rect.
@@ -222,7 +222,7 @@ class PixmapKnob(QDial):
             # rx and ry so it's in the center.
             rx = -(self.pixmap_size * 0.5)
             ry = -(self.pixmap_size * 0.5)
-            p.drawPixmap(rx, ry, self.pixmap_fg)
+            p.drawPixmap(int(rx), int(ry), self.pixmap_fg)
 
     def mousePressEvent(self, a_event):
         self._button = a_event.button()

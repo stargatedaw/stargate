@@ -671,7 +671,7 @@ def init():
     MAIN_WINDOW = shared.MAIN_WINDOW
 
     shared.PIANO_ROLL_EDITOR.verticalScrollBar().setSliderPosition(
-        shared.PIANO_ROLL_EDITOR.scene.height() * 0.4,
+        int(shared.PIANO_ROLL_EDITOR.scene.height() * 0.4),
     )
 
     shared.ITEM_EDITOR.snap_combobox.setCurrentIndex(4)

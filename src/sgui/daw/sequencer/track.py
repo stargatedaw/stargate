@@ -382,7 +382,7 @@ class TrackPanel:
         self.tracks_layout.addItem(
             QSpacerItem(
                 0,
-                _shared.SEQUENCE_EDITOR_HEADER_HEIGHT + 2.0,
+                int(_shared.SEQUENCE_EDITOR_HEADER_HEIGHT + 2.0),
                 vPolicy=QSizePolicy.Policy.MinimumExpanding,
             ),
         )
