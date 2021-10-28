@@ -1116,10 +1116,13 @@ class ItemSequencer(QGraphicsView):
         )
         f_track = shared.TRACK_PANEL.plugin_uid_map[a_point.index]
         return QtCore.QPointF(
-            (a_point.beat * _shared.SEQUENCER_PX_PER_BEAT),
-            (f_track_height * (1.0 - (a_point.cc_val / 127.0))) +
-            (shared.SEQUENCE_EDITOR_TRACK_HEIGHT * f_track) +
-            _shared.SEQUENCE_EDITOR_HEADER_HEIGHT)
+            float(a_point.beat * _shared.SEQUENCER_PX_PER_BEAT),
+            float(
+                (f_track_height * (1.0 - (a_point.cc_val / 127.0))) +
+                (shared.SEQUENCE_EDITOR_TRACK_HEIGHT * f_track) +
+                _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
+            ),
+        )
 
     def automation_save_callback(self, a_open=True):
         constants.DAW_PROJECT.save_atm_sequence(shared.ATM_SEQUENCE)

@@ -172,7 +172,10 @@ class SequencerWidget:
         self.size_label.setText("Track Height")
         self.set_vzoom_size()
         f_widget = shared.MAIN_WINDOW.midi_scroll_area
-        f_point = QtCore.QPoint(0, _shared.SEQUENCE_EDITOR_HEADER_HEIGHT + 2)
+        f_point = QtCore.QPoint(
+            0, 
+            int(_shared.SEQUENCE_EDITOR_HEADER_HEIGHT + 2),
+        )
         self.size_label.setParent(f_widget)
         self.size_label.move(f_point)
         self.size_label.show()
@@ -223,7 +226,7 @@ class SequencerWidget:
         self.size_label.setText("Beat")
         self.set_hzoom_size()
         f_point = QtCore.QPoint(
-            _shared.SEQUENCE_TRACK_WIDTH + 10,
+            int(_shared.SEQUENCE_TRACK_WIDTH + 10),
             2,
         )
         f_widget = shared.MAIN_WINDOW.midi_scroll_area

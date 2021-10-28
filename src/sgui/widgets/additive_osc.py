@@ -118,8 +118,12 @@ class additive_wav_viewer(QGraphicsView):
 
     def draw_array(self, a_np_array):
         self.setUpdatesEnabled(False)
-        f_path = QPainterPath(QtCore.QPointF(
-            0.0, ADDITIVE_OSC_HEIGHT * 0.5))
+        f_path = QPainterPath(
+            QtCore.QPointF(
+                0.0, 
+                ADDITIVE_OSC_HEIGHT * 0.5,
+            )
+        )
         f_x = 1.0
         f_half = ADDITIVE_OSC_HEIGHT * 0.5
         for f_point in a_np_array:

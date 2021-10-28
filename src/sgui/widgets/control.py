@@ -229,7 +229,7 @@ class AbstractUiControl:
         f_ok_button = QPushButton(_("OK"))
         f_ok_button.pressed.connect(ok_handler)
         f_layout.addWidget(f_ok_button, 6, 1)
-        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0.0, 0.0)))
+        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
     def tempo_sync_dialog(self):
@@ -278,7 +278,7 @@ class AbstractUiControl:
         f_groupbox_layout.addWidget(f_beat_frac_combobox, 1, 1)
         f_groupbox_layout.addWidget(f_cancel_button, 2, 0)
         f_groupbox_layout.addWidget(f_sync_button, 2, 1)
-        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0.0, 0.0)))
+        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
     def set_note_dialog(self):
@@ -303,7 +303,7 @@ class AbstractUiControl:
         f_ok_cancel_layout.addWidget(f_cancel_button)
         f_ok_cancel_layout.addWidget(f_ok_button)
         f_vlayout.addLayout(f_ok_cancel_layout)
-        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0.0, 0.0)))
+        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
     def set_ratio_dialog(self):
@@ -338,7 +338,7 @@ class AbstractUiControl:
         f_cancel_button.pressed.connect(f_dialog.close)
         f_layout.addWidget(f_ok_button, 5, 0)
         f_layout.addWidget(f_cancel_button, 5, 1)
-        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0.0, 0.0)))
+        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
     def set_octave_dialog(self):
@@ -363,7 +363,7 @@ class AbstractUiControl:
         f_cancel_button.pressed.connect(f_dialog.close)
         f_layout.addWidget(f_ok_button, 5, 0)
         f_layout.addWidget(f_cancel_button, 5, 1)
-        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0.0, 0.0)))
+        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
     def copy_automation(self):
@@ -438,7 +438,7 @@ class AbstractUiControl:
         f_cancel_button = QPushButton(_("Cancel"))
         f_cancel_button.pressed.connect(f_dialog.close)
         f_ok_cancel_layout.addWidget(f_cancel_button)
-        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0.0, 0.0)))
+        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
     def undo_action_callback(self, a_action):

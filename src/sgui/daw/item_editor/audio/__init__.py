@@ -137,8 +137,8 @@ class AudioItemSeq(AbstractItemEditor):
 
     def get_scene_pos(self):
         return QtCore.QPointF(
-            self.horizontalScrollBar().value(),
-            self.verticalScrollBar().value(),
+            float(self.horizontalScrollBar().value()),
+            float(self.verticalScrollBar().value()),
         )
 
     def get_selected(self):
