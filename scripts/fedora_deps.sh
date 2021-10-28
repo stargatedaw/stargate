@@ -13,6 +13,7 @@ sudo dnf install \
 	gcovr \
     gettext \
     git \
+    jq \
     lame \
     libsndfile-devel \
     livecd-tools \
