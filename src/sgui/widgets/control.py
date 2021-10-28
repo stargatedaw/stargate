@@ -259,7 +259,7 @@ class AbstractUiControl:
         f_groupbox_layout = QGridLayout(f_dialog)
         f_spinbox = QDoubleSpinBox()
         f_spinbox.setDecimals(1)
-        f_spinbox.setRange(60, 200)
+        f_spinbox.setRange(60., 200.)
         f_spinbox.setSingleStep(0.1)
         f_spinbox.setValue(_shared.TEMPO)
         f_beat_fracs = ["1/16", "1/12", "1/8", "2/12", "3/16",
@@ -354,7 +354,7 @@ class AbstractUiControl:
         f_spinbox = QSpinBox()
         f_min = self.control.minimum() // 12
         f_max = self.control.maximum() // 12
-        f_spinbox.setRange(f_min, f_max)
+        f_spinbox.setRange(int(f_min), int(f_max))
         f_spinbox.setValue(self.get_value() // 12)
         f_layout.addWidget(f_spinbox, 0, 1)
         f_ok_button = QPushButton(_("OK"))
@@ -618,11 +618,19 @@ class slider_control(AbstractUiControl):
         a_preset_mgr=None
     ):
         AbstractUiControl.__init__(
-            self, a_label, a_port_num, a_rel_callback, a_val_callback,
-            a_val_conversion, a_port_dict, a_preset_mgr, a_default_val)
+            self, 
+            a_label, 
+            a_port_num, 
+            a_rel_callback, 
+            a_val_callback,
+            a_val_conversion, 
+            a_port_dict, 
+            a_preset_mgr, 
+            a_default_val,
+        )
         self.control = QSlider(a_orientation)
         self.control.contextMenuEvent = self.contextMenuEvent
-        self.control.setRange(a_min_val, a_max_val)
+        self.control.setRange(int(a_min_val), int(a_max_val))
         self.control.valueChanged.connect(self.control_value_changed)
         self.control.sliderReleased.connect(self.control_released)
         self.value_label = QLabel("")
@@ -659,7 +667,7 @@ class spinbox_control(AbstractUiControl):
         )
         self.control = QSpinBox()
         self.widget = self.control
-        self.control.setRange(a_min_val, a_max_val)
+        self.control.setRange(int(a_min_val), int(a_max_val))
         self.control.setKeyboardTracking(False)
         self.control.valueChanged.connect(self.control_value_changed)
         self.control.valueChanged.connect(self.control_released)
@@ -694,7 +702,7 @@ class doublespinbox_control(AbstractUiControl):
         )
         self.control = QDoubleSpinBox()
         self.widget = self.control
-        self.control.setRange(a_min_val, a_max_val)
+        self.control.setRange(float(a_min_val), float(a_max_val))
         self.control.setKeyboardTracking(False)
         self.control.valueChanged.connect(self.control_value_changed)
         self.control.valueChanged.connect(self.control_released)

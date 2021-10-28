@@ -625,7 +625,9 @@ class AutomationEditorWidget:
 
         def ipb_changed(a_self=None, a_event=None):
             f_epb_spinbox.setRange(
-                f_ipb_spinbox.value() * -1, f_ipb_spinbox.value())
+                int(f_ipb_spinbox.value() * -1), 
+                int(f_ipb_spinbox.value()),
+            )
 
         def goto_start():
             f_pos_spinbox.setValue(f_pos_spinbox.minimum())

@@ -109,7 +109,7 @@ class PixmapKnob(QDial):
         self.fg_svg = fg_svg
         self.draw_line = draw_line
         self._size = a_size
-        self.setRange(a_min_val, a_max_val)
+        self.setRange(int(a_min_val), int(a_max_val))
         self.val_step = float(a_max_val - a_min_val) * 0.005  # / 200.0
         self.val_step_small = self.val_step * 0.1
         self.setGeometry(0, 0, a_size, a_size)
