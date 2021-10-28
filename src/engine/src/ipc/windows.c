@@ -1,6 +1,6 @@
 #include "compiler.h"
 
-#if defined(SG_OS_WINDOWS)
+#if SG_OS == _OS_WINDOWS
 
 #define WIN32_LEAN_AND_MEAN
 #undef UNICODE

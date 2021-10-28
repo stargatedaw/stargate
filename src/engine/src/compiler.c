@@ -1,5 +1,5 @@
 #include "compiler.h"
-#ifdef SG_OS_WINDOWS
+#if SG_OS == _OS_WINDOWS
     #include <windows.h>
     #include <DbgHelp.h>
 #else
@@ -12,15 +12,13 @@
 
 
 
-#ifdef SG_OS_MAC_OS_X
-    #define SG_OS_MACOSX
+#if SG_OS == _OS_MAC_OS_X
     void pthread_spin_init(OSSpinLock * a_lock, void * a_opts){
         *a_lock = 0;
     }
 #endif
 
-#ifdef SG_OS_LINUX
-    #define SG_OS_LINUX
+#if SG_OS == _OS_LINUX
     void prefetch_range(void *addr, size_t len){
         char *cp;
         char *end = (char*)addr + len;
@@ -32,7 +30,7 @@
 
 #endif
 
-#if defined(SG_OS_WINDOWS)
+#if SG_OS == _OS_WINDOWS
     #define REAL_PATH_SEP "\\"
     char * get_home_dir(){
         char * f_result = getenv("USERPROFILE");
@@ -51,7 +49,7 @@
 NO_OPTIMIZATION void v_self_set_thread_affinity(){
     v_pre_fault_thread_stack(1024 * 512);
 
-#ifdef SG_OS_LINUX
+#if SG_OS == _OS_LINUX
     pthread_attr_t threadAttr;
     pthread_attr_init(&threadAttr);
     pthread_attr_setstacksize(&threadAttr, 1024 * 1024);
@@ -67,7 +65,7 @@ NO_OPTIMIZATION void v_self_set_thread_affinity(){
 }
 
 void v_pre_fault_thread_stack(int stacksize){
-#ifdef SG_OS_LINUX
+#if SG_OS == _OS_LINUX
     int pagesize = sysconf(_SC_PAGESIZE);
     stacksize -= pagesize * 20;
 
@@ -85,7 +83,7 @@ void v_pre_fault_thread_stack(int stacksize){
 
 
 void sg_print_stack_trace(){
-#ifdef SG_OS_WINDOWS
+#if SG_OS == _OS_WINDOWS
     size_t i;
     int line_num;
     char sym_name[256];

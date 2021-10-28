@@ -80,7 +80,7 @@ void v_daw_offline_render(
     f_sndfile = sf_open(f_file, SFM_WRITE, &f_sf_info);
     log_info("Successfully opened SNDFILE");
 
-#ifdef SG_OS_LINUX
+#if SG_OS == _OS_LINUX
     struct timespec f_start, f_finish;
     clock_gettime(CLOCK_REALTIME, &f_start);
 #endif
@@ -130,7 +130,7 @@ void v_daw_offline_render(
         v_daw_zero_all_buffers(self);
     }
 
-#ifdef SG_OS_LINUX
+#if SG_OS == _OS_LINUX
 
     clock_gettime(CLOCK_REALTIME, &f_finish);
     SGFLT f_elapsed = (SGFLT)v_print_benchmark(

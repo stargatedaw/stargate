@@ -35,7 +35,7 @@ int getNumberOfCores(){
         }
     }
     return count;
-#elif defined(SG_OS_LINUX)
+#elif SG_OS == _OS_LINUX
     return sysconf(_SC_NPROCESSORS_ONLN);
 #else
     return 2;
@@ -149,7 +149,7 @@ void v_init_worker_threads(
 
     pthread_attr_setstacksize(&threadAttr, f_stack_size);
     pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_DETACHED);
-#ifndef SG_OS_LINUX
+#if SG_OS != _OS_LINUX
     pthread_attr_setschedpolicy(&threadAttr, RT_SCHED);
 #endif
 
@@ -179,7 +179,7 @@ void v_init_worker_threads(
             (void*)f_args
         );
 
-#ifdef SG_OS_LINUX
+#if SG_OS == _OS_LINUX
         if(a_set_thread_affinity){
             cpu_set_t cpuset;
             CPU_ZERO(&cpuset);
@@ -270,7 +270,7 @@ NO_OPTIMIZATION void v_activate(
         a_aux_threads
     );
 
-#ifdef SG_OS_LINUX
+#if SG_OS == _OS_LINUX
     mlockall(MCL_CURRENT | MCL_FUTURE);
 #endif
 

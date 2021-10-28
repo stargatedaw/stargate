@@ -1,12 +1,16 @@
 #ifndef SG_COMPILER_H
 #define SG_COMPILER_H
 
+#define _OS_LINUX 0
+#define _OS_WINDOWS 1
+#define _OS_MAC_OS_X 2
+
 #if defined(_WIN64) || defined(_WIN32) || defined(__MINGW32__) || defined(__MINGW64__)
-    #define SG_OS_WINDOWS
+    #define SG_OS _OS_WINDOWS
 #elif defined(__linux__)
-    #define SG_OS_LINUX
+    #define SG_OS _OS_LINUX
 #elif defined(__APPLE__)
-    #define SG_OS_MAC_OS_X
+    #define SG_OS _OS_MAC_OS_X
 #endif
 
 //Required for sched.h
@@ -22,7 +26,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef SG_OS_LINUX
+#if SG_OS == _OS_LINUX
     #include <sys/resource.h>
 #else
     #include <sched.h>
@@ -63,7 +67,7 @@ struct SamplePair {
     SGFLT right;
 };
 
-#ifdef SG_OS_MAC_OS_X
+#if SG_OS == _OS_MAC_OS_X
 
     #include <libkern/OSAtomic.h>
 
@@ -96,7 +100,7 @@ struct SamplePair {
 #endif
 
 
-#ifdef SG_OS_LINUX
+#if SG_OS == _OS_LINUX
 
     void prefetch_range(void *addr, size_t len);
 
@@ -104,7 +108,7 @@ struct SamplePair {
 
 char * get_home_dir();
 
-#if defined(SG_OS_WINDOWS)
+#if SG_OS == _OS_WINDOWS
     #define REAL_PATH_SEP "\\"
 #else
     #define REAL_PATH_SEP "/"

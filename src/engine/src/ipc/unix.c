@@ -1,6 +1,6 @@
 #include "compiler.h"
 
-#if !defined(SG_OS_WINDOWS)
+#if SG_OS != _OS_WINDOWS
 
 #include <arpa/inet.h>
 #include <netinet/in.h>

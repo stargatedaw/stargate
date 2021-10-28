@@ -26,7 +26,7 @@
 #define MAX_PLUGIN_POOL_COUNT 1000
 
 #define MAX_AUDIO_INPUT_COUNT 128
-#ifdef SG_OS_LINUX
+#if SG_OS == _OS_LINUX
     #define FRAMES_PER_BUFFER 4096
 #else
     // Lest no low-latency back-end is available
