@@ -178,8 +178,9 @@ mingw:
 	###################
 	#### IMPORTANT ####
 	###################
-	# Go run the following command in the Visual Studio shell from
-	# this directory:
+	# Go run the following command in the 
+	# Visual Studio Developer Command Prompt 
+	# from the engine directory:
 	# .\cv2pdb\cv2pdb.exe .\stargate-engine.exe
 
 pahole:
