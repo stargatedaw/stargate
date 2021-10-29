@@ -26,10 +26,8 @@ void v_daw_offline_render(
     SGFLT f_sample_rate = STARGATE->thread_storage[0].sample_rate;
 
     int f_i, f_i2;
-    int f_beat_total = (int)(a_end_beat - a_start_beat);
 
-    SGFLT f_sample_count =
-        self->ts[0].samples_per_beat * ((SGFLT)f_beat_total);
+    long f_sample_count = 0;
 
     long f_size = 0;
     long f_block_size = (STARGATE->sample_count);
@@ -85,10 +83,8 @@ void v_daw_offline_render(
     clock_gettime(CLOCK_REALTIME, &f_start);
 #endif
 
-    while(self->ts[0].ml_current_beat < a_end_beat)
-    {
-        for(f_i = 0; f_i < f_block_size; ++f_i)
-        {
+    while(self->ts[0].ml_current_beat < a_end_beat){
+        for(f_i = 0; f_i < f_block_size; ++f_i){
             f_buffer[0][f_i] = 0.0f;
             f_buffer[1][f_i] = 0.0f;
         }
@@ -128,21 +124,26 @@ void v_daw_offline_render(
         }
 
         v_daw_zero_all_buffers(self);
+        f_sample_count += f_block_size;
     }
 
 #if SG_OS == _OS_LINUX
 
     clock_gettime(CLOCK_REALTIME, &f_finish);
-    SGFLT f_elapsed = (SGFLT)v_print_benchmark(
-        "v_daw_offline_render", f_start, f_finish);
-    SGFLT f_realtime = f_sample_count / f_sample_rate;
+    double f_elapsed = v_print_benchmark(
+        "v_daw_offline_render",
+        f_start,
+        f_finish
+    );
+    double f_realtime = (double)f_sample_count / (double)f_sample_rate;
 
-    log_info("Realtime: %f", f_realtime);
+    log_info("Song length: %f seconds", f_realtime);
 
-    if(f_elapsed > 0.0f){
-        log_info("Ratio:  %f : 1", f_realtime / f_elapsed);
-    } else {
-        log_info("Ratio:  infinity : 1");
+    if(f_elapsed > 0.0f && f_realtime > 0.0f){
+        log_info(
+            "Ratio of render rate to real time (higher is better):  %f: 1",
+            f_realtime / f_elapsed
+        );
     }
 
 #endif

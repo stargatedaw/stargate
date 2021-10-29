@@ -457,8 +457,8 @@ double v_print_benchmark(
     struct timespec f_finish
 ){
     double elapsed;
-    elapsed = (f_finish.tv_sec - f_start.tv_sec);
-    elapsed += (f_finish.tv_nsec - f_start.tv_nsec) / 1000000000.0;
+    elapsed = (double)(f_finish.tv_sec - f_start.tv_sec);
+    elapsed += (double)(f_finish.tv_nsec - f_start.tv_nsec) / 1000000000.0;
 
     log_info("Completed %s in %lf seconds", a_message, elapsed);
 

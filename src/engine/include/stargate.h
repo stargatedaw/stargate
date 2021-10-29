@@ -13,7 +13,7 @@
 #include "hardware/midi.h"
 #include "osc.h"
 
-#define MAX_WORKER_THREADS 8
+#define MAX_WORKER_THREADS 16
 
 #define MAX_EVENT_BUFFER_SIZE 512
 

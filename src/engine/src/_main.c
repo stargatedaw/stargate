@@ -223,6 +223,11 @@ int daw_render(int argc, char** argv){
     int f_stem_render = atoi(argv[10]);
     int sequence_uid = atoi(argv[11]);
 
+    if(f_thread_count < 0 || f_thread_count > MAX_WORKER_THREADS){
+        log_error("Error: Thread count out of range 0-16, exiting");
+        exit(1);
+    }
+
     sg_assert(
         (int)(f_huge_pages == 0 || f_huge_pages == 1),
         argv[9]

@@ -607,7 +607,8 @@ void v_daw_process(t_thread_args * f_args){
     t_daw * self = DAW;
     int f_i = f_args->thread_num;
     int f_sorted_count = self->routing_graph->track_pool_sorted_count;
-    int * f_sorted = self->routing_graph->track_pool_sorted[f_args->thread_num];
+    int * f_sorted =
+        self->routing_graph->track_pool_sorted[f_args->thread_num];
 
     t_daw_thread_storage * f_ts = &DAW->ts[f_args->thread_num];
 
