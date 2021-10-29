@@ -342,13 +342,12 @@ def reset_end():
 def move_to_item_end():
     f_list = shared.AUDIO_SEQ.get_selected()
     if f_list:
-        f_current_sequence_length = get_current_sequence_length()
         f_global_tempo = shared.CURRENT_SEQUENCE.get_tempo_at_pos(
             shared.CURRENT_ITEM_REF.start_beat,
         )
         for f_item in f_list:
             f_item.audio_item.clip_at_sequence_end(
-                f_current_sequence_length,
+                shared.CURRENT_ITEM_REF.length_beats,
                 f_global_tempo,
                 f_item.graph_object.length_in_seconds,
                 False,
