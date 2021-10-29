@@ -78,7 +78,7 @@ PROJECT=~/stargate/projects/myproject
 # change the filename between runs
 OUTFILE=test.wav
 
-./stargate-engine daw ${PROJECT?} ${OUTFILE} 8 340 ${SR?} ${BUF_SIZE?} ${THREADS?} 0 0 0
+./stargate-engine daw ${PROJECT?} ${OUTFILE?} 8 340 ${SR?} ${BUF_SIZE?} ${THREADS?} 0 0 0
 ```
 
 The `OUTFILE` parameter will exist after the render.  Note that the file may be
