@@ -391,7 +391,7 @@ class item:
                 f_time_inc = 0.0625
                 f_start = f_pb1.start + f_time_inc
                 f_start_diff = f_pb2.start - f_pb1.start
-                if f_start_diff == 0.0:
+                if f_start_diff <= f_time_inc:
                     continue
                 f_val_inc = f_val_diff / (f_start_diff * 16.0)
                 if f_pb1.pb_val > f_pb2.pb_val:
