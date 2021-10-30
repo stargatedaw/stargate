@@ -210,7 +210,8 @@ class ItemSequencer(QGraphicsView):
                         self.scene.clearSelection()
                         self.current_item.setSelected(True)
                         self.selected_item_strings = {
-                            self.current_item.get_selected_string()}
+                            self.current_item.get_selected_string(),
+                        }
                 self.show_context_menu()
         elif _shared.SEQUENCE_EDITOR_MODE == 0:
             self.current_item = self.get_item(f_pos)
@@ -260,7 +261,8 @@ class ItemSequencer(QGraphicsView):
                 f_item = self.get_item(f_pos)
                 if f_item:
                     self.selected_item_strings = {
-                        f_item.get_selected_string()}
+                        f_item.get_selected_string(),
+                    }
                 else:
                     self.clear_selected_item_strings()
 
@@ -396,8 +398,10 @@ class ItemSequencer(QGraphicsView):
     def set_selected_strings(self):
         if self.ignore_selection_change:
             return
-        self.selected_item_strings = {x.get_selected_string()
-            for x in self.get_selected_items()}
+        self.selected_item_strings = {
+            x.get_selected_string()
+            for x in self.get_selected_items()
+        }
 
     def clear_selected_item_strings(self):
         self.selected_item_strings = set()
@@ -827,6 +831,7 @@ class ItemSequencer(QGraphicsView):
         self.scene.clearSelection()
         for f_item in self.get_sequence_items():
             f_item.setSelected(True)
+        self.set_selected_strings()
 
     def get_loop_pos(self, a_warn=True):
         if self.loop_start is None:
