@@ -45,7 +45,7 @@ def show(event):
         loop_end_action = menu.addAction(_("Set Region End"))
         loop_end_action.triggered.connect(header_loop_end)
         select_sequence = menu.addAction(_("Select Items in Region"))
-        select_sequence.triggered.connect(shared.SEQUENCER.select_sequence_items)
+        select_sequence.triggered.connect(select_sequence_items)
         copy_sequence_action = menu.addAction(_("Copy Region"))
         copy_sequence_action.triggered.connect(copy_sequence)
         if shared.SEQUENCER.sequence_clipboard:
@@ -67,6 +67,8 @@ def show(event):
         6.0,
     )
     pos_line.setPen(pos_line_pen)
+    global POS_LINE
+    POS_LINE = pos_line
     # Otherwise, the entire scene gets redrawn and we should not delete it
     if not menu.exec(QCursor.pos()):
         shared.SEQUENCER.scene.removeItem(pos_line)
@@ -92,6 +94,8 @@ def header_time_modify():
             constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
             constants.DAW_PROJECT.commit(_("Delete tempo marker"))
             shared.SEQ_WIDGET.open_sequence()
+        else:
+            shared.SEQUENCER.scene.removeItem(POS_LINE)
         window.close()
 
     window = QDialog(shared.MAIN_WINDOW)
@@ -166,6 +170,9 @@ def header_tempo_clear():
         constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
         constants.DAW_PROJECT.commit(_("Delete tempo ranger"))
         shared.SEQ_WIDGET.open_sequence()
+    else:
+        shared.SEQUENCER.scene.removeItem(POS_LINE)
+
 
 def header_time_range():
     if not shared.CURRENT_SEQUENCE.loop_marker:
@@ -203,6 +210,7 @@ def header_time_range():
         window.close()
 
     def cancel_handler():
+        shared.SEQUENCER.scene.removeItem(POS_LINE)
         window.close()
 
     window = QDialog(shared.MAIN_WINDOW)
@@ -276,6 +284,8 @@ def header_marker_modify():
             constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
             constants.DAW_PROJECT.commit(_("Delete text marker"))
             shared.SEQ_WIDGET.open_sequence()
+        else:
+            shared.SEQUENCER.scene.removeItem(POS_LINE)
         window.close()
 
     window = QDialog(shared.MAIN_WINDOW)
@@ -370,6 +380,7 @@ def copy_sequence():
         item_list,
         atm_list,
     )
+    shared.SEQUENCER.scene.removeItem(POS_LINE)
 
 def insert_region():
     (
@@ -399,3 +410,6 @@ def insert_region():
     constants.DAW_PROJECT.commit(_("Insert sequence"))
     shared.SEQ_WIDGET.open_sequence()
 
+def select_sequence_items():
+    shared.SEQUENCER.select_sequence_items()
+    shared.SEQUENCER.scene.removeItem(POS_LINE)
