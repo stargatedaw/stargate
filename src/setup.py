@@ -166,7 +166,7 @@ setuptools.setup(
     version=VERSION,
     author="stargateaudio",
     author_email="stargateaudio@noreply.github.com",
-    license="GPL3",
+    license="GPLv3",
     description=DESCRIPTION,
     # Only build the C exension if C_EXT=1 was defined in the env. vars.
     ext_modules=[C_EXT] if ENV.get('C_EXT') == '1' else [],
