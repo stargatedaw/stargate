@@ -186,12 +186,14 @@ void sg_print_stack_trace(){
 static void _sg_assert_failed(va_list args, char* msg){
     char _str[4096];
     if(msg){
+        log_error("Assertion failed: %s", msg);
+        sg_print_stack_trace();
         vsprintf(_str, msg, args);
-        log_error("Assertion failed: %s", _str);
+        log_error("Assertion message %s", _str);
     } else {
         log_error("Assertion failed: no message provided");
+        sg_print_stack_trace();
     }
-    sg_print_stack_trace();
     abort();
 }
 
