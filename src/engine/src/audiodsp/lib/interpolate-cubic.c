@@ -112,11 +112,13 @@ SGFLT f_cubic_interpolate_ptr(SGFLT * a_table, SGFLT a_ptr)
     // position is valid.
     sg_assert(
         int_pos_minus1 >= 0,
-        "f_cubic_interpolate_ptr: m1 underrun"
+        "f_cubic_interpolate_ptr: m1 underrun %i",
+        int_pos_minus1
     );
     sg_assert(
         int_pos_minus2 >= 0,
-        "f_cubic_interpolate_ptr: m2 underrun"
+        "f_cubic_interpolate_ptr: m2 underrun %i",
+        int_pos_minus2
     );
 #endif
 

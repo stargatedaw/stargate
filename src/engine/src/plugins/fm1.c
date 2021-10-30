@@ -208,7 +208,11 @@ void v_fm1_connect_buffer(
             plugin->output1 = DataLocation;
             break;
         default:
-            sg_assert(0, "v_fm1_connect_buffer: unknown port");
+            sg_assert(
+                0,
+                "v_fm1_connect_buffer: unknown port %i",
+                a_index
+            );
             break;
     }
 }
@@ -1183,7 +1187,8 @@ void v_fm1_process_midi_event(
     {
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
-            "v_fm1_process_midi_event: param out of range"
+            "v_fm1_process_midi_event: param %i out of range 1 to 128",
+            a_event->param
         );
 
         v_plugin_event_queue_add(&plugin_data->midi_queue,

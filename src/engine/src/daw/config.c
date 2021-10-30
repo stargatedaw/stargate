@@ -70,7 +70,8 @@ void v_daw_configure(const char* a_key, const char* a_value){
         int f_mode = atoi(f_arr->array[0]);
         sg_assert(
             f_mode >= 0 && f_mode <= 2,
-            "v_daw_configure: DN_CONFIGURE_KEY_DN_PLAYBACK invalid mode"
+            "v_daw_configure: DN_CONFIGURE_KEY_DN_PLAYBACK invalid mode: %i",
+            f_mode
         );
         double f_beat = atof(f_arr->array[1]);
         v_daw_set_playback_mode(self, f_mode, f_beat, 1);
@@ -92,7 +93,9 @@ void v_daw_configure(const char* a_key, const char* a_value){
         int uid = atoi(a_value);
         sg_assert(
             uid >= 0 && uid < DAW_MAX_SONG_COUNT,
-            "v_daw_configure: DN_CONFIGURE_KEY_NS uid out of range"
+            "v_daw_configure: DN_CONFIGURE_KEY_NS uid %i out of range 0 to %i",
+            uid,
+            DAW_MAX_SONG_COUNT
         );
         t_daw_sequence * f_result = g_daw_sequence_get(self, uid);
         // Should not already be set
@@ -113,7 +116,9 @@ void v_daw_configure(const char* a_key, const char* a_value){
         int uid = atoi(a_value);
         sg_assert(
             uid >= 0 && uid < DAW_MAX_SONG_COUNT,
-            "v_daw_configure: DN_CONFIGURE_KEY_SR uid out of range"
+            "v_daw_configure: DN_CONFIGURE_KEY_SR uid %i out of range 0 to %i",
+            uid,
+            DAW_MAX_SONG_COUNT
         );
         t_daw_sequence * f_result = g_daw_sequence_get(self, uid);
 
@@ -187,7 +192,8 @@ void v_daw_configure(const char* a_key, const char* a_value){
         int f_mode = atoi(f_val_arr->array[1]);
         sg_assert(
             f_mode == 0 || f_mode == 1,
-            "v_daw_configure: DN_CONFIGURE_KEY_SOLO invalid mode"
+            "v_daw_configure: DN_CONFIGURE_KEY_SOLO invalid mode: %i",
+            f_mode
         );
 
         pthread_spin_lock(&STARGATE->main_lock);
@@ -212,7 +218,8 @@ void v_daw_configure(const char* a_key, const char* a_value){
         int f_mode = atoi(f_val_arr->array[1]);
         sg_assert(
             f_mode == 0 || f_mode == 1,
-            "v_daw_configure: DN_CONFIGURE_KEY_MUTE invalid mode"
+            "v_daw_configure: DN_CONFIGURE_KEY_MUTE invalid mode: %i",
+            f_mode
         );
         pthread_spin_lock(&STARGATE->main_lock);
 
@@ -252,7 +259,8 @@ void v_daw_configure(const char* a_key, const char* a_value){
         int f_bool = atoi(a_value);
         sg_assert(
             f_bool == 0 || f_bool == 1,
-            "v_daw_configure: DN_CONFIGURE_KEY_SET_OVERDUB_MODE invalid value"
+            "v_daw_configure: DN_CONFIGURE_KEY_SET_OVERDUB_MODE invalid value",
+            f_bool
         );
         pthread_spin_lock(&STARGATE->main_lock);
         self->overdub_mode = f_bool;

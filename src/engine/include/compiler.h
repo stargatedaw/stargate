@@ -120,8 +120,8 @@ void v_pre_fault_thread_stack(int stacksize);
  * @cond: The condition to assert is true
  * @msg:  The message to print
  */
-void sg_assert(int cond, char* msg);
-void sg_assert_ptr(void* cond, char* msg);
+void sg_assert(int cond, char* msg, ...);
+void sg_assert_ptr(void* cond, char* msg, ...);
 
 typedef struct {
     char padding1[CACHE_LINE_SIZE];

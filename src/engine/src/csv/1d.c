@@ -58,6 +58,9 @@ t_1d_char_array * c_split_str(
             f_current_string_index = 0;
             sg_assert(
                 f_current_column < a_column_count,
+                "c_split_str: f_current_column %i >= a_column_count %i: %s",
+                f_current_column,
+                a_column_count,
                 f_result->array[f_current_column]
             );
         }
@@ -76,11 +79,11 @@ t_1d_char_array * c_split_str(
         ++f_i;
     }
 
-    char dbg[512];
-    snprintf(dbg, 512, "%i", f_current_column);
     sg_assert(
         f_current_column == a_column_count - 1,
-        dbg
+        "c_split_str: f_current_column %i != a_column_count %i - 1",
+        f_current_column,
+        a_column_count
     );
 
     return f_result;

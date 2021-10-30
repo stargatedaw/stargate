@@ -14,7 +14,7 @@ void small_page_aligned_alloc(void ** a_ptr, size_t a_size, int a_alignment)
 #if SG_OS == _OS_LINUX
     sg_assert(
         (int)(posix_memalign(a_ptr, a_alignment, a_size) == 0),
-        NULL
+        "posix_memalign failed"
     );
 #else
     *a_ptr = (void*)malloc(a_size);  //unaligned, but completely portable

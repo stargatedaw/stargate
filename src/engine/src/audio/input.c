@@ -327,7 +327,9 @@ void * v_audio_recording_thread(void* a_arg){
 
                     sg_assert(
                         f_ai->channels == f_ai->sf_info.channels,
-                        "v_audio_recording_thread: channel mismatch"
+                        "v_audio_recording_thread: channel mismatch: %i %i",
+                        f_ai->channels,
+                        f_ai->sf_info.channels
                     );
 
                     log_info(

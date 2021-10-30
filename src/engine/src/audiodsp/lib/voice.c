@@ -22,7 +22,9 @@ void g_voc_voices_init(
 ){
     sg_assert(
         (int)(a_thresh < a_count),
-        NULL
+        "a_thresh %i >= a_count %i",
+        a_thresh,
+        a_count
     );
 
     voices->count = a_count;
@@ -75,7 +77,7 @@ int i_get_oldest_voice(
 
     sg_assert(
         (int)(oldest_tick_voice != -1),
-        NULL
+        "oldest_tick_voice == -1"
     );
     return oldest_tick_voice;
 }

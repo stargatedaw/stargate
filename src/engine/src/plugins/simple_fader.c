@@ -121,7 +121,8 @@ void v_sfader_process_midi_event(
     {
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
-            "v_sfader_process_midi_event: out of range"
+            "v_sfader_process_midi_event: param %i out of range 1 to 128",
+            a_event->param
         );
         v_plugin_event_queue_add(
             &plugin_data->midi_queue,

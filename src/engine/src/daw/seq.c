@@ -296,7 +296,9 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
                 f_item_counters[f_track_num]
                 <
                 f_result->tracks[f_track_num].count,
-                "g_daw_sequence_get: track counter out of range"
+                "g_daw_sequence_get: track counter %i >= %i",
+                f_item_counters[f_track_num],
+                f_result->tracks[f_track_num].count
             );
 
             v_iterate_2d_char_array(f_current_string);
@@ -366,15 +368,19 @@ NO_OPTIMIZATION void v_daw_open_tracks(){
 
             sg_assert(
                 f_track_index >= 0 && f_track_index < DN_TRACK_COUNT,
-                "v_daw_open_tracks: track index out of range"
+                "v_daw_open_tracks: track index %i out of range 0 to %i",
+                f_track_index,
+                DN_TRACK_COUNT
             );
             sg_assert(
                 f_solo == 0 || f_solo == 1,
-                "v_daw_open_tracks: invalid solo value"
+                "v_daw_open_tracks: invalid solo value: %i",
+                f_solo
             );
             sg_assert(
                 f_mute == 0 || f_mute == 1,
-                "v_daw_open_tracks: invalid mute value"
+                "v_daw_open_tracks: invalid mute value: %i",
+                f_mute
             );
 
             v_open_track(

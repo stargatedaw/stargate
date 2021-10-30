@@ -10,12 +10,18 @@ void ui_message_init(
     char* path,
     char* value
 ){
+    int length = strlen(path);
     sg_assert(
-        strlen(path) < 128,
+        length < 128,
+        "%i: %s",
+        length,
         path
     );
+    length = strlen(value);
     sg_assert(
-        strlen(value) < 8192,
+        length < 8192,
+        "%i: %s",
+        length,
         value
     );
     strcpy(

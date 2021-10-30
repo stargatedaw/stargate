@@ -319,7 +319,8 @@ void v_destructor(){
     for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
         sg_assert(
             STARGATE->track_thread_quit_notifier[f_i] == 2,
-            "v_destructor: track_thread_quit_notifier != 2"
+            "v_destructor: track_thread_quit_notifier %i != 2",
+            STARGATE->track_thread_quit_notifier[f_i]
         );
     }
 }

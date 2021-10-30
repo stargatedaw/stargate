@@ -136,7 +136,9 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
                 result->audio_input_count >= 0
                 &&
                 result->audio_input_count <= 128,
-                "load_hardware_config: audio_input_count out of range"
+                "load_hardware_config: audio_input_count %i out of "
+                "range 0 to 128",
+                result->audio_input_count
             );
             AUDIO_INPUT_TRACK_COUNT = result->audio_input_count;
         } else if(!strcmp(f_key_char, "audioOutputs")){
@@ -158,7 +160,9 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
                 result->audio_output_count >= 1
                 &&
                 result->audio_output_count <= 128,
-                "load_hardware_config: audio output count out of range"
+                "load_hardware_config: audio output count %i out of "
+                "range 1 to 128",
+                result->audio_output_count
             );
             OUTPUT_CH_COUNT = result->audio_output_count;
             MAIN_OUT_L = atoi(f_line->str_arr[1]);
@@ -167,13 +171,17 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
                 MAIN_OUT_L >= 0
                 &&
                 MAIN_OUT_L < result->audio_output_count,
-                "load_hardware_config: MAIN_OUT_L out of range"
+                "load_hardware_config: MAIN_OUT_L %i out of range 0 to %i",
+                MAIN_OUT_L,
+                result->audio_output_count
             );
             sg_assert(
                 MAIN_OUT_R >= 0
                 &&
                 MAIN_OUT_R < result->audio_output_count,
-                "load_hardware_config: MAIN_OUT_R out of range"
+                "load_hardware_config: MAIN_OUT_R %i out of range 0 to %i",
+                MAIN_OUT_R,
+                result->audio_output_count
             );
 
             v_free_split_line(f_line);

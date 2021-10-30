@@ -16,7 +16,9 @@ void v_osc_set_uni_voice_count(
 ){
     sg_assert(
         a_value <= OSC_UNISON_MAX_VOICES && a_value >= 1,
-        "v_osc_set_uni_voice_count: value out of range"
+        "v_osc_set_uni_voice_count: value %i out of range 1 to %i",
+        a_value,
+        OSC_UNISON_MAX_VOICES
     );
 
     if(a_osc_ptr->voice_count != a_value){

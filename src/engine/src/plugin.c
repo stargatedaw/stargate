@@ -107,9 +107,12 @@ SGFLT f_atm_to_ctrl_val(
 }
 
 void v_plugin_event_queue_add(
-    t_plugin_event_queue *self, int a_type, int a_tick,
-    SGFLT a_val, int a_port)
-{
+    t_plugin_event_queue *self,
+    int a_type,
+    int a_tick,
+    SGFLT a_val,
+    int a_port
+){
     t_plugin_event_queue_item * f_item = &self->items[self->count];
     f_item->type = a_type;
     f_item->tick = a_tick;
@@ -118,7 +121,8 @@ void v_plugin_event_queue_add(
     ++self->count;
     sg_assert(
         (int)(self->count <= 200),
-        NULL
+        "v_plugin_event_queue_add: self->count %i > 200",
+        self->count
     );
 }
 
@@ -255,19 +259,27 @@ void set_pyfx_port(
 ){
     sg_assert(
         (int)(a_port >= 0 && a_port < a_desc->PortCount),
-        NULL
+        "set_pyfx_port: a_port %i out of range 0 to %i",
+        a_port,
+        a_desc->PortCount
     );
     sg_assert(
         (int)(!a_desc->PortDescriptors[a_port]),
-        NULL
+        "set_pyfx_port: a_port %i already set",
+        a_port
     );
     sg_assert(
         (int)(a_min < a_max),
-        NULL
+        "set_pyfx_port: a_min %i >= a_max %i",
+        a_min,
+        a_max
     );
     sg_assert(
         (int)(a_default >= a_min && a_default <= a_max),
-        NULL
+        "set_pyfx_port: a_default %i out of range %i to %i",
+        a_default,
+        a_min,
+        a_max
     );
 
     a_desc->PortDescriptors[a_port] = 1;
@@ -285,7 +297,10 @@ PluginData g_get_port_default(PluginDescriptor *plugin, int port)
             &&
             hint.DefaultValue >= hint.LowerBound
         ),
-        NULL
+        "g_get_port_default: DefaultValue %f out of range %f to %f",
+        hint.DefaultValue,
+        hint.LowerBound,
+        hint.UpperBound
     );
     return hint.DefaultValue;
 }
@@ -411,11 +426,14 @@ void generic_file_loader(
 
             sg_assert(
                 (int)(f_port_key >= 0),
-                NULL
+                "f_port_key %i <= 0",
+                f_port_key
             );
             sg_assert(
                 (int)(f_port_key <= Descriptor->PortCount),
-                NULL
+                "f_port_key %i > Descriptor->PortCount %i",
+                f_port_key,
+                Descriptor->PortCount
             );
 
             a_table[f_port_key] = f_port_value;
@@ -454,7 +472,9 @@ NO_OPTIMIZATION void g_plugin_init(
 
     sg_assert_ptr(
         f_result->descriptor,
-        NULL
+        "plugin descriptor %i %i was NULL",
+        a_index,
+        a_plugin_uid
     );
     log_info("Calling descriptor->instantiate()");
     f_result->plugin_handle = (PluginHandle)f_result->descriptor->instantiate(

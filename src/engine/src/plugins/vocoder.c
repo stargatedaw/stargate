@@ -64,7 +64,11 @@ void v_sg_vocoder_connect_port(
         case SG_VOCODER_MODULATOR: plugin->modulator = data; break;
         case SG_VOCODER_CARRIER: plugin->carrier = data; break;
         default:
-            sg_assert(0, "v_sg_vocoder_connect_port: unknown port");
+            sg_assert(
+                0,
+                "v_sg_vocoder_connect_port: unknown port %i",
+                port
+            );
             break;
     }
 }
@@ -116,7 +120,8 @@ void v_sg_vocoder_process_midi_event(
     {
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
-            "v_sg_vocoder_process_midi_event: param out of range"
+            "v_sg_vocoder_process_midi_event: param %i out of range",
+            a_event->param
         );
 
         v_plugin_event_queue_add(

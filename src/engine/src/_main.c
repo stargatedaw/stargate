@@ -151,6 +151,7 @@ int _main(int argc, char** argv){
     int f_huge_pages = atoi(argv[4]);
     sg_assert(
         (int)(f_huge_pages == 0 || f_huge_pages == 1),
+        "huge pages '%s' out of range 0 to 1 ",
         argv[4]
     );
 
@@ -230,6 +231,7 @@ int daw_render(int argc, char** argv){
 
     sg_assert(
         (int)(f_huge_pages == 0 || f_huge_pages == 1),
+        "huge pages '%s' out of range 0 to 1 ",
         argv[9]
     );
 
@@ -317,7 +319,8 @@ NO_OPTIMIZATION void start_osc_thread(){
     );
     sg_assert(
         (int)(result == 0),
-        NULL
+        "pthread_create failed with %i",
+        result
     );
 }
 

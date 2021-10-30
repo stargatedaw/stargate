@@ -48,7 +48,9 @@ void g_daw_item_get(t_daw* self, int a_uid){
 
         sg_assert(
             f_event_pos <= f_result->event_count,
-            "g_daw_item_get: event pos > count"
+            "g_daw_item_get: event pos %i > count %i",
+            f_event_pos,
+            f_result->event_count
         );
 
         char f_type = f_current_string->current_str[0];
@@ -173,7 +175,10 @@ void g_daw_item_get(t_daw* self, int a_uid){
             f_result->uid = atoi(f_current_string->current_str);
             sg_assert(
                 f_result->uid == a_uid,
-                "g_daw_item_get: file UID does not match file name"
+                "g_daw_item_get: file UID property %i does not "
+                "match file name UID %i",
+                f_result->uid,
+                a_uid
             );
         }
         else

@@ -75,7 +75,11 @@ void v_triggerfx_connect_buffer(
             plugin->output1 = DataLocation;
             break;
         default:
-            sg_assert(0, "v_triggerfx_connect_buffer: unknown port");
+            sg_assert(
+                0,
+                "v_triggerfx_connect_buffer: unknown port %i",
+                a_index
+            );
             break;
     }
 }
@@ -176,7 +180,8 @@ void v_triggerfx_process_midi_event(
     {
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
-            "v_triggerfx_process_midi_event: param out of range"
+            "v_triggerfx_process_midi_event: param %i out of range 1 to 128",
+            a_event->param
         );
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =

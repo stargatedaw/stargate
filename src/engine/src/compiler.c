@@ -6,6 +6,7 @@
     #include <execinfo.h>
 #endif
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -182,9 +183,11 @@ void sg_print_stack_trace(){
 #endif
 }
 
-static void _sg_assert_failed(char* msg){
+static void _sg_assert_failed(va_list args, char* msg){
+    char _str[4096];
     if(msg){
-        log_error("Assertion failed: %s", msg);
+        vsprintf(_str, msg, args);
+        log_error("Assertion failed: %s", _str);
     } else {
         log_error("Assertion failed: no message provided");
     }
@@ -192,14 +195,18 @@ static void _sg_assert_failed(char* msg){
     abort();
 }
 
-void sg_assert(int cond, char* msg){
+void sg_assert(int cond, char* msg, ...){
     if(!cond){
-        _sg_assert_failed(msg);
+        va_list args;
+        va_start(args, msg);
+        _sg_assert_failed(args, msg);
     }
 }
 
-void sg_assert_ptr(void* cond, char* msg){
+void sg_assert_ptr(void* cond, char* msg, ...){
     if(!cond){
-        _sg_assert_failed(msg);
+        va_list args;
+        va_start(args, msg);
+        _sg_assert_failed(args, msg);
     }
 }

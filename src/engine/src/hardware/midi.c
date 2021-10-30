@@ -428,7 +428,9 @@ void midiDeviceRead(
 
     sg_assert(
         self->instanceEventCounts < MIDI_EVENT_BUFFER_SIZE,
-        "midiDeviceRead: instance event count out of range"
+        "midiDeviceRead: instance event count out %i out of range 0 to %i",
+        self->instanceEventCounts,
+        MIDI_EVENT_BUFFER_SIZE
     );
 }
 

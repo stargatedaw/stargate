@@ -328,7 +328,8 @@ void v_audio_pool_add_items(
                     control = atof(f_arr->current_str);
                     sg_assert(
                         control >= 0. && control <= 127.,
-                        "v_audio_pool_add_items: control out of range"
+                        "v_audio_pool_add_items: control out of range: %f",
+                        control
                     );
                     item->fx_controls.controls[i].knobs[j] = control;
                 }
@@ -336,7 +337,10 @@ void v_audio_pool_add_items(
                 fx_type = atoi(f_arr->current_str);
                 sg_assert(
                     fx_type >= 0 && fx_type < MULTIFX3KNOB_MAX_INDEX,
-                    "v_audio_pool_add_items: Invalid fx_type"
+                    "v_audio_pool_add_items: Invalid fx_type %i not in "
+                    "range 0 to %i",
+                    fx_type,
+                    MULTIFX3KNOB_MAX_INDEX
                 );
                 item->fx_controls.controls[i].fx_type = fx_type;
                 item->fx_controls.controls[i].func_ptr =

@@ -52,7 +52,9 @@ t_daw * g_daw_get(){
 
     sg_assert(
         AUDIO_INPUT_TRACK_COUNT < MAX_AUDIO_INPUT_COUNT,
-        "g_daw_get: Too many audio input tracks"
+        "g_daw_get: Too many audio input tracks, %i >= %i",
+        AUDIO_INPUT_TRACK_COUNT,
+        MAX_AUDIO_INPUT_COUNT
     );
 
     g_seq_event_result_init(&f_result->seq_event_result);
@@ -276,7 +278,9 @@ void v_daw_audio_items_run(
             ){
                 sg_assert(
                     f_i2 < a_sample_count,
-                    "v_daw_audio_items_run: f_i2 >= a_sample_count"
+                    "v_daw_audio_items_run: f_i2 %i >= a_sample_count %i",
+                    f_i2,
+                    a_sample_count
                 );
                 v_audio_item_set_fade_vol(f_audio_item, f_send_num, sg_ts);
 
@@ -339,14 +343,18 @@ void v_daw_audio_items_run(
                         f_audio_item->sample_read_heads[f_send_num].whole_number
                         <=
                         f_audio_item->audio_pool_item->length,
-                        "v_daw_audio_items_run: read head > length"
+                        "v_daw_audio_items_run: read head %i > length %i",
+                        f_audio_item->sample_read_heads[f_send_num].whole_number,
+                        f_audio_item->audio_pool_item->length
                     );
 
                     sg_assert(
                         f_audio_item->sample_read_heads[f_send_num].whole_number
                         >=
                         AUDIO_ITEM_PADDING_DIV2,
-                        "v_daw_audio_items_run: read head < start padding"
+                        "v_daw_audio_items_run: read head %i < start padding %i",
+                        f_audio_item->sample_read_heads[f_send_num].whole_number,
+                        AUDIO_ITEM_PADDING_DIV2
                     );
 
                     SGFLT f_tmp_sample0 = f_cubic_interpolate_ptr_ifh(
@@ -415,13 +423,10 @@ void v_daw_audio_items_run(
                 } else {
                     // TODO:  Catch this during load and
                     // do something then...
-                    log_error(
-                        "invalid number of channels %i",
-                        f_audio_item->audio_pool_item->channels
-                    );
                     sg_assert(
                         0,
-                        "v_daw_audio_items_run: Invalid number of channels"
+                        "v_daw_audio_items_run: Invalid number of channels %i",
+                        f_audio_item->audio_pool_item->channels
                     );
                 }
 
@@ -697,12 +702,15 @@ void g_daw_instantiate()
 void daw_set_sequence(t_daw* self, int uid){
     sg_assert(
         uid >= 0 && uid < DAW_MAX_SONG_COUNT,
-        "daw_set_sequence: uid out of range"
+        "daw_set_sequence: uid %i out of range 0 to %i",
+        uid,
+        DAW_MAX_SONG_COUNT
     );
     // Must be loaded
     sg_assert_ptr(
         self->seq_pool[uid],
-        "daw_set_sequence: sequence not loaded"
+        "daw_set_sequence: sequence uid %i not loaded",
+        uid
     );
 
     pthread_spin_lock(&STARGATE->main_lock);

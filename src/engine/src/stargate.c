@@ -38,16 +38,11 @@ int ZERO = 0;
 
 void v_ui_send(char * a_path, char * a_msg){
     int msg_len = strlen(a_path) + strlen(a_msg);
-    char dbg[512];
-    sprintf(
-        dbg,
+    sg_assert(
+        msg_len < 60000,
         "Message exceeded 60,000 size limit: %s: %i",
         a_path,
         msg_len
-    );
-    sg_assert(
-        msg_len < 60000,
-        dbg
     );
     char msg[60000];
     sprintf(msg, "%s\n%s", a_path, a_msg);
@@ -408,12 +403,12 @@ void v_set_control_from_cc(
 
 void v_set_host(int a_mode){
     int f_i;
-    char dbg[128];
-    sprintf(dbg, "%i", a_mode);
 
     sg_assert(
         a_mode >= 0 && a_mode < SG_HOST_COUNT,
-        dbg
+        "v_set_host: a_mode %i out of range 0 to %i",
+        a_mode,
+        SG_HOST_COUNT
     );
 
     pthread_spin_lock(&STARGATE->main_lock);
@@ -523,11 +518,11 @@ NO_OPTIMIZATION void v_open_track(
                     0
                 );
             } else {
-                log_error(
-                    "Invalid track identifier '%c'",
-                    f_2d_array->current_str[0]
+                sg_assert(
+                    0,
+                    "v_open_track: invalid track identifier '%s'",
+                    f_2d_array->current_str
                 );
-                sg_assert(0, "v_open_track: invalid track identifier");
             }
         }
 
@@ -786,7 +781,10 @@ void v_sample_period_set_atm_events(
     ){
         sg_assert(
             (int)self->atm_tick_count < ATM_TICK_BUFFER_SIZE,
-            "v_sample_period_set_atm_events: atm tick count out of range"
+            "v_sample_period_set_atm_events: atm tick count %i out of "
+            "range 0 to %i",
+            self->atm_tick_count,
+            ATM_TICK_BUFFER_SIZE
         );
 
         pos = (a_event_list->atm_pos - current_sample);
@@ -1206,7 +1204,8 @@ void v_sg_configure(const char* a_key, const char* a_value){
         f_input->vol_linear = f_vol_linear;
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_KILL_ENGINE)){
         pthread_spin_lock(&STARGATE->main_lock);
-        sg_assert(0, "v_sg_configure: SG_CONFIGURE_KEY_KILL_ENGINE");
+        log_warn("v_sg_configure: SG_CONFIGURE_KEY_KILL_ENGINE");
+        exit(0);
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_EXIT)){
         pthread_mutex_lock(&STARGATE->exit_mutex);
         exiting = 1;
@@ -1299,6 +1298,8 @@ void v_sg_configure(const char* a_key, const char* a_value){
         int f_val = atoi(a_value);
         sg_assert(
             (int)(f_val == 0 || f_val == 1),
+            "SG_CONFIGURE_KEY_ENGINE: f_val %i out of range 0 to 1, %s",
+            f_val,
             (char*)a_value
         );
         pthread_spin_lock(&STARGATE->main_lock);

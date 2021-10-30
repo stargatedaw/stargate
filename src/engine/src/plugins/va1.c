@@ -89,7 +89,11 @@ void v_va1_connect_buffer(
             plugin->output1 = DataLocation;
             break;
         default:
-            sg_assert(0, "v_va1_connect_buffer: port out of range");
+            sg_assert(
+                0,
+                "v_va1_connect_buffer: port out of range: %i",
+                a_index
+            );
             break;
     }
 }
@@ -236,7 +240,13 @@ void v_va1_connect_port(
         case VA1_DIST_TYPE: plugin->dist_type = data; break;
         case VA1_ADSR_LIN_MAIN: plugin->adsr_lin_main = data; break;
         case VA1_PAN: plugin->pan = data; break;
-        default: sg_assert(0, "v_va1_connect_port: unknown port"); break;
+        default:
+            sg_assert(
+                0,
+                "v_va1_connect_port: unknown port %i",
+                port
+            );
+            break;
     }
 }
 
@@ -521,7 +531,8 @@ void v_va1_process_midi_event(
     } else if (a_event->type == EVENT_CONTROLLER){
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
-            "v_va1_process_midi_event: param out of range"
+            "v_va1_process_midi_event: param %i out of range 1 to 128",
+            a_event->param
         );
 
         v_plugin_event_queue_add(

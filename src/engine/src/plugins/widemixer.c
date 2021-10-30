@@ -293,7 +293,13 @@ void v_widemixer_connect_port(
         case WIDEMIXER_MUTE: plugin->mute = data; break;
         case WIDEMIXER_BASS_MONO_LOW: plugin->bass_mono_low = data; break;
         case WIDEMIXER_BASS_MONO_HIGH: plugin->bass_mono_high = data; break;
-        default: sg_assert(0, "v_widemixer_connect_port: unknown port"); break;
+        default:
+            sg_assert(
+                0,
+                "v_widemixer_connect_port: unknown port %i",
+                port
+            );
+            break;
     }
 }
 
@@ -359,7 +365,8 @@ void v_widemixer_process_midi_event(
     if (a_event->type == EVENT_CONTROLLER){
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
-            "v_widemixer_process_midi_event: param out of range"
+            "v_widemixer_process_midi_event: param %i out of range 1 to 128",
+            a_event->param
         );
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =

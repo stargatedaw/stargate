@@ -21,7 +21,7 @@ void v_rate_envelope(
     info.format = 0;
     file = sf_open(a_file_in, SFM_READ, &info);
 
-    sg_assert_ptr(file, a_file_in);
+    sg_assert_ptr(file, "v_rate_envelope: Failed to open '%s'", a_file_in);
 
     if (info.frames > 100000000)
     {
@@ -64,9 +64,11 @@ void v_rate_envelope(
             f_i2++;
         }
     } else {
-        char dbg[256];
-        sprintf(dbg, "%i channels is not supported", info.channels);
-        sg_assert(0, dbg);
+        sg_assert(
+            0,
+            "v_rate_envelope: %i channels is not supported",
+            info.channels
+        );
     }
 
     SNDFILE * f_sndfile = sf_open(a_file_out, SFM_WRITE, &f_sf_info);
@@ -141,7 +143,7 @@ void v_pitch_envelope(
     info.format = 0;
     file = sf_open(a_file_in, SFM_READ, &info);
 
-    sg_assert_ptr(file, a_file_in);
+    sg_assert_ptr(file, "v_pitch_envelope: Unable to open '%s'", a_file_in);
 
     if (info.frames > 100000000)
     {
@@ -189,9 +191,7 @@ void v_pitch_envelope(
             f_i2++;
         }
     } else {
-        char dbg[256];
-        sprintf(dbg, "%i channels is not supported", info.channels);
-        sg_assert(0, dbg);
+        sg_assert(0, "%i channels is not supported", info.channels);
     }
 
     SNDFILE * f_sndfile = sf_open(a_file_out, SFM_WRITE, &f_sf_info);

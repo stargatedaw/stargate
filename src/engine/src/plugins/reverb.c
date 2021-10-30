@@ -62,7 +62,11 @@ void v_sreverb_connect_buffer(
             plugin->output1 = DataLocation;
             break;
         default:
-            sg_assert(0, "v_sreverb_connect_buffer: unknown port");
+            sg_assert(
+                0,
+                "v_sreverb_connect_buffer: unknown port %i",
+                a_index
+            );
             break;
     }
 }
@@ -84,7 +88,13 @@ void v_sreverb_connect_port(
         case SREVERB_REVERB_HP: plugin->reverb_hp = data; break;
         case SREVERB_DRY_PAN: plugin->dry_pan = data; break;
         case SREVERB_WET_PAN: plugin->wet_pan = data; break;
-        default: sg_assert(0, "v_sreverb_connect_port: unknown port"); break;
+        default:
+            sg_assert(
+                0,
+                "v_sreverb_connect_port: unknown port %i",
+                port
+            );
+            break;
     }
 }
 
@@ -151,7 +161,8 @@ void v_sreverb_process_midi_event(
     {
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
-            "v_sreverb_process_midi_event: param out of range"
+            "v_sreverb_process_midi_event: param %i out of range 1 to 128",
+            a_event->param
         );
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =

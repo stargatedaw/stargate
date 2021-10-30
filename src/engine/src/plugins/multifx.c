@@ -61,57 +61,63 @@ void v_multifx_connect_buffer(
             plugin->output1 = DataLocation;
             break;
         default:
-            sg_assert(0, "v_multifx_connect_buffer: unknown port");
+            sg_assert(
+                0,
+                "v_multifx_connect_buffer: unknown port %i",
+                a_index
+            );
             break;
     }
 }
 
-void v_multifx_connect_port(PluginHandle instance, int port,
-        PluginData * data)
-{
+void v_multifx_connect_port(
+    PluginHandle instance,
+    int port,
+    PluginData * data
+){
     t_multifx *plugin;
 
-    plugin = (t_multifx *) instance;
+    plugin = (t_multifx*) instance;
 
     switch (port)
     {
         case MULTIFX_FX0_KNOB0: plugin->fx_knob0[0] = data; break;
-        case MULTIFX_FX0_KNOB1:        plugin->fx_knob1[0] = data; break;
+        case MULTIFX_FX0_KNOB1: plugin->fx_knob1[0] = data; break;
         case MULTIFX_FX0_KNOB2: plugin->fx_knob2[0] = data; break;
         case MULTIFX_FX0_COMBOBOX: plugin->fx_combobox[0] = data; break;
 
         case MULTIFX_FX1_KNOB0: plugin->fx_knob0[1] = data; break;
-        case MULTIFX_FX1_KNOB1:        plugin->fx_knob1[1] = data; break;
+        case MULTIFX_FX1_KNOB1: plugin->fx_knob1[1] = data; break;
         case MULTIFX_FX1_KNOB2: plugin->fx_knob2[1] = data; break;
         case MULTIFX_FX1_COMBOBOX: plugin->fx_combobox[1] = data; break;
 
         case MULTIFX_FX2_KNOB0: plugin->fx_knob0[2] = data; break;
-        case MULTIFX_FX2_KNOB1:        plugin->fx_knob1[2] = data; break;
+        case MULTIFX_FX2_KNOB1: plugin->fx_knob1[2] = data; break;
         case MULTIFX_FX2_KNOB2: plugin->fx_knob2[2] = data; break;
         case MULTIFX_FX2_COMBOBOX: plugin->fx_combobox[2] = data; break;
 
         case MULTIFX_FX3_KNOB0: plugin->fx_knob0[3] = data; break;
-        case MULTIFX_FX3_KNOB1:        plugin->fx_knob1[3] = data; break;
+        case MULTIFX_FX3_KNOB1: plugin->fx_knob1[3] = data; break;
         case MULTIFX_FX3_KNOB2: plugin->fx_knob2[3] = data; break;
         case MULTIFX_FX3_COMBOBOX: plugin->fx_combobox[3] = data; break;
 
         case MULTIFX_FX4_KNOB0: plugin->fx_knob0[4] = data; break;
-        case MULTIFX_FX4_KNOB1:        plugin->fx_knob1[4] = data; break;
+        case MULTIFX_FX4_KNOB1: plugin->fx_knob1[4] = data; break;
         case MULTIFX_FX4_KNOB2: plugin->fx_knob2[4] = data; break;
         case MULTIFX_FX4_COMBOBOX: plugin->fx_combobox[4] = data; break;
 
         case MULTIFX_FX5_KNOB0: plugin->fx_knob0[5] = data; break;
-        case MULTIFX_FX5_KNOB1:        plugin->fx_knob1[5] = data; break;
+        case MULTIFX_FX5_KNOB1: plugin->fx_knob1[5] = data; break;
         case MULTIFX_FX5_KNOB2: plugin->fx_knob2[5] = data; break;
         case MULTIFX_FX5_COMBOBOX: plugin->fx_combobox[5] = data; break;
 
         case MULTIFX_FX6_KNOB0: plugin->fx_knob0[6] = data; break;
-        case MULTIFX_FX6_KNOB1:        plugin->fx_knob1[6] = data; break;
+        case MULTIFX_FX6_KNOB1: plugin->fx_knob1[6] = data; break;
         case MULTIFX_FX6_KNOB2: plugin->fx_knob2[6] = data; break;
         case MULTIFX_FX6_COMBOBOX: plugin->fx_combobox[6] = data; break;
 
         case MULTIFX_FX7_KNOB0: plugin->fx_knob0[7] = data; break;
-        case MULTIFX_FX7_KNOB1:        plugin->fx_knob1[7] = data; break;
+        case MULTIFX_FX7_KNOB1: plugin->fx_knob1[7] = data; break;
         case MULTIFX_FX7_KNOB2: plugin->fx_knob2[7] = data; break;
         case MULTIFX_FX7_COMBOBOX: plugin->fx_combobox[7] = data; break;
     }
@@ -204,7 +210,8 @@ void v_multifx_process_midi_event(
     {
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
-            "v_multifx_process_midi_event: param out of range"
+            "v_multifx_process_midi_event: param %i out of range 1 to 128",
+            a_event->param
         );
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =

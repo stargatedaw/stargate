@@ -164,7 +164,9 @@ void v_daw_process_external_midi(
 
     sg_assert(
         f_extern_midi_count < 200,
-        "v_daw_process_external_midi: external midi count out of range"
+        "v_daw_process_external_midi: external midi count %i out of "
+        "range 0 to 200",
+        f_extern_midi_count
     );
 
     int f_i2 = 0;

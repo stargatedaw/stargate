@@ -52,6 +52,7 @@ void papifx_paste(const char* _str){
     t_1d_char_array* arr = c_split_str(_str, '|', 34, 32);
     sg_assert(
         !strcmp(arr->array[0], "f"),
+        "papifx_paste: Invalid first char: %s",
         (char*)_str
     );
 

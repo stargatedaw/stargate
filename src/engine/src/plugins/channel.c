@@ -128,7 +128,8 @@ void v_sgchnl_process_midi_event(
     {
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
-            "v_sgchnl_process_midi_event: param out of range"
+            "v_sgchnl_process_midi_event: param %i out of range 1 to 128",
+            a_event->param
         );
 
         plugin_data->midi_event_types[plugin_data->midi_event_count] =

@@ -35,14 +35,17 @@ void v_daw_papifx_set_control(
         int fx_type = (int)port_val;
         sg_assert(
             fx_type >= 0 && fx_type < MULTIFX3KNOB_MAX_INDEX,
-            "v_daw_papifx_set_control: invalid fx type"
+            "v_daw_papifx_set_control: invalid fx type %i, range 0 to %i",
+            fx_type,
+            MULTIFX3KNOB_MAX_INDEX
         );
         controls->fx_type = fx_type;
         controls->func_ptr = g_mf3_get_function_pointer(fx_type);
     } else {
         sg_assert(
             port_val >= 0. && port_val <= 127.,
-            "v_daw_papifx_set_control: port out of range"
+            "v_daw_papifx_set_control: port %f out of range 0 to 127",
+            port_val
         );
         controls->knobs[control_index] = port_val;
     }
