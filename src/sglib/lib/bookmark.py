@@ -17,6 +17,7 @@ def get_file_bookmarks():
     f_result = {
         "system": {
             "project user folder": constants.PROJECT.user_folder,
+            "project recording folder": constants.PROJECT.audio_rec_folder,
         }
     }
     if constants.IS_PORTABLE_INSTALL:
