@@ -83,9 +83,13 @@ class Welcome:
         self.close()
 
     def load_rp(self):
-        """ Load a list of recent projects
-        """
+        """ Load a list of recent projects """
         self.history = get_history()
+        if util.IS_WINDOWS:
+            self.history = [
+                x.replace('/', '\\')
+                for x in self.history
+            ]
         LOG.info(f"Project history: {self.history}")
         if self.history:
             self.rp_list.addItems(self.history)
