@@ -22,34 +22,30 @@ GNU General Public License for more details.
 #define TRIGGERFX_EVENT_GLITCH_OFF 1004
 
 
-void v_triggerfx_cleanup(PluginHandle instance)
-{
+void v_triggerfx_cleanup(PluginHandle instance){
     free(instance);
 }
 
-void v_triggerfx_set_cc_map(PluginHandle instance, char * a_msg)
-{
+void v_triggerfx_set_cc_map(PluginHandle instance, char * a_msg){
     t_triggerfx *plugin = (t_triggerfx *)instance;
     v_generic_cc_map_set(&plugin->cc_map, a_msg);
 }
 
-void v_triggerfx_panic(PluginHandle instance)
-{
+void v_triggerfx_panic(PluginHandle instance){
     t_triggerfx *plugin = (t_triggerfx*)instance;
 
-    plugin->mono_modules->gate_on = 0.0f;
-    plugin->mono_modules->glitch_on = 0.0f;
+    plugin->mono_modules.gate_on = 0.0f;
+    plugin->mono_modules.glitch_on = 0.0f;
 
-    v_adsr_kill(&plugin->mono_modules->glitch.adsr);
+    v_adsr_kill(&plugin->mono_modules.glitch.adsr);
 }
 
-void v_triggerfx_on_stop(PluginHandle instance)
-{
+void v_triggerfx_on_stop(PluginHandle instance){
     t_triggerfx *plugin = (t_triggerfx*)instance;
 
-    plugin->mono_modules->gate_on = 0.0f;
-    plugin->mono_modules->glitch_on = 0.0f;
-    v_glc_glitch_v2_release(&plugin->mono_modules->glitch);
+    plugin->mono_modules.gate_on = 0.0f;
+    plugin->mono_modules.glitch_on = 0.0f;
+    v_glc_glitch_v2_release(&plugin->mono_modules.glitch);
     plugin->sv_pitch_bend_value = 0.0f;
 }
 
@@ -59,8 +55,7 @@ void v_triggerfx_connect_buffer(
     SGFLT * DataLocation,
     int a_is_sidechain
 ){
-    if(a_is_sidechain)
-    {
+    if(a_is_sidechain){
         return;
     }
 
@@ -84,9 +79,11 @@ void v_triggerfx_connect_buffer(
     }
 }
 
-void v_triggerfx_connect_port(PluginHandle instance, int port,
-        PluginData * data)
-{
+void v_triggerfx_connect_port(
+    PluginHandle instance,
+    int port,
+    PluginData * data
+){
     t_triggerfx *plugin;
 
     plugin = (t_triggerfx *) instance;
@@ -106,10 +103,13 @@ void v_triggerfx_connect_port(PluginHandle instance, int port,
     }
 }
 
-PluginHandle g_triggerfx_instantiate(PluginDescriptor * descriptor,
-        int s_rate, fp_get_audio_pool_item_from_host a_host_audio_pool_func,
-        int a_plugin_uid, fp_queue_message a_queue_func)
-{
+PluginHandle g_triggerfx_instantiate(
+    PluginDescriptor * descriptor,
+    int s_rate,
+    fp_get_audio_pool_item_from_host a_host_audio_pool_func,
+    int a_plugin_uid,
+    fp_queue_message a_queue_func
+){
     t_triggerfx *plugin_data;
     hpalloc((void**)&plugin_data, sizeof(t_triggerfx));
 
@@ -120,53 +120,84 @@ PluginHandle g_triggerfx_instantiate(PluginDescriptor * descriptor,
 
     plugin_data->sv_pitch_bend_value = 0.0f;
 
-    plugin_data->mono_modules =
-        v_triggerfx_mono_init(plugin_data->fs, plugin_data->plugin_uid);
+    v_triggerfx_mono_init(
+        &plugin_data->mono_modules,
+        plugin_data->fs,
+        plugin_data->plugin_uid
+    );
 
     plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data, descriptor);
+        (void**)plugin_data,
+        descriptor
+    );
 
     v_cc_map_init(&plugin_data->cc_map);
 
-    return (PluginHandle) plugin_data;
+    return (PluginHandle)plugin_data;
 }
 
-void v_triggerfx_load(PluginHandle instance,
-        PluginDescriptor * Descriptor, char * a_file_path)
-{
+void v_triggerfx_load(
+    PluginHandle instance,
+    PluginDescriptor * Descriptor,
+    char * a_file_path
+){
     t_triggerfx *plugin_data = (t_triggerfx*)instance;
-    generic_file_loader(instance, Descriptor,
-        a_file_path, plugin_data->port_table, &plugin_data->cc_map);
+    generic_file_loader(
+        instance,
+        Descriptor,
+        a_file_path,
+        plugin_data->port_table,
+        &plugin_data->cc_map
+    );
 }
 
-void v_triggerfx_set_port_value(PluginHandle Instance,
-        int a_port, SGFLT a_value)
-{
+void v_triggerfx_set_port_value(
+    PluginHandle Instance,
+    int a_port,
+    SGFLT a_value
+){
     t_triggerfx *plugin_data = (t_triggerfx*)Instance;
     plugin_data->port_table[a_port] = a_value;
 }
 
-void v_triggerfx_run_gate(t_triggerfx *plugin_data,
-        SGFLT a_in0, SGFLT a_in1)
-{
-    v_sml_run(&plugin_data->mono_modules->gate_wet_smoother,
-            *plugin_data->gate_wet * 0.01f);
-    v_gat_set(&plugin_data->mono_modules->gate, *plugin_data->gate_pitch,
-            plugin_data->mono_modules->gate_wet_smoother.last_value);
-    v_gat_run(&plugin_data->mono_modules->gate,
-            plugin_data->mono_modules->gate_on, a_in0, a_in1);
+void v_triggerfx_run_gate(
+    t_triggerfx *plugin_data,
+    SGFLT a_in0,
+    SGFLT a_in1
+){
+    v_sml_run(
+        &plugin_data->mono_modules.gate_wet_smoother,
+        *plugin_data->gate_wet * 0.01f
+    );
+    v_gat_set(
+        &plugin_data->mono_modules.gate,
+        *plugin_data->gate_pitch,
+        plugin_data->mono_modules.gate_wet_smoother.last_value
+    );
+    v_gat_run(
+        &plugin_data->mono_modules.gate,
+        plugin_data->mono_modules.gate_on,
+        a_in0,
+        a_in1
+    );
 }
 
-void v_triggerfx_run_glitch(t_triggerfx *plugin_data,
-        SGFLT a_in0, SGFLT a_in1)
-{
-    v_sml_run(&plugin_data->mono_modules->glitch_time_smoother,
-            *plugin_data->glitch_time * 0.01f);
-    v_glc_glitch_v2_set(&plugin_data->mono_modules->glitch,
-            plugin_data->mono_modules->glitch_time_smoother.last_value,
-            plugin_data->mono_modules->pitchbend_smoother.last_value *
-            (*plugin_data->glitch_pb));
-    v_glc_glitch_v2_run(&plugin_data->mono_modules->glitch, a_in0, a_in1);
+void v_triggerfx_run_glitch(
+    t_triggerfx *plugin_data,
+    SGFLT a_in0,
+    SGFLT a_in1
+){
+    v_sml_run(
+        &plugin_data->mono_modules.glitch_time_smoother,
+        *plugin_data->glitch_time * 0.01f
+    );
+    v_glc_glitch_v2_set(
+        &plugin_data->mono_modules.glitch,
+        plugin_data->mono_modules.glitch_time_smoother.last_value,
+        plugin_data->mono_modules.pitchbend_smoother.last_value *
+        (*plugin_data->glitch_pb)
+    );
+    v_glc_glitch_v2_run(&plugin_data->mono_modules.glitch, a_in0, a_in1);
 }
 
 void v_triggerfx_process_midi_event(
@@ -260,9 +291,11 @@ void v_triggerfx_process_midi_event(
 }
 
 void v_triggerfx_run(
-        PluginHandle instance, int sample_count,
-        struct ShdsList * midi_events, struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    struct ShdsList* midi_events,
+    struct ShdsList* atm_events
+){
     t_triggerfx *plugin_data = (t_triggerfx*)instance;
 
     t_seq_event **events = (t_seq_event**)midi_events->data;
@@ -317,29 +350,29 @@ void v_triggerfx_run(
             else if(plugin_data->midi_event_types[midi_event_pos] ==
                     TRIGGERFX_EVENT_GATE_ON)
             {
-                plugin_data->mono_modules->gate_on =
+                plugin_data->mono_modules.gate_on =
                         plugin_data->midi_event_values[midi_event_pos];
             }
             else if(plugin_data->midi_event_types[midi_event_pos] ==
                     TRIGGERFX_EVENT_GATE_OFF)
             {
-                plugin_data->mono_modules->gate_on =
+                plugin_data->mono_modules.gate_on =
                         plugin_data->midi_event_values[midi_event_pos];
             }
             else if(plugin_data->midi_event_types[midi_event_pos] ==
                     TRIGGERFX_EVENT_GLITCH_ON)
             {
-                plugin_data->mono_modules->glitch_on =
+                plugin_data->mono_modules.glitch_on =
                         plugin_data->midi_event_values[midi_event_pos];
                 v_glc_glitch_v2_retrigger(
-                        &plugin_data->mono_modules->glitch);
+                        &plugin_data->mono_modules.glitch);
             }
             else if(plugin_data->midi_event_types[midi_event_pos] ==
                     TRIGGERFX_EVENT_GLITCH_OFF)
             {
-                plugin_data->mono_modules->glitch_on =
+                plugin_data->mono_modules.glitch_on =
                         plugin_data->midi_event_values[midi_event_pos];
-                v_glc_glitch_v2_release(&plugin_data->mono_modules->glitch);
+                v_glc_glitch_v2_release(&plugin_data->mono_modules.glitch);
             }
 
             ++midi_event_pos;
@@ -348,41 +381,45 @@ void v_triggerfx_run(
         v_plugin_event_queue_atm_set(
             &plugin_data->atm_queue, f_i, plugin_data->port_table);
 
-        plugin_data->mono_modules->current_sample0 =
+        plugin_data->mono_modules.current_sample0 =
                 plugin_data->output0[f_i];
-        plugin_data->mono_modules->current_sample1 =
+        plugin_data->mono_modules.current_sample1 =
                 plugin_data->output1[f_i];
 
-        v_sml_run(&plugin_data->mono_modules->pitchbend_smoother,
+        v_sml_run(&plugin_data->mono_modules.pitchbend_smoother,
                 (plugin_data->sv_pitch_bend_value));
 
-        if(f_glitch_on &&
-        plugin_data->mono_modules->glitch.adsr.stage != ADSR_STAGE_OFF)
-        {
-            v_triggerfx_run_glitch(plugin_data,
-                    plugin_data->mono_modules->current_sample0,
-                    plugin_data->mono_modules->current_sample1);
-            plugin_data->mono_modules->current_sample0 =
-                    plugin_data->mono_modules->glitch.output0;
-            plugin_data->mono_modules->current_sample1 =
-                    plugin_data->mono_modules->glitch.output1;
+        if(
+            f_glitch_on
+            &&
+            plugin_data->mono_modules.glitch.adsr.stage != ADSR_STAGE_OFF
+        ){
+            v_triggerfx_run_glitch(
+                plugin_data,
+                plugin_data->mono_modules.current_sample0,
+                plugin_data->mono_modules.current_sample1
+            );
+            plugin_data->mono_modules.current_sample0 =
+                    plugin_data->mono_modules.glitch.output0;
+            plugin_data->mono_modules.current_sample1 =
+                    plugin_data->mono_modules.glitch.output1;
         }
 
         if(f_gate_on)
         {
             v_triggerfx_run_gate(plugin_data,
-                    plugin_data->mono_modules->current_sample0,
-                    plugin_data->mono_modules->current_sample1);
-            plugin_data->mono_modules->current_sample0 =
-                    plugin_data->mono_modules->gate.output[0];
-            plugin_data->mono_modules->current_sample1 =
-                    plugin_data->mono_modules->gate.output[1];
+                    plugin_data->mono_modules.current_sample0,
+                    plugin_data->mono_modules.current_sample1);
+            plugin_data->mono_modules.current_sample0 =
+                    plugin_data->mono_modules.gate.output[0];
+            plugin_data->mono_modules.current_sample1 =
+                    plugin_data->mono_modules.gate.output[1];
         }
 
         plugin_data->output0[f_i] =
-                (plugin_data->mono_modules->current_sample0);
+                (plugin_data->mono_modules.current_sample0);
         plugin_data->output1[f_i] =
-                (plugin_data->mono_modules->current_sample1);
+                (plugin_data->mono_modules.current_sample1);
 
         ++f_i;
     }
@@ -420,13 +457,11 @@ PluginDescriptor *triggerfx_plugin_descriptor(){
     return f_result;
 }
 
-t_triggerfx_mono_modules * v_triggerfx_mono_init(
+void v_triggerfx_mono_init(
+    t_triggerfx_mono_modules * a_mono,
     SGFLT a_sr,
     int a_plugin_uid
 ){
-    t_triggerfx_mono_modules * a_mono;
-    hpalloc((void**)&a_mono, sizeof(t_triggerfx_mono_modules));
-
     g_sml_init(&a_mono->pitchbend_smoother, a_sr, 1.0f, -1.0f, 0.1f);
 
     g_sml_init(&a_mono->gate_wet_smoother,a_sr, 100.0f, 0.0f, 0.01f);
@@ -440,8 +475,6 @@ t_triggerfx_mono_modules * v_triggerfx_mono_init(
     g_glc_glitch_v2_init(&a_mono->glitch, a_sr);
     a_mono->glitch_on = 0.0f;
     g_sml_init(&a_mono->glitch_time_smoother, a_sr, 0.10f, 0.01f, 0.01f);
-
-    return a_mono;
 }
 
 /*

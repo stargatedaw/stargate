@@ -32,22 +32,21 @@ GNU General Public License for more details.
 #define SFADER_COUNT 1
 
 
-typedef struct
-{
+typedef struct {
     SGFLT current_sample0;
     SGFLT current_sample1;
 
     SGFLT vol_linear;
 
-    t_smoother_linear * volume_smoother;
+    t_smoother_linear volume_smoother;
 }t_sfader_mono_modules;
 
-typedef struct
-{
+typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     SGFLT * buffers[2];
     PluginData *vol_slider;
     SGFLT fs;
-    t_sfader_mono_modules * mono_modules;
+    t_sfader_mono_modules mono_modules;
 
     int i_mono_out;
     int i_buffer_clear;
@@ -60,9 +59,10 @@ typedef struct
     SGFLT * port_table;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_sfader;
 
-t_sfader_mono_modules * v_sfader_mono_init(SGFLT, int);
+void v_sfader_mono_init(t_sfader_mono_modules*, SGFLT, int);
 PluginDescriptor *sfader_plugin_descriptor();
 
 #endif /* SIMPLE_FADER_PLUGIN_H */

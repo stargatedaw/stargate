@@ -177,7 +177,8 @@ PluginHandle g_sgeq_instantiate(
     plugin_data->plugin_uid = a_plugin_uid;
     plugin_data->queue_func = a_queue_func;
 
-    plugin_data->mono_modules = v_sgeq_mono_init(
+    v_sgeq_mono_init(
+        &plugin_data->mono_modules,
         plugin_data->fs,
         plugin_data->plugin_uid
     );
@@ -236,7 +237,7 @@ void v_sgeq_process_midi_event(
 int _prefx_check_if_on(t_sgeq *plugin_data){
     int f_i;
     int on = 0;
-    t_sgeq_mono_modules* mm = plugin_data->mono_modules;
+    t_sgeq_mono_modules* mm = &plugin_data->mono_modules;
 
     for(f_i = 0; f_i < 6; ++f_i){
         mm->pre_fx_func_ptr[f_i] = g_mf3_get_function_pointer(
@@ -253,7 +254,7 @@ int _prefx_check_if_on(t_sgeq *plugin_data){
 int _postfx_check_if_on(t_sgeq *plugin_data){
     int f_i;
     int on = 0;
-    t_sgeq_mono_modules* mm = plugin_data->mono_modules;
+    t_sgeq_mono_modules* mm = &plugin_data->mono_modules;
 
     for(f_i = 0; f_i < 6; ++f_i){
         mm->post_fx_func_ptr[f_i] = g_mf3_get_function_pointer(
@@ -335,7 +336,7 @@ void v_sgeq_run(
             f_i,
             plugin_data->port_table
         );
-        mm = plugin_data->mono_modules;
+        mm = &plugin_data->mono_modules;
 
         if(prefx_on){
             for(f_i2 = 0; f_i2 < 6; ++f_i2){
@@ -438,17 +439,17 @@ void v_sgeq_run(
 
     if((int)(*plugin_data->spectrum_analyzer_on)){
         v_spa_run(
-            plugin_data->mono_modules->spectrum_analyzer,
+            plugin_data->mono_modules.spectrum_analyzer,
             plugin_data->output0,
             plugin_data->output1,
             sample_count
         );
-        if(plugin_data->mono_modules->spectrum_analyzer->str_buf[0] != '\0'){
+        if(plugin_data->mono_modules.spectrum_analyzer->str_buf[0] != '\0'){
             plugin_data->queue_func(
                 "ui",
-                plugin_data->mono_modules->spectrum_analyzer->str_buf
+                plugin_data->mono_modules.spectrum_analyzer->str_buf
             );
-            plugin_data->mono_modules->spectrum_analyzer->str_buf[0] = '\0';
+            plugin_data->mono_modules.spectrum_analyzer->str_buf[0] = '\0';
         }
     }
 
@@ -545,10 +546,11 @@ PluginDescriptor *sgeq_plugin_descriptor(){
     return f_result;
 }
 
-t_sgeq_mono_modules * v_sgeq_mono_init(SGFLT a_sr, int a_plugin_uid){
-    t_sgeq_mono_modules * a_mono;
-    hpalloc((void**)&a_mono, sizeof(t_sgeq_mono_modules));
-
+void v_sgeq_mono_init(
+    t_sgeq_mono_modules* a_mono,
+    SGFLT a_sr,
+    int a_plugin_uid
+){
     int f_i;
     int f_i2;
 
@@ -588,8 +590,6 @@ t_sgeq_mono_modules * v_sgeq_mono_init(SGFLT a_sr, int a_plugin_uid){
             );
         }
     }
-
-    return a_mono;
 }
 
 /*

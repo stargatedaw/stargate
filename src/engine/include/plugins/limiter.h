@@ -35,13 +35,13 @@ GNU General Public License for more details.
 #define SG_LIM_COUNT 4
 
 
-typedef struct
-{
+typedef struct {
     t_lim_limiter limiter;
-}t_sg_lim_mono_modules;
+} t_sg_lim_mono_modules;
 
-typedef struct
-{
+typedef struct {
+    char pad1[CACHE_LINE_SIZE];
+
     PluginData *output0;
     PluginData *output1;
 
@@ -50,9 +50,8 @@ typedef struct
     PluginData *release;
     PluginData *peak_meter;
 
-
     SGFLT fs;
-    t_sg_lim_mono_modules * mono_modules;
+    t_sg_lim_mono_modules mono_modules;
 
     int midi_event_types[200];
     int midi_event_ticks[200];
@@ -67,9 +66,10 @@ typedef struct
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
     char ui_msg_buff[64];
+    char pad2[CACHE_LINE_SIZE];
 } t_sg_lim;
 
-t_sg_lim_mono_modules * v_sg_lim_mono_init(SGFLT a_sr, int a_plugin_uid);
+void v_sg_lim_mono_init(t_sg_lim_mono_modules*, SGFLT a_sr, int a_plugin_uid);
 PluginDescriptor *sg_lim_plugin_descriptor();
 
 

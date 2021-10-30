@@ -60,7 +60,7 @@ static SGFLT run_widemixer(
     int sample_num
 ){
     SGFLT tmp, mid, side[2];
-    t_svf2_filter* filter = &plugin->mono_modules->bass_mono_filter;
+    t_svf2_filter* filter = &plugin->mono_modules.bass_mono_filter;
     while(
         *midi_event_pos < plugin->midi_event_count
         &&
@@ -117,62 +117,62 @@ static SGFLT run_widemixer(
 
     if(runvars->mid_side >= 0.01){
         v_axf_set_xfade(
-            &plugin->mono_modules->xfade,
+            &plugin->mono_modules.xfade,
             runvars->mid_side
         );
         plugin->buffers[0][sample_num] = f_axf_run_xfade(
-            &plugin->mono_modules->xfade,
+            &plugin->mono_modules.xfade,
             plugin->buffers[0][sample_num],
             side[0]
         );
         plugin->buffers[1][sample_num] = f_axf_run_xfade(
-            &plugin->mono_modules->xfade,
+            &plugin->mono_modules.xfade,
             plugin->buffers[1][sample_num],
             side[1]
         );
     } else if(runvars->mid_side <= -0.01){
         tmp = runvars->mid_side + 1.0;
-        v_axf_set_xfade(&plugin->mono_modules->xfade, tmp);
+        v_axf_set_xfade(&plugin->mono_modules.xfade, tmp);
         plugin->buffers[0][sample_num] = f_axf_run_xfade(
-            &plugin->mono_modules->xfade,
+            &plugin->mono_modules.xfade,
             mid,
             plugin->buffers[0][sample_num]
         );
         plugin->buffers[1][sample_num] = f_axf_run_xfade(
-            &plugin->mono_modules->xfade,
+            &plugin->mono_modules.xfade,
             mid,
             plugin->buffers[1][sample_num]
         );
     }
 
     v_sml_run(
-        &plugin->mono_modules->volume_smoother,
+        &plugin->mono_modules.volume_smoother,
         (*plugin->vol_slider * 0.01f)
     );
 
     v_sml_run(
-        &plugin->mono_modules->pan_smoother,
+        &plugin->mono_modules.pan_smoother,
         (*plugin->pan * 0.01f)
     );
 
     v_pn2_set(
-        &plugin->mono_modules->panner,
-        plugin->mono_modules->pan_smoother.last_value,
+        &plugin->mono_modules.panner,
+        plugin->mono_modules.pan_smoother.last_value,
         runvars->pan_law
     );
     if(runvars->bass_mono_on){
         v_svf2_set_cutoff_hz(
-            &plugin->mono_modules->bass_mono_filter,
+            &plugin->mono_modules.bass_mono_filter,
             runvars->bass_mono_freq
         );
         v_svf2_run(
-            &plugin->mono_modules->bass_mono_filter,
-            &plugin->mono_modules->bass_mono_filter.filter_kernels[0][0],
+            &plugin->mono_modules.bass_mono_filter,
+            &plugin->mono_modules.bass_mono_filter.filter_kernels[0][0],
             plugin->buffers[0][sample_num]
         );
         v_svf2_run(
-            &plugin->mono_modules->bass_mono_filter,
-            &plugin->mono_modules->bass_mono_filter.filter_kernels[0][1],
+            &plugin->mono_modules.bass_mono_filter,
+            &plugin->mono_modules.bass_mono_filter.filter_kernels[0][1],
             plugin->buffers[1][sample_num]
         );
         // 0.708 == -3dB
@@ -222,11 +222,11 @@ static SGFLT run_widemixer(
 
         if(runvars->dc_offset){
             plugin->buffers[0][sample_num] = f_dco_run(
-                &plugin->mono_modules->dc_filter[0],
+                &plugin->mono_modules.dc_filter[0],
                 plugin->buffers[0][sample_num]
             );
             plugin->buffers[1][sample_num] = f_dco_run(
-                &plugin->mono_modules->dc_filter[1],
+                &plugin->mono_modules.dc_filter[1],
                 plugin->buffers[1][sample_num]
             );
         }
@@ -235,7 +235,7 @@ static SGFLT run_widemixer(
     // * 1.090184 to compensate for various rounding errors that cannot be
     // fixed without changing the sound of everything
     return f_db_to_linear_fast(
-        plugin->mono_modules->volume_smoother.last_value - runvars->pan_law
+        plugin->mono_modules.volume_smoother.last_value - runvars->pan_law
     ) * 1.090184;
 }
 
@@ -319,7 +319,8 @@ PluginHandle g_widemixer_instantiate(
     plugin_data->plugin_uid = a_plugin_uid;
     plugin_data->queue_func = a_queue_func;
 
-    plugin_data->mono_modules = v_widemixer_mono_init(
+    v_widemixer_mono_init(
+        &plugin_data->mono_modules,
         plugin_data->fs,
         plugin_data->plugin_uid
     );
@@ -453,10 +454,10 @@ void v_widemixer_run_mixing(
         }
         left = plugin_data->buffers[0][f_i] *
             f_vol_linear * runvars.gain *
-            plugin_data->mono_modules->panner.gainL;
+            plugin_data->mono_modules.panner.gainL;
         right = plugin_data->buffers[1][f_i] *
             f_vol_linear * runvars.gain *
-            plugin_data->mono_modules->panner.gainR;
+            plugin_data->mono_modules.panner.gainR;
         if(peak_meter){
             v_pkm_run_single(
                 peak_meter,
@@ -500,10 +501,10 @@ void v_widemixer_run(
         }
         plugin_data->buffers[0][f_i] *=
             f_vol_linear * runvars.gain *
-            plugin_data->mono_modules->panner.gainL;
+            plugin_data->mono_modules.panner.gainL;
         plugin_data->buffers[1][f_i] *=
             f_vol_linear * runvars.gain *
-            plugin_data->mono_modules->panner.gainR;
+            plugin_data->mono_modules.panner.gainR;
     }
 }
 
@@ -545,10 +546,11 @@ PluginDescriptor *widemixer_plugin_descriptor(){
     return f_result;
 }
 
-t_widemixer_mono_modules* v_widemixer_mono_init(SGFLT a_sr, int a_plugin_uid){
-    t_widemixer_mono_modules * a_mono;
-    hpalloc((void**)&a_mono, sizeof(t_widemixer_mono_modules));
-
+void v_widemixer_mono_init(
+    t_widemixer_mono_modules* a_mono,
+    SGFLT a_sr,
+    int a_plugin_uid
+){
     g_sml_init(&a_mono->volume_smoother, a_sr, 0.0f, -50.0f, 0.1f);
     a_mono->volume_smoother.last_value = 0.0f;
     g_sml_init(&a_mono->pan_smoother, a_sr, 100.0f, -100.0f, 0.1f);
@@ -558,8 +560,6 @@ t_widemixer_mono_modules* v_widemixer_mono_init(SGFLT a_sr, int a_plugin_uid){
     g_svf2_init(&a_mono->bass_mono_filter, a_sr);
     v_svf2_set_res(&a_mono->bass_mono_filter, -12.0);
     g_axf_init(&a_mono->xfade, -3.0);
-
-    return a_mono;
 }
 
 /*

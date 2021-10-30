@@ -120,9 +120,10 @@ typedef struct {
     t_smoother_linear pre_smoothers[6][3];
     t_smoother_linear post_smoothers[6][3];
 
-}t_sgeq_mono_modules;
+} t_sgeq_mono_modules;
 
 typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     PluginData *output0;
     PluginData *output1;
 
@@ -142,7 +143,7 @@ typedef struct {
     PluginData *post_fx_combobox[6];
 
     SGFLT fs;
-    t_sgeq_mono_modules * mono_modules;
+    t_sgeq_mono_modules mono_modules;
 
     int i_buffer_clear;
 
@@ -158,9 +159,10 @@ typedef struct {
     SGFLT * port_table;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_sgeq;
 
-t_sgeq_mono_modules * v_sgeq_mono_init(SGFLT, int);
+void v_sgeq_mono_init(t_sgeq_mono_modules*, SGFLT, int);
 PluginDescriptor *sgeq_plugin_descriptor();
 
 #endif /* SGEQ_PLUGIN_H */

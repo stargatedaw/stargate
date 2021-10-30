@@ -46,15 +46,15 @@ typedef struct
     t_pn2_panner2 panner;
 }t_sgchnl_mono_modules;
 
-typedef struct
-{
+typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     SGFLT * buffers[2];
     PluginData *vol_slider;
     PluginData *gain;
     PluginData *pan;
     PluginData *pan_law;
     SGFLT fs;
-    t_sgchnl_mono_modules * mono_modules;
+    t_sgchnl_mono_modules mono_modules;
 
     int i_mono_out;
     int i_buffer_clear;
@@ -71,9 +71,10 @@ typedef struct
     SGFLT * port_table;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_sgchnl;
 
-t_sgchnl_mono_modules * v_sgchnl_mono_init(SGFLT, int);
+void v_sgchnl_mono_init(t_sgchnl_mono_modules*, SGFLT, int);
 PluginDescriptor *sgchnl_plugin_descriptor();
 
 #endif /* SGCHNL_PLUGIN_H */

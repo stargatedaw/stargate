@@ -64,10 +64,10 @@ void v_fm1_or_prep(PluginHandle instance, SGFLT sample_rate){
         }
     }
 
-    plugin->mono_modules->fm_macro_smoother[0].last_value =
+    plugin->mono_modules.fm_macro_smoother[0].last_value =
         (*plugin->fm_macro[0] * 0.01f);
 
-    plugin->mono_modules->fm_macro_smoother[1].last_value =
+    plugin->mono_modules.fm_macro_smoother[1].last_value =
         (*plugin->fm_macro[1] * 0.01f);
 }
 
@@ -94,7 +94,7 @@ SGFLT fm1_run_voice_osc(void* arg){
     SGFLT f_macro_amp;
     SGFLT f_osc_amp;
     t_fm1_osc* f_osc;
-    t_fm1_mono_modules* mm = plugin_data->mono_modules;
+    t_fm1_mono_modules* mm = &plugin_data->mono_modules;
 
     for(f_osc_num = 0; f_osc_num < FM1_OSC_COUNT; ++f_osc_num){
         f_macro_amp = 0.0f;
@@ -738,7 +738,10 @@ PluginHandle g_fm1_instantiate(
     plugin_data->fs = s_rate;
     plugin_data->descriptor = descriptor;
 
-    plugin_data->mono_modules = v_fm1_mono_init(plugin_data->fs);
+    v_fm1_mono_init(
+        &plugin_data->mono_modules,
+        plugin_data->fs
+    );
 
     int i;
 
@@ -751,7 +754,7 @@ PluginHandle g_fm1_instantiate(
         g_fm1_poly_init(
             &plugin_data->data[i],
             plugin_data->fs,
-            plugin_data->mono_modules,
+            &plugin_data->mono_modules,
             i
         );
     }
@@ -878,10 +881,10 @@ void v_fm1_process_midi_event(
                     }
                     v_osc_wav_set_waveform(
                         &f_pfx_osc->osc_wavtable,
-                        plugin_data->mono_modules->wavetables->tables[
+                        plugin_data->mono_modules.wavetables->tables[
                             f_osc_type
                         ]->wavetable,
-                        plugin_data->mono_modules->wavetables->tables[
+                        plugin_data->mono_modules.wavetables->tables[
                             f_osc_type
                         ]->length
                     );
@@ -1288,7 +1291,7 @@ void v_run_fm1(
             plugin_data->port_table
         );
 
-        if(plugin_data->mono_modules->reset_wavetables){
+        if(plugin_data->mono_modules.reset_wavetables){
             int f_voice = 0;
             int f_osc_type[FM1_OSC_COUNT];
             int f_i = 0;
@@ -1304,10 +1307,10 @@ void v_run_fm1(
                     if(f_osc_type[f_i] >= 0){
                         v_osc_wav_set_waveform(
                             &pvoice->osc[f_i].osc_wavtable,
-                            plugin_data->mono_modules->wavetables->tables[
+                            plugin_data->mono_modules.wavetables->tables[
                                 f_osc_type[f_i]
                             ]->wavetable,
-                            plugin_data->mono_modules->wavetables->tables[
+                            plugin_data->mono_modules.wavetables->tables[
                                 f_osc_type[f_i]
                             ]->length
                         );
@@ -1315,21 +1318,21 @@ void v_run_fm1(
                 }
             }
 
-            plugin_data->mono_modules->reset_wavetables = 0;
+            plugin_data->mono_modules.reset_wavetables = 0;
         }
 
         v_sml_run(
-            &plugin_data->mono_modules->pitchbend_smoother,
+            &plugin_data->mono_modules.pitchbend_smoother,
             (plugin_data->sv_pitch_bend_value)
         );
 
         v_sml_run(
-            &plugin_data->mono_modules->fm_macro_smoother[0],
+            &plugin_data->mono_modules.fm_macro_smoother[0],
             (*plugin_data->fm_macro[0] * 0.01f)
         );
 
         v_sml_run(
-            &plugin_data->mono_modules->fm_macro_smoother[1],
+            &plugin_data->mono_modules.fm_macro_smoother[1],
             (*plugin_data->fm_macro[1] * 0.01f)
         );
 
@@ -1351,26 +1354,26 @@ void v_run_fm1(
         }
 
         v_svf2_run_4_pole_lp(
-            &plugin_data->mono_modules->aa_filter,
+            &plugin_data->mono_modules.aa_filter,
             plugin_data->output0[i_iterator],
             plugin_data->output1[i_iterator]
         );
         v_sml_run(
-            &plugin_data->mono_modules->pan_smoother,
+            &plugin_data->mono_modules.pan_smoother,
             (*plugin_data->pan * 0.01f)
         );
 
         v_pn2_set(
-            &plugin_data->mono_modules->panner,
-            plugin_data->mono_modules->pan_smoother.last_value,
+            &plugin_data->mono_modules.panner,
+            plugin_data->mono_modules.pan_smoother.last_value,
             -3.0
         );
         plugin_data->output0[i_iterator] =
-            plugin_data->mono_modules->aa_filter.output0 *
-            plugin_data->mono_modules->panner.gainL;
+            plugin_data->mono_modules.aa_filter.output0 *
+            plugin_data->mono_modules.panner.gainL;
         plugin_data->output1[i_iterator] =
-            plugin_data->mono_modules->aa_filter.output1 *
-            plugin_data->mono_modules->panner.gainR;
+            plugin_data->mono_modules.aa_filter.output1 *
+            plugin_data->mono_modules.panner.gainR;
 
         ++plugin_data->sampleNo;
     }
@@ -1446,7 +1449,7 @@ void v_run_fm1_voice(
             (a_voice->glide_env.output_multiplied) +
             ((a_voice->ramp_env.output_multiplied) *
             (*plugin_data->pitch_env_amt))
-            + (plugin_data->mono_modules->pitchbend_smoother.last_value  *
+            + (plugin_data->mono_modules.pitchbend_smoother.last_value  *
             (*(plugin_data->main_pb_amt))) + (a_voice->last_pitch) +
             (a_voice->lfo_pitch_output);
     }
@@ -1596,36 +1599,36 @@ void v_fm1_configure(
     {
         SGFLT * f_table = f_char_to_wavetable(value);
         v_wt_set_wavetable(
-            plugin_data->mono_modules->wavetables,
+            plugin_data->mono_modules.wavetables,
             17,
             f_table,
             1024,
             a_spinlock,
-            &plugin_data->mono_modules->reset_wavetables
+            &plugin_data->mono_modules.reset_wavetables
         );
     }
     else if (!strcmp(key, "fm1_add_eng1"))
     {
         SGFLT * f_table = f_char_to_wavetable(value);
         v_wt_set_wavetable(
-            plugin_data->mono_modules->wavetables,
+            plugin_data->mono_modules.wavetables,
             18,
             f_table,
             1024,
             a_spinlock,
-            &plugin_data->mono_modules->reset_wavetables
+            &plugin_data->mono_modules.reset_wavetables
         );
     }
     else if (!strcmp(key, "fm1_add_eng2"))
     {
         SGFLT * f_table = f_char_to_wavetable(value);
         v_wt_set_wavetable(
-            plugin_data->mono_modules->wavetables,
+            plugin_data->mono_modules.wavetables,
             19,
             f_table,
             1024,
             a_spinlock,
-            &plugin_data->mono_modules->reset_wavetables
+            &plugin_data->mono_modules.reset_wavetables
         );
     }
     else
@@ -2081,17 +2084,12 @@ void v_fm1_poly_note_off(t_fm1_poly_voice * a_voice, int a_fast)
 }
 
 /*Initialize any modules that will be run monophonically*/
-t_fm1_mono_modules * v_fm1_mono_init(SGFLT a_sr)
-{
-    t_fm1_mono_modules * a_mono;
-    hpalloc((void**)&a_mono, sizeof(t_fm1_mono_modules));
+void v_fm1_mono_init(t_fm1_mono_modules* a_mono, SGFLT a_sr){
     g_sml_init(&a_mono->pitchbend_smoother, a_sr, 1.0f, -1.0f, 0.2f);
 
     int f_i = 0;
-    while(f_i < FM1_FM_MACRO_COUNT)
-    {
+    for(f_i = 0; f_i < FM1_FM_MACRO_COUNT; ++f_i){
         g_sml_init(&a_mono->fm_macro_smoother[f_i], a_sr, 0.5f, 0.0f, 0.02f);
-        ++f_i;
     }
 
     a_mono->wavetables = g_wt_wavetables_get();
@@ -2106,7 +2104,5 @@ t_fm1_mono_modules * v_fm1_mono_init(SGFLT a_sr)
     g_sml_init(&a_mono->pan_smoother, a_sr, 100.0f, -100.0f, 0.1f);
     a_mono->pan_smoother.last_value = 0.0f;
     g_pn2_init(&a_mono->panner);
-
-    return a_mono;
 }
 

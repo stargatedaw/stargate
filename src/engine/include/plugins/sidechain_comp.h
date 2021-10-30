@@ -35,13 +35,12 @@ GNU General Public License for more details.
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
 #define SCC_COUNT 6
 
-typedef struct
-{
+typedef struct {
     t_scc_sidechain_comp sidechain_comp;
-}t_scc_mono_modules;
+} t_scc_mono_modules;
 
-typedef struct
-{
+typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     PluginData *output0;
     PluginData *output1;
 
@@ -56,7 +55,7 @@ typedef struct
     PluginData *peak_meter;
 
     SGFLT fs;
-    t_scc_mono_modules * mono_modules;
+    t_scc_mono_modules mono_modules;
 
     int midi_event_types[200];
     int midi_event_ticks[200];
@@ -71,9 +70,10 @@ typedef struct
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
     char ui_msg_buff[64];
+    char pad2[CACHE_LINE_SIZE];
 } t_scc;
 
-t_scc_mono_modules * v_scc_mono_init(SGFLT, int);
+void v_scc_mono_init(t_scc_mono_modules*, SGFLT, int);
 
 PluginDescriptor *scc_plugin_descriptor();
 

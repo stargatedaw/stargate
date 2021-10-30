@@ -83,8 +83,7 @@ typedef struct
     int polyfx_mod_counts;
 }t_sampler1_pfx_group;
 
-typedef struct
-{
+typedef struct {
     t_smoother_linear pitchbend_smoother;
 
     t_dco_dc_offset_filter dc_offset_filters[2];
@@ -94,7 +93,7 @@ typedef struct
     int noise_current_index;
 
     t_sinc_interpolator sinc_interpolator;
-}t_sampler1_mono_modules ;
+} t_sampler1_mono_modules;
 
 typedef struct
 {
@@ -166,9 +165,9 @@ typedef struct
     int active_polyfx[SAMPLER1_MODULAR_POLYFX_COUNT];
     int active_polyfx_count;
 
-}t_sampler1_poly_voice ;
-typedef struct
-{
+} t_sampler1_poly_voice;
+
+typedef struct {
     PluginData *basePitch;
     PluginData *low_note;
     PluginData *high_note;
@@ -205,8 +204,8 @@ typedef struct
     SGFLT noise_linamp;
 }t_sampler1_sample;
 
-typedef struct st_sampler1
-{
+typedef struct st_sampler1 {
+    char pad1[CACHE_LINE_SIZE];
     PluginData *output[2];
     t_sampler1_sample samples[SAMPLER1_MAX_SAMPLE_COUNT];
 
@@ -279,7 +278,7 @@ typedef struct st_sampler1
 
     SGFLT sample[2];
 
-    t_sampler1_mono_modules * mono_modules;
+    t_sampler1_mono_modules mono_modules;
     t_pit_ratio * smp_pit_ratio;
     t_sampler1_poly_voice * data[SAMPLER1_POLYPHONY];
 
@@ -299,6 +298,7 @@ typedef struct st_sampler1
     int plugin_uid;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_sampler1 ;
 
 
@@ -309,7 +309,7 @@ void v_sampler1_poly_note_off(
     int a_fast_release
 );
 
-t_sampler1_mono_modules * g_sampler1_mono_init(SGFLT a_sr);
+void g_sampler1_mono_init(t_sampler1_mono_modules*, SGFLT);
 PluginDescriptor *sampler1_plugin_descriptor();
 
 // Ports

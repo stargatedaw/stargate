@@ -159,14 +159,16 @@ void v_sampler1_poly_note_off(
     v_adsr_release(&a_voice->adsr_filter);
 }
 
-t_sampler1_mono_modules * g_sampler1_mono_init(SGFLT a_sr)
-{
-    t_sampler1_mono_modules * a_mono;
-    hpalloc((void**)&a_mono, sizeof(t_sampler1_mono_modules));
-
+void g_sampler1_mono_init(t_sampler1_mono_modules* a_mono, SGFLT a_sr){
     g_sml_init(&a_mono->pitchbend_smoother, a_sr, 1.0f, -1.0f, 0.1f);
-    g_sinc_init(&a_mono->sinc_interpolator,
-        SAMPLER1_SINC_INTERPOLATION_POINTS, 6000, 8000.0f, a_sr, 0.42f);
+    g_sinc_init(
+        &a_mono->sinc_interpolator,
+        SAMPLER1_SINC_INTERPOLATION_POINTS,
+        6000,
+        8000.0f,
+        a_sr,
+        0.42f
+    );
     a_mono->noise_current_index = 0;
 
     int f_i;
@@ -193,14 +195,14 @@ t_sampler1_mono_modules * g_sampler1_mono_init(SGFLT a_sr)
     {
         g_white_noise_init(&a_mono->white_noise1[f_i], a_sr);
     }
-
-    return a_mono;
 }
 
-void connectPortSampler(PluginHandle instance, int port,
-                               PluginData * data)
-{
-    t_sampler1 *plugin = (t_sampler1 *) instance;
+void connectPortSampler(
+    PluginHandle instance,
+    int port,
+    PluginData * data
+){
+    t_sampler1 *plugin = (t_sampler1*)instance;
 
     if(port < SAMPLER1_LAST_REGULAR_CONTROL_PORT)
     {
@@ -541,7 +543,7 @@ void connectPortSampler(PluginHandle instance, int port,
         int f_instance = f_port / 18;
         int f_diff = f_port % 18;
         v_eq6_connect_port(
-            &plugin->mono_modules->mfx[f_instance].eqs, f_diff, data);
+            &plugin->mono_modules.mfx[f_instance].eqs, f_diff, data);
     }
     else if(port == SAMPLER1_LFO_PITCH_FINE)
     {
@@ -639,7 +641,10 @@ PluginHandle instantiateSampler(PluginDescriptor * descriptor,
 
     plugin_data->sv_pitch_bend_value = 0.0f;
     plugin_data->sv_last_note = -1.0f;
-    plugin_data->mono_modules = g_sampler1_mono_init(s_rate);
+    g_sampler1_mono_init(
+        &plugin_data->mono_modules,
+        s_rate
+    );
     plugin_data->sampleNo = 0;
 
     plugin_data->port_table = g_get_port_table(
@@ -722,7 +727,7 @@ void run_sampler_interpolation_sinc(
             (plugin_data->current_sample)].sample_read_heads;
 
     f_sample->sample_last_interpolated_value =
-        f_sinc_interpolate2(&plugin_data->mono_modules->sinc_interpolator,
+        f_sinc_interpolate2(&plugin_data->mono_modules.sinc_interpolator,
         f_sample->audio_pool_items->samples[ch],
         f_read_head->whole_number, f_read_head->fraction);
 }
@@ -796,7 +801,7 @@ void add_sample_sg_sampler1(t_sampler1 * plugin_data, int n)
     v_lfs_run(&f_voice->lfo1);
 
     f_voice->base_pitch = (f_voice->glide_env.output_multiplied)
-            +  (plugin_data->mono_modules->pitchbend_smoother.last_value *
+            +  (plugin_data->mono_modules.pitchbend_smoother.last_value *
             (*(plugin_data->main_pb_amt)))
             + (f_voice->last_pitch) + ((f_voice->lfo1.output) *
             (*plugin_data->lfo_pitch + (*plugin_data->lfo_pitch_fine * 0.01f)));
@@ -860,7 +865,7 @@ void add_sample_sg_sampler1(t_sampler1 * plugin_data, int n)
 
         f_voice->noise_sample =
             f_sample->noise_func_ptr(
-            &plugin_data->mono_modules->white_noise1[(f_voice->noise_index)])
+            &plugin_data->mono_modules.white_noise1[(f_voice->noise_index)])
             * f_sample->noise_linamp;
 
         for(ch = 0; ch < f_sample->audio_pool_items->channels; ++ch)
@@ -967,7 +972,7 @@ void v_sampler1_slow_index(t_sampler1* plugin_data)
             i3 = 0;
             while(i3 < SAMPLER1_MONO_FX_COUNT)
             {
-                plugin_data->mono_modules->mfx[f_mono_fx_group].fx_func_ptr[i3]
+                plugin_data->mono_modules.mfx[f_mono_fx_group].fx_func_ptr[i3]
                     = g_mf3_get_function_pointer(
                     (int)(*plugin_data->mfx_comboboxes[f_mono_fx_group][i3]));
                 ++i3;
@@ -1257,13 +1262,13 @@ void v_sampler1_process_midi_event(
             }
 
             f_voice->noise_index =
-                    (plugin_data->mono_modules->noise_current_index);
-            ++plugin_data->mono_modules->noise_current_index;
+                    (plugin_data->mono_modules.noise_current_index);
+            ++plugin_data->mono_modules.noise_current_index;
 
-            if((plugin_data->mono_modules->noise_current_index) >=
+            if((plugin_data->mono_modules.noise_current_index) >=
                     SAMPLER1_NOISE_COUNT)
             {
-                plugin_data->mono_modules->noise_current_index = 0;
+                plugin_data->mono_modules.noise_current_index = 0;
             }
 
             plugin_data->amp = f_db_to_linear_fast(*(plugin_data->main_vol));
@@ -1397,7 +1402,7 @@ void v_run_sg_sampler1(
     for(i2 = 0; i2 < (plugin_data->monofx_channel_index_count); ++i2)
     {
         f_monofx_index = (plugin_data->monofx_channel_index[i2]);
-        v_eq6_set(&plugin_data->mono_modules->mfx[f_monofx_index].eqs);
+        v_eq6_set(&plugin_data->mono_modules.mfx[f_monofx_index].eqs);
     }
 
     for(f_i = 0; f_i < sample_count; ++f_i)
@@ -1429,7 +1434,7 @@ void v_run_sg_sampler1(
         v_plugin_event_queue_atm_set(
             &plugin_data->atm_queue, f_i, plugin_data->port_table);
 
-        v_sml_run(&plugin_data->mono_modules->pitchbend_smoother,
+        v_sml_run(&plugin_data->mono_modules.pitchbend_smoother,
                 (plugin_data->sv_pitch_bend_value));
 
         for(i2 = 0; i2 < (plugin_data->monofx_channel_index_count); ++i2)
@@ -1459,31 +1464,31 @@ void v_run_sg_sampler1(
             for(i3 = 0; i3 < SAMPLER1_MONO_FX_COUNT; ++i3)
             {
                 v_mf3_set(
-                    &plugin_data->mono_modules->mfx[
+                    &plugin_data->mono_modules.mfx[
                         f_monofx_index].multieffect[i3],
                     (*(plugin_data->mfx_knobs[f_monofx_index][i3][0])),
                     (*(plugin_data->mfx_knobs[f_monofx_index][i3][1])),
                     (*(plugin_data->mfx_knobs[f_monofx_index][i3][2])));
-                plugin_data->mono_modules->mfx[f_monofx_index].fx_func_ptr[i3](
-                    &plugin_data->mono_modules->mfx[
+                plugin_data->mono_modules.mfx[f_monofx_index].fx_func_ptr[i3](
+                    &plugin_data->mono_modules.mfx[
                         f_monofx_index].multieffect[i3],
                     f_temp_sample0, f_temp_sample1);
 
                 f_temp_sample0 =
-                    (plugin_data->mono_modules->mfx[
+                    (plugin_data->mono_modules.mfx[
                         f_monofx_index].multieffect[i3].output0);
                 f_temp_sample1 =
-                    (plugin_data->mono_modules->mfx[
+                    (plugin_data->mono_modules.mfx[
                         f_monofx_index].multieffect[i3].output1);
             }
 
-            v_eq6_run(&plugin_data->mono_modules->mfx[f_monofx_index].eqs,
+            v_eq6_run(&plugin_data->mono_modules.mfx[f_monofx_index].eqs,
                 f_temp_sample0, f_temp_sample1);
 
             plugin_data->output[0][f_i] +=
-                plugin_data->mono_modules->mfx[f_monofx_index].eqs.output0;
+                plugin_data->mono_modules.mfx[f_monofx_index].eqs.output0;
             plugin_data->output[1][f_i] +=
-                plugin_data->mono_modules->mfx[f_monofx_index].eqs.output1;
+                plugin_data->mono_modules.mfx[f_monofx_index].eqs.output1;
         }
         ++plugin_data->sampleNo;
     }

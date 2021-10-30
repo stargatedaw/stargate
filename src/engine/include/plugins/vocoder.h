@@ -32,23 +32,22 @@ GNU General Public License for more details.
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
 #define SG_VOCODER_COUNT 3
 
-typedef struct
-{
+typedef struct {
     t_smoother_linear carrier_smoother;
     t_smoother_linear wet_smoother;
     t_vdr_vocoder vocoder;
     t_smoother_linear modulator_smoother;
-}t_sg_vocoder_mono_modules;
+} t_sg_vocoder_mono_modules;
 
-typedef struct
-{
+typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     PluginData * wet;
     PluginData * modulator;
     PluginData * carrier;
     SGFLT * buffers[2];
     SGFLT * sc_buffers[2];
     SGFLT fs;
-    t_sg_vocoder_mono_modules * mono_modules;
+    t_sg_vocoder_mono_modules mono_modules;
 
     int i_mono_out;
     int i_buffer_clear;
@@ -61,9 +60,10 @@ typedef struct
     SGFLT * port_table;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_sg_vocoder;
 
-t_sg_vocoder_mono_modules * v_sg_vocoder_mono_init(SGFLT, int);
+void v_sg_vocoder_mono_init(t_sg_vocoder_mono_modules*, SGFLT, int);
 PluginDescriptor *sg_vocoder_plugin_descriptor();
 
 #endif /* SG_VOCODER_PLUGIN_H */

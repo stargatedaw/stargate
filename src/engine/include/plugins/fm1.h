@@ -477,8 +477,7 @@ GNU General Public License for more details.
 #define FM1_POLYPHONY   16
 #define FM1_POLYPHONY_THRESH 12
 
-typedef struct
-{
+typedef struct {
     t_wt_wavetables * wavetables;
     t_smoother_linear pitchbend_smoother;
     t_smoother_linear fm_macro_smoother[FM1_FM_MACRO_COUNT];
@@ -587,6 +586,7 @@ typedef struct {
 }t_fm1_poly_voice;
 
 typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     PluginData *output0;
     PluginData *output1;
     PluginData *adsr_lin_main;
@@ -707,7 +707,7 @@ typedef struct {
     long sampleNo;
 
     SGFLT fs;
-    t_fm1_mono_modules * mono_modules;
+    t_fm1_mono_modules mono_modules;
 
     SGFLT sv_last_note;  //For glide
     SGFLT sv_pitch_bend_value;
@@ -716,6 +716,7 @@ typedef struct {
     t_plugin_event_queue atm_queue;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_fm1;
 
 void g_fm1_poly_init(
@@ -727,7 +728,7 @@ void g_fm1_poly_init(
 
 void v_fm1_poly_note_off(t_fm1_poly_voice * a_voice, int a_fast);
 
-t_fm1_mono_modules * v_fm1_mono_init(SGFLT);
+void v_fm1_mono_init(t_fm1_mono_modules*, SGFLT);
 PluginDescriptor *fm1_plugin_descriptor();
 
 #endif /* FM1_PLUGIN_H */

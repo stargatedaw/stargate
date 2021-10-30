@@ -46,8 +46,7 @@ GNU General Public License for more details.
 #define SGDELAY_COUNT 7
 
 
-typedef struct
-{
+typedef struct {
     t_sg_delay * delay;
     t_smoother_linear * time_smoother;
 
@@ -55,11 +54,10 @@ typedef struct
     SGFLT current_sample1;
 
     SGFLT vol_linear;
+} t_sgdelay_mono_modules;
 
-}t_sgdelay_mono_modules;
-
-typedef struct
-{
+typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     PluginData *output0;
     PluginData *output1;
 
@@ -72,7 +70,7 @@ typedef struct
     PluginData *stereo;
 
     SGFLT fs;
-    t_sgdelay_mono_modules * mono_modules;
+    t_sgdelay_mono_modules mono_modules;
 
     int midi_event_types[200];
     int midi_event_ticks[200];
@@ -86,9 +84,10 @@ typedef struct
     SGFLT * port_table;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_sgdelay;
 
-t_sgdelay_mono_modules * v_sgdelay_mono_init(SGFLT, int);
+void v_sgdelay_mono_init(t_sgdelay_mono_modules*, SGFLT, int);
 PluginDescriptor *sgdelay_plugin_descriptor();
 
 #endif /* SGDELAY_PLUGIN_H */

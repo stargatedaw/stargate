@@ -47,8 +47,7 @@ GNU General Public License for more details.
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
 #define TRIGGERFX_COUNT 12
 
-typedef struct
-{
+typedef struct {
     t_smoother_linear pitchbend_smoother;
 
     SGFLT current_sample0;
@@ -64,10 +63,10 @@ typedef struct
 
     t_glc_glitch_v2 glitch;
     SGFLT glitch_on;
-}t_triggerfx_mono_modules;
+} t_triggerfx_mono_modules;
 
-typedef struct
-{
+typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     PluginData *output0;
     PluginData *output1;
 
@@ -83,7 +82,7 @@ typedef struct
 
     SGFLT fs;
     SGFLT sv_pitch_bend_value;
-    t_triggerfx_mono_modules * mono_modules;
+    t_triggerfx_mono_modules mono_modules;
 
     int i_buffer_clear;
 
@@ -99,9 +98,10 @@ typedef struct
     SGFLT * port_table;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_triggerfx;
 
-t_triggerfx_mono_modules * v_triggerfx_mono_init(SGFLT, int);
+void v_triggerfx_mono_init(t_triggerfx_mono_modules*, SGFLT, int);
 PluginDescriptor *triggerfx_plugin_descriptor();
 
 #endif /* TRIGGERFX_PLUGIN_H */

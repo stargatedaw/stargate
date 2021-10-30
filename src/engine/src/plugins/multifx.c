@@ -139,8 +139,11 @@ PluginHandle g_multifx_instantiate(
     plugin_data->plugin_uid = a_plugin_uid;
     plugin_data->queue_func = a_queue_func;
 
-    plugin_data->mono_modules =
-            v_multifx_mono_init(plugin_data->fs, plugin_data->plugin_uid);
+    v_multifx_mono_init(
+        &plugin_data->mono_modules,
+        plugin_data->fs,
+        plugin_data->plugin_uid
+    );
 
     plugin_data->i_slow_index =
             MULTIFX_SLOW_INDEX_ITERATIONS + MULTIFX_AMORITIZER;
@@ -191,12 +194,12 @@ void v_multifx_check_if_on(t_multifx *plugin_data){
     int f_i;
 
     for(f_i = 0; f_i < 8; ++f_i){
-        plugin_data->mono_modules->fx_func_ptr[f_i] =
+        plugin_data->mono_modules.fx_func_ptr[f_i] =
             g_mf3_get_function_pointer(
                 (int)(*(plugin_data->fx_combobox[f_i]))
             );
 
-        if(plugin_data->mono_modules->fx_func_ptr[f_i] != v_mf3_run_off){
+        if(plugin_data->mono_modules.fx_func_ptr[f_i] != v_mf3_run_off){
             plugin_data->is_on = 1;
         }
     }
@@ -313,53 +316,53 @@ void v_multifx_run(
                 plugin_data->port_table)
             ;
 
-            plugin_data->mono_modules->current_sample0 =
+            plugin_data->mono_modules.current_sample0 =
                 plugin_data->output0[(i_mono_out)];
-            plugin_data->mono_modules->current_sample1 =
+            plugin_data->mono_modules.current_sample1 =
                 plugin_data->output1[(i_mono_out)];
 
             for(f_i = 0; f_i < 8; ++f_i){
                 if(
-                    plugin_data->mono_modules->fx_func_ptr[f_i]
+                    plugin_data->mono_modules.fx_func_ptr[f_i]
                     !=
                     v_mf3_run_off
                 ){
-                    f_fx = &plugin_data->mono_modules->multieffect[f_i];
+                    f_fx = &plugin_data->mono_modules.multieffect[f_i];
                     v_sml_run(
-                        &plugin_data->mono_modules->smoothers[f_i][0],
+                        &plugin_data->mono_modules.smoothers[f_i][0],
                         *plugin_data->fx_knob0[f_i]
                     );
                     v_sml_run(
-                        &plugin_data->mono_modules->smoothers[f_i][1],
+                        &plugin_data->mono_modules.smoothers[f_i][1],
                         *plugin_data->fx_knob1[f_i]
                     );
                     v_sml_run(
-                        &plugin_data->mono_modules->smoothers[f_i][2],
+                        &plugin_data->mono_modules.smoothers[f_i][2],
                         *plugin_data->fx_knob2[f_i]
                     );
 
                     v_mf3_set(
                         f_fx,
-                        plugin_data->mono_modules->smoothers[f_i][0].last_value,
-                        plugin_data->mono_modules->smoothers[f_i][1].last_value,
-                        plugin_data->mono_modules->smoothers[f_i][2].last_value
+                        plugin_data->mono_modules.smoothers[f_i][0].last_value,
+                        plugin_data->mono_modules.smoothers[f_i][1].last_value,
+                        plugin_data->mono_modules.smoothers[f_i][2].last_value
                     );
 
-                    plugin_data->mono_modules->fx_func_ptr[f_i](
+                    plugin_data->mono_modules.fx_func_ptr[f_i](
                         f_fx,
-                        (plugin_data->mono_modules->current_sample0),
-                        (plugin_data->mono_modules->current_sample1)
+                        (plugin_data->mono_modules.current_sample0),
+                        (plugin_data->mono_modules.current_sample1)
                     );
 
-                    plugin_data->mono_modules->current_sample0 = f_fx->output0;
-                    plugin_data->mono_modules->current_sample1 = f_fx->output1;
+                    plugin_data->mono_modules.current_sample0 = f_fx->output0;
+                    plugin_data->mono_modules.current_sample1 = f_fx->output1;
                 }
             }
 
             plugin_data->output0[(i_mono_out)] =
-                    (plugin_data->mono_modules->current_sample0);
+                    (plugin_data->mono_modules.current_sample0);
             plugin_data->output1[(i_mono_out)] =
-                    (plugin_data->mono_modules->current_sample1);
+                    (plugin_data->mono_modules.current_sample1);
 
             ++i_mono_out;
         }
@@ -422,10 +425,11 @@ PluginDescriptor *multifx_plugin_descriptor(){
 }
 
 
-t_multifx_mono_modules * v_multifx_mono_init(SGFLT a_sr, int a_plugin_uid){
-    t_multifx_mono_modules * a_mono;
-    hpalloc((void**)&a_mono, sizeof(t_multifx_mono_modules));
-
+void v_multifx_mono_init(
+    t_multifx_mono_modules* a_mono,
+    SGFLT a_sr,
+    int a_plugin_uid
+){
     int f_i;
     int f_i2;
 
@@ -442,8 +446,6 @@ t_multifx_mono_modules * v_multifx_mono_init(SGFLT a_sr, int a_plugin_uid){
             );
         }
     }
-
-    return a_mono;
 }
 
 /*

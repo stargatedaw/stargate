@@ -52,6 +52,7 @@ typedef struct {
 } t_sreverb_mono_modules;
 
 typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     PluginData *output0;
     PluginData *output1;
 
@@ -79,6 +80,7 @@ typedef struct {
     SGFLT * port_table;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_sreverb;
 
 void v_sreverb_mono_init(t_sreverb_mono_modules*, SGFLT, int);

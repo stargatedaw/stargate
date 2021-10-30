@@ -104,7 +104,7 @@ typedef struct {
 
     t_smoother_linear pan_smoother;
     t_pn2_panner2 panner;
-}t_va1_mono_modules;
+} t_va1_mono_modules;
 
 typedef struct {
     SGFLT amp;
@@ -155,6 +155,7 @@ typedef struct {
 }t_va1_poly_voice  ;
 
 typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     int oversample;
     SGFLT os_recip;
     PluginData *os_buffer;
@@ -243,6 +244,7 @@ typedef struct {
     SGFLT * port_table;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_va1;
 
 

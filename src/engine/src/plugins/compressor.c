@@ -97,7 +97,11 @@ PluginHandle g_sg_comp_instantiate(
     plugin_data->plugin_uid = a_plugin_uid;
     plugin_data->queue_func = a_queue_func;
 
-    plugin_data->mono_modules = v_sg_comp_mono_init(s_rate, a_plugin_uid);
+    v_sg_comp_mono_init(
+        &plugin_data->mono_modules,
+        s_rate,
+        a_plugin_uid
+    );
 
     plugin_data->port_table = g_get_port_table(
         (void**)plugin_data,
@@ -168,7 +172,7 @@ void v_sg_comp_run(
     int f_i = 0;
     int midi_event_pos = 0;
     int f_is_rms = (int)(*plugin_data->mode);
-    t_cmp_compressor * f_cmp = &plugin_data->mono_modules->compressor;
+    t_cmp_compressor * f_cmp = &plugin_data->mono_modules.compressor;
     SGFLT f_gain = f_db_to_linear_fast((*plugin_data->gain) * 0.1f);
     plugin_data->midi_event_count = 0;
 
@@ -295,12 +299,12 @@ PluginDescriptor *sg_comp_plugin_descriptor(){
     return f_result;
 }
 
-t_sg_comp_mono_modules * v_sg_comp_mono_init(SGFLT a_sr, int a_plugin_uid)
-{
-    t_sg_comp_mono_modules * f_result;
-    hpalloc((void**)&f_result, sizeof(t_sg_comp_mono_modules));
+void v_sg_comp_mono_init(
+    t_sg_comp_mono_modules* f_result,
+    SGFLT a_sr,
+    int a_plugin_uid
+){
     g_cmp_init(&f_result->compressor, a_sr);
-    return f_result;
 }
 
 /*

@@ -85,8 +85,11 @@ PluginHandle g_sg_vocoder_instantiate(PluginDescriptor * descriptor,
     plugin_data->plugin_uid = a_plugin_uid;
     plugin_data->queue_func = a_queue_func;
 
-    plugin_data->mono_modules =
-            v_sg_vocoder_mono_init(plugin_data->fs, plugin_data->plugin_uid);
+    v_sg_vocoder_mono_init(
+        &plugin_data->mono_modules,
+        plugin_data->fs,
+        plugin_data->plugin_uid
+    );
 
     plugin_data->port_table = g_get_port_table(
         (void**)plugin_data, descriptor);
@@ -175,11 +178,11 @@ void v_sg_vocoder_run(
     int f_i = 0;
 
     t_smoother_linear * f_wet_smoother =
-        &plugin_data->mono_modules->wet_smoother;
+        &plugin_data->mono_modules.wet_smoother;
     t_smoother_linear * f_carrier_smoother =
-        &plugin_data->mono_modules->carrier_smoother;
+        &plugin_data->mono_modules.carrier_smoother;
     t_smoother_linear * f_modulator_smoother =
-        &plugin_data->mono_modules->modulator_smoother;
+        &plugin_data->mono_modules.modulator_smoother;
 
     SGFLT f_amp;
 
@@ -208,7 +211,7 @@ void v_sg_vocoder_run(
         v_plugin_event_queue_atm_set(
             &plugin_data->atm_queue, f_i, plugin_data->port_table);
 
-        v_vdr_run(&plugin_data->mono_modules->vocoder,
+        v_vdr_run(&plugin_data->mono_modules.vocoder,
             plugin_data->sc_buffers[0][f_i], plugin_data->sc_buffers[1][f_i],
             plugin_data->buffers[0][f_i], plugin_data->buffers[1][f_i]);
 
@@ -222,9 +225,9 @@ void v_sg_vocoder_run(
         f_amp = f_db_to_linear_fast(f_wet_smoother->last_value * 0.1f);
 
         plugin_data->buffers[0][f_i] +=
-            plugin_data->mono_modules->vocoder.output0 * f_amp;
+            plugin_data->mono_modules.vocoder.output0 * f_amp;
         plugin_data->buffers[1][f_i] +=
-            plugin_data->mono_modules->vocoder.output1 * f_amp;
+            plugin_data->mono_modules.vocoder.output1 * f_amp;
 
         if(*plugin_data->modulator >= -499.0f)
         {
@@ -268,18 +271,15 @@ PluginDescriptor *sg_vocoder_plugin_descriptor(){
 }
 
 
-t_sg_vocoder_mono_modules * v_sg_vocoder_mono_init(
+void v_sg_vocoder_mono_init(
+    t_sg_vocoder_mono_modules * a_mono,
     SGFLT a_sr,
     int a_plugin_uid
 ){
-    t_sg_vocoder_mono_modules * a_mono;
-    hpalloc((void**)&a_mono, sizeof(t_sg_vocoder_mono_modules));
     g_sml_init(&a_mono->wet_smoother, a_sr, 0.0f, -500.0f, 0.1f);
     g_vdr_init(&a_mono->vocoder, a_sr);
     g_sml_init(&a_mono->carrier_smoother, a_sr, 0.0f, -500.0f, 0.1f);
     g_sml_init(&a_mono->modulator_smoother, a_sr, 0.0f, -500.0f, 0.1f);
-
-    return a_mono;
 }
 
 /*

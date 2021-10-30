@@ -81,9 +81,10 @@ typedef struct {
     SGFLT current_sample1;
 
     t_smoother_linear smoothers[8][3];
-}t_multifx_mono_modules;
+} t_multifx_mono_modules;
 
 typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     PluginData *output0;
     PluginData *output1;
 
@@ -93,7 +94,7 @@ typedef struct {
     PluginData *fx_combobox[8];
 
     SGFLT fs;
-    t_multifx_mono_modules * mono_modules;
+    t_multifx_mono_modules mono_modules;
 
     int i_slow_index;
     int is_on;
@@ -110,9 +111,10 @@ typedef struct {
     SGFLT * port_table;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_multifx;
 
-t_multifx_mono_modules * v_multifx_mono_init(SGFLT, int);
+void v_multifx_mono_init(t_multifx_mono_modules*, SGFLT, int);
 PluginDescriptor *multifx_plugin_descriptor();
 
 #endif /* MULTIFX_PLUGIN_H */

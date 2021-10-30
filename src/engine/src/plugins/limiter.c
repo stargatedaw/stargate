@@ -95,7 +95,11 @@ PluginHandle g_sg_lim_instantiate(PluginDescriptor * descriptor,
     plugin_data->plugin_uid = a_plugin_uid;
     plugin_data->queue_func = a_queue_func;
 
-    plugin_data->mono_modules = v_sg_lim_mono_init(s_rate, a_plugin_uid);
+    v_sg_lim_mono_init(
+        &plugin_data->mono_modules,
+        s_rate,
+        a_plugin_uid
+    );
 
     plugin_data->port_table = g_get_port_table(
         (void**)plugin_data, descriptor);
@@ -156,7 +160,7 @@ void v_sg_lim_run(
 
     int f_i = 0;
     int midi_event_pos = 0;
-    t_lim_limiter * f_lim = &plugin_data->mono_modules->limiter;
+    t_lim_limiter * f_lim = &plugin_data->mono_modules.limiter;
     plugin_data->midi_event_count = 0;
 
     for(f_i = 0; f_i < event_count; ++f_i)
@@ -247,14 +251,12 @@ PluginDescriptor *sg_lim_plugin_descriptor(){
     return f_result;
 }
 
-t_sg_lim_mono_modules * v_sg_lim_mono_init(
+void v_sg_lim_mono_init(
+    t_sg_lim_mono_modules* f_result,
     SGFLT a_sr,
     int a_plugin_uid
 ){
-    t_sg_lim_mono_modules * f_result;
-    hpalloc((void**)&f_result, sizeof(t_sg_lim_mono_modules));
     g_lim_init(&f_result->limiter, a_sr, 1);
-    return f_result;
 }
 
 /*

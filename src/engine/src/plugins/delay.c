@@ -31,10 +31,10 @@ void v_sgdelay_panic(PluginHandle instance)
     t_sgdelay *plugin = (t_sgdelay*)instance;
 
     int f_i = 0;
-    while(f_i < plugin->mono_modules->delay->delay0.sample_count)
+    while(f_i < plugin->mono_modules.delay->delay0.sample_count)
     {
-        plugin->mono_modules->delay->delay0.buffer[f_i] = 0.0f;
-        plugin->mono_modules->delay->delay1.buffer[f_i] = 0.0f;
+        plugin->mono_modules.delay->delay0.buffer[f_i] = 0.0f;
+        plugin->mono_modules.delay->delay1.buffer[f_i] = 0.0f;
         ++f_i;
     }
 }
@@ -112,8 +112,11 @@ PluginHandle g_sgdelay_instantiate(
     plugin_data->queue_func = a_queue_func;
 
 
-    plugin_data->mono_modules =
-            v_sgdelay_mono_init(plugin_data->fs, plugin_data->plugin_uid);
+    v_sgdelay_mono_init(
+        &plugin_data->mono_modules,
+        plugin_data->fs,
+        plugin_data->plugin_uid
+    );
 
     plugin_data->port_table = g_get_port_table(
         (void**)plugin_data, descriptor);
@@ -221,24 +224,24 @@ void v_sgdelay_run(
             &plugin_data->atm_queue, f_i,
             plugin_data->port_table);
 
-        v_sml_run(plugin_data->mono_modules->time_smoother,
+        v_sml_run(plugin_data->mono_modules.time_smoother,
             (*(plugin_data->delay_time)));
 
-        v_ldl_set_delay(plugin_data->mono_modules->delay,
-            (plugin_data->mono_modules->time_smoother->last_value * 0.01f),
+        v_ldl_set_delay(plugin_data->mono_modules.delay,
+            (plugin_data->mono_modules.time_smoother->last_value * 0.01f),
             (*plugin_data->feedback) * 0.1f,
             (*plugin_data->wet) * 0.1f, (*plugin_data->dry) * 0.1f,
             (*(plugin_data->stereo) * .01), (*plugin_data->duck),
             (*plugin_data->cutoff));
 
-        v_ldl_run_delay(plugin_data->mono_modules->delay,
+        v_ldl_run_delay(plugin_data->mono_modules.delay,
                 (plugin_data->output0[(f_i)]),
                 (plugin_data->output1[(f_i)]));
 
         plugin_data->output0[(f_i)] =
-                (plugin_data->mono_modules->delay->output0);
+                (plugin_data->mono_modules.delay->output0);
         plugin_data->output1[(f_i)] =
-                (plugin_data->mono_modules->delay->output1);
+                (plugin_data->mono_modules.delay->output1);
 
         ++f_i;
     }
@@ -274,17 +277,20 @@ PluginDescriptor *sgdelay_plugin_descriptor(){
     return f_result;
 }
 
-t_sgdelay_mono_modules * v_sgdelay_mono_init(SGFLT a_sr, int a_plugin_uid){
-    t_sgdelay_mono_modules * a_mono;
-    hpalloc((void**)&a_mono, sizeof(t_sgdelay_mono_modules));
-
+void v_sgdelay_mono_init(
+    t_sgdelay_mono_modules* a_mono,
+    SGFLT a_sr,
+    int a_plugin_uid
+){
     a_mono->delay = g_ldl_get_delay(1, a_sr);
-    a_mono->time_smoother =
-            g_sml_get_smoother_linear(a_sr, 100.0f, 10.0f, 0.1f);
+    a_mono->time_smoother = g_sml_get_smoother_linear(
+        a_sr,
+        100.0f,
+        10.0f,
+        0.1f
+    );
 
     a_mono->vol_linear = 1.0f;
-
-    return a_mono;
 }
 
 /*

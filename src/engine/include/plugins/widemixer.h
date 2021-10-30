@@ -69,9 +69,10 @@ typedef struct {
     t_dco_dc_offset_filter dc_filter[2];
     t_svf2_filter bass_mono_filter;
     t_audio_xfade xfade;
-}t_widemixer_mono_modules;
+} t_widemixer_mono_modules;
 
 typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     SGFLT * buffers[2];
     PluginData* vol_slider;
     PluginData* gain;
@@ -89,7 +90,7 @@ typedef struct {
     PluginData* mute;
 
     SGFLT fs;
-    t_widemixer_mono_modules * mono_modules;
+    t_widemixer_mono_modules mono_modules;
 
     int midi_event_types[200];
     int midi_event_ticks[200];
@@ -103,9 +104,10 @@ typedef struct {
     SGFLT * port_table;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_widemixer;
 
-t_widemixer_mono_modules * v_widemixer_mono_init(SGFLT, int);
+void v_widemixer_mono_init(t_widemixer_mono_modules*, SGFLT, int);
 PluginDescriptor *widemixer_plugin_descriptor();
 
 #endif /* WIDEMIXER_PLUGIN_H */

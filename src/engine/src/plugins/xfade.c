@@ -81,8 +81,11 @@ PluginHandle g_xfade_instantiate(PluginDescriptor * descriptor,
     plugin_data->plugin_uid = a_plugin_uid;
     plugin_data->queue_func = a_queue_func;
 
-    plugin_data->mono_modules =
-            v_xfade_mono_init(plugin_data->fs, plugin_data->plugin_uid);
+    v_xfade_mono_init(
+        &plugin_data->mono_modules,
+        plugin_data->fs,
+        plugin_data->plugin_uid
+    );
 
     plugin_data->port_table = g_get_port_table(
         (void**)plugin_data, descriptor);
@@ -194,23 +197,23 @@ void v_xfade_run(
         v_plugin_event_queue_atm_set(
             &plugin_data->atm_queue, f_i, plugin_data->port_table);
 
-        v_sml_run(&plugin_data->mono_modules->pan_smoother,
+        v_sml_run(&plugin_data->mono_modules.pan_smoother,
             (*plugin_data->pan * 0.01f));
 
-        v_pn2_set(&plugin_data->mono_modules->panner,
-            plugin_data->mono_modules->pan_smoother.last_value, f_pan_law);
+        v_pn2_set(&plugin_data->mono_modules.panner,
+            plugin_data->mono_modules.pan_smoother.last_value, f_pan_law);
 
         plugin_data->buffers[0][f_i] *=
-            plugin_data->mono_modules->panner.gainL;
+            plugin_data->mono_modules.panner.gainL;
         plugin_data->buffers[0][f_i] +=
             plugin_data->sc_buffers[0][f_i] *
-            plugin_data->mono_modules->panner.gainR;
+            plugin_data->mono_modules.panner.gainR;
 
         plugin_data->buffers[1][f_i] *=
-            plugin_data->mono_modules->panner.gainL;
+            plugin_data->mono_modules.panner.gainL;
         plugin_data->buffers[1][f_i] +=
             plugin_data->sc_buffers[1][f_i] *
-            plugin_data->mono_modules->panner.gainR;
+            plugin_data->mono_modules.panner.gainR;
 
         ++f_i;
     }
@@ -241,15 +244,13 @@ PluginDescriptor *xfade_plugin_descriptor(){
     return f_result;
 }
 
-t_xfade_mono_modules * v_xfade_mono_init(SGFLT a_sr, int a_plugin_uid)
-{
-    t_xfade_mono_modules * a_mono;
-    hpalloc((void**)&a_mono, sizeof(t_xfade_mono_modules));
-
+void v_xfade_mono_init(
+     t_xfade_mono_modules* a_mono,
+    SGFLT a_sr,
+    int a_plugin_uid
+){
     g_sml_init(&a_mono->pan_smoother, a_sr, 100.0f, -100.0f, 0.1f);
     a_mono->pan_smoother.last_value = 0.0f;
-
-    return a_mono;
 }
 
 /*

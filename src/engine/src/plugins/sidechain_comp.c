@@ -115,7 +115,11 @@ PluginHandle g_scc_instantiate(
     plugin_data->plugin_uid = a_plugin_uid;
     plugin_data->queue_func = a_queue_func;
 
-    plugin_data->mono_modules = v_scc_mono_init(s_rate, a_plugin_uid);
+    v_scc_mono_init(
+        &plugin_data->mono_modules,
+        s_rate,
+        a_plugin_uid
+    );
 
     plugin_data->port_table = g_get_port_table(
         (void**)plugin_data,
@@ -187,7 +191,7 @@ void v_scc_run(
 
     int event_count = midi_events->len;
 
-    t_scc_sidechain_comp * f_cmp = &plugin_data->mono_modules->sidechain_comp;
+    t_scc_sidechain_comp * f_cmp = &plugin_data->mono_modules.sidechain_comp;
 
     int f_i = 0;
     int midi_event_pos = 0;
@@ -303,11 +307,12 @@ PluginDescriptor *scc_plugin_descriptor(){
     return f_result;
 }
 
-t_scc_mono_modules * v_scc_mono_init(SGFLT a_sr, int a_plugin_uid){
-    t_scc_mono_modules * f_result;
-    hpalloc((void**)&f_result, sizeof(t_scc_mono_modules));
+void v_scc_mono_init(
+    t_scc_mono_modules* f_result,
+    SGFLT a_sr,
+    int a_plugin_uid
+){
     g_scc_init(&f_result->sidechain_comp, a_sr);
-    return f_result;
 }
 
 /*

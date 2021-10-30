@@ -32,24 +32,23 @@ GNU General Public License for more details.
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
 #define XFADE_COUNT 2
 
-typedef struct
-{
+typedef struct {
     SGFLT current_sample0;
     SGFLT current_sample1;
 
     t_smoother_linear pan_smoother;
 
     t_pn2_panner2 panner;
-}t_xfade_mono_modules;
+} t_xfade_mono_modules;
 
-typedef struct
-{
+typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     SGFLT * buffers[2];
     SGFLT * sc_buffers[2];
     PluginData *pan;
     PluginData *pan_law;
     SGFLT fs;
-    t_xfade_mono_modules * mono_modules;
+    t_xfade_mono_modules mono_modules;
 
     int i_mono_out;
     int i_buffer_clear;
@@ -66,9 +65,10 @@ typedef struct
     SGFLT * port_table;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
 } t_xfade;
 
-t_xfade_mono_modules * v_xfade_mono_init(SGFLT, int);
+void v_xfade_mono_init(t_xfade_mono_modules*, SGFLT, int);
 PluginDescriptor *xfade_plugin_descriptor();
 
 #endif /* XFADE_PLUGIN_H */

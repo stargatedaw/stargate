@@ -38,15 +38,14 @@ GNU General Public License for more details.
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
 #define SG_COMP_COUNT 9
 
-typedef struct
-{
+typedef struct {
     t_cmp_compressor compressor;
-}t_sg_comp_mono_modules;
+} t_sg_comp_mono_modules;
 
-t_sg_comp_mono_modules * v_sg_comp_mono_init(SGFLT, int);
+void v_sg_comp_mono_init(t_sg_comp_mono_modules*, SGFLT, int);
 
-typedef struct
-{
+typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     PluginData *output0;
     PluginData *output1;
 
@@ -62,7 +61,7 @@ typedef struct
 
 
     SGFLT fs;
-    t_sg_comp_mono_modules * mono_modules;
+    t_sg_comp_mono_modules mono_modules;
 
     int midi_event_types[200];
     int midi_event_ticks[200];
@@ -77,6 +76,7 @@ typedef struct
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
     char ui_msg_buff[64];
+    char pad2[CACHE_LINE_SIZE];
 } t_sg_comp;
 
 PluginDescriptor *sg_comp_plugin_descriptor();
