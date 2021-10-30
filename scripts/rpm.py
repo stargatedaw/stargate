@@ -168,12 +168,6 @@ xdg-mime default stargate.desktop text/stargate.project || true
 %{{_usr}}/share/
 %{{_usr}}/lib/{0}
 
-# Fedora 34 refuses to let Python execute binaries that are setuid or
-# have capabilities set, so we sacrifice performance and latency at
-# the alter of "security"
-# %caps(cap_sys_nice=eip) %{{_usr}}//bin/{0}-engine
-# %caps(cap_sys_nice=eip) %{{_usr}}//bin/{0}-engine-dbg
-
 %doc
 
 """.format(
