@@ -13,6 +13,7 @@ GNU General Public License for more details.
 
 import argparse
 import datetime
+import glob
 import json
 import os
 import shutil
@@ -47,17 +48,18 @@ class ProjectRecoveryWidget(QListWidget):
         self,
         a_backup_dir,
         a_project_dir,
+        _files,
     ):
         QListWidget.__init__(self)
         self.backup_dir = a_backup_dir
         self.project_dir = a_project_dir
-        self.data = os.listdir(a_backup_dir)
+        self._files = _files
         self.draw()
 
     def draw(self):
         self.clear()
-        for data in self.data:
-            self.addItem(data)
+        for _file in self._files:
+            self.addItem(_file)
         self.sortItems()
 
     def set_selected_as_project(self):
@@ -93,8 +95,17 @@ def project_recover_dialog(a_file):
     f_window.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
     f_window.setWindowTitle("Project History")
     f_project_dir = os.path.dirname(str(a_file))
-    f_backup_dir = os.path.join(f_project_dir, "backups")
-    if not os.listdir(f_backup_dir):
+    f_backup_dir = os.path.join(
+        f_project_dir,
+        "backups",
+    )
+    _files = glob.glob(
+        os.path.join(
+            f_backup_dir,
+            "*.tar.bz2"
+        )
+    )
+    if not _files:
         QMessageBox.warning(
             f_window,
             _("Error"),
@@ -108,6 +119,7 @@ def project_recover_dialog(a_file):
     f_widget = ProjectRecoveryWidget(
         f_backup_dir,
         f_project_dir,
+        _files,
     )
     f_layout.addWidget(f_widget)
     f_hlayout = QHBoxLayout()
