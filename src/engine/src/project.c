@@ -16,6 +16,21 @@ void v_open_project(const char* a_project_folder, int a_first_load){
     clock_gettime(CLOCK_REALTIME, &f_start);
 #endif
 
+    char stargate_dot_project[1024];
+    sprintf(
+        stargate_dot_project,
+        "%s%sstargate.project",
+        a_project_folder,
+        PATH_SEP
+    );
+    if(!i_file_exists(stargate_dot_project)){
+        log_error(
+            "Project folder %s does not contain a stargate.project file, "
+            "it is not a Stargate DAW project, exiting.",
+            a_project_folder
+        );
+        exit(321);
+    }
     log_info("Setting files and folders");
     sprintf(STARGATE->project_folder, "%s", a_project_folder);
     sprintf(
