@@ -18,7 +18,6 @@ CACHE_LINE_SIZE = $(shell getconf LEVEL1_DCACHE_LINESIZE || echo 64)
 OPTIMIZE_FLAGS ?= \
 	-ffast-math \
 	-finline-functions \
-	-floop-optimize \
 	-flto \
 	-fno-stack-protector \
 	-fprefetch-loop-arrays \

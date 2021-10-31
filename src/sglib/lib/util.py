@@ -13,7 +13,7 @@ import sys
 import time
 
 
-if IS_LINUX:
+if IS_LINUX or IS_MAC_OSX:
     from .path.linux import *
 elif IS_WINDOWS:
     from .path.windows import *
