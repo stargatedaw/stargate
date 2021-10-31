@@ -105,7 +105,7 @@ class UIScaler:
         _max: float=15.,
         orientation: str='h',
     ) -> int:
-        """ Covert millimeters to screen pixels, clip to a percentage of
+        """ Convert millimeters to screen pixels, clip to a percentage of
             screen size.
 
             @mm:      The size in millimeters
@@ -134,7 +134,7 @@ class UIScaler:
         _max: int=15,
         orientation: str='h',
     ) -> int:
-        """ Covert millimeters to screen pixels
+        """ Convert millimeters to screen pixels
             @mm:      The size in millimeters
             @_min: 1-N
                 The minimum number of pixels

@@ -431,7 +431,7 @@ class AutomationEditorWidget:
         self.smooth_button = QPushButton(_("Smooth"))
         self.smooth_button.setToolTip(
             _("By default, the control points are steppy, "
-            "this button draws extra points between the exisiting points."))
+            "this button draws extra points between the existing points."))
         self.smooth_button.pressed.connect(self.smooth_pressed)
         self.hlayout.addWidget(self.smooth_button)
         self.hlayout.addItem(QSpacerItem(10, 10))

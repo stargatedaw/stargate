@@ -49,7 +49,7 @@ def knob_setup():
 class ArcType(Enum):
     # Arc goes from minimal at -135 degrees to full at +135 degrees from top
     UP = 0
-    # Arc is minimal at 0 degress (top), half-full at -/+135 degrees from top
+    # Arc is minimal at 0 degrees (top), half-full at -/+135 degrees from top
     BIDIRECTIONAL = 1
 
 class PixmapKnob(QDial):

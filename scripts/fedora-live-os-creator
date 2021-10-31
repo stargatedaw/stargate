@@ -170,7 +170,7 @@ sed -i s/SELINUX=enforcing/SELINUX=disabled/g /etc/selinux/config
 %post --interpreter /usr/bin/python3
 
 # embed the Stargate rpm file into the kickstart template, to subvert the
-# need to setup a Yum respository somewhere on the internet, or worry about DNS
+# need to setup a Yum repository somewhere on the internet, or worry about DNS
 
 import os
 

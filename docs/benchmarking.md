@@ -84,7 +84,7 @@ BUF_SIZE=512
 # causes Stargate DAW to automatically select a very conservative value
 # of 1-4 depending on the CPU that was detected
 THREADS=8
-# The project folder to render.  Specfically, this is the folder that contains
+# The project folder to render.  Specifically, this is the folder that contains
 # the `stargate.project` file.
 PROJECT=~/stargate/projects/myproject
 # The file to output.  If you want to keep all of the artifacts from this run,
@@ -184,7 +184,7 @@ Ratio, render time to real time (higher is better):  0.864748 : 1
 Note that with 2 threads, we entered the point where the ratio fell below 1:1,
 therefore there is no way this project could be played in real time in Stargate
 DAW on 2 CPU cores.  However, given that this project is completely,
-unrealistically CPU heavy (many times moreso than a normal song), this is a
+unrealistically CPU heavy (many times more so than a normal song), this is a
 testament to how CPU efficient the code is that such a heavy project can almost
 run on 2 cores.
 

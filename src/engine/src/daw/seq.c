@@ -422,7 +422,7 @@ void g_daw_song_get(t_daw* self, int a_lock){
     f_result->sequences_atm = NULL;
 
     f_result->sequences_atm = g_daw_atm_sequence_get(self);
-    // Assumed to alredy be loaded
+    // Assumed to already be loaded
     f_result->sequences = self->seq_pool[0];
 
     t_daw_song * f_old = self->en_song;

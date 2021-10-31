@@ -46,7 +46,7 @@ typedef struct
 {
     t_voc_single_voice * voices;
     int count;
-    int thresh;  //when to start agressively killing voices
+    int thresh;  //when to start aggressively killing voices
     int poly_mode;
 }t_voc_voices;
 

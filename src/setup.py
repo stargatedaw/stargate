@@ -168,7 +168,7 @@ setuptools.setup(
     author_email="stargateaudio@noreply.github.com",
     license="GPLv3",
     description=DESCRIPTION,
-    # Only build the C exension if C_EXT=1 was defined in the env. vars.
+    # Only build the C extension if C_EXT=1 was defined in the env. vars.
     ext_modules=[C_EXT] if ENV.get('C_EXT') == '1' else [],
     long_description=DESCRIPTION,
     url=URL,
