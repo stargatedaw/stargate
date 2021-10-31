@@ -26,7 +26,7 @@ def parse_args():
         '--install',
         action='store_true',
         dest='install',
-        help="Install the pacakge after creating it",
+        help="Install the package after creating it",
     )
     parser.add_argument(
         '--plat-flags',

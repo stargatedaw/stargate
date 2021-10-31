@@ -1,6 +1,6 @@
 # Debug Symbols
 This document describes how to install Windows .pdb debug symbols for 
-depedencies, to allow using WinDbg and enable better stack traces when a
+dependencies, to allow using WinDbg and enable better stack traces when a
 library segfaults.
 
 # Procedure

@@ -30,7 +30,7 @@ scripts/rpm.py --plat-flags='-march=native'
 ```
 cd src/
 
-# Preferred for peformance
+# Preferred for performance
 PLAT_FLAGS="-march=native" make
 # or, if native has bugs or other issues
 PLAT_FLAGS="" make

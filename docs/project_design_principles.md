@@ -15,7 +15,7 @@ Stargate does not intend to be a DAW just like any other DAW.  As a one person
 development team (with some short-term assistance on cosmetic aspects from
 others along the way), Stargate must think differently, and provide a unique
 experience.  I hope to attract more developers to the platform, but I have
-to assume that I will be doing this alone for the forseeable future, given
+to assume that I will be doing this alone for the foreseeable future, given
 the specialized knowledge and high barrier to entry to contribute to DAWs
 and plugins at a high level (and the fact that those who can contribute tend
 to start their own projects).

@@ -46,7 +46,7 @@ Executables to be installed to /usr/bin or elsewhere in `$PATH`.
 ## sglib/
 The back-end library for the Stargate UI.  All business logic, models
 and related code should go in this library.  There should be no presentation
-or Qt dependenies in this library.
+or Qt dependencies in this library.
 
 Divided into main areas:
 - `api`: `sgui` should interact with the engine and file formats using

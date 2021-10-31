@@ -12,7 +12,7 @@
  * @return 1 for true, or 0 for false */
 typedef int (*shds_cmpfunc)(void*, void*);
 
-/* Comparison function for determing less-than/equal/greater-than
+/* Comparison function for determining less-than/equal/greater-than
  *
  * @return -1 for 'less than', 0 for 'equal' or 1 for 'greater than' */
 typedef int (*shds_eqfunc)(void*, void*);

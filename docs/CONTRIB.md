@@ -9,7 +9,7 @@ within this repository, create artifacts in the issue tracker or elsewhere.
 
 # Copyright assignment
 All contributions to this project that could be considered copyrighted will
-have their copyright transfered to the project owner.  The project owner may
+have their copyright transferred to the project owner.  The project owner may
 use these contributions under licenses other than the project license,
 including selling commercial versions of the software.  The project owner
 does not intend to change the project license, but reserves the right to do

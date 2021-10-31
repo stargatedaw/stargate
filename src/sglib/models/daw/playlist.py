@@ -12,7 +12,7 @@ class PlaylistPoolEntry:
         self.name = type_assert(
             name,
             str,
-            desc="The friendly name of this seqence",
+            desc="The friendly name of this sequence",
         )
         self.seq_uid = type_assert(
             seq_uid,

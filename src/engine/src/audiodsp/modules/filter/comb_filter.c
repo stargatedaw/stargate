@@ -162,7 +162,7 @@ void g_cmb_init(
 ){
     int f_i = 0;
 
-    //Allocate enough memory to accomodate 20hz filter frequency
+    //Allocate enough memory to accommodate 20hz filter frequency
     f_result->buffer_size = (int)((a_sr / 20.0f) + 300);
 
     if(a_huge_pages){

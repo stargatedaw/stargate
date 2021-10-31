@@ -6,7 +6,7 @@ If building for ARM or any architecture other than x86, you must override
 PLAT_FLAGS='-march=native' make
 ```
 
-## Prequisites
+## Prerequisites
 ```
 # Install dependencies using one of:
 scripts/debian_deps.sh

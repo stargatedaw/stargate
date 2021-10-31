@@ -12,7 +12,7 @@ The project wants to curate the selection of plugins available on the platform.
 The project is eager to accept 3rd party plugin contributions, and willing to
 work with developers as much as needed.  However, it is important to ensure
 quality and long term project vision that prospective plugins are designed
-and discussed throughly before implementing.  Especially because plugins
+and discussed thoroughly before implementing.  Especially because plugins
 are expected to maintain backwards compatibility forever, and the project
 does not want to maintain 10 different versions of the same plugin with only
 minor differences.

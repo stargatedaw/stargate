@@ -354,7 +354,7 @@ class hardware_dialog:
         f_device_name_combobox.setToolTip(DEVICE_TOOLTIP)
         f_device_name_combobox.setMinimumWidth(390)
         f_window_layout.addWidget(f_device_name_combobox, 5, 1)
-        # TODO: Investigate if this is sitll needed
+        # TODO: Investigate if this is still needed
         if util.IS_WINDOWS or util.IS_MAC_OSX:
             f_window_layout.addWidget(QLabel(_("Input Device")), 6, 0)
             f_input_name_combobox = QComboBox()
