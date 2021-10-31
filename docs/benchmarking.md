@@ -33,7 +33,21 @@ See [the build instructions](./building.md) or the
 [releases page](https://github.com/stargateaudio/stargate/releases).
 
 ## Run the benchmark
-You can replicate these commands by:
+### Acquiring projects to benchmark
+[Download the CPU-heavy stress-testing project here](./benchmark-project.zip)
+
+Or clone the demo projects for real world benchmarking
+```
+git clone https://github.com/stargateaudio/stargate-v1-demo-projects.git
+# Projects are in stargate-v1-demo-projects/src/*/
+```
+
+### Generate the engine command from the UI
+This is needed to generate the start and end parameters for the command, to
+know which beat number the render should start and stop at.  Using arbitrary
+numbers is also an option, but it is best to render the entire song and not
+include empty space at either end, as it may skew the results.
+
 * Opening the project in Stargate DAW
 * Make sure that the region start/end are set to the portion of the song
   you want to render by right-clicking on the sequencer header and setting
@@ -51,8 +65,7 @@ You should have with something like this in your terminal window:
 ./stargate-engine daw '/home/me/stargate/projects/myproject' test.wav 8 340 44100 512 3 0 0 0
 ```
 
-But let's replace that with something that allows substituting values we will
-want to change for the benchmarks:
+### Parameterizing a benchmarking shell command
 
 ```shell
 # Sample rate.  Normally this is 44100 or 48000, but users sometimes choose
@@ -77,14 +90,23 @@ PROJECT=~/stargate/projects/myproject
 # The file to output.  If you want to keep all of the artifacts from this run,
 # change the filename between runs
 OUTFILE=test.wav
+# This is the musical "beat" number within the project to begin rendering at.
+# 0 being the first beat of the song.  It is best to get this by opening
+# the project in Stargate DAW as described above, but you could also use
+# arbitrary numbers.  This should be a low number, like 0 or 8
+START=8
+# This is the musical "beat" number within the project to stop rendering at
+# This should always be a (much) larger number than ${START}
+END=340
 
-./stargate-engine daw ${PROJECT?} ${OUTFILE?} 8 340 ${SR?} ${BUF_SIZE?} ${THREADS?} 0 0 0
+./stargate-engine daw ${PROJECT?} ${OUTFILE?} ${START?} ${END?} ${SR?} ${BUF_SIZE?} ${THREADS?} 0 0 0
 ```
 
-The `OUTFILE` parameter will exist after the render.  Note that the file may be
-deterministic within the same version of Stargate DAW, but floating point
-rounding error may cause it to be non-deterministic.  You can listen to the
-file to check for correctness, but checksums may (or may not) work as intended.
+The `OUTFILE` parameter will exist as a file after the render.  Note that the
+file may be deterministic within the same version of Stargate DAW, but floating
+point rounding error may cause it to be non-deterministic.  You can listen to
+the file to check for correctness, but checksums may (or may not) work as
+intended.
 
 Using this to parameterize your benchmark with scaling values, you can now
 grep the output for these lines:
