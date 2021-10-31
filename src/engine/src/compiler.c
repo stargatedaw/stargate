@@ -14,8 +14,9 @@
 
 
 #if SG_OS == _OS_MAC_OS_X
-    void pthread_spin_init(OSSpinLock * a_lock, void * a_opts){
-        *a_lock = 0;
+    #include <os/lock.h>
+    void pthread_spin_init(os_unfair_lock * a_lock, void * a_opts){
+        #define OS_UNFAIR_LOCK_INIT
     }
 #endif
 

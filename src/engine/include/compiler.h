@@ -70,12 +70,13 @@ struct SamplePair {
 #if SG_OS == _OS_MAC_OS_X
 
     #include <libkern/OSAtomic.h>
+    #include <os/lock.h>
 
-    #define pthread_spinlock_t OSSpinLock
-    #define pthread_spin_lock OSSpinLockLock
-    #define pthread_spin_unlock OSSpinLockUnlock
+    #define pthread_spinlock_t os_unfair_lock
+    #define pthread_spin_lock os_unfair_lock_lock
+    #define pthread_spin_unlock os_unfair_lock_unlock
 
-    void pthread_spin_init(OSSpinLock * a_lock, void * a_opts);
+    void pthread_spin_init(os_unfair_lock * a_lock, void * a_opts);
 
 #endif
 
