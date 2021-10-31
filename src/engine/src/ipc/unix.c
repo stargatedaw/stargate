@@ -49,6 +49,7 @@ void ipc_client_send(
     int n;
     char buffer[1024];
 
+#if SG_OS != _OS_MAC_OS_X
     sendto(
         SOCKET_DATA.sockfd,
         (const char*)message,
@@ -65,6 +66,26 @@ void ipc_client_send(
         (struct sockaddr*)&SOCKET_DATA.servaddr,
         &SOCKET_DATA.len
     );
+
+#else
+#define MSG_OOB  0x1
+    sendto(
+        SOCKET_DATA.sockfd,
+        (const char*)message,
+        strlen(message),
+        MSG_OOB,
+        (const struct sockaddr*)&SOCKET_DATA.servaddr,
+        sizeof(SOCKET_DATA.servaddr)
+    );
+    n = recvfrom(
+        SOCKET_DATA.sockfd,
+        (char*)buffer,
+        1024,
+        MSG_WAITALL,
+        (struct sockaddr*)&SOCKET_DATA.servaddr,
+        &SOCKET_DATA.len
+    );
+#endif
     buffer[n] = '\0';
 }
 
@@ -151,6 +172,7 @@ void* ipc_server_thread(void* _arg){
             engine_message.key,
             engine_message.value
         );
+#if SG_OS != _OS_MAC_OS_X
         sendto(
             sockfd,
             (const char*)response,
@@ -158,6 +180,16 @@ void* ipc_server_thread(void* _arg){
             MSG_CONFIRM,
             (const struct sockaddr*)&cliaddr,
             len
+        );
+#else
+        sendto(
+            sockfd,
+            (const char*)response,
+            response_len,
+            MSG_OOB,
+            (const struct sockaddr*)&cliaddr,
+            len
+#endif
         );
     }
     return 0;

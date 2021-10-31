@@ -42,7 +42,7 @@ else:
 OPT_FLAGS = ENV['OPT_FLAGS'].split() if 'OPT_FLAGS' in ENV else [
 	'-ffast-math',
 	'-finline-functions',
-	'-floop-optimize',
+#	'-floop-optimize',
 	'-flto',
 	'-fno-stack-protector',
 	'-fprefetch-loop-arrays',
