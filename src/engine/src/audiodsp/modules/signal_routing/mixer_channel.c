@@ -11,18 +11,18 @@ void v_mxc_run_smoothers(
     SGFLT a_pan,
     SGFLT a_pan_law
 ){
-    v_sml_run(a_mxc->amp_smoother, a_amp);
-    v_sml_run(a_mxc->pan_smoother, a_pan);
+    v_sml_run(&a_mxc->amp_smoother, a_amp);
+    v_sml_run(&a_mxc->pan_smoother, a_pan);
 
     if(a_pan > 0.5f)    {
         a_mxc->pan_law_gain_linear = f_db_to_linear_fast(
-            (a_pan_law * a_pan * 2)
+            (a_pan_law * a_mxc->pan_smoother.last_value * 2)
         );
     }
     else
     {
         a_mxc->pan_law_gain_linear = f_db_to_linear_fast(
-            (a_pan_law * (1 - a_pan) * 2)
+            (a_pan_law * (1 - a_mxc->pan_smoother.last_value) * 2)
         );
     }
 
@@ -34,7 +34,7 @@ void v_mxc_run_smoothers(
     ) * (a_mxc->pan_law_gain_linear);
 
     a_mxc->amp_linear = f_db_to_linear_fast(
-        (a_mxc->amp_smoother->last_value)
+        (a_mxc->amp_smoother.last_value)
     );
 
     a_mxc->main_gain0 = (a_mxc->amp_linear) * (a_mxc->pan0);
@@ -75,8 +75,9 @@ void v_mxc_mix_stereo_to_mono(
 }
 
 t_mxc_mixer_channel * g_mxc_get(SGFLT a_sr){
-    t_mxc_mixer_channel* f_result =
-        (t_mxc_mixer_channel*)malloc(sizeof(t_mxc_mixer_channel));
+    t_mxc_mixer_channel* f_result = (t_mxc_mixer_channel*)malloc(
+        sizeof(t_mxc_mixer_channel)
+    );
 
     f_result->amp_linear = 1;
     f_result->in0 = 0;
@@ -87,8 +88,20 @@ t_mxc_mixer_channel * g_mxc_get(SGFLT a_sr){
     f_result->out1 = 0;
     f_result->main_gain0 = 1;
     f_result->main_gain1 = 1;
-    f_result->amp_smoother = g_sml_get_smoother_linear(a_sr, 0, -48, 0.5f);
-    f_result->pan_smoother = g_sml_get_smoother_linear(a_sr, 1.0f, -1.0f, 0.5f);
+    g_sml_init(
+        &f_result->amp_smoother,
+        a_sr,
+        0,
+        -48,
+        0.5f
+    );
+    g_sml_init(
+        &f_result->pan_smoother,
+        a_sr,
+        1.0f,
+        -1.0f,
+        0.5f
+    );
     f_result->pan_law_gain_linear = 3.0f;
     f_result->pan0 = 1;
     f_result->pan1 = 1;

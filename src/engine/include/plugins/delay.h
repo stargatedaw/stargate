@@ -48,7 +48,7 @@ GNU General Public License for more details.
 
 typedef struct {
     t_sg_delay * delay;
-    t_smoother_linear * time_smoother;
+    t_smoother_linear time_smoother;
 
     SGFLT current_sample0;
     SGFLT current_sample1;

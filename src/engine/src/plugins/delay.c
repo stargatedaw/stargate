@@ -224,11 +224,13 @@ void v_sgdelay_run(
             &plugin_data->atm_queue, f_i,
             plugin_data->port_table);
 
-        v_sml_run(plugin_data->mono_modules.time_smoother,
-            (*(plugin_data->delay_time)));
+        v_sml_run(
+            &plugin_data->mono_modules.time_smoother,
+            (*(plugin_data->delay_time))
+        );
 
         v_ldl_set_delay(plugin_data->mono_modules.delay,
-            (plugin_data->mono_modules.time_smoother->last_value * 0.01f),
+            (plugin_data->mono_modules.time_smoother.last_value * 0.01f),
             (*plugin_data->feedback) * 0.1f,
             (*plugin_data->wet) * 0.1f, (*plugin_data->dry) * 0.1f,
             (*(plugin_data->stereo) * .01), (*plugin_data->duck),
@@ -283,7 +285,8 @@ void v_sgdelay_mono_init(
     int a_plugin_uid
 ){
     a_mono->delay = g_ldl_get_delay(1, a_sr);
-    a_mono->time_smoother = g_sml_get_smoother_linear(
+    g_sml_init(
+        &a_mono->time_smoother,
         a_sr,
         100.0f,
         10.0f,

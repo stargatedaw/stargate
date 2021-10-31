@@ -20,15 +20,14 @@ GNU General Public License for more details.
 #include "audiodsp/lib/interpolate-linear.h"
 #include "compiler.h"
 
-typedef struct st_mxc_mixer_channel
-{
+typedef struct st_mxc_mixer_channel{
     SGFLT amp_linear;
-    t_smoother_linear * amp_smoother;
+    t_smoother_linear amp_smoother;
     SGFLT gain_db;
     SGFLT gain_linear;
     SGFLT main_gain0;
     SGFLT main_gain1;
-    t_smoother_linear * pan_smoother;
+    t_smoother_linear pan_smoother;
     SGFLT pan0;
     SGFLT pan1;
     SGFLT pan_law_gain_linear;
