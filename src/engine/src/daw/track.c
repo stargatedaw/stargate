@@ -69,7 +69,7 @@ void v_daw_process_track(
     }
 
     switch(f_item_ref_count){
-        case 0:   //set it out of range
+        case 0:  //set it out of range
             f_current_beat = a_ts->ml_next_beat + 1.0f;
             f_next_beat = a_ts->ml_next_beat + 2.0f;
             break;

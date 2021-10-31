@@ -91,15 +91,15 @@ extern SGFLT **pluginOutputBuffers;
 extern int ZERO;
 
 /* An automation clock event */
-typedef struct{
+typedef struct {
     /* (int)(song_pos_in_beats / SG_AUTOMATION_RESOLUTION) */
     int tick;
     /* the sample number in the current buffer that the event happens on */
     int sample;
     double beat;
-}t_atm_tick;
+} t_atm_tick;
 
-typedef struct{
+typedef struct {
     int sample_count;
     long current_sample;
     double start_beat;
@@ -112,31 +112,31 @@ typedef struct{
     t_atm_tick atm_ticks[ATM_TICK_BUFFER_SIZE];
 }t_sample_period;
 
-typedef struct{
+typedef struct {
     int count;
     t_sample_period periods[3];
-}t_sample_period_split;
+} t_sample_period_split;
 
-typedef struct{
+typedef struct {
     int type;  //0:Loop,1:TempoChange
     double beat;
     double start_beat;  //currently only for the loop event
     SGFLT tempo;
-}t_sg_seq_event;
+} t_sg_seq_event;
 
-typedef struct{
+typedef struct {
     int is_looping;
     SGFLT tempo;
     SGFLT playback_inc;
     SGFLT samples_per_beat;
     t_sample_period period;
-}t_sg_seq_event_period;
+} t_sg_seq_event_period;
 
-typedef struct{
+typedef struct {
     t_sample_period_split splitter;
     int count;
     t_sg_seq_event_period sample_periods[2];
-}t_sg_seq_event_result;
+} t_sg_seq_event_result;
 
 typedef struct{
     int count;
@@ -158,6 +158,7 @@ typedef struct{
 }t_thread_args;
 
 typedef struct{
+    char pad1[CACHE_LINE_SIZE];
     /*This is reset to bus_count each cycle and the
      * bus track processed when count reaches 0*/
     volatile int bus_counter;
@@ -188,6 +189,7 @@ typedef struct{
     t_seq_event * extern_midi;
     t_seq_event event_buffer[MAX_EVENT_BUFFER_SIZE];
     struct ShdsList * event_list;
+    char pad2[CACHE_LINE_SIZE];
 }t_pytrack;
 
 typedef struct{
@@ -239,31 +241,30 @@ typedef struct {
     t_midi_device_list * midi_devices;
     int midi_learn;
     t_plugin plugin_pool[MAX_PLUGIN_POOL_COUNT];
-    char * project_folder;
-    char * audio_folder;
-    char * audio_tmp_folder;
-    char * samples_folder;
-    char * samplegraph_folder;
-    char * audio_pool_file;
-    char * plugins_folder;
+    char* project_folder;
+    char* audio_folder;
+    char* audio_tmp_folder;
+    char* samples_folder;
+    char* samplegraph_folder;
+    char* audio_pool_file;
+    char* plugins_folder;
     pthread_mutex_t exit_mutex;
 } t_stargate;
 
-typedef struct
-{
+typedef struct {
     int output_track;
     int on;
 }t_midi_routing;
 
-typedef struct
-{
+typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     // index of the track to send to
     int output;
     // 1 if active, 0 if not active
     int active;
     int type;
-    char padding[4];
-}t_pytrack_routing;
+    char pad2[CACHE_LINE_SIZE];
+} t_pytrack_routing;
 
 void g_stargate_get(SGFLT, t_midi_device_list*);
 t_pytrack * g_pytrack_get(int, SGFLT);
