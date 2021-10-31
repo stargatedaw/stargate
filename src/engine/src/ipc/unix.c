@@ -189,8 +189,8 @@ void* ipc_server_thread(void* _arg){
             MSG_OOB,
             (const struct sockaddr*)&cliaddr,
             len
-#endif
         );
+#endif
     }
     return 0;
 }
