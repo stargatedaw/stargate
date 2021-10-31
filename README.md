@@ -14,6 +14,9 @@ music on a computer.  To understand what Stargate is, and why, read the
 - A comprehensive suite of built-in instrument and effect plugins
 - A basic wave editor
 - Broad audio and MIDI hardware support using Portaudio and Portmidi
+- Powerful track routing matrix with easy sidechaining
+- Modular mixer architecture.  Mixer channels are a type of plugin that can
+  be chosen per track send, mix and match plugins, or skip them when not needed
 - Runs on Windows and Linux, x86 and ARM.  Will be ported to Mac OS X (and any
   other platform) if there is sufficient demand
 - Everything you need to create music in a single package, no need to install
