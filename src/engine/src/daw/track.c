@@ -170,6 +170,8 @@ void v_daw_process_track(
         }
     }
 
+    f_track->period_event_index = 0;
+
     if(a_ts->playback_mode == PLAYBACK_MODE_PLAY || !f_is_recording){
         for(f_i = 0; f_i < f_track->splitter.count; ++f_i){
             if(f_i > 0){

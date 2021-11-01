@@ -289,11 +289,13 @@ void v_daw_process_note_offs(
 
     int f_i2 = 0;
     long f_note_off;
+    long sample_count = f_next_current_sample - f_current_sample;
 
     for(f_i2 = 0; f_i2 < MIDI_NOTE_COUNT; ++f_i2){
         f_note_off = f_track->note_offs[f_i2];
         if(
-            f_note_off >= f_current_sample
+            // f_note_off >= f_current_sample
+            f_note_off != -1
             &&
             f_note_off < f_next_current_sample
         ){
@@ -303,12 +305,18 @@ void v_daw_process_note_offs(
 
             v_ev_set_noteoff(f_event, 0, f_i2, 0);
             f_event->tick = f_note_off - f_current_sample;
+            if(f_event->tick < 0){
+                f_event->tick = 0;
+            } else if(f_event->tick >= sample_count){
+                f_event->tick = sample_count - 1;
+            }
             ++f_track->period_event_index;
             f_track->note_offs[f_i2] = -1;
 
             shds_list_append(f_track->event_list, f_event);
         }
     }
+    shds_list_isort(f_track->event_list, seq_event_cmpfunc);
 }
 
 void v_daw_process_midi(
@@ -324,7 +332,6 @@ void v_daw_process_midi(
     double f_adjusted_start;
     int f_i;
     t_pytrack * f_track = self->track_pool[a_track_num];
-    f_track->period_event_index = 0;
 
     double f_track_current_period_beats = (a_ts->ml_current_beat);
     double f_track_next_period_beats = (a_ts->ml_next_beat);
