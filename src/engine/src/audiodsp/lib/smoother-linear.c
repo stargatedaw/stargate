@@ -12,7 +12,7 @@ void g_sml_init(
     SGFLT a_low,
     SGFLT a_time_in_seconds
 ){
-    sg_assert(a_high > a_low, "g_sml_init: high <= low", a_high, a_low);
+    sg_assert(a_high > a_low, "g_sml_init: high %f <= low %f", a_high, a_low);
     f_result->last_value = (((a_high - a_low) * .5f) + a_low);
 
     /*Rate is the time it would take to complete if the knob was all

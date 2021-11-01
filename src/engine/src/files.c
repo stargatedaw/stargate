@@ -49,7 +49,7 @@ void get_string_from_file(
     sg_assert(
         (int)((int)f_char_count < a_size),
         "get_string_from_file: length %i > size %i",
-        f_char_count,
+        (int)f_char_count,
         a_size
     );
     a_buf[f_char_count] = '\0';

@@ -259,7 +259,8 @@ void v_daw_configure(const char* a_key, const char* a_value){
         int f_bool = atoi(a_value);
         sg_assert(
             f_bool == 0 || f_bool == 1,
-            "v_daw_configure: DN_CONFIGURE_KEY_SET_OVERDUB_MODE invalid value",
+            "v_daw_configure: DN_CONFIGURE_KEY_SET_OVERDUB_MODE "
+            "invalid value %i",
             f_bool
         );
         pthread_spin_lock(&STARGATE->main_lock);

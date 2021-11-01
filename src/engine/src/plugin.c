@@ -270,13 +270,13 @@ void set_pyfx_port(
     );
     sg_assert(
         (int)(a_min < a_max),
-        "set_pyfx_port: a_min %i >= a_max %i",
+        "set_pyfx_port: a_min %f >= a_max %f",
         a_min,
         a_max
     );
     sg_assert(
         (int)(a_default >= a_min && a_default <= a_max),
-        "set_pyfx_port: a_default %i out of range %i to %i",
+        "set_pyfx_port: a_default %f out of range %f to %f",
         a_default,
         a_min,
         a_max
