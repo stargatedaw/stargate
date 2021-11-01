@@ -290,12 +290,13 @@ void v_daw_process_note_offs(
     int f_i2 = 0;
     long f_note_off;
 
-    while(f_i2 < MIDI_NOTE_COUNT)
-    {
+    for(f_i2 = 0; f_i2 < MIDI_NOTE_COUNT; ++f_i2){
         f_note_off = f_track->note_offs[f_i2];
-        if(f_note_off >= f_current_sample &&
-           f_note_off < f_next_current_sample)
-        {
+        if(
+            f_note_off >= f_current_sample
+            &&
+            f_note_off < f_next_current_sample
+        ){
             t_seq_event * f_event =
                 &f_track->event_buffer[f_track->period_event_index];
             v_ev_clear(f_event);
@@ -307,7 +308,6 @@ void v_daw_process_note_offs(
 
             shds_list_append(f_track->event_list, f_event);
         }
-        ++f_i2;
     }
 }
 
