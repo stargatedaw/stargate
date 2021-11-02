@@ -9,6 +9,7 @@ from sglib.constants import (
 from sglib.lib import portable
 from sglib.lib.translate import _
 from sglib.lib.util import (
+    pi_path,
     META_DOT_JSON,
     PROJECT_FILE_TYPE,
     set_file_setting,
@@ -115,16 +116,15 @@ def open_project(a_parent=None):
         return False
 
 def set_project(project):
+    project = pi_path(project)
     set_file_setting("last-project", str(project))
-    history = get_history()
+    history = [pi_path(x) for x in get_history() if pi_path(x) != project]
     if IS_PORTABLE_INSTALL:
         project = portable.escape_path(project)
         history = [
             portable.escape_path(x)
             for x in history
         ]
-    if project in history:
-        history.remove(project)
     history.insert(0, project)
     util.set_file_setting(
         "project-history",
