@@ -171,7 +171,7 @@ void sg_print_stack_trace(){
             sprintf(file_name, "???");
         }
 
-        log_info("[%i] %s %s:%i", i, sym_name, file_name, line_num);
+        log_info("[%i] %s %s:%i", (int)i, sym_name, file_name, line_num);
     }
 
     SymCleanup(process);
