@@ -17,8 +17,8 @@ music on a computer.  To understand what Stargate is, and why, read the
 - Powerful track routing matrix with easy sidechaining
 - Modular mixer architecture.  Mixer channels are a type of plugin that can
   be chosen per track send, mix and match plugins, or skip them when not needed
-- Runs on Windows and Linux, x86 and ARM.  Will be ported to Mac OS X (and any
-  other platform) if there is sufficient demand
+- Runs on Windows, Mac and Linux, x86 and ARM.  Can be ported to other
+  platforms if there is sufficient demand
 - Everything you need to create music in a single package, no need to install
   additional software
 - Revolutionary CPU efficiency for DAW and plugins, minimum recommended
