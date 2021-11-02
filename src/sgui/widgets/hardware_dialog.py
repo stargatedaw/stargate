@@ -125,8 +125,14 @@ class hardware_dialog:
             pa_paths = ("libportaudio.so.2", "libportaudio.so")
             pm_paths = ("libportmidi.so.0", "libportmidi.so")
         elif util.IS_MAC_OSX:
-            pa_paths = ("libportaudio.dylib",)
-            pm_paths = ("libportmidi.dylib",)
+            pa_paths = (
+                "/usr/local/lib/libportaudio.dylib",
+                "libportaudio.dylib",
+            )
+            pm_paths = (
+                "/usr/local/lib/libportmidi.dylib",
+                "libportmidi.dylib",
+            )
         elif util.IS_WINDOWS:
             pm_paths = (
                 os.path.join(
@@ -354,7 +360,6 @@ class hardware_dialog:
         f_device_name_combobox.setToolTip(DEVICE_TOOLTIP)
         f_device_name_combobox.setMinimumWidth(390)
         f_window_layout.addWidget(f_device_name_combobox, 5, 1)
-        # TODO: Investigate if this is still needed
         if util.IS_WINDOWS or util.IS_MAC_OSX:
             f_window_layout.addWidget(QLabel(_("Input Device")), 6, 0)
             f_input_name_combobox = QComboBox()
@@ -433,9 +438,6 @@ class hardware_dialog:
                 f"out: {f_dev.contents.maxOutputChannels} "
                 f"sr: {f_dev.contents.defaultSampleRate} "
             )
-            if f_dev.contents.maxOutputChannels < 2:
-                LOG.info(f"Skipping {f_dev_name}, less than 2 outputs")
-                continue
             f_host_api = f_host_api_names[f_dev.contents.hostApi]
             f_name_to_index[f_host_api][f_dev_name] = i
             f_result_dict[f_host_api][f_dev_name] = f_dev.contents
@@ -444,14 +446,21 @@ class hardware_dialog:
 
         f_host_api_input_names = {
             k:[x for x in v if f_result_dict[k][x].maxInputChannels]
-            for k, v in f_host_api_device_names.items() if v}
+            for k, v in f_host_api_device_names.items()
+            if v
+        }
 
         f_host_api_device_names = {
-            k:[x for x in v if f_result_dict[k][x].maxOutputChannels]
-            for k, v in f_host_api_device_names.items() if v}
+            k:[x for x in v if f_result_dict[k][x].maxOutputChannels >= 2]
+            for k, v in f_host_api_device_names.items()
+            if v
+        }
 
-        for f_list in list(f_host_api_device_names.values()
-        ) + list(f_host_api_input_names.values()):
+        for f_list in list(
+            f_host_api_device_names.values()
+        ) + list(
+            f_host_api_input_names.values()
+        ):
             f_list.sort(key=lambda x: x.lower())
 
         f_io_layout = QHBoxLayout()
@@ -533,11 +542,13 @@ class hardware_dialog:
             self.subsystem = str(f_subsystem_combobox.currentText())
             f_device_name_combobox.clear()
             f_device_name_combobox.addItems(
-                f_host_api_device_names[self.subsystem])
+                f_host_api_device_names[self.subsystem],
+            )
             if util.IS_WINDOWS or util.IS_MAC_OSX:
                 f_input_name_combobox.clear()
                 f_input_name_combobox.addItems(
-                    f_host_api_input_names[self.subsystem])
+                    f_host_api_input_names[self.subsystem],
+                )
 
         def combobox_changed(a_self=None, a_val=None):
             f_str = str(f_device_name_combobox.currentText())
