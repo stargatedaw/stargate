@@ -7,6 +7,19 @@ import subprocess
 import sys
 import time
 
+REAL_PATH = __file__
+
+for i in range(20):
+    if os.path.islink(REAL_PATH):
+        print(f"Replacing symlink: {REAL_PATH}")
+        REAL_PATH = os.readlink(REAL_PATH)
+    else:
+        break
+
+if os.path.islink(REAL_PATH):
+    print("You clearly messed something up, what are you trying to do?")
+    exit(1)
+
 VERSION = "stargate"
 
 def parse_args():
@@ -110,7 +123,7 @@ def main():
         time.sleep(1)
 
     args = parse_args()
-    f_prefix_dir = os.path.dirname(__file__)
+    f_prefix_dir = os.path.dirname(REAL_PATH)
     f_path = os.path.join(
         f_prefix_dir,
         "..",
