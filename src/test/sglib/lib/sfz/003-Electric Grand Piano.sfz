@@ -1,0 +1,39 @@
+// GM Electric Grand Piano
+// Yamaha CP80 Electric Grand Piano
+// Author Greg Sullivan
+// License: Creative Commons CC0, Greg Sullivan
+// Source: https://github.com/sfzinstruments/GregSullivan.E-Pianos
+// --------------------------------------
+// converted to sfz by kinwie, looped and remapped for GM by jlearman
+// --------------------------------------
+// SFZ format v2 with ARIA extensions
+
+//<master>
+fil_type=lpf_2p cutoff=20000 cutoff_oncc131=-8500 cutoff_curvecc131=2
+pan_keycenter=60
+pan_keytrack=1
+
+<group> ampeg_release=.8
+<region> region_label=027 lokey=021 hikey=030 pitch_keycenter=027 volume=-2 sample=003-Electric Grand Piano/027-D#1-FF.wav tune=-8
+<region> region_label=035 lokey=031 hikey=038 pitch_keycenter=035 volume=-3 sample=003-Electric Grand Piano/035-B1-FF.wav
+<region> region_label=042 lokey=039 hikey=043 pitch_keycenter=042 volume=-3 sample=003-Electric Grand Piano/042-F#2-FF.wav
+<region> region_label=046 lokey=044 hikey=049 pitch_keycenter=046 volume=-4 sample=003-Electric Grand Piano/046-A#2-FF.wav
+<group> ampeg_release=.6
+<region> region_label=053 lokey=050 hikey=054 pitch_keycenter=053 volume=-4 sample=003-Electric Grand Piano/053-F3-FF.wav
+<region> region_label=057 lokey=055 hikey=058 pitch_keycenter=057 volume=-6 sample=003-Electric Grand Piano/057-A3-FF.wav
+<region> region_label=060 lokey=059 hikey=061 pitch_keycenter=060 volume=-6 sample=003-Electric Grand Piano/060-C4-FF.wav
+<region> region_label=065 lokey=062 hikey=066 pitch_keycenter=065 volume=-6 sample=003-Electric Grand Piano/065-F4-FF.wav
+<group> ampeg_release=.5
+<region> region_label=068 lokey=067 hikey=069 pitch_keycenter=068 volume=-6 sample=003-Electric Grand Piano/068-G#4-FF.wav
+<region> region_label=072 lokey=070 hikey=073 pitch_keycenter=072 volume=-6 sample=003-Electric Grand Piano/072-C5-FF.wav
+<region> region_label=076 lokey=074 hikey=077 pitch_keycenter=076 volume=-4 sample=003-Electric Grand Piano/076-E5-FF.wav
+<region> region_label=080 lokey=078 hikey=082 pitch_keycenter=080 volume=-3 sample=003-Electric Grand Piano/080-G#5-FF.wav
+<group> ampeg_release=.4
+<region> region_label=085 lokey=083 hikey=086 pitch_keycenter=085 volume=-4 sample=003-Electric Grand Piano/085-C#6-FF.wav
+<region> region_label=088 lokey=087 hikey=092 pitch_keycenter=088 volume=-4 sample=003-Electric Grand Piano/088-E6-FF.wav
+<group> ampeg_release=20
+<region> region_label=095 lokey=093 hikey=095 pitch_keycenter=095 volume=-5 sample=003-Electric Grand Piano/095-B6-FF.wav
+<region> region_label=097 lokey=096 hikey=099 pitch_keycenter=097 volume=-5 sample=003-Electric Grand Piano/097-C#7-FF.wav
+<region> region_label=102 lokey=100 hikey=104 pitch_keycenter=102 volume=-7 sample=003-Electric Grand Piano/102-F#7-FF.wav
+<region> region_label=107 lokey=105 hikey=108 pitch_keycenter=107 volume=-5 sample=003-Electric Grand Piano/107-B7-FF.wav
+

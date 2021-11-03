@@ -1,0 +1,29 @@
+// GM Electric Piano
+// jRhodes GM version
+// Author: Jeff Learman: http://github.com/jlearman
+// License: Creative Commons CC0, Jeff Learman
+// Source: http://github.com/sfzinstruments/jlearman.jRhodes3c
+// Mapped and relooped for GM by jlearman
+
+ampeg_sustain=0
+
+<group> ampeg_release=0.6 
+<region> sample=005-Electric Piano 1/A_029__F1_3.wav lokey=21 hikey=32 pitch_keycenter=29 ampeg_hold=4.921 ampeg_decay=30
+<region> sample=005-Electric Piano 1/A_035__B1_3.wav lokey=33 hikey=37 pitch_keycenter=35 ampeg_hold=4.254 ampeg_decay=30
+<region> sample=005-Electric Piano 1/A_040__E2_3.wav lokey=38 hikey=42 pitch_keycenter=40 ampeg_hold=5.854 ampeg_decay=30
+<region> sample=005-Electric Piano 1/A_045__A2_3.wav lokey=43 hikey=47 pitch_keycenter=45 ampeg_hold=6.354 ampeg_decay=30
+<group> ampeg_release=0.4 
+<region> sample=005-Electric Piano 1/A_050__D3_3.wav lokey=48 hikey=52 pitch_keycenter=50 ampeg_hold=5.391 ampeg_decay=28 
+<region> sample=005-Electric Piano 1/A_055__G3_3.wav lokey=53 hikey=57 pitch_keycenter=55 ampeg_hold=5.761 ampeg_decay=26 
+<region> sample=005-Electric Piano 1/A_059__B3_3.wav lokey=58 hikey=60 pitch_keycenter=59 ampeg_hold=4.84 ampeg_decay=24 
+<region> sample=005-Electric Piano 1/A_062__D4_3.wav lokey=61 hikey=63 pitch_keycenter=62 ampeg_hold=6.078 ampeg_decay=22 
+<group> ampeg_release=0.3 
+<region> sample=005-Electric Piano 1/A_065__F4_3.wav lokey=64 hikey=68 pitch_keycenter=65 ampeg_hold=5.336 ampeg_decay=20 
+<region> sample=005-Electric Piano 1/A_071__B4_4.wav lokey=69 hikey=73 pitch_keycenter=71 ampeg_hold=4.435 ampeg_decay=18 
+<region> sample=005-Electric Piano 1/A_076__E5_4.wav lokey=74 hikey=78 pitch_keycenter=76 ampeg_hold=3.087 ampeg_decay=16 
+<region> sample=005-Electric Piano 1/A_081__A5_4.wav lokey=79 hikey=83 pitch_keycenter=81 ampeg_hold=3.804 ampeg_decay=14 
+<group> ampeg_release=0.2
+<region> sample=005-Electric Piano 1/A_086__D6_4.wav lokey=84 hikey=88 pitch_keycenter=86 ampeg_hold=3.532 ampeg_decay=12 
+<region> sample=005-Electric Piano 1/A_091__G6_4.wav lokey=89 hikey=93 pitch_keycenter=91 ampeg_hold=1.53 ampeg_decay=8 
+<region> sample=005-Electric Piano 1/A_096__C7_4.wav lokey=94 hikey=108 pitch_keycenter=96 ampeg_hold=0.651 ampeg_decay=5 
+

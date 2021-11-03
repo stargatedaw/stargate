@@ -1,0 +1,31 @@
+// GM Bright Piano
+// VCSL Upright Piano - Yamaha
+// License: Creative Commons CC0, Versilian Studios
+// Source: https://vis.versilstudios.com/vcsl.html
+// mapped & looped for GM by jlearman
+
+//<master>
+ampeg_sustain=0
+fil_type=lpf_1p cutoff=20000 cutoff_oncc131=-6500 cutoff_curvecc131=2
+
+<group> ampeg_release=1
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_C0_vl3_rr1.wav lokey=21 hikey=23 pitch_keycenter=23 tune=45 volume=6.8 ampeg_hold=5.987 ampeg_decay=24
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_G0_vl3_rr1.wav lokey=24 hikey=33 pitch_keycenter=31 tune=5 volume=0.44 ampeg_hold=6.361 ampeg_decay=22
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_C1_vl3_rr1.wav lokey=34 hikey=39 pitch_keycenter=36 tune=-5 volume=-0.32 ampeg_hold=6 ampeg_decay=20
+<group> ampeg_release=.7
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_G1_vl3_rr1.wav lokey=40 hikey=45 pitch_keycenter=43 tune=-9 volume=-1.6 ampeg_hold=7.219 ampeg_decay=18
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_C2_vl3_rr1.wav lokey=46 hikey=51 pitch_keycenter=48 tune=-3 volume=-0.1 ampeg_hold=5.522 ampeg_decay=17
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_G2_vl3_rr1.wav lokey=52 hikey=57 pitch_keycenter=55 tune=-8 volume=-4.22 ampeg_hold=5.217 ampeg_decay=16
+<group> ampeg_release=.5
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_C3_vl3_rr1.wav lokey=58 hikey=63 pitch_keycenter=60 tune=-5 volume=-1.94 ampeg_hold=4.543 ampeg_decay=14
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_G3_vl3_rr1.wav lokey=64 hikey=69 pitch_keycenter=67 tune=-7 volume=0.11 ampeg_hold=3.01 ampeg_decay=12
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_C4_vl3_rr1.wav lokey=70 hikey=75 pitch_keycenter=72 tune=-6 volume=-3.85 ampeg_hold=3.108 ampeg_decay=10
+<group> ampeg_release=.3
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_G4_vl3_rr1.wav lokey=76 hikey=81 pitch_keycenter=79 tune=-1 volume=-0.50 ampeg_hold=2.76 ampeg_decay=8
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_C5_vl3_rr1.wav lokey=82 hikey=87 pitch_keycenter=84 tune=0 volume=1.50 ampeg_hold=1.366 ampeg_decay=6 
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_G5_vl3_rr1.wav lokey=88 hikey=90 pitch_keycenter=91 tune=-5 volume=0.00 ampeg_hold=1.766 ampeg_decay=4
+<group> ampeg_release=20
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_G5_vl3_rr1.wav lokey=91 hikey=93 pitch_keycenter=91 tune=-5 volume=0.00 ampeg_hold=1.766 ampeg_decay=4
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_C6_vl3_rr1.wav lokey=94 hikey=100 pitch_keycenter=96 tune=0  volume=1.00 ampeg_sustain=1
+<region> sample=002-Bright Acoustic Piano/Upright1_Sus_G6_vl3_rr1.wav lokey=101 hikey=108 pitch_keycenter=103 tune=-5 volume=1.00 ampeg_sustain=1
+

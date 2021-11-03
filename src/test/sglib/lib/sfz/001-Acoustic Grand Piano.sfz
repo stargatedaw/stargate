@@ -1,0 +1,38 @@
+// GM Grand Piano
+// Salamander Grand Piano V2
+// Author: Alexander Holm
+// Contact: axeldenstore [at] gmail [dot] com
+// License: Creative Commons CC-BY, Alexander Holm
+// Source: https://github.com/sfzinstruments/SalamanderGrandPiano
+// mapped and looped by jlearman
+
+//<master>
+fil_type=lpf_1p cutoff=20000 cutoff_oncc131=-9500 cutoff_curvecc131=2
+
+<group> ampeg_sustain=0.001 ampeg_release=1
+<region> sample=001-Acoustic Grand Piano/C1v16.wav lokey=21 hikey=26 pitch_keycenter=24 ampeg_hold=12.156 ampeg_decay=22
+<region> sample=001-Acoustic Grand Piano/F#1v16.wav lokey=27 hikey=32 pitch_keycenter=30 ampeg_hold=12.843 ampeg_decay=21
+<region> sample=001-Acoustic Grand Piano/C2v16.wav lokey=33 hikey=38 pitch_keycenter=36 ampeg_hold=10.394 ampeg_decay=20
+<region> sample=001-Acoustic Grand Piano/F#2v16.wav lokey=39 hikey=43 pitch_keycenter=42 ampeg_hold=8.817 ampeg_decay=19
+
+<group> ampeg_sustain=0.001 ampeg_release=0.7
+<region> sample=001-Acoustic Grand Piano/A2v16.wav lokey=44 hikey=49 pitch_keycenter=45 ampeg_hold=5.918 ampeg_decay=18
+<region> sample=001-Acoustic Grand Piano/D#3v16.wav lokey=50 hikey=53 pitch_keycenter=51 ampeg_hold=6.352 ampeg_decay=17
+<region> sample=001-Acoustic Grand Piano/A3v16.wav lokey=54 hikey=58 pitch_keycenter=57 ampeg_hold=5.592 ampeg_decay=16
+<region> sample=001-Acoustic Grand Piano/C4v16.wav lokey=59 hikey=62 pitch_keycenter=60 ampeg_hold=7.112 ampeg_decay=15
+<group> ampeg_sustain=0.001 ampeg_release=0.4
+
+<region> sample=001-Acoustic Grand Piano/F#4v16.wav lokey=63 hikey=68 pitch_keycenter=66 ampeg_hold=6.304 ampeg_decay=14
+<region> sample=001-Acoustic Grand Piano/C5v16.wav lokey=69 hikey=74 pitch_keycenter=72 ampeg_hold=3.557 ampeg_decay=13
+<region> sample=001-Acoustic Grand Piano/F#5v16.wav lokey=75 hikey=80 pitch_keycenter=78 ampeg_hold=3.484 ampeg_decay=12
+<group> ampeg_sustain=0.001 ampeg_release=0.2
+
+<region> sample=001-Acoustic Grand Piano/C6v16.wav lokey=81 hikey=86 pitch_keycenter=84 ampeg_hold=1.663 ampeg_decay=11
+<region> sample=001-Acoustic Grand Piano/F#6v16.wav lokey=87 hikey=88 pitch_keycenter=90 ampeg_hold=1.889 ampeg_decay=10
+<group> ampeg_sustain=0.001 ampeg_release=10
+
+<region> sample=001-Acoustic Grand Piano/F#6v16.wav lokey=89 hikey=93 pitch_keycenter=90 ampeg_hold=1.889 ampeg_decay=9
+<region> sample=001-Acoustic Grand Piano/C7v16.wav lokey=92 hikey=97 pitch_keycenter=96 ampeg_hold=2.073 ampeg_decay=8
+<region> sample=001-Acoustic Grand Piano/D#7v16.wav lokey=98 hikey=103 pitch_keycenter=99 ampeg_hold=1.674 ampeg_decay=7
+<region> sample=001-Acoustic Grand Piano/A7v16.wav lokey=104 hikey=108 pitch_keycenter=105 ampeg_hold=1.247 ampeg_decay=6
+

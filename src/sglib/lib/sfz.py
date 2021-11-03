@@ -130,12 +130,11 @@ class sfz_file:
                     and
                     not is_audio_file(f_value.strip())
                 ):
-                    raise sfz_exception(
-                        "{} not supported, only {} supported.".format(
-                            f_value,
-                            AUDIO_FILE_EXTS,
-                        ),
+                    LOG.error(
+                        f"{f_value} not supported, only {AUDIO_FILE_EXTS} "
+                        "supported."
                     )
+                    continue
                 f_current_object.dict[f_key.lower()] = f_value
                 if f_current_mode == 1:
                     f_current_object.set_from_group(
