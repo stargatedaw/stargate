@@ -34,13 +34,13 @@ def _log_system_info():
         import distro
         LOG.info(distro.info())
     except Exception as ex:
-        LOG.warn(ex)
+        LOG.warning(ex)
     try:
         import platform
         LOG.info(f"Python version: {platform.python_version()}")
         LOG.info(f"Platform: {platform.platform()}")
     except Exception as ex:
-        LOG.warn(ex)
+        LOG.warning(ex)
 
 def preflight():
     _preflight_rpi()

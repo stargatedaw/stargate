@@ -160,7 +160,7 @@ class hardware_dialog:
                 ctypes.cdll.LoadLibrary(path)
                 self.pyaudio = ctypes.CDLL(path)
             except Exception as ex:
-                LOG.warn(f"Failed to load portaudio: {ex}")
+                LOG.warning(f"Failed to load portaudio: {ex}")
         if not self.pyaudio:
             raise ImportError(
                 f"Cannot find one of {pa_paths}, please "
@@ -187,7 +187,7 @@ class hardware_dialog:
                 ctypes.cdll.LoadLibrary(path)
                 self.pypm = ctypes.CDLL(path)
             except Exception as ex:
-                LOG.warn(f"Could not find {path}")
+                LOG.warning(f"Could not find {path}")
         if not self.pypm:
             raise ImportError(
                 f"Unable to find one of {pm_paths}, please install Portmidi"

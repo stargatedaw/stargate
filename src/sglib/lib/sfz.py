@@ -1,4 +1,5 @@
 from .util import (
+    AUDIO_FILE_EXTS,
     is_audio_file,
     read_file_text,
     string_to_note_num,
@@ -107,6 +108,10 @@ class sfz_file:
                     f_current_mode = 2
                     f_current_group = sfz_sample()
                     f_current_object = f_current_group
+                elif f_line.startswith("<region>"):
+                    f_current_mode = 3
+                    f_current_object = sfz_sample()
+                    f_samples_list.append(f_current_object)
                 else:
                     f_current_mode = None
             else:
@@ -116,22 +121,26 @@ class sfz_file:
                     f_key, f_value = f_line.split("=")
                     f_value = string_to_note_num(f_value)
                 except Exception as ex:
-                    LOG.error("ERROR:  {}".format(f_line))
-                    raise sfz_exception(
-                        "Error parsing key/value pair\n{}\n{}".format(
-                            f_line,
-                            ex,
-                        )
+                    LOG.warning(
+                        f"Error parsing key/value pair  {f_line}: {ex}",
                     )
-                if f_key.lower() == "sample" and \
-                not is_audio_file(f_value.strip()):
+                    continue
+                if (
+                    f_key.lower() == "sample"
+                    and
+                    not is_audio_file(f_value.strip())
+                ):
                     raise sfz_exception(
                         "{} not supported, only {} supported.".format(
-                        f_value, AUDIO_FILE_EXTS))
+                            f_value,
+                            AUDIO_FILE_EXTS,
+                        ),
+                    )
                 f_current_object.dict[f_key.lower()] = f_value
                 if f_current_mode == 1:
                     f_current_object.set_from_group(
-                        [f_global_settings, f_current_group])
+                        [f_global_settings, f_current_group],
+                    )
 
         for f_sequence in f_samples_list:
             if "sample" in f_sequence.dict:

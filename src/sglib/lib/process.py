@@ -50,7 +50,7 @@ def _stderr_handler(line: str):
         or
         any(x in lower for x in ("alsa", "jack"))
     ):
-        LOG.warn(line)
+        LOG.warning(line)
     else:
         LOG.error(line)
 

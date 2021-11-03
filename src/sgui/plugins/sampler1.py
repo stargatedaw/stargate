@@ -2315,12 +2315,12 @@ class sampler1_plugin_ui(AbstractPluginUI):
                 f_file_list.append(f_file)
                 f_proc_list.append(f_proc)
                 f_status_lineedit.setText("Starting {}".format(f_file))
-                qApp.processEvents()
+                QtCore.QCoreApplication.processEvents()
                 time.sleep(0.1)
 
             for f_item, f_file in zip(f_proc_list, f_file_list):
                 f_status_lineedit.setText("Finished {}".format(f_file))
-                qApp.processEvents()
+                QtCore.QCoreApplication.processEvents()
                 f_item.wait()
 
             self.load_files(f_file_list)
@@ -2597,7 +2597,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
             if f_text != "":
                 for f_path in self.import_sfz(f_text):
                     f_status_label.setText(_("Loading {}").format(f_path))
-                    qApp.processEvents()
+                    QtCore.QCoreApplication.processEvents()
                 f_window.close()
 
         def on_cancel(a_val=None):
@@ -2644,14 +2644,21 @@ class sampler1_plugin_ui(AbstractPluginUI):
             self.clearAllSamples()
 
             for f_index, f_sample in zip(
-            range(len(f_sfz.samples)), f_sfz.samples):
+                range(len(f_sfz.samples)),
+                f_sfz.samples,
+            ):
                 if f_index >= SAMPLER1_MAX_SAMPLE_COUNT:
                     QMessageBox.warning(
-                        self.widget, _("Error"),
-                        _("Sample count {} exceeds maximum of {}, not "
-                        "loading all samples").format(
-                        len(f_sfz.samples),
-                        SAMPLER1_MAX_SAMPLE_COUNT))
+                        self.widget,
+                        _("Error"),
+                        _(
+                            "Sample count {} exceeds maximum of {}, not "
+                            "loading all samples"
+                        ).format(
+                            len(f_sfz.samples),
+                            SAMPLER1_MAX_SAMPLE_COUNT,
+                        ),
+                    )
                     return
                 if "sample" in f_sample.dict:
                     if os.path.sep == '/':
