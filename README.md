@@ -10,6 +10,7 @@ music on a computer.  To understand what Stargate is, and why, read the
 - [Get the latest Stargate news on Twitter](https://twitter.com/stargatedaw)
 - [Download Stargate demo projects](
     https://github.com/stargateaudio/stargate-v1-demo-projects)
+- [Download instruments for Sampler1](https://github.com/sfzinstruments)
 
 # Features
 - A digital audio workstation (DAW) with a powerful pattern-based workflow
