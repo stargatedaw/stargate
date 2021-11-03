@@ -8,6 +8,8 @@ music on a computer.  To understand what Stargate is, and why, read the
   https://www.youtube.com/channel/UC0xYkPBN3cqMMaTQxc38Rfw)
 - [Chat with us on Discord](https://discord.gg/7mP5psUN7D)
 - [Get the latest Stargate news on Twitter](https://twitter.com/stargatedaw)
+- [Download Stargate demo projects](
+    https://github.com/stargateaudio/stargate-v1-demo-projects)
 
 # Features
 - A digital audio workstation (DAW) with a powerful pattern-based workflow
