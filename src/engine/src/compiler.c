@@ -197,7 +197,7 @@ static void _sg_assert_failed(va_list args, char* msg){
 }
 
 void sg_assert(int cond, char* msg, ...){
-    if(!cond){
+    if(unlikely(!cond)){
         va_list args;
         va_start(args, msg);
         _sg_assert_failed(args, msg);
@@ -205,7 +205,7 @@ void sg_assert(int cond, char* msg, ...){
 }
 
 void sg_assert_ptr(void* cond, char* msg, ...){
-    if(!cond){
+    if(unlikely(!cond)){
         va_list args;
         va_start(args, msg);
         _sg_assert_failed(args, msg);
