@@ -347,6 +347,14 @@ class SgMainWindow(QMainWindow):
             _("Follow us on Twitter..."),
         )
         self.twitter_action.triggered.connect(self.on_twitter)
+        self.sfzinstruments_action = self.menu_help.addAction(
+            _("Download SFZ instruments for Sampler1"),
+        )
+        self.sfzinstruments_action.triggered.connect(self.on_sfzinstruments)
+        self.samplepack_action = self.menu_help.addAction(
+            _("Download the official Stargate DAW sample pack"),
+        )
+        self.samplepack_action.triggered.connect(self.on_samplepack)
 
         self.version_action = self.menu_help.addAction(_("Version Info..."))
         self.version_action.triggered.connect(self.on_version)
@@ -433,6 +441,18 @@ class SgMainWindow(QMainWindow):
             os.getpid(),
         )
         self._copy_to_clipboard(text)
+
+    def on_samplepack(self):
+        f_url = QtCore.QUrl(
+            "https://github.com/stargateaudio/stargate-sample-pack",
+        )
+        QDesktopServices.openUrl(f_url)
+
+    def on_sfzinstruments(self):
+        f_url = QtCore.QUrl(
+            "https://github.com/sfzinstruments",
+        )
+        QDesktopServices.openUrl(f_url)
 
     def on_youtube(self):
         f_url = QtCore.QUrl(
