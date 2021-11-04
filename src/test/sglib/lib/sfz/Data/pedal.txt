@@ -1,0 +1,13 @@
+master_label=pedalAction
+lokey=-1
+hikey=-1
+
+<group> group_label=pedalD
+volume=-20 on_locc64=126 on_hicc64=127 group=1 off_by=2
+<region> region_label=1 lorand=0 hirand=0.5 sample=pedalD1.$EXT
+<region> region_label=2 lorand=0.5 hirand=1 sample=pedalD2.$EXT
+
+<group> group_label=pedalU
+volume=-19 on_locc64=0 on_hicc64=1 group=2
+<region> region_label=1 lorand=0 hirand=0.5 sample=pedalU1.$EXT
+<region> region_label=2 lorand=0.5 hirand=1 sample=pedalU2.$EXT

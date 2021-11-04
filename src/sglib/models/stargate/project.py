@@ -459,7 +459,6 @@ class SgProject(AbstractProject):
         if a_cp:
             self.cp_audio_file_to_cache(f_path)
         by_path = audio_pool.by_path()
-        LOG.info(f"{f_path}, {by_path}")
         if f_path in by_path:
             return by_path[f_path].uid
         else:

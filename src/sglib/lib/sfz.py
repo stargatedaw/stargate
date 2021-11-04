@@ -29,6 +29,63 @@ class sfz_sample:
     def __str__(self):
         return str(self.dict)
 
+def sfz_file_loader(
+    path: str,
+    defines: dict=None,
+) -> list:
+    """ Load an SFZ file by substituting all of the #definee's and recursively
+        inserting all of the #include's
+
+        @return:
+            The individual, sanitized lines of the SFZ and every file that
+            it references
+    """
+    defines = defines if defines else {}
+    result = []
+    with open(path) as f:
+        text = f.read()
+    # Remove multiline comments
+    text = re.sub(r"(\/\*.*\*\/)", ' ', text)
+    text = re.sub(r"(\/\*.*\*\/)", '\n', text, flags=re.S)
+
+    lines = text.split('\n')
+    for line in lines:
+        line = line.strip()
+        if line.startswith('//'):
+            continue
+        if '//' in line:
+            line = line.split('//')[0]
+        # Reverse the list to avoid the corner case of:
+        # #define STRING abc
+        # #define STRING_LONGER xyz
+        for k in sorted(defines, reverse=True):
+            v = defines[k]
+            line = line.replace(k, v)
+
+        if line.startswith("#define"):
+            define = re.match(
+                r'#define\s+(\$.*)\s+(.*)',
+                line,
+            )
+            if not define:
+                LOG.warning(f"Invalid #define '{define}'")
+                continue
+            defines[define.group(1)] = define.group(2)
+        elif line.startswith('#include'):
+            match = re.match(
+                r'#include\s+"(.*)"',
+                line,
+            )
+            _include = os.path.join(
+                os.path.dirname(path),
+                match.group(1),
+            )
+            inc_lines = sfz_file_loader(_include, defines)
+            result.extend(inc_lines)
+        else:
+            result.append(line)
+
+    return result
 
 class sfz_file:
     """ Abstracts an .sfz file into a list of sfz_sample whose dicts
@@ -37,21 +94,18 @@ class sfz_file:
         self.path = str(a_file_path)
         if not os.path.exists(self.path):
             raise sfz_exception("{} does not exist.".format(self.path))
-        f_file_text = read_file_text(self.path)
+        f_file_text = "\n".join(sfz_file_loader(self.path))
+        print(f_file_text)
         # In the wild, people can and often do put tags and opcodes on the same
         # line, move all tags and opcodes to their own line
         f_file_text = f_file_text.replace("<", "\n<")
         f_file_text = f_file_text.replace(">", ">\n")
-        f_file_text = f_file_text.replace("/*", "\n/*")
-        f_file_text = f_file_text.replace("*/", "*/\n")
         f_file_text = f_file_text.replace("\t", " ")
         f_file_text = f_file_text.replace("\r", "")
 
         f_file_text_new = ""
 
         for f_line in f_file_text.split("\n"):
-            if f_line.strip().startswith("//"):
-                continue
             if "=" in f_line:
                 f_line_arr = f_line.split("=")
                 for f_i in range(1, len(f_line_arr)):
@@ -71,26 +125,16 @@ class sfz_file:
         f_current_group = None
         f_current_sequence = None
         f_current_object = None
-
-        f_extended_comment = False
+        control = {}
 
         self.samples = []
         f_samples_list = []
 
-        #None = unsupported, 0 = global, 1 = sequence, 2 = group
+        #None = unsupported, 0 = global, 1 = sequence, 2 = group, 3 = region
         f_current_mode = None
 
         for f_line in f_file_text.split("\n"):
             f_line = f_line.strip()
-
-            if f_line.startswith("/*"):
-                f_extended_comment = True
-                continue
-
-            if f_extended_comment:
-                if "*/" in f_line:
-                    f_extended_comment = False
-                continue
 
             if f_line == "" or f_line.startswith("//"):
                 continue
@@ -112,10 +156,17 @@ class sfz_file:
                     f_current_mode = 3
                     f_current_object = sfz_sample()
                     f_samples_list.append(f_current_object)
+                elif f_line.startswith("<control>"):
+                    f_current_mode = 4
+                    continue
                 else:
                     f_current_mode = None
             else:
                 if f_current_mode is None:
+                    continue
+                if f_current_mode == 4:
+                    f_key, f_value = f_line.split("=", 1)
+                    control[f_key.strip()] = f_value.strip()
                     continue
                 try:
                     f_key, f_value = f_line.split("=")
@@ -125,16 +176,19 @@ class sfz_file:
                         f"Error parsing key/value pair  {f_line}: {ex}",
                     )
                     continue
-                if (
-                    f_key.lower() == "sample"
-                    and
-                    not is_audio_file(f_value.strip())
-                ):
-                    LOG.error(
-                        f"{f_value} not supported, only {AUDIO_FILE_EXTS} "
-                        "supported."
-                    )
-                    continue
+                if f_key.lower() == "sample":
+                    if not is_audio_file(f_value.strip()):
+                        LOG.error(
+                            f"{f_value} not supported, only {AUDIO_FILE_EXTS} "
+                            "supported."
+                        )
+                        continue
+                    if 'default_path' in control:
+                        f_value = os.path.join(
+                            control['default_path'],
+                            f_value,
+                        )
+
                 f_current_object.dict[f_key.lower()] = f_value
                 if f_current_mode == 1:
                     f_current_object.set_from_group(

@@ -1,0 +1,18 @@
+master_label=Notes
+
+<group> #include "Data/vel_01.txt" lovel=1 hivel=26 #include "Data/region.txt"
+<group> #include "Data/vel_02.txt" lovel=27 hivel=34 #include "Data/region.txt"
+<group> #include "Data/vel_03.txt" lovel=35 hivel=36 #include "Data/region.txt"
+<group> #include "Data/vel_04.txt" lovel=37 hivel=43 #include "Data/region.txt"
+<group> #include "Data/vel_05.txt" lovel=44 hivel=46 #include "Data/region.txt"
+<group> #include "Data/vel_06.txt" lovel=47 hivel=50 #include "Data/region.txt"
+<group> #include "Data/vel_07.txt" lovel=51 hivel=56 #include "Data/region.txt"
+<group> #include "Data/vel_08.txt" lovel=57 hivel=64 #include "Data/region.txt"
+<group> #include "Data/vel_09.txt" lovel=65 hivel=72 #include "Data/region.txt"
+<group> #include "Data/vel_10.txt" lovel=73 hivel=80 #include "Data/region.txt"
+<group> #include "Data/vel_11.txt" lovel=81 hivel=88 #include "Data/region.txt"
+<group> #include "Data/vel_12.txt" lovel=89 hivel=96 #include "Data/region.txt"
+<group> #include "Data/vel_13.txt" lovel=97 hivel=104 #include "Data/region.txt"
+<group> #include "Data/vel_14.txt" lovel=105 hivel=112 #include "Data/region.txt"
+<group> #include "Data/vel_15.txt" lovel=113 hivel=120 #include "Data/region.txt"
+<group> #include "Data/vel_16.txt" lovel=121 hivel=127 #include "Data/region.txt"

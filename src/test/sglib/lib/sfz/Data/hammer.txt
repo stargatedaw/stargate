@@ -1,0 +1,97 @@
+master_label=HammerNoise
+group=3
+
+<group>
+group_label=rel
+amp_veltrack=82
+volume=-37
+rt_decay=2
+
+<region> region_label=01 key=21 sample=rel1.$EXT
+<region> region_label=02 key=22 sample=rel2.$EXT
+<region> region_label=03 key=23 sample=rel3.$EXT
+<region> region_label=04 key=24 sample=rel4.$EXT
+<region> region_label=05 key=25 sample=rel5.$EXT
+<region> region_label=06 key=26 sample=rel6.$EXT
+<region> region_label=07 key=27 sample=rel7.$EXT
+<region> region_label=08 key=28 sample=rel8.$EXT
+<region> region_label=09 key=29 sample=rel9.$EXT
+<region> region_label=10 key=30 sample=rel10.$EXT
+<region> region_label=11 key=31 sample=rel11.$EXT
+<region> region_label=12 key=32 sample=rel12.$EXT
+<region> region_label=13 key=33 sample=rel13.$EXT
+<region> region_label=14 key=34 sample=rel14.$EXT
+<region> region_label=15 key=35 sample=rel15.$EXT
+<region> region_label=16 key=36 sample=rel16.$EXT
+<region> region_label=17 key=37 sample=rel17.$EXT
+<region> region_label=18 key=38 sample=rel18.$EXT
+<region> region_label=19 key=39 sample=rel19.$EXT
+<region> region_label=20 key=40 sample=rel20.$EXT
+<region> region_label=21 key=41 sample=rel21.$EXT
+<region> region_label=22 key=42 sample=rel22.$EXT
+<region> region_label=23 key=43 sample=rel23.$EXT
+<region> region_label=24 key=44 sample=rel24.$EXT
+<region> region_label=25 key=45 sample=rel25.$EXT
+<region> region_label=26 key=46 sample=rel26.$EXT
+<region> region_label=27 key=47 sample=rel27.$EXT
+<region> region_label=28 key=48 sample=rel28.$EXT
+<region> region_label=29 key=49 sample=rel29.$EXT
+<region> region_label=30 key=50 sample=rel30.$EXT
+<region> region_label=31 key=51 sample=rel31.$EXT
+<region> region_label=32 key=52 sample=rel32.$EXT
+<region> region_label=33 key=53 sample=rel33.$EXT
+<region> region_label=34 key=54 sample=rel34.$EXT
+<region> region_label=35 key=55 sample=rel35.$EXT
+<region> region_label=36 key=56 sample=rel36.$EXT
+<region> region_label=37 key=57 sample=rel37.$EXT
+<region> region_label=38 key=58 sample=rel38.$EXT
+<region> region_label=39 key=59 sample=rel39.$EXT
+<region> region_label=40 key=60 sample=rel40.$EXT
+<region> region_label=41 key=61 sample=rel41.$EXT
+<region> region_label=42 key=62 sample=rel42.$EXT
+<region> region_label=43 key=63 sample=rel43.$EXT
+<region> region_label=44 key=64 sample=rel44.$EXT
+<region> region_label=45 key=65 sample=rel45.$EXT
+<region> region_label=46 key=66 sample=rel46.$EXT
+<region> region_label=47 key=67 sample=rel47.$EXT
+<region> region_label=48 key=68 sample=rel48.$EXT
+<region> region_label=49 key=69 sample=rel49.$EXT
+<region> region_label=50 key=70 sample=rel50.$EXT
+<region> region_label=51 key=71 sample=rel51.$EXT
+<region> region_label=52 key=72 sample=rel52.$EXT
+<region> region_label=53 key=73 sample=rel53.$EXT
+<region> region_label=54 key=74 sample=rel54.$EXT
+<region> region_label=55 key=75 sample=rel55.$EXT
+<region> region_label=56 key=76 sample=rel56.$EXT
+<region> region_label=57 key=77 sample=rel57.$EXT
+<region> region_label=58 key=78 sample=rel58.$EXT
+<region> region_label=59 key=79 sample=rel59.$EXT
+<region> region_label=60 key=80 sample=rel60.$EXT
+<region> region_label=61 key=81 sample=rel61.$EXT
+<region> region_label=62 key=82 sample=rel62.$EXT
+<region> region_label=63 key=83 sample=rel63.$EXT
+<region> region_label=64 key=84 sample=rel64.$EXT
+<region> region_label=65 key=85 sample=rel65.$EXT
+<region> region_label=66 key=86 sample=rel66.$EXT
+<region> region_label=67 key=87 sample=rel67.$EXT
+<region> region_label=68 key=88 sample=rel68.$EXT
+<region> region_label=69 key=89 sample=rel69.$EXT
+<region> region_label=70 key=90 sample=rel70.$EXT
+<region> region_label=71 key=91 sample=rel71.$EXT
+<region> region_label=72 key=92 sample=rel72.$EXT
+<region> region_label=73 key=93 sample=rel73.$EXT
+<region> region_label=74 key=94 sample=rel74.$EXT
+<region> region_label=75 key=95 sample=rel75.$EXT
+<region> region_label=76 key=96 sample=rel76.$EXT
+<region> region_label=77 key=97 sample=rel77.$EXT
+<region> region_label=78 key=98 sample=rel78.$EXT
+<region> region_label=79 key=99 sample=rel79.$EXT
+<region> region_label=80 key=100 sample=rel80.$EXT
+<region> region_label=81 key=101 sample=rel81.$EXT
+<region> region_label=82 key=102 sample=rel82.$EXT
+<region> region_label=83 key=103 sample=rel83.$EXT
+<region> region_label=84 key=104 sample=rel84.$EXT
+<region> region_label=85 key=105 sample=rel85.$EXT
+<region> region_label=86 key=106 sample=rel86.$EXT
+<region> region_label=87 key=107 sample=rel87.$EXT
+<region> region_label=88 key=108 sample=rel88.$EXT

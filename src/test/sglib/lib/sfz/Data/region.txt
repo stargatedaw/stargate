@@ -1,0 +1,35 @@
+group_label=$VEL
+
+//Notes
+<region> region_label=01 tune=$TUNE01 offset_oncc$OFFSET=$OFF01 lokey=21 hikey=22 pitch_keycenter=21 sample=A0$VEL.$EXT
+<region> region_label=02 tune=$TUNE02 offset_oncc$OFFSET=$OFF02 lokey=23 hikey=25 pitch_keycenter=24 sample=C1$VEL.$EXT
+<region> region_label=03 tune=$TUNE03 offset_oncc$OFFSET=$OFF03 lokey=26 hikey=28 pitch_keycenter=27 sample=D#1$VEL.$EXT
+<region> region_label=04 tune=$TUNE04 offset_oncc$OFFSET=$OFF04 lokey=29 hikey=31 pitch_keycenter=30 sample=F#1$VEL.$EXT
+<region> region_label=05 tune=$TUNE05 offset_oncc$OFFSET=$OFF05 lokey=32 hikey=34 pitch_keycenter=33 sample=A1$VEL.$EXT
+<region> region_label=06 tune=$TUNE06 offset_oncc$OFFSET=$OFF06 lokey=35 hikey=37 pitch_keycenter=36 sample=C2$VEL.$EXT
+<region> region_label=07 tune=$TUNE07 offset_oncc$OFFSET=$OFF07 lokey=38 hikey=40 pitch_keycenter=39 sample=D#2$VEL.$EXT
+<region> region_label=08 tune=$TUNE08 offset_oncc$OFFSET=$OFF08 lokey=41 hikey=43 pitch_keycenter=42 sample=F#2$VEL.$EXT
+<region> region_label=09 tune=$TUNE09 offset_oncc$OFFSET=$OFF09 lokey=44 hikey=46 pitch_keycenter=45 sample=A2$VEL.$EXT
+<region> region_label=10 tune=$TUNE10 offset_oncc$OFFSET=$OFF10 lokey=47 hikey=49 pitch_keycenter=48 sample=C3$VEL.$EXT
+<region> region_label=11 tune=$TUNE11 offset_oncc$OFFSET=$OFF11 lokey=50 hikey=52 pitch_keycenter=51 sample=D#3$VEL.$EXT
+<region> region_label=12 tune=$TUNE12 offset_oncc$OFFSET=$OFF12 lokey=53 hikey=55 pitch_keycenter=54 sample=F#3$VEL.$EXT
+<region> region_label=13 tune=$TUNE13 offset_oncc$OFFSET=$OFF13 lokey=56 hikey=58 pitch_keycenter=57 sample=A3$VEL.$EXT
+<region> region_label=14 tune=$TUNE14 offset_oncc$OFFSET=$OFF14 lokey=59 hikey=61 pitch_keycenter=60 sample=C4$VEL.$EXT
+<region> region_label=15 tune=$TUNE15 offset_oncc$OFFSET=$OFF15 lokey=62 hikey=64 pitch_keycenter=63 sample=D#4$VEL.$EXT
+<region> region_label=16 tune=$TUNE16 offset_oncc$OFFSET=$OFF16 lokey=65 hikey=67 pitch_keycenter=66 sample=F#4$VEL.$EXT
+<region> region_label=17 tune=$TUNE17 offset_oncc$OFFSET=$OFF17 lokey=68 hikey=70 pitch_keycenter=69 sample=A4$VEL.$EXT
+<region> region_label=18 tune=$TUNE18 offset_oncc$OFFSET=$OFF18 lokey=71 hikey=73 pitch_keycenter=72 sample=C5$VEL.$EXT
+<region> region_label=19 tune=$TUNE19 offset_oncc$OFFSET=$OFF19 lokey=74 hikey=76 pitch_keycenter=75 sample=D#5$VEL.$EXT
+<region> region_label=20 tune=$TUNE20 offset_oncc$OFFSET=$OFF20 lokey=77 hikey=79 pitch_keycenter=78 sample=F#5$VEL.$EXT
+<region> region_label=21 tune=$TUNE21 offset_oncc$OFFSET=$OFF21 lokey=80 hikey=82 pitch_keycenter=81 sample=A5$VEL.$EXT
+<region> region_label=22 tune=$TUNE22 offset_oncc$OFFSET=$OFF22 lokey=83 hikey=85 pitch_keycenter=84 sample=C6$VEL.$EXT
+<region> region_label=23 tune=$TUNE23 offset_oncc$OFFSET=$OFF23 lokey=86 hikey=88 pitch_keycenter=87 sample=D#6$VEL.$EXT
+
+//Notes without dampers
+<region> region_label=24 tune=$TUNE24 offset_oncc$OFFSET=$OFF24 ampeg_release=3 lokey=89 hikey=91 pitch_keycenter=90 sample=F#6$VEL.$EXT
+<region> region_label=25 tune=$TUNE25 offset_oncc$OFFSET=$OFF25 ampeg_release=3 lokey=92 hikey=94 pitch_keycenter=93 sample=A6$VEL.$EXT
+<region> region_label=26 tune=$TUNE26 offset_oncc$OFFSET=$OFF26 ampeg_release=4 lokey=95 hikey=97 pitch_keycenter=96 sample=C7$VEL.$EXT
+<region> region_label=27 tune=$TUNE27 offset_oncc$OFFSET=$OFF27 ampeg_release=4 lokey=98 hikey=100 pitch_keycenter=99 sample=D#7$VEL.$EXT
+<region> region_label=28 tune=$TUNE28 offset_oncc$OFFSET=$OFF28 ampeg_release=4 lokey=101 hikey=103 pitch_keycenter=102 sample=F#7$VEL.$EXT
+<region> region_label=29 tune=$TUNE29 offset_oncc$OFFSET=$OFF29 ampeg_release=4 lokey=104 hikey=106 pitch_keycenter=105 sample=A7$VEL.$EXT
+<region> region_label=30 tune=$TUNE30 offset_oncc$OFFSET=$OFF30 ampeg_release=4 lokey=107 hikey=108 pitch_keycenter=108 sample=C8$VEL.$EXT

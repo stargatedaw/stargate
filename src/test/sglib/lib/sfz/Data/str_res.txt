@@ -1,0 +1,88 @@
+master_label=Release string resonances
+group=4
+
+//========================
+<group> group_label=harmL volume=-4 amp_veltrack=94 rt_decay=6 lovel=45
+<region> region_label=01 lokey=21 hikey=22 pitch_keycenter=21 sample=harmLA0.$EXT
+<region> region_label=02 lokey=23 hikey=25 pitch_keycenter=24 sample=harmLC1.$EXT
+<region> region_label=03 lokey=26 hikey=28 pitch_keycenter=27 sample=harmLD#1.$EXT
+//--------------------------------------
+<group> group_label=harmL volume=-4 amp_veltrack=94 rt_decay=7 lovel=45
+<region> region_label=04 lokey=29 hikey=31 pitch_keycenter=30 sample=harmLF#1.$EXT
+<region> region_label=05 lokey=32 hikey=34 pitch_keycenter=33 sample=harmLA1.$EXT
+<region> region_label=06 lokey=35 hikey=37 pitch_keycenter=36 sample=harmLC2.$EXT
+//--------------------------------------
+<group> group_label=harmL volume=-4 amp_veltrack=90 rt_decay=8  lovel=45
+<region> region_label=07 lokey=38 hikey=40 pitch_keycenter=39 sample=harmLD#2.$EXT
+<region> region_label=08 lokey=41 hikey=43 pitch_keycenter=42 sample=harmLF#2.$EXT
+<region> region_label=09 lokey=44 hikey=46 pitch_keycenter=45 sample=harmLA2.$EXT
+<region> region_label=10 lokey=47 hikey=49 pitch_keycenter=48 sample=harmLC3.$EXT
+//--------------------------------------
+<group> group_label=harmL volume=-4 amp_veltrack=90 rt_decay=9 lovel=45
+<region> region_label=11 lokey=50 hikey=52 pitch_keycenter=51 sample=harmLD#3.$EXT
+<region> region_label=12 lokey=53 hikey=55 pitch_keycenter=54 sample=harmLF#3.$EXT
+<region> region_label=13 lokey=56 hikey=58 pitch_keycenter=57 sample=harmLA3.$EXT
+<region> region_label=14 lokey=59 hikey=61 pitch_keycenter=60 sample=harmLC4.$EXT
+<region> region_label=15 lokey=62 hikey=64 pitch_keycenter=63 sample=harmLD#4.$EXT
+<region> region_label=16 lokey=65 hikey=67 pitch_keycenter=66 sample=harmLF#4.$EXT
+<region> region_label=17 lokey=68 hikey=70 pitch_keycenter=69 sample=harmLA4.$EXT
+<region> region_label=18 lokey=71 hikey=73 pitch_keycenter=72 sample=harmLC5.$EXT
+<region> region_label=19 lokey=74 hikey=76 pitch_keycenter=75 sample=harmLD#5.$EXT
+<region> region_label=20 lokey=77 hikey=79 pitch_keycenter=78 sample=harmLF#5.$EXT
+<region> region_label=21 lokey=80 hikey=82 pitch_keycenter=81 sample=harmLA5.$EXT
+<region> region_label=22 lokey=83 hikey=85 pitch_keycenter=84 sample=harmLC6.$EXT
+<region> region_label=23 lokey=86 hikey=88 pitch_keycenter=87 sample=harmLD#6.$EXT
+
+//========================
+<group> group_label=harmS amp_veltrack=95 rt_decay=7 hivel=44
+<region> region_label=01 lokey=21 hikey=22 pitch_keycenter=21 sample=harmSA0.$EXT
+<region> region_label=02 lokey=23 hikey=25 pitch_keycenter=24 sample=harmSC1.$EXT
+<region> region_label=03 lokey=26 hikey=28 pitch_keycenter=27 sample=harmSD#1.$EXT
+<region> region_label=04 lokey=29 hikey=31 pitch_keycenter=30 sample=harmSF#1.$EXT
+<region> region_label=05 lokey=32 hikey=34 pitch_keycenter=33 sample=harmSA1.$EXT
+<region> region_label=06 lokey=35 hikey=37 pitch_keycenter=36 sample=harmSC2.$EXT
+<region> region_label=07 lokey=38 hikey=40 pitch_keycenter=39 sample=harmSD#2.$EXT
+<region> region_label=08 lokey=41 hikey=43 pitch_keycenter=42 sample=harmSF#2.$EXT
+//--------------------------------------
+<group> group_label=harmS amp_veltrack=90 rt_decay=7 hivel=44
+<region> region_label=09 lokey=44 hikey=46 pitch_keycenter=45 sample=harmSA2.$EXT
+<region> region_label=10 lokey=47 hikey=49 pitch_keycenter=48 sample=harmSC3.$EXT
+<region> region_label=11 lokey=50 hikey=52 pitch_keycenter=51 sample=harmSD#3.$EXT
+<region> region_label=12 lokey=53 hikey=55 pitch_keycenter=54 sample=harmSF#3.$EXT
+<region> region_label=13 lokey=56 hikey=58 pitch_keycenter=57 sample=harmSA3.$EXT
+<region> region_label=14 lokey=59 hikey=61 pitch_keycenter=60 sample=harmSC4.$EXT
+<region> region_label=15 lokey=62 hikey=64 pitch_keycenter=63 sample=harmSD#4.$EXT
+<region> region_label=16 lokey=65 hikey=67 pitch_keycenter=66 sample=harmSF#4.$EXT
+<region> region_label=17 lokey=68 hikey=70 pitch_keycenter=69 sample=harmSA4.$EXT
+<region> region_label=18 lokey=71 hikey=73 pitch_keycenter=72 sample=harmSC5.$EXT
+<region> region_label=19 lokey=74 hikey=76 pitch_keycenter=75 sample=harmSD#5.$EXT
+<region> region_label=20 lokey=77 hikey=79 pitch_keycenter=78 sample=harmSF#5.$EXT
+<region> region_label=21 lokey=80 hikey=82 pitch_keycenter=81 sample=harmSA5.$EXT
+<region> region_label=22 lokey=83 hikey=85 pitch_keycenter=84 sample=harmSC6.$EXT
+<region> region_label=23 lokey=86 hikey=88 pitch_keycenter=87 sample=harmSD#6.$EXT
+
+//========================
+<group> group_label=harmV3 amp_veltrack=96 rt_decay=2 group=5
+<region> region_label=01 lokey=21 hikey=22 pitch_keycenter=21 sample=harmV3A0.$EXT
+<region> region_label=02 lokey=23 hikey=25 pitch_keycenter=24 sample=harmV3C1.$EXT
+<region> region_label=03 lokey=26 hikey=28 pitch_keycenter=27 sample=harmV3D#1.$EXT
+<region> region_label=04 lokey=29 hikey=31 pitch_keycenter=30 sample=harmV3F#1.$EXT
+<region> region_label=05 lokey=32 hikey=34 pitch_keycenter=33 sample=harmV3A1.$EXT
+<region> region_label=06 lokey=35 hikey=37 pitch_keycenter=36 sample=harmV3C2.$EXT
+<region> region_label=07 lokey=38 hikey=40 pitch_keycenter=39 sample=harmV3D#2.$EXT
+<region> region_label=08 lokey=41 hikey=43 pitch_keycenter=42 sample=harmV3F#2.$EXT
+<region> region_label=09 lokey=44 hikey=46 pitch_keycenter=45 sample=harmV3A2.$EXT
+<region> region_label=10 lokey=47 hikey=49 pitch_keycenter=48 sample=harmV3C3.$EXT
+<region> region_label=11 lokey=50 hikey=52 pitch_keycenter=51 sample=harmV3D#3.$EXT
+<region> region_label=12 lokey=53 hikey=55 pitch_keycenter=54 sample=harmV3F#3.$EXT
+<region> region_label=13 lokey=56 hikey=58 pitch_keycenter=57 sample=harmV3A3.$EXT
+<region> region_label=14 lokey=59 hikey=61 pitch_keycenter=60 sample=harmV3C4.$EXT
+<region> region_label=15 lokey=62 hikey=64 pitch_keycenter=63 sample=harmV3D#4.$EXT
+<region> region_label=16 lokey=65 hikey=67 pitch_keycenter=66 sample=harmV3F#4.$EXT
+<region> region_label=17 lokey=68 hikey=70 pitch_keycenter=69 sample=harmV3A4.$EXT
+<region> region_label=18 lokey=71 hikey=73 pitch_keycenter=72 sample=harmV3C5.$EXT
+<region> region_label=19 lokey=74 hikey=76 pitch_keycenter=75 sample=harmV3D#5.$EXT
+<region> region_label=20 lokey=77 hikey=79 pitch_keycenter=78 sample=harmV3F#5.$EXT
+<region> region_label=21 lokey=80 hikey=82 pitch_keycenter=81 sample=harmV3A5.$EXT
+<region> region_label=22 lokey=83 hikey=85 pitch_keycenter=84 sample=harmV3C6.$EXT
+<region> region_label=23 lokey=86 hikey=88 pitch_keycenter=87 sample=harmV3D#6.$EXT

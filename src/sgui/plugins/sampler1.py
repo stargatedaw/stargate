@@ -2586,10 +2586,15 @@ class sampler1_plugin_ui(AbstractPluginUI):
                     sfz.sfz_file(f_selected_path)
                     f_file_lineedit.setText(f_selected_path)
                 except Exception as ex:
+                    LOG.exception(ex)
                     QMessageBox.warning(
-                        self.widget, _("Error"),
+                        self.widget,
+                        _("Error"),
                         _("Error importing {}\n{}").format(
-                        f_selected_path, ex))
+                            f_selected_path,
+                            ex,
+                        ),
+                    )
                     return
 
         def on_ok(a_val=None):
@@ -2662,10 +2667,14 @@ class sampler1_plugin_ui(AbstractPluginUI):
                     return
                 if "sample" in f_sample.dict:
                     if os.path.sep == '/':
-                        f_sample_file = f_sample.dict[
-                            "sample"].replace("\\", "/")
+                        f_sample_file = f_sample.dict["sample"].replace(
+                            "\\",
+                            "/",
+                        )
                         f_new_file_path = os.path.join(
-                            f_sfz_dir, f_sample_file)
+                            f_sfz_dir,
+                            f_sample_file,
+                        )
                         f_new_file_path = f_new_file_path.replace("//", "/")
                     elif os.path.sep == '\\':
                         f_sample_file = f_sample.dict[
@@ -2676,9 +2685,16 @@ class sampler1_plugin_ui(AbstractPluginUI):
                     else:
                         assert False, "Unknown os.path.sep {}".format(
                             os.path.sep)
-                    f_new_file_path = util.case_insensitive_path(
-                        f_new_file_path)
-
+                    try:
+                        f_new_file_path = util.case_insensitive_path(
+                            f_new_file_path,
+                        )
+                    except Exception as ex:
+                        LOG.exception(ex)
+                        LOG.warning(
+                            f"{f_new_file_path} is missing, cannot load"
+                        )
+                        continue
                     yield f_new_file_path
 
                     f_item = QTableWidgetItem()
@@ -2695,7 +2711,8 @@ class sampler1_plugin_ui(AbstractPluginUI):
                         f_index, f_path_sections[-1])
 
                     f_graph = self.sg_project.get_sample_graph_by_name(
-                        f_new_file_path)
+                        f_new_file_path,
+                    )
                     f_frame_count = float(f_graph.frame_count)
 
                     if "key" in f_sample.dict:
@@ -2781,8 +2798,12 @@ class sampler1_plugin_ui(AbstractPluginUI):
                         self.sample_vols[f_index].control_value_changed(f_val)
 
         except Exception as ex:
-            QMessageBox.warning(self.widget, _("Error"),
-            _("Error parsing {}\n{}").format(a_sfz_path, ex))
+            LOG.exception(ex)
+            QMessageBox.warning(
+                self.widget,
+                _("Error"),
+                _("Error parsing {}\n{}").format(a_sfz_path, ex),
+            )
 
         self.generate_files_string()
         self.configure_plugin("load", self.files_string)
