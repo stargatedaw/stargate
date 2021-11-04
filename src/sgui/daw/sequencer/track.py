@@ -382,7 +382,7 @@ class TrackPanel:
         self.tracks_layout.addItem(
             QSpacerItem(
                 0,
-                int(_shared.SEQUENCE_EDITOR_HEADER_HEIGHT + 2.0),
+                int(_shared.SEQUENCE_EDITOR_HEADER_HEIGHT),
                 vPolicy=QSizePolicy.Policy.MinimumExpanding,
             ),
         )
@@ -407,12 +407,12 @@ class TrackPanel:
         self.tracks_widget.setUpdatesEnabled(False)
         self.tracks_widget.setFixedSize(
             QtCore.QSize(
-                _shared.SEQUENCE_TRACK_WIDTH,
-                (
+                int(_shared.SEQUENCE_TRACK_WIDTH),
+                int(
                     shared.SEQUENCE_EDITOR_TRACK_HEIGHT
                     *
                     _shared.SEQUENCE_EDITOR_TRACK_COUNT
-                ) + _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
+                ) + int(_shared.SEQUENCE_EDITOR_HEADER_HEIGHT)
             ),
         )
         for f_track in self.tracks.values():
