@@ -713,11 +713,13 @@ class hardware_dialog:
         def on_test():
             config_path = util.DEVICE_CONFIG_PATH + '.test'
             create_config(config_path)
-            proc = run_process([
+            cmd = [
                 util.BIN_PATH,
                 "soundcheck",
                 config_path,
-            ])
+            ]
+            cmd = util.has_pasuspender(cmd)
+            proc = run_process(cmd)
             for i in range(5):
                 time.sleep(1)
                 retcode = proc.poll()

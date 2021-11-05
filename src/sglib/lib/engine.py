@@ -99,19 +99,9 @@ def open_engine(a_project_path, fps):
     f_pid = os.getpid()
     LOG.info(f"Starting audio engine with {a_project_path}")
     global ENGINE_SUBPROCESS
-    if (
-        not is_rpi()
-        and
-        util.which("pasuspender") is not None
-        and
-        os.system("pasuspender sleep 0.1") == 0
-    ):
-        f_pa_suspend = True
-    else:
-        f_pa_suspend = False
 
-    if f_pa_suspend:
-        f_cmd = 'pasuspender -- "{}" "{}" "{}" {} {} {}'.format(
+    f_cmd = [
+        str(x) for x in (
             util.BIN_PATH,
             util.INSTALL_PREFIX,
             constants.PROJECT_DIR,
@@ -119,17 +109,8 @@ def open_engine(a_project_path, fps):
             util.USE_HUGEPAGES,
             fps,
         )
-    else:
-        f_cmd = [
-            str(x) for x in (
-                util.BIN_PATH,
-                util.INSTALL_PREFIX,
-                constants.PROJECT_DIR,
-                f_pid,
-                util.USE_HUGEPAGES,
-                fps,
-            )
-        ]
+    ]
+    f_cmd = util.has_pasuspender(f_cmd)
     run_engine(f_cmd)
 
 def reopen_engine():

@@ -1,4 +1,5 @@
 from sglib.constants import *
+from sglib.hardware.rpi import is_rpi
 from sglib.log import LOG
 from sglib.math import clip_max, clip_min
 import ctypes
@@ -158,6 +159,19 @@ if IS_WINDOWS:
     assert PYTHON3
 else:
     PYTHON3 = sys.executable
+
+def has_pasuspender(cmd) -> list:
+    """ Test for the presence of PulseAudio pasuspender and see it if works
+    """
+    if (
+        not is_rpi()
+        and
+        which("pasuspender") is not None
+        and
+        os.system("pasuspender sleep 0.1") == 0
+    ):
+        return ['pasuspender', '--'] + cmd
+    return cmd
 
 
 for _terminal in ("x-terminal-emulator", "gnome-terminal", "konsole"):
