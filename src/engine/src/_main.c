@@ -127,6 +127,8 @@ void print_help(){
         "[huge_pages] [stem] [sequence_uid]\n\n",
         STARGATE_VERSION
     );
+    printf("Sound check (play a short test tone and exit):\n");
+    printf("%s soundcheck [/path/to/device.txt]\n\n", STARGATE_VERSION);
 }
 
 int _main(int argc, char** argv){
