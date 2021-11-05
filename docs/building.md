@@ -40,7 +40,43 @@ PREFIX=/usr/local make install
 # Or, run locally without installing
 scripts/stargate
 ```
-## Windows, Mac
-We will take care of that for you, it is quite complicated and time consuming
-to setup.
+## Windows
+[See this document](../src/windows/README.md)
 
+## Mac
+[See this document](./building_for_mac.md)
+
+# Distro Packagers
+## Dependencies
+### Build time
+- alsa-lib-devel
+- fftw-devel
+- gcc
+- gcc-c++
+- libsndfile-devel
+- portaudio-devel
+- portmidi-devel
+- python3-devel
+
+### Run time
+- alsa-lib
+- fftw
+- libsndfile
+- portaudio
+- portmidi
+- python3
+- python3-jinja2
+- python3-mido
+- python3-mutagen
+- python3-numpy
+- python3-psutil
+- python3-pyyaml
+- python3-pymarshal
+- python3-wavefile
+- (python3-qt6 or python3-qt5)
+- rubberband
+
+#### Recommended
+- lame
+- vorbis-tools
+- ffmpeg

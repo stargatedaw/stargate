@@ -95,9 +95,9 @@ mingw_deps_clean:
 py_vendor:
 	mkdir -p ./sg_py_vendor
 	$(PIP) install \
-		--ignore-installed --target=./sg_py_vendor pymarshal
+		--ignore-installed --target=./sg_py_vendor pymarshal  || true
 	$(PIP) install \
-		--ignore-installed --target=./sg_py_vendor --no-deps wavefile
+		--ignore-installed --target=./sg_py_vendor --no-deps wavefile || true
 
 tag_release:
 	git tag release-$(MINOR)
