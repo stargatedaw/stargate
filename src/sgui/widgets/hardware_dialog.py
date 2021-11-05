@@ -728,11 +728,9 @@ class hardware_dialog:
                 elif retcode == 0:
                     return
                 else:
-                    QMessageBox.warning(
-                        f_window,
-                        _("Error"),
-                        f"soundcheck returned error code {retcode}",
-                    )
+                    msg = f"soundcheck returned error code {retcode}"
+                    LOG.error(msg)
+                    QMessageBox.warning(f_window, _("Error"), msg)
                     return
             proc.kill()
 
