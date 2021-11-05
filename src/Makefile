@@ -6,8 +6,7 @@ MINOR := $(shell jq -r .version.minor meta.json)
 WMAJOR := $(shell /mingw64/bin/jq -r .version.major meta.json)
 WMINOR := $(shell /mingw64/bin/jq -r .version.minor meta.json)
 DESTDIR ?=
-SBSMS_PREFIX = $(PREFIX)/lib/$(MAJOR)/sbsms
-SG_DIR = $(DESTDIR)$(PREFIX)/lib/$(MAJOR)
+SG_DIR = $(DESTDIR)$(PREFIX)/share/$(MAJOR)
 PIP ?= pip3
 BROWSER ?= firefox
 

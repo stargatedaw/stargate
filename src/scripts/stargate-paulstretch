@@ -28,8 +28,7 @@ f_parent_dir = os.path.abspath(os.path.join(f_parent_dir, ".."))
 lib_dir = os.path.abspath(
     os.path.join(
         f_parent_dir,
-        '..',
-        'lib',
+        'share',
         'stargate',
         'stargate',
     ),

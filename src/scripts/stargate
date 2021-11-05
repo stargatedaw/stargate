@@ -141,7 +141,7 @@ def main():
         f_path = os.path.join(
             f_prefix_dir,
             "..",
-            "lib",
+            "share",
             VERSION,
             "stargate",
         )

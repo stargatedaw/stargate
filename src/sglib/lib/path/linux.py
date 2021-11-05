@@ -28,7 +28,7 @@ else:
             *(['..'] * 6),
         )
     )
-    _STARGATE_DIR = os.path.join(INSTALL_PREFIX, 'lib', MAJOR_VERSION)
+    _STARGATE_DIR = os.path.join(INSTALL_PREFIX, 'share', MAJOR_VERSION)
     FONTS_DIR = os.path.join(_STARGATE_DIR, 'fonts')
     SHARE_DIR = os.path.join(INSTALL_PREFIX, 'share')
     PRESETS_DIR = os.path.join(_STARGATE_DIR, 'presets')

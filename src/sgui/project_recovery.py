@@ -24,7 +24,7 @@ f_prefix_dir = os.path.dirname(__file__)
 f_path = os.path.join(
     f_prefix_dir,
     "..",
-    "lib",
+    "share",
     "stargate",
     "stargate",
 )

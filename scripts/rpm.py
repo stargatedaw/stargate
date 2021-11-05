@@ -133,7 +133,7 @@ Requires: \
 Recommends: \
     ffmpeg \
 
-%define __provides_exclude_from ^%{{_usr}}/lib/{0}/.*$
+%define __provides_exclude_from ^%{{_usr}}/share/{0}/.*$
 %global __python %{{__python3}}
 
 %description
@@ -166,7 +166,6 @@ xdg-mime default stargate.desktop text/stargate.project || true
 %attr(755, root, root) %{{_usr}}/bin/{0}-paulstretch
 %attr(755, root, root) %{{_usr}}/bin/{0}-sbsms
 %{{_usr}}/share/
-%{{_usr}}/lib/{0}
 
 %doc
 
