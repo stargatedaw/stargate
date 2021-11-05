@@ -34,6 +34,12 @@ def parse_args():
         default=None,
         help='Use non-default PLAT_FLAGS to compile',
     )
+    parser.add_argument(
+        '--nodeps',
+        action='store_true',
+        dest='nodeps',
+        help="(rpmbuild) Do not verify build dependencies",
+    )
     return parser.parse_args()
 
 args = parse_args()
@@ -187,7 +193,8 @@ if args.install:
     os.system('rm -f {}-*'.format(MAJOR_VERSION))
 
 os.chdir(SPEC_DIR)
-f_rpm_result = os.system("rpmbuild -ba {}".format(global_spec_file))
+nodeps = '--nodeps' if args.nodeps else ''
+f_rpm_result = os.system(f"rpmbuild -ba {nodeps} {global_spec_file}")
 
 if f_rpm_result:
     print("Error:  rpmbuild returned {}".format(f_rpm_result))
