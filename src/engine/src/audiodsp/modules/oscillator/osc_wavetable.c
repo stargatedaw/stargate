@@ -257,8 +257,6 @@ void g_osc_init_osc_wav_unison(
 
 }
 
-/* t_osc_simple_unison * g_osc_get_osc_simple_unison(SGFLT a_sample_rate)
- */
 t_osc_wav_unison * g_osc_get_osc_wav_unison(
     SGFLT a_sample_rate,
     int voice_num

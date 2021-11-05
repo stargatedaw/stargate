@@ -254,17 +254,6 @@ void g_adsr_init(t_adsr * f_result, SGFLT a_sr){
     f_result->wait_count = 0;
 }
 
-/* t_adsr * g_adsr_get_adsr(
- * SGFLT a_sr_recip) // 1.0f/sample_rate (TODO: use sample_rate instead)
- *
- */
-t_adsr * g_adsr_get_adsr(SGFLT a_sr){
-    t_adsr * f_result;
-    hpalloc((void**)&f_result, sizeof(t_adsr));
-    g_adsr_init(f_result, a_sr);
-    return f_result;
-}
-
 void v_adsr_run_delay(t_adsr *self){
     ++self->time_counter;
     if(self->time_counter >= self->delay_count){

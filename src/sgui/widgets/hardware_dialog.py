@@ -14,6 +14,7 @@ GNU General Public License for more details.
 """
 
 from sglib.hardware.rpi import is_rpi
+from sglib.lib.process import run_process
 from sglib.math import clip_value
 import ctypes
 import os
@@ -404,6 +405,11 @@ class hardware_dialog:
 
         f_ok_cancel_layout = QHBoxLayout()
         f_main_layout.addLayout(f_ok_cancel_layout)
+        f_test_button = QPushButton(_("Test"))
+        f_test_button.setToolTip(
+            _("Send a test sound to your soundcard using this configuration"),
+        )
+        f_ok_cancel_layout.addWidget(f_test_button)
         f_ok_button = QPushButton(_("OK"))
         f_ok_cancel_layout.addWidget(f_ok_button)
         f_cancel_button = QPushButton(_("Cancel"))
@@ -589,9 +595,10 @@ class hardware_dialog:
             f_in_count = clip_value(f_in_count, 0, 128)
             f_audio_in_spinbox.setMaximum(f_in_count)
             f_audio_in_spinbox.setValue(
-                    f_in_count if f_in_count < 16 else 16)
+                f_in_count if f_in_count < 16 else 16
+            )
 
-        def on_ok(a_self=None):
+        def create_config(config_path):
             if is_rpi() and self.device_name.startswith('bcm'):
                 f_warn_result = QMessageBox.question(
                     f_window,
@@ -604,23 +611,6 @@ class hardware_dialog:
                         "class-compliant driver.  Do you still want to use"
                         "this device?"
                     ),
-                    (
-                        QMessageBox.StandardButton.Yes
-                        |
-                        QMessageBox.StandardButton.Cancel
-                    ),
-                    QMessageBox.StandardButton.Cancel,
-                )
-                if f_warn_result == QMessageBox.StandardButton.Cancel:
-                    return
-            elif self.device_name == "default":
-                f_warn_result = QMessageBox.question(
-                    f_window,
-                    _("Warning"),
-                    _("You have selected the 'default' audio device, "
-                    "which may not be a valid device.  It is recommended "
-                    "that you explicitly pick the audio device you "
-                    "intend to use.  Use the 'default' device anyway?"),
                     (
                         QMessageBox.StandardButton.Yes
                         |
@@ -674,8 +664,11 @@ class hardware_dialog:
                     ):
                         f_input = portaudio.PaStreamParameters(
                             f_name_to_index[self.subsystem][self.device_name],
-                            f_audio_inputs, portaudio.paInt16,
-                            float(f_buffer_size) / float(f_samplerate), None)
+                            f_audio_inputs,
+                            portaudio.paInt16,
+                            float(f_buffer_size) / float(f_samplerate),
+                            None,
+                        )
                         f_input_ref = ctypes.byref(f_input)
                     else:
                         f_input_ref = 0
@@ -687,8 +680,7 @@ class hardware_dialog:
                         f_input_ref, ctypes.byref(f_output), f_samplerate)
                     if not f_supported:
                         raise Exception()
-                f_file = open(
-                    util.DEVICE_CONFIG_PATH, "w", newline="\n")
+                f_file = open(config_path, "w", newline="\n")
                 f_file.write("hostApi|{}\n".format(self.subsystem))
                 f_file.write("name|{}\n".format(self.device_name))
                 if (
@@ -714,6 +706,37 @@ class hardware_dialog:
 
                 f_file.write("\\")
                 f_file.close()
+            except Exception as ex:
+                LOG.exception(ex)
+                raise ex
+
+        def on_test():
+            config_path = util.DEVICE_CONFIG_PATH + '.test'
+            create_config(config_path)
+            proc = run_process([
+                util.BIN_PATH,
+                "soundcheck",
+                config_path,
+            ])
+            for i in range(5):
+                time.sleep(1)
+                retcode = proc.poll()
+                if retcode is None:
+                    continue
+                elif retcode == 0:
+                    return
+                else:
+                    QMessageBox.warning(
+                        f_window,
+                        _("Error"),
+                        f"soundcheck returned error code {retcode}",
+                    )
+                    return
+            proc.kill()
+
+        def on_ok(a_self=None):
+            try:
+                create_config(util.DEVICE_CONFIG_PATH)
                 self.close_devices()
 
                 self.dialog_result = True
@@ -751,6 +774,7 @@ class hardware_dialog:
                     _("Stargate will restart now"),
                 )
 
+        f_test_button.pressed.connect(on_test)
         f_ok_button.pressed.connect(on_ok)
         f_cancel_button.pressed.connect(on_cancel)
 

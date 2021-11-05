@@ -25,8 +25,7 @@ GNU General Public License for more details.
 
 typedef SGFLT (*fp_get_osc_func_ptr)(t_osc_core*);
 
-typedef struct
-{
+typedef struct {
     SGFLT sr_recip;
     //Set this to the max number of voices, not to exceed OSC_UNISON_MAX_VOICES
     int voice_count;
@@ -43,7 +42,7 @@ typedef struct
     SGFLT adjusted_amp;
     SGFLT current_sample;  //current output sample for the entire oscillator
     int is_resetting;  //For oscillator sync
-}t_osc_simple_unison;
+} t_osc_simple_unison;
 
 
 void v_osc_set_uni_voice_count(t_osc_simple_unison*, int);
@@ -60,11 +59,10 @@ SGFLT f_get_triangle(t_osc_core *);
 SGFLT f_get_osc_off(t_osc_core *);
 void v_osc_set_simple_osc_unison_type(t_osc_simple_unison *, int);
 void v_osc_note_on_sync_phases(t_osc_simple_unison *);
-t_osc_simple_unison * g_osc_get_osc_simple_unison(SGFLT, int);
 void g_osc_init_osc_simple_single(
-        t_osc_simple_unison * f_result,
-        SGFLT a_sample_rate,
-        int voice_num
+    t_osc_simple_unison * f_result,
+    SGFLT a_sample_rate,
+    int voice_num
 );
 void g_osc_simple_unison_init(
     t_osc_simple_unison * f_result,

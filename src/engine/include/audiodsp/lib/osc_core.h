@@ -19,8 +19,7 @@ GNU General Public License for more details.
 #include "compiler.h"
 #include "pitch_core.h"
 
-typedef struct
-{
+typedef struct {
     SGFLT output;   //range:  0 to 1
 }t_osc_core;
 
@@ -32,7 +31,6 @@ typedef struct
  * then resets to (value - 1), for each oscillation
  */
 void v_run_osc(t_osc_core *, SGFLT);
-t_osc_core * g_get_osc_core();
 void v_osc_core_free(t_osc_core *);
 void g_init_osc_core(t_osc_core * f_result);
 int v_run_osc_sync(t_osc_core *a_core, SGFLT a_inc);

@@ -35,8 +35,7 @@ GNU General Public License for more details.
 #define ADSR_STAGE_WAIT 6
 #define ADSR_STAGE_OFF 7
 
-typedef struct st_adsr
-{
+typedef struct st_adsr {
     SGFLT output;
     SGFLT output_db;
     int stage;  //0=a,1=d,2=s,3=r,4=inactive,6=delay,9=hold
@@ -60,7 +59,7 @@ typedef struct st_adsr
 
     SGFLT sr;
     SGFLT sr_recip;
-}t_adsr;
+} t_adsr;
 
 void v_adsr_set_a_time(t_adsr*, SGFLT);
 void v_adsr_set_d_time(t_adsr*, SGFLT);
@@ -82,8 +81,6 @@ void v_adsr_run(t_adsr *);
 void v_adsr_run_db(t_adsr *);
 void v_adsr_kill(t_adsr *);
 void g_adsr_init(t_adsr * f_result, SGFLT a_sr);
-
-t_adsr * g_adsr_get_adsr(SGFLT);
 
 typedef void (*fp_adsr_run)(t_adsr*);
 typedef void (*fp_adsr_set)(t_adsr*, SGFLT, SGFLT, SGFLT, SGFLT);

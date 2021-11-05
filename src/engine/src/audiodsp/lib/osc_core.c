@@ -9,13 +9,6 @@ void g_init_osc_core(t_osc_core * f_result)
     f_result->output = 0.0f;
 }
 
-t_osc_core * g_get_osc_core()
-{
-    t_osc_core * f_result = (t_osc_core*)malloc(sizeof(t_osc_core));
-    f_result->output = 0.0f;
-    return f_result;
-}
-
 void v_osc_core_free(t_osc_core * a_osc)
 {
     free(a_osc);

@@ -14,7 +14,8 @@
 #define RET_CODE_AUDIO_DEVICE_BUSY 1003
 
 int open_audio_device(
-    struct HardwareConfig* config
+    struct HardwareConfig* config,
+    PaStreamCallback callback
 );
 void close_audio_device();
 int portaudioCallback(

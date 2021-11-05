@@ -284,18 +284,6 @@ NO_OPTIMIZATION void g_osc_simple_unison_init(
 
 }
 
-/* t_osc_simple_unison * g_osc_get_osc_simple_unison(SGFLT a_sample_rate)
- */
-t_osc_simple_unison * g_osc_get_osc_simple_unison(
-    SGFLT a_sample_rate,
-    int voice_num
-){
-    t_osc_simple_unison * f_result;
-    lmalloc((void**)&f_result, sizeof(t_osc_simple_unison));
-    g_osc_simple_unison_init(f_result, a_sample_rate, voice_num);
-    return f_result;
-}
-
 void g_osc_init_osc_simple_single(
     t_osc_simple_unison * f_result,
     SGFLT a_sample_rate,

@@ -41,6 +41,7 @@ GNU General Public License for more details.
 #include "hardware/audio.h"
 #include "hardware/config.h"
 #include "hardware/midi.h"
+#include "soundcheck.h"
 #include "stargate.h"
 #include "wave_edit.h"
 #include "worker.h"
@@ -142,6 +143,8 @@ int _main(int argc, char** argv){
         return 1;
     } else if(!strcmp(argv[1], "daw")){
         return daw_render(argc, argv);
+    } else if(!strcmp(argv[1], "soundcheck")){
+        return soundcheck(argc, argv);
     } else if(argc < 6){
         print_help();
         return 9996;
@@ -433,7 +436,7 @@ NO_OPTIMIZATION int init_audio_hardware(
     struct HardwareConfig* hardware_config
 ){
     log_info("Initializing audio hardware");
-    int result = open_audio_device(hardware_config);
+    int result = open_audio_device(hardware_config, portaudioCallback);
     return result;
 }
 

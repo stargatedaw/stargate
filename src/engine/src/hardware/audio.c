@@ -7,7 +7,8 @@
 PaStream* PA_STREAM;
 
 NO_OPTIMIZATION int open_audio_device(
-    struct HardwareConfig* config
+    struct HardwareConfig* config,
+    PaStreamCallback callback
 ){
     int f_i;
     int f_host_api_index = -1;
@@ -151,7 +152,7 @@ NO_OPTIMIZATION int open_audio_device(
             config->sample_rate,
             config->frame_count,
             0, // paClipOff
-            portaudioCallback,
+            callback,
             NULL
         );
 
