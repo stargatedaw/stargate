@@ -17,11 +17,13 @@ typedef struct {
 }t_daw_midi_routing_list;
 
 typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     t_seq_event * events;
     int event_count;
     t_audio_items * audio_items;
     int uid;
-}t_daw_item;
+    char pad2[CACHE_LINE_SIZE];
+} t_daw_item;
 
 typedef struct {
     int item_uid;
@@ -29,18 +31,18 @@ typedef struct {
     double start_offset;
     double length;
     double end;
-}t_daw_item_ref;
+} t_daw_item_ref;
 
 typedef struct {
     int pos;
     int count;
     t_daw_item_ref * refs;
-}t_daw_track_seq;
+} t_daw_track_seq;
 
 typedef struct {
     t_daw_track_seq tracks[DN_TRACK_COUNT];
     t_sg_seq_event_list events;
-}t_daw_sequence;
+} t_daw_sequence;
 
 typedef struct {
     double beat;      // the beat position within the song 0-N
@@ -51,7 +53,7 @@ typedef struct {
     int index;        // the plugin type, not used by the engine
     int plugin;       // plugin uid 0-N
     int break_after;  // Don't smooth to the next point
-}t_daw_atm_point;
+} t_daw_atm_point;
 
 typedef struct {
     int atm_pos;  //position within the automation sequence
@@ -59,29 +61,29 @@ typedef struct {
     int point_count;
     int port;
     SGFLT last_val;
-}t_daw_atm_port;
+} t_daw_atm_port;
 
 typedef struct {
     t_daw_atm_port * ports;
     int port_count;
     char padding[CACHE_LINE_SIZE - sizeof(int) - sizeof(void*)];
-}t_daw_atm_plugin;
+} t_daw_atm_plugin;
 
 typedef struct {
     t_daw_atm_plugin plugins[MAX_PLUGIN_POOL_COUNT];
-}t_daw_atm_sequence;
+} t_daw_atm_sequence;
 
 typedef struct {
     t_daw_sequence * sequences;
     t_daw_atm_sequence * sequences_atm;
-}t_daw_song;
+} t_daw_song;
 
 typedef struct {
     int track_pool_sorted[MAX_WORKER_THREADS][DN_TRACK_COUNT];
     t_pytrack_routing routes[DN_TRACK_COUNT][MAX_ROUTING_COUNT];
     int bus_count[DN_TRACK_COUNT];
     int track_pool_sorted_count;
-}t_daw_routing_graph;
+} t_daw_routing_graph;
 
 typedef struct {
     const char padding1[CACHE_LINE_SIZE];
@@ -107,8 +109,7 @@ typedef struct {
     const char padding2[CACHE_LINE_SIZE];
 } t_daw_thread_storage;
 
-typedef struct
-{
+typedef struct {
     t_daw_thread_storage ts[MAX_WORKER_THREADS];
     t_sg_seq_event_result seq_event_result;
     t_daw_song* en_song;
@@ -132,7 +133,7 @@ typedef struct
     char* sequence_folder;
     char* tracks_folder;
     char* seq_event_file;
-}t_daw;
+} t_daw;
 
 
 void g_daw_song_get(t_daw*, int);
