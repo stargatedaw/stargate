@@ -381,7 +381,7 @@ void generic_file_loader(
 
         sg_assert(
             strcmp(f_2d_array->current_str, ""),
-            f_2d_array->current_str
+            "generic_file_loader: f_2d_array->current_str is empty"
         );
 
         if(f_2d_array->current_str[0] == 'c'){

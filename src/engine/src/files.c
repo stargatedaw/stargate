@@ -19,7 +19,8 @@
         if(!geteuid()){
             uid_t user_id = getuid();
             gid_t group_id = getgid();
-            chown(file_name, user_id, group_id);
+            int result = chown(file_name, user_id, group_id);
+            sg_assert(result == 0, "chown failed with %i", result);
         }
     }
 #endif
