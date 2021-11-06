@@ -714,6 +714,7 @@ class hardware_dialog:
         def on_test():
             config_path = util.DEVICE_CONFIG_PATH + '.test'
             create_config(config_path)
+            util.set_bin_path()
             cmd = [
                 util.BIN_PATH,
                 "soundcheck",
