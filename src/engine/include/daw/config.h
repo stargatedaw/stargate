@@ -1,6 +1,8 @@
 #ifndef UTIL_DAW_CONFIG_H
 #define UTIL_DAW_CONFIG_H
 
+#define DN_CONFIGURE_KEY_NOTE_ON "non"
+#define DN_CONFIGURE_KEY_NOTE_OFF "noff"
 #define DN_CONFIGURE_KEY_CS "cs"
 #define DN_CONFIGURE_KEY_OS "os"
 #define DN_CONFIGURE_KEY_SI "si"

@@ -23,6 +23,7 @@ from sglib.lib import strings as sg_strings
 from sglib.lib.translate import _
 from sglib.log import LOG
 from sgui import shared as glbl_shared
+from sgui.util import KeyboardEventFilter
 from sgui.plugins import (
     channel,
     compressor,
@@ -549,8 +550,22 @@ class PluginRackTab:
         )
         self.track_combobox = QComboBox()
         self.track_combobox.setMinimumWidth(300)
+        self.track_combobox.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.track_combobox.view().installEventFilter(
+            KeyboardEventFilter(),
+        )
         self.menu_layout.addWidget(QLabel(_("Track")))
         self.menu_layout.addWidget(self.track_combobox)
+
+        self.octave_spinbox = QSpinBox()
+        self.octave_spinbox.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.octave_spinbox.setRange(-2, 7)
+        self.octave_spinbox.setValue(2)
+        self.octave_spinbox.setToolTip(_(
+            "Sets the octave for the QWERTY... MIDI keyboard"
+        ))
+        self.menu_layout.addWidget(QLabel(_("Octave")))
+        self.menu_layout.addWidget(self.octave_spinbox)
 
         self.plugins_button = QPushButton(_("Menu"))
         self.plugins_menu = QMenu(self.widget)
@@ -570,10 +585,15 @@ class PluginRackTab:
         self.plugin_racks = {}
         self.last_rack_num = None
 
+    def octave(self):
+        return self.octave_spinbox.value() + 2
+
+    def rack_index(self):
+        return self.track_combobox.currentIndex()
+
     def set_tooltips(self, a_enabled):
         self.widget.setToolTip(
             sg_strings.PluginRack if a_enabled else "")
-
 
     def set_plugin_order(self):
         index = self.track_combobox.currentIndex()

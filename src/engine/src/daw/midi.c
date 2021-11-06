@@ -4,6 +4,7 @@
 #include "daw.h"
 #include "files.h"
 
+struct DawMidiQwertyDevice QWERTY_MIDI = {};
 
 void v_daw_set_midi_devices(){
 #ifndef NO_MIDI
@@ -140,6 +141,30 @@ void v_daw_set_midi_device(
 
 #endif
 
+void daw_process_qwerty_midi(
+    t_daw * self,
+    t_pytrack * a_track,
+    int sample_count,
+    int a_thread_num,
+    t_daw_thread_storage * a_ts
+){
+    if(
+        a_track->track_num == QWERTY_MIDI.rack_num
+        &&
+        QWERTY_MIDI.event_count
+    ){
+        int i;
+        for(i = 0; i < QWERTY_MIDI.event_count; ++i){
+            shds_list_append(
+                a_track->event_list,
+                &QWERTY_MIDI.events[i]
+            );
+        }
+        QWERTY_MIDI.event_count = 0;
+        shds_list_isort(a_track->event_list, seq_event_cmpfunc);
+    }
+}
+
 void v_daw_process_external_midi(
     t_daw * self,
     t_pytrack * a_track,
@@ -210,27 +235,42 @@ void v_daw_process_external_midi(
         } else if(events[f_i2].type == EVENT_NOTEOFF){
             if(f_playback_mode == PLAYBACK_MODE_REC){
                 SGFLT f_beat = a_ts->ml_current_beat +
-                    f_samples_to_beat_count(events[f_i2].tick,
-                        f_tempo, f_sample_rate);
+                    f_samples_to_beat_count(
+                        events[f_i2].tick,
+                        f_tempo,
+                        f_sample_rate
+                    );
 
-                sprintf(f_osc_msg, "off|%f|%i|%i|%ld",
-                    f_beat, a_track->track_num, events[f_i2].note,
-                    a_ts->current_sample + events[f_i2].tick);
+                sprintf(
+                    f_osc_msg,
+                    "off|%f|%i|%i|%ld",
+                    f_beat,
+                    a_track->track_num,
+                    events[f_i2].note,
+                    a_ts->current_sample + events[f_i2].tick
+                );
                 v_queue_osc_message("mrec", f_osc_msg);
             }
 
             sprintf(f_osc_msg, "0|%i", events[f_i2].note);
             v_queue_osc_message("ne", f_osc_msg);
         } else if(events[f_i2].type == EVENT_PITCHBEND){
-            if(f_playback_mode == PLAYBACK_MODE_REC)
-            {
+            if(f_playback_mode == PLAYBACK_MODE_REC){
                 SGFLT f_beat = a_ts->ml_current_beat +
-                    f_samples_to_beat_count(events[f_i2].tick,
-                        f_tempo, f_sample_rate);
+                    f_samples_to_beat_count(
+                        events[f_i2].tick,
+                        f_tempo,
+                        f_sample_rate
+                    );
 
-                sprintf(f_osc_msg, "pb|%f|%i|%f|%ld",
-                    f_beat, a_track->track_num, events[f_i2].value,
-                    a_ts->current_sample + events[f_i2].tick);
+                sprintf(
+                    f_osc_msg,
+                    "pb|%f|%i|%f|%ld",
+                    f_beat,
+                    a_track->track_num,
+                    events[f_i2].value,
+                    a_ts->current_sample + events[f_i2].tick
+                );
                 v_queue_osc_message("mrec", f_osc_msg);
             }
         } else if(events[f_i2].type == EVENT_CONTROLLER){
@@ -250,25 +290,29 @@ void v_daw_process_external_midi(
             v_set_control_from_cc(&events[f_i2], a_track);
 
             if(f_playback_mode == PLAYBACK_MODE_REC){
-                SGFLT f_beat =
-                    a_ts->ml_current_beat +
+                SGFLT f_beat = a_ts->ml_current_beat +
                     f_samples_to_beat_count(
-                        events[f_i2].tick, f_tempo,
-                        f_sample_rate);
+                        events[f_i2].tick,
+                        f_tempo,
+                        f_sample_rate
+                    );
 
-                sprintf(f_osc_msg,
+                sprintf(
+                    f_osc_msg,
                     "cc|%f|%i|%i|%f|%ld",
                     f_beat,
-                    a_track->track_num, controller, events[f_i2].value,
-                    a_ts->current_sample + events[f_i2].tick);
+                    a_track->track_num,
+                    controller,
+                    events[f_i2].value,
+                    a_ts->current_sample + events[f_i2].tick
+                );
                 v_queue_osc_message("mrec", f_osc_msg);
             }
         } else {
             f_valid_type = 0;
         }
 
-        if(f_valid_type)
-        {
+        if(f_valid_type){
             shds_list_append(a_track->event_list, &events[f_i2]);
         }
 

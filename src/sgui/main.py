@@ -142,6 +142,20 @@ def offline_operation(func):
     return wrapper
 
 class SgMainWindow(QMainWindow):
+    MIDI_NOTES = {
+        "q": 0,
+        "w": 1,
+        "e": 2,
+        "r": 3,
+        "t": 4,
+        "y": 5,
+        "u": 6,
+        "i": 7,
+        "o": 8,
+        "p": 9,
+        "[": 10,
+        "]": 11,
+    }
     daw_callback = Signal(str)
     wave_edit_callback = Signal(str)
 
@@ -409,6 +423,32 @@ class SgMainWindow(QMainWindow):
 
         self.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
         self.on_collapse_splitters(a_restore=True)
+
+    def _key_event(self, ev, press):
+        QMainWindow.keyPressEvent(self, ev)
+        if shared.IS_PLAYING or shared.IS_RECORDING:
+            return
+        try:
+            host = shared.TRANSPORT.current_host()
+            key = str(ev.text())
+            if host == HOST_INDEX_DAW and key in self.MIDI_NOTES:
+                rack = daw.shared.PLUGIN_RACK.rack_index()
+                note_offset = daw.shared.PLUGIN_RACK.octave() * 12
+                note = self.MIDI_NOTES[key] + note_offset
+                assert note >= 0 and note <= 120, note
+                LOG.info(f"QWERTY: {rack}:{note}")
+                if press:
+                    constants.DAW_IPC.note_on(rack, note)
+                else:
+                    constants.DAW_IPC.note_off(rack, note)
+        except Exception as ex:
+            LOG.exception(ex)
+
+    def keyPressEvent(self, ev):
+        self._key_event(ev, True)
+
+    def keyReleaseEvent(self, ev):
+        self._key_event(ev, False)
 
     def on_custom_font(self):
         font = get_font()

@@ -193,6 +193,13 @@ void v_daw_process_track(
     } else {
         f_track->item_event_index = 0;
     }
+    daw_process_qwerty_midi(
+        self,
+        f_track,
+        a_sample_count,
+        a_thread_num,
+        a_ts
+    );
 
     v_daw_process_external_midi(
         self,

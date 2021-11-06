@@ -34,6 +34,22 @@ class DawIPC(AbstractIPC):
             a_configure_path,
         )
 
+    def note_on(self, rack_index, note):
+        self.send_configure(
+            "non",
+            "|".join(
+                str(x) for x in (rack_index, note)
+            )
+        )
+
+    def note_off(self, rack_index, note):
+        self.send_configure(
+            "noff",
+            "|".join(
+                str(x) for x in (rack_index, note)
+            )
+        )
+
     def open_song(self, a_project_folder, a_first_open=True):
         self.send_configure(
             "os",  "|".join(

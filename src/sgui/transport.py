@@ -77,6 +77,9 @@ class TransportWidget:
 
         self.controls_to_disable = (self.menu_button, self.host_combobox)
 
+    def current_host(self) -> int:
+        return self.host_combobox.currentIndex()
+
     def enable_controls(self, a_enabled):
         for f_control in self.controls_to_disable:
             f_control.setEnabled(a_enabled)

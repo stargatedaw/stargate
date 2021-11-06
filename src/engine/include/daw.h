@@ -12,13 +12,24 @@
 #define DN_LOOP_MODE_SEQUENCE 1
 #define DAW_MAX_SONG_COUNT 20
 
+// Events stored from the user's QWERTY keyboard
+struct DawMidiQwertyDevice {
+    char pad1[CACHE_LINE_SIZE];
+    int rack_num;
+    t_seq_event events[200];
+    int event_count;
+    char pad2[CACHE_LINE_SIZE];
+};
+
+extern struct DawMidiQwertyDevice QWERTY_MIDI;
+
 typedef struct {
     t_midi_routing routes[DN_TRACK_COUNT];
 }t_daw_midi_routing_list;
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
-    t_seq_event * events;
+    t_seq_event* events;
     int event_count;
     t_audio_items * audio_items;
     int uid;
@@ -156,6 +167,13 @@ void v_daw_set_playback_cursor(t_daw*, double);
 int i_daw_song_index_from_sequence_uid(t_daw*, int);
 void v_daw_update_track_send(t_daw * self, int a_lock);
 void v_daw_process_external_midi(
+    t_daw * data,
+    t_pytrack * a_track,
+    int sample_count,
+    int a_thread_num,
+    t_daw_thread_storage * a_ts
+);
+void daw_process_qwerty_midi(
     t_daw * data,
     t_pytrack * a_track,
     int sample_count,
