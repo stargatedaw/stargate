@@ -3,8 +3,8 @@
 PREFIX ?= /usr
 MAJOR := $(shell jq -r .version.major meta.json || echo stargate)
 MINOR := $(shell jq -r .version.minor meta.json)
-WMAJOR := $(shell /mingw64/bin/jq -r .version.major meta.json)
-WMINOR := $(shell /mingw64/bin/jq -r .version.minor meta.json)
+WMAJOR := $(shell /mingw64/bin/jq -r .version.major meta.json 2>/dev/null)
+WMINOR := $(shell /mingw64/bin/jq -r .version.minor meta.json 2>/dev/null)
 DESTDIR ?=
 SG_DIR = $(DESTDIR)$(PREFIX)/share/$(MAJOR)
 PIP ?= pip3
@@ -13,6 +13,7 @@ BROWSER ?= firefox
 # --------------------------------------------------------------
 
 all: deps py_vendor commit_hash
+	# General purpose build, including dependencies
 	make -C engine
 
 clean: clean_pyc
@@ -25,7 +26,7 @@ clean_pyc:
 	find . -type d -name __pycache__ -exec rm -rf {} \; ; true
 
 commit_hash:
-	git rev-parse --short HEAD > COMMIT || true
+	git rev-parse --short HEAD > COMMIT || echo unknown > COMMIT
 
 deps:
 	cd vendor/sbsms && ( ./configure || ./configure --enable-sse=no ) && make
@@ -35,22 +36,30 @@ deps_clean:
 	make -C vendor/sbsms clean
 	make -C vendor/sbsms/cli clean
 
-install: clean_pyc
+distro: commit_hash
+	# Build Stargate DAW without vendored dependencies, you are expected
+	# to provide and package: mido, pymarshal, SBSMS, python-wavefile
+	make -C engine
+
+install_distro: clean_pyc
 	install -d $(SG_DIR)
 	install -d $(DESTDIR)$(PREFIX)/bin
-	install -m 755 \
-		vendor/sbsms/cli/sbsms \
-		$(DESTDIR)$(PREFIX)/bin/$(MAJOR)-sbsms
 	cp scripts/* $(DESTDIR)$(PREFIX)/bin
 	install -d $(SG_DIR)/stargate
 	install -m 755 engine/$(MAJOR)-engine-dbg $(DESTDIR)$(PREFIX)/bin
 	install -s -m 4755 engine/$(MAJOR)-engine $(DESTDIR)$(PREFIX)/bin
-	cp -r sg_py_vendor sglib sgui $(SG_DIR)/stargate
+	cp -r sglib sgui $(SG_DIR)/stargate
 	cp -r files/themes files/presets $(SG_DIR)
 	cp -r files/themes files/plugin_assets files/fonts $(SG_DIR)
 	cp -r files/share $(DESTDIR)/$(PREFIX)
 	install -m 644 meta.json $(SG_DIR)
 	install -m 644 COMMIT $(SG_DIR)
+
+install: install_distro
+	cp -r sg_py_vendor $(SG_DIR)/stargate
+	install -m 755 \
+		vendor/sbsms/cli/sbsms \
+		$(DESTDIR)$(PREFIX)/bin/$(MAJOR)-sbsms
 
 lines-of-code:
 	./loc.sh
@@ -94,9 +103,9 @@ mingw_deps_clean:
 py_vendor:
 	mkdir -p ./sg_py_vendor
 	$(PIP) install \
-		--ignore-installed --target=./sg_py_vendor pymarshal  || true
+		--ignore-installed --target=./sg_py_vendor pymarshal
 	$(PIP) install \
-		--ignore-installed --target=./sg_py_vendor --no-deps wavefile || true
+		--ignore-installed --target=./sg_py_vendor --no-deps wavefile
 
 tag_release:
 	git tag release-$(MINOR)
