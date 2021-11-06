@@ -74,6 +74,10 @@ else:  # PySide
     from PySide6.QtWidgets import *
     from PySide6.QtSvg import QSvgRenderer
 
+class _QComboBox(QComboBox):
+    def wheelEvent(self, event):
+        event.ignore()
+
 class _QSpinBox(QSpinBox):
     def wheelEvent(self, event):
         event.ignore()
@@ -82,6 +86,7 @@ class _QDoubleSpinBox(QDoubleSpinBox):
     def wheelEvent(self, event):
         event.ignore()
 
+QComboBox = _QComboBox
 QSpinBox = _QSpinBox
 QDoubleSpinBox = _QDoubleSpinBox
 

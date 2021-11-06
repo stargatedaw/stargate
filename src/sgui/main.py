@@ -436,7 +436,6 @@ class SgMainWindow(QMainWindow):
                 note_offset = daw.shared.PLUGIN_RACK.octave() * 12
                 note = self.MIDI_NOTES[key] + note_offset
                 assert note >= 0 and note <= 120, note
-                LOG.info(f"QWERTY: {rack}:{note}")
                 if press:
                     constants.DAW_IPC.note_on(rack, note)
                 else:
