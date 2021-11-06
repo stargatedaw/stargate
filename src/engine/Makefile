@@ -10,8 +10,8 @@ OPT_LVL ?= -O2 -g -ggdb3
 PLAT_FLAGS ?= -mfpmath=sse -mssse3 -mtune=generic -mstackrealign
 LIBEXT ?= so
 
-INC = -Iinclude -I../vendor/libcds/include
-SRC = $(shell find src/ ../vendor/libcds/src -type f -name '*.c')
+INC = -Iinclude -Ilibcds/include
+SRC = $(shell find src/ libcds/src -type f -name '*.c')
 
 CACHE_LINE_SIZE = $(shell getconf LEVEL1_DCACHE_LINESIZE || echo 64)
 
@@ -177,8 +177,8 @@ mingw:
 	###################
 	#### IMPORTANT ####
 	###################
-	# Go run the following command in the 
-	# Visual Studio Developer Command Prompt 
+	# Go run the following command in the
+	# Visual Studio Developer Command Prompt
 	# from the engine directory:
 	# .\cv2pdb\cv2pdb.exe .\stargate-engine.exe
 

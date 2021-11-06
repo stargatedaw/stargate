@@ -1,0 +1,17 @@
+*.gcda
+*.gcno
+*.rpm
+*.swp
+coverage*.html
+gmon.out
+libcds.benchmark
+libcds.debug
+libcds.gprof
+libcds.pahole
+libcds.perf
+libcds.so
+libcds.tests
+pahole.txt
+profile.txt
+vgcore.*
+TODO
