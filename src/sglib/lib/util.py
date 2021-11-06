@@ -103,14 +103,6 @@ PAULSTRETCH_PATH = os.path.join(
     f"{MAJOR_VERSION}-paulstretch",
 )
 
-if IS_WINDOWS:
-    sbsms_util = os.path.join(
-        ENGINE_DIR,
-        "sbsms.exe",
-    )
-else:
-    sbsms_util = f"{MAJOR_VERSION}-sbsms"
-
 AUDIO_FILE_EXTS = [".WAV", ".AIF", ".AIFF", ".FLAC"]
 MIDI_FILE_EXTS = [".MIDI", ".MID"]
 AUDIO_MIDI_FILE_EXTS = AUDIO_FILE_EXTS + MIDI_FILE_EXTS
@@ -155,10 +147,30 @@ def which(a_file):
     return None
 
 if IS_WINDOWS:
+    sbsms_util = os.path.join(
+        ENGINE_DIR,
+        "sbsms.exe",
+    )
     PYTHON3 = which('python.exe')
     assert PYTHON3
 else:
     PYTHON3 = sys.executable
+    # Prefer the vendored SBSMS
+    sbsms_util = os.path.join(
+        os.path.dirname(__file__),
+        '..',
+        '..',
+        'vendor',
+        'sbsms',
+        'cli',
+        'sbsms',
+    )
+    if not os.path.exists(sbsms_util):
+        sbsms_util = which(f"{MAJOR_VERSION}-sbsms")
+        if not sbsms_util:
+            sbsms_util = which("sbsms")
+    LOG.info(f'Using SBSMS: {sbsms_util}')
+    assert sbsms_util
 
 def has_pasuspender(cmd) -> list:
     """ Test for the presence of PulseAudio pasuspender and see it if works
