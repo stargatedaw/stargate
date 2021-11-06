@@ -53,6 +53,7 @@ scripts/stargate
 - fftw-devel
 - gcc
 - gcc-c++
+- jq
 - libsndfile-devel
 - portaudio-devel
 - portmidi-devel
