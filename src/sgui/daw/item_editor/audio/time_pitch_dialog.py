@@ -42,7 +42,7 @@ class TimePitchDialogWidget:
         self.time_pitch_gridlayout.addWidget(QLabel(_("Pitch:")), 0, 0)
         self.pitch_shift = QDoubleSpinBox()
         self.pitch_shift.setRange(-36, 36)
-        self.pitch_shift.setValue(a_audio_item.pitch_shift)
+        self.pitch_shift.setValue(float(a_audio_item.pitch_shift))
         self.pitch_shift.setDecimals(6)
         self.time_pitch_gridlayout.addWidget(self.pitch_shift, 0, 1)
 
@@ -55,7 +55,7 @@ class TimePitchDialogWidget:
             self.pitch_shift_end_checkbox, 0, 2)
         self.pitch_shift_end = QDoubleSpinBox()
         self.pitch_shift_end.setRange(-36, 36)
-        self.pitch_shift_end.setValue(a_audio_item.pitch_shift_end)
+        self.pitch_shift_end.setValue(float(a_audio_item.pitch_shift_end))
         self.pitch_shift_end.setDecimals(6)
         self.time_pitch_gridlayout.addWidget(self.pitch_shift_end, 0, 3)
 
@@ -64,7 +64,7 @@ class TimePitchDialogWidget:
         self.timestretch_amt.setRange(0.1, 200.0)
         self.timestretch_amt.setDecimals(6)
         self.timestretch_amt.setSingleStep(0.1)
-        self.timestretch_amt.setValue(a_audio_item.timestretch_amt)
+        self.timestretch_amt.setValue(float(a_audio_item.timestretch_amt))
         self.time_pitch_gridlayout.addWidget(self.timestretch_amt, 1, 1)
 
         self.crispness_layout = QHBoxLayout()
@@ -84,7 +84,9 @@ class TimePitchDialogWidget:
         self.timestretch_amt_end.setRange(0.2, 4.0)
         self.timestretch_amt_end.setDecimals(6)
         self.timestretch_amt_end.setSingleStep(0.1)
-        self.timestretch_amt_end.setValue(a_audio_item.timestretch_amt_end)
+        self.timestretch_amt_end.setValue(
+            float(a_audio_item.timestretch_amt_end),
+        )
         self.time_pitch_gridlayout.addWidget(self.timestretch_amt_end, 1, 3)
 
         self.timestretch_mode_changed(0)
@@ -111,20 +113,28 @@ class TimePitchDialogWidget:
 
     def timestretch_end_mode_changed(self, a_val=None):
         if not self.timestretch_amt_end_checkbox.isChecked():
-            self.timestretch_amt_end.setValue(self.timestretch_amt.value())
+            self.timestretch_amt_end.setValue(
+                float(self.timestretch_amt.value()),
+            )
 
     def pitch_end_mode_changed(self, a_val=None):
         if not self.pitch_shift_end_checkbox.isChecked():
-            self.pitch_shift_end.setValue(self.pitch_shift.value())
+            self.pitch_shift_end.setValue(
+                float(self.pitch_shift.value()),
+            )
 
     def end_mode_changed(self, a_val=None):
         self.end_mode_checkbox.setChecked(True)
 
     def timestretch_changed(self, a_val=None):
         if not self.pitch_shift_end_checkbox.isChecked():
-            self.pitch_shift_end.setValue(self.pitch_shift.value())
+            self.pitch_shift_end.setValue(
+                float(self.pitch_shift.value()),
+            )
         if not self.timestretch_amt_end_checkbox.isChecked():
-            self.timestretch_amt_end.setValue(self.timestretch_amt.value())
+            self.timestretch_amt_end.setValue(
+                float(self.timestretch_amt.value()),
+            )
 
     def timestretch_mode_changed(self, a_val=None):
         a_val = util.TIMESTRETCH_INDEXES[

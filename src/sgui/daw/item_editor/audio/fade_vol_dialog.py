@@ -27,7 +27,7 @@ class FadeVolDialogWidget:
         self.fadein_vol_layout.addWidget(self.fadein_vol_checkbox)
         self.fadein_vol_spinbox = QSpinBox()
         self.fadein_vol_spinbox.setRange(-50, -6)
-        self.fadein_vol_spinbox.setValue(a_audio_item.fadein_vol)
+        self.fadein_vol_spinbox.setValue(int(a_audio_item.fadein_vol))
         self.fadein_vol_spinbox.valueChanged.connect(self.fadein_vol_changed)
         self.fadein_vol_layout.addWidget(self.fadein_vol_spinbox)
         self.fadein_vol_layout.addItem(
@@ -39,7 +39,7 @@ class FadeVolDialogWidget:
         self.fadein_vol_layout.addWidget(self.fadeout_vol_checkbox)
         self.fadeout_vol_spinbox = QSpinBox()
         self.fadeout_vol_spinbox.setRange(-50, -6)
-        self.fadeout_vol_spinbox.setValue(a_audio_item.fadeout_vol)
+        self.fadeout_vol_spinbox.setValue(int(a_audio_item.fadeout_vol))
         self.fadeout_vol_spinbox.valueChanged.connect(self.fadeout_vol_changed)
         self.fadein_vol_layout.addWidget(self.fadeout_vol_spinbox)
 

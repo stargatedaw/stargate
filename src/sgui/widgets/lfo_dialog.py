@@ -88,8 +88,10 @@ def lfo_dialog(a_update_callback, a_save_callback):
     f_layout.addWidget(f_end_center_cbox, 5, 16)
 
     def start_fade_changed(*args):
-        f_start, f_end = (x.control.value() for x in
-            (f_start_fade_knob, f_end_fade_knob))
+        f_start, f_end = (
+            int(x.control.value())
+            for x in (f_start_fade_knob, f_end_fade_knob)
+        )
         if  f_start >= f_end:
             f_end_fade_knob.control.setValue(f_start + 1)
         else:
@@ -101,8 +103,10 @@ def lfo_dialog(a_update_callback, a_save_callback):
     f_start_fade_knob.add_to_grid_layout(f_layout, 20)
 
     def end_fade_changed(*args):
-        f_start, f_end = (x.control.value() for x in
-            (f_start_fade_knob, f_end_fade_knob))
+        f_start, f_end = (
+            int(x.control.value())
+            for x in (f_start_fade_knob, f_end_fade_knob)
+        )
         if f_end <= f_start:
             f_start_fade_knob.control.setValue(f_end - 1)
         else:

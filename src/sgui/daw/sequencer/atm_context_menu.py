@@ -172,7 +172,9 @@ def transform_atm():
     f_start_beat = shared.SEQUENCER.atm_selected[0].item.beat
     shared.SEQUENCER.set_playback_pos(f_start_beat)
     f_scrollbar = shared.SEQUENCER.horizontalScrollBar()
-    f_scrollbar.setValue(_shared.SEQUENCER_PX_PER_BEAT * f_start_beat)
+    f_scrollbar.setValue(
+        int(_shared.SEQUENCER_PX_PER_BEAT * f_start_beat),
+    )
 
     shared.SEQUENCER.atm_selected_vals = [
         x.item.cc_val
@@ -274,7 +276,9 @@ def lfo_atm():
         )
         return
     f_scrollbar = shared.SEQUENCER.horizontalScrollBar()
-    f_scrollbar.setValue(_shared.SEQUENCER_PX_PER_BEAT * f_start_beat)
+    f_scrollbar.setValue(
+        int(_shared.SEQUENCER_PX_PER_BEAT * f_start_beat),
+    )
     shared.SEQUENCER.set_playback_pos(f_start_beat)
     f_step = 1.0 / 16.0
     f_track, f_beat, f_val = shared.SEQUENCER.current_coord

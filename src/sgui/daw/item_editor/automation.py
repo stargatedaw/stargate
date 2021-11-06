@@ -216,9 +216,9 @@ class AutomationEditor(AbstractItemEditor):
         self.header.setPos(self.axis_size, 0)
         self.scene.addItem(self.header)
         self.y_axis = QGraphicsRectItem(
-            0., 
-            0., 
-            float(self.axis_size), 
+            0.,
+            0.,
+            float(self.axis_size),
             float(self.viewer_height),
         )
         self.y_axis.setPos(0, self.axis_size)
@@ -369,9 +369,9 @@ class AutomationEditor(AbstractItemEditor):
             self.scene.addItem(f_note_item)
 
         self.setSceneRect(
-            0.0, 
-            0.0, 
-            float(self.grid_max_start_time + 20.0), 
+            0.0,
+            0.0,
+            float(self.grid_max_start_time + 20.0),
             float(self.height()),
         )
         self.setUpdatesEnabled(True)
@@ -585,7 +585,7 @@ class AutomationEditorWidget:
         f_value_spinbox.setRange(0.0, 127.0)
         f_value_spinbox.setDecimals(4)
         if a_value is not None:
-            f_value_spinbox.setValue(a_value)
+            f_value_spinbox.setValue(float(a_value))
         f_layout.addWidget(f_value_spinbox, 10, 1)
 
         f_ok = QPushButton(_("Add"))
@@ -633,7 +633,7 @@ class AutomationEditorWidget:
 
         def ipb_changed(a_self=None, a_event=None):
             f_epb_spinbox.setRange(
-                int(f_ipb_spinbox.value() * -1), 
+                int(f_ipb_spinbox.value() * -1),
                 int(f_ipb_spinbox.value()),
             )
 
@@ -672,7 +672,7 @@ class AutomationEditorWidget:
         f_ipb_spinbox.setToolTip(
             _("Set this to the same setting that your instrument plugin uses"))
         f_ipb_spinbox.setRange(2, 36)
-        f_ipb_spinbox.setValue(LAST_IPB_VALUE)
+        f_ipb_spinbox.setValue(int(LAST_IPB_VALUE))
         f_layout.addWidget(f_ipb_spinbox, 10, 1)
         f_ipb_spinbox.valueChanged.connect(ipb_changed)
 

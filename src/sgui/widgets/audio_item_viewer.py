@@ -44,9 +44,9 @@ class audio_marker_widget(QGraphicsRectItem):
         """ a_type:  0 == start, 1 == end, more types eventually... """
         self.audio_item_marker_height = 66.0
         QGraphicsRectItem.__init__(
-            self, 
-            0., 
-            0., 
+            self,
+            0.,
+            0.,
             float(self.audio_item_marker_height),
             float(self.audio_item_marker_height),
         )
@@ -199,9 +199,9 @@ class audio_fade_marker_widget(QGraphicsRectItem):
         """ a_type:  0 == start, 1 == end, more types eventually... """
         self.audio_item_marker_height = 66.0
         QGraphicsRectItem.__init__(
-            self, 
-            0., 
-            0., 
+            self,
+            0.,
+            0.,
             float(self.audio_item_marker_height),
             float(self.audio_item_marker_height),
         )
@@ -467,7 +467,7 @@ class AudioItemViewerWidget(QGraphicsView):
         bpm_spinbox.setDecimals(1)
         bpm_spinbox.setRange(60, 200)
         bpm_spinbox.setSingleStep(0.1)
-        bpm_spinbox.setValue(_shared.TEMPO)
+        bpm_spinbox.setValue(float(_shared.TEMPO))
         f_beat_fracs = [
             "1/16", "1/12", "1/8", "2/12", "3/16",
             "1/4", "2/4", "4/4", "None",
@@ -478,7 +478,7 @@ class AudioItemViewerWidget(QGraphicsView):
         f_beat_frac_combobox.setCurrentIndex(self.last_tempo_combobox_index)
         count_spinbox = QSpinBox()
         count_spinbox.setRange(1, 64)
-        count_spinbox.setValue(self.last_ts_beat)
+        count_spinbox.setValue(int(self.last_ts_beat))
         f_sync_button = QPushButton(_("Sync"))
         f_sync_button.pressed.connect(sync_button_pressed)
         f_cancel_button = QPushButton(_("Cancel"))

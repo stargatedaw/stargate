@@ -329,7 +329,8 @@ class AbstractUiControl:
         f_ratio_spinbox.setRange(f_min, round(f_max))
         f_ratio_spinbox.setDecimals(4)
         f_ratio_spinbox.setValue(
-            pitch_to_ratio(self.get_value()))
+            pitch_to_ratio(self.get_value()),
+        )
         f_layout.addWidget(f_ratio_spinbox, 0, 1)
 
         f_ok_button = QPushButton(_("OK"))
@@ -355,7 +356,7 @@ class AbstractUiControl:
         f_min = self.control.minimum() // 12
         f_max = self.control.maximum() // 12
         f_spinbox.setRange(int(f_min), int(f_max))
-        f_spinbox.setValue(self.get_value() // 12)
+        f_spinbox.setValue(int(self.get_value() // 12))
         f_layout.addWidget(f_spinbox, 0, 1)
         f_ok_button = QPushButton(_("OK"))
         f_ok_button.pressed.connect(ok_button_pressed)
@@ -412,8 +413,10 @@ class AbstractUiControl:
             f_dialog.close()
 
         f_cc_map = self.get_cc_map()
-        f_default_low, f_default_high = (get_real_value(x) for x in
-            f_cc_map[f_cc].ports[self.port_num])
+        f_default_low, f_default_high = (
+            int(get_real_value(x))
+            for x in f_cc_map[f_cc].ports[self.port_num]
+        )
 
         f_dialog = QDialog(self.control)
         f_dialog.setWindowTitle(_("Set Range for CC"))
@@ -618,14 +621,14 @@ class slider_control(AbstractUiControl):
         a_preset_mgr=None
     ):
         AbstractUiControl.__init__(
-            self, 
-            a_label, 
-            a_port_num, 
-            a_rel_callback, 
+            self,
+            a_label,
+            a_port_num,
+            a_rel_callback,
             a_val_callback,
-            a_val_conversion, 
-            a_port_dict, 
-            a_preset_mgr, 
+            a_val_conversion,
+            a_port_dict,
+            a_preset_mgr,
             a_default_val,
         )
         self.control = QSlider(a_orientation)

@@ -47,7 +47,7 @@ class PianoRollEditorWidget:
         self.vzoom_slider.setObjectName("zoom_slider")
         self.vzoom_slider.setMaximumWidth(72)
         self.vzoom_slider.setRange(9, 24)
-        self.vzoom_slider.setValue(shared.PIANO_ROLL_NOTE_HEIGHT)
+        self.vzoom_slider.setValue(int(shared.PIANO_ROLL_NOTE_HEIGHT))
         self.vzoom_slider.valueChanged.connect(self.set_midi_vzoom)
         self.vzoom_slider.sliderReleased.connect(self.save_vzoom)
 

@@ -120,8 +120,8 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         self.length_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
         self.length_handle.setRect(
             QtCore.QRectF(
-                0.0, 
-                0.0, 
+                0.0,
+                0.0,
                 float(shared.AUDIO_ITEM_HANDLE_SIZE),
                 float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
             ),
@@ -139,8 +139,8 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         self.fade_in_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
         self.fade_in_handle.setRect(
             QtCore.QRectF(
-                0.0, 
-                0.0, 
+                0.0,
+                0.0,
                 shared.AUDIO_ITEM_HANDLE_SIZE,
                 shared.AUDIO_ITEM_HANDLE_HEIGHT,
             ),
@@ -148,10 +148,10 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         self.fade_in_handle.mousePressEvent = \
             self.fade_in_handle_mouseClickEvent
         self.fade_in_handle_line = QGraphicsLineItem(
-            0.0, 
-            0.0, 
-            0.0, 
-            0.0, 
+            0.0,
+            0.0,
+            0.0,
+            0.0,
             self,
         )
 
@@ -289,9 +289,9 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         f_fade_in = self.audio_item.fade_in * 0.001
         f_fade_out = self.audio_item.fade_out * 0.001
         self.setRect(
-            0.0, 
-            0.0, 
-            float(f_length), 
+            0.0,
+            0.0,
+            float(f_length),
             float(shared.AUDIO_ITEM_HEIGHT),
         )
         f_fade_in_handle_pos = (f_length * f_fade_in)
@@ -417,9 +417,9 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         if f_end > f_max_x:
             f_end_px = f_max_x - f_pos_x
             self.setRect(
-                0.0, 
-                0.0, 
-                float(f_end_px), 
+                0.0,
+                0.0,
+                float(f_end_px),
                 float(shared.AUDIO_ITEM_HEIGHT),
             )
             self.audio_item.sample_end = \
@@ -659,7 +659,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         )
         f_vol_label = QLabel("0dB")
         f_layout.addWidget(f_vol_label, 1, 1)
-        f_vol_slider.setValue(self.audio_item.vol)
+        f_vol_slider.setValue(int(self.audio_item.vol))
         f_reverse_combobox = QComboBox()
         f_reverse_combobox.addItems(
             [_("Either"), _("Not-Reversed"), _("Reversed")])
@@ -1153,9 +1153,9 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
                 f_x = f_audio_item.quantize(f_x)
                 f_x -= f_audio_item.quantize_offset
                 f_audio_item.setRect(
-                    0.0, 
-                    0.0, 
-                    float(f_x), 
+                    0.0,
+                    0.0,
+                    float(f_x),
                     float(shared.AUDIO_ITEM_HEIGHT),
                 )
                 f_item.sample_end = (

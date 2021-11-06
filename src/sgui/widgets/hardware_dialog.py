@@ -573,7 +573,8 @@ class hardware_dialog:
                 f_in_count = clip_value(f_in_count, 0, 128)
                 f_audio_in_spinbox.setMaximum(f_in_count)
                 f_audio_in_spinbox.setValue(
-                    f_in_count if f_in_count < 16 else 16)
+                    int(f_in_count if f_in_count < 16 else 16),
+                )
 
             f_out_count = f_result_dict[
                 self.subsystem][self.device_name].maxOutputChannels
@@ -595,7 +596,7 @@ class hardware_dialog:
             f_in_count = clip_value(f_in_count, 0, 128)
             f_audio_in_spinbox.setMaximum(f_in_count)
             f_audio_in_spinbox.setValue(
-                f_in_count if f_in_count < 16 else 16
+                int(f_in_count if f_in_count < 16 else 16),
             )
 
         def create_config(config_path):

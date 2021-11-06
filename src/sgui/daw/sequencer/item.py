@@ -128,8 +128,8 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
         self.length_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
         self.length_handle.setRect(
             QtCore.QRectF(
-                0.0, 
-                0.0, 
+                0.0,
+                0.0,
                 float(shared.AUDIO_ITEM_HANDLE_SIZE),
                 float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
             ),
@@ -591,7 +591,7 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
             f_vol_label = QLabel("0.0dB")
             f_vol_labels.append(f_vol_label)
             f_layout.addWidget(f_vol_label, 3, f_i)
-            f_vol_slider.setValue(f_vol * 10.0)
+            f_vol_slider.setValue(int(f_vol * 10.0))
 
         f_ok_cancel_layout = QHBoxLayout()
         f_layout.addLayout(f_ok_cancel_layout, 10, 2)
@@ -848,9 +848,9 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
                 f_x = f_audio_item.quantize(f_x)
                 f_x -= f_audio_item.quantize_offset
                 f_audio_item.setRect(
-                    0.0, 
-                    0.0, 
-                    float(f_x), 
+                    0.0,
+                    0.0,
+                    float(f_x),
                     float(shared.SEQUENCE_EDITOR_TRACK_HEIGHT),
                 )
                 f_item.length_beats = f_x /_shared.SEQUENCER_PX_PER_BEAT

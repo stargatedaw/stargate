@@ -126,8 +126,8 @@ def header_time_modify():
     tsig_den.addItems(["2", "4", "8", "16"])
 
     if marker:
-        tempo.setValue(marker.tempo)
-        tsig_num.setValue(marker.tsig_num)
+        tempo.setValue(int(marker.tempo))
+        tsig_num.setValue(int(marker.tsig_num))
         tsig_den.setCurrentIndex(
             tsig_den.findText(str(marker.tsig_den)))
     else:
@@ -245,11 +245,12 @@ def header_time_range():
     tsig_den.addItems(["2", "4", "8", "16"])
 
     if marker:
-        start_tempo.setValue(marker.tempo)
-        end_tempo.setValue(marker.tempo)
-        tsig_num.setValue(marker.tsig_num)
+        start_tempo.setValue(int(marker.tempo))
+        end_tempo.setValue(int(marker.tempo))
+        tsig_num.setValue(int(marker.tsig_num))
         tsig_den.setCurrentIndex(
-            tsig_den.findText(str(marker.tsig_den)))
+            tsig_den.findText(str(marker.tsig_den)),
+        )
     else:
         start_tempo.setValue(128)
         end_tempo.setValue(128)

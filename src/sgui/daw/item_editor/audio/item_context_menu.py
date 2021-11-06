@@ -248,11 +248,14 @@ def volume_dialog():
     f_hlayout.addWidget(f_db_spinbox)
     f_db_spinbox.setDecimals(1)
     f_db_spinbox.setRange(-24, 24)
-    f_vols = {x.audio_item.vol for x in shared.AUDIO_SEQ.get_selected()}
+    f_vols = {
+        float(x.audio_item.vol)
+        for x in shared.AUDIO_SEQ.get_selected()
+    }
     if len(f_vols) == 1:
         f_db_spinbox.setValue(f_vols.pop())
     else:
-        f_db_spinbox.setValue(0)
+        f_db_spinbox.setValue(0.)
     f_ok_button = QPushButton(_("OK"))
     f_ok_cancel_layout = QHBoxLayout()
     f_layout.addLayout(f_ok_cancel_layout)

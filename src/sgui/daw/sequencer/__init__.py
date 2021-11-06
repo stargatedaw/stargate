@@ -173,7 +173,7 @@ class SequencerWidget:
         self.set_vzoom_size()
         f_widget = shared.MAIN_WINDOW.midi_scroll_area
         f_point = QtCore.QPoint(
-            0, 
+            0,
             int(_shared.SEQUENCE_EDITOR_HEADER_HEIGHT + 2),
         )
         self.size_label.setParent(f_widget)
@@ -188,8 +188,11 @@ class SequencerWidget:
 
         f_scrollbar = shared.MAIN_WINDOW.midi_scroll_area.verticalScrollBar()
         f_scrollbar.setValue(
-            (shared.SEQUENCE_EDITOR_TRACK_HEIGHT / self.old_height_px) *
-            f_scrollbar.value())
+            int(
+                (shared.SEQUENCE_EDITOR_TRACK_HEIGHT / self.old_height_px)
+                * f_scrollbar.value()
+            ),
+        )
         shared.MAIN_WINDOW.vscrollbar_released()  # Quantizes the vertical pos
         f_scrollbar.setSingleStep(shared.SEQUENCE_EDITOR_TRACK_HEIGHT)
         self.size_label.hide()

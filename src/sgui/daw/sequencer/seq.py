@@ -462,7 +462,7 @@ class ItemSequencer(QGraphicsView):
         if _shared.SEQUENCE_EDITOR_MODE == 1:
             self.open_atm_sequence()
             shared.TRACK_PANEL.update_ccs_in_use()
-        f_scrollbar.setValue(f_scrollbar_value)
+        f_scrollbar.setValue(int(f_scrollbar_value))
         self.setUpdatesEnabled(True)
         self.update()
         self.enabled = True
