@@ -28,25 +28,24 @@ typedef struct _PluginPortRangeHint {
 typedef void * PluginHandle;
 
 // MIDI event
-typedef struct
-{
-        int type;               /**< event type */
-        int tick;                /**< tick-time */
-        unsigned int tv_sec;        /**< seconds */
-        unsigned int tv_nsec;        /**< nanoseconds */
-        int channel;                /**< channel number */
-        int note;                /**< note */
-        int velocity;                /**< velocity */
-        int duration;                /**< duration until note-off;
-                                 * only for #EVENT_NOTEON */
-        int param;                /**< control parameter */
-        SGFLT value;
-        SGFLT start;
-        SGFLT length;
-        int port;
+typedef struct {
+    int type;
+    int tick;
+    unsigned int tv_sec;
+    unsigned int tv_nsec;
+    int channel;
+    int note;
+    int velocity;
+    int duration;
+
+    int param;
+    SGFLT value;
+    SGFLT start;
+    SGFLT length;
+    int port;
 } t_seq_event;
 
-typedef struct{
+typedef struct {
     int uid;
     SGFLT* samples[2];
     SGFLT ratio_orig;
@@ -54,11 +53,14 @@ typedef struct{
     int channels;
     int length;
     SGFLT sample_rate;
-    int is_loaded;  //wav's are now loaded dynamically when they are first seen
-    SGFLT host_sr;  //host sample-rate, cached here for easy access
+    // audio files are loaded dynamically when they are first seen
+    // in the project
+    int is_loaded;
+    // host sample-rate, cached here for easy access
+    SGFLT host_sr;
     t_file_fx_controls fx_controls;
     char path[2048];
-}t_audio_pool_item;
+} t_audio_pool_item;
 
 typedef t_audio_pool_item * (*fp_get_audio_pool_item_from_host)(int);
 
@@ -76,8 +78,8 @@ typedef struct _PluginDescriptor {
 
     PluginPortDescriptor * PortDescriptors;
 
-    /* This member indicates an array of range hints for each port (see
-     above). Valid indices vary from 0 to PortCount-1. */
+    // This member indicates an array of range hints for each port (see
+    // above). Valid indices vary from 0 to PortCount-1.
     PluginPortRangeHint * PortRangeHints;
 
     PluginHandle (*instantiate)(
@@ -94,8 +96,7 @@ typedef struct _PluginDescriptor {
         PluginData * DataLocation
     );
 
-    /* Assign the audio buffer at DataLocation to index a_index
-     */
+    // Assign the audio buffer at DataLocation to index a_index
     void (*connect_buffer)(
         PluginHandle Instance,
         int a_index,
@@ -105,10 +106,12 @@ typedef struct _PluginDescriptor {
 
     void (*cleanup)(PluginHandle Instance);
 
-    /* Load the plugin state file at a_file_path
-     */
-    void (*load)(PluginHandle Instance, struct _PluginDescriptor * Descriptor,
-            char * a_file_path);
+    // Load the plugin state file at a_file_path
+    void (*load)(
+        PluginHandle Instance,
+        struct _PluginDescriptor * Descriptor,
+        char * a_file_path
+    );
 
     void (*set_port_value)(PluginHandle Instance, int a_port, SGFLT a_value);
 
@@ -122,8 +125,12 @@ typedef struct _PluginDescriptor {
 
     int API_Version;
 
-    void (*configure)(PluginHandle Instance, char *Key, char *Value,
-        pthread_spinlock_t * a_spinlock);
+    void (*configure)(
+        PluginHandle Instance,
+        char *Key,
+        char *Value,
+        pthread_spinlock_t * a_spinlock
+    );
 
     // Plugins NOT part of a send channel will always call this
     void (*run_replacing)(
@@ -161,36 +168,31 @@ typedef struct _PluginDescriptor {
 
 typedef PluginDescriptor * (*PluginDescriptor_Function)();
 
-typedef struct
-{
+typedef struct {
     int type;
     int tick;
     SGFLT value;
     int port;
-}t_plugin_event_queue_item;
+} t_plugin_event_queue_item;
 
-typedef struct
-{
+typedef struct {
     int count;
     int pos;
     t_plugin_event_queue_item items[200];
-}t_plugin_event_queue;
+} t_plugin_event_queue;
 
-typedef struct
-{
+typedef struct {
     int count;
     int ports[5];
     SGFLT lows[5];
     SGFLT highs[5];
-}t_cc_mapping;
+} t_cc_mapping;
 
-typedef struct
-{
+typedef struct {
     t_cc_mapping map[128];
-}t_plugin_cc_map;
+} t_plugin_cc_map;
 
-typedef struct
-{
+typedef struct {
     int active;
     int power;
     PluginDescriptor *descriptor;
@@ -204,7 +206,7 @@ typedef struct
     int mute;
     int solo;
     char padding[CACHE_LINE_SIZE - ((8 * sizeof(int)) + (sizeof(void*) * 4))];
-}t_plugin;
+} t_plugin;
 
 //PluginDescriptor_Function PLUGIN_DESC_FUNCS[];
 
