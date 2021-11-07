@@ -239,12 +239,12 @@ PluginDescriptor * get_pyfx_descriptor(int a_port_count){
 
     f_result->PortDescriptors = (PluginPortDescriptor*)calloc(
         f_result->PortCount,
-        sizeof(PluginPortDescriptor)
+        sizeof(PluginPortDescriptor) + CACHE_LINE_SIZE
     );
 
     f_result->PortRangeHints = (PluginPortRangeHint*)calloc(
         f_result->PortCount,
-        sizeof(PluginPortRangeHint)
+        sizeof(PluginPortRangeHint) + CACHE_LINE_SIZE
     );
 
     return f_result;

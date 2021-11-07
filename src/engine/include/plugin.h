@@ -74,6 +74,7 @@ int seq_event_cmpfunc(void *self, void *other);
    buffers and workspaces and to run it. */
 
 typedef struct _PluginDescriptor {
+    char pad1[CACHE_LINE_SIZE];
     int PortCount;
 
     PluginPortDescriptor * PortDescriptors;
@@ -140,7 +141,7 @@ typedef struct _PluginDescriptor {
         struct ShdsList* atm_events
     );
 
-    // Plugins that ARE part of a send channel will always call this,
+    // Plugins that are part of a send channel will always call this,
     // any plugin that isn't a fader/channel type plugin do not need
     // to implement or set this
     void (*run_mixing)(
@@ -164,9 +165,10 @@ typedef struct _PluginDescriptor {
      */
     void (*on_stop)(PluginHandle Instance);
 
+    char pad2[CACHE_LINE_SIZE];
 } PluginDescriptor;
 
-typedef PluginDescriptor * (*PluginDescriptor_Function)();
+typedef PluginDescriptor* (*PluginDescriptor_Function)();
 
 typedef struct {
     int type;
@@ -193,6 +195,7 @@ typedef struct {
 } t_plugin_cc_map;
 
 typedef struct {
+    char pad1[CACHE_LINE_SIZE];
     int active;
     int power;
     PluginDescriptor *descriptor;
@@ -205,7 +208,7 @@ typedef struct {
     PluginDescriptor_Function descfn;
     int mute;
     int solo;
-    char padding[CACHE_LINE_SIZE - ((8 * sizeof(int)) + (sizeof(void*) * 4))];
+    char pad2[CACHE_LINE_SIZE];
 } t_plugin;
 
 //PluginDescriptor_Function PLUGIN_DESC_FUNCS[];
@@ -218,7 +221,13 @@ void v_plugin_event_queue_atm_set(t_plugin_event_queue*, int, SGFLT*);
 SGFLT f_cc_to_ctrl_val(PluginDescriptor*, int, SGFLT);
 void v_cc_mapping_init(t_cc_mapping*);
 void v_cc_map_init(t_plugin_cc_map*);
-void v_cc_map_translate(t_plugin_cc_map*, PluginDescriptor*, SGFLT*, int, SGFLT);
+void v_cc_map_translate(
+    t_plugin_cc_map*,
+    PluginDescriptor*,
+    SGFLT*,
+    int,
+    SGFLT
+);
 void v_generic_cc_map_set(t_plugin_cc_map*, char*);
 void v_ev_clear(t_seq_event * a_event);
 void v_ev_set_atm(
