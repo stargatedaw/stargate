@@ -205,8 +205,11 @@ class ItemSequencer(QGraphicsView):
             if self.current_coord:
                 if _shared.SEQUENCE_EDITOR_MODE == 0:
                     self.current_item = self.get_item(f_pos)
-                    if self.current_item and \
-                    not self.current_item.isSelected():
+                    if (
+                        self.current_item
+                        and
+                        not self.current_item.isSelected()
+                    ):
                         self.scene.clearSelection()
                         self.current_item.setSelected(True)
                         self.selected_item_strings = {

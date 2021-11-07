@@ -486,8 +486,13 @@ class PluginSettingsMain(AbstractPluginSettings):
         f_clear_action.triggered.connect(self.clear)
 
         AbstractPluginSettings.__init__(
-            self, a_set_plugin_func, a_index, a_track_num, a_save_callback,
-            a_qcbox=False)
+            self,
+            a_set_plugin_func,
+            a_index,
+            a_track_num,
+            a_save_callback,
+            a_qcbox=False,
+        )
 
         self.hide_checkbox = QCheckBox()
         self.hide_checkbox.setObjectName("button_hide")
@@ -512,14 +517,31 @@ class PluginSettingsMain(AbstractPluginSettings):
         if self.plugin_ui:
             self.plugin_ui.widget.setHidden(self.hide_checkbox.isChecked())
 
+    def on_plugin_combobox_change(self, a_val=None):
+        AbstractPluginSettings.on_plugin_combobox_change(self, a_val)
+        if a_val:
+            constants.DAW_PROJECT.check_output(self.track_num)
+
+
 
 class PluginSettingsMixer(AbstractPluginSettings):
     def __init__(
-            self, a_set_plugin_func, a_index, a_track_num, a_save_callback):
-        self.plugin_list = ["None"] + PLUGINS_MIXER # MIXER_PLUGIN_NAMES
+        self,
+        a_set_plugin_func,
+        a_index,
+        a_track_num,
+        a_save_callback,
+    ):
+        self.plugin_list = ["None"] + PLUGINS_MIXER  # MIXER_PLUGIN_NAMES
         AbstractPluginSettings.__init__(
-            self, a_set_plugin_func, a_index, a_track_num,
-            a_save_callback, a_qcbox=True, a_is_mixer=True)
+            self,
+            a_set_plugin_func,
+            a_index,
+            a_track_num,
+            a_save_callback,
+            a_qcbox=True,
+            a_is_mixer=True,
+        )
         self.index += PLUGINS_PER_TRACK
         self.vlayout.setParent(None)
         self.plugin_combobox.setMinimumWidth(120)
@@ -527,11 +549,21 @@ class PluginSettingsMixer(AbstractPluginSettings):
 
 class PluginSettingsWaveEditor(AbstractPluginSettings):
     def __init__(
-            self, a_set_plugin_func, a_index, a_track_num, a_save_callback):
+        self,
+        a_set_plugin_func,
+        a_index,
+        a_track_num,
+        a_save_callback,
+    ):
         self.plugin_list = WAVE_EDITOR_PLUGIN_NAMES
         AbstractPluginSettings.__init__(
-            self, a_set_plugin_func, a_index, a_track_num,
-            a_save_callback, a_qcbox=False)
+            self,
+            a_set_plugin_func,
+            a_index,
+            a_track_num,
+            a_save_callback,
+            a_qcbox=False,
+        )
         self.layout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
