@@ -270,8 +270,11 @@ class ItemSequencer(QGraphicsView):
             self.setDragMode(QGraphicsView.DragMode.NoDrag)
             self.atm_select_pos_x = None
             self.atm_select_track = None
-            if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT or \
-            shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
+            if (
+                shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT
+                or
+                shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE
+            ):
                 self.current_coord = self.get_item_coord(f_pos, True)
                 self.scene.clearSelection()
                 self.atm_select_pos_x = f_pos.x()
@@ -281,8 +284,11 @@ class ItemSequencer(QGraphicsView):
                     return
             elif a_event.button() == QtCore.Qt.MouseButton.RightButton:
                 pass
-            elif shared.EDITOR_MODE == shared.EDITOR_MODE_DRAW and \
-            self.current_coord is not None:
+            elif (
+                shared.EDITOR_MODE == shared.EDITOR_MODE_DRAW
+                and
+                self.current_coord is not None
+            ):
                 f_port, f_index = shared.TRACK_PANEL.has_automation(
                     self.current_coord[0])
                 if f_port is not None:
