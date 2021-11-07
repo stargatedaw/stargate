@@ -22,7 +22,7 @@ git clone https://github.com/stargateaudio/stargate.git
 cd stargate
 sh ./scripts/homebrew_deps.sh
 cd src
-python3 -m pip install requirements-windows.txt
+python3 -m pip install -r requirements-windows.txt
 make mac_osx
 
 # and run Stargate locally
