@@ -9,6 +9,7 @@ from .sample_graph import (
 )
 from sglib import constants
 from sglib.lib import *
+from sglib.lib.paulstretch import paulstretch
 from sglib.lib.util import *
 from sglib.constants import MAJOR_VERSION
 from sglib.models.project.abstract import AbstractProject
@@ -335,60 +336,56 @@ class SgProject(AbstractProject):
                     str(a_audio_item.pitch_shift_end)
                 ]
             elif a_audio_item.time_stretch_mode == 6:
-                if a_audio_item.pitch_shift != 0.0:
-                    f_cmd = [
-                        PAULSTRETCH_PATH,
-                        "-s", str(a_audio_item.timestretch_amt),
-                        "-p", str(a_audio_item.pitch_shift),
-                        f_src_path,
-                        f_dest_path,
-                    ]
-                else:
-                    f_cmd = [
-                        PAULSTRETCH_PATH,
-                        "-s", str(a_audio_item.timestretch_amt),
-                        f_src_path,
-                        f_dest_path,
-                    ]
-                if util.IS_WINDOWS:
-                    f_cmd.insert(0, util.PYTHON3)
+                f_cmd = [
+                    f_src_path,
+                    a_audio_item.timestretch_amt,
+                    0.25,
+                    10.0,
+                    f_dest_path,
+                    a_audio_item.pitch_shift,
+                    a_audio_item.pitch_shift,
+                    f_src_path,
+                ]
 
             self.timestretch_cache[f_key] = f_uid
             self.timestretch_reverse_lookup[f_dest_path] = f_src_path
 
             if f_cmd is not None:
-                LOG.info("Running {}".format(" ".join(f_cmd)))
-                if IS_WINDOWS:
-                    startupinfo = subprocess.STARTUPINFO()
-                    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                    env = os.environ.copy()
-                    env['PATH'] = ENGINE_DIR + ';' + env['PATH']
-                    env['PYTHONPATH'] = INSTALL_PREFIX
-                    LOG.info(env)
-                    f_proc = subprocess.Popen(
-                        f_cmd,
-                        encoding='UTF-8',
-                        env=env,
-                        startupinfo=startupinfo,
-                    )
+                if a_audio_item.time_stretch_mode == 6:
+                    paulstretch(*f_cmd)
                 else:
-                    f_proc = subprocess.Popen(
-                        f_cmd,
-                        encoding='UTF-8',
-                    )
-                stdout, stderr = f_proc.communicate()
-                if not (
-                    f_proc.returncode == 0
-                    and
-                    os.path.exists(f_dest_path)
-                ):
-                    LOG.error(f"{f_cmd} failed with {f_proc.returncode}")
-                    LOG.error(stdout)
-                    LOG.error(stderr)
-                    raise FileNotFoundError(
-                        f"Could not time stretch file, {f_cmd} returned "
-                        f"{f_proc.returncode}"
-                    )
+                    LOG.info("Running {}".format(" ".join(f_cmd)))
+                    if IS_WINDOWS:
+                        startupinfo = subprocess.STARTUPINFO()
+                        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                        env = os.environ.copy()
+                        env['PATH'] = ENGINE_DIR + ';' + env['PATH']
+                        env['PYTHONPATH'] = INSTALL_PREFIX
+                        LOG.info(env)
+                        f_proc = subprocess.Popen(
+                            f_cmd,
+                            encoding='UTF-8',
+                            env=env,
+                            startupinfo=startupinfo,
+                        )
+                    else:
+                        f_proc = subprocess.Popen(
+                            f_cmd,
+                            encoding='UTF-8',
+                        )
+                    stdout, stderr = f_proc.communicate()
+                    if not (
+                        f_proc.returncode == 0
+                        and
+                        os.path.exists(f_dest_path)
+                    ):
+                        LOG.error(f"{f_cmd} failed with {f_proc.returncode}")
+                        LOG.error(stdout)
+                        LOG.error(stderr)
+                        raise FileNotFoundError(
+                            f"Could not time stretch file, {f_cmd} returned "
+                            f"{f_proc.returncode}"
+                        )
                 a_audio_item.uid = self.timestretch_cache[f_key]
                 self.get_wav_uid_by_name(
                     f_dest_path,

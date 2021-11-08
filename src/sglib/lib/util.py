@@ -98,10 +98,6 @@ INT_TO_NOTE = [
 ]
 
 TERMINAL = None
-PAULSTRETCH_PATH = os.path.join(
-    BIN_DIR,
-    f"{MAJOR_VERSION}-paulstretch",
-)
 
 AUDIO_FILE_EXTS = [".WAV", ".AIF", ".AIFF", ".FLAC"]
 MIDI_FILE_EXTS = [".MIDI", ".MID"]
@@ -151,10 +147,7 @@ if IS_WINDOWS:
         ENGINE_DIR,
         "sbsms.exe",
     )
-    PYTHON3 = which('python.exe')
-    assert PYTHON3
 else:
-    PYTHON3 = sys.executable
     # Prefer the vendored SBSMS
     sbsms_util = os.path.join(
         os.path.dirname(__file__),

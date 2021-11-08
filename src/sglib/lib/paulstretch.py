@@ -71,6 +71,10 @@ def paulstretch(
     a_end_pitch,
     a_in_file,
 ):
+    stretch = numpy.double(stretch)
+    windowsize_seconds = numpy.double(windowsize_seconds)
+    onset_level = numpy.double(onset_level)
+
     if not os.path.exists(file_path):
         print("Error: {} does not exist.".format(file_path))
         return
@@ -272,84 +276,88 @@ def paulstretch(
 
 
 
-########################################
-print("Paul's Extreme Sound Stretch (Paulstretch) - Python version 20110223")
-print("new method: using onsets information")
-print("by Nasca Octavian PAUL, Targu Mures, Romania\n")
-parser = ArgumentParser(
-    description="CLI for Paulstretch"
-)
-parser.add_argument(
-  'input',
-  help='Path to the input file',
-)
-parser.add_argument(
-  'output',
-  help='Path to the output file',
-)
-parser.add_argument(
-    "--stretch",
-    "-s",
-    default=8.0,
-    dest="stretch",
-    help="stretch amount (1.0 = no stretch)",
-    type=float,
-)
-parser.add_argument(
-    "--window_size",
-    "-w",
-    default=0.25,
-    dest="window_size",
-    help="window size (seconds)",
-    type=float,
-)
-parser.add_argument(
-    "--onset",
-    "-t",
-    default=10.0,
-    dest="onset",
-    help="onset sensitivity (0.0=max, 1.0=min)",
-    type=float,
-)
-parser.add_argument(
-    "--start-pitch",
-    "-p",
-    default=None,
-    dest="start_pitch",
-    help="start pitch (36.0=max, -36.0=min)",
-    type=float,
-)
-parser.add_argument(
-    "--end-pitch",
-    "-e",
-    default=None,
-    dest="end_pitch",
-    help="end pitch (36.0=max, -36.0=min)",
-    type=float,
-)
+def main():
+    print("Paul's Extreme Sound Stretch (Paulstretch) - Python version 20110223")
+    print("new method: using onsets information")
+    print("by Nasca Octavian PAUL, Targu Mures, Romania\n")
+    parser = ArgumentParser(
+        description="CLI for Paulstretch"
+    )
+    parser.add_argument(
+      'input',
+      help='Path to the input file',
+    )
+    parser.add_argument(
+      'output',
+      help='Path to the output file',
+    )
+    parser.add_argument(
+        "--stretch",
+        "-s",
+        default=8.0,
+        dest="stretch",
+        help="stretch amount (1.0 = no stretch)",
+        type=float,
+    )
+    parser.add_argument(
+        "--window_size",
+        "-w",
+        default=0.25,
+        dest="window_size",
+        help="window size (seconds)",
+        type=float,
+    )
+    parser.add_argument(
+        "--onset",
+        "-t",
+        default=10.0,
+        dest="onset",
+        help="onset sensitivity (0.0=max, 1.0=min)",
+        type=float,
+    )
+    parser.add_argument(
+        "--start-pitch",
+        "-p",
+        default=None,
+        dest="start_pitch",
+        help="start pitch (36.0=max, -36.0=min)",
+        type=float,
+    )
+    parser.add_argument(
+        "--end-pitch",
+        "-e",
+        default=None,
+        dest="end_pitch",
+        help="end pitch (36.0=max, -36.0=min)",
+        type=float,
+    )
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-if (
-    args.stretch <= 0.0
-    or
-    args.window_size <= 0.001
-):
-    print("Error in command line parameters. Run this program with "
-        "--help for help.")
-    sys.exit(1)
+    if (
+        args.stretch <= 0.0
+        or
+        args.window_size <= 0.001
+    ):
+        print("Error in command line parameters. Run this program with "
+            "--help for help.")
+        sys.exit(1)
 
-print("stretch amount = {}".format(args.stretch))
-print("window size = {} seconds".format(args.window_size))
-print("onset sensitivity = {}".format(args.onset))
+    print("stretch amount = {}".format(args.stretch))
+    print("window size = {} seconds".format(args.window_size))
+    print("onset sensitivity = {}".format(args.onset))
 
-paulstretch(
-    args.input,
-    numpy.double(args.stretch),
-    numpy.double(args.window_size),
-    numpy.double(args.onset),
-    args.output,
-    args.start_pitch,
-    args.end_pitch,
-    args.input,
-)
+    paulstretch(
+        args.input,
+        numpy.double(args.stretch),
+        numpy.double(args.window_size),
+        numpy.double(args.onset),
+        args.output,
+        args.start_pitch,
+        args.end_pitch,
+        args.input,
+    )
+
+if __name__ == "__main__":
+    main()
+
