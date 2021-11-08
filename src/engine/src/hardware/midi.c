@@ -1,4 +1,6 @@
-#include <portmidi.h>
+#ifdef NO_MIDI
+    #include <portmidi.h>
+#endif
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
@@ -8,6 +10,19 @@
 #include "hardware/config.h"
 #include "hardware/midi.h"
 
+#ifdef NO_MIDI
+    void midiPoll(void * arg){}
+    void midiDeviceRead(void* arg1, SGFLT arg2, unsigned long arg3){}
+    void open_midi_devices(
+        struct HardwareConfig* config
+    ){}
+    void close_midi_devices(){}
+    NO_OPTIMIZATION int midiDeviceInit(
+        t_midi_device * self,
+        char * f_midi_device_name
+    );
+
+#else
 
 NO_OPTIMIZATION void open_midi_devices(
     struct HardwareConfig* config
@@ -433,4 +448,4 @@ void midiDeviceRead(
         MIDI_EVENT_BUFFER_SIZE
     );
 }
-
+#endif

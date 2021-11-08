@@ -1,7 +1,9 @@
 #ifndef HARDWARE_MIDI_H
 #define HARDWARE_MIDI_H
 
-#include <portmidi.h>
+#ifndef NO_MIDI
+    #include <portmidi.h>
+#endif
 
 #include "compiler.h"
 #include "hardware/config.h"
@@ -19,24 +21,30 @@
 #define MIDI_PITCH_BEND     0xE0
 #define MIDI_EOX            0xF7
 
-typedef struct{
-    int loaded;
-    PmStream *f_midi_stream;
-    PmError f_midi_err;
-    PmDeviceID f_device_id;
-    int instanceEventCounts;
-    t_seq_event instanceEventBuffers[MIDI_EVENT_BUFFER_SIZE];
-    PmEvent portMidiBuffer[MIDI_EVENT_BUFFER_SIZE];
-    t_seq_event midiEventBuffer[MIDI_EVENT_BUFFER_SIZE];
-    int midiEventReadIndex;
-    int midiEventWriteIndex;
-    char name[256];
-}t_midi_device;
+#ifdef NO_MIDI
+    #define t_midi_device void
+    #define t_midi_device_list void
+#else
+    typedef struct{
+        int loaded;
+        PmStream *f_midi_stream;
+        PmError f_midi_err;
+        PmDeviceID f_device_id;
+        int instanceEventCounts;
+        t_seq_event instanceEventBuffers[MIDI_EVENT_BUFFER_SIZE];
+        PmEvent portMidiBuffer[MIDI_EVENT_BUFFER_SIZE];
+        t_seq_event midiEventBuffer[MIDI_EVENT_BUFFER_SIZE];
+        int midiEventReadIndex;
+        int midiEventWriteIndex;
+        char name[256];
+    }t_midi_device;
 
-typedef struct{
-    int count;
-    t_midi_device devices[SG_MAX_MIDI_DEVICE_COUNT];
-}t_midi_device_list;
+    typedef struct{
+        int count;
+        t_midi_device devices[SG_MAX_MIDI_DEVICE_COUNT];
+    }t_midi_device_list;
+extern PmError f_midi_err;
+#endif
 
 void midiPoll(t_midi_device * self);
 
@@ -63,5 +71,4 @@ void open_midi_devices(
 void close_midi_devices();
 
 extern t_midi_device_list MIDI_DEVICES;
-extern PmError f_midi_err;
 #endif

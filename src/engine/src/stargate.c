@@ -19,11 +19,6 @@
 #include "hardware/config.h"
 
 #ifdef NO_MIDI
-    #define t_midi_device void
-    #define t_midi_device_list void
-
-    void midiPoll(void * arg){}
-    void midiDeviceRead(void * arg1, SGFLT arg2, int arg3){}
 #else
     #include "hardware/midi.h"
 #endif
