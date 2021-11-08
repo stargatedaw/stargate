@@ -190,14 +190,16 @@ class hardware_dialog:
             except Exception as ex:
                 LOG.warning(f"Could not find {path}")
         if not self.pypm:
-            raise ImportError(
-                f"Unable to find one of {pm_paths}, please install Portmidi"
+            LOG.warning(
+                "No Portmidi detected, the user will not be able to "
+                "configure a MIDI device"
             )
-        self.pypm.Pm_GetDeviceInfo.restype = ctypes.POINTER(
-            portmidi.PmDeviceInfo,
-        )
-        LOG.info("Initializing PortMIDI")
-        self.pypm.Pm_Initialize()
+        else:
+            self.pypm.Pm_GetDeviceInfo.restype = ctypes.POINTER(
+                portmidi.PmDeviceInfo,
+            )
+            LOG.info("Initializing PortMIDI")
+            self.pypm.Pm_Initialize()
         self.devices_open = True
         LOG.info("Finished opening hardware devices")
 
@@ -208,15 +210,19 @@ class hardware_dialog:
             LOG.info("Terminating Portaudio")
             self.pyaudio.Pa_Terminate()
             LOG.info("Terminating PortMIDI")
-            self.pypm.Pm_Terminate()
-            LOG.info("Cleaning up...")
-            for x in (self.pyaudio._handle, self.pypm._handle):
+            if self.pypm:
+                self.pypm.Pm_Terminate()
                 if util.IS_WINDOWS:
-                    _ctypes.FreeLibrary(x)
+                    _ctypes.FreeLibrary(self.pypm._handle)
                 else:
-                    _ctypes.dlclose(x)
+                    _ctypes.dlclose(self.pypm._handle)
+                del self.pypm
+
+            if util.IS_WINDOWS:
+                _ctypes.FreeLibrary(self.pyaudio._handle)
+            else:
+                _ctypes.dlclose(self.pyaudio._handle)
             del self.pyaudio
-            del self.pypm
             gc.collect()
             self.devices_open = False
             time.sleep(0.5)  # Give the kernel audio API time to close
@@ -224,8 +230,6 @@ class hardware_dialog:
         else:
             pass
 #            LOG.error("close_devices called, but devices are not open")
-#            import traceback
-#            traceback.print_stack()
 
     def check_device(self, a_splash_screen=None):
         if not util.DEVICE_SETTINGS:
@@ -347,7 +351,8 @@ class hardware_dialog:
         f_window_layout = QGridLayout(f_audio_out_tab)
 
         f_midi_in_tab = QTabWidget()
-        f_tab_widget.addTab(f_midi_in_tab, _("MIDI In"))
+        if self.pypm:
+            f_tab_widget.addTab(f_midi_in_tab, _("MIDI In"))
         f_midi_in_layout = QVBoxLayout(f_midi_in_tab)
 
         f_window_layout.addWidget(QLabel(_("Host API")), 2, 0)
@@ -505,26 +510,27 @@ class hardware_dialog:
 
         self.midi_in_checkboxes = {}
 
-        LOG.info("Enumerating MIDI devices")
-        for loop in range(self.pypm.Pm_CountDevices()):
-            f_midi_device = self.pypm.Pm_GetDeviceInfo(loop)
-            f_midi_device_name = \
-                f_midi_device.contents.name.decode(TEXT_ENCODING)
-#                LOG.info("DeviceID: {} Name: '{}' Input?: {} "
-#                    "Output?: {} Opened: {} ".format(
-#                    loop, f_midi_device_name, f_midi_device.contents.input,
-#                    f_midi_device.contents.output,
-#                    f_midi_device.contents.opened))
-            if f_midi_device.contents.input == 1:
-                f_checkbox = QCheckBox(f_midi_device_name)
-                if f_midi_device_name in util.MIDI_IN_DEVICES:
-                    f_checkbox.setChecked(True)
-                self.midi_in_checkboxes[f_midi_device_name] = f_checkbox
+        if self.pypm:
+            LOG.info("Enumerating MIDI devices")
+            for loop in range(self.pypm.Pm_CountDevices()):
+                f_midi_device = self.pypm.Pm_GetDeviceInfo(loop)
+                f_midi_device_name = \
+                    f_midi_device.contents.name.decode(TEXT_ENCODING)
+    #                LOG.info("DeviceID: {} Name: '{}' Input?: {} "
+    #                    "Output?: {} Opened: {} ".format(
+    #                    loop, f_midi_device_name, f_midi_device.contents.input,
+    #                    f_midi_device.contents.output,
+    #                    f_midi_device.contents.opened))
+                if f_midi_device.contents.input == 1:
+                    f_checkbox = QCheckBox(f_midi_device_name)
+                    if f_midi_device_name in util.MIDI_IN_DEVICES:
+                        f_checkbox.setChecked(True)
+                    self.midi_in_checkboxes[f_midi_device_name] = f_checkbox
 
-            for f_cbox in sorted(
-            self.midi_in_checkboxes, key=lambda x: x.lower()):
-                f_midi_in_layout.addWidget(self.midi_in_checkboxes[f_cbox])
-        LOG.info("Finished enumerating MIDI devices")
+                for f_cbox in sorted(
+                self.midi_in_checkboxes, key=lambda x: x.lower()):
+                    f_midi_in_layout.addWidget(self.midi_in_checkboxes[f_cbox])
+            LOG.info("Finished enumerating MIDI devices")
 
         f_midi_in_layout.addItem(
             QSpacerItem(
