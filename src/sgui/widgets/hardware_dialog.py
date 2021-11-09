@@ -13,7 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 """
 
-from sglib._ctypes import *
+from sglib.lib._ctypes import *
 from sglib.hardware.rpi import is_rpi
 from sglib.lib.process import run_process
 from sglib.math import clip_value
