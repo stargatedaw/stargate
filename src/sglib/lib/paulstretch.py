@@ -38,12 +38,20 @@ sys.path.insert(0, lib_dir)
 print(f_parent_dir)
 print(lib_dir)
 
+from sglib.log import LOG
+from sglib.lib.util import *
+from sglib.lib._ctypes import *
+os.environ['LIBRARY_PATH'] = ENGINE_DIR
+LOG.info(ENGINE_DIR)
+patch_ctypes()
+
 try:
     from sg_py_vendor import wavefile
 except ImportError:
     import wavefile
 
-from sglib.lib.util import *
+revert_patch_ctypes()
+
 
 def optimize_windowsize(n):
     orig_n = n
@@ -67,45 +75,14 @@ def paulstretch(
     windowsize_seconds,
     onset_level,
     outfilename,
-    a_start_pitch,
-    a_end_pitch,
-    a_in_file,
 ):
     stretch = numpy.double(stretch)
     windowsize_seconds = numpy.double(windowsize_seconds)
     onset_level = numpy.double(onset_level)
 
     if not os.path.exists(file_path):
-        print("Error: {} does not exist.".format(file_path))
+        LOG.info("Error: {} does not exist.".format(file_path))
         return
-
-    if a_start_pitch is not None:
-        print("Pitch shifting file")
-        f_src_path = file_path
-        f_dest_path = outfilename.replace(".wav", "-tmp.wav")
-        if a_end_pitch is not None and "win" not in sys.platform.lower():
-            f_cmd = [
-                "sbsms",
-                f_src_path,
-                f_dest_path,
-                "1.0",
-                "1.0",
-                str(a_start_pitch),
-                str(a_end_pitch),
-            ]
-        else:
-            f_cmd = [
-                "rubberband",
-                "-p", str(a_start_pitch),
-                "-R",
-                "--pitch-hq",
-                f_src_path,
-                f_dest_path,
-            ]
-        print("Running {}".format(" ".join(f_cmd)))
-        f_proc = subprocess.Popen(f_cmd)
-        f_proc.wait()
-        file_path = f_dest_path
 
     f_reader = wavefile.WaveReader(file_path)
     samplerate = f_reader.samplerate
@@ -269,11 +246,6 @@ def paulstretch(
             get_next_buf = True
 
     outfile.close()
-
-    if a_start_pitch is not None:
-        print("Deleting temp file {}".format(file_path))
-        os.remove(file_path)
-
 
 
 def main():

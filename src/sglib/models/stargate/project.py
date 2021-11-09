@@ -342,9 +342,6 @@ class SgProject(AbstractProject):
                     0.25,
                     10.0,
                     f_dest_path,
-                    a_audio_item.pitch_shift,
-                    a_audio_item.pitch_shift,
-                    f_src_path,
                 ]
 
             self.timestretch_cache[f_key] = f_uid
@@ -352,7 +349,12 @@ class SgProject(AbstractProject):
 
             if f_cmd is not None:
                 if a_audio_item.time_stretch_mode == 6:
-                    paulstretch(*f_cmd)
+                    LOG.info(f"paulstretch({f_cmd})")
+                    try:
+                        paulstretch(*f_cmd)
+                    except Exception as ex:
+                        LOG.exception(ex)
+                        raise
                 else:
                     LOG.info("Running {}".format(" ".join(f_cmd)))
                     if IS_WINDOWS:
