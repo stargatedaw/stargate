@@ -13,4 +13,7 @@ t_line_split* g_split_line(
 );
 void v_free_split_line(t_line_split * a_split_line);
 
+// The new, faster way
+char* str_split(char*, char*, char);
+
 #endif

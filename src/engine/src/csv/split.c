@@ -3,12 +3,27 @@
 #include "files.h"
 #include "csv/split.h"
 
+char* str_split(char* self, char* buf, char delim){
+    while(1){
+        if(self[0] == '\0'){
+            buf[0] = '\0';
+            return NULL;
+        } else if(self[0] == delim){
+            buf[0] = '\0';
+            ++self;
+            return self;
+        }
+        buf[0] = self[0];
+        ++buf;
+        ++self;
+    }
+}
+
 t_line_split* g_split_line(
     char a_delimiter,
     const char * a_str
 ){
-    t_line_split * f_result =
-            (t_line_split*)malloc(sizeof(t_line_split));
+    t_line_split * f_result = (t_line_split*)malloc(sizeof(t_line_split));
     f_result->count = 1;
 
     int f_i = 0;
