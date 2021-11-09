@@ -47,7 +47,7 @@ install_distro: clean_pyc
 	cp scripts/* $(DESTDIR)$(PREFIX)/bin
 	install -d $(SG_DIR)/stargate
 	install -m 755 engine/$(MAJOR)-engine-dbg $(DESTDIR)$(PREFIX)/bin
-	install -s -m 4755 engine/$(MAJOR)-engine $(DESTDIR)$(PREFIX)/bin
+	install -s -m 755 engine/$(MAJOR)-engine $(DESTDIR)$(PREFIX)/bin
 	cp -r sglib sgui $(SG_DIR)/stargate
 	cp -r files/themes files/presets $(SG_DIR)
 	cp -r files/themes files/plugin_assets files/fonts $(SG_DIR)
