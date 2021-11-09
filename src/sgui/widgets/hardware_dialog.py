@@ -13,6 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 """
 
+from sglib._ctypes import *
 from sglib.hardware.rpi import is_rpi
 from sglib.lib.process import run_process
 from sglib.math import clip_value
@@ -155,18 +156,8 @@ class hardware_dialog:
             raise NotImplementedError
 
         LOG.info("Loading Portaudio library")
-        self.pyaudio = None
-        for path in pa_paths:
-            try:
-                ctypes.cdll.LoadLibrary(path)
-                self.pyaudio = ctypes.CDLL(path)
-            except Exception as ex:
-                LOG.warning(f"Failed to load portaudio: {ex}")
-        if not self.pyaudio:
-            raise ImportError(
-                f"Cannot find one of {pa_paths}, please "
-                "install Portaudio"
-            )
+        patch_ctypes(True)
+        self.pyaudio = ctypes.CDLL(pa_paths)
         self.pyaudio.Pa_GetDeviceInfo.restype = ctypes.POINTER(
             portaudio.PaDeviceInfo)
         self.pyaudio.Pa_GetDeviceInfo.argstype = [ctypes.c_int]
@@ -183,12 +174,10 @@ class hardware_dialog:
 
         LOG.info("Loading PortMIDI library")
         self.pypm = None
-        for path in pm_paths:
-            try:
-                ctypes.cdll.LoadLibrary(path)
-                self.pypm = ctypes.CDLL(path)
-            except Exception as ex:
-                LOG.warning(f"Could not find {path}")
+        try:
+            self.pypm = ctypes.CDLL(pm_paths)
+        except ImportError:
+            pass
         if not self.pypm:
             LOG.warning(
                 "No Portmidi detected, the user will not be able to "
@@ -202,6 +191,7 @@ class hardware_dialog:
             self.pypm.Pm_Initialize()
         self.devices_open = True
         LOG.info("Finished opening hardware devices")
+        revert_patch_ctypes()
 
     def close_devices(self):
         if self.devices_open:
