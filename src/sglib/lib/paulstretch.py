@@ -41,16 +41,18 @@ print(lib_dir)
 from sglib.log import LOG
 from sglib.lib.util import *
 from sglib.lib._ctypes import *
-os.environ['LIBRARY_PATH'] = ENGINE_DIR
-LOG.info(ENGINE_DIR)
-patch_ctypes()
+if IS_WINDOWS:
+    os.environ['LIBRARY_PATH'] = ENGINE_DIR
+    LOG.info(ENGINE_DIR)
+    patch_ctypes()
 
 try:
     from sg_py_vendor import wavefile
 except ImportError:
     import wavefile
 
-revert_patch_ctypes()
+if IS_WINDOWS:
+    revert_patch_ctypes()
 
 
 def optimize_windowsize(n):
