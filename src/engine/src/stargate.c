@@ -14,6 +14,7 @@
 #include "audio/util.h"
 #include "csv/1d.h"
 #include "csv/kvp.h"
+#include "csv/split.h"
 #include "ds/list.h"
 #include "files.h"
 #include "hardware/config.h"
@@ -1117,19 +1118,16 @@ void v_sg_seq_event_list_set(
 
 
 void v_sg_configure(const char* a_key, const char* a_value){
+    char buf[1024];
     log_info("v_sg_configure:  key: \"%s\", value: \"%s\"", a_key, a_value);
 
     if(!strcmp(a_key, SG_CONFIGURE_KEY_UPDATE_PLUGIN_CONTROL)){
-        t_1d_char_array * f_val_arr = c_split_str(
-            a_value,
-            '|',
-            3,
-            TINY_STRING
-        );
-
-        int f_plugin_uid = atoi(f_val_arr->array[0]);
-        int f_port = atoi(f_val_arr->array[1]);
-        SGFLT f_value = atof(f_val_arr->array[2]);
+        a_value = str_split(a_value, buf, '|');
+        int f_plugin_uid = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int f_port = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        SGFLT f_value = atof(buf);
 
         t_plugin * f_instance;
         pthread_spin_lock(&STARGATE->main_lock);
@@ -1149,7 +1147,6 @@ void v_sg_configure(const char* a_key, const char* a_value){
             );
         }
         pthread_spin_unlock(&STARGATE->main_lock);
-        g_free_1d_char_array(f_val_arr);
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_CONFIGURE_PLUGIN)){
         t_1d_char_array * f_val_arr = c_split_str_remainder(
             a_value,
@@ -1181,20 +1178,12 @@ void v_sg_configure(const char* a_key, const char* a_value){
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_MAIN_VOL)){
         MAIN_VOL = atof(a_value);
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_AUDIO_IN_VOL)){
-        t_1d_char_array * f_val_arr = c_split_str(
-            a_value,
-            '|',
-            2,
-            SMALL_STRING
-        );
-        int f_index = atoi(f_val_arr->array[0]);
-        SGFLT f_vol = atof(f_val_arr->array[1]);
+        a_value = str_split(a_value, buf, '|');
+        int f_index = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        SGFLT f_vol = atof(buf);
         SGFLT f_vol_linear = f_db_to_linear_fast(f_vol);
-
-        g_free_1d_char_array(f_val_arr);
-
         t_pyaudio_input * f_input = &STARGATE->audio_inputs[f_index];
-
         f_input->vol = f_vol;
         f_input->vol_linear = f_vol_linear;
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_KILL_ENGINE)){

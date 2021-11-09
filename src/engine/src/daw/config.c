@@ -12,18 +12,15 @@
 
 
 void v_daw_configure(const char* a_key, const char* a_value){
+    char buf[1024];
     t_daw* self = DAW;
     log_info("v_daw_configure:  key: \"%s\", value: \"%s\"", a_key, a_value);
 
     if(!strcmp(a_key, DN_CONFIGURE_KEY_NOTE_ON)){
-        t_1d_char_array * f_arr = c_split_str(
-            a_value,
-            '|',
-            2,
-            SMALL_STRING
-        );
-        int rack_num = atoi(f_arr->array[0]);
-        int note = atoi(f_arr->array[1]);
+        a_value = str_split(a_value, buf, '|');
+        int rack_num = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int note = atoi(buf);
         pthread_spin_lock(&STARGATE->main_lock);
         t_seq_event* ev = &QWERTY_MIDI.events[QWERTY_MIDI.event_count];
         ev->note = note;
@@ -34,14 +31,10 @@ void v_daw_configure(const char* a_key, const char* a_value){
         ++QWERTY_MIDI.event_count;
         pthread_spin_unlock(&STARGATE->main_lock);
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_NOTE_OFF)){
-        t_1d_char_array * f_arr = c_split_str(
-            a_value,
-            '|',
-            2,
-            SMALL_STRING
-        );
-        int rack_num = atoi(f_arr->array[0]);
-        int note = atoi(f_arr->array[1]);
+        a_value = str_split(a_value, buf, '|');
+        int rack_num = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int note = atoi(buf);
         pthread_spin_lock(&STARGATE->main_lock);
         t_seq_event* ev = &QWERTY_MIDI.events[QWERTY_MIDI.event_count];
         ev->note = note;
@@ -51,24 +44,19 @@ void v_daw_configure(const char* a_key, const char* a_value){
         QWERTY_MIDI.rack_num = rack_num;
         ++QWERTY_MIDI.event_count;
         pthread_spin_unlock(&STARGATE->main_lock);
-        g_free_1d_char_array(f_arr);
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_PER_FILE_FX)){
-        t_1d_char_array * f_arr = c_split_str(
-            a_value,
-            '|',
-            3,
-            SMALL_STRING
-        );
-        int ap_uid = atoi(f_arr->array[0]);
-        int port_num = atoi(f_arr->array[1]);
-        SGFLT port_val = atof(f_arr->array[2]);
+        a_value = str_split(a_value, buf, '|');
+        int ap_uid = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int port_num = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        SGFLT port_val = atof(buf);
 
         v_daw_papifx_set_control(
             ap_uid,
             port_num,
             port_val
         );
-        g_free_1d_char_array(f_arr);
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_PER_FILE_FX_PASTE)){
        papifx_paste(a_value);
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_PER_FILE_FX_CLEAR)){
@@ -78,16 +66,14 @@ void v_daw_configure(const char* a_key, const char* a_value){
         papifx_reset(&item->fx_controls);
         pthread_spin_unlock(&STARGATE->main_lock);
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_PER_AUDIO_ITEM_FX)){
-        t_1d_char_array * f_arr = c_split_str(
-            a_value,
-            '|',
-            4,
-            SMALL_STRING
-        );
-        int f_item_index = atoi(f_arr->array[0]);
-        int f_audio_item_index = atoi(f_arr->array[1]);
-        int f_port_num = atoi(f_arr->array[2]);
-        SGFLT f_port_val = atof(f_arr->array[3]);
+        a_value = str_split(a_value, buf, '|');
+        int f_item_index = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int f_audio_item_index = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int f_port_num = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        SGFLT f_port_val = atof(buf);
 
         v_daw_paif_set_control(
             self,
@@ -96,23 +82,17 @@ void v_daw_configure(const char* a_key, const char* a_value){
             f_port_num,
             f_port_val
         );
-        g_free_1d_char_array(f_arr);
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_DN_PLAYBACK)) {
-        t_1d_char_array * f_arr = c_split_str(
-            a_value,
-            '|',
-            2,
-            SMALL_STRING
-        );
-        int f_mode = atoi(f_arr->array[0]);
+        a_value = str_split(a_value, buf, '|');
+        int f_mode = atoi(buf);
         sg_assert(
             f_mode >= 0 && f_mode <= 2,
             "v_daw_configure: DN_CONFIGURE_KEY_DN_PLAYBACK invalid mode: %i",
             f_mode
         );
-        double f_beat = atof(f_arr->array[1]);
+        a_value = str_split(a_value, buf, '|');
+        double f_beat = atof(buf);
         v_daw_set_playback_mode(self, f_mode, f_beat, 1);
-        g_free_1d_char_array(f_arr);
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_CS)) {
         // Change the active sequence being played
         //Ensure that a project isn't being loaded right now
@@ -220,13 +200,11 @@ void v_daw_configure(const char* a_key, const char* a_value){
         pthread_spin_lock(&STARGATE->main_lock);
         STARGATE->is_offline_rendering = 0;
         pthread_spin_unlock(&STARGATE->main_lock);
-    }
-    else if(!strcmp(a_key, DN_CONFIGURE_KEY_SOLO)) //Set track solo
-    {
-        t_1d_char_array * f_val_arr = c_split_str(a_value, '|', 2,
-                TINY_STRING);
-        int f_track_num = atoi(f_val_arr->array[0]);
-        int f_mode = atoi(f_val_arr->array[1]);
+    } else if(!strcmp(a_key, DN_CONFIGURE_KEY_SOLO)){ //Set track solo
+        a_value = str_split(a_value, buf, '|');
+        int f_track_num = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int f_mode = atoi(buf);
         sg_assert(
             f_mode == 0 || f_mode == 1,
             "v_daw_configure: DN_CONFIGURE_KEY_SOLO invalid mode: %i",
@@ -241,18 +219,11 @@ void v_daw_configure(const char* a_key, const char* a_value){
         v_daw_set_is_soloed(self);
 
         pthread_spin_unlock(&STARGATE->main_lock);
-        g_free_1d_char_array(f_val_arr);
-    }
-    else if(!strcmp(a_key, DN_CONFIGURE_KEY_MUTE)) //Set track mute
-    {
-        t_1d_char_array * f_val_arr = c_split_str(
-            a_value,
-            '|',
-            2,
-            TINY_STRING
-        );
-        int f_track_num = atoi(f_val_arr->array[0]);
-        int f_mode = atoi(f_val_arr->array[1]);
+    } else if(!strcmp(a_key, DN_CONFIGURE_KEY_MUTE)){
+        a_value = str_split(a_value, buf, '|');
+        int f_track_num = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int f_mode = atoi(buf);
         sg_assert(
             f_mode == 0 || f_mode == 1,
             "v_daw_configure: DN_CONFIGURE_KEY_MUTE invalid mode: %i",
@@ -264,24 +235,28 @@ void v_daw_configure(const char* a_key, const char* a_value){
         //self->track_pool[f_track_num]->period_event_index = 0;
 
         pthread_spin_unlock(&STARGATE->main_lock);
-        g_free_1d_char_array(f_val_arr);
-    }
-    else if(!strcmp(a_key, DN_CONFIGURE_KEY_PLUGIN_INDEX))
-    {
-        t_1d_char_array * f_val_arr = c_split_str(a_value, '|', 5,
-                TINY_STRING);
-        int f_track_num = atoi(f_val_arr->array[0]);
-        int f_index = atoi(f_val_arr->array[1]);
-        int f_plugin_index = atoi(f_val_arr->array[2]);
-        int f_plugin_uid = atoi(f_val_arr->array[3]);
-        int f_power = atoi(f_val_arr->array[4]);
+    } else if(!strcmp(a_key, DN_CONFIGURE_KEY_PLUGIN_INDEX)){
+        a_value = str_split(a_value, buf, '|');
+        int f_track_num = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int f_index = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int f_plugin_index = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int f_plugin_uid = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int f_power = atoi(buf);
 
         t_pytrack * f_track = DAW->track_pool[f_track_num];
 
         v_set_plugin_index(
-            f_track, f_index, f_plugin_index, f_plugin_uid, f_power, 1);
-
-        g_free_1d_char_array(f_val_arr);
+            f_track,
+            f_index,
+            f_plugin_index,
+            f_plugin_uid,
+            f_power,
+            1
+        );
     }
     else if(!strcmp(a_key, DN_CONFIGURE_KEY_UPDATE_SEND))
     {

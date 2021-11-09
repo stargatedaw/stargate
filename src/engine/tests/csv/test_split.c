@@ -7,8 +7,8 @@
 
 void TestSplitStr(){
     char buf[1024];
-    char str[128] = "123|345|432";
-    char* _str = str;
+    const char str[128] = "123|345|432";
+    const char* _str = str;
     _str = str_split(_str, buf, '|');
     int one = atoi(buf);
     assert(one == 123);

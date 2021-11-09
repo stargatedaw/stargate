@@ -3,7 +3,7 @@
 #include "files.h"
 #include "csv/split.h"
 
-char* str_split(char* self, char* buf, char delim){
+const char* str_split(const char* self, char* buf, char delim){
     while(1){
         if(self[0] == '\0'){
             buf[0] = '\0';
