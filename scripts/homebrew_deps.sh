@@ -9,6 +9,7 @@ brew install \
 	libogg \
 	libsndfile \
 	libvorbis \
+	numpy \
 	opus \
 	portaudio \
 	portmidi \
