@@ -12,6 +12,5 @@ brew install \
 	opus \
 	portaudio \
 	portmidi \
-	python@3.9 \
 	rubberband
 

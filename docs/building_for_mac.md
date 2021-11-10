@@ -7,9 +7,9 @@ if there is sufficient demand.
 Note that you will need to install [Homebrew](https://brew.sh/) first, as it
 will be used to download dependencies.
 
-Also note that you may need to disable the Mac OS X firewall or add rules, as
-it may block the Stargate UI and engine from communicating over UDP sockets on
-localhost.  You will need the following rules:
+Also note that you may need to disable the Mac OS X firewall (if enabled) or
+add rules, as it may block the Stargate UI and engine from communicating over
+UDP sockets on localhost.  You will need the following rules:
 ```
 stargate: 31909
 stargate-engine: 31999
@@ -20,11 +20,11 @@ stargate-engine: 31999
 # Download and build the source code
 git clone https://github.com/stargateaudio/stargate.git
 cd stargate
-sh ./scripts/homebrew_deps.sh
+./scripts/homebrew_deps.sh
 cd src
-python3 -m pip install -r requirements-windows.txt
+pip3 install --user -r requirements-mac.txt
 make mac_osx
 
 # and run Stargate locally
-./scripts/stargate
+python3 ./scripts/stargate
 ```
