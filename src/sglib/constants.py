@@ -33,11 +33,13 @@ if IS_WINDOWS:
     if os.path.isfile(
         os.path.join(dirname, '_stargate_home'),
     ):
+        USER_HOME = os.path.abspath(
+            os.path.join(dirname, '..'),
+        )
         print(
-            f"Using {dirname} for USER_HOME because _stargate_home "
+            f"Using {USER_HOME} for USER_HOME because _stargate_home "
             "file exists"
         )
-        USER_HOME = dirname
         IS_PORTABLE_INSTALL = True
         PORTABLE_ROOT = pathlib.Path(sys.executable).drive.upper()
 
