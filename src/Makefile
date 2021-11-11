@@ -61,6 +61,9 @@ install: install_distro
 		vendor/sbsms/cli/sbsms \
 		$(DESTDIR)$(PREFIX)/bin/$(MAJOR)-sbsms
 
+install_mac_osx:
+	PREFIX=/usr/local make install
+
 lines-of-code:
 	./loc.sh
 
