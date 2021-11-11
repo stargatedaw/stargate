@@ -34,7 +34,7 @@ RequestExecutionLevel admin
 
 SetCompressor /SOLID lzma
 
-Name "{MAJOR_VERSION} {MINOR_VERSION}"
+Name "Stargate DAW {MINOR_VERSION}"
 OutFile "dist\{MAJOR_VERSION}-{MINOR_VERSION}-win64-installer.exe"
 InstallDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
 
@@ -127,9 +127,7 @@ SectionEnd
 Section /o "Portable Flash Drive Install" SEC03
     SetOutPath $INSTDIR
     ; Create the shortcut to the executable
-    FileOpen $9 "$INSTDIR\Launch Stargate.cmd" w
-    FileWrite $9 '@"%~dp0program\stargate.exe" %*'
-    FileClose $9
+    File windows\LaunchStargate.cmd
     SetOutPath $INSTDIR\program
     ; The exe looks for this empty file to choose the Stargate home folder
     FileOpen $9 _stargate_home w
