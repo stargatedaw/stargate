@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(['scripts\\stargate', 'scripts\\stargate-paulstretch'],
+a = Analysis(['scripts\\stargate'],
              pathex=['C:\\msys64\\home\\starg\\src\\stargate\\src'],
              binaries=[
                  ('engine/*.exe', 'engine'),
@@ -30,7 +30,7 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 
 exe = EXE(pyz,
-          a.scripts, 
+          a.scripts,
           [],
           exclude_binaries=True,
           name='stargate',
@@ -47,7 +47,7 @@ exe = EXE(pyz,
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
-               a.datas, 
+               a.datas,
                strip=False,
                upx=True,
                upx_exclude=[],
