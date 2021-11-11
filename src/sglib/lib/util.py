@@ -14,8 +14,10 @@ import sys
 import time
 
 
-if IS_LINUX or IS_MAC_OSX:
+if IS_LINUX:
     from .path.linux import *
+if IS_MAC_OSX:
+    from .path.macos import *
 elif IS_WINDOWS:
     from .path.windows import *
 
@@ -140,7 +142,7 @@ def which(a_file):
                 return f_file_path
     return None
 
-if IS_WINDOWS or IS_MAC_OSX:
+if IS_WINDOWS:
     sbsms_util = os.path.join(
         ENGINE_DIR,
         "sbsms.exe",
@@ -151,7 +153,25 @@ elif IS_MAC_OSX:
         ENGINE_DIR,
         "sbsms",
     )
-    PAULSTRETCH_PATH = sys.executable
+elif IS_MAC_OSX:
+    if IS_LOCAL_DEVEL:
+        PAULSTRETCH_PATH = sys.argv[0]
+        # Prefer the vendored SBSMS
+        sbsms_util = os.path.join(
+            os.path.dirname(__file__),
+            '..',
+            '..',
+            'vendor',
+            'sbsms',
+            'cli',
+            'sbsms',
+        )
+    else:
+        PAULSTRETCH_PATH = sys.executable
+        sbsms_util = os.path.join(
+            ENGINE_DIR,
+            "sbsms",
+        )
 else:
     # Prefer the vendored SBSMS
     sbsms_util = os.path.join(

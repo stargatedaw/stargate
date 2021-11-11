@@ -68,8 +68,13 @@ lines-of-code:
 	./loc.sh
 
 mac_osx: deps py_vendor commit_hash
+	cp -f \
+		vendor/sbsms/cli/sbsms \
+		/usr/local/bin/rubberband \
+		engine/
 	OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make deps
 	OPTIMIZE_FLAGS= CC=clang make -C engine mac_osx
+	./macos/relink.py
 
 mingw:
 	CFLAGS+=" -static-libgcc " make -C engine mingw

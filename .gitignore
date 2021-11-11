@@ -2,6 +2,8 @@
 *.deb
 *.deps*
 *.dll
+.DS_Store
+*.dylib
 *.exe
 *.iso
 *.la

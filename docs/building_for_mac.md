@@ -1,7 +1,5 @@
 # Description
-This article describes the process for building on Mac OS X.  Note that it is
-very much still a work-in-progress.  We hope to eventually offer an app bundle
-if there is sufficient demand.
+This document describes the process for building on Mac OS X.
 
 # Procedure
 Note that you will need to install [Homebrew](https://brew.sh/) first, as it
@@ -23,8 +21,11 @@ cd stargate
 ./scripts/homebrew_deps.sh
 cd src
 pip3 install --user -r requirements-mac.txt
-make mac_osx
 
-# and run Stargate locally
+# Run locally
+make mac_osx
 python3 ./scripts/stargate
+
+# Package
+./macos/release.py
 ```
