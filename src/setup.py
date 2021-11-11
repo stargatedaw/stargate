@@ -196,8 +196,6 @@ setuptools.setup(
     ],
     scripts=[
         'scripts/stargate',
-        'scripts/stargate-paulstretch',
-        'scripts/stargate-project-recover',
     ],
     # PyPI
     download_url=_github_download_url(),

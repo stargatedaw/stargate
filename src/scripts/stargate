@@ -87,10 +87,15 @@ def _setup():
     scaler = setup_theme(app)
     return app, scaler
 
-def start_stargate(project_file):
+def start_paulstretch():
+    from sglib.lib.paulstretch import main as ps_main
+    ps_main()
+
+def start_stargate():
     app, scaler = _setup()
     from sglib.constants import UI_PIDFILE
     from sglib.lib.pidfile import check_pidfile, create_pidfile
+    args = parse_args()
     pid = check_pidfile(UI_PIDFILE)
     if pid is not None:
         from sgui.sgqt import QMessageBox
@@ -102,7 +107,7 @@ def start_stargate(project_file):
         )
         sys.exit(0)
     create_pidfile(UI_PIDFILE)
-    if not project_file:
+    if not args.project_file:
         from sgui.welcome import Welcome
         w = Welcome(app, scaler)
         app.exec()
@@ -114,7 +119,7 @@ def start_stargate(project_file):
     from sgui.splash import SplashScreen
     splash_screen = SplashScreen(scaler.y_res)
     from sgui.main import main
-    main(app, splash_screen, scaler, project_file)
+    main(app, splash_screen, scaler, args.project_file)
 
 def main():
     # When respawning, give the old process a chance to garbage collect first
@@ -122,7 +127,11 @@ def main():
         sys.argv.remove("--delay")
         time.sleep(1)
 
-    args = parse_args()
+    is_paulstretch = False
+    if len(sys.argv) >= 2 and sys.argv[1] == 'paulstretch':
+        is_paulstretch = True
+        sys.argv.pop(1)
+
     f_prefix_dir = os.path.dirname(REAL_PATH)
     f_path = os.path.join(
         f_prefix_dir,
@@ -132,7 +141,10 @@ def main():
     print(f'Adding PYTHONPATH {f_path}')
     sys.path.insert(0, f_path)
     try:
-        start_stargate(args.project_file)
+        if is_paulstretch:
+            start_paulstretch()
+        else:
+            start_stargate()
         return
     except ImportError:
         print(
@@ -149,7 +161,10 @@ def main():
     f_path = os.path.abspath(f_path)
     print(f'Adding PYTHONPATH {f_path}')
     sys.path.insert(0, f_path)
-    start_stargate(args.project_file)
+    if is_paulstretch:
+        start_paulstretch()
+    else:
+        start_stargate()
 
 if __name__ == "__main__":
     main()

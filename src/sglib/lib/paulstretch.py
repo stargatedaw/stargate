@@ -327,9 +327,6 @@ def main():
         numpy.double(args.window_size),
         numpy.double(args.onset),
         args.output,
-        args.start_pitch,
-        args.end_pitch,
-        args.input,
     )
 
 if __name__ == "__main__":

@@ -44,8 +44,6 @@ TIMESTRETCH_INDEXES = {
 
 if IS_WINDOWS:
     TIMESTRETCH_MODES.remove("SBSMS")
-elif IS_MAC_OSX:
-    TIMESTRETCH_MODES.remove("Paulstretch")
 
 CRISPNESS_SETTINGS = [
     "0 (smeared)",
@@ -142,11 +140,18 @@ def which(a_file):
                 return f_file_path
     return None
 
-if IS_WINDOWS:
+if IS_WINDOWS or IS_MAC_OSX:
     sbsms_util = os.path.join(
         ENGINE_DIR,
         "sbsms.exe",
     )
+    PAULSTRETCH_PATH = sys.executable
+elif IS_MAC_OSX:
+    sbsms_util = os.path.join(
+        ENGINE_DIR,
+        "sbsms",
+    )
+    PAULSTRETCH_PATH = sys.executable
 else:
     # Prefer the vendored SBSMS
     sbsms_util = os.path.join(
@@ -164,6 +169,7 @@ else:
             sbsms_util = which("sbsms")
     LOG.info(f'Using SBSMS: {sbsms_util}')
     assert sbsms_util
+    PAULSTRETCH_PATH = sys.argv[0]
 
 def has_pasuspender(cmd) -> list:
     """ Test for the presence of PulseAudio pasuspender and see it if works
