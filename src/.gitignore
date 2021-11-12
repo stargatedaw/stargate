@@ -3,6 +3,5 @@
 COMMIT
 dist/
 htmlcov/
-sg_py_vendor/
 stargate.egg-info/
 tmp/

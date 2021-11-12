@@ -12,9 +12,8 @@ BROWSER ?= firefox
 
 # --------------------------------------------------------------
 
-all: deps py_vendor commit_hash
+all: sbsms commit_hash distro
 	# General purpose build, including dependencies
-	make -C engine
 
 clean: clean_pyc
 	rm -rf htmlcov/ .pytest_cache/ .eggs/ .coverage \
@@ -28,10 +27,6 @@ clean_pyc:
 commit_hash:
 	git rev-parse --short HEAD > COMMIT || echo unknown > COMMIT
 
-deps:
-	cd vendor/sbsms && ( ./configure || ./configure --enable-sse=no ) && make
-	cd vendor/sbsms/cli && make
-
 deps_clean:
 	make -C vendor/sbsms clean
 	make -C vendor/sbsms/cli clean
@@ -41,7 +36,11 @@ distro: commit_hash
 	# to provide and package: mido, pymarshal, SBSMS, python-wavefile
 	make -C engine
 
+install: install_distro install_sbsms install_py_vendor
+	# General purpose install for users
+
 install_distro: clean_pyc
+	# install without vendored dependencies
 	install -d $(SG_DIR)
 	install -d $(DESTDIR)$(PREFIX)/bin
 	cp scripts/* $(DESTDIR)$(PREFIX)/bin
@@ -55,8 +54,10 @@ install_distro: clean_pyc
 	install -m 644 meta.json $(SG_DIR)
 	install -m 644 COMMIT $(SG_DIR)
 
-install: install_distro
+install_py_vendor:
 	cp -r sg_py_vendor $(SG_DIR)/stargate
+
+install_sbsms:
 	install -m 755 \
 		vendor/sbsms/cli/sbsms \
 		$(DESTDIR)$(PREFIX)/bin/$(MAJOR)-sbsms
@@ -67,12 +68,12 @@ install_mac_osx:
 lines-of-code:
 	./loc.sh
 
-mac_osx: deps py_vendor commit_hash
+mac_osx: commit_hash
 	cp -f \
 		vendor/sbsms/cli/sbsms \
 		/usr/local/bin/rubberband \
 		engine/
-	OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make deps
+	OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make sbsms
 	OPTIMIZE_FLAGS= CC=clang make -C engine mac_osx
 	./macos/relink.py
 
@@ -104,16 +105,20 @@ mingw_deps:
 		engine/libportaudio.dll \
 		|| echo "Could not install portaudio with ASIO support"
 
-
 mingw_deps_clean:
-	rm -rf scripts/*.{dll,exe}
+	rm -rf engine/*.{dll,exe}
 
 py_vendor:
+	# Vendor pip dependencies
 	mkdir -p ./sg_py_vendor
 	$(PIP) install \
-		--ignore-installed --target=./sg_py_vendor pymarshal
+		--ignore-installed --upgrade --target=./sg_py_vendor pymarshal
 	$(PIP) install \
-		--ignore-installed --target=./sg_py_vendor --no-deps wavefile
+		--ignore-installed --upgrade --target=./sg_py_vendor --no-deps wavefile
+
+sbsms:
+	cd vendor/sbsms && ( ./configure || ./configure --enable-sse=no ) && make
+	cd vendor/sbsms/cli && make
 
 tag_release:
 	git tag release-$(MINOR)

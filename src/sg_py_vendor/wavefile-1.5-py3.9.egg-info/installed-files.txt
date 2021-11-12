@@ -1,0 +1,11 @@
+../wavefile/__init__.py
+../wavefile/__pycache__/__init__.cpython-39.pyc
+../wavefile/__pycache__/libsndfile.cpython-39.pyc
+../wavefile/__pycache__/wavefile.cpython-39.pyc
+../wavefile/libsndfile.py
+../wavefile/wavefile.py
+PKG-INFO
+SOURCES.txt
+dependency_links.txt
+requires.txt
+top_level.txt

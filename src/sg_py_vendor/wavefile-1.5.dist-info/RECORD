@@ -1,0 +1,11 @@
+wavefile-1.5.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+wavefile-1.5.dist-info/METADATA,sha256=2gc7RTQscB4ANG87dOSfmmNAdMB5PS5s-A5zAZCt2v8,1860
+wavefile-1.5.dist-info/RECORD,,
+wavefile-1.5.dist-info/WHEEL,sha256=g4nMs7d-Xl9-xC9XovUrsDHGXt-FT0E17Yqo92DEfvY,92
+wavefile-1.5.dist-info/top_level.txt,sha256=mzDj81CaGXrQdSYjs0DqgPYKWAYsK-63yuEwpDp3MAg,9
+wavefile/__init__.py,sha256=uzcUPxvwE4rV3b6aLa-jMFuI8ky9NMlan5Q--StuN24,24
+wavefile/__pycache__/__init__.cpython-38.pyc,,
+wavefile/__pycache__/libsndfile.cpython-38.pyc,,
+wavefile/__pycache__/wavefile.cpython-38.pyc,,
+wavefile/libsndfile.py,sha256=J8_BfQYEa6ehGULcTG58vy3t-w01g4wLE26WdeeLRys,17984
+wavefile/wavefile.py,sha256=-eLWp-pqmzFlTUEeuSUbpmfoaC6y0fzT5wBkRfAf4G4,14701

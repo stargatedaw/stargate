@@ -21,6 +21,7 @@ cd stargate
 ./scripts/homebrew_deps.sh
 cd src
 pip3 install --user -r requirements-mac.txt
+make sbsms
 
 # Run locally
 make mac_osx

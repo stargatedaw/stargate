@@ -1,0 +1,10 @@
+setup.cfg
+setup.py
+wavefile/__init__.py
+wavefile/libsndfile.py
+wavefile/wavefile.py
+wavefile.egg-info/PKG-INFO
+wavefile.egg-info/SOURCES.txt
+wavefile.egg-info/dependency_links.txt
+wavefile.egg-info/requires.txt
+wavefile.egg-info/top_level.txt
