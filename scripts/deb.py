@@ -146,13 +146,24 @@ postinst_path = os.path.join(
 #     f.write(postinst)
 # os.chmod(postinst_path, 0o755)
 retcode = os.system(f"dpkg-deb --build --root-owner-group {root}")
-assert not retcode, f"dpkg-deb exited with status retcode"
+assert not retcode, retcode
+try:
+    import distro
+    distro_name = distro.name().split()[0].lower()
+    distro_version = distro.version().lower().replace(' ', '-')
+    package = (
+        f"{major_version}-{minor_version}-"
+        f"{distro_name}-{distro_version}-{arch}.deb"
+    )
+except ImportError:
+    package = f"{major_version}-{minor_version}-{arch}.deb"
 
-retcode = os.system(f"dpkg-name {os.path.join(CWD, 'tmp.deb')}")
-assert not retcode, f"dpkg-name exited with status retcode"
-
-print("Created package")
-os.system(f"ls -l {CWD}/*.deb")
+os.rename(
+    os.path.join(CWD, "tmp.deb"),
+    os.path.join(CWD, package),
+)
+package_path = os.path.join(CWD, package)
+print(f"Created {package_path}")
 
 if args.install:
     retcode = os.system(f'sudo apt install -y --reinstall ./{package}')

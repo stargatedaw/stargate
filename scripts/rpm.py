@@ -34,12 +34,6 @@ def parse_args():
         default=None,
         help='Use non-default PLAT_FLAGS to compile',
     )
-    parser.add_argument(
-        '--nodeps',
-        action='store_true',
-        dest='nodeps',
-        help="(rpmbuild) Do not verify build dependencies",
-    )
     return parser.parse_args()
 
 args = parse_args()
@@ -74,15 +68,16 @@ PACKAGE_NAME = "{}-{}".format(
     MAJOR_VERSION, global_version_fedora)
 
 global_home = os.path.expanduser("~")
-rpmbuild_path = os.path.join(global_home, 'rpmbuild')
-os.system(f'rm -rf {os.path.join(rpmbuild_path, "BUILD", MAJOR_VERSION)}*')
+rpm_build_path = os.path.join(
+    global_home,
+    'rpmbuild',
+    "BUILD",
+    MAJOR_VERSION,
+)
+os.system(f'rm -rf {rpm_build_path}*')
 
-# If rpmbuild_path doesn't exist, create it manually. This is equivalent
-# to what rpmdev-setuptree does on Fedora/RHEL, but works on any distro.
-if not os.path.isdir(rpmbuild_path):
-    os.mkdir(rpmbuild_path)
-    for dirname in ['BUILD', 'RPMS', 'SOURCES', 'SPECS', 'SRPMS']:
-        os.mkdir(os.path.join(rpmbuild_path, dirname))
+if not os.path.isdir("{}/rpmbuild".format(global_home)):
+    os.system("rpmdev-setuptree")
 
 SPEC_DIR = "{}/rpmbuild/SPECS/".format(global_home)
 SOURCE_DIR = "{}/rpmbuild/SOURCES/".format(global_home)
@@ -191,8 +186,7 @@ if args.install:
     os.system('rm -f {}-*'.format(MAJOR_VERSION))
 
 os.chdir(SPEC_DIR)
-nodeps = '--nodeps' if args.nodeps else ''
-f_rpm_result = os.system(f"rpmbuild -ba {nodeps} {global_spec_file}")
+f_rpm_result = os.system("rpmbuild -ba {}".format(global_spec_file))
 
 if f_rpm_result:
     print("Error:  rpmbuild returned {}".format(f_rpm_result))
