@@ -254,6 +254,11 @@ def setup_theme(app):
         theme.load_theme(scaler, font_size, font_unit)
         glbl_shared.APP.setStyle(QStyleFactory.create("Fusion"))
         glbl_shared.APP.setStyleSheet(theme.QSS)
+        if theme.ICON_PATH:
+            LOG.info(f"Setting icon to '{theme.ICON_PATH}'")
+            glbl_shared.APP.setWindowIcon(
+                QIcon(theme.ICON_PATH),
+            )
         return scaler
     except Exception as ex:
         LOG.exception(ex)
