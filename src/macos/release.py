@@ -2,6 +2,7 @@
 
 import json
 import os
+import platform
 import shutil
 import subprocess
 
@@ -36,8 +37,9 @@ subprocess.check_call([
 ])
 
 os.chdir('dist')
+ARCH = platform.machine()
 
-DMG = f'{MAJOR_VERSION}-{MINOR_VERSION}-intel-mac.dmg'
+DMG = f'{MAJOR_VERSION}-{MINOR_VERSION}-{ARCH}-mac.dmg'
 if os.path.exists(DMG):
     os.remove(DMG)
 
