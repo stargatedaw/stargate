@@ -142,19 +142,22 @@ def which(a_file):
                 return f_file_path
     return None
 
+
+
+
 if IS_WINDOWS:
+    RUBBERBAND_PATH = os.path.join(
+        ENGINE_DIR,
+        'rubberband.exe',
+    )
     sbsms_util = os.path.join(
         ENGINE_DIR,
         "sbsms.exe",
     )
     PAULSTRETCH_PATH = sys.executable
 elif IS_MAC_OSX:
-    sbsms_util = os.path.join(
-        ENGINE_DIR,
-        "sbsms",
-    )
-elif IS_MAC_OSX:
     if IS_LOCAL_DEVEL:
+        RUBBERBAND_PATH = which('rubberband')
         PAULSTRETCH_PATH = sys.argv[0]
         # Prefer the vendored SBSMS
         sbsms_util = os.path.join(
@@ -166,14 +169,20 @@ elif IS_MAC_OSX:
             'cli',
             'sbsms',
         )
+        PAULSTRETCH_PATH = sys.argv[0]
     else:
         PAULSTRETCH_PATH = sys.executable
+        RUBBERBAND_PATH = os.path.join(
+            ENGINE_DIR,
+            "sbsms",
+        )
         sbsms_util = os.path.join(
             ENGINE_DIR,
             "sbsms",
         )
-else:
+elif IS_LINUX:
     # Prefer the vendored SBSMS
+    RUBBERBAND_PATH = which("rubberband")
     sbsms_util = os.path.join(
         os.path.dirname(__file__),
         '..',
@@ -190,6 +199,8 @@ else:
     LOG.info(f'Using SBSMS: {sbsms_util}')
     assert sbsms_util
     PAULSTRETCH_PATH = sys.argv[0]
+else:
+    raise NotImplementedError("Unsupported platform")
 
 def has_pasuspender(cmd) -> list:
     """ Test for the presence of PulseAudio pasuspender and see it if works
@@ -209,16 +220,6 @@ for _terminal in ("x-terminal-emulator", "gnome-terminal", "konsole"):
     if which(_terminal):
         TERMINAL = _terminal
         break
-
-if IS_WINDOWS:
-    RUBBERBAND_PATH = os.path.join(
-        ENGINE_DIR,
-        'rubberband.exe',
-    )
-else:
-    RUBBERBAND_PATH = which("rubberband")
-
-
 
 class WinVolInfo:
     def __init__(self):
