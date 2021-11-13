@@ -174,7 +174,7 @@ elif IS_MAC_OSX:
         PAULSTRETCH_PATH = sys.executable
         RUBBERBAND_PATH = os.path.join(
             ENGINE_DIR,
-            "sbsms",
+            "rubberband",
         )
         sbsms_util = os.path.join(
             ENGINE_DIR,

@@ -13,6 +13,7 @@ a = Analysis(['scripts/stargate'],
                  ('engine/stargate-engine', 'engine'),
                  ('engine/*.dylib', '.'),
                  ('vendor/sbsms/cli/sbsms', 'engine'),
+                 ('engine/rubberband', 'engine'),
              ],
              datas=[
                  ('meta.json', '.'),
