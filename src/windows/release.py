@@ -114,6 +114,13 @@ Section "Base Install" SEC01
     SetOutPath $INSTDIR\program
     File /r "dist\stargate\"
     File "files\share\pixmaps\{MAJOR_VERSION}.ico"
+    ; Add to the "Add or remove programs" dialog
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\StargateDAW" \
+                "DisplayName" "Stargate DAW"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\StargateDAW" \
+                "DisplayIcon" "$\"$INSTDIR\program\files\share\pixmaps\stargate.ico$\""
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\StargateDAW" \
+                "UninstallString" "$\"$INSTDIR\uninstall.exe$\""
 SectionEnd
 
 Section "Start Menu Shortcut" SEC02
@@ -145,6 +152,7 @@ Section "uninstall"
     ; stored next to the application, only the application itself
     RMDir /r $INSTDIR\program
     Delete "$SMPROGRAMS\Stargate DAW.lnk"
+    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\StargateDAW"
 SectionEnd
 """
 
