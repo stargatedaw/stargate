@@ -62,4 +62,4 @@ coll = COLLECT(exe,
 app = BUNDLE(coll,
              name='stargate.app',
              icon='macos/stargate.icns',
-             bundle_identifier=None)
+             bundle_identifier='io.github.stargateaudio')
