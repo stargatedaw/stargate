@@ -75,21 +75,20 @@ typedef struct{
     int pid;
 }ui_thread_args;
 
-#if SG_OS == _OS_LINUX
-NO_OPTIMIZATION void * ui_process_monitor_thread(
+#if SG_OS != _OS_WINDOWS
+NO_OPTIMIZATION void* ui_process_monitor_thread(
     void * a_thread_args
 ){
-    char f_proc_path[256];
-    f_proc_path[0] = '\0';
     ui_thread_args * f_thread_args = (ui_thread_args*)(a_thread_args);
-    sprintf(f_proc_path, "/proc/%i", f_thread_args->pid);
-    struct stat sts;
     int f_exited = 0;
 
     while(!exiting){
         sleep(1);
-        if (stat(f_proc_path, &sts) == -1 && errno == ENOENT){
-            log_info("UI process doesn't exist, exiting.");
+        if(kill(f_thread_args->pid, 0)){
+            log_info(
+                "UI process %i doesn't exist, exiting.",
+                f_thread_args->pid
+            );
             pthread_mutex_lock(&STARGATE->exit_mutex);
             exiting = 1;
             pthread_mutex_unlock(&STARGATE->exit_mutex);
@@ -98,8 +97,7 @@ NO_OPTIMIZATION void * ui_process_monitor_thread(
         }
     }
 
-    if(f_exited)
-    {
+    if(f_exited){
         sleep(3);
         stop_engine();
         exit(1);
@@ -199,7 +197,7 @@ int _main(int argc, char** argv){
     }
 
     set_thread_params();
-#if SG_OS == _OS_LINUX
+#if SG_OS != _OS_WINDOWS
     start_ui_thread(ui_pid);
 #endif
     start_osc_thread();
@@ -329,7 +327,7 @@ NO_OPTIMIZATION void start_osc_thread(){
     );
 }
 
-#if SG_OS == _OS_LINUX
+#if SG_OS != _OS_WINDOWS
     NO_OPTIMIZATION void start_ui_thread(int pid){
         log_info("Starting UI monitor thread");
         pthread_attr_t f_ui_threadAttr;
