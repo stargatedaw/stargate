@@ -11,7 +11,7 @@ a = Analysis(['scripts/stargate'],
              ],
              binaries=[
                  ('engine/stargate-engine', 'engine'),
-                 ('engine/*.dylib', 'engine'),
+                 ('engine/*.dylib', '.'),
                  ('vendor/sbsms/cli/sbsms', 'engine'),
              ],
              datas=[

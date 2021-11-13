@@ -128,10 +128,12 @@ class hardware_dialog:
             pm_paths = ("libportmidi.so.0", "libportmidi.so")
         elif util.IS_MAC_OSX:
             pa_paths = (
+                os.path.join(util.INSTALL_PREFIX, 'libportaudio.2.dylib'),
                 "/usr/local/lib/libportaudio.dylib",
                 "libportaudio.dylib",
             )
             pm_paths = (
+                os.path.join(util.INSTALL_PREFIX, 'libportmidi.dylib'),
                 "/usr/local/lib/libportmidi.dylib",
                 "libportmidi.dylib",
             )
