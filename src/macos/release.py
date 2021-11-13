@@ -33,6 +33,7 @@ if os.path.isdir(BUNDLE):
 subprocess.check_call([
     f'{HOME}/Library/Python/3.8/bin/pyinstaller',
     f'--paths=(CWD)',
+    '--noconfirm',
     'pyinstaller-mac-onedir.spec',
 ])
 
