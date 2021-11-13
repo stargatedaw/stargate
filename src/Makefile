@@ -74,7 +74,7 @@ mac_osx: commit_hash
 		/usr/local/bin/rubberband \
 		engine/
 	OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make sbsms
-	OPTIMIZE_FLAGS= CC=clang make -C engine mac_osx
+	OPTIMIZE_FLAGS= CC=clang CC_ARGS= make -C engine mac_osx
 	./macos/link.py
 
 mingw:
