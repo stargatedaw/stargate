@@ -36,7 +36,7 @@ def relink(binary):
                 'install_name_tool',
                 '-change',
                 dylib,
-                f'@executable_path/{basename}',
+                f'@loader_path/{basename}',
                 binary,
             ])
 
