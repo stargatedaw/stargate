@@ -6,6 +6,9 @@ block_cipher = None
 
 
 a = Analysis(['scripts/stargate'],
+             pathex=[
+                 os.path.dirname(SPECPATH),
+             ],
              binaries=[
                  ('engine/stargate-engine', 'engine'),
                  ('engine/*.dylib', 'engine'),
@@ -21,9 +24,6 @@ a = Analysis(['scripts/stargate'],
                  'sgui',
                  'logging',
              ],
-             pathex=[
-                 os.path.dirname(SPECPATH),
-             ],
              hookspath=[],
              hooksconfig={},
              runtime_hooks=[],
@@ -32,7 +32,6 @@ a = Analysis(['scripts/stargate'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
-
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 
@@ -51,7 +50,15 @@ exe = EXE(pyz,
           codesign_identity=None,
           entitlements_file=None )
 
-app = BUNDLE(exe,
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=False,
+               upx=True,
+               upx_exclude=[],
+               name='stargate')
+app = BUNDLE(coll,
              name='stargate.app',
-             icon=None,
+             icon='macos/stargate.icns',
              bundle_identifier=None)

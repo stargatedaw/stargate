@@ -33,18 +33,19 @@ if os.path.isdir(BUNDLE):
 subprocess.check_call([
     f'{HOME}/Library/Python/3.8/bin/pyinstaller',
     f'--paths=(CWD)',
-    'pyinstaller-mac-onefile.spec',
+    'pyinstaller-mac-onedir.spec',
 ])
 
 os.chdir('dist')
 ARCH = platform.machine()
 
-DMG = f'{MAJOR_VERSION}-{MINOR_VERSION}-{ARCH}-mac.dmg'
+DMG = f'{MAJOR_VERSION}-{MINOR_VERSION}-macos-{ARCH}.dmg'
 if os.path.exists(DMG):
     os.remove(DMG)
 
 subprocess.check_call([
     'create-dmg',
+    '--format', 'UDBZ',
     DMG,
     f'{MAJOR_VERSION}.app',
 ])
