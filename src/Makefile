@@ -75,7 +75,7 @@ mac_osx: commit_hash
 		engine/
 	OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make sbsms
 	OPTIMIZE_FLAGS= CC=clang make -C engine mac_osx
-	./macos/relink.py
+	./macos/link.py
 
 mingw:
 	CFLAGS+=" -static-libgcc " make -C engine mingw
