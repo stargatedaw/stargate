@@ -1,4 +1,4 @@
-from sglib._ctypes import *
+from sglib.lib._ctypes import *
 import ctypes
 import os
 import pytest
