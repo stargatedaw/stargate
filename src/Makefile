@@ -12,7 +12,7 @@ BROWSER ?= firefox
 
 # --------------------------------------------------------------
 
-all: sbsms commit_hash distro
+all: sbsms distro
 	# General purpose build, including dependencies
 
 clean: clean_pyc
