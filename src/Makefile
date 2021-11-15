@@ -109,12 +109,14 @@ mingw_deps_clean:
 	rm -rf engine/*.{dll,exe}
 
 py_vendor:
-	# Vendor pip dependencies
+	# Vendor Python dependencies not commonly available in distro repos
 	mkdir -p ./sg_py_vendor
 	$(PIP) install \
 		--ignore-installed --upgrade --target=./sg_py_vendor pymarshal
 	$(PIP) install \
 		--ignore-installed --upgrade --target=./sg_py_vendor --no-deps wavefile
+	$(PIP) install \
+		--ignore-installed --upgrade --target=./sg_py_vendor mido
 
 sbsms:
 	cd vendor/sbsms && ( ./configure || ./configure --enable-sse=no ) && make

@@ -1,5 +1,9 @@
 from sglib.log import LOG
-import mido
+try:
+    import mido
+except ImportError:
+    from sg_py_vendor import mido
+
 
 class MidiEvent:
     def __init__(self, a_ev, a_start_beat):
