@@ -103,7 +103,7 @@ class TransportWidget(AbstractTransportWidget):
                 and
                 rb.isChecked()
             ):
-                self.tool_select_rb.setChecked(True)
+                self.tool_select_clicked()
 
     def tool_select_clicked(self, a_val=None):
         shared.EDITOR_MODE = shared.EDITOR_MODE_SELECT
