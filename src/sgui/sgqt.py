@@ -1,5 +1,6 @@
 from sglib.log import LOG
 import os
+import sys
 
 
 if True:  # PyQt
@@ -8,7 +9,11 @@ if True:  # PyQt
         # default to PyQt5
         _PYQT5_ONLY = False
     except ImportError:
-        import PyQt5
+        try:
+            import PyQt5
+        except ImportError:
+            LOG.error(f"Unable to Find PyQt5 or PyQt6 in {sys.path}")
+            sys.exit(1)
         # default to PyQt6 if available, and PyQt5 is not
         _PYQT5_ONLY = True
     if (

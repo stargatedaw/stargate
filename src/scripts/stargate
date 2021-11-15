@@ -138,8 +138,8 @@ def main():
         "..",
     )
     f_path = os.path.abspath(f_path)
-    print(f'Adding {f_path} to sys.path')
     sys.path.insert(0, f_path)
+    print(f'sys.path = {sys.path}')
     try:
         if is_paulstretch:
             start_paulstretch()
@@ -159,8 +159,8 @@ def main():
         "stargate",
     )
     f_path = os.path.abspath(f_path)
-    print(f'Adding {f_path} to sys.path')
     sys.path.insert(0, f_path)
+    print(f'sys.path = {sys.path}')
     if is_paulstretch:
         start_paulstretch()
     else:
