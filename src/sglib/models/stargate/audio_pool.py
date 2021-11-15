@@ -196,7 +196,7 @@ class AudioPool:
 
     @staticmethod
     def from_str(_str):
-        lines = _str.split("\n")
+        lines = [x for x in _str.split("\n") if x.strip()]
         if lines[-1] == "\\":
             lines = lines[:-1]
         pool = [
