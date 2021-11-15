@@ -639,6 +639,7 @@ class AudioItemSeqWidget(FileDragDropper):
         self.audio_items_clipboard = []
         self.disable_on_play = (self.menu_button,)
         self.set_multiselect(False)
+        self.paifx_clipboard = None
 
     def on_play(self):
         for f_item in self.disable_on_play:
