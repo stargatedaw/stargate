@@ -11,6 +11,8 @@ def change_sequence(name):
         uid, sequence = lookup[name]
     else:  # Create new
         constants.DAW_PROJECT.create_sequence(name)
+        lookup = constants.DAW_PROJECT.sequence_uids_by_name()
+        uid, sequence = lookup[name]
     constants.DAW_IPC.change_sequence(uid)
     constants.DAW_CURRENT_SEQUENCE_UID = uid
     shared.CURRENT_SEQUENCE = sequence

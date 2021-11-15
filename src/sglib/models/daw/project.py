@@ -621,13 +621,16 @@ class DawProject(AbstractProject):
         f_graph = self.get_routing_graph()
         f_graph.reorder(a_dict)
 
-        f_sequence = self.get_sequence()
-        f_sequence.reorder(a_dict)
+        sequences = self.sequence_uids_by_name()
+        for name, tup in sequences.items():
+            uid = tup[0]
+            sequence = self.get_sequence(uid)
+            sequence.reorder(a_dict)
+            self.save_sequence(sequence, a_notify=False, uid=uid)
 
         self.save_tracks(f_tracks)
         self.save_audio_inputs(f_audio_inputs)
         self.save_routing_graph(f_graph, a_notify=False)
-        self.save_sequence(f_sequence, a_notify=False)
         self.save_midi_routing(f_midi_routings, a_notify=False)
 
         constants.DAW_IPC.open_song(self.project_folder, False)
