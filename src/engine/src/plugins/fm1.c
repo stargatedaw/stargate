@@ -1368,10 +1368,10 @@ void v_run_fm1(
             plugin_data->mono_modules.pan_smoother.last_value,
             -3.0
         );
-        plugin_data->output0[i_iterator] =
+        plugin_data->output0[i_iterator] +=
             plugin_data->mono_modules.aa_filter.output0 *
             plugin_data->mono_modules.panner.gainL;
-        plugin_data->output1[i_iterator] =
+        plugin_data->output1[i_iterator] +=
             plugin_data->mono_modules.aa_filter.output1 *
             plugin_data->mono_modules.panner.gainR;
 

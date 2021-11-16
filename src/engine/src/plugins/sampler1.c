@@ -992,8 +992,9 @@ void v_sampler1_slow_index(t_sampler1* plugin_data)
 }
 
 void v_sampler1_process_midi_event(
-    t_sampler1 * plugin_data, t_seq_event * a_event)
-{
+    t_sampler1 * plugin_data,
+    t_seq_event * a_event
+){
     t_sampler1_sample * f_sample = NULL;
     t_int_frac_read_head * f_read_head = NULL;
     t_sampler1_poly_voice * f_voice = NULL;
@@ -1358,9 +1359,11 @@ void v_sampler1_process_midi_event(
 
 
 void v_run_sg_sampler1(
-        PluginHandle instance, int sample_count,
-        struct ShdsList * midi_events, struct ShdsList *atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    struct ShdsList* midi_events,
+    struct ShdsList *atm_events
+){
     t_sampler1 *plugin_data = (t_sampler1*)instance;
 
     t_seq_event **events = (t_seq_event**)midi_events->data;
@@ -1494,9 +1497,11 @@ void v_run_sg_sampler1(
     }
 }
 
-char *c_sampler1_load_all(t_sampler1 *plugin_data, char *paths,
-        pthread_spinlock_t * a_spinlock)
-{
+char* c_sampler1_load_all(
+    t_sampler1 *plugin_data,
+    char *paths,
+    pthread_spinlock_t * a_spinlock
+){
     int f_index = 0;
     int f_samples_loaded_count = 0;
     int f_current_string_index = 0;
@@ -1588,9 +1593,12 @@ char *c_sampler1_load_all(t_sampler1 *plugin_data, char *paths,
     return NULL;
 }
 
-void v_sampler1_configure(PluginHandle instance, char *key,
-        char *value, pthread_spinlock_t * a_spinlock)
-{
+void v_sampler1_configure(
+    PluginHandle instance,
+    char *key,
+    char *value,
+    pthread_spinlock_t * a_spinlock
+){
     t_sampler1 *plugin_data = (t_sampler1 *)instance;
 
     if (!strcmp(key, "load"))
