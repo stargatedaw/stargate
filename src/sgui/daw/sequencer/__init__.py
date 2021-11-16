@@ -345,5 +345,8 @@ class SequencerWidget:
             self.open_sequence()
             shared.MIDI_DEVICES_DIALOG.set_routings()
             shared.TRANSPORT.open_project()
-            shared.PLUGIN_RACK.set_track_order(f_result)
+            shared.PLUGIN_RACK.set_track_order(
+                f_result,
+                shared.TRACK_NAMES,
+            )
 

@@ -697,17 +697,22 @@ class PluginRackTab:
         self.track_combobox.setCurrentIndex(index)
         self.enabled = True
 
-    def set_track_order(self, a_dict):
-        self.enabled = False
+    def set_track_order(self, a_dict, track_names):
         f_index = self.track_combobox.currentIndex()
         f_new_index = a_dict[f_index]
+        self.set_track_names(track_names)
+        self.enabled = False
         self.plugin_racks = {
-            y:self.plugin_racks[x]
+            y: self.plugin_racks[x]
             for x, y in a_dict.items()
             if x in self.plugin_racks
         }
         for k, v in self.plugin_racks.items():
+            LOG.info(f"track {v.track_number}: {k}")
             v.track_number = k
+            for plugin in v.plugins:
+                LOG.info(f"plugin {plugin.track_num}: {k}")
+                plugin.track_num = k
         self.track_combobox.setCurrentIndex(f_new_index)
         self.enabled = True
 
