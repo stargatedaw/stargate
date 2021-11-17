@@ -1,5 +1,5 @@
 # Building
-##Note
+## Note
 If building for ARM or any architecture other than x86, you must override
 `PLAT_FLAGS` when calling `make`.  For example:
 ```
