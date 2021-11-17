@@ -13,7 +13,7 @@
 
 
 
-#if SG_OS == _OS_MAC_OS_X
+#if SG_OS == _OS_MACOS
     #include <os/lock.h>
     void pthread_spin_init(os_unfair_lock * a_lock, void * a_opts){
         os_unfair_lock lock = OS_UNFAIR_LOCK_INIT;

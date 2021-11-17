@@ -104,7 +104,7 @@ NO_OPTIMIZATION int open_audio_device(
 
     outputParameters.suggestedLatency = f_device_info->defaultLowOutputLatency;
 
-#if SG_OS == _OS_WINDOWS || SG_OS == _OS_MAC_OS_X
+#if SG_OS == _OS_WINDOWS || SG_OS == _OS_MACOS
     if(config->input_name[0] == '\0'){
         inputParameters.channelCount = 0;
     } else {

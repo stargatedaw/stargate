@@ -3,14 +3,14 @@
 
 #define _OS_LINUX 0
 #define _OS_WINDOWS 1
-#define _OS_MAC_OS_X 2
+#define _OS_MACOS 2
 
 #if defined(_WIN64) || defined(_WIN32) || defined(__MINGW32__) || defined(__MINGW64__)
     #define SG_OS _OS_WINDOWS
 #elif defined(__linux__)
     #define SG_OS _OS_LINUX
 #elif defined(__APPLE__)
-    #define SG_OS _OS_MAC_OS_X
+    #define SG_OS _OS_MACOS
 #endif
 
 //Required for sched.h
@@ -67,7 +67,7 @@ struct SamplePair {
     SGFLT right;
 };
 
-#if SG_OS == _OS_MAC_OS_X
+#if SG_OS == _OS_MACOS
 
     #include <libkern/OSAtomic.h>
     #include <os/lock.h>

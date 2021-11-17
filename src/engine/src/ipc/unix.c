@@ -15,7 +15,7 @@
 #include "globals.h"
 #include "ipc.h"
 
-#if SG_OS == _OS_MAC_OS_X
+#if SG_OS == _OS_MACOS
     #define MSG_CONFIRM SO_NOSIGPIPE
 #endif
 

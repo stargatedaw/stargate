@@ -393,7 +393,7 @@ NO_OPTIMIZATION void destruct_signal_handling(){
 
 
 NO_OPTIMIZATION void set_thread_params(){
-#if SG_OS != _OS_LINUX && SG_OS != _OS_MAC_OS_X
+#if SG_OS != _OS_LINUX && SG_OS != _OS_MACOS
     log_info("Setting thread params");
     int f_current_proc_sched = sched_getscheduler(0);
 
