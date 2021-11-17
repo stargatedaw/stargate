@@ -187,10 +187,10 @@ elif IS_LINUX:
         os.path.dirname(__file__),
         '..',
         '..',
-        'vendor',
-        'sbsms',
-        'cli',
-        'sbsms',
+        '..',
+        '..',
+        '..',
+        'bin',
     )
     if not os.path.exists(sbsms_util):
         sbsms_util = which(f"{MAJOR_VERSION}-sbsms")
