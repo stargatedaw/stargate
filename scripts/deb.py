@@ -79,7 +79,6 @@ build_depends = ", ".join([
 ])
 
 depends = [
-    "ffmpeg",
     "fftw3",
     "lame",
     "libasound2",
@@ -100,6 +99,10 @@ depends = [
     "vorbis-tools",
 ]
 
+recommends = ", ".join([
+    "ffmpeg",
+])
+
 if arch.lower().startswith("arm"):
     # Used to detect if a Raspberry Pi is running a sufficiently lightweight
     # desktop to be able to render the UI
@@ -117,6 +120,7 @@ Description: A holistic audio production solution.
   Everything you need to create music on a computer.
 Build-Depends: {build_depends}
 Depends: {depends}
+Recommends: {recommends}
 """
 
 postinst = """\
