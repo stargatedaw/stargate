@@ -27,7 +27,7 @@ void small_page_aligned_alloc(
     *a_ptr = (void*)malloc(a_size);  //unaligned, but completely portable
     sg_assert_ptr(
         *a_ptr,
-        "malloc failed: size %zu",
+        "malloc failed: size %llu",
         a_size
     );
 #endif
