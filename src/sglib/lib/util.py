@@ -13,6 +13,8 @@ import subprocess
 import sys
 import time
 
+import psutil
+
 
 if IS_LINUX:
     from .path.linux import *
@@ -63,7 +65,7 @@ WITH_AUDIO = True
 
 ENGINE_RETCODE = None
 
-CPU_COUNT = multiprocessing.cpu_count()
+CPU_COUNT = psutil.cpu_count(logical=False)
 if CPU_COUNT < 1:
     CPU_COUNT = 1
 
