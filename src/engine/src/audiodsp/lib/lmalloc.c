@@ -9,7 +9,11 @@
 #endif
 
 
-void small_page_aligned_alloc(void ** a_ptr, size_t a_size, int a_alignment){
+void small_page_aligned_alloc(
+    void ** a_ptr,
+    size_t a_size,
+    int a_alignment
+){
 #if SG_OS == _OS_LINUX
     int result = posix_memalign(a_ptr, a_alignment, a_size);
     sg_assert(
@@ -28,8 +32,7 @@ void small_page_aligned_alloc(void ** a_ptr, size_t a_size, int a_alignment){
  *
  * Custom memory allocator
  */
-void lmalloc(void ** a_ptr, size_t a_size)
-{
+void lmalloc(void ** a_ptr, size_t a_size){
     small_page_aligned_alloc(a_ptr, a_size, HUGEPAGE_MIN_ALIGN);
 }
 
@@ -40,13 +43,11 @@ huge_page_data HUGE_PAGE_DATA[50];
 
 /* Ensure that any pointers carved out of hugepages meet minimum
  * alignment for SIMD instructions (or maybe cache lines eventually) */
-char * hugepage_align(char * a_pos, int a_alignment)
-{
+char* hugepage_align(char * a_pos, int a_alignment){
     return a_pos + (a_alignment - ((size_t)a_pos % a_alignment));
 }
 
-int alloc_hugepage_data()
-{
+int alloc_hugepage_data(){
 #if SG_OS == _OS_LINUX
     huge_page_data * f_data = &HUGE_PAGE_DATA[HUGE_PAGE_DATA_COUNT];
     f_data->start = (char*)mmap(NULL, HUGEPAGE_ALLOC_SIZE,
@@ -74,8 +75,11 @@ int alloc_hugepage_data()
    when the process goes away.
  */
 
-void hp_aligned_alloc(void ** a_ptr, size_t a_size, int a_alignment)
-{
+void hp_aligned_alloc(
+    void ** a_ptr,
+    size_t a_size,
+    int a_alignment
+){
 #if SG_OS == _OS_LINUX
     if(USE_HUGEPAGES)
     {
@@ -129,13 +133,11 @@ void hp_aligned_alloc(void ** a_ptr, size_t a_size, int a_alignment)
 
 }
 
-void hpalloc(void ** a_ptr, size_t a_size)
-{
+void hpalloc(void ** a_ptr, size_t a_size){
     hp_aligned_alloc(a_ptr, a_size, HUGEPAGE_MIN_ALIGN);
 }
 
-void clalloc(void ** a_ptr, size_t a_size)
-{
+void clalloc(void ** a_ptr, size_t a_size){
     hp_aligned_alloc(a_ptr, a_size, CACHE_LINE_SIZE);
 }
 
