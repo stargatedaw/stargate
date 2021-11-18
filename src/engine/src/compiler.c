@@ -189,7 +189,7 @@ static void _sg_assert_failed(va_list args, char* msg){
     char _str[4096];
     if(msg){
         vsprintf(_str, msg, args);
-        log_error("Assertion message %s", _str);
+        log_error("Assertion failed: %s", _str);
     } else {
         log_error("Assertion failed: no message provided");
     }
