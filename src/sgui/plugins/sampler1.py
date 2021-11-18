@@ -1261,9 +1261,11 @@ class sampler1_plugin_ui(AbstractPluginUI):
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             self.selected_sample_index_combobox.addItem("")
         self.selected_sample_index_combobox.currentIndexChanged.connect(
-            self.viewSampleSelectedIndexChanged)
+            self.viewSampleSelectedIndexChanged,
+        )
         self.sample_view_extra_controls_gridview.addWidget(
-            self.selected_sample_index_combobox, 1, 0, 1, 1)
+            self.selected_sample_index_combobox, 1, 0, 1, 1,
+        )
         self.selected_sample_index_label = QLabel(_("Selected Sample"))
         self.sample_view_extra_controls_gridview.addWidget(
             self.selected_sample_index_label, 0, 0, 1, 1)
@@ -1280,9 +1282,9 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.loop_mode_combobox = QComboBox(self.view_sample_tab)
         self.loop_mode_combobox.addItems([_("Off"), _("On")])
         self.loop_mode_combobox.currentIndexChanged.connect(
-            self.loopModeChanged)
-        self.loop_tune_note_selector = note_selector_widget(
-            0, None, None)
+            self.loopModeChanged,
+        )
+        self.loop_tune_note_selector = note_selector_widget(0, None, None)
         self.loop_tune_button = QPushButton(_("Tune"))
         self.loop_tune_button.pressed.connect(self.on_loop_tune)
         self.sample_view_extra_controls_gridview.addWidget(
@@ -2049,7 +2051,27 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.selected_radiobuttons[a_index].setChecked(True)
         self.mono_fx_tab_selected_sample.setCurrentIndex(a_index)
         self.mono_fx_tab_selected_group.setCurrentIndex(
-            self.monofx_groups[a_index].get_value())
+            self.monofx_groups[a_index].get_value(),
+        )
+        if self.sample_table.item(
+            self.selected_row_index,
+            SMP_TB_FILE_PATH_INDEX,
+        ) is None:
+            f_file_path = ""
+        else:
+            item = self.sample_table.item(
+                a_index,
+                SMP_TB_FILE_PATH_INDEX,
+            )
+            if item:
+                f_file_path = str(item.text())
+            else:
+                f_file_path = ""
+        self.file_selector.set_file(f_file_path)
+        self.view_file_selector.set_file(f_file_path)
+        self.loop_mode_combobox.setCurrentIndex(
+            self.loop_modes[a_index].get_value(),
+        )
         self.suppress_selected_sample_changed = False
         self.set_sample_graph()
 
@@ -2171,17 +2193,23 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.selected_sample_index_combobox.setCurrentIndex(
             (self.selected_row_index))
         if self.sample_table.item(
-        self.selected_row_index, SMP_TB_FILE_PATH_INDEX) is None:
+            self.selected_row_index,
+            SMP_TB_FILE_PATH_INDEX,
+        ) is None:
             f_file_path = ""
         else:
             f_file_path = str(
-                self.sample_table.item(self.selected_row_index,
-                                       SMP_TB_FILE_PATH_INDEX).text())
+                self.sample_table.item(
+                    self.selected_row_index,
+                    SMP_TB_FILE_PATH_INDEX,
+                ).text(),
+            )
         self.file_selector.set_file(f_file_path)
         self.view_file_selector.set_file(f_file_path)
         self.set_sample_graph()
         self.loop_mode_combobox.setCurrentIndex(
-            self.loop_modes[(self.selected_row_index)].get_value())
+            self.loop_modes[(self.selected_row_index)].get_value(),
+        )
 
     def file_browser_load_button_pressed(self):
         f_result = self.file_browser.files_selected()
