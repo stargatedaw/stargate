@@ -193,6 +193,14 @@ elif IS_LINUX:
         'sbsms',
     )
     if not os.path.exists(sbsms_util):
+        try:
+            sbsms_util = os.path.join(
+                ENGINE_DIR,
+                "sbsms",
+            )
+        except NameError:
+            pass
+    if not os.path.exists(sbsms_util):
         sbsms_util = which(f"{MAJOR_VERSION}-sbsms")
         if not sbsms_util:
             sbsms_util = which("sbsms")

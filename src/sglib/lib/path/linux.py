@@ -1,9 +1,20 @@
 from sglib.constants import MAJOR_VERSION
 import os
 
+def _is_self_contained():
+    dirname = os.path.dirname(
+        os.path.abspath(__file__),
+    )
+    scripts = os.path.join(
+        dirname,
+        '..',
+        '..',
+        '..',
+        'scripts',
+    )
+    return os.path.isdir(scripts)
 
-# Running from the source repo
-if os.path.join("src", "sglib") in os.path.abspath(__file__):
+if _is_self_contained():
     IS_LOCAL_DEVEL = True
     INSTALL_PREFIX = os.path.abspath(
         os.path.join(
@@ -19,7 +30,7 @@ if os.path.join("src", "sglib") in os.path.abspath(__file__):
     COMMIT_PATH = os.path.join(INSTALL_PREFIX, "COMMIT")
     META_DOT_JSON_PATH = os.path.join(INSTALL_PREFIX, "meta.json")
     BIN_DIR = os.path.join(INSTALL_PREFIX, 'scripts')
-# Running installed
+    ENGINE_DIR = os.path.join(INSTALL_PREFIX, 'engine')
 else:
     IS_LOCAL_DEVEL = False
     INSTALL_PREFIX = os.path.abspath(

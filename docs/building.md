@@ -81,3 +81,16 @@ scripts/stargate
 - lame
 - vorbis-tools
 - ffmpeg
+
+## Building for packages
+```
+# The following targets are useful for packaging, see src/Makefile for details
+make distro
+
+# Install without vendored dependencies
+make install_distro
+
+# Install everything into a single folder, in this example /opt/stargate
+# You can then `ln -s /opt/stargate/scripts/stargate /usr/bin/stargate`
+PREFIX=/opt/stargate make install_self_contained
+```

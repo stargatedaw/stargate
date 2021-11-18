@@ -62,6 +62,14 @@ install_sbsms:
 		vendor/sbsms/cli/sbsms \
 		$(DESTDIR)$(PREFIX)/bin/$(MAJOR)-sbsms
 
+install_self_contained:
+	# Install all files to a single directory
+	install -d $(DESTDIR)$(PREFIX)/engine
+	install -m 755 engine/stargate-engine* $(DESTDIR)$(PREFIX)/engine/
+	install -m 755 vendor/sbsms/cli/sbsms* $(DESTDIR)$(PREFIX)/engine/
+	cp -r files meta.json scripts sg_py_vendor sglib sgui \
+		$(DESTDIR)$(PREFIX)
+
 install_mac_osx:
 	PREFIX=/usr/local make install
 
