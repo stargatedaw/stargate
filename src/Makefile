@@ -63,6 +63,7 @@ install_sbsms:
 		$(DESTDIR)$(PREFIX)/bin/$(MAJOR)-sbsms
 
 install_self_contained:
+	if [ "$(PREFIX)" == "/usr" ]; then exit 1; fi
 	# Install all files to a single directory
 	install -d $(DESTDIR)$(PREFIX)/engine
 	install -m 755 engine/stargate-engine* $(DESTDIR)$(PREFIX)/engine/
