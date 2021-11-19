@@ -92,7 +92,7 @@ GNU General Public License for more details.
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
 #define VA1_COUNT 57
 
-#define VA1_POLYPHONY   16
+#define VA1_POLYPHONY 24
 #define VA1_POLYPHONY_THRESH 12
 
 

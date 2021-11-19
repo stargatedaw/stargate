@@ -34,7 +34,7 @@ GNU General Public License for more details.
 #include "plugin.h"
 #include "compiler.h"
 
-#define SAMPLER1_POLYPHONY 20
+#define SAMPLER1_POLYPHONY 32
 #define SAMPLER1_POLYPHONY_THRESH 16
 
 // How many buffers in between slow indexing operations.

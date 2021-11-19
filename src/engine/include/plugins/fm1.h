@@ -474,7 +474,7 @@ GNU General Public License for more details.
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
 #define FM1_COUNT 374
 
-#define FM1_POLYPHONY   16
+#define FM1_POLYPHONY 24
 #define FM1_POLYPHONY_THRESH 12
 
 typedef struct {
@@ -570,7 +570,7 @@ typedef struct {
 
     //The index of the control to mod, currently 0-2
     int polyfx_mod_ctrl_indexes[FM1_MODULAR_POLYFX_COUNT]
-    [(FM1_CONTROLS_PER_MOD_EFFECT * FM1_MODULATOR_COUNT)];
+        [(FM1_CONTROLS_PER_MOD_EFFECT * FM1_MODULATOR_COUNT)];
 
     //How many polyfx_mod_ptrs to iterate through for the current note
     int polyfx_mod_counts[FM1_MODULAR_POLYFX_COUNT];
