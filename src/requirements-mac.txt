@@ -3,6 +3,7 @@ mido
 mutagen
 numpy
 psutil
+pyinstaller
 pymarshal
 PyQt5
 PyYAML
