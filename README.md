@@ -1,13 +1,13 @@
-# Stargate
-Stargate is a holistic audio production solution, everything you need to make
-music on a computer.  To understand what Stargate is, and why, read the
+# Stargate DAW
+Stargate is an all-in-one DAW and plugin suite, designed to be a comprehensive
+solution for music production, with a focus on providing unique and innovative
+features, especially for EDM production.  To understand what Stargate is,
+and why, read the
 [project design principles](docs/project_design_principles.md).
 
 # Links
 - [Learn Stargate by watching Youtube Videos](
   https://www.youtube.com/channel/UC0xYkPBN3cqMMaTQxc38Rfw)
-- [Chat with us on Discord](https://discord.gg/7mP5psUN7D)
-- [Get the latest Stargate news on Twitter](https://twitter.com/stargatedaw)
 - [Download Stargate demo projects](
     https://github.com/stargateaudio/stargate-v1-demo-projects)
 - [Download instruments for Sampler1](https://github.com/sfzinstruments)
@@ -18,7 +18,6 @@ music on a computer.  To understand what Stargate is, and why, read the
 - A digital audio workstation (DAW) with a powerful pattern-based workflow
 - A comprehensive suite of built-in instrument and effect plugins
 - A basic wave editor
-- Broad audio and MIDI hardware support using Portaudio and Portmidi
 - Powerful track routing matrix with easy sidechaining
 - Modular mixer architecture.  Mixer channels are a type of plugin that can
   be chosen per track send, mix and match plugins, or skip them when not needed
@@ -31,9 +30,7 @@ music on a computer.  To understand what Stargate is, and why, read the
   dual core CPU, 1GB of RAM and a 720p display.
 - Support for display resolution from 720p to 4k and above.
 - Optional portable flash drive install on Windows
-
-# Building
-[See the building instructions](docs/building.md "Building")
+- Broad audio and MIDI hardware support using Portaudio and Portmidi
 
 # Screenshots
 ![Sequencer](assets/sequencer.png?raw=true "Sequencer")
@@ -58,3 +55,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 For details on the GNU General Public License, see [the license](LICENSE).
+

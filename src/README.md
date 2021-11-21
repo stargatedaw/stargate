@@ -1,6 +1,4 @@
 # Source Code
-# Building
-[See the building instructions](../docs/building.md "Building")
 
 # Architecture
 The UI is written in Python and PyQt.  PyQt5 and PyQt6 are both supported,
