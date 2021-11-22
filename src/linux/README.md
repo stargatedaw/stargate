@@ -5,6 +5,7 @@ If building for ARM or any architecture other than x86, you must override
 ```
 PLAT_FLAGS='-march=native' make
 ```
+[See the ARM documentation](./ARM)
 
 ## Prerequisites
 ```
@@ -21,6 +22,7 @@ git submodule update
 ## Linux
 ### Option 1: Packaging scripts
 ```
+# From the root of the Stargate repo
 # See --help for additional options
 # Create a Debian package, works on Debian, Ubuntu and their derivatives
 scripts/deb.py
@@ -38,13 +40,8 @@ make
 # Install
 PREFIX=/usr/local make install
 # Or, run locally without installing
-scripts/stargate
+./scripts/stargate
 ```
-## Windows
-[See this document](../src/windows/README.md)
-
-## Mac
-[See this document](./building_for_mac.md)
 
 # Distro Packagers
 ## Dependencies
@@ -91,6 +88,10 @@ make distro
 make install_distro
 
 # Install everything into a single folder, in this example /opt/stargate
-# You can then `ln -s /opt/stargate/scripts/stargate /usr/bin/stargate`
 PREFIX=/opt/stargate make install_self_contained
+# You can then:
+ln -s /opt/stargate/scripts/stargate /usr/bin/stargate
+ln -s /opt/stargate/files/share/pixmaps/stargate.png /usr/share/pixmaps/stargate.png
+ln -s /opt/stargate/files/share/pixmaps/stargate.ico /usr/share/pixmaps/stargate.ico
+ln -s /opt/stargate/files/share/applications/stargate.desktop /usr/share/applications/stargate.desktop
 ```
