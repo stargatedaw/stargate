@@ -353,22 +353,19 @@ t_audio_item * g_audio_item_load_single(
         case 1:  //Pitch affecting time
         {
             //Otherwise, it's already been stretched offline
-            if(f_result->pitch_shift == f_result->pitch_shift_end)
-            {
-                if((f_result->pitch_shift) >= 0.0f)
-                {
-                    f_result->ratio *=
-                            f_pit_midi_note_to_ratio_fast(0.0f,
-                                (f_result->pitch_shift),
-                                &f_result->pitch_ratio_ptr);
-                }
-                else
-                {
-                    f_result->ratio *=
-                            f_pit_midi_note_to_ratio_fast(
-                            ((f_result->pitch_shift) * -1.0f),
-                            0.0f,
-                            &f_result->pitch_ratio_ptr);
+            if(f_result->pitch_shift == f_result->pitch_shift_end){
+                if((f_result->pitch_shift) >= 0.0f){
+                    f_result->ratio *= f_pit_midi_note_to_ratio_fast(
+                        0.0f,
+                        f_result->pitch_shift,
+                        &f_result->pitch_ratio_ptr
+                    );
+                } else {
+                    f_result->ratio *= f_pit_midi_note_to_ratio_fast(
+                        f_result->pitch_shift * -1.0f,
+                        0.0f,
+                        &f_result->pitch_ratio_ptr
+                    );
                 }
             }
         }

@@ -266,16 +266,19 @@ void v_set_wave_editor_item(
     sprintf(f_current_string->array, "%s", a_val);
     t_audio_item * f_old = self->ab_audio_item;
     t_audio_item * f_result = g_audio_item_load_single(
-            STARGATE->thread_storage[0].sample_rate, f_current_string, 0, 0,
-            self->ab_wav_item);
+        STARGATE->thread_storage[0].sample_rate,
+        f_current_string,
+        0,
+        0,
+        self->ab_wav_item
+    );
 
     pthread_spin_lock(&STARGATE->main_lock);
     self->ab_audio_item = f_result;
     pthread_spin_unlock(&STARGATE->main_lock);
 
     g_free_2d_char_array(f_current_string);
-    if(f_old)
-    {
+    if(f_old){
         v_audio_item_free(f_old);
     }
 }
@@ -425,8 +428,13 @@ void v_we_osc_send(t_osc_send_data * a_buffers){
 
     f_i = 0;
     t_pkm_peak_meter * f_pkm = wave_edit->track_pool[0]->peak_meter;
-    sprintf(a_buffers->f_tmp1, "%i:%f:%f",
-        f_i, f_pkm->value[0], f_pkm->value[1]);
+    sprintf(
+        a_buffers->f_tmp1,
+        "%i:%f:%f",
+        f_i,
+        f_pkm->value[0],
+        f_pkm->value[1]
+    );
     v_pkm_reset(f_pkm);
 
     v_queue_osc_message("peak", a_buffers->f_tmp1);
