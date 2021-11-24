@@ -9,7 +9,7 @@ from sglib.log import LOG
 from sglib.models.daw import *
 from sgui.daw.shared import *
 from sglib.models import stargate as sg_project
-from sglib.lib import util
+from sglib.lib import strings as sg_strings, util
 from sglib.lib.util import *
 from sglib.lib.translate import _
 from sgui.sgqt import *
@@ -682,8 +682,13 @@ class AutomationEditorWidget:
         f_epb_spinbox.setRange(-18, 18)
         f_layout.addWidget(f_epb_spinbox, 20, 1)
 
-        f_layout.addWidget(QLabel(
-            sg_strings.pitchbend_dialog), 30, 1)
+        f_layout.addWidget(
+            QLabel(
+                sg_strings.pitchbend_dialog,
+            ),
+            30,
+            1,
+        )
 
         f_ok = QPushButton(_("Add"))
         f_ok.pressed.connect(ok_handler)
