@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "audiodsp/constants.h"
 #include "audiodsp/lib/fast_sine.h"
 #include "audiodsp/lib/lmalloc.h"
@@ -271,13 +273,13 @@ NO_OPTIMIZATION void g_osc_simple_unison_init(
         60.0f + (1.01234 * (float)voice_num)
     );
 
-    //Prevent phasing artifacts from the oscillators starting at the same phase.
-    for(f_i = 0; f_i < (int)(6 * a_sample_rate); ++f_i){
-        f_osc_run_unison_osc(f_result);
-    }
-
     for(f_i = 0; f_i < OSC_UNISON_MAX_VOICES; ++f_i){
-        f_result->phases[f_i] = f_result->osc_cores[f_i].output;
+        // Prevent phasing artifacts from the oscillators starting at the
+        // same phase.
+        f_result->phases[f_i] = f_result->osc_cores[f_i].output = fmod(
+            11. * (double)a_sample_rate * (double)f_result->voice_inc[f_i],
+            1.0
+        );
     }
 
     v_osc_set_unison_pitch(f_result, .2, 60.0f);

@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "audiodsp/constants.h"
 #include "audiodsp/lib/interpolate-cubic.h"
 #include "audiodsp/lib/interpolate-linear.h"
@@ -239,13 +241,13 @@ void g_osc_init_osc_wav_unison(
         60.0f + (1.01234 * (float)voice_num)
     );
 
-    //Prevent phasing artifacts from the oscillators starting at the same phase.
-    for(f_i = 0; f_i < (int)(6 * a_sample_rate); ++f_i){
-        v_osc_wav_run_unison_core_only(f_result);
-    }
-
     for(f_i = 0; f_i < OSC_UNISON_MAX_VOICES; ++f_i){
-        f_result->phases[f_i] = f_result->osc_cores[f_i].output;
+        // Prevent phasing artifacts from the oscillators starting at
+        // the same phase.
+        f_result->phases[f_i] = f_result->osc_cores[f_i].output = fmod(
+            11. * (double)a_sample_rate * (double)f_result->voice_inc[f_i],
+            1.0
+        );
         f_result->fm_phases[f_i] = 0.0f;
     }
 
