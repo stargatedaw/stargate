@@ -6,8 +6,10 @@
 #include "compiler.h"
 
 
-void g_voc_single_init(t_voc_single_voice * f_result, int a_voice_number)
-{
+void g_voc_single_init(
+    t_voc_single_voice* f_result,
+    int a_voice_number
+){
     f_result->voice_number = a_voice_number;
     f_result->note = -1;
     f_result->n_state = note_state_off;
@@ -207,9 +209,12 @@ int i_pick_voice(
 /* void v_voc_note_off(t_voc_voices * a_voc, int a_note,
  * long a_current_sample, long a_tick)
  */
-void v_voc_note_off(t_voc_voices * a_voc, int a_note,
-        long a_current_sample, long a_tick)
-{
+void v_voc_note_off(
+    t_voc_voices* a_voc,
+    int a_note,
+    long a_current_sample,
+    long a_tick
+){
     if(a_voc->poly_mode == 2)
     {
         //otherwise it's from an old note and should be ignored
