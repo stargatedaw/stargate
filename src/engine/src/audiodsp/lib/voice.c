@@ -31,7 +31,7 @@ void g_voc_voices_init(
 
     voices->count = a_count;
     voices->thresh = a_thresh;
-    voices->poly_mode = 0;
+    voices->poly_mode = POLY_MODE_RETRIG;
 
     hpalloc((void**)&voices->voices, sizeof(t_voc_single_voice) * a_count);
 
@@ -97,13 +97,13 @@ int i_pick_voice(
 ){
     int f_i;
 
-    if(data->poly_mode == 2){
+    if(data->poly_mode == POLY_MODE_MONO){
         data->voices[0].on = a_current_sample + a_tick;
         data->voices[0].off = -1;
         data->voices[0].note = a_current_note;
         data->voices[0].n_state = note_state_running;
         return 0;
-    } else if(data->poly_mode == 3){
+    } else if(data->poly_mode == POLY_MODE_MONO2){
         for(f_i = 0; f_i < data->count; ++f_i){
             if(
                 data->voices[f_i].n_state == note_state_running
@@ -215,7 +215,7 @@ void v_voc_note_off(
     long a_current_sample,
     long a_tick
 ){
-    if(a_voc->poly_mode == 2)
+    if(a_voc->poly_mode == POLY_MODE_MONO)
     {
         //otherwise it's from an old note and should be ignored
         if(a_note == a_voc->voices[0].note)
