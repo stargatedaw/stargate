@@ -13,8 +13,6 @@
 #endif
 
 
-extern int READY;
-
 void* v_worker_thread(void*);
 void v_init_worker_threads(int, int, int);
 

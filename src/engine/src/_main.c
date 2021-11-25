@@ -518,6 +518,7 @@ NO_OPTIMIZATION int main_loop(){
             f_portaudio_output_buffer[f_i] = 0.0f;
         }
     }
+    READY = 1;
     log_info("Entering main loop");
     while(1){
         pthread_mutex_lock(&STARGATE->exit_mutex);

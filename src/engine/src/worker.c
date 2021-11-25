@@ -13,7 +13,6 @@
 #include "wave_edit.h"
 #include "worker.h"
 
-int READY = 0;
 
 int getNumberOfCores(){
 #if defined(WIN32)
@@ -273,8 +272,6 @@ NO_OPTIMIZATION void v_activate(
 #if SG_OS == _OS_LINUX
     mlockall(MCL_CURRENT | MCL_FUTURE);
 #endif
-
-    READY = 1;
 }
 
 void v_destructor(){
