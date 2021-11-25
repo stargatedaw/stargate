@@ -476,7 +476,7 @@ NO_OPTIMIZATION void g_plugin_init(
         a_index,
         a_plugin_uid
     );
-    log_info("Calling descriptor->instantiate()");
+    log_info("Calling descriptor->instantiate() for %i", a_plugin_uid);
     f_result->plugin_handle = (PluginHandle)f_result->descriptor->instantiate(
         f_result->descriptor,
         a_sample_rate,
@@ -484,7 +484,10 @@ NO_OPTIMIZATION void g_plugin_init(
         a_plugin_uid,
         a_queue_func
     );
-    log_info("Finished calling descriptor->instantiate()");
+    log_info(
+        "Finished calling descriptor->instantiate() for %i",
+        a_plugin_uid
+    );
 
     f_result->solo = 0;
     f_result->mute = 0;

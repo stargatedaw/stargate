@@ -317,8 +317,13 @@ void v_va1_load(
     char * a_file_path
 ){
     t_va1 *plugin_data = (t_va1*)instance;
-    generic_file_loader(instance, Descriptor,
-        a_file_path, plugin_data->port_table, &plugin_data->cc_map);
+    generic_file_loader(
+        instance,
+        Descriptor,
+        a_file_path,
+        plugin_data->port_table,
+        &plugin_data->cc_map
+    );
 }
 
 void v_va1_set_port_value(
