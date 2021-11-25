@@ -232,13 +232,12 @@ void v_osc_note_on_sync_phases(t_osc_simple_unison * a_osc_ptr){
     }
 }
 
-void v_osc_note_on_sync_phases_hard(t_osc_simple_unison * a_osc_ptr){
-    int i_sync_phases = 0;
-
-    while(i_sync_phases < (a_osc_ptr->voice_count))
-    {
-        a_osc_ptr->osc_cores[i_sync_phases].output = 0.0f;
-        ++i_sync_phases;
+void v_osc_note_on_sync_phases_hard(
+    t_osc_simple_unison * a_osc_ptr
+){
+    int i;
+    for(i = 0; i < a_osc_ptr->voice_count; ++i){
+        a_osc_ptr->osc_cores[i].output = 0.0f;
     }
 }
 

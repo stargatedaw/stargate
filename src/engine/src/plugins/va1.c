@@ -739,8 +739,10 @@ void v_run_va1_voice(
     f_rmp_run_ramp_curve(&a_voice->pitch_env);
     f_rmp_run_ramp(&a_voice->glide_env);
 
-    v_lfs_set(&a_voice->lfo1,
-        (plugin_data->mono_modules.lfo_smoother.last_value) * 0.01f);
+    v_lfs_set(
+        &a_voice->lfo1,
+        (plugin_data->mono_modules.lfo_smoother.last_value) * 0.01f
+    );
     v_lfs_run(&a_voice->lfo1);
     a_voice->lfo_amp_output =
         f_db_to_linear_fast((((*plugin_data->lfo_amp) *
@@ -760,48 +762,58 @@ void v_run_va1_voice(
 
     if(a_voice->hard_sync)
     {
-        v_osc_set_unison_pitch(&a_voice->osc_unison1, a_voice->unison_spread1,
+        v_osc_set_unison_pitch(
+            &a_voice->osc_unison1,
+            a_voice->unison_spread1,
             ((a_voice->target_pitch) + (a_voice->osc1_pitch_adjust) +
-            (a_voice->osc1pb * f_pb)));
-        v_osc_set_unison_pitch(&a_voice->osc_unison2, a_voice->unison_spread2,
+            (a_voice->osc1pb * f_pb))
+        );
+        v_osc_set_unison_pitch(
+            &a_voice->osc_unison2,
+            a_voice->unison_spread2,
             ((a_voice->base_pitch) + (a_voice->osc2_pitch_adjust) +
-            (a_voice->osc2pb * f_pb)));
+            (a_voice->osc2pb * f_pb))
+        );
 
         current_sample += f_osc_run_unison_osc_sync(&a_voice->osc_unison2);
 
-        if(a_voice->osc_unison2.is_resetting)
-        {
+        if(a_voice->osc_unison2.is_resetting){
             v_osc_note_on_sync_phases_hard(&a_voice->osc_unison1);
         }
 
-        current_sample +=
-            f_osc_run_unison_osc(&a_voice->osc_unison1) * a_voice->osc1_linamp;
+        current_sample += f_osc_run_unison_osc(
+            &a_voice->osc_unison1
+        ) * a_voice->osc1_linamp;
 
-    }
-    else
-    {
-        v_osc_set_unison_pitch(&a_voice->osc_unison1,
+    } else {
+        v_osc_set_unison_pitch(
+            &a_voice->osc_unison1,
             (*plugin_data->uni_spread1) * 0.01f,
             ((a_voice->base_pitch) + (a_voice->osc1_pitch_adjust) +
-            (a_voice->osc1pb * f_pb)));
-        v_osc_set_unison_pitch(&a_voice->osc_unison2,
+            (a_voice->osc1pb * f_pb))
+        );
+        v_osc_set_unison_pitch(
+            &a_voice->osc_unison2,
             (*plugin_data->uni_spread2) * 0.01f,
             ((a_voice->base_pitch) + (a_voice->osc2_pitch_adjust) +
-            (a_voice->osc2pb * f_pb)));
+            (a_voice->osc2pb * f_pb))
+        );
 
-        current_sample +=
-            f_osc_run_unison_osc(&a_voice->osc_unison1) * a_voice->osc1_linamp;
-        current_sample +=
-            f_osc_run_unison_osc(&a_voice->osc_unison2) * a_voice->osc2_linamp;
+        current_sample += f_osc_run_unison_osc(
+            &a_voice->osc_unison1
+        ) * a_voice->osc1_linamp;
+        current_sample += f_osc_run_unison_osc(
+            &a_voice->osc_unison2
+        ) * a_voice->osc2_linamp;
     }
 
-    current_sample +=
-        a_voice->noise_func_ptr(&a_voice->white_noise1) * a_voice->noise_linamp;
+    current_sample += a_voice->noise_func_ptr(
+        &a_voice->white_noise1
+    ) * a_voice->noise_linamp;
 
     a_voice->adsr_run_func(&a_voice->adsr_amp);
 
-    if(a_voice->adsr_prefx)
-    {
+    if(a_voice->adsr_prefx){
         current_sample *= (a_voice->adsr_amp.output);
     }
 
