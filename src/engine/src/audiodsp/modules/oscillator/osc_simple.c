@@ -7,7 +7,6 @@
 #include "audiodsp/lib/pitch_core.h"
 #include "audiodsp/modules/oscillator/osc_simple.h"
 
-
 /* void v_osc_set_uni_voice_count(
  * t_osc_simple_unison* a_osc_ptr,
  * int a_value) //the number of unison voices this oscillator should use
@@ -276,10 +275,9 @@ NO_OPTIMIZATION void g_osc_simple_unison_init(
     for(f_i = 0; f_i < OSC_UNISON_MAX_VOICES; ++f_i){
         // Prevent phasing artifacts from the oscillators starting at the
         // same phase.
-        f_result->phases[f_i] = f_result->osc_cores[f_i].output = fmod(
-            11. * (double)a_sample_rate * (double)f_result->voice_inc[f_i],
-            1.0
-        );
+        f_result->phases[f_i] =
+            f_result->osc_cores[f_i].output =
+                OSC_CORE_PHASES[voice_num][f_i];
     }
 
     v_osc_set_unison_pitch(f_result, .2, 60.0f);

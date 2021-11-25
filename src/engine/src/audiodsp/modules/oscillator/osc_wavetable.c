@@ -244,10 +244,9 @@ void g_osc_init_osc_wav_unison(
     for(f_i = 0; f_i < OSC_UNISON_MAX_VOICES; ++f_i){
         // Prevent phasing artifacts from the oscillators starting at
         // the same phase.
-        f_result->phases[f_i] = f_result->osc_cores[f_i].output = fmod(
-            11. * (double)a_sample_rate * (double)f_result->voice_inc[f_i],
-            1.0
-        );
+        f_result->phases[f_i] =
+            f_result->osc_cores[f_i].output =
+                OSC_CORE_PHASES[voice_num][f_i];
         f_result->fm_phases[f_i] = 0.0f;
     }
 

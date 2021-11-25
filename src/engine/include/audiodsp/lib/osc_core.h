@@ -19,6 +19,10 @@ GNU General Public License for more details.
 #include "compiler.h"
 #include "pitch_core.h"
 
+#define OSC_UNISON_MAX_VOICES 7
+
+extern int OSC_CORE_PHASES[32][OSC_UNISON_MAX_VOICES];
+
 typedef struct {
     SGFLT output;   //range:  0 to 1
 }t_osc_core;

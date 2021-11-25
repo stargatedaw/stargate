@@ -21,8 +21,6 @@ GNU General Public License for more details.
 #include "audiodsp/lib/lmalloc.h"
 #include "compiler.h"
 
-#define OSC_UNISON_MAX_VOICES 7
-
 typedef SGFLT (*fp_get_osc_func_ptr)(t_osc_core*);
 
 typedef struct {
