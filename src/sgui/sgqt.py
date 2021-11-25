@@ -79,6 +79,19 @@ else:  # PySide
     from PySide6.QtWidgets import *
     from PySide6.QtSvg import QSvgRenderer
 
+orig_QLineEdit = QLineEdit
+
+class _QLineEdit(QLineEdit):
+    def event(self, ev):
+        if ev.type() == QtCore.QEvent.Type.KeyPress:
+            if ev.key() in(
+                QtCore.Qt.Key.Key_Enter,
+                QtCore.Qt.Key.Key_Return,
+            ):
+                self.focusNextChild()
+                return True
+        return orig_QLineEdit.event(self, ev)
+
 class _QComboBox(QComboBox):
     def wheelEvent(self, event):
         event.ignore()
@@ -92,6 +105,7 @@ class _QDoubleSpinBox(QDoubleSpinBox):
         event.ignore()
 
 QComboBox = _QComboBox
-QSpinBox = _QSpinBox
 QDoubleSpinBox = _QDoubleSpinBox
+QLineEdit = _QLineEdit
+QSpinBox = _QSpinBox
 
