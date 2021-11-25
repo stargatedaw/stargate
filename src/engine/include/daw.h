@@ -17,6 +17,7 @@ struct DawMidiQwertyDevice {
     char pad1[CACHE_LINE_SIZE];
     int rack_num;
     t_seq_event events[200];
+    char note_offs[128];
     int event_count;
     char pad2[CACHE_LINE_SIZE];
 };

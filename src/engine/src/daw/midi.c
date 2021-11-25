@@ -148,20 +148,34 @@ void daw_process_qwerty_midi(
     int a_thread_num,
     t_daw_thread_storage * a_ts
 ){
-    if(
-        a_track->track_num == QWERTY_MIDI.rack_num
-        &&
-        QWERTY_MIDI.event_count
-    ){
+    if(a_track->track_num == QWERTY_MIDI.rack_num){
         int i;
-        for(i = 0; i < QWERTY_MIDI.event_count; ++i){
-            shds_list_append(
-                a_track->event_list,
-                &QWERTY_MIDI.events[i]
-            );
+        for(i = 0; i < 128; ++i){
+            if(QWERTY_MIDI.note_offs[i]){
+                --QWERTY_MIDI.note_offs[i];
+                if(!QWERTY_MIDI.note_offs[i]){
+                    t_seq_event* ev =
+                        &QWERTY_MIDI.events[QWERTY_MIDI.event_count];
+                    ev->note = i;
+                    ev->tick = 0;
+                    ev->type = EVENT_NOTEOFF;
+                    ev->velocity = 0;
+                    ++QWERTY_MIDI.event_count;
+                }
+            }
+
         }
-        QWERTY_MIDI.event_count = 0;
-        shds_list_isort(a_track->event_list, seq_event_cmpfunc);
+
+        if(QWERTY_MIDI.event_count){
+            for(i = 0; i < QWERTY_MIDI.event_count; ++i){
+                shds_list_append(
+                    a_track->event_list,
+                    &QWERTY_MIDI.events[i]
+                );
+            }
+            QWERTY_MIDI.event_count = 0;
+            shds_list_isort(a_track->event_list, seq_event_cmpfunc);
+        }
     }
 }
 

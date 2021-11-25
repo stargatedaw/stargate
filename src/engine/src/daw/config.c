@@ -22,13 +22,17 @@ void v_daw_configure(const char* a_key, const char* a_value){
         a_value = str_split(a_value, buf, '|');
         int note = atoi(buf);
         pthread_spin_lock(&STARGATE->main_lock);
-        t_seq_event* ev = &QWERTY_MIDI.events[QWERTY_MIDI.event_count];
-        ev->note = note;
-        ev->tick = 0;
-        ev->type = EVENT_NOTEON;
-        ev->velocity = 100;
         QWERTY_MIDI.rack_num = rack_num;
-        ++QWERTY_MIDI.event_count;
+        if(QWERTY_MIDI.note_offs[note]){
+            QWERTY_MIDI.note_offs[note] = 0;
+        } else {
+            t_seq_event* ev = &QWERTY_MIDI.events[QWERTY_MIDI.event_count];
+            ev->note = note;
+            ev->tick = 0;
+            ev->type = EVENT_NOTEON;
+            ev->velocity = 100;
+            ++QWERTY_MIDI.event_count;
+        }
         pthread_spin_unlock(&STARGATE->main_lock);
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_NOTE_OFF)){
         a_value = str_split(a_value, buf, '|');
@@ -36,13 +40,8 @@ void v_daw_configure(const char* a_key, const char* a_value){
         a_value = str_split(a_value, buf, '|');
         int note = atoi(buf);
         pthread_spin_lock(&STARGATE->main_lock);
-        t_seq_event* ev = &QWERTY_MIDI.events[QWERTY_MIDI.event_count];
-        ev->note = note;
-        ev->tick = 0;
-        ev->type = EVENT_NOTEOFF;
-        ev->velocity = 0;
+        QWERTY_MIDI.note_offs[note] = 3;
         QWERTY_MIDI.rack_num = rack_num;
-        ++QWERTY_MIDI.event_count;
         pthread_spin_unlock(&STARGATE->main_lock);
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_PER_FILE_FX)){
         a_value = str_split(a_value, buf, '|');
