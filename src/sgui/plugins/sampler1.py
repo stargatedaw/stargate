@@ -706,6 +706,8 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.sample_table.verticalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Fixed,
         )
+        self.sample_table.setHorizontalHeaderLabels(f_sample_table_columns)
+        self.sample_table.resizeColumnsToContents()
 
         glbl_shared.APP.processEvents()
 
@@ -752,9 +754,20 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_port_start = SAMPLER1_SAMPLE_VOLUME_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_sample_vol = spinbox_control(
-                None, f_port_start + f_i,
-                self.plugin_rel_callback, self.plugin_val_callback,
-                -50.0, 36.0, 0.0, KC_NONE, self.port_dict)
+                None,
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                -50.0,
+                36.0,
+                0.0,
+                KC_NONE,
+                self.port_dict,
+            )
+            f_sample_vol.control.setFixedSize(
+                self.sample_table.columnWidth(5),
+                self.sample_table.rowHeight(f_i),
+            )
             self.sample_table.setCellWidget(f_i, 5, f_sample_vol.control)
             self.sample_vols.append(f_sample_vol)
 
@@ -762,9 +775,20 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_port_start = SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_vel_sens = spinbox_control(
-                None, f_port_start + f_i,
-                self.plugin_rel_callback, self.plugin_val_callback,
-                0, 20, 10, KC_NONE, self.port_dict)
+                None,
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                0,
+                20,
+                10,
+                KC_NONE,
+                self.port_dict,
+            )
+            f_vel_sens.control.setFixedSize(
+                self.sample_table.columnWidth(6),
+                self.sample_table.rowHeight(f_i),
+            )
             self.sample_table.setCellWidget(f_i, 6, f_vel_sens.control)
             self.sample_vel_sens.append(f_vel_sens)
 
@@ -772,9 +796,20 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_port_start = SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_vel_low = spinbox_control(
-                None, f_port_start + f_i,
-                self.plugin_rel_callback, self.plugin_val_callback,
-                1, 127, 1, KC_NONE, self.port_dict)
+                None,
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                1,
+                127,
+                1,
+                KC_NONE,
+                self.port_dict,
+            )
+            f_vel_low.control.setFixedSize(
+                self.sample_table.columnWidth(7),
+                self.sample_table.rowHeight(f_i),
+            )
             self.sample_table.setCellWidget(f_i, 7, f_vel_low.control)
             self.sample_low_vels.append(f_vel_low)
 
@@ -782,9 +817,20 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_port_start = SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_vel_high = spinbox_control(
-                None, f_port_start + f_i,
-                self.plugin_rel_callback, self.plugin_val_callback,
-                1, 128, 128, KC_NONE, self.port_dict)
+                None,
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                1,
+                128,
+                128,
+                KC_NONE,
+                self.port_dict,
+            )
+            f_vel_high.control.setFixedSize(
+                self.sample_table.columnWidth(8),
+                self.sample_table.rowHeight(f_i),
+            )
             self.sample_table.setCellWidget(f_i, 8, f_vel_high.control)
             self.sample_high_vels.append(f_vel_high)
 
@@ -792,9 +838,20 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_port_start = SAMPLER1_PITCH_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_sample_pitch = spinbox_control(
-                None, f_port_start + f_i,
-                self.plugin_rel_callback, self.plugin_val_callback,
-                -36, 36, 0, KC_NONE, self.port_dict)
+                None,
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                -36,
+                36,
+                0,
+                KC_NONE,
+                self.port_dict,
+            )
+            f_sample_pitch.control.setFixedSize(
+                self.sample_table.columnWidth(9),
+                self.sample_table.rowHeight(f_i),
+            )
             self.sample_table.setCellWidget(f_i, 9, f_sample_pitch.control)
             self.sample_pitches.append(f_sample_pitch)
 
@@ -802,9 +859,20 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_port_start = SAMPLER1_TUNE_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_sample_tune = spinbox_control(
-                None, f_port_start + f_i,
-                self.plugin_rel_callback, self.plugin_val_callback,
-                -100, 100, 0, KC_NONE, self.port_dict)
+                None,
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                -100,
+                100,
+                0,
+                KC_NONE,
+                self.port_dict,
+            )
+            f_sample_tune.control.setFixedSize(
+                self.sample_table.columnWidth(10),
+                self.sample_table.rowHeight(f_i),
+            )
             self.sample_table.setCellWidget(f_i, 10, f_sample_tune.control)
             self.sample_tunes.append(f_sample_tune)
 
@@ -833,9 +901,20 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_port_start = SAMPLER1_NOISE_AMP_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_noise_amp = spinbox_control(
-                None, f_port_start + f_i,
-                self.plugin_rel_callback, self.plugin_val_callback,
-                -60, 0, -30, KC_NONE, self.port_dict)
+                None,
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                -60,
+                0,
+                -30,
+                KC_NONE,
+                self.port_dict,
+            )
+            f_noise_amp.control.setFixedSize(
+                self.sample_table.columnWidth(13),
+                self.sample_table.rowHeight(f_i),
+            )
             self.sample_table.setCellWidget(f_i, 13, f_noise_amp.control)
             self.noise_amps.append(f_noise_amp)
 
@@ -1076,14 +1155,12 @@ class sampler1_plugin_ui(AbstractPluginUI):
                 f_eq_list.append(f_bw)
                 f_eq_list.append(f_gain)
 
-        self.sample_table.setHorizontalHeaderLabels(f_sample_table_columns)
         self.sample_table.verticalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Fixed,
         )
         self.sample_table.horizontalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Fixed,
         )
-        self.sample_table.resizeRowsToContents()
 
         self.file_selector = file_select_widget(self.load_files)
         self.file_selector.clear_button.pressed.connect(self.clearFile)
@@ -1397,10 +1474,21 @@ class sampler1_plugin_ui(AbstractPluginUI):
             for f_i_src in range(4):
                 for f_i_ctrl in range(3):
                     f_ctrl = spinbox_control(
-                        None, f_port_num,
-                        self.plugin_rel_callback, self.plugin_val_callback,
-                        -100, 100, 0, KC_NONE, self.port_dict)
+                        None,
+                        f_port_num,
+                        self.plugin_rel_callback,
+                        self.plugin_val_callback,
+                        -100,
+                        100,
+                        0,
+                        KC_NONE,
+                        self.port_dict,
+                    )
                     f_x = (f_i_dst * 3) + f_i_ctrl
+                    f_ctrl.control.setFixedSize(
+                        self.mod_matrix.columnWidth(f_x),
+                        self.mod_matrix.rowHeight(f_i_src),
+                    )
                     self.mod_matrix.setCellWidget(f_i_src, f_x, f_ctrl.control)
                     f_port_num += 1
 
@@ -1411,10 +1499,21 @@ class sampler1_plugin_ui(AbstractPluginUI):
             for f_i_dst in range(4):
                 for f_i_ctrl in range(3):
                     f_ctrl = spinbox_control(
-                        None, f_port_num,
-                        self.plugin_rel_callback, self.plugin_val_callback,
-                        -100, 100, 0, KC_NONE, self.port_dict)
+                        None,
+                        f_port_num,
+                        self.plugin_rel_callback,
+                        self.plugin_val_callback,
+                        -100,
+                        100,
+                        0,
+                        KC_NONE,
+                        self.port_dict,
+                    )
                     f_x = (f_i_dst * 3) + f_i_ctrl
+                    f_ctrl.control.setFixedSize(
+                        self.mod_matrix.columnWidth(f_x),
+                        self.mod_matrix.rowHeight(f_i_src),
+                    )
                     self.mod_matrix.setCellWidget(f_i_src, f_x, f_ctrl.control)
                     f_port_num += 1
 

@@ -1151,19 +1151,31 @@ class fm1_plugin_ui(AbstractPluginUI):
 
         self.fm_gridlayout.addWidget(self.fm_matrix, 1, 0)
 
+        self.fm_matrix.resizeColumnsToContents()
         for f_i in range(6):
             for f_i2 in range(6):
                 f_port = getattr(
                     sys.modules[__name__],
                     "FM1_OSC{}_FM{}".format(f_i2 + 1, f_i + 1))
                 f_spinbox = spinbox_control(
-                    None, f_port,
-                    self.plugin_rel_callback, self.plugin_val_callback,
-                    0, 100, 0, KC_NONE, self.port_dict, self.preset_manager)
+                    None,
+                    f_port,
+                    self.plugin_rel_callback,
+                    self.plugin_val_callback,
+                    0,
+                    100,
+                    0,
+                    KC_NONE,
+                    self.port_dict,
+                    self.preset_manager,
+                )
+                f_spinbox.control.setFixedSize(
+                    self.fm_matrix.columnWidth(f_i2),
+                    self.fm_matrix.rowHeight(f_i),
+                )
                 self.fm_matrix.setCellWidget(f_i, f_i2, f_spinbox.control)
                 self.fm_knobs.append(f_spinbox)
 
-        self.fm_matrix.resizeColumnsToContents()
 
         self.fm_matrix_button = QPushButton(_("Menu"))
 
@@ -1266,7 +1278,8 @@ class fm1_plugin_ui(AbstractPluginUI):
             f_fm_dest_matrix_labels = ["To\nOsc{}".format(x)
                 for x in range(1, 7)]
             f_fm_macro_matrix.setHorizontalHeaderLabels(
-                f_fm_dest_matrix_labels)
+                f_fm_dest_matrix_labels,
+            )
             f_fm_macro_matrix.setVerticalHeaderLabels(f_fm_src_matrix_labels)
             f_fm_macro_matrix.setHorizontalScrollBarPolicy(
                 QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
@@ -1282,6 +1295,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             )
 
             self.fm_gridlayout.addWidget(f_fm_macro_matrix, 3, f_i)
+            f_fm_macro_matrix.resizeColumnsToContents()
 
             for f_i2 in range(6):
                 for f_i3 in range(6):
@@ -1290,12 +1304,26 @@ class fm1_plugin_ui(AbstractPluginUI):
                         "FM1_FM_MACRO{}_OSC{}_FM{}".format(
                             f_i + 1, f_i3 + 1, f_i2 + 1))
                     f_spinbox = spinbox_control(
-                        None, f_port,
-                        self.plugin_rel_callback, self.plugin_val_callback,
-                        -100, 100, 0, KC_NONE, self.port_dict,
-                        self.preset_manager)
+                        None,
+                        f_port,
+                        self.plugin_rel_callback,
+                        self.plugin_val_callback,
+                        -100,
+                        100,
+                        0,
+                        KC_NONE,
+                        self.port_dict,
+                        self.preset_manager,
+                    )
+                    f_spinbox.control.setFixedSize(
+                        f_fm_macro_matrix.columnWidth(f_i3),
+                        f_fm_macro_matrix.rowHeight(f_i2),
+                    )
                     f_fm_macro_matrix.setCellWidget(
-                        f_i2, f_i3, f_spinbox.control)
+                        f_i2,
+                        f_i3,
+                        f_spinbox.control,
+                    )
                     self.fm_macro_spinboxes[f_i].append(f_spinbox)
 
                 f_port = getattr(
@@ -1309,9 +1337,12 @@ class fm1_plugin_ui(AbstractPluginUI):
                     None, f_port,
                     self.plugin_rel_callback, self.plugin_val_callback,
                     -100, 100, 0, KC_NONE, self.port_dict, self.preset_manager)
+                f_spinbox.control.setFixedSize(
+                    f_fm_macro_matrix.columnWidth(f_i2),
+                    f_fm_macro_matrix.rowHeight(6),
+                )
                 f_fm_macro_matrix.setCellWidget(6, f_i2, f_spinbox.control)
                 self.osc_amp_mod_matrix_spinboxes[f_i].append(f_spinbox)
-                f_fm_macro_matrix.resizeColumnsToContents()
 
         ############################
 
@@ -1529,27 +1560,46 @@ class fm1_plugin_ui(AbstractPluginUI):
         f_hlabels = ["FX{}\nCtrl{}".format(x, y)
             for x in range(4) for y in range(1, 4)]
         self.mod_matrix.setHorizontalHeaderLabels(f_hlabels)
-        self.mod_matrix.setVerticalHeaderLabels(
-            [_("DAHDSR 1"), _("DAHDSR 2"), _("Ramp Env"),
-             _("LFO"), _("Pitch"), _("Velocity"),
-             _("FM Macro 1"), _("FM Macro 2")])
+        self.mod_matrix.setVerticalHeaderLabels([
+            _("DAHDSR 1"),
+            _("DAHDSR 2"),
+            _("Ramp Env"),
+            _("LFO"),
+            _("Pitch"),
+            _("Velocity"),
+            _("FM Macro 1"),
+            _("FM Macro 2"),
+        ])
+        self.mod_matrix.resizeColumnsToContents()
 
         for f_i_dst in range(4):
             for f_i_src in range(8):
                 for f_i_ctrl in range(3):
                     f_ctrl = spinbox_control(
                         None,
-                        getattr(sys.modules[__name__], "FM1_PFXMATRIX_"
-                        "GRP0DST{}SRC{}CTRL{}".format(
-                        f_i_dst, f_i_src, f_i_ctrl)),
-                        self.plugin_rel_callback, self.plugin_val_callback,
-                        -100, 100, 0, KC_NONE, self.port_dict,
-                        self.preset_manager)
+                        getattr(
+                            sys.modules[__name__],
+                            "FM1_PFXMATRIX_GRP0DST{}SRC{}CTRL{}".format(
+                                f_i_dst, f_i_src, f_i_ctrl
+                            )
+                        ),
+                        self.plugin_rel_callback,
+                        self.plugin_val_callback,
+                        -100,
+                        100,
+                        0,
+                        KC_NONE,
+                        self.port_dict,
+                        self.preset_manager,
+                    )
                     f_x = (f_i_dst * 3) + f_i_ctrl
+                    f_ctrl.control.setFixedSize(
+                        self.mod_matrix.columnWidth(f_x),
+                        self.mod_matrix.rowHeight(f_i_src),
+                    )
                     self.mod_matrix.setCellWidget(f_i_src, f_x, f_ctrl.control)
 
         self.main_layout.addWidget(self.mod_matrix)
-        self.mod_matrix.resizeColumnsToContents()
 
         self.main_layout.addItem(
             QSpacerItem(1, 1, vPolicy=QSizePolicy.Policy.Expanding),
