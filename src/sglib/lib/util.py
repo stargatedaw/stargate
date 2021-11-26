@@ -68,6 +68,8 @@ ENGINE_RETCODE = None
 CPU_COUNT = psutil.cpu_count(logical=False)
 if CPU_COUNT is None:
     CPU_COUNT = multiprocessing.cpu_count()
+    if not is_rpi():  # Assume SMT
+        CPU_COUNT /= 2
 CPU_COUNT = clip_value(CPU_COUNT, 1, 16)
 AUTO_CPU_COUNT = clip_value(CPU_COUNT - 1, 1, 4)
 
