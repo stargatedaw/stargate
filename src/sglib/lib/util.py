@@ -1,7 +1,7 @@
 from sglib.constants import *
 from sglib.hardware.rpi import is_rpi
 from sglib.log import LOG
-from sglib.math import clip_max, clip_min
+from sglib.math import clip_max, clip_min, clip_value
 import ctypes
 import json
 import math
@@ -66,8 +66,9 @@ WITH_AUDIO = True
 ENGINE_RETCODE = None
 
 CPU_COUNT = psutil.cpu_count(logical=False)
-if CPU_COUNT < 1:
-    CPU_COUNT = 1
+if CPU_COUNT is None:
+    CPU_COUNT = multiprocessing.cpu_count()
+CPU_COUNT = clip_value(CPU_COUNT, 1, 16)
 
 def _meta():
     with open(META_DOT_JSON_PATH) as f:
