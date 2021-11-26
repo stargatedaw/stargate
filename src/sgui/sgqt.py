@@ -92,7 +92,13 @@ class _QLineEdit(QLineEdit):
                 return True
         return orig_QLineEdit.event(self, ev)
 
+origQComboBox = QComboBox
+
 class _QComboBox(QComboBox):
+    def __init__(self, *args, **kwargs):
+        origQComboBox.__init__(self, *args, **kwargs)
+        self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+
     def wheelEvent(self, event):
         event.ignore()
 

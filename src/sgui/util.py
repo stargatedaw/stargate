@@ -37,17 +37,6 @@ def show_generic_exception(
         _(f"The following error happened:\n{ex}\n\n{extra}"),
     )
 
-class KeyboardEventFilter(QtCore.QObject):
-    """ Generic event filter to reject keyboard events
-    """
-    def eventFilter(obj, event):
-        if event.type in (
-            QtCore.QEvent.Type.KeyPress,
-            QtCore.QEvent.Type.KeyRelease,
-        ):
-            return True
-        return False
-
 def check_for_rw_perms(a_file):
     if not os.access(
         os.path.dirname(str(a_file)),

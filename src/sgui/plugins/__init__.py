@@ -23,7 +23,6 @@ from sglib.lib import strings as sg_strings
 from sglib.lib.translate import _
 from sglib.log import LOG
 from sgui import shared as glbl_shared
-from sgui.util import KeyboardEventFilter
 from sgui.plugins import (
     channel,
     compressor,
@@ -583,9 +582,6 @@ class PluginRackTab:
         self.track_combobox = QComboBox()
         self.track_combobox.setMinimumWidth(300)
         self.track_combobox.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
-        self.track_combobox.view().installEventFilter(
-            KeyboardEventFilter(),
-        )
         self.menu_layout.addWidget(QLabel(_("Track")))
         self.menu_layout.addWidget(self.track_combobox)
 
