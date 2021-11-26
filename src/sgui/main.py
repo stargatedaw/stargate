@@ -1441,14 +1441,15 @@ def main(
 
     shared.set_window_title()
     SPLASH_SCREEN.status_update(_("Loading project..."))
-    for i in range(300):
+    for i in range(600):
         if (
             constants.READY
             or
             util.ENGINE_RETCODE is not None
         ):
             break
-        time.sleep(0.1)
+        time.sleep(0.05)
+        QApplication.processEvents()
 
     if i < 15:
         SPLASH_SCREEN.status_update(_("Showing the main window"))
