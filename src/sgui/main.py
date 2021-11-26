@@ -1440,8 +1440,19 @@ def main(
     _load_project(project_file)
 
     shared.set_window_title()
-    SPLASH_SCREEN.status_update(_("Showing main window"))
-    time.sleep(2)
+    SPLASH_SCREEN.status_update(_("Loading project..."))
+    for i in range(300):
+        if (
+            constants.READY
+            or
+            util.ENGINE_RETCODE is not None
+        ):
+            break
+        time.sleep(0.1)
+
+    if i < 15:
+        SPLASH_SCREEN.status_update(_("Showing the main window"))
+        time.sleep((20 - i) * 0.1)
     MAIN_WINDOW.show()
     SPLASH_SCREEN.finish(MAIN_WINDOW)
 
