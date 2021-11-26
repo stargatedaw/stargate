@@ -166,6 +166,7 @@ QLabel#plugin_value_label {
     color: #cccccc;
 }
 
+QLineEdit,
 QSpinBox,
 QDoubleSpinBox,
 QComboBox {

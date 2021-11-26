@@ -380,7 +380,9 @@ QGroupBox::title {
     color: #cccccc;
 }
 
-QComboBox{
+QComboBox,
+QLineEdit
+{
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a

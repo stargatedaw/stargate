@@ -47,6 +47,7 @@ QWidget#plugin_window {
     );
 }
 
+QLineEdit,
 QSpinBox,
 QDoubleSpinBox,
 QComboBox {

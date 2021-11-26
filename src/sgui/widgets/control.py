@@ -671,7 +671,6 @@ class spinbox_control(AbstractUiControl):
         self.control = QSpinBox()
         self.widget = self.control
         self.control.setRange(int(a_min_val), int(a_max_val))
-        self.control.setKeyboardTracking(False)
         self.control.valueChanged.connect(self.control_value_changed)
         self.control.valueChanged.connect(self.control_released)
         self.value_label = None
@@ -706,7 +705,6 @@ class doublespinbox_control(AbstractUiControl):
         self.control = QDoubleSpinBox()
         self.widget = self.control
         self.control.setRange(float(a_min_val), float(a_max_val))
-        self.control.setKeyboardTracking(False)
         self.control.valueChanged.connect(self.control_value_changed)
         self.control.valueChanged.connect(self.control_released)
         self.value_label = None

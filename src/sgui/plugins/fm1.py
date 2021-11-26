@@ -666,6 +666,7 @@ QHeaderView::section {
     padding: 4px;
 }
 
+QLineEdit,
 QSpinBox,
 QDoubleSpinBox,
 QComboBox {
