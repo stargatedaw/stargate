@@ -14,33 +14,6 @@
 #include "worker.h"
 
 
-int getNumberOfCores(){
-#if defined(WIN32)
-    return atoi(getenv("NUMBER_OF_PROCESSORS"));
-#elif defined(MACOS)
-    int nm[2];
-    size_t len = 4;
-    uint32_t count;
-
-    nm[0] = CTL_HW;
-    nm[1] = HW_AVAILCPU;
-    sysctl(nm, 2, &count, &len, NULL, 0);
-
-    if(count < 1) {
-        nm[1] = HW_NCPU;
-        sysctl(nm, 2, &count, &len, NULL, 0);
-        if(count < 1){
-            count = 1;
-        }
-    }
-    return count;
-#elif SG_OS == _OS_LINUX
-    return sysconf(_SC_NPROCESSORS_ONLN);
-#else
-    return 2;
-#endif
-}
-
 void * v_worker_thread(void* a_arg){
     t_thread_args * f_args = (t_thread_args*)(a_arg);
     t_sg_thread_storage * f_storage =
@@ -81,66 +54,39 @@ void * v_worker_thread(void* a_arg){
 
 void v_init_worker_threads(
     int a_thread_count,
-    int a_set_thread_affinity,
     int a_aux_threads
 ){
     int f_stack_size = (1024 * 1024);
-    int f_cpu_core_inc = 1;
-    int f_cpu_count = getNumberOfCores();
-    log_info("Detected %i cpu cores", f_cpu_count);
-
-    if(f_cpu_count < 1)
-    {
-        f_cpu_count = 1;
-    }
 
     if(SINGLE_THREAD){
         STARGATE->worker_thread_count = 1;
-    } else if(a_thread_count == 0){  // auto, select for the user
-        // 2 thread SMT is assumed now
-        // Stargate is very CPU efficient, it is unlikely that anybody needs
-        // so much processing power.
-        int core_count = f_cpu_count / 2;
-        if(core_count >= 9){
-            STARGATE->worker_thread_count = 4;
-        } else if(core_count >= 6){
-            STARGATE->worker_thread_count = 3;
-        } else if(core_count == 1){
-            STARGATE->worker_thread_count = 1;
-        } else {
-            STARGATE->worker_thread_count = 2;
-        }
     } else {
-        if(a_thread_count > f_cpu_count){
-            STARGATE->worker_thread_count = f_cpu_count;
-        } else {
-            STARGATE->worker_thread_count = a_thread_count;
-        }
-    }
-
-    if(STARGATE->worker_thread_count >= f_cpu_count / 2){
-        f_cpu_core_inc = 1;
-    } else {
-        // Assume SMT, possibly CCX and/or chiplet design, so try to
-        // consolidate onto a single CPU or CCX or chiplet
-        f_cpu_core_inc = 2;
+        STARGATE->worker_thread_count = a_thread_count;
     }
 
     log_info("Spawning %i worker threads", STARGATE->worker_thread_count);
 
     STARGATE->track_block_mutexes = (pthread_mutex_t*)malloc(
-        sizeof(pthread_mutex_t) * (STARGATE->worker_thread_count));
+        sizeof(pthread_mutex_t) * (STARGATE->worker_thread_count)
+    );
     STARGATE->worker_threads = (pthread_t*)malloc(
-        sizeof(pthread_t) * (STARGATE->worker_thread_count));
+        sizeof(pthread_t) * (STARGATE->worker_thread_count)
+    );
 
-    hpalloc((void**)&STARGATE->track_thread_quit_notifier,
-        (sizeof(int) * (STARGATE->worker_thread_count)));
+    hpalloc(
+        (void**)&STARGATE->track_thread_quit_notifier,
+        sizeof(int) * STARGATE->worker_thread_count
+    );
 
-    hpalloc((void**)&STARGATE->track_cond,
-        sizeof(pthread_cond_t) * (STARGATE->worker_thread_count));
+    hpalloc(
+        (void**)&STARGATE->track_cond,
+        sizeof(pthread_cond_t) * STARGATE->worker_thread_count
+    );
 
-    hpalloc((void**)&STARGATE->thread_locks,
-        sizeof(pthread_spinlock_t) * (STARGATE->worker_thread_count));
+    hpalloc(
+        (void**)&STARGATE->thread_locks,
+        sizeof(pthread_spinlock_t) * STARGATE->worker_thread_count
+    );
 
     pthread_attr_t threadAttr;
     pthread_attr_init(&threadAttr);
@@ -152,7 +98,6 @@ void v_init_worker_threads(
     pthread_attr_setschedpolicy(&threadAttr, RT_SCHED);
 #endif
 
-    int f_cpu_core = 0;
     int f_i;
 
     for(f_i = 0; f_i < (STARGATE->worker_thread_count); ++f_i)
@@ -177,27 +122,6 @@ void v_init_worker_threads(
             v_worker_thread,
             (void*)f_args
         );
-
-#if SG_OS == _OS_LINUX
-        if(a_set_thread_affinity){
-            cpu_set_t cpuset;
-            CPU_ZERO(&cpuset);
-            CPU_SET(f_cpu_core, &cpuset);
-            pthread_setaffinity_np(
-                STARGATE->worker_threads[f_i],
-                sizeof(cpu_set_t),
-                &cpuset
-            );
-            log_info(
-                "Locked thread %i to core %i",
-                f_i,
-                f_cpu_core
-            );
-            //sched_setaffinity(0, sizeof(cpu_set_t), &cpuset);
-            f_cpu_core += f_cpu_core_inc;
-        }
-
-#endif
     }
 
     pthread_attr_destroy(&threadAttr);
@@ -229,7 +153,6 @@ void v_init_worker_threads(
 // Crashes in GCC and Clang when optimized
 NO_OPTIMIZATION void v_activate(
     int a_thread_count,
-    int a_set_thread_affinity,
     char* a_project_path,
     SGFLT a_sr,
     t_midi_device_list* a_midi_devices,
@@ -265,7 +188,6 @@ NO_OPTIMIZATION void v_activate(
     log_info("Initializing worker threads");
     v_init_worker_threads(
         a_thread_count,
-        a_set_thread_affinity,
         a_aux_threads
     );
 

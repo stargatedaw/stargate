@@ -69,6 +69,7 @@ CPU_COUNT = psutil.cpu_count(logical=False)
 if CPU_COUNT is None:
     CPU_COUNT = multiprocessing.cpu_count()
 CPU_COUNT = clip_value(CPU_COUNT, 1, 16)
+AUTO_CPU_COUNT = clip_value(CPU_COUNT - 1, 1, 4)
 
 def _meta():
     with open(META_DOT_JSON_PATH) as f:

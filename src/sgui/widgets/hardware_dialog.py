@@ -385,17 +385,6 @@ class hardware_dialog:
         f_window_layout.addWidget(f_worker_threads_combobox, 30, 1)
 
         if util.IS_LINUX:
-            f_thread_affinity_checkbox = QCheckBox(
-                _("Lock worker threads to own core?"))
-            f_thread_affinity_checkbox.setToolTip(
-                _(
-                    "This locks worker threads to their own CPU core and "
-                    "may give better\nperformance with fewer "
-                    "audio drop-outs at low latency,"
-                    "but may perform badly\non some configurations."
-                )
-            )
-            f_window_layout.addWidget(f_thread_affinity_checkbox, 50, 1)
             f_hugepages_checkbox = QCheckBox(
                 _("Use HugePages? (You must configure HugePages on your "
                 "system first)"))
@@ -637,8 +626,6 @@ class hardware_dialog:
                 return
             f_worker_threads = f_worker_threads_combobox.currentIndex()
             if util.IS_LINUX:
-                f_thread_affinity = \
-                    1 if f_thread_affinity_checkbox.isChecked() else 0
                 f_hugepages = 1 if f_hugepages_checkbox.isChecked() else 0
             f_audio_inputs = f_audio_in_spinbox.value()
             f_out_tuple = (f_audio_out_spinbox,) + OUT_SPINBOXES
@@ -695,9 +682,6 @@ class hardware_dialog:
                 f_file.write("threads|{}\n".format(f_worker_threads))
 
                 if util.IS_LINUX:
-                    f_file.write(
-                        "threadAffinity|{}\n".format(f_thread_affinity)
-                    )
                     f_file.write("hugePages|{}\n".format(f_hugepages))
                 f_file.write("audioInputs|{}\n".format(f_audio_inputs))
                 f_file.write("audioOutputs|{}\n".format(f_audio_outputs))
@@ -850,11 +834,6 @@ class hardware_dialog:
                 int(util.DEVICE_SETTINGS["threads"]))
 
         if util.IS_LINUX:
-            if "threadAffinity" in util.DEVICE_SETTINGS:
-                if int(util.DEVICE_SETTINGS[
-                "threadAffinity"]) == 1:
-                    f_thread_affinity_checkbox.setChecked(True)
-
             if "hugePages" in util.DEVICE_SETTINGS and \
             int(util.DEVICE_SETTINGS["hugePages"]) == 1:
                 f_hugepages_checkbox.setChecked(True)

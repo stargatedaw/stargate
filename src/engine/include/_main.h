@@ -31,6 +31,6 @@ void alloc_output_buffers();
 int init_hardware(
     struct HardwareConfig* hardware_config
 );
-int start_engine(char* project_dir);
+int start_engine(char* project_dir, int thread_count);
 void stop_engine();
 #endif

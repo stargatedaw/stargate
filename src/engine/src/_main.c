@@ -111,7 +111,8 @@ void print_help(){
     printf("Usage:\n\nStart the engine:\n");
     printf(
         "%s-engine install_prefix project_dir ui_pid "
-        "huge_pages frames_per_second [--sleep --no-hardware]\n",
+        "huge_pages frames_per_second worker_threds "
+        "[--sleep --no-hardware]\n",
         STARGATE_VERSION
     );
     printf(
@@ -145,7 +146,7 @@ int _main(int argc, char** argv){
         return daw_render(argc, argv);
     } else if(!strcmp(argv[1], "soundcheck")){
         return soundcheck(argc, argv);
-    } else if(argc < 6){
+    } else if(argc < 7){
         print_help();
         return 9996;
     }
@@ -164,6 +165,12 @@ int _main(int argc, char** argv){
     int fps = atoi(argv[5]);
     log_info("UI Frames per second: %i", fps);
     int ui_send_usleep = (int)(1000000. / (float)fps);
+    int thread_count = atoi(argv[6]);
+    sg_assert(
+        thread_count >= 1 && thread_count <= 16,
+        "Thread count %i out of range 1..16",
+        thread_count
+    );
     if(ui_send_usleep < 15000){
         log_error(
             "Invalid FPS received: %i",
@@ -202,7 +209,7 @@ int _main(int argc, char** argv){
 #endif
     start_osc_thread();
 
-    start_engine(argv[2]);
+    start_engine(argv[2], thread_count);
     int result = main_loop();
 
     return result;
@@ -256,7 +263,7 @@ int daw_render(int argc, char** argv){
     SGFLT** f_output;
     hpalloc((void**)&f_output, sizeof(SGFLT*) * 2);
 
-    v_activate(f_thread_count, 0, f_project_dir, f_sample_rate, NULL, 0);
+    v_activate(f_thread_count, f_project_dir, f_sample_rate, NULL, 0);
 
     /*
     AUDIO_INPUT_TRACK_COUNT = 2;
@@ -440,7 +447,7 @@ NO_OPTIMIZATION int init_audio_hardware(
     return result;
 }
 
-int start_engine(char* project_dir){
+int start_engine(char* project_dir, int thread_count){
     int retcode = 0;
     struct HardwareConfig* hardware_config = load_hardware_config(
         default_device_file_path()
@@ -450,8 +457,7 @@ int start_engine(char* project_dir){
     log_info("Activating");
 #ifdef NO_MIDI
     v_activate(
-        hardware_config->thread_count,
-        hardware_config->thread_affinity,
+        thread_count,
         project_dir,
         hardware_config->sample_rate,
         NULL,
@@ -463,8 +469,7 @@ int start_engine(char* project_dir){
         open_midi_devices(hardware_config);
     }
     v_activate(
-        hardware_config->thread_count,
-        hardware_config->thread_affinity,
+        thread_count,
         project_dir,
         hardware_config->sample_rate,
         &MIDI_DEVICES,

@@ -100,6 +100,11 @@ def open_engine(a_project_path, fps):
     LOG.info(f"Starting audio engine with {a_project_path}")
     global ENGINE_SUBPROCESS
 
+    threads = int(util.DEVICE_SETTINGS['threads'])
+    if threads == 0:
+        threads = util.AUTO_CPU_COUNT
+    threads = str(threads)
+
     f_cmd = [
         str(x) for x in (
             util.BIN_PATH,
@@ -108,6 +113,7 @@ def open_engine(a_project_path, fps):
             f_pid,
             util.USE_HUGEPAGES,
             fps,
+            threads,
         )
     ]
     f_cmd = util.has_pasuspender(f_cmd)
