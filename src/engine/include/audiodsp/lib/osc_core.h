@@ -21,7 +21,7 @@ GNU General Public License for more details.
 
 #define OSC_UNISON_MAX_VOICES 7
 
-extern int OSC_CORE_PHASES[32][OSC_UNISON_MAX_VOICES];
+extern SGFLT OSC_CORE_PHASES[32][OSC_UNISON_MAX_VOICES];
 
 typedef struct {
     SGFLT output;   //range:  0 to 1

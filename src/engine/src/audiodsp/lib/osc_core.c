@@ -4,7 +4,7 @@
 #include "audiodsp/lib/pitch_core.h"
 
 
-int OSC_CORE_PHASES[32][7] = {
+SGFLT OSC_CORE_PHASES[32][7] = {
     {
         0.6989061,
         0.6868586,
