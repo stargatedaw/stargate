@@ -86,6 +86,13 @@ mac_osx: commit_hash
 	OPTIMIZE_FLAGS= CC=clang CC_ARGS= make -C engine mac_osx
 	./macos/link.py
 
+mac_osx_arm: commit_hash
+	cp -f /opt/homebrew/bin/rubberband engine/
+	OPTIMIZE_FLAGS= CC=clang CC_ARGS= PLAT_FLAGS= \
+		DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib \
+		make -C engine mac_osx
+	./macos/link.py
+
 mingw:
 	CFLAGS+=" -static-libgcc " make -C engine mingw
 

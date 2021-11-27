@@ -7,6 +7,7 @@ import shutil
 import subprocess
 
 HOME = os.path.expanduser('~')
+ARCH = platform.machine()
 
 with open('meta.json') as f:
     j = json.load(f)
@@ -21,10 +22,18 @@ CWD = os.path.abspath(
 )
 os.chdir(CWD)
 
-subprocess.check_call([
-    'make',
-    'mac_osx',
-])
+if ARCH == 'x86_64':
+    subprocess.check_call([
+        'make',
+        'mac_osx',
+    ])
+elif ARCH == 'arm64':
+    subprocess.check_call([
+        'make',
+        'mac_osx_arm',
+    ])
+else:
+    assert False, f"Unknown arch. {ARCH}"
 
 BUNDLE = f'dist/{MAJOR_VERSION}.app'
 if os.path.isdir(BUNDLE):
@@ -38,7 +47,6 @@ subprocess.check_call([
 ])
 
 os.chdir('dist')
-ARCH = platform.machine()
 
 DMG = f'{MAJOR_VERSION}-{MINOR_VERSION}-macos-{ARCH}.dmg'
 if os.path.exists(DMG):
