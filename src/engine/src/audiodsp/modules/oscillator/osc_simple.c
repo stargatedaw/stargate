@@ -189,20 +189,26 @@ SGFLT f_get_triangle(t_osc_core * a_core)
 
 
 //Return zero if the oscillator is turned off.
-SGFLT f_get_osc_off(t_osc_core * a_core)
-{
+SGFLT f_get_osc_off(t_osc_core * a_core){
     return 0.0f;
 }
 
-SG_THREAD_LOCAL fp_get_osc_func_ptr SIMPLE_OSC_TYPES[]
- = {
-    f_get_osc_off, f_get_saw, f_get_square, f_get_triangle, f_get_sine
+SG_THREAD_LOCAL fp_get_osc_func_ptr SIMPLE_OSC_TYPES[] = {
+    f_get_osc_off,
+    f_get_saw,
+    f_get_square,
+    f_get_triangle,
+    f_get_sine
 };
 
-SG_THREAD_LOCAL fp_get_osc_func_ptr SIMPLE_OSC_TYPES_v2[]
- = {
-    f_get_osc_off, f_get_saw, f_get_square, f_get_hsquare, f_get_qsquare,
-    f_get_triangle, f_get_sine
+SG_THREAD_LOCAL fp_get_osc_func_ptr SIMPLE_OSC_TYPES_v2[] = {
+    f_get_osc_off,
+    f_get_saw,
+    f_get_square,
+    f_get_hsquare,
+    f_get_qsquare,
+    f_get_triangle,
+    f_get_sine
 };
 
 

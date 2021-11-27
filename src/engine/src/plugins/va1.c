@@ -482,7 +482,10 @@ void v_va1_process_midi_event(
                 *(plugin_data->dist_wet) * 0.01f
             );
 
-            f_voice->hard_sync = (int)(*plugin_data->sync_hard);
+            f_voice->hard_sync =
+                (int)(*plugin_data->sync_hard) &
+                (int)(*plugin_data->osc1type) &
+                (int)(*plugin_data->osc2type);
 
             v_osc_set_simple_osc_unison_type_v2(
                 &f_voice->osc_unison1,
@@ -761,12 +764,12 @@ void v_run_va1_voice(
     SGFLT f_pb = plugin_data->mono_modules.pitchbend_smoother.last_value;
 
     a_voice->base_pitch =
-        (a_voice->glide_env.output_multiplied) +
-        (a_voice->pitch_env.output_multiplied) +
-        (a_voice->last_pitch) + (a_voice->lfo_pitch_output);
+        a_voice->glide_env.output_multiplied +
+        a_voice->pitch_env.output_multiplied +
+        a_voice->last_pitch +
+        a_voice->lfo_pitch_output;
 
-    if(a_voice->hard_sync)
-    {
+    if(a_voice->hard_sync){
         v_osc_set_unison_pitch(
             &a_voice->osc_unison1,
             a_voice->unison_spread1,
