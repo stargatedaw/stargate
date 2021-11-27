@@ -71,7 +71,11 @@ if CPU_COUNT is None:
     if not is_rpi():  # Assume SMT
         CPU_COUNT /= 2
 CPU_COUNT = clip_value(CPU_COUNT, 1, 16)
-AUTO_CPU_COUNT = clip_value(CPU_COUNT - 1, 1, 4)
+AUTO_CPU_COUNT = clip_value(
+    CPU_COUNT if CPU_COUNT <= 2 else CPU_COUNT - 1,
+    1,
+    4,
+)
 
 def _meta():
     with open(META_DOT_JSON_PATH) as f:
