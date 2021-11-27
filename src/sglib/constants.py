@@ -1,5 +1,6 @@
 import os
 import pathlib
+import platform
 import sys
 
 __all__ = [
