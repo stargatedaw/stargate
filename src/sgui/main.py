@@ -463,7 +463,7 @@ class SgMainWindow(QMainWindow):
         cb.setText(text, mode=cb.Mode.Clipboard)
 
     def copy_gdb_run_cmd(self):
-        text = "run '{}' '{}' {} 0 30 --sleep".format(
+        text = "run '{}' '{}' {} 0 30 1 --sleep".format(
             util.INSTALL_PREFIX,
             constants.PROJECT_DIR,
             os.getpid(),
@@ -472,7 +472,7 @@ class SgMainWindow(QMainWindow):
 
     def copy_valgrind_cmd(self):
         text = (
-            "valgrind '{}-dbg' '{}' '{}' {} 0 --no-hardware --single-thread"
+            "valgrind '{}-dbg' '{}' '{}' {} 0 1 --no-hardware --single-thread"
         ).format(
             util.BIN_PATH,
             util.INSTALL_PREFIX,
