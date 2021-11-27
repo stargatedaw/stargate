@@ -17,6 +17,7 @@ __all__ = [
 
 MAJOR_VERSION = 'stargate'
 
+ARCH = platform.machine()
 assert "cygwin" not in sys.platform, "Cygwin is unsupported"
 IS_WINDOWS = "win32" in sys.platform or "msys" in sys.platform
 IS_LINUX = "linux" in sys.platform

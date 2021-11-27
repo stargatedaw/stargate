@@ -46,7 +46,14 @@ TIMESTRETCH_INDEXES = {
     )
 }
 
-if IS_WINDOWS:
+if (
+    IS_WINDOWS
+    or
+    (
+        IS_MAC_OSX
+        and
+        ARCH != 'x86_64'  # Contains x86 assembly language
+):
     TIMESTRETCH_MODES.remove("SBSMS")
 
 CRISPNESS_SETTINGS = [
