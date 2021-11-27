@@ -390,6 +390,7 @@ void v_run(
     SGFLT* a_input,
     int sample_count
 );
+void stop_preview();
 
 extern t_stargate * STARGATE;
 #endif

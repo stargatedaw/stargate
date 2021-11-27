@@ -39,6 +39,7 @@ void v_we_set_playback_mode(
     int a_mode,
     int a_lock
 ){
+    stop_preview();
     switch(a_mode)
     {
         case 0: //stop

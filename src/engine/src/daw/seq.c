@@ -32,6 +32,7 @@ void v_daw_set_playback_mode(
     double a_beat,
     int a_lock
 ){
+    stop_preview();
     switch(a_mode)
     {
         case 0: //stop

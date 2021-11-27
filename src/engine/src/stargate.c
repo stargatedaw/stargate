@@ -648,6 +648,14 @@ void v_set_preview_file(const char * a_file){
     }
 }
 
+void stop_preview(){
+    if(STARGATE->is_previewing){
+        pthread_spin_lock(&STARGATE->main_lock);
+        v_adsr_release(&STARGATE->preview_audio_item->adsrs[0]);
+        pthread_spin_unlock(&STARGATE->main_lock);
+    }
+}
+
 double f_bpm_to_seconds_per_beat(double a_tempo){
     return (60.0f / a_tempo);
 }
@@ -1240,12 +1248,7 @@ void v_sg_configure(const char* a_key, const char* a_value){
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_PREVIEW_SAMPLE)){
         v_set_preview_file(a_value);
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_STOP_PREVIEW)){
-        if(STARGATE->is_previewing)
-        {
-            pthread_spin_lock(&STARGATE->main_lock);
-            v_adsr_release(&STARGATE->preview_audio_item->adsrs[0]);
-            pthread_spin_unlock(&STARGATE->main_lock);
-        }
+        stop_preview();
     }
     else if(!strcmp(a_key, SG_CONFIGURE_KEY_RATE_ENV))
     {
