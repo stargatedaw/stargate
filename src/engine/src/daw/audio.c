@@ -138,8 +138,10 @@ void v_daw_reset_audio_item_read_heads(
     for(f_i = 0; f_i < MAX_AUDIO_ITEM_COUNT; ++f_i){
         if(f_audio_items->items[f_i]){
             f_audio_item = f_audio_items->items[f_i];
-            double f_start_beat = f_audio_item->start_beat + a_start_offset;
+            double f_start_beat = a_start_offset - f_audio_item->start_beat;
 
+            // TODO: This has bugs when tempo changes happen during the
+            // audio item
             double f_end_beat = f_start_beat + f_samples_to_beat_count(
                 f_audio_item->sample_end_offset -
                     f_audio_item->sample_start_offset,
