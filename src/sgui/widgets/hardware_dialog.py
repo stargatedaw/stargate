@@ -166,13 +166,17 @@ class hardware_dialog:
             portaudio.PaDeviceInfo)
         self.pyaudio.Pa_GetDeviceInfo.argstype = [ctypes.c_int]
         self.pyaudio.Pa_GetHostApiInfo.restype = ctypes.POINTER(
-            portaudio.PaHostApiInfo)
+            portaudio.PaHostApiInfo,
+        )
         self.pyaudio.Pa_GetHostApiInfo.argstype = [ctypes.c_int]
         self.pyaudio.Pa_IsFormatSupported.argstype = [
             ctypes.POINTER(portaudio.PaStreamParameters),
             ctypes.POINTER(portaudio.PaStreamParameters),
             ctypes.c_double,
         ]
+        self.pyaudio.Pa_IsFormatSupported.restype = ctypes.c_int
+        self.pyaudio.Pa_GetErrorText.argstype = [ctypes.c_int]
+        self.pyaudio.Pa_GetErrorText.restype = ctypes.c_char_p
         LOG.info("Initializing Portaudio")
         self.pyaudio.Pa_Initialize()
 
@@ -632,42 +636,43 @@ class hardware_dialog:
             f_audio_outputs = "|".join(str(x.value()) for x in f_out_tuple)
 
             try:
-                #This doesn't work if the device is open already,
-                #so skip the test, and if it fails the
-                #user will be prompted again next time Stargate starts
                 if (
-                    not self.is_running
-                    or
-                    "name" not in util.DEVICE_SETTINGS
-                    or (
-                        util.DEVICE_SETTINGS["name"]
-                        !=
-                        self.device_name
-                    )
+                    (util.IS_WINDOWS or util.IS_MAC_OSX)
+                    and
+                    f_audio_inputs
                 ):
-                    if (
-                        (util.IS_WINDOWS or util.IS_MAC_OSX)
-                        and
-                        f_audio_inputs
-                    ):
-                        f_input = portaudio.PaStreamParameters(
-                            f_name_to_index[self.subsystem][self.device_name],
-                            f_audio_inputs,
-                            portaudio.paInt16,
-                            float(f_buffer_size) / float(f_samplerate),
-                            None,
-                        )
-                        f_input_ref = ctypes.byref(f_input)
-                    else:
-                        f_input_ref = 0
-                    f_output = portaudio.PaStreamParameters(
+                    f_input = portaudio.PaStreamParameters(
                         f_name_to_index[self.subsystem][self.device_name],
-                        2, portaudio.paInt16,
-                        float(f_buffer_size) / float(f_samplerate), None)
-                    f_supported = self.pyaudio.Pa_IsFormatSupported(
-                        f_input_ref, ctypes.byref(f_output), f_samplerate)
-                    if not f_supported:
-                        raise Exception()
+                        f_audio_inputs,
+                        portaudio.paInt16,
+                        float(f_buffer_size) / float(f_samplerate),
+                        None,
+                    )
+                    f_input_ref = ctypes.byref(f_input)
+                else:
+                    f_input_ref = 0
+                f_output = portaudio.PaStreamParameters(
+                    f_name_to_index[self.subsystem][self.device_name],
+                    2,
+                    portaudio.paInt16,
+                    float(f_buffer_size) / float(f_samplerate),
+                    None,
+                )
+                f_supported = self.pyaudio.Pa_IsFormatSupported(
+                    f_input_ref,
+                    ctypes.byref(f_output),
+                    ctypes.c_double(float(f_samplerate)),
+                )
+                LOG.info(f"Pa_IsFormatSupported returned {f_supported}")
+                if f_supported:  # != 0
+                    msg = self.pyaudio.Pa_GetErrorText(f_supported).decode()
+                    LOG.error(msg)
+                    QMessageBox.warning(
+                        f_window,
+                        _("Error"),
+                        _(f"Audio device returned: {msg}"),
+                    )
+                    raise Exception(msg)
                 f_file = open(config_path, "w", newline="\n")
                 f_file.write("hostApi|{}\n".format(self.subsystem))
                 f_file.write("name|{}\n".format(self.device_name))
@@ -735,16 +740,6 @@ class hardware_dialog:
 
             except Exception as ex:
                 LOG.exception(ex)
-                QMessageBox.warning(
-                    f_window,
-                    _("Error"),
-                    _(
-                        "Couldn't open audio device\n\n{ex}\n\n"
-                        "This may (or may not) be because the "
-                        "device is already open by another application or "
-                        "a sound daemon such as JACK."
-                    ),
-                )
 
         def on_cancel(a_self=None):
             # notify_restart()
