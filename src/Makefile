@@ -90,7 +90,7 @@ mac_osx_arm: commit_hash
 	cp -f /opt/homebrew/bin/rubberband engine/
 	OPTIMIZE_FLAGS= CC=clang \
 		CC_ARGS="-I/opt/homebrew/include -L /opt/homebrew/lib" \
-		PLAT_FLAGS=  \
+		PLAT_FLAGS="-mcpu=apple-a11"  \
 		DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib \
 		make -C engine mac_osx
 	./macos/link.py
