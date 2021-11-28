@@ -55,7 +55,12 @@ assert retcode == 0, retcode
 
 os.chdir('dist')
 
-DMG = f'{MAJOR_VERSION}-{MINOR_VERSION}-macos-{ARCH}.dmg'
+ARCH_NAMES = {
+    'x86_64': 'intel',
+    'arm64': 'm1',
+}
+
+DMG = f'{MAJOR_VERSION}-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.dmg'
 if os.path.exists(DMG):
     os.remove(DMG)
 
