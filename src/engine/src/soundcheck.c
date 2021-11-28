@@ -1,4 +1,5 @@
 #include <portaudio.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "files.h"
@@ -61,16 +62,32 @@ int soundcheck_callback(
     PaStreamCallbackFlags statusFlags,
     void *userData
 ){
-    int i = 0;
-    int j = 0;
     SGFLT sample;
-    float* buf = (float*)outputBuffer;
-    for(i = 0; i < framesPerBuffer; ++i){
-        sample = soundcheck_run(&SOUNDCHECK);
-        buf[j] = sample;
-        ++j;
-        buf[j] = sample;
-        ++j;
+    int f_i;
+    float* out = (float*)outputBuffer;
+
+    if(OUTPUT_CH_COUNT > 2){
+        int f_i2 = 0;
+        memset(
+            out,
+            0,
+            sizeof(float) * framesPerBuffer * OUTPUT_CH_COUNT
+        );
+
+        for(f_i = 0; f_i < framesPerBuffer; ++f_i){
+            sample = soundcheck_run(&SOUNDCHECK);
+            out[f_i2 + MAIN_OUT_L] = sample;
+            out[f_i2 + MAIN_OUT_R] = sample;
+            f_i2 += OUTPUT_CH_COUNT;
+        }
+    } else {
+        for(f_i = 0; f_i < framesPerBuffer; ++f_i){
+            sample = soundcheck_run(&SOUNDCHECK);
+            *out = sample;  // left
+            ++out;
+            *out = sample;  // right
+            ++out;
+        }
     }
 
     return paContinue;
