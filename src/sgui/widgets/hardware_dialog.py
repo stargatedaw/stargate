@@ -636,11 +636,12 @@ class hardware_dialog:
             f_audio_outputs = "|".join(str(x.value()) for x in f_out_tuple)
 
             try:
-                if (
-                    (util.IS_WINDOWS or util.IS_MAC_OSX)
-                    and
-                    f_audio_inputs
-                ):
+                #if (
+                #    (util.IS_WINDOWS or util.IS_MAC_OSX)
+                #    and
+                #    f_audio_inputs
+                #):
+                if False:
                     f_input = portaudio.PaStreamParameters(
                         f_name_to_index[self.subsystem][self.device_name],
                         f_audio_inputs,
@@ -653,8 +654,8 @@ class hardware_dialog:
                     f_input_ref = 0
                 f_output = portaudio.PaStreamParameters(
                     f_name_to_index[self.subsystem][self.device_name],
-                    2,
-                    portaudio.paInt16,
+                    f_audio_out_spinbox.value(),
+                    portaudio.paFloat32,
                     float(f_buffer_size) / float(f_samplerate),
                     None,
                 )
