@@ -1,20 +1,27 @@
 # -*- mode: python ; coding: utf-8 -*-
 import os
+import platform
+ARCH = platform.machine()
 
 
 block_cipher = None
 
+BINARIES = [
+ ('engine/stargate-engine', 'engine'),
+ ('engine/*.dylib', '.'),
+ ('engine/rubberband', 'engine'),
+]
+
+if ARCH == 'x86_64':
+    BINARIES.append(
+        ('vendor/sbsms/cli/sbsms', 'engine'),
+    )
 
 a = Analysis(['scripts/stargate'],
              pathex=[
                  os.path.dirname(SPECPATH),
              ],
-             binaries=[
-                 ('engine/stargate-engine', 'engine'),
-                 ('engine/*.dylib', '.'),
-                 ('vendor/sbsms/cli/sbsms', 'engine'),
-                 ('engine/rubberband', 'engine'),
-             ],
+             binaries=BINARIES,
              datas=[
                  ('meta.json', '.'),
                  ('COMMIT', '.'),

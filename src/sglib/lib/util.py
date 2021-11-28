@@ -7,6 +7,7 @@ import json
 import math
 import multiprocessing
 import os
+import platform
 import random
 import re
 import subprocess
@@ -51,7 +52,7 @@ if (
     or (
         IS_MAC_OSX
         and
-        ARCH != 'x86_64'  # Contains x86 assembly language
+        platform.machine() != 'x86_64'  # Contains x86 assembly language
     )
 ):
     TIMESTRETCH_MODES.remove("SBSMS")

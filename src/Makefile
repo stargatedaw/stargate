@@ -84,11 +84,13 @@ mac_osx: commit_hash
 		engine/
 	OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make sbsms
 	OPTIMIZE_FLAGS= CC=clang CC_ARGS= make -C engine mac_osx
-	./macos/link.py
+	./macos/link.py --with-sbsms
 
 mac_osx_arm: commit_hash
 	cp -f /opt/homebrew/bin/rubberband engine/
-	OPTIMIZE_FLAGS= CC=clang CC_ARGS= PLAT_FLAGS= \
+	OPTIMIZE_FLAGS= CC=clang \
+		CC_ARGS="-I/opt/homebrew/include -L /opt/homebrew/lib" \
+		PLAT_FLAGS=  \
 		DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib \
 		make -C engine mac_osx
 	./macos/link.py

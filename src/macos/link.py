@@ -1,11 +1,23 @@
 #!/usr/bin/env python3
 
+import argparse
 import collections
 import copy
 import glob
 import os
 import shutil
 import subprocess
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--with-sbsms',
+        action='store_true',
+        dest='sbsms',
+    )
+    return parser.parse_args()
+
+args = parse_args()
 
 CWD = os.path.abspath(
         os.path.join(
@@ -27,7 +39,14 @@ def relink(binary):
         if not arr:
             continue
         dylib = arr[0]
-        if dylib.startswith('/usr/local/') and dylib.endswith('.dylib'):
+        if (
+            (
+                dylib.startswith('/usr/local/') 
+                or
+                dylib.startswith('/opt/homebrew/') 
+            ) and 
+            dylib.endswith('.dylib')
+        ):
             basename = os.path.basename(dylib)
             print(
                 f'Relinking {binary} -> {basename}',
@@ -44,6 +63,10 @@ def relink(binary):
                 shutil.copyfile(dylib, basename)
                 relink(basename)
 
-for binary in ['stargate-engine', 'rubberband', 'sbsms']:
+BINARIES = ['stargate-engine', 'rubberband']
+if args.sbsms:
+    BINARIES.append('sbsms')
+
+for binary in BINARIES:
     relink(binary)
 
