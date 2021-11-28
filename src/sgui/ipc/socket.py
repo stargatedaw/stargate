@@ -1,5 +1,7 @@
-from sgui.sgqt import QtCore, Signal, Slot
+from sgui.sgqt import QtCore, Signal
 from sglib.ipc.abstract import AbstractIPCTransport
+from sglib import constants
+from sglib.lib import engine
 from sglib.log import LOG
 from sgui import shared
 import select
@@ -15,6 +17,7 @@ __all__ = [
 SOCKET_IPC_SERVER = None
 IPC_ENGINE_SERVER_PORT = 31999
 IPC_UI_SERVER_PORT = 31909
+SOCKET_ERROR_SHOWN = False
 
 class SocketIPCServerSignal(QtCore.QObject):
     handled = Signal(str)
@@ -118,5 +121,27 @@ class SocketIPCTransport(AbstractIPCTransport):
             except Exception as ex:
                 LOG.warning(f"Error: {ex}, waiting {wait}s to retry")
                 time.sleep(wait)
-        LOG.error(f"Failed to send {message}")
+        global SOCKET_ERROR_SHOWN
+        if (
+            not SOCKET_ERROR_SHOWN
+            and
+            engine.ENGINE_SUBPROCESS
+            and
+            engine.ENGINE_SUBPROCESS.returncode is None
+        ):
+            msg = _(
+                "Unable to communicate with the engine over UDP sockets.  "
+                "Please ensure that UDP sockets on localhost are enabled "
+                "in your firewall for the entire application, or for "
+                "the following UDP ports:\n"
+                f"{IPC_UI_SERVER_PORT}\n{IPC_ENGINE_SERVER_PORT}"
+            )
+            LOG.error(msg)
+            SOCKET_ERROR_SHOWN = True
+            QMessageBox.warning(
+                shared.MAIN_WINDOW,
+                _("Error"),
+                msg,
+            )
+        LOG.error(f"Failed to send {message[:100]}")
 
