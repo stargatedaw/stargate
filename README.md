@@ -1,4 +1,3 @@
-![](src/files/share/pixmaps/stargate.png)
 # Stargate DAW
 Stargate is an all-in-one DAW and plugin suite, designed to be a comprehensive
 solution for music production, with a focus on providing unique and innovative
