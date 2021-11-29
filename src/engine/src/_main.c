@@ -234,8 +234,8 @@ int daw_render(int argc, char** argv){
     int f_stem_render = atoi(argv[10]);
     int sequence_uid = atoi(argv[11]);
 
-    if(f_thread_count < 0 || f_thread_count > MAX_WORKER_THREADS){
-        log_error("Error: Thread count out of range 0-16, exiting");
+    if(f_thread_count < 1 || f_thread_count > MAX_WORKER_THREADS){
+        log_error("Error: Thread count out of range 1-16, exiting");
         exit(1);
     }
 

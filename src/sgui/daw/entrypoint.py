@@ -284,8 +284,12 @@ class MainWindow(QScrollArea):
             f_fini = os.path.join(f_out_file, "finished") if f_stem else None
             f_samp_rate = f_sample_rate.currentText()
             f_buff_size = util.DEVICE_SETTINGS["bufferSize"]
-            f_thread_count = 1 if util.IS_WINDOWS else \
-                util.DEVICE_SETTINGS["threads"]
+            if util.IS_WINDOWS:
+                f_thread_count = 1
+            elif int(util.DEVICE_SETTINGS["threads"]) > 0:
+                f_thread_count = int(util.DEVICE_SETTINGS["threads"])
+            else:
+                f_thread_count = util.AUTO_CPU_COUNT
 
             self.last_offline_dir = os.path.dirname(str(f_name.text()))
 
