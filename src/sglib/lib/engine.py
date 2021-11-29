@@ -55,6 +55,7 @@ def close_engine():
         ENGINE_SUBPROCESS = None
     if os.path.exists(ENGINE_PIDFILE):
         os.remove(ENGINE_PIDFILE)
+    constants.READY = False
 
 def check_engine():
     """ Check if the engine is running.  Only works for subprocess engine mode

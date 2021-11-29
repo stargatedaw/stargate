@@ -126,7 +126,7 @@ def offline_operation(func):
         if MAIN_WINDOW.current_module.CLOSE_ENGINE_ON_RENDER:
             open_engine(PROJECT_FILE, get_fps())
             constants.IPC_ENABLED = True
-            for i in range(30):
+            for i in range(300):
                 time.sleep(0.1)
                 if constants.READY:
                     break
