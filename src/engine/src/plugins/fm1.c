@@ -41,28 +41,6 @@ void v_fm1_set_cc_map(PluginHandle instance, char* a_msg){
 
 void v_fm1_or_prep(PluginHandle instance, SGFLT sample_rate){
     t_fm1 *plugin = (t_fm1 *)instance;
-    int f_i;
-    int f_i2;
-    int f_i3;
-
-    int f_osc_on[FM1_OSC_COUNT];
-
-    for(f_i = 0; f_i < FM1_OSC_COUNT; ++f_i){
-        f_osc_on[f_i] = ((int)(*plugin->osc_type[f_i]) - 1);
-    }
-
-    for(f_i2 = 0; f_i2 < FM1_POLYPHONY; ++f_i2){
-        t_fm1_poly_voice * f_voice = &plugin->data[f_i2];
-        for(f_i = 0; f_i < (int)(sample_rate * 3.); ++f_i){
-            for(f_i3 = 0; f_i3 < FM1_OSC_COUNT; ++f_i3){
-                if(f_osc_on[f_i3] >= 0){
-                    v_osc_wav_run_unison_core_only(
-                        &f_voice->osc[f_i3].osc_wavtable
-                    );
-                }
-            }
-        }
-    }
 
     plugin->mono_modules.fm_macro_smoother[0].last_value =
         (*plugin->fm_macro[0] * 0.01f);

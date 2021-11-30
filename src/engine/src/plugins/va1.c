@@ -32,18 +32,6 @@ void v_cleanup_va1(PluginHandle instance){
     free(instance);
 }
 
-void v_va1_or_prep(PluginHandle instance, SGFLT sample_rate){
-    t_va1 *plugin = (t_va1*)instance;
-    int f_i, f_i2;
-    for(f_i2 = 0; f_i2 < VA1_POLYPHONY; ++f_i2){
-        t_va1_poly_voice* f_voice = &plugin->data[f_i2];
-        for(f_i = 0; f_i < (int)(sample_rate * 3); ++f_i){
-            f_osc_run_unison_osc_core_only(&f_voice->osc_unison1);
-            f_osc_run_unison_osc_core_only(&f_voice->osc_unison2);
-        }
-    }
-}
-
 void v_va1_set_cc_map(PluginHandle instance, char * a_msg){
     t_va1 *plugin = (t_va1 *)instance;
     v_generic_cc_map_set(&plugin->cc_map, a_msg);
@@ -937,7 +925,7 @@ PluginDescriptor *va1_plugin_descriptor(){
     f_result->API_Version = 1;
     f_result->configure = NULL;
     f_result->run_replacing = v_run_va1;
-    f_result->offline_render_prep = v_va1_or_prep;
+    f_result->offline_render_prep = NULL;
     f_result->on_stop = v_va1_on_stop;
 
     return f_result;
