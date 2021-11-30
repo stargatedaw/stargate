@@ -1181,10 +1181,9 @@ class SgMainWindow(QMainWindow):
         f_layout.addWidget(f_status_label, 15, 1)
         f_window.exec()
 
-    @offline_operation
     def on_offline_render(self):
+        shared.PLUGIN_UI_DICT.save_all_plugin_state()
         self.current_window.on_offline_render()
-        return True
 
     def on_undo(self):
         self.current_window.on_undo()

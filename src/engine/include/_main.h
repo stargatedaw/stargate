@@ -9,7 +9,7 @@
 #define SIG SIGRTMIN
 
 int _main(int argc, char** argv);
-void start_osc_thread();
+void start_socket_thread();
 void start_ui_thread(int pid);
 void setup_signal_handling();
 

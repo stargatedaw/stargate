@@ -207,7 +207,7 @@ int _main(int argc, char** argv){
 #if SG_OS != _OS_WINDOWS
     start_ui_thread(ui_pid);
 #endif
-    start_osc_thread();
+    start_socket_thread();
 
     start_engine(argv[2], thread_count);
     int result = main_loop();
@@ -313,7 +313,7 @@ NO_OPTIMIZATION void init_main_vol(){
     log_info("MAIN_VOL = %f", MAIN_VOL);
 }
 
-NO_OPTIMIZATION void start_osc_thread(){
+NO_OPTIMIZATION void start_socket_thread(){
     ipc_init();
     log_info("Starting socket server thread");
     struct IpcServerThreadArgs* args = (struct IpcServerThreadArgs*)malloc(
