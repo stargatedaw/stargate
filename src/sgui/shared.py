@@ -62,14 +62,14 @@ def clean_audio_pool():
         f_msg = "|".join(str(x) for x in sorted(f_result))
         constants.IPC.clean_audio_pool(f_msg)
 
-    if util.USE_HUGEPAGES:
-        for f_uid in (x for x in f_result if x not in MEMORY_ENTROPY_UIDS):
-            MEMORY_ENTROPY_UIDS.add(f_uid)
-            f_sg = constants.PROJECT.get_sample_graph_by_uid(f_uid)
-            f_delta = datetime.timedelta(seconds=f_sg.length_in_seconds)
-            if add_entropy(f_delta):
-                restart_engine()
-                break
+    #if util.USE_HUGEPAGES:
+    #    for f_uid in (x for x in f_result if x not in MEMORY_ENTROPY_UIDS):
+    #        MEMORY_ENTROPY_UIDS.add(f_uid)
+    #        f_sg = constants.PROJECT.get_sample_graph_by_uid(f_uid)
+    #        f_delta = datetime.timedelta(seconds=f_sg.length_in_seconds)
+    #        if add_entropy(f_delta):
+    #            restart_engine()
+    #            break
 
 def add_entropy(a_timedelta):
     """ Use this to restart the engine and clean up the wav pool memory
