@@ -106,16 +106,16 @@ class SgSpinBox(_QLineEdit):
     """
     Tries to mimic behavior from Maya's internal slider that's found in the channel box.
     """
-    IntSpinBox = 0
-    DoubleSpinBox = 1
+    TYPE_INT = 0
+    TYPE_DOUBLE = 1
 
     def __init__(self, spinbox_type, *args, **kwargs):
         self.spinbox_type = spinbox_type
         super(SgSpinBox, self).__init__(*args, **kwargs)
 
-        if spinbox_type == SgSpinBox.IntSpinBox:
+        if spinbox_type == SgSpinBox.TYPE_INT:
             self.setValidator(QtGui.QIntValidator(parent=self))
-        elif spinbox_type == SgSpinBox.DoubleSpinBox:
+        elif spinbox_type == SgSpinBox.TYPE_DOUBLE:
             self.setValidator(QtGui.QDoubleValidator(parent=self))
         else:
             assert False, spinbox_type
@@ -134,9 +134,9 @@ class SgSpinBox(_QLineEdit):
         self.setValue(0)
 
     def _str_to_value(self, _str):
-        if self.spinbox_type == self.DoubleSpinBox:
+        if self.spinbox_type == self.TYPE_DOUBLE:
             value = float(_str)
-        elif self.spinbox_type == self.IntSpinBox:
+        elif self.spinbox_type == self.TYPE_INT:
             value = int(_str)
         if self.max is not None and value > self.max:
             value = self.max
@@ -183,7 +183,7 @@ class SgSpinBox(_QLineEdit):
         delta *= self.step_size * steps_mult
         value = self.value_at_press + delta
 
-        if self.spinbox_type == SgSpinBox.DoubleSpinBox:
+        if self.spinbox_type == SgSpinBox.TYPE_DOUBLE:
             value = round(value, self.decimals)
         self.setValue(value)
 
@@ -210,13 +210,13 @@ class SgSpinBox(_QLineEdit):
         self.max = _max
 
     def setSingleStep(self, step_size):
-        if self.spinbox_type == SgSpinBox.IntSpinBox:
+        if self.spinbox_type == SgSpinBox.TYPE_INT:
             self.step_size = step_size
         else:
             self.step_size = step_size
 
     def value(self):
-        if self.spinbox_type == SgSpinBox.IntSpinBox:
+        if self.spinbox_type == SgSpinBox.TYPE_INT:
             return int(self.text())
         else:
             return float(self.text())
@@ -228,10 +228,26 @@ class SgSpinBox(_QLineEdit):
         if self.max is not None:
             value = min(value, self.max)
 
-        if self.spinbox_type == SgSpinBox.IntSpinBox:
+        if self.spinbox_type == SgSpinBox.TYPE_INT:
             self.setText(str(int(value)))
         else:
             self.setText(str(float(value)))
+
+    def event(self, ev):
+        if ev.type() == QtCore.QEvent.Type.KeyPress:
+            if ev.key() in(
+                QtCore.Qt.Key.Key_Enter,
+                QtCore.Qt.Key.Key_Return,
+            ):
+                self.focusNextChild()
+                return True
+            elif ev.key() == QtCore.Qt.Key.Key_Up:
+                self.setValue(self.value() + self.step_size)
+                return True
+            elif ev.key() == QtCore.Qt.Key.Key_Down:
+                self.setValue(self.value() - self.step_size)
+                return True
+        return orig_QLineEdit.event(self, ev)
 
 class _QDoubleSpinBox(SgSpinBox):
     valueChanged = Signal(float)
@@ -239,7 +255,7 @@ class _QDoubleSpinBox(SgSpinBox):
     def __init__(self, *args, **kwargs):
         SgSpinBox.__init__(
             self,
-            SgSpinBox.DoubleSpinBox,
+            SgSpinBox.TYPE_DOUBLE,
             *args,
             **kwargs
         )
@@ -259,7 +275,7 @@ class _QSpinBox(SgSpinBox):
     def __init__(self, *args, **kwargs):
         SgSpinBox.__init__(
             self,
-            SgSpinBox.IntSpinBox,
+            SgSpinBox.TYPE_INT,
             *args,
             **kwargs
         )
