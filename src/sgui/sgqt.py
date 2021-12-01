@@ -208,6 +208,7 @@ class SgSpinBox(_QLineEdit):
     def setRange(self, _min, _max):
         self.min = _min
         self.max = _max
+        self.setValue(self.value())
 
     def setSingleStep(self, step_size):
         if self.spinbox_type == SgSpinBox.TYPE_INT:
