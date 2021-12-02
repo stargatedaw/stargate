@@ -223,15 +223,19 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
 }
 
 
-void v_set_we_file(t_wave_edit * self, const char * a_uid)
-{
+void v_set_we_file(t_wave_edit * self, const char * a_uid){
     int uid = atoi(a_uid);
 
     t_audio_pool_item * f_result = g_audio_pool_get_item_by_uid(
-        STARGATE->audio_pool, uid);
+        STARGATE->audio_pool,
+        uid
+    );
 
-    if(f_result->is_loaded || i_audio_pool_item_load(f_result, 1))
-    {
+    if(
+        f_result->is_loaded
+        ||
+        i_audio_pool_item_load(f_result, 1)
+    ){
         pthread_spin_lock(&STARGATE->main_lock);
 
         self->ab_wav_item = f_result;
@@ -239,9 +243,7 @@ void v_set_we_file(t_wave_edit * self, const char * a_uid)
         self->ab_audio_item->ratio = self->ab_wav_item->ratio_orig;
 
         pthread_spin_unlock(&STARGATE->main_lock);
-    }
-    else
-    {
+    } else {
         log_info("i_audio_pool_item_load failed in v_set_we_file");
     }
 }

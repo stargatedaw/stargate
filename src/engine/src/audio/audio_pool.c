@@ -51,7 +51,11 @@ int i_audio_pool_item_load(
 
     info.format = 0;
 
-    file = sf_open(a_audio_pool_item->path, SFM_READ, &info);
+    file = sf_open(
+        a_audio_pool_item->path,
+        SFM_READ,
+        &info
+    );
 
     if (!file){
         log_error(
@@ -135,12 +139,9 @@ int i_audio_pool_item_load(
                     tmpSamples[j][f_i] = f_temp_sample;
                 }
             }
-        }
-        else
-        {
+        } else {
             tmpSamples[0][f_i] = 0.0f;
-            if(f_adjusted_channel_count > 1)
-            {
+            if(f_adjusted_channel_count > 1){
                 tmpSamples[1][f_i] = 0.0f;
             }
         }
