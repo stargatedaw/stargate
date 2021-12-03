@@ -51,6 +51,12 @@ int i_audio_pool_item_load(
 
     info.format = 0;
 
+    sg_assert(
+        i_file_exists(a_audio_pool_item->path),
+        "Audio file does not exist: '%s'",
+        a_audio_pool_item->path
+    );
+
     file = sf_open(
         a_audio_pool_item->path,
         SFM_READ,
@@ -277,12 +283,6 @@ t_audio_pool_item * v_audio_pool_add_item(
     }
 
     if(!i_file_exists(f_path)){
-       sg_assert(
-            i_file_exists(a_file_path),
-            "Audio file does not exist: '%s' '%s'",
-            f_path,
-            a_file_path
-        );
        strcpy(f_path, a_file_path);
     }
 
