@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 This file is part of the Stargate project, Copyright Stargate Team
@@ -284,9 +283,7 @@ class MainWindow(QScrollArea):
             f_fini = os.path.join(f_out_file, "finished") if f_stem else None
             f_samp_rate = f_sample_rate.currentText()
             f_buff_size = util.DEVICE_SETTINGS["bufferSize"]
-            if util.IS_WINDOWS:
-                f_thread_count = 1
-            elif int(util.DEVICE_SETTINGS["threads"]) > 0:
+            if int(util.DEVICE_SETTINGS["threads"]) > 0:
                 f_thread_count = int(util.DEVICE_SETTINGS["threads"])
             else:
                 f_thread_count = util.AUTO_CPU_COUNT
