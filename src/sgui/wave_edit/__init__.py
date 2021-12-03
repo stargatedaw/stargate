@@ -48,7 +48,7 @@ file_notes = os.path.join(wave_edit_folder, "notes.txt")
 file_pyinput = os.path.join(wave_edit_folder, "input.txt")
 
 
-class WaveNextProject(AbstractProject):
+class WaveEditProject(AbstractProject):
     def __init__(self, a_with_audio):
         self.TRACK_COUNT = TRACK_COUNT_ALL
         self.suppress_updates = False
@@ -608,7 +608,7 @@ def global_update_peak_meters(a_val):
             LOG.warning("{} not in ALL_PEAK_METERS".format(f_index))
 
 
-class wave_editor_widget:
+class WaveEditorWidget:
     def __init__(self):
         self.file_name = None
         self.widget = QWidget()
@@ -1133,8 +1133,10 @@ class wave_editor_widget:
         f_file = str(a_file)
         if not os.path.exists(f_file):
             QMessageBox.warning(
-                self.widget, _("Error"),
-                _("{} does not exist".format(f_file)))
+                self.widget,
+                _("Error"),
+                _("{} does not exist").format(f_file),
+            )
             return
         self.file_name = f_file
         glbl_shared.APP.setOverrideCursor(
@@ -1144,8 +1146,11 @@ class wave_editor_widget:
         self.current_file = f_file
         self.file_lineedit.setText(f_file)
         self.set_sample_graph(f_file)
-        self.duration = float(self.graph_object.frame_count) / float(
-            self.graph_object.sample_rate)
+        self.duration = float(
+            self.graph_object.frame_count,
+        ) / float(
+            self.graph_object.sample_rate,
+        )
         if f_file in self.history:
             self.history.remove(f_file)
         self.history.append(f_file)
@@ -1156,7 +1161,7 @@ class wave_editor_widget:
             f_action.file_name = f_path
         self.history_button.setMenu(f_menu)
         constants.WAVE_EDIT_PROJECT.ipc().ab_open(
-            constants.PROJECT.get_wav_uid_by_name(a_file),
+            constants.PROJECT.get_wav_uid_by_name(a_file, a_cp=False),
         )
         self.marker_callback()
         glbl_shared.APP.restoreOverrideCursor()
@@ -1248,9 +1253,16 @@ class wave_editor_widget:
 
     def set_sample_graph(self, a_file_name):
         self.graph_object = constants.PROJECT.get_sample_graph_by_name(
-            a_file_name)
+            a_file_name,
+            a_cp=False,
+        )
         self.sample_graph.draw_item(
-            self.graph_object, 0.0, 1000.0, 0.0, 1000.0)
+            self.graph_object,
+            0.0,
+            1000.0,
+            0.0,
+            1000.0,
+        )
 
     def clear_sample_graph(self):
         self.sample_graph.clear_drawn_items()
@@ -1267,7 +1279,7 @@ def global_close_all():
 #Opens or creates a new project
 def global_open_project(a_project_file):
     global TRACK_NAMES, PLUGIN_RACK
-    constants.WAVE_EDIT_PROJECT = WaveNextProject(WITH_AUDIO)
+    constants.WAVE_EDIT_PROJECT = WaveEditProject(WITH_AUDIO)
     constants.WAVE_EDIT_PROJECT.suppress_updates = True
     constants.WAVE_EDIT_PROJECT.open_project(a_project_file, False)
     WAVE_EDITOR.last_offline_dir = constants.PROJECT.user_folder
@@ -1290,7 +1302,7 @@ def global_open_project(a_project_file):
 
 def global_new_project(a_project_file):
     global PLUGIN_RACK
-    constants.WAVE_EDIT_PROJECT = WaveNextProject(WITH_AUDIO)
+    constants.WAVE_EDIT_PROJECT = WaveEditProject(WITH_AUDIO)
     constants.WAVE_EDIT_PROJECT.new_project(a_project_file)
     WAVE_EDITOR.last_offline_dir = constants.PROJECT.user_folder
     MAIN_WINDOW.last_offline_dir = constants.PROJECT.user_folder
@@ -1316,16 +1328,17 @@ def active_audio_pool_uids():
     if WAVE_EDITOR.file_name:
         result.add(
             constants.PROJECT.get_wav_uid_by_name(
-                WAVE_EDITOR.file_name
+                WAVE_EDITOR.file_name,
+                a_cp=False,
             )
         )
     return result
 
-constants.WAVE_EDIT_PROJECT = WaveNextProject(True)
+constants.WAVE_EDIT_PROJECT = WaveEditProject(True)
 
 ALL_PEAK_METERS = {}
 
-WAVE_EDITOR = wave_editor_widget()
+WAVE_EDITOR = WaveEditorWidget()
 TRANSPORT = TransportWidget()
 MAIN_WINDOW = MainWindow()
 

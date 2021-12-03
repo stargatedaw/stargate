@@ -115,10 +115,8 @@ int i_audio_pool_item_load(
             &&
             f_i < (samples + AUDIO_ITEM_PADDING_DIV2)
         ){
-            if(f_i >= f_fade_out_start)
-            {
-                if(f_fade_out_envelope <= 0.0f)
-                {
+            if(f_i >= f_fade_out_start){
+                if(f_fade_out_envelope <= 0.0f){
                     f_fade_out_dec = 0.0f;
                 }
 
@@ -130,12 +128,9 @@ int i_audio_pool_item_load(
                         (tmpFrames[(f_i - AUDIO_ITEM_PADDING_DIV2) *
                         info.channels + j]);
 
-                if(f_i >= f_fade_out_start)
-                {
+                if(f_i >= f_fade_out_start){
                     tmpSamples[j][f_i] = f_temp_sample * f_fade_out_envelope;
-                }
-                else
-                {
+                } else {
                     tmpSamples[j][f_i] = f_temp_sample;
                 }
             }
@@ -234,7 +229,7 @@ t_audio_pool_item * v_audio_pool_add_item(
 
     int f_pos = 2;
 
-    if(a_file_path[0] != '/' && a_file_path[1] == ':'){
+    if(a_file_path[0] != '/' && a_file_path[1] == ':'){  // Windows
         char f_file_path[2048];
 
         f_file_path[0] = a_file_path[0];
@@ -260,8 +255,7 @@ t_audio_pool_item * v_audio_pool_add_item(
             PATH_SEP,
             f_file_path
         );
-    }
-    else{
+    } else {  // UNIX
         if(a_file_path[0] == '/'){
             snprintf(
                 f_path,
@@ -280,6 +274,16 @@ t_audio_pool_item * v_audio_pool_add_item(
                 a_file_path
             );
         }
+    }
+
+    if(!i_file_exists(f_path)){
+       sg_assert(
+            i_file_exists(a_file_path),
+            "Audio file does not exist: '%s' '%s'",
+            f_path,
+            a_file_path
+        );
+       strcpy(f_path, a_file_path);
     }
 
     g_audio_pool_item_init(
