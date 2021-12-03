@@ -441,6 +441,7 @@ class SgProject(AbstractProject):
         """ Return the UID from the wav pool, or add to the
             pool if it does not exist
         """
+        a_path = self.check_audio_file_in_project(a_path)
         if a_uid_dict is None:
             audio_pool = self.get_audio_pool()
         else:
@@ -456,6 +457,21 @@ class SgProject(AbstractProject):
             self.create_sample_graph(f_path, entry.uid)
             self.save_audio_pool(audio_pool)
             return entry.uid
+
+    def check_audio_file_in_project(self, path: str):
+        """ Check if the user is trying to load a file already
+            in the projects audio file cache
+
+            @path: THe path to an audio file
+        """
+        samples_dir = pi_path(self.samples_folder)
+        path = pi_path(path)
+        if path.startswith(samples_dir):
+            result = path.replace(samples_dir, "", 1)
+            if IS_WINDOWS:
+                result = f"{result[0]}:{result[1:]}"
+            return result
+        return path
 
     def cp_audio_file_to_cache(self, a_file):
         if a_file in self.cached_audio_files:
