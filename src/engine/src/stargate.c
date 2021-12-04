@@ -1231,7 +1231,8 @@ void v_sg_configure(const char* a_key, const char* a_value){
             STARGATE->audio_pool,
             uid,
             volume,
-            val_arr->array[2]
+            val_arr->array[2],
+            STARGATE->audio_folder
         );
         i_audio_pool_item_load(result, 1);
         v_create_sample_graph(result);

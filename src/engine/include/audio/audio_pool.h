@@ -46,10 +46,15 @@ t_audio_pool_item * v_audio_pool_add_item(
     t_audio_pool* a_audio_pool,
     int a_uid,
     SGFLT volume,
-    char * a_file_path
+    char * a_file_path,
+    char* audio_folder
 );
 
-void v_audio_pool_add_items(t_audio_pool* a_audio_pool, char * a_file_path);
+void v_audio_pool_add_items(
+    t_audio_pool* a_audio_pool,
+    char* a_file_path,
+    char* audio_folder
+);
 
 t_audio_pool_item * g_audio_pool_get_item_by_uid(
     t_audio_pool* a_audio_pool,

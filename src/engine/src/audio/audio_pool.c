@@ -229,13 +229,24 @@ t_audio_pool_item * v_audio_pool_add_item(
     t_audio_pool* a_audio_pool,
     int a_uid,
     SGFLT volume,
-    char * a_file_path
+    char* a_file_path,
+    char* audio_folder
 ){
     char f_path[2048];
 
     int f_pos = 2;
 
-    if(a_file_path[0] != '/' && a_file_path[1] == ':'){  // Windows
+    if(a_file_path[0] == '!'){
+        char* rest = a_file_path;
+        ++rest;
+        snprintf(
+            f_path,
+            2047,
+            "%s%s",
+            audio_folder,
+            rest
+        );
+    } else if(a_file_path[0] != '/' && a_file_path[1] == ':'){  // Windows
         char f_file_path[2048];
 
         f_file_path[0] = a_file_path[0];
@@ -283,7 +294,12 @@ t_audio_pool_item * v_audio_pool_add_item(
     }
 
     if(!i_file_exists(f_path)){
-       strcpy(f_path, a_file_path);
+        sg_assert(
+            a_file_path[0] != '!',
+            "File in project audio folder does not exist '%s'",
+            a_file_path
+        );
+        strcpy(f_path, a_file_path);
     }
 
     g_audio_pool_item_init(
@@ -300,7 +316,8 @@ t_audio_pool_item * v_audio_pool_add_item(
 /* Load entire pool at startup/open */
 void v_audio_pool_add_items(
     t_audio_pool* a_audio_pool,
-    char * a_file_path
+    char * a_file_path,
+    char* audio_folder
 ){
     int i, j;
     a_audio_pool->count = 0;
@@ -363,7 +380,8 @@ void v_audio_pool_add_items(
                 a_audio_pool,
                 f_uid,
                 volume,
-                f_arr->current_str
+                f_arr->current_str,
+                audio_folder
             );
         }
     }

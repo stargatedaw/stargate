@@ -1,3 +1,4 @@
+from sglib import constants
 from sglib.models.stargate.audio_pool import *
 import copy
 
@@ -13,7 +14,15 @@ POOL_STR_NO_FILE_FX = """\
 1|-6.0|/path/to/file2.wav
 \\"""
 
+class MockProject:
+    def to_long_audio_file_path(self, path):
+        return path
+
+    def to_short_audio_file_path(self, path):
+        return path
+
 def test_pool_from_str_to_str():
+    constants.PROJECT = MockProject()
     pool = AudioPool.from_str(POOL_STR)
     assert len(pool.pool) == 2, pool.pool
     assert str(pool) == POOL_STR
@@ -21,19 +30,23 @@ def test_pool_from_str_to_str():
     assert 0 in fx_by_uid, fx_by_uid
 
 def test_pool_no_fx_from_str_to_str():
+    constants.PROJECT = MockProject()
     pool = AudioPool.from_str(POOL_STR_NO_FILE_FX)
     assert len(pool.pool) == 2, pool.pool
     assert str(pool) == POOL_STR_NO_FILE_FX
 
 def test_pool_new_str_empty():
+    constants.PROJECT = MockProject()
     pool = AudioPool.new()
     assert str(pool) == "\\", str(pool)
 
 def test_pool_entry_repr():
+    constants.PROJECT = MockProject()
     entry = AudioPoolEntry(0, 0., '/path/to')
     assert '/path/to' in repr(entry), repr(entry)
 
 def test_add_remove():
+    constants.PROJECT = MockProject()
     pool = AudioPool.new()
     entry = pool.add_entry(__file__)
     assert len(pool.pool) == 1
@@ -43,6 +56,7 @@ def test_add_remove():
     assert len(pool.pool) == 0
 
 def test_set_per_file_fx():
+    constants.PROJECT = MockProject()
     pool = AudioPool.from_str(POOL_STR)
     fx = copy.deepcopy(pool.per_file_fx[0])
     fx.uid = 2

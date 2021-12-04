@@ -71,9 +71,8 @@ void v_open_project(const char* a_project_folder, int a_first_load){
     );
     sprintf(
         STARGATE->audio_folder,
-        "%s%saudio%sfiles",
+        "%s%saudio",
         STARGATE->project_folder,
-        PATH_SEP,
         PATH_SEP
     );
     sprintf(
@@ -90,7 +89,8 @@ void v_open_project(const char* a_project_folder, int a_first_load){
         log_info("Loading wave pool");
         v_audio_pool_add_items(
             STARGATE->audio_pool,
-            STARGATE->audio_pool_file
+            STARGATE->audio_pool_file,
+            STARGATE->audio_folder
         );
     }
 

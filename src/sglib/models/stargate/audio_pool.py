@@ -2,6 +2,7 @@ try:
     from sg_py_vendor.pymarshal.csv import *
 except ImportError:
     from pymarshal.csv import *
+from sglib import constants
 from sglib.lib.util import pi_path
 from sglib.models.multifx_settings import multifx_settings
 import os
@@ -32,7 +33,7 @@ class AudioPoolEntry:
             desc="Volume level applied to the sample in dB",
         )
         self.path = type_assert(
-            path,
+            constants.PROJECT.to_long_audio_file_path(path),
             str,
             desc="The path to the audio file",
         )
@@ -48,7 +49,7 @@ class AudioPoolEntry:
             str(x) for x in (
                 self.uid,
                 self.volume,
-                self.path,
+                constants.PROJECT.to_short_audio_file_path(self.path),
             )
         )
 

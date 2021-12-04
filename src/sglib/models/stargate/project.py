@@ -21,6 +21,7 @@ import shutil
 import tarfile
 
 
+folder_audio_root = 'audio'
 folder_audio = os.path.join("audio", "files")
 folder_audio_rec = os.path.join("audio", "rec")
 folder_samplegraph = os.path.join("audio", "samplegraph")
@@ -49,8 +50,14 @@ class SgProject(AbstractProject):
         self.project_file = os.path.splitext(
             os.path.basename(a_project_file))[0]
 
+        self.audio_root_folder = os.path.join(
+            self.project_folder,
+            folder_audio_root,
+        )
         self.audio_folder = os.path.join(
-            self.project_folder, folder_audio)
+            self.project_folder,
+            folder_audio,
+        )
         self.audio_rec_folder = os.path.join(
             self.project_folder, folder_audio_rec)
         self.audio_tmp_folder = os.path.join(
@@ -83,6 +90,7 @@ class SgProject(AbstractProject):
             self.project_folder, file_pystretch_map)
 
         self.project_folders = [
+            self.audio_root_folder,
             self.audio_folder,
             self.audio_rec_folder,
             self.audio_tmp_folder,
@@ -441,7 +449,6 @@ class SgProject(AbstractProject):
         """ Return the UID from the wav pool, or add to the
             pool if it does not exist
         """
-        a_path = self.check_audio_file_in_project(a_path)
         if a_uid_dict is None:
             audio_pool = self.get_audio_pool()
         else:
@@ -458,23 +465,47 @@ class SgProject(AbstractProject):
             self.save_audio_pool(audio_pool)
             return entry.uid
 
-    def check_audio_file_in_project(self, path: str):
+
+    def to_long_audio_file_path(self, path: str) -> str:
+        """ Check if an audio file path begins with an escape character
+            and convert to the real path
+
+            @path: THe path to an audio file
+        """
+        if path[0] == '!':
+            return pi_path(
+                path.replace('!', self.audio_root_folder, 1),
+            )
+        return pi_path(path)
+
+    def to_short_audio_file_path(self, path: str) -> str:
         """ Check if the user is trying to load a file already
             in the projects audio file cache
 
             @path: THe path to an audio file
         """
+        audio_dir = pi_path(self.audio_root_folder)
         samples_dir = pi_path(self.samples_folder)
         path = pi_path(path)
         if path.startswith(samples_dir):
             result = path.replace(samples_dir, "", 1)
             if IS_WINDOWS:
                 result = f"{result[0]}:{result[1:]}"
+            LOG.info("Starts with sample dir")
             return result
+        elif path.startswith(audio_dir):
+            # Specifically, any folder under project/audio except for the
+            # samples/ folder that caches everything else
+            LOG.info("Starts with audio dir")
+            return path.replace(audio_dir, '!', 1)
         return path
 
     def cp_audio_file_to_cache(self, a_file):
-        if a_file in self.cached_audio_files:
+        if (
+            a_file in self.cached_audio_files
+            or
+            a_file.startswith(self.audio_root_folder)
+        ):
             return
         if a_file[0] != "/" and a_file[1] == ":":
             f_file = a_file.replace(":", "", 1)
