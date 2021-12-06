@@ -353,14 +353,15 @@ class SgMainWindow(QMainWindow):
             _("Watch Tutorial Videos on Youtube..."),
         )
         self.youtube_action.triggered.connect(self.on_youtube)
+        self.check_updates_action = self.menu_help.addAction(
+            _("Check for Updates..."),
+        )
+        self.check_updates_action.triggered.connect(self.on_check_updates)
         self.manual_action = self.menu_help.addAction(
             _("View User Manual on Github..."),
         )
         self.manual_action.triggered.connect(self.on_manual)
-        self.twitter_action = self.menu_help.addAction(
-            _("Follow us on Twitter..."),
-        )
-        self.twitter_action.triggered.connect(self.on_twitter)
+
         self.sfzinstruments_action = self.menu_help.addAction(
             _("Download SFZ instruments for Sampler1"),
         )
@@ -481,36 +482,36 @@ class SgMainWindow(QMainWindow):
         )
         self._copy_to_clipboard(text)
 
+    def on_check_updates(self):
+        url = QtCore.QUrl(
+            "https://github.com/stargateaudio/stargate/releases",
+        )
+        QDesktopServices.openUrl(url)
+
     def on_samplepack(self):
-        f_url = QtCore.QUrl(
+        url = QtCore.QUrl(
             "https://github.com/stargateaudio/stargate-sample-pack",
         )
-        QDesktopServices.openUrl(f_url)
+        QDesktopServices.openUrl(url)
 
     def on_sfzinstruments(self):
-        f_url = QtCore.QUrl(
+        url = QtCore.QUrl(
             "https://github.com/sfzinstruments",
         )
-        QDesktopServices.openUrl(f_url)
+        QDesktopServices.openUrl(url)
 
     def on_youtube(self):
-        f_url = QtCore.QUrl(
+        url = QtCore.QUrl(
             "https://www.youtube.com/channel/UC0xYkPBN3cqMMaTQxc38Rfw",
         )
-        QDesktopServices.openUrl(f_url)
+        QDesktopServices.openUrl(url)
 
     def on_manual(self):
-        f_url = QtCore.QUrl(
+        url = QtCore.QUrl(
             "https://github.com/stargateaudio/stargate/"
             "tree/main/docs/UserManual",
         )
-        QDesktopServices.openUrl(f_url)
-
-    def on_twitter(self):
-        f_url = QtCore.QUrl(
-            "https://twitter.com/stargatedaw",
-        )
-        QDesktopServices.openUrl(f_url)
+        QDesktopServices.openUrl(url)
 
     def engine_lib_callback(self, a_path, a_msg):
         f_path = a_path.decode("utf-8")
