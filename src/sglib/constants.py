@@ -44,6 +44,20 @@ if IS_WINDOWS:
         )
         IS_PORTABLE_INSTALL = True
         PORTABLE_ROOT = pathlib.Path(sys.executable).drive.upper()
+elif IS_MAC_OSX:
+    dirname = os.path.dirname(sys.executable)
+    if os.path.isfile(
+        os.path.join(dirname, '..', '..', '..', '_stargate_home'),
+    ):
+        USER_HOME = os.path.abspath(
+            os.path.join(dirname, '..', '..', '..'),
+        )
+        print(
+            f"Using {USER_HOME} for USER_HOME because _stargate_home "
+            "file exists"
+        )
+        IS_PORTABLE_INSTALL = True
+        PORTABLE_ROOT = USER_HOME
 
 HOME = os.path.join(
     USER_HOME,
