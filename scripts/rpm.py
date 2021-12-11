@@ -102,15 +102,18 @@ License:        GPLv3
 URL:            http://github.com/stargateaudio/stargate/
 Source0:        {2}
 
-BuildRequires: \
-    alsa-lib-devel \
-    fftw-devel \
-    gcc \
-    gcc-c++ \
-    libsndfile-devel \
-    portaudio-devel \
-    portmidi-devel \
-    python3-devel \
+# Commented out to allow compiling from an old Debian VM, these
+# dependencies are still required
+
+#BuildRequires: \
+#    alsa-lib-devel \
+#    fftw-devel \
+#    gcc \
+#    gcc-c++ \
+#    libsndfile-devel \
+#    portaudio-devel \
+#    portmidi-devel \
+#    python3-devel \
 
 Requires: \
     alsa-lib \
