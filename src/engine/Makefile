@@ -4,7 +4,7 @@ NAME ?= stargate-engine
 
 # Compiler flags
 CC ?= gcc
-CC_ARGS ?= -Wall -Wformat-truncation=0 -Werror=format-security
+CC_ARGS ?= -Wall
 OPT_LVL ?= -O2 -g -ggdb3
 # These assume a modern x86 CPU, change or remove for other platforms
 PLAT_FLAGS ?= -mfpmath=sse -mssse3 -mtune=generic -mstackrealign

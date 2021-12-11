@@ -232,7 +232,8 @@ t_audio_pool_item * v_audio_pool_add_item(
     char* a_file_path,
     char* audio_folder
 ){
-    char f_path[2048];
+    char f_path[8192];
+    f_path[0] = '\0';
 
     int f_pos = 2;
 
@@ -241,7 +242,7 @@ t_audio_pool_item * v_audio_pool_add_item(
         ++rest;
         snprintf(
             f_path,
-            2047,
+            8191,
             "%s%s",
             audio_folder,
             rest
@@ -266,7 +267,7 @@ t_audio_pool_item * v_audio_pool_add_item(
 
         snprintf(
             f_path,
-            2047,
+            8191,
             "%s%s%s",
             a_audio_pool->samples_folder,
             PATH_SEP,
@@ -276,7 +277,7 @@ t_audio_pool_item * v_audio_pool_add_item(
         if(a_file_path[0] == '/'){
             snprintf(
                 f_path,
-                2047,
+                8191,
                 "%s%s",
                 a_audio_pool->samples_folder,
                 a_file_path
@@ -284,7 +285,7 @@ t_audio_pool_item * v_audio_pool_add_item(
         } else {
             snprintf(
                 f_path,
-                2047,
+                8191,
                 "%s%s%s",
                 a_audio_pool->samples_folder,
                 PATH_SEP,
