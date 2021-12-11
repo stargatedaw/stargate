@@ -91,17 +91,22 @@ void v_init_worker_threads(
     pthread_attr_t threadAttr;
     pthread_attr_init(&threadAttr);
 
-
     pthread_attr_setstacksize(&threadAttr, f_stack_size);
     pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_DETACHED);
 #if SG_OS != _OS_LINUX
     pthread_attr_setschedpolicy(&threadAttr, RT_SCHED);
 #endif
+#if SG_OS == _OS_MACOS
+    int sched_priority = (int)((float)sched_get_priority_max(RT_SCHED) * 0.9);
+    log_info("sched_priority: %i", sched_priority);
+    const struct sched_param rt_sched_param = {
+        .sched_priority = sched_priority,
+    };
+#endif
 
     int f_i;
 
-    for(f_i = 0; f_i < (STARGATE->worker_thread_count); ++f_i)
-    {
+    for(f_i = 0; f_i < STARGATE->worker_thread_count; ++f_i){
         STARGATE->track_thread_quit_notifier[f_i] = 0;
         t_thread_args * f_args = (t_thread_args*)malloc(
             sizeof(t_thread_args)
@@ -116,6 +121,13 @@ void v_init_worker_threads(
         pthread_cond_init(&STARGATE->track_cond[f_i], NULL);
         pthread_spin_init(&STARGATE->thread_locks[f_i], 0);
         pthread_mutex_init(&STARGATE->track_block_mutexes[f_i], NULL);
+#if SG_OS == _OS_MACOS
+        pthread_setschedparam(
+            STARGATE->worker_threads[f_i],
+            RT_SCHED,
+            &rt_sched_param
+        );
+#endif
         pthread_create(
             &STARGATE->worker_threads[f_i],
             &threadAttr,
