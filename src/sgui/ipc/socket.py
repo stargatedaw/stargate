@@ -2,6 +2,7 @@ from sgui.sgqt import QtCore, Signal
 from sglib.ipc.abstract import AbstractIPCTransport
 from sglib import constants
 from sglib.lib import engine
+from sglib.lib.translate import _
 from sglib.log import LOG
 from sgui import shared
 import select
