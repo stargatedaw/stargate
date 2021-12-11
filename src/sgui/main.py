@@ -473,7 +473,8 @@ class SgMainWindow(QMainWindow):
 
     def copy_valgrind_cmd(self):
         text = (
-            "valgrind '{}-dbg' '{}' '{}' {} 0 1 --no-hardware --single-thread"
+            "valgrind '{}-dbg' '{}' '{}' {} 0 1 1 "
+            "--no-hardware --single-thread"
         ).format(
             util.BIN_PATH,
             util.INSTALL_PREFIX,
