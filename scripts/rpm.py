@@ -130,13 +130,11 @@ Source0:        {2}
 Requires: \
     (alsa-lib or alsa) \
     (fftw3 or libfftw3-3) \
-    lame \
     libsndfile \
     (portaudio or libportaudio2) \
     (portmidi or libportmidi0) \
     python3 \
     (python3-jinja2 or python3-Jinja2) \
-    python3-mutagen \
     python3-numpy \
     python3-psutil \
     (python3-pyyaml or python3-PyYAML) \
@@ -146,6 +144,8 @@ Requires: \
 
 Recommends: \
     ffmpeg \
+    lame \
+    python3-mutagen \
 
 %define __provides_exclude_from ^%{{_usr}}/share/{0}/.*$
 %global __python %{{__python3}}
