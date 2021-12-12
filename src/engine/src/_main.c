@@ -151,7 +151,6 @@ int _main(int argc, char** argv){
         return 9996;
     }
 
-    int ui_pid = atoi(argv[3]);
     int f_huge_pages = atoi(argv[4]);
     sg_assert(
         (int)(f_huge_pages == 0 || f_huge_pages == 1),
@@ -205,6 +204,7 @@ int _main(int argc, char** argv){
 
     set_thread_params();
 #if SG_OS != _OS_WINDOWS
+    int ui_pid = atoi(argv[3]);
     start_ui_thread(ui_pid);
 #endif
     start_socket_thread();
@@ -539,7 +539,7 @@ NO_OPTIMIZATION int main_loop(){
                 f_portaudio_output_buffer,
                 128,
                 NULL,
-                (PaStreamCallbackFlags)NULL,
+                (PaStreamCallbackFlags)0,
                 NULL
             );
 
