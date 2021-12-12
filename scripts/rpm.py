@@ -123,7 +123,7 @@ Requires: \
     (portaudio or libportaudio2) \
     (portmidi or libportmidi0) \
     python3 \
-    python3-jinja2 \
+    (python3-jinja2 or python3-Jinja2) \
     python3-mutagen \
     python3-numpy \
     python3-psutil \
