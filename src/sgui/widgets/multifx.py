@@ -698,7 +698,7 @@ class MultiFXSingle:
             self.knobs[1].control.show()
             self.knobs[2].control.show()
             self.knobs[0].name_label.setText(_("Thresh"))
-            self.knobs[1].name_label.setText(_("Hardness"))
+            self.knobs[1].name_label.setText(_("Shape"))
             self.knobs[2].name_label.setText(_("Out"))
             self.knobs[0].val_conversion = _shared.KC_127_ZERO_TO_X
             self.knobs[0].set_127_min_max(-12.0, 0.0)

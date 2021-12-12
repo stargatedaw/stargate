@@ -5,7 +5,7 @@
 void v_scl_set(
     t_soft_clipper* self,
     SGFLT threshold_db,
-    SGFLT hardness,
+    SGFLT shape,
     SGFLT out_db
 ){
     if(threshold_db != self->threshold_db){
@@ -19,7 +19,7 @@ void v_scl_set(
         self->out_db = out_db;
     }
 
-    self->hardness = hardness;
+    self->shape = shape;
 }
 
 void v_scl_run(t_soft_clipper* self, SGFLT a_in0, SGFLT a_in1){
@@ -27,12 +27,12 @@ void v_scl_run(t_soft_clipper* self, SGFLT a_in0, SGFLT a_in1){
     if(a_in0 > (self->threshold_linear)){
         temp = a_in0 - self->threshold_linear;
         self->output0 = (
-            temp * self->hardness
+            temp * self->shape
         ) + self->threshold_linear;
     } else if(a_in0 < (self->threshold_linear_neg)) {
         temp = a_in0 - (self->threshold_linear_neg);
         self->output0 = (
-            temp * self->hardness
+            temp * self->shape
         ) + self->threshold_linear_neg;
     } else {
         self->output0 = a_in0;
@@ -41,12 +41,12 @@ void v_scl_run(t_soft_clipper* self, SGFLT a_in0, SGFLT a_in1){
     if(a_in1 > self->threshold_linear){
         temp = a_in1 - self->threshold_linear;
         self->output1 = (
-            temp * self->hardness
+            temp * self->shape
         ) + self->threshold_linear;
     } else if(a_in1 < self->threshold_linear_neg){
         temp = a_in1 - self->threshold_linear_neg;
         self->output1 = (
-            temp * self->hardness
+            temp * self->shape
         ) + self->threshold_linear_neg;
     } else {
         self->output1 = a_in1;
@@ -69,7 +69,7 @@ void v_scl_run(t_soft_clipper* self, SGFLT a_in0, SGFLT a_in1){
 }
 
 void soft_clipper_init(t_soft_clipper* self){
-    self->hardness = 1.0f;
+    self->shape = 1.0f;
     self->output0 = 0.0f;
     self->output1 = 0.0f;
     self->threshold_db = 0.0f;

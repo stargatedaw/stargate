@@ -21,7 +21,7 @@ typedef struct {
     SGFLT threshold_db;
     SGFLT threshold_linear;
     SGFLT threshold_linear_neg;
-    SGFLT hardness;
+    SGFLT shape;
     SGFLT out_db;
     SGFLT out_linear;
     SGFLT output0;
