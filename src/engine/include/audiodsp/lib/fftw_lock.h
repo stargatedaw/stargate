@@ -15,28 +15,10 @@ GNU General Public License for more details.
 #define FFTW_LOCK_H
 
 #include <pthread.h>
-#include <fftw3.h>
-
 #include "compiler.h"
 
-extern pthread_mutex_t FFTW_LOCK;
-extern int FFTW_LOCK_INIT;
 
-#ifdef SG_USE_DOUBLE
-fftw_plan g_fftw_plan_dft_r2c_1d(
-    int a_size,
-    SGFLT * a_in,
-    fftw_complex * a_out,
-    unsigned a_flags
-);
-#else
-fftwf_plan g_fftw_plan_dft_r2c_1d(
-    int a_size,
-    SGFLT * a_in,
-    fftwf_complex * a_out,
-    unsigned a_flags
-);
-#endif
+extern pthread_mutex_t FFTW_LOCK;
 
 #endif /* FFTW_LOCK_H */
 

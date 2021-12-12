@@ -45,12 +45,19 @@ t_spa_spectrum_analyzer * g_spa_spectrum_analyzer_get(
     f_result->str_buf = (char*)malloc(sizeof(char) * 15 * a_sample_count);
     f_result->str_buf[0] = '\0';
 
-    f_result->plan = g_fftw_plan_dft_r2c_1d(
+    pthread_mutex_lock(&FFTW_LOCK);
+#ifdef SG_USE_DOUBLE
+    f_result->plan = fftw_plan_dft_r2c_1d(
+#else
+    f_result->plan = fftwf_plan_dft_r2c_1d(
+#endif
         f_result->samples_count,
         f_result->samples,
         f_result->output,
         0
     );
+    pthread_mutex_unlock(&FFTW_LOCK);
+
 
     return f_result;
 }

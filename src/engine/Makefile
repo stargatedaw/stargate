@@ -23,7 +23,6 @@ OPTIMIZE_FLAGS ?= \
 	-fprefetch-loop-arrays \
 	-fsingle-precision-constant \
 	-fstrength-reduce \
-	-fno-strict-aliasing
 	# -funroll-loops \
 
 THREAD_LOCAL ?=  -DSG_THREAD_LOCAL=__thread

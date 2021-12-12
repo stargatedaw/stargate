@@ -29,6 +29,7 @@ GNU General Public License for more details.
 #include <unistd.h>
 
 #include "_main.h"
+#include "audiodsp/lib/fftw_lock.h"
 #include "audiodsp/lib/lmalloc.h"
 #include "compiler.h"
 #include "csv/split.h"
@@ -133,6 +134,7 @@ void print_help(){
 int _main(int argc, char** argv){
     log_info("Calling engine _main()");
     setup_signal_handling();
+    pthread_mutex_init(&FFTW_LOCK, NULL);
     int j;
 
     for(j = 0; j < argc; ++j){
