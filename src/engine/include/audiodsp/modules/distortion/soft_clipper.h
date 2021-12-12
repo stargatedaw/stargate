@@ -17,19 +17,20 @@ GNU General Public License for more details.
 #include "audiodsp/lib/amp.h"
 #include "compiler.h"
 
-typedef struct st_scl_soft_clipper
-{
+typedef struct {
     SGFLT threshold_db;
-    SGFLT threshold_linear, threshold_linear_neg;
-    SGFLT amount;
+    SGFLT threshold_linear;
+    SGFLT threshold_linear_neg;
+    SGFLT hardness;
+    SGFLT out_db;
+    SGFLT out_linear;
     SGFLT output0;
     SGFLT output1;
-    SGFLT temp;
-}t_soft_clipper;
+} t_soft_clipper;
 
-void v_scl_set(t_soft_clipper*,SGFLT,SGFLT);
-void v_scl_run(t_soft_clipper*,SGFLT,SGFLT);
-t_soft_clipper * g_scl_get();
+void v_scl_set(t_soft_clipper*, SGFLT, SGFLT, SGFLT);
+void v_scl_run(t_soft_clipper*, SGFLT, SGFLT);
+void soft_clipper_init(t_soft_clipper*);
 
 #endif /* SOFT_CLIPPER_H */
 

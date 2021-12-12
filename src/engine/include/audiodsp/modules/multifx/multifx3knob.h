@@ -15,7 +15,7 @@ GNU General Public License for more details.
 #define MULTIFX3KNOB_H
 
 /*This is actually count, not index TODO:  Rename*/
-#define MULTIFX3KNOB_MAX_INDEX 35
+#define MULTIFX3KNOB_MAX_INDEX 36
 #define MULTIFX3KNOB_KNOB_COUNT 3
 
 #include "audiodsp/lib/amp.h"
@@ -27,6 +27,7 @@ GNU General Public License for more details.
 #include "audiodsp/modules/distortion/ring_mod.h"
 #include "audiodsp/modules/distortion/sample_and_hold.h"
 #include "audiodsp/modules/distortion/saturator.h"
+#include "audiodsp/modules/distortion/soft_clipper.h"
 #include "audiodsp/modules/dynamics/limiter.h"
 #include "audiodsp/modules/filter/comb_filter.h"
 #include "audiodsp/modules/filter/dc_offset_filter.h"
@@ -66,7 +67,8 @@ typedef struct {
     t_grw_growl_filter growl_filter;
     t_fbk_foldback foldback;
     t_dco_dc_offset_filter dc_offset[2];
-}t_mf3_multi;
+    t_soft_clipper soft_clipper;
+} t_mf3_multi;
 
 typedef void (*fp_mf3_reset)(t_mf3_multi*);
 
@@ -88,6 +90,7 @@ void v_mf3_run_notch2(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_notch4(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_eq(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_dist(t_mf3_multi*,SGFLT,SGFLT);
+void v_mf3_run_soft_clipper(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_comb(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_phaser_static(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_flanger_static(t_mf3_multi*,SGFLT,SGFLT);

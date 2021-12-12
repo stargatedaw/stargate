@@ -53,6 +53,7 @@ const fp_mf3_run mf3_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
     v_mf3_run_bp_spread, //32
     v_mf3_run_phaser_static, //33
     v_mf3_run_flanger_static, //34
+    v_mf3_run_soft_clipper, //35
 };
 
 const fp_mf3_reset mf3_reset_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
@@ -91,6 +92,7 @@ const fp_mf3_reset mf3_reset_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
     v_mf3_reset_svf, //32
     v_mf3_reset_null, //33
     v_mf3_reset_null, //34
+    v_mf3_reset_null, //35
 };
 
 void v_mf3_reset_null(t_mf3_multi* self){
@@ -418,10 +420,36 @@ void v_mf3_run_dist(
     v_clp_set_in_gain(&self->clipper, (self->control_value[0]));
     v_axf_set_xfade(&self->xfader, (self->control_value[1]));
 
-    self->output0 = f_axf_run_xfade(&self->xfader, a_in0,
-            (f_clp_clip(&self->clipper, a_in0))) * (self->outgain);
-    self->output1 = f_axf_run_xfade(&self->xfader, a_in1,
-            (f_clp_clip(&self->clipper, a_in1))) * (self->outgain);
+    self->output0 = f_axf_run_xfade(
+        &self->xfader,
+        a_in0,
+        f_clp_clip(&self->clipper, a_in0)
+    ) * self->outgain;
+    self->output1 = f_axf_run_xfade(
+        &self->xfader,
+        a_in1,
+        f_clp_clip(&self->clipper, a_in1)
+    ) * self->outgain;
+}
+
+void v_mf3_run_soft_clipper(
+    t_mf3_multi* self,
+    SGFLT a_in0,
+    SGFLT a_in1
+){
+    v_mf3_commit_mod(self);
+    self->control_value[0] = (self->control[0] * 0.09375) - 12.0;
+    self->control_value[1] = (self->control[1] * 0.015625);
+    self->control_value[2] = ((self->control[2] * 0.1875) - 12.0);
+    v_scl_set(
+        &self->soft_clipper,
+        self->control_value[0],
+        self->control_value[1],
+        self->control_value[2]
+    );
+    v_scl_run(&self->soft_clipper, a_in0, a_in1);
+    self->output0 = self->soft_clipper.output0;
+    self->output1 = self->soft_clipper.output1;
 }
 
 void v_mf3_run_comb(
@@ -1011,6 +1039,7 @@ void g_mf3_init(
     g_fbk_init(&f_result->foldback);
     g_dco_init(&f_result->dc_offset[0], a_sample_rate);
     g_dco_init(&f_result->dc_offset[1], a_sample_rate);
+    soft_clipper_init(&f_result->soft_clipper);
 }
 
 /* t_mf3_multi g_mf3_get(

@@ -42,6 +42,7 @@ MULTIFX_EFFECTS_LOOKUP = {
     "BP Spread": 32,
     "Phaser Static": 33,
     "Flanger Static": 34,
+    "Soft Clipper": 35,
 }
 
 MULTIFX_FILTERS = [
@@ -73,6 +74,7 @@ MULTIFX_DISTORTION = [
     "RingMod",
     "S/H",
     "Saturator",
+    "Soft Clipper",
 ]
 
 MULTIFX_DELAY = [
@@ -691,6 +693,19 @@ class MultiFXSingle:
             self.knobs[0].value_label.setText("")
             self.knobs[1].value_label.setText("")
             self.knobs[2].value_label.setText("")
+        elif a_val == 35: # Soft Clipper
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.show()
+            self.knobs[0].name_label.setText(_("Thresh"))
+            self.knobs[1].name_label.setText(_("Hardness"))
+            self.knobs[2].name_label.setText(_("Out"))
+            self.knobs[0].val_conversion = _shared.KC_127_ZERO_TO_X
+            self.knobs[0].set_127_min_max(-12.0, 0.0)
+            self.knobs[1].val_conversion = _shared.KC_127_ZERO_TO_X
+            self.knobs[1].set_127_min_max(0.0, 2.0)
+            self.knobs[2].val_conversion = _shared.KC_127_ZERO_TO_X
+            self.knobs[2].set_127_min_max(-12.0, 12.0)
 
         self.knobs[0].set_value(self.knobs[0].control.value())
         self.knobs[1].set_value(self.knobs[1].control.value())

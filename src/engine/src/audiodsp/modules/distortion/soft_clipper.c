@@ -2,59 +2,79 @@
 #include "audiodsp/modules/distortion/soft_clipper.h"
 
 
-void v_scl_set(t_soft_clipper* a_scl, SGFLT a_threshold_db, SGFLT a_amount)
-{
-    if(a_threshold_db != (a_scl->threshold_db))
-    {
-        a_scl->threshold_db = a_threshold_db;
-        a_scl->threshold_linear = f_db_to_linear_fast(a_threshold_db);
-        a_scl->threshold_linear_neg = (a_scl->threshold_linear) * -1.0f;
+void v_scl_set(
+    t_soft_clipper* self,
+    SGFLT threshold_db,
+    SGFLT hardness,
+    SGFLT out_db
+){
+    if(threshold_db != self->threshold_db){
+        self->threshold_db = threshold_db;
+        self->threshold_linear = f_db_to_linear_fast(threshold_db);
+        self->threshold_linear_neg = (self->threshold_linear) * -1.0f;
     }
 
-    a_scl->amount = a_amount;
+    if(out_db != self->out_db){
+        self->out_linear = f_db_to_linear_fast(out_db);
+        self->out_db = out_db;
+    }
+
+    self->hardness = hardness;
 }
 
-void v_scl_run(t_soft_clipper* a_scl,SGFLT a_in0, SGFLT a_in1)
-{
-    if(a_in0 > (a_scl->threshold_linear))
-    {
-        a_scl->temp = a_in0 - (a_scl->threshold_linear);
-        a_scl->output0 =
-            ((a_scl->temp) * (a_scl->amount)) + (a_scl->threshold_linear);
-    }
-    else if(a_in0 < (a_scl->threshold_linear_neg))
-    {
-        a_scl->temp = a_in0 - (a_scl->threshold_linear_neg);
-        a_scl->output0 =
-            ((a_scl->temp) * (a_scl->amount)) + (a_scl->threshold_linear_neg);
+void v_scl_run(t_soft_clipper* self, SGFLT a_in0, SGFLT a_in1){
+    SGFLT temp;
+    if(a_in0 > (self->threshold_linear)){
+        temp = a_in0 - self->threshold_linear;
+        self->output0 = (
+            temp * self->hardness
+        ) + self->threshold_linear;
+    } else if(a_in0 < (self->threshold_linear_neg)) {
+        temp = a_in0 - (self->threshold_linear_neg);
+        self->output0 = (
+            temp * self->hardness
+        ) + self->threshold_linear_neg;
+    } else {
+        self->output0 = a_in0;
     }
 
-
-    if(a_in1 > (a_scl->threshold_linear))
-    {
-        a_scl->temp = a_in1 - (a_scl->threshold_linear);
-        a_scl->output1 =
-            ((a_scl->temp) * (a_scl->amount)) + (a_scl->threshold_linear);
+    if(a_in1 > self->threshold_linear){
+        temp = a_in1 - self->threshold_linear;
+        self->output1 = (
+            temp * self->hardness
+        ) + self->threshold_linear;
+    } else if(a_in1 < self->threshold_linear_neg){
+        temp = a_in1 - self->threshold_linear_neg;
+        self->output1 = (
+            temp * self->hardness
+        ) + self->threshold_linear_neg;
+    } else {
+        self->output1 = a_in1;
     }
-    else if(a_in1 < (a_scl->threshold_linear_neg))
-    {
-        a_scl->temp = a_in1 - (a_scl->threshold_linear_neg);
-        a_scl->output1 =
-            ((a_scl->temp) * (a_scl->amount)) + (a_scl->threshold_linear_neg);
+
+    self->output0 *= self->out_linear;
+    self->output1 *= self->out_linear;
+
+    if(self->output0 > 1.0){
+        self->output0 = 1.0;
+    } else if(self->output0 < -1.0){
+        self->output0 = -1.0;
+    }
+
+    if(self->output1 > 1.0){
+        self->output1 = 1.0;
+    } else if(self->output1 < -1.0){
+        self->output1 = -1.0;
     }
 }
 
-t_soft_clipper * g_scl_get()
-{
-    t_soft_clipper * f_result = (t_soft_clipper*)malloc(sizeof(t_soft_clipper));
-
-    f_result->amount = 1.0f;
-    f_result->output0 = 0.0f;
-    f_result->output1 = 0.0f;
-    f_result->temp = 0.0f;
-    f_result->threshold_db = 0.0f;
-    f_result->threshold_linear = 1.0f;
-    f_result->threshold_linear_neg = -1.0f;
-
-    return f_result;
+void soft_clipper_init(t_soft_clipper* self){
+    self->hardness = 1.0f;
+    self->output0 = 0.0f;
+    self->output1 = 0.0f;
+    self->threshold_db = 0.0f;
+    self->threshold_linear = 1.0f;
+    self->threshold_linear_neg = -1.0f;
+    self->out_db = 0.0;
+    self->out_linear = 1.0;
 }
