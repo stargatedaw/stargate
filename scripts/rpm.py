@@ -15,6 +15,7 @@ GNU General Public License for more details.
 import argparse
 import json
 import os
+import shutil
 import sys
 
 def parse_args():
@@ -77,7 +78,18 @@ rpm_build_path = os.path.join(
 os.system(f'rm -rf {rpm_build_path}*')
 
 if not os.path.isdir("{}/rpmbuild".format(global_home)):
-    os.system("rpmdev-setuptree")
+    if shutil.which("rpmdev-setuptree"):
+        os.system("rpmdev-setuptree")
+    else:
+        for dirname in (
+            'BUILD',
+            'BUILDROOT',
+            'RPM',
+            'SOURCES',
+            'SPECS',
+        ):
+            path = os.path.join(global_home, 'rpmbuild', dirname)
+            os.makedirs(path)
 
 SPEC_DIR = "{}/rpmbuild/SPECS/".format(global_home)
 SOURCE_DIR = "{}/rpmbuild/SOURCES/".format(global_home)

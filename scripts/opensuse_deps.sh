@@ -22,6 +22,7 @@ sudo zypper install \
     python3-qt5 \
     python3-pytest \
     python3-pytest-cov \
+    rpm-build \
     rubberband-cli \
     vorbis-tools
 
