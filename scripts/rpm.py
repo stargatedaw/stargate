@@ -116,21 +116,20 @@ Source0:        {2}
 #    python3-devel \
 
 Requires: \
-    alsa-lib \
-    fftw \
+    (alsa-lib or alsa) \
+    (fftw3 or libfftw3-3) \
     lame \
     libsndfile \
-    portaudio \
-    portmidi \
+    (portaudio or libportaudio2) \
+    (portmidi or libportmidi0) \
     python3 \
     python3-jinja2 \
-    python3-mido \
     python3-mutagen \
     python3-numpy \
     python3-psutil \
-    python3-pyyaml \
+    (python3-pyyaml or python3-PyYAML) \
     (python3-qt6 or python3-qt5) \
-    rubberband \
+    (rubberband or rubberband-cli) \
     vorbis-tools \
 
 Recommends: \
