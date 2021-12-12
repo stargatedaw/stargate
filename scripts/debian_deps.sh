@@ -1,4 +1,8 @@
-#!/bin/bash -x
+#!/bin/bash -xe
+
+# Ubuntu, and maybe some of it's derivatives
+sudo add-apt-repository universe || true
+sudo add-apt-repository multiverse || true
 
 sudo apt-get update
 
@@ -15,7 +19,7 @@ sudo apt-get install -y \
     gdb \
     genisoimage \
     gettext \
-	jq \
+    jq \
     lame \
     libasound2-dev \
     libfftw3-dev \
@@ -30,6 +34,7 @@ sudo apt-get install -y \
     python3-pip \
     python3-pyqt5 \
     python3-pyqt5.qtsvg \
+    rpm \
     rubberband-cli \
     squashfs-tools \
     vorbis-tools

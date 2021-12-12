@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh -xe
 
 # This script installs all dependencies needed to build on Fedora
 
@@ -10,7 +10,7 @@ sudo dnf install \
     fftw-devel \
     gcc \
     gcc-c++ \
-	gcovr \
+    gcovr \
     gettext \
     git \
     jq \
@@ -23,8 +23,8 @@ sudo dnf install \
     python3-devel \
     python3-numpy \
     python3-qt5 \
-	python3-pytest \
-	python3-pytest-cov \
+    python3-pytest \
+    python3-pytest-cov \
     rubberband \
     spin-kickstarts \
     vorbis-tools

@@ -6,20 +6,20 @@
 # Stargate DAW from a Himebrew tap
 
 brew install \
-	create-dmg \
-	ffmpeg \
-	fftw \
-	flac \
-	jq \
-	lame \
-	libogg \
-	libsamplerate \
-	libsndfile \
-	libvorbis \
-	numpy \
-	opus \
-	portaudio \
-	portmidi \
-	rubberband \
-	theora
+    create-dmg \
+    ffmpeg \
+    fftw \
+    flac \
+    jq \
+    lame \
+    libogg \
+    libsamplerate \
+    libsndfile \
+    libvorbis \
+    numpy \
+    opus \
+    portaudio \
+    portmidi \
+    rubberband \
+    theora
 

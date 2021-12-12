@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh -xe
 
 # This script installs all dependencies needed to build on Fedora
 
