@@ -10,7 +10,6 @@ sudo apt-get install -y \
     autoconf \
     automake \
     build-essential \
-    cython3 \
     debhelper \
     dh-make \
     ffmpeg \

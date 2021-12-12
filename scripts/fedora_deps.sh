@@ -19,7 +19,6 @@ sudo dnf install \
     livecd-tools \
     portaudio-devel \
     portmidi-devel \
-    python3-Cython \
     python3-devel \
     python3-numpy \
     python3-qt5 \
