@@ -80,7 +80,6 @@ build_depends = ", ".join([
 
 depends = [
     "fftw3",
-    "lame",
     "libasound2",
     "libportaudio2",
     "libportmidi0",
@@ -101,6 +100,7 @@ depends = [
 
 recommends = ", ".join([
     "ffmpeg",
+    "lame",
 ])
 
 if arch.lower().startswith("arm"):
