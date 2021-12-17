@@ -50,9 +50,11 @@ class SgProject(AbstractProject):
         self.project_file = os.path.splitext(
             os.path.basename(a_project_file))[0]
 
-        self.audio_root_folder = os.path.join(
-            self.project_folder,
-            folder_audio_root,
+        self.audio_root_folder = pi_path(
+            os.path.join(
+                self.project_folder,
+                folder_audio_root,
+            ),
         )
         self.audio_folder = os.path.join(
             self.project_folder,
