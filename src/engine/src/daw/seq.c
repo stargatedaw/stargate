@@ -142,7 +142,10 @@ void v_daw_set_playback_cursor(t_daw * self, double a_beat)
     t_daw_sequence * f_sequence = self->en_song->sequences;
 
     v_sg_set_playback_pos(
-        &f_sequence->events, a_beat, self->ts[0].current_sample);
+        &f_sequence->events,
+        a_beat,
+        self->ts[0].current_sample
+    );
 
     int f_i;
 

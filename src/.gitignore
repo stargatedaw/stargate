@@ -4,4 +4,4 @@ COMMIT
 dist/
 htmlcov/
 stargate.egg-info/
-tmp/
+./tmp/

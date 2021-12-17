@@ -1,0 +1,13 @@
+{
+  "playlist": [
+    {
+      "seq_uid": 0
+    }
+  ],
+  "pool": [
+    {
+      "name": "default",
+      "seq_uid": 0
+    }
+  ]
+}

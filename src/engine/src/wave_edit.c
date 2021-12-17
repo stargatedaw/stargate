@@ -514,24 +514,15 @@ void v_we_update_audio_inputs(){
 void v_we_configure(const char* a_key, const char* a_value){
     log_info("v_we_configure:  key: \"%s\", value: \"%s\"", a_key, a_value);
 
-    if(!strcmp(a_key, WN_CONFIGURE_KEY_LOAD_AB_OPEN))
-    {
+    if(!strcmp(a_key, WN_CONFIGURE_KEY_LOAD_AB_OPEN)){
         v_set_we_file(wave_edit, a_value);
-    }
-    else if(!strcmp(a_key, WN_CONFIGURE_KEY_AUDIO_INPUTS))
-    {
+    } else if(!strcmp(a_key, WN_CONFIGURE_KEY_AUDIO_INPUTS)){
         v_we_update_audio_inputs();
-    }
-    else if(!strcmp(a_key, WN_CONFIGURE_KEY_WE_SET))
-    {
+    } else if(!strcmp(a_key, WN_CONFIGURE_KEY_WE_SET)){
         v_set_wave_editor_item(wave_edit, a_value);
-    }
-    else if(!strcmp(a_key, WN_CONFIGURE_KEY_WE_EXPORT))
-    {
+    } else if(!strcmp(a_key, WN_CONFIGURE_KEY_WE_EXPORT)){
         v_we_export(wave_edit, a_value);
-    }
-    else if(!strcmp(a_key, WN_CONFIGURE_KEY_WN_PLAYBACK))
-    {
+    } else if(!strcmp(a_key, WN_CONFIGURE_KEY_WN_PLAYBACK)){
         int f_mode = atoi(a_value);
         sg_assert(
             f_mode >= 0 && f_mode <= 2,
@@ -539,11 +530,13 @@ void v_we_configure(const char* a_key, const char* a_value){
             f_mode
         );
         v_we_set_playback_mode(wave_edit, f_mode, 1);
-    }
-    else if(!strcmp(a_key, WN_CONFIGURE_KEY_PLUGIN_INDEX))
-    {
-        t_1d_char_array * f_val_arr = c_split_str(a_value, '|', 5,
-                TINY_STRING);
+    } else if(!strcmp(a_key, WN_CONFIGURE_KEY_PLUGIN_INDEX)){
+        t_1d_char_array * f_val_arr = c_split_str(
+            a_value,
+            '|',
+            5,
+            TINY_STRING
+        );
         int f_track_num = atoi(f_val_arr->array[0]);
         int f_index = atoi(f_val_arr->array[1]);
         int f_plugin_index = atoi(f_val_arr->array[2]);
@@ -556,15 +549,12 @@ void v_we_configure(const char* a_key, const char* a_value){
             f_track, f_index, f_plugin_index, f_plugin_uid, f_power, 1);
 
         g_free_1d_char_array(f_val_arr);
-    }
-    else
-    {
+    } else {
         log_info("Unknown configure message key: %s, value %s", a_key, a_value);
     }
 }
 
-void v_we_test()
-{
+void v_we_test(){
     log_info("Begin Wave-Next test");
 
     STARGATE->sample_count = 512;

@@ -215,6 +215,7 @@ test:
 	mkdir html || rm -rf html/*
 	gcovr -r . --html --html-details \
 		--exclude=benchmark \
+		--exclude=libcds \
 		-o html/coverage.html
 	rm -rf *.gcda *.gcno
 	$(BROWSER) html/coverage.html &
