@@ -19,8 +19,7 @@ void TestWaveEditConfigE2E(){
     v_set_host(SG_HOST_WAVE_EDIT);
     v_we_configure(
         WN_CONFIGURE_KEY_LOAD_AB_OPEN,
-        "/home/fd/src/github.com/stargateaudio/stargate-sample-pack/"
-        "stargate-sample-pack/karoryfer/kicks/kick_Szpaderski_24_open.wav"
+        "./test_fixtures/1.wav"
     );
     v_we_configure(
         WN_CONFIGURE_KEY_WE_SET,
@@ -37,8 +36,7 @@ void TestWaveEditConfigE2E(){
     );
     v_we_configure(
         WN_CONFIGURE_KEY_LOAD_AB_OPEN,
-        "/home/fd/src/github.com/stargateaudio/stargate-sample-pack/"
-        "stargate-sample-pack/karoryfer/kicks/kick_marching_20_old.wav"
+        "./test_fixtures/2.wav"
     );
     v_we_configure(
         WN_CONFIGURE_KEY_WE_SET,
