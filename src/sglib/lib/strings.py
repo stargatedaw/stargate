@@ -84,14 +84,15 @@ The panic button has 2 options:
 
 
 avconv_error = _(
-"""Please ensure that avconv(or ffmpeg) and lame are installed, can't
-open mp3 converter dialog.
+"""\
+Please ensure that ffmpeg (or avconv) and lame are installed.
+cannot open mp3 converter dialog.
 Check your normal sources for packages or visit:
 
 http://lame.sourceforge.net
-http://libav.org
+http://ffmpeg.org
 
-Can't find {}""")
+Cannot find {}""")
 
 export_format = _(
 """File is exported to 32 bit .wav at the sample rate your audio
@@ -147,7 +148,7 @@ Detected that there are instances of the Stargate audio engine already running.
 This could mean that you already have Stargate running, if so you
 should click 'Cancel' and close the other instance.
 
-This could also mean that for some reason the engine didn't properly
+This could also mean that for some reason the engine did not properly
 terminate from another session.  If so, click 'OK' to kill the
 other process(es)""")
 
