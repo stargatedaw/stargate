@@ -6,7 +6,7 @@
 *.so
 *.swp
 /tmp/
-./test_tmp/*wav*
+/test_tmp/*wav*
 bench.out
 coverage*.html
 gmon.out
