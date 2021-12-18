@@ -879,6 +879,7 @@ class ItemSequencer(QGraphicsView):
         self.header.mousePressEvent = self.header_click_event
         self.header.contextMenuEvent = header_context_menu.show
         self.scene.addItem(self.header)
+        text_item = None
 
         for f_marker in shared.CURRENT_SEQUENCE.get_markers():
             if f_marker.type == 1:  # Loop/Region
@@ -918,6 +919,31 @@ class ItemSequencer(QGraphicsView):
                 )
                 item.setPos(
                     f_marker.beat * _shared.SEQUENCER_PX_PER_BEAT,
+                    _shared.SEQUENCE_EDITOR_HEADER_ROW_HEIGHT + 3.,
+                )
+
+                # Hide the previous tempo marker's text if it overlaps this
+                # tempo marker
+                if (
+                    text_item
+                    and
+                    text_item.sceneBoundingRect().intersects(
+                        item.sceneBoundingRect(),
+                    )
+                ):
+                    text_item.hide()
+                text_item = get_font().QGraphicsSimpleTextItem(
+                    f_text,
+                    self.header,
+                )
+                text_item.setZValue(1.0)
+                text_item.setBrush(
+                    QColor(
+                        theme.SYSTEM_COLORS.daw.seq_header_text,
+                    ),
+                )
+                text_item.setPos(
+                    (f_marker.beat * _shared.SEQUENCER_PX_PER_BEAT) + 12.,
                     _shared.SEQUENCE_EDITOR_HEADER_ROW_HEIGHT,
                 )
                 item.setToolTip(f_text)
