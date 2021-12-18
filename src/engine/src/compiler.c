@@ -185,7 +185,7 @@ void sg_print_stack_trace(){
 #endif
 }
 
-static void _sg_assert_failed(va_list args, char* msg){
+static void _sg_abort(va_list args, char* msg){
     char _str[4096];
     if(msg){
         vsprintf(_str, msg, args);
@@ -197,11 +197,17 @@ static void _sg_assert_failed(va_list args, char* msg){
     abort();
 }
 
+void sg_abort(char* msg, ...){
+    va_list args;
+    va_start(args, msg);
+    _sg_abort(args, msg);
+}
+
 void sg_assert(int cond, char* msg, ...){
     if(unlikely(!cond)){
         va_list args;
         va_start(args, msg);
-        _sg_assert_failed(args, msg);
+        _sg_abort(args, msg);
     }
 }
 
@@ -209,6 +215,6 @@ void sg_assert_ptr(void* cond, char* msg, ...){
     if(unlikely(!cond)){
         va_list args;
         va_start(args, msg);
-        _sg_assert_failed(args, msg);
+        _sg_abort(args, msg);
     }
 }

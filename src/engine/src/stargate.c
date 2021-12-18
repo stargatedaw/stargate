@@ -296,10 +296,10 @@ void v_sample_period_split(
                     &a_input_buffer[f_split * a_input_count];
             }
         } else {
-            sg_assert(0, "v_sample_period_split: else 1");
+            sg_abort("v_sample_period_split: else 1");
         }
     } else {
-        sg_assert(0, "v_sample_period_split: else 2");
+        sg_abort("v_sample_period_split: else 2");
     }
 }
 
@@ -1114,12 +1114,12 @@ void v_sg_seq_event_list_set(
             } else if(a_result->splitter.count == 1){
                 // TODO:  Debug how and why this happens
             } else {
-                sg_assert(0, "v_sg_seq_event_list_set: else 1");
+                sg_abort("v_sg_seq_event_list_set: else 1");
             }
 
             self->period.end_beat = f_period->period.end_beat;
         } else {
-            sg_assert(0, "v_sg_seq_event_list_set: else 2");
+            sg_abort("v_sg_seq_event_list_set: else 2");
         }
     }
 }

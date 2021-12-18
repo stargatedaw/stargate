@@ -125,6 +125,7 @@ void sg_assert(int cond, char* msg, ...)
     __attribute__((format(printf, 2, 3)));
 void sg_assert_ptr(void* cond, char* msg, ...)
     __attribute__((format(printf, 2, 3)));
+void sg_abort(char* msg, ...) __attribute__((format(printf, 1, 2)));
 
 typedef struct {
     char padding1[CACHE_LINE_SIZE];

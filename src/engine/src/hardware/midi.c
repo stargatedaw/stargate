@@ -425,7 +425,7 @@ void midiDeviceRead(
             }
             else
             {
-                sg_assert(0, "midiDeviceRead: Unknown controller");
+                sg_abort("midiDeviceRead: Unknown controller");
             }
         }
         else

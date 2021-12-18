@@ -191,7 +191,7 @@ void v_pitch_envelope(
             f_i2++;
         }
     } else {
-        sg_assert(0, "%i channels is not supported", info.channels);
+        sg_abort("%i channels is not supported", info.channels);
     }
 
     SNDFILE * f_sndfile = sf_open(a_file_out, SFM_WRITE, &f_sf_info);

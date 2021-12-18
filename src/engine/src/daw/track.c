@@ -64,7 +64,7 @@ void v_daw_process_track(
                 break;
             }
         } else {
-            sg_assert(0, "process track: invalid item ref count");
+            sg_abort("process track: invalid item ref count");
         }
     }
 
@@ -94,7 +94,7 @@ void v_daw_process_track(
             f_next_beat = f_item_ref[2]->start;
             break;
         default:
-            sg_assert(0, "process track: invalid item ref count");
+            sg_abort("process track: invalid item ref count");
     }
 
     v_sample_period_split(
