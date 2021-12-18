@@ -33,7 +33,7 @@ PORTABLE_ROOT = None
 if IS_WINDOWS:
     dirname = os.path.dirname(sys.executable)
     if os.path.isfile(
-        os.path.join(dirname, '_stargate_home'),
+        os.path.join(dirname, '..', '_stargate_home'),
     ):
         USER_HOME = os.path.abspath(
             os.path.join(dirname, '..'),

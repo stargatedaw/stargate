@@ -108,7 +108,7 @@ Section "Base Install" SEC01
     ; TODO: Remove this in mid 2022
     Delete $INSTDIR\{MAJOR_VERSION}.exe
     Delete $INSTDIR\{MAJOR_VERSION}.ico
-    Delete $INSTDIR\_stargate_home
+    Delete $INSTDIR\..\_stargate_home
     ; Install the program
     CreateDirectory $INSTDIR\program
     SetOutPath $INSTDIR\program
@@ -137,7 +137,8 @@ Section /o "Portable Flash Drive Install" SEC03
     File windows\LaunchStargate.cmd
     SetOutPath $INSTDIR\program
     ; The exe looks for this empty file to choose the Stargate home folder
-    FileOpen $9 _stargate_home w
+    FileOpen $9 ..\_stargate_home w
+    FileWrite $9 "This file tells Stargate it is a portable install."
     FileClose $9
 SectionEnd
 
