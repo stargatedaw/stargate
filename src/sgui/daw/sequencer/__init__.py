@@ -242,18 +242,22 @@ class SequencerWidget:
         _shared.set_seq_snap()
         self.open_sequence()
         self.scrollbar.setValue(
-            (
-                _shared.SEQUENCER_PX_PER_BEAT
-                /
-                self.old_px_per_beat
-            ) * self.scrollbar.value()
+            int(
+                (
+                    _shared.SEQUENCER_PX_PER_BEAT
+                    /
+                    self.old_px_per_beat
+                ) * self.scrollbar.value()
+            )
         )
-        self.scrollbar.setSingleStep(_shared.SEQUENCER_PX_PER_BEAT)
+        self.scrollbar.setSingleStep(int(_shared.SEQUENCER_PX_PER_BEAT))
         self.size_label.hide()
 
     def set_hzoom_size(self):
         self.size_label.setFixedSize(
-            _shared.SEQUENCER_PX_PER_BEAT, _shared.SEQUENCE_EDITOR_HEADER_HEIGHT)
+            int(_shared.SEQUENCER_PX_PER_BEAT),
+            int(_shared.SEQUENCE_EDITOR_HEADER_HEIGHT),
+        )
 
     def set_hzoom(self, a_val=None):
         if not self.is_hzooming:
