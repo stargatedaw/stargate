@@ -6,7 +6,6 @@ import re
 __all__ = [
     'is_rpi',
     'gpu_mem',
-    'desktop',
 ]
 
 def gpu_mem(
@@ -31,25 +30,6 @@ def gpu_mem(
         LOG.warning(f"Detected {gpu_mem} GPU memory")
         return False
     return True
-
-def desktop(
-    cmd: str='wmctrl -m',
-    allow: tuple=('fluxbox',),
-) -> bool:
-    """ Check that the Raspberry Pi is running a desktop environment known
-        to be able to adequately run a complex UI application
-    """
-    status, output = getstatusoutput(cmd)
-    if status != 0:
-        LOG.warning(
-            f"Could not check DE: '{cmd}' returned {status}: '{output}'"
-        )
-        return True
-    output = output.lower()
-    for de in allow:
-        if de in output:
-            return True
-    return False
 
 def is_rpi(
     sysfs_path: str='/sys/firmware/devicetree/base/model',

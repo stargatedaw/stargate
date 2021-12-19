@@ -16,11 +16,7 @@ Please see https://github.com/stargateaudio/stargate/docs/rpi.md
 def _preflight_rpi():
     try:
         if rpi.is_rpi():
-            if not (
-                rpi.gpu_mem()
-                and
-                rpi.desktop()
-            ):
+            if not rpi.gpu_mem():
                 QMessageBox.warning(
                     None,
                     "Warning",

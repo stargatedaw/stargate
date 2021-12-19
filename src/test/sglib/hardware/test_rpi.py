@@ -26,12 +26,3 @@ def test_gpu_mem():
         result = gpu_mem(cmd=cmd)
         assert result == expected, (result, expected)
 
-def test_desktop():
-    for cmd, expected in (
-        ('echo fluxbox', True),
-        ('echo kde', False),
-        ('exit 1', True),
-    ):
-        result = desktop(cmd=cmd)
-        assert result == expected, (result, expected)
-
