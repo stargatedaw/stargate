@@ -23,8 +23,15 @@ void small_page_aligned_alloc(
         a_size,
         a_alignment
     );
-#else
+#elif SG_OS == _OS_MACOS
     *a_ptr = (void*)malloc(a_size);  //unaligned, but completely portable
+    sg_assert_ptr(
+        *a_ptr,
+        "malloc failed: size %lu",
+        a_size
+    );
+#else
+    *a_ptr = (void*)malloc(a_size);  // unaligned, but completely portable
     sg_assert_ptr(
         *a_ptr,
         "malloc failed: size %llu",
