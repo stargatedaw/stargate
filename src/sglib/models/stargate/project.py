@@ -493,12 +493,10 @@ class SgProject(AbstractProject):
             result = path.replace(samples_dir, "", 1)
             if IS_WINDOWS:
                 result = f"{result[0]}:{result[1:]}"
-            LOG.info("Starts with sample dir")
             return result
         elif path.startswith(audio_dir):
             # Specifically, any folder under project/audio except for the
             # samples/ folder that caches everything else
-            LOG.info("Starts with audio dir")
             return path.replace(audio_dir, '!', 1)
         return path
 
