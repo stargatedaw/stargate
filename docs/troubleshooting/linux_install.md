@@ -71,11 +71,7 @@ code and asks you what to do, enter `i` for "ignore"
 # Arch / PKGBUILD
 Arch, Manjaro, EndeavourOS and many others.
 
-I have yet to get Stargate DAW compiling on Arch.  Where the 6 or so distros we
-currently support officially all manage to succeed at compiling Stargate DAW,
-Arch fails to compile.  If somebody wants to be a hero and handle maintaining
-an AUR package, I will gladly promote it as the official way to use
-Stargate DAW on Arch.
+[See this document](../src/linux/arch_linux.md)
 
 # Building from source code
 
