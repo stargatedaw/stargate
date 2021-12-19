@@ -336,7 +336,7 @@ class SgProject(AbstractProject):
                 ]
             elif a_audio_item.time_stretch_mode == 5:
                 f_cmd = [
-                    sbsms_util,
+                    SBSMS,
                     f_src_path,
                     f_dest_path,
                     str(1.0 / a_audio_item.timestretch_amt),

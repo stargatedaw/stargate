@@ -39,6 +39,7 @@ TIMESTRETCH_MODES = [
     "SBSMS",
     "Paulstretch",
 ]
+SBSMS = None
 
 TIMESTRETCH_INDEXES = {
     x:y for x, y in zip(
@@ -47,15 +48,6 @@ TIMESTRETCH_INDEXES = {
     )
 }
 
-if (
-    IS_WINDOWS
-    or (
-        IS_MAC_OSX
-        and
-        platform.machine() != 'x86_64'  # Contains x86 assembly language
-    )
-):
-    TIMESTRETCH_MODES.remove("SBSMS")
 
 CRISPNESS_SETTINGS = [
     "0 (smeared)",
@@ -168,7 +160,7 @@ if IS_WINDOWS:
         ENGINE_DIR,
         'rubberband.exe',
     )
-    sbsms_util = os.path.join(
+    SBSMS = os.path.join(
         ENGINE_DIR,
         "sbsms.exe",
     )
@@ -178,7 +170,7 @@ elif IS_MAC_OSX:
         RUBBERBAND_PATH = which('rubberband')
         PAULSTRETCH_PATH = sys.argv[0]
         # Prefer the vendored SBSMS
-        sbsms_util = os.path.join(
+        SBSMS = os.path.join(
             os.path.dirname(__file__),
             '..',
             '..',
@@ -194,14 +186,14 @@ elif IS_MAC_OSX:
             ENGINE_DIR,
             "rubberband",
         )
-        sbsms_util = os.path.join(
+        SBSMS = os.path.join(
             ENGINE_DIR,
             "sbsms",
         )
 elif IS_LINUX:
     # Prefer the vendored SBSMS
     RUBBERBAND_PATH = which("rubberband")
-    sbsms_util = os.path.join(
+    SBSMS = os.path.join(
         os.path.dirname(__file__),
         '..',
         '..',
@@ -210,23 +202,25 @@ elif IS_LINUX:
         'cli',
         'sbsms',
     )
-    if not os.path.exists(sbsms_util):
+    if not os.path.exists(SBSMS):
         try:
-            sbsms_util = os.path.join(
+            SBSMS = os.path.join(
                 ENGINE_DIR,
                 "sbsms",
             )
         except NameError:
             pass
-    if not os.path.exists(sbsms_util):
-        sbsms_util = which(f"{MAJOR_VERSION}-sbsms")
-        if not sbsms_util:
-            sbsms_util = which("sbsms")
-    LOG.info(f'Using SBSMS: {sbsms_util}')
-    assert sbsms_util
+    if not os.path.exists(SBSMS):
+        SBSMS = which(f"{MAJOR_VERSION}-sbsms")
+        if not SBSMS:
+            SBSMS = which("sbsms")
     PAULSTRETCH_PATH = sys.argv[0]
 else:
     raise NotImplementedError("Unsupported platform")
+
+if not SBSMS or not os.path.exists(SBSMS):
+    LOG.info(f'Cannot find SBSMS, removing from timestretch options')
+    TIMESTRETCH_MODES.remove("SBSMS")
 
 def has_pasuspender(cmd) -> list:
     """ Test for the presence of PulseAudio pasuspender and see it if works
@@ -444,7 +438,7 @@ def sbsms(
     a_pitch_shift,
 ):
     f_cmd = [
-        sbsms_util,
+        SBSMS,
         a_src_path,
         a_dest_path,
         str(1.0 / a_timestretch_amt),
