@@ -33,6 +33,7 @@ fedora/*.ks
 fedora/cache/
 main.su
 packages/
+pkg/
 profile.txt
 profiling.txt
 src/*.pymap
@@ -52,7 +53,7 @@ src/portaudio/config.status
 src/portaudio/lib-stamp
 src/portaudio/libtool
 src/portaudio/portaudio-2.0.pc
-src/stargate/test.wav.finished
+src/stargate-*/
 src/vendor/pyliblo-0.9.2/build/
 src/vendor/sbsms/Makefile
 src/vendor/sbsms/cli/sbsms
