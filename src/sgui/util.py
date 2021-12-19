@@ -276,7 +276,7 @@ def get_fps() -> int:
         the UI
     """
     if is_rpi():
-        return 10
+        return 20
     screen = QGuiApplication.primaryScreen()
     is_gt_hd = screen.physicalSize().width() > 2000
     cpu_count = multiprocessing.cpu_count()
