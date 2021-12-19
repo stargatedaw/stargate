@@ -234,7 +234,10 @@ class eq_viewer(QGraphicsView):
 
     def resizeEvent(self, a_resize_event):
         QGraphicsView.resizeEvent(self, a_resize_event)
-        self.scale(1.0 / self.last_x_scale, 1.0 / self.last_y_scale)
+        self.scale(
+            1.0 / self.last_x_scale if self.last_x_scale else 1.0, 
+            1.0 / self.last_y_scale if self.last_y_scale else 1.0,
+        )
         f_rect = self.rect()
         self.last_x_scale = f_rect.width() / (
             _shared.EQ_WIDTH + _shared.EQ_POINT_DIAMETER + 3.0
