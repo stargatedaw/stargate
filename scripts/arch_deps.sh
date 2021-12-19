@@ -3,11 +3,11 @@ sudo pacman -S  \
     python-pip \
     vim \
     fakeroot \
-    strip \
     fakeroot \
     binutils \
     vorbis-tools \
     rubberband \
+    pkgconf \
     portmidi \
     portmidi \
     gcc \

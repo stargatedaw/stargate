@@ -1,16 +1,30 @@
 #!/usr/bin/env python3
+import argparse
 import json
 import os
+import subprocess
 
 from jinja2 import Template
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-i', 
+        '--install', 
+        action='store_true',
+        dest='install',
+        help='Install the package after building',
+    )
+    return parser.parse_args()
+
+ARGS = parse_args()
 
 PKGBUILD = """\
 pkgname={{ name }}
 pkgver={{ version }}
 pkgrel=1
 pkgdesc="A DAW, plugins and wave editor"
-arch=('i686' 'x86_64')
+arch=('i686' 'x86_64' 'aarch64')
 url="https://stargateaudio.github.io"
 license=('GPL')
 groups=()
@@ -28,6 +42,7 @@ depends=(
     python-psutil
     python-pyaml
     python-pyqt6
+    qt6-svg
     rubberband
     vorbis-tools
 )
@@ -55,13 +70,18 @@ md5sums=() #generate with 'makepkg -g'
 build() {
   cd "$srcdir/$pkgname-$pkgver"
 
-  make
+  if [ "${CARCH?}" -eq "x86_64" ]; then
+    make distro
+  else
+    make distro PLAT_FLAGS="-march=native" 
+  fi
 }
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
 
-  make DESTDIR="$pkgdir/" install
+  make DESTDIR="$pkgdir/" install_distro
+  make DESTDIR="$pkgdir/" install_py_vendor
 }
 
 """
@@ -89,6 +109,11 @@ output = t.render(
 with open('PKGBUILD', 'w') as f:
 	f.write(output)
 
-os.system('scripts/src.sh')
-os.system('makepkg -g >>PKGBUILD')
-os.system('makepkg -s')
+assert not os.system('scripts/src.sh')
+assert not os.system('makepkg -g >>PKGBUILD')
+assert not os.system('makepkg -fs')
+
+if ARGS.install:
+    assert not os.system(
+        f'sudo pacman -U ./{MAJOR_VERSION}-{MINOR_VERSION}-*.zst',
+    )

@@ -20,6 +20,7 @@
 /*.spec
 *.swp
 *.tar.gz
+*.zst
 */build/*
 *GNU-amd64-Linux*
 *deps_installed.txt
