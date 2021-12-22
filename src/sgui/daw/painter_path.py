@@ -79,10 +79,9 @@ def painter_path(
         item.items.values(),
         key=lambda x: x.start_beat
     ):
-        f_graph = constants.PROJECT.get_sample_graph_by_uid(
-            f_item.uid)
-        f_width = (f_graph.length_in_seconds /
-            f_seconds_per_beat) * a_px_per_beat
+        f_graph = constants.PROJECT.get_sample_graph_by_uid(f_item.uid)
+        f_width = (
+            f_graph.length_in_seconds / f_seconds_per_beat) * a_px_per_beat
         f_paths = create_sample_graph(
             f_graph,
             True,
@@ -126,9 +125,9 @@ def painter_path(
             f_x_pos = f_note.start * a_px_per_beat
             f_width = f_note.length * a_px_per_beat
             f_notes_path.addRect(
-                float(f_x_pos), 
-                float(f_y_pos), 
-                float(f_width), 
+                float(f_x_pos),
+                float(f_y_pos),
+                float(f_width),
                 float(f_note_height),
             )
 

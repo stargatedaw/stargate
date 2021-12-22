@@ -22,12 +22,12 @@ def create_sample_graph(
         ap_entry = by_uid[a_audio_item.uid]
         f_vol = db_to_lin(a_audio_item.vol + ap_entry.volume)
         f_len = len(sample_graph.high_peaks[0])
-        f_slice_low = int(f_ss * f_len)
-        f_slice_high = int(f_se * f_len)
+        f_slice_start = int(f_ss * f_len)
+        f_slice_end = int(f_se * f_len)
         #a_width *= f_width_frac
     else:
-        f_slice_low = None
-        f_slice_high = None
+        f_slice_start = None
+        f_slice_end = None
     if a_width or a_height or sample_graph.cache is None:
         if not a_width:
             a_width = AUDIO_ITEM_SCENE_WIDTH
@@ -50,14 +50,14 @@ def create_sample_graph(
             f_result.moveTo(f_width_pos, f_section_div2)
             if a_audio_item and a_audio_item.reversed:
                 f_high_peaks = sample_graph.high_peaks[f_i][
-                        f_slice_high:f_slice_low:-1]
+                    f_slice_end:f_slice_start:-1]
                 f_low_peaks = sample_graph.low_peaks[f_i][::-1]
-                f_low_peaks = f_low_peaks[f_slice_low:f_slice_high]
+                f_low_peaks = f_low_peaks[f_slice_start:f_slice_end]
             else:
                 f_high_peaks = sample_graph.high_peaks[f_i][
-                    f_slice_low:f_slice_high]
+                    f_slice_start:f_slice_end]
                 f_low_peaks = sample_graph.low_peaks[f_i][::-1]
-                f_low_peaks = f_low_peaks[f_slice_high:f_slice_low:-1]
+                f_low_peaks = f_low_peaks[f_slice_end:f_slice_start:-1]
 
             if a_audio_item:
                 f_high_peaks = f_high_peaks * f_vol
