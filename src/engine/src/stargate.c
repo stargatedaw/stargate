@@ -709,25 +709,15 @@ void g_pynote_init(
     int a_note,
     int a_vel,
     SGFLT a_start,
-    SGFLT a_length
+    SGFLT a_length,
+    SGFLT pan
 ){
     f_result->type = EVENT_NOTEON;
     f_result->length = a_length;
     f_result->note = a_note;
     f_result->start = a_start;
     f_result->velocity = a_vel;
-}
-
-t_seq_event * g_pynote_get(
-    int a_note,
-    int a_vel,
-    SGFLT a_start,
-    SGFLT a_length
-){
-    t_seq_event * f_result =
-        (t_seq_event*)malloc(sizeof(t_seq_event));
-    g_pynote_init(f_result, a_note, a_vel, a_start, a_length);
-    return f_result;
+    f_result->pan = pan;
 }
 
 void g_pycc_init(

@@ -67,14 +67,29 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
         self.set_brush()
 
     def set_vel_line(self):
-        f_vel = self.note_item.velocity
-        f_rect = self.rect()
-        f_y = (1.0 - (f_vel * 0.007874016)) * f_rect.height()
-        f_width = f_rect.width()
-        self.vel_line.setLine(0.0, f_y, f_width, f_y)
+        if _shared.PARAMETER == 0:
+            f_vel = self.note_item.velocity
+            f_rect = self.rect()
+            f_y = (1.0 - (f_vel * 0.007874016)) * f_rect.height()
+            f_width = f_rect.width()
+            self.vel_line.setLine(0.0, f_y, f_width, f_y)
+        elif _shared.PARAMETER == 1:
+            pan = self.note_item.pan
+            f_rect = self.rect()
+            f_y = (1.0 - ((pan + 1.0) * 0.5)) * f_rect.height()
+            f_width = f_rect.width()
+            self.vel_line.setLine(0.0, f_y, f_width, f_y)
+        else:
+            raise ValueError(_shared.PARAMETER)
 
     def set_brush(self):
-        pos = (1.0 - (self.note_item.velocity / 127.0))
+        if _shared.PARAMETER == 0:  # velocity
+            pos = (1.0 - (self.note_item.velocity / 127.0))
+        elif _shared.PARAMETER == 1:  # pan
+            pos = (1.0 - ((self.note_item.pan + 1.0) * 0.5))
+        else:
+            raise ValueError(_shared.PARAMETER)
+
         pos = clip_value(pos, 0.0, 1.0)
         color = color_interpolate(
             theme.SYSTEM_COLORS.daw.note_vel_min_color,
@@ -152,12 +167,16 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
             |
             QtCore.Qt.KeyboardModifier.AltModifier
         ):
+            if not self.isSelected():
+                self.setSelected(True)
             self.is_velocity_dragging = True
         elif a_event.modifiers() == (
             QtCore.Qt.KeyboardModifier.ControlModifier
             |
             QtCore.Qt.KeyboardModifier.ShiftModifier
         ):
+            if not self.isSelected():
+                self.setSelected(True)
             f_list = [
                 x.note_item.start
                 for x in shared.PIANO_ROLL_EDITOR.get_selected_items()
@@ -198,10 +217,18 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
             self.orig_y = qt_event_pos(a_event).y()
             QApplication.setOverrideCursor(QtCore.Qt.CursorShape.BlankCursor)
             for f_item in shared.PIANO_ROLL_EDITOR.get_selected_items():
-                f_item.orig_value = f_item.note_item.velocity
+                if _shared.PARAMETER == 0:
+                    f_item.orig_value = f_item.note_item.velocity
+                elif _shared.PARAMETER == 1:
+                    f_item.orig_value = f_item.note_item.pan
+                else:
+                    raise ValueError(_shared.PARAMETER)
                 f_item.set_brush()
             for f_item in shared.PIANO_ROLL_EDITOR.note_items:
-                f_item.note_text.setText(str(f_item.note_item.velocity))
+                if _shared.PARAMETER == 0:
+                    f_item.note_text.setText(str(f_item.note_item.velocity))
+                if _shared.PARAMETER == 1:
+                    f_item.note_text.setText(str(f_item.note_item.pan))
         shared.PIANO_ROLL_EDITOR.click_enabled = True
 
     def mouseMoveEvent(self, a_event):
@@ -235,35 +262,77 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
                 # Does not work on Wayland
                 #QCursor.setPos(QCursor.pos().x(), self.mouse_y_pos)
             elif self.is_velocity_dragging:
-                f_new_vel = clip_value(
-                    f_val + f_item.orig_value, 1, 127)
-                f_new_vel = int(f_new_vel)
-                f_item.note_item.velocity = f_new_vel
-                f_item.note_text.setText(str(f_new_vel))
+                if _shared.PARAMETER == 0:
+                    f_new_vel = clip_value(
+                        f_val + f_item.orig_value,
+                        1,
+                        127,
+                    )
+                    f_new_vel = int(f_new_vel)
+                    f_item.note_item.velocity = f_new_vel
+                    f_item.note_text.setText(str(f_new_vel))
+                elif _shared.PARAMETER == 1:
+                    new_pan = clip_value(
+                        (f_val * 0.01) + f_item.orig_value,
+                        -1.0,
+                        1.0,
+                    )
+                    new_pan = round(new_pan, 2)
+                    f_item.note_item.pan = new_pan
+                    f_item.note_text.setText(str(new_pan))
                 f_item.set_brush()
                 f_item.set_vel_line()
             elif self.is_velocity_curving:
-                f_start = f_item.note_item.start
-                if f_start == self.vc_mid:
-                    f_new_vel = f_val + f_item.orig_value
-                else:
-                    if f_start > self.vc_mid:
-                        f_frac = (f_start -
-                            self.vc_mid) / (self.vc_end - self.vc_mid)
-                        f_new_vel = linear_interpolate(
-                            f_val, 0.3 * f_val, f_frac)
+                if _shared.PARAMETER == 0:
+                    f_start = f_item.note_item.start
+                    if f_start == self.vc_mid:
+                        f_new_vel = f_val + f_item.orig_value
                     else:
-                        f_frac = (f_start -
-                            self.vc_start) / (self.vc_mid - self.vc_start)
-                        f_new_vel = linear_interpolate(
-                            0.3 * f_val, f_val, f_frac)
-                    f_new_vel += f_item.orig_value
-                f_new_vel = clip_value(f_new_vel, 1, 127)
-                f_new_vel = int(f_new_vel)
-                f_item.note_item.velocity = f_new_vel
-                f_item.note_text.setText(str(f_new_vel))
-                f_item.set_brush()
-                f_item.set_vel_line()
+                        if f_start > self.vc_mid:
+                            f_frac = (f_start -
+                                self.vc_mid) / (self.vc_end - self.vc_mid)
+                            f_new_vel = linear_interpolate(
+                                f_val, 0.3 * f_val, f_frac)
+                        else:
+                            f_frac = (f_start -
+                                self.vc_start) / (self.vc_mid - self.vc_start)
+                            f_new_vel = linear_interpolate(
+                                0.3 * f_val, f_val, f_frac)
+                        f_new_vel += f_item.orig_value
+                    f_new_vel = clip_value(f_new_vel, 1, 127)
+                    f_new_vel = int(f_new_vel)
+                    f_item.note_item.velocity = f_new_vel
+                    f_item.note_text.setText(str(f_new_vel))
+                    f_item.set_brush()
+                    f_item.set_vel_line()
+                elif _shared.PARAMETER == 1:
+                    f_start = f_item.note_item.start
+                    if f_start == self.vc_mid:
+                        new_pan = (f_val * 0.01) + f_item.orig_value
+                    else:
+                        if f_start > self.vc_mid:
+                            f_frac = (f_start -
+                                self.vc_mid) / (self.vc_end - self.vc_mid)
+                            new_pan = linear_interpolate(
+                                f_val * 0.01,
+                                0.003 * f_val,
+                                f_frac,
+                            )
+                        else:
+                            f_frac = (f_start -
+                                self.vc_start) / (self.vc_mid - self.vc_start)
+                            new_pan = linear_interpolate(
+                                0.003 * f_val,
+                                f_val * 0.01,
+                                f_frac,
+                            )
+                        new_pan += f_item.orig_value
+                    new_pan = clip_value(new_pan, -1.0, 1.0)
+                    new_pan = round(new_pan, 2)
+                    f_item.note_item.pan = new_pan
+                    f_item.note_text.setText(str(new_pan))
+                    f_item.set_brush()
+                    f_item.set_vel_line()
             else:
                 f_pos_x = f_item.pos().x()
                 f_pos_y = f_item.pos().y()
@@ -317,13 +386,18 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
             elif self.is_velocity_dragging or self.is_velocity_curving:
                 pass
             else:
-                f_new_note_start = (f_pos_x -
-                    shared.PIANO_KEYS_WIDTH) * shared.CURRENT_ITEM_LEN * f_recip
+                f_new_note_start = (
+                    f_pos_x - shared.PIANO_KEYS_WIDTH
+                ) * shared.CURRENT_ITEM_LEN * f_recip
                 f_new_note_num = self.y_pos_to_note(f_pos_y)
                 if self.is_copying:
                     f_new_note = sg_project.note(
-                        f_new_note_start, f_item.note_item.length,
-                        f_new_note_num, f_item.note_item.velocity)
+                        f_new_note_start,
+                        f_item.note_item.length,
+                        f_new_note_num,
+                        f_item.note_item.velocity,
+                        f_item.note_item.pan,
+                    )
                     shared.CURRENT_ITEM.add_note(f_new_note, False)
                     # pass a ref instead of a str in case
                     # fix_overlaps() modifies it.

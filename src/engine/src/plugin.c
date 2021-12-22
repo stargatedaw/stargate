@@ -199,12 +199,14 @@ void v_ev_set_noteon(
     t_seq_event* a_event,
     int a_channel,
     int a_note,
-    int a_velocity
+    int a_velocity,
+    SGFLT pan
 ){
     a_event->type = EVENT_NOTEON;
     a_event->channel = a_channel;
     a_event->note = a_note;
     a_event->velocity = a_velocity;
+    a_event->pan = pan;
 }
 
 void v_ev_set_controller(

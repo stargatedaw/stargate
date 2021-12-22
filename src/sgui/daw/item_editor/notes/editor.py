@@ -166,9 +166,15 @@ class PianoRollEditor(AbstractItemEditor):
             f_new_start = f_note.note_item.start + f_half
             f_note_num = f_note.note_item.note_num
             f_velocity = f_note.note_item.velocity
+            pan = f_note.note_item.pan
             self.selected_note_strings.append(str(f_note.note_item))
             f_new_note_item = sg_project.note(
-                f_new_start, f_half, f_note_num, f_velocity)
+                f_new_start,
+                f_half,
+                f_note_num,
+                f_velocity,
+                pan,
+            )
             shared.CURRENT_ITEM.add_note(f_new_note_item, False)
             self.selected_note_strings.append(str(f_new_note_item))
 
@@ -210,6 +216,8 @@ class PianoRollEditor(AbstractItemEditor):
                         f_max = f_end
                 f_vels = [x.note_item.velocity for x in f_dict[k]]
                 f_vel = int(sum(f_vels) // len(f_vels))
+                pans = [x.note_item.pan for x in f_dict[k]]
+                pan = round(sum(pans) / len(pans), 2)
 
                 LOG.info(str(f_max))
                 LOG.info(str(f_min))
@@ -217,7 +225,13 @@ class PianoRollEditor(AbstractItemEditor):
                 LOG.info(str(f_length))
                 f_start = f_min
                 LOG.info(str(f_start))
-                f_new_note = sg_project.note(f_start, f_length, k, f_vel)
+                f_new_note = sg_project.note(
+                    f_start,
+                    f_length,
+                    k,
+                    f_vel,
+                    pan,
+                )
                 LOG.info(str(f_new_note))
                 f_result.append(f_new_note)
 
@@ -368,7 +382,11 @@ class PianoRollEditor(AbstractItemEditor):
                         f_pos_x - shared.PIANO_KEYS_WIDTH
                     ) * f_recip * shared.CURRENT_ITEM_LEN
                     f_note_item = sg_project.note(
-                        f_beat, 0.25, f_note, self.get_vel(f_beat))
+                        f_beat,
+                        0.25,
+                        f_note,
+                        self.get_vel(f_beat),
+                    )
                 shared.ITEM_EDITOR.add_note(f_note_item)
                 _shared.SELECTED_PIANO_NOTE = f_note_item
                 f_drawn_note = self.draw_note(f_note_item)
@@ -680,7 +698,10 @@ class PianoRollEditor(AbstractItemEditor):
                 )
                 for f_note in shared.LAST_ITEM.notes:
                     f_note_item = self.draw_note(
-                        f_note, False, a_offset=f_offset)
+                        f_note,
+                        False,
+                        a_offset=f_offset,
+                    )
             self.scrollContentsBy(0, 0)
 #            f_text = get_font().QGraphicsSimpleTextItem(f_name, self.header)
 #            f_text.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
@@ -705,7 +726,8 @@ class PianoRollEditor(AbstractItemEditor):
             f_length,
             self.note_height,
             a_note.note_num,
-            a_note, a_enabled,
+            a_note,
+            a_enabled,
         )
         f_note_item.setPos(f_start, f_note)
         self.scene.addItem(f_note_item)

@@ -76,8 +76,20 @@ void g_daw_item_get(t_daw* self, int a_uid){
             int f_note = atoi(f_current_string->current_str);
             v_iterate_2d_char_array(f_current_string);
             int f_vel = atoi(f_current_string->current_str);
-            g_pynote_init(&f_result->events[f_event_pos],
-                    f_note, f_vel, f_start, f_length);
+            SGFLT pan = 0.0;
+            // TODO: Stargate v2: Remove if statement
+            if(!f_current_string->eol){
+                v_iterate_2d_char_array(f_current_string);
+                pan = atof(f_current_string->current_str);
+            }
+            g_pynote_init(
+                &f_result->events[f_event_pos],
+                f_note,
+                f_vel,
+                f_start,
+                f_length,
+                pan
+            );
             ++f_event_pos;
         }
         else if(f_type == 'c') //cc

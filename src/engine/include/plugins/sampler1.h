@@ -31,6 +31,7 @@ GNU General Public License for more details.
 #include "audiodsp/modules/multifx/multifx3knob.h"
 #include "audiodsp/modules/oscillator/lfo_simple.h"
 #include "audiodsp/modules/oscillator/noise.h"
+#include "audiodsp/modules/signal_routing/panner2.h"
 #include "plugin.h"
 #include "compiler.h"
 
@@ -108,6 +109,7 @@ typedef struct
 
 typedef struct
 {
+    t_pn2_panner2 panner;
     t_adsr adsr_filter;
     fp_adsr_run adsr_run_func;
     t_adsr adsr_amp;
@@ -299,7 +301,7 @@ typedef struct st_sampler1 {
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
     char pad2[CACHE_LINE_SIZE];
-} t_sampler1 ;
+} t_sampler1;
 
 
 t_sampler1_poly_voice * g_sampler1_poly_init(SGFLT);

@@ -563,6 +563,7 @@ typedef struct {
     SGFLT * modulator_outputs[FM1_MODULATOR_COUNT];
 
     SGFLT amp;
+    t_pn2_panner2 panner;
     SGFLT main_vol_lin;
 
     int active_polyfx[FM1_MODULAR_POLYFX_COUNT];
@@ -583,7 +584,7 @@ typedef struct {
     SGFLT polyfx_mod_matrix_values[FM1_MODULAR_POLYFX_COUNT]
     [(FM1_CONTROLS_PER_MOD_EFFECT * FM1_MODULATOR_COUNT)];
 
-}t_fm1_poly_voice;
+} t_fm1_poly_voice;
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];

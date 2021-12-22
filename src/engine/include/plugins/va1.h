@@ -100,7 +100,8 @@ typedef struct {
     t_smoother_linear filter_smoother;
     t_smoother_linear pitchbend_smoother;
     t_smoother_linear lfo_smoother;
-    t_nosvf_filter aa_filter;
+    t_nosvf_filter aa_filterL;
+    t_nosvf_filter aa_filterR;
 
     t_smoother_linear pan_smoother;
     t_pn2_panner2 panner;
@@ -108,6 +109,7 @@ typedef struct {
 
 typedef struct {
     SGFLT amp;
+    t_pn2_panner2 panner;
     SGFLT note_f;
     int note;
     SGFLT osc1_linamp;
@@ -152,13 +154,14 @@ typedef struct {
 
     t_mds_multidist mdist;
     fp_multi_dist mdist_fp;
-}t_va1_poly_voice  ;
+} t_va1_poly_voice;
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
     int oversample;
     SGFLT os_recip;
-    PluginData *os_buffer;
+    PluginData *os_bufferL;
+    PluginData *os_bufferR;
     PluginData *output0;
     PluginData *output1;
     PluginData *tune;

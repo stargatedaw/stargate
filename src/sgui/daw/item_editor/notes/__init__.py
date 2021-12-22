@@ -57,11 +57,18 @@ class PianoRollEditorWidget:
             30,
         )
 
+        self.param_combobox = QComboBox()
+        self.param_combobox.setMinimumWidth(75)
+        self.param_combobox.addItems(['Velocity', 'Pan'])
+        self.param_combobox.currentIndexChanged.connect(self.param_changed)
+        self.controls_grid_layout.addWidget(QLabel(_("Parameter")), 0, 26)
+        self.controls_grid_layout.addWidget(self.param_combobox, 0, 27)
+
         self.edit_menu_button = QPushButton(_("Menu"))
         self.edit_menu_button.setFixedWidth(60)
         self.edit_menu = QMenu(self.widget)
         self.edit_menu_button.setMenu(self.edit_menu)
-        self.controls_grid_layout.addWidget(self.edit_menu_button, 0, 30)
+        self.controls_grid_layout.addWidget(self.edit_menu_button, 0, 0)
 
         self.edit_actions_menu = self.edit_menu.addMenu(_("Edit"))
 
@@ -155,7 +162,9 @@ class PianoRollEditorWidget:
         self.velocity_random_menu.triggered.connect(self.vel_rand_triggered)
 
         for f_i, f_type in zip(
-        range(len(self.random_types)), self.random_types):
+            range(len(self.random_types)),
+            self.random_types
+        ):
             f_action = self.velocity_random_menu.addAction(f_type)
             f_action.setActionGroup(self.vel_rand_action_group)
             f_action.setCheckable(True)
@@ -221,6 +230,10 @@ class PianoRollEditorWidget:
         self.vlayout.addLayout(self.controls_grid_layout)
         self.vlayout.addWidget(shared.PIANO_ROLL_EDITOR)
 
+    def param_changed(self, value):
+        _shared.PARAMETER = value
+        shared.PIANO_ROLL_EDITOR.draw_item()
+
     def set_midi_vzoom(self, a_val):
         shared.PIANO_ROLL_NOTE_HEIGHT = a_val
         shared.PIANO_ROLL_EDITOR.draw_item()
@@ -249,7 +262,10 @@ class PianoRollEditorWidget:
 
     def open_last(self):
         if shared.LAST_ITEM_NAME:
-            global_open_items(shared.LAST_ITEM_NAME, a_new_ref=shared.LAST_ITEM_REF)
+            global_open_items(
+                shared.LAST_ITEM_NAME,
+                a_new_ref=shared.LAST_ITEM_REF,
+            )
             shared.PIANO_ROLL_EDITOR.draw_item()
 
     def draw_last(self):

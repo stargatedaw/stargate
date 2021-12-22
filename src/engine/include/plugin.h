@@ -35,6 +35,7 @@ typedef struct {
     unsigned int tv_nsec;
     int channel;
     int note;
+    int pan;
     int velocity;
     int duration;
 
@@ -274,7 +275,8 @@ void v_ev_set_noteon(
     t_seq_event* a_event,
     int a_channel,
     int a_note,
-    int a_velocity
+    int a_velocity,
+    SGFLT pan
 );
 void v_ev_set_noteoff(
     t_seq_event* a_event,

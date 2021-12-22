@@ -183,17 +183,21 @@ void midiReceive(
              * status, channel+1, (status & 255)>>4, control, value);*/
             break;
         case MIDI_NOTE_ON:
-            if(value == 0)
-            {
+            if(value == 0){
                 v_ev_set_noteoff(
                     &self->midiEventBuffer[self->midiEventWriteIndex],
-                    channel, control, value);
-            }
-            else
-            {
+                    channel,
+                    control,
+                    value
+                );
+            } else {
                 v_ev_set_noteon(
                     &self->midiEventBuffer[self->midiEventWriteIndex],
-                    channel, control, value);
+                    channel,
+                    control,
+                    value,
+                    0.0
+                );
             }
             ++self->midiEventWriteIndex;
             /*log_info("MIDI NOTE_ON status %i (ch %i, opcode %i), ctrl %i, "

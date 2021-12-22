@@ -26,3 +26,9 @@ void v_pn2_set(t_pn2_panner2 * self, SGFLT a_pan, SGFLT a_law){
     }
 }
 
+void v_pn2_set_normalize(t_pn2_panner2 * self, SGFLT a_pan, SGFLT a_law){
+    SGFLT normalize = f_db_to_linear_fast(-a_law);
+    v_pn2_set(self, a_pan, a_law);
+    self->gainL *= normalize;
+    self->gainR *= normalize;
+}

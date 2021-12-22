@@ -23,8 +23,7 @@ void v_sampler1_slow_index(t_sampler1*);
 
 /*initialize all of the modules in an instance of poly_voice*/
 
-t_sampler1_poly_voice * g_sampler1_poly_init(SGFLT a_sr)
-{
+t_sampler1_poly_voice* g_sampler1_poly_init(SGFLT a_sr){
     t_sampler1_poly_voice * f_voice;
     hpalloc((void**)&f_voice, sizeof(t_sampler1_poly_voice));
 
@@ -36,6 +35,7 @@ t_sampler1_poly_voice * g_sampler1_poly_init(SGFLT a_sr)
     g_rmp_init(&f_voice->glide_env, a_sr);
     g_rmp_init(&f_voice->ramp_env, a_sr);
 
+    g_pn2_init(&f_voice->panner);
     //f_voice->real_pitch = 60.0f;
 
     f_voice->target_pitch = 66.0f;
@@ -144,7 +144,7 @@ void sampler1ConnectBuffer(PluginHandle instance, int a_index,
 }
 
 void v_sampler1_poly_note_off(
-    t_sampler1_poly_voice * a_voice,
+    t_sampler1_poly_voice* a_voice,
     int a_fast_release
 ){
     if(a_fast_release)
@@ -762,15 +762,10 @@ void run_sampler_interpolation_none(
         f_sample->audio_pool_items-> samples[ch][(f_read_head->whole_number)];
 }
 
-/* void add_sample_sg_sampler1(t_sampler1 *__restrict plugin_data,
- *                                                      int n) //voice number
-*/
-void add_sample_sg_sampler1(t_sampler1 * plugin_data, int n)
-{
+void add_sample_sg_sampler1(t_sampler1* plugin_data, int n){
     t_voc_single_voice * f_poly_voice = &plugin_data->voices->voices[n];
 
-    if((f_poly_voice->on) > (plugin_data->sampleNo))
-    {
+    if((f_poly_voice->on) > (plugin_data->sampleNo)){
         return;
     }
 
@@ -806,15 +801,14 @@ void add_sample_sg_sampler1(t_sampler1 * plugin_data, int n)
             + (f_voice->last_pitch) + ((f_voice->lfo1.output) *
             (*plugin_data->lfo_pitch + (*plugin_data->lfo_pitch_fine * 0.01f)));
 
-    if((f_poly_voice->off == plugin_data->sampleNo) &&
-        (f_voice->adsr_amp.stage < ADSR_STAGE_RELEASE))
-    {
-        if(f_poly_voice->n_state == note_state_killed)
-        {
+    if(
+        f_poly_voice->off == plugin_data->sampleNo
+        &&
+        f_voice->adsr_amp.stage < ADSR_STAGE_RELEASE
+    ){
+        if(f_poly_voice->n_state == note_state_killed){
             v_sampler1_poly_note_off(f_voice, 1);
-        }
-        else
-        {
+        } else {
             v_sampler1_poly_note_off(f_voice, 0);
         }
     }
@@ -827,14 +821,12 @@ void add_sample_sg_sampler1(t_sampler1 * plugin_data, int n)
     int i_ls;
 
     //Calculating and summing all of the interpolated samples for this note
-    for(i_ls = 0; i_ls < f_voice->sample_indexes_count; ++i_ls)
-    {
+    for(i_ls = 0; i_ls < f_voice->sample_indexes_count; ++i_ls){
         plugin_data->current_sample = f_voice->sample_indexes[i_ls];
         f_pfx_sample = &f_voice->samples[plugin_data->current_sample];
         f_sample = &plugin_data->samples[plugin_data->current_sample];
 
-        if(f_sample->ratio_function_ptr(plugin_data, n) == 1)
-        {
+        if(f_sample->ratio_function_ptr(plugin_data, n) == 1){
             continue;
         }
 
@@ -930,12 +922,12 @@ void add_sample_sg_sampler1(t_sampler1 * plugin_data, int n)
     plugin_data->mono_fx_buffers[
         (plugin_data->sample_mfx_groups_index[(plugin_data->current_sample)])][0] +=
             (f_voice->multifx_current_sample[0]) * (f_voice->adsr_amp.output) *
-            (plugin_data->amp);
+            (plugin_data->amp) * f_voice->panner.gainL;
     plugin_data->mono_fx_buffers[
         plugin_data->sample_mfx_groups_index[(plugin_data->current_sample)]][1]
             +=
             (f_voice->multifx_current_sample[1]) * (f_voice->adsr_amp.output) *
-            (plugin_data->amp);
+            (plugin_data->amp) * f_voice->panner.gainR;
 }
 
 void v_sampler1_slow_index(t_sampler1* plugin_data)
@@ -1004,22 +996,30 @@ void v_sampler1_process_midi_event(
     int f_min_note = (int)*plugin_data->min_note;
     int f_max_note = (int)*plugin_data->max_note;
 
-    if (a_event->type == EVENT_NOTEON)
-    {
+    if (a_event->type == EVENT_NOTEON){
         f_note = a_event->note;
 
-        if (a_event->velocity > 0)
-        {
-            if(a_event->note > f_max_note ||
-                a_event->note < f_min_note)
-            {
+        if (a_event->velocity > 0){
+            if(
+                a_event->note > f_max_note
+                ||
+                a_event->note < f_min_note
+            ){
                 return;
             }
             int f_voice_num = i_pick_voice(
-                plugin_data->voices, f_note,
-                plugin_data->sampleNo, a_event->tick);
+                plugin_data->voices,
+                f_note,
+                plugin_data->sampleNo,
+                a_event->tick
+            );
             f_voice = plugin_data->data[f_voice_num];
             f_voice->velocities = a_event->velocity;
+            v_pn2_set_normalize(
+                &f_voice->panner,
+                a_event->pan,
+                -3.0
+            );
 
             int f_adsr_main_lin = (int)(*plugin_data->adsr_lin_main);
             f_voice->adsr_run_func = FP_ADSR_RUN[f_adsr_main_lin];
@@ -1448,11 +1448,12 @@ void v_run_sg_sampler1(
                 (plugin_data->monofx_channel_index[i2])][1] = 0.0f;
         }
 
-        for(i2 = 0; i2 < SAMPLER1_POLYPHONY; ++i2)
-        {
-            if(((plugin_data->data[i2]->adsr_amp.stage) != ADSR_STAGE_OFF) &&
-                (plugin_data->data[i2]->sample_indexes_count > 0))
-            {
+        for(i2 = 0; i2 < SAMPLER1_POLYPHONY; ++i2){
+            if(
+                plugin_data->data[i2]->adsr_amp.stage != ADSR_STAGE_OFF
+                &&
+                plugin_data->data[i2]->sample_indexes_count > 0
+            ){
                 add_sample_sg_sampler1(plugin_data, i2);
             }
         }

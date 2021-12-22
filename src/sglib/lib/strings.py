@@ -110,10 +110,16 @@ Click 'Menu->Show Tooltips' in the transport to disable these tooltips
 
 Press 's' to choose the draw tool, click+drag to draw notes
 Press 'a' to choose the select tool, CTRL+click+drag to marquee select items
-CTRL+ALT+click+drag-up/down to adjust the velocity of selected notes
-CTRL+SHIFT+click+drag-up/down to create a velocity curve for the selected notes
 Press the Delete button on your keyboard to delete selected notes
 Click and drag the note end to change the length of selected notes
+
+Parameter Settings:
+The "Parameter" combobox  can currently be set to "Velocity" or "Pan".  These
+mouse modifiers will set the parameter:
+
+CTRL+ALT+click+drag-up/down to adjust the parameter value of selected notes
+CTRL+SHIFT+click+drag-up/down to create a parameter value curve for the
+  selected notes.
 """)
 
 

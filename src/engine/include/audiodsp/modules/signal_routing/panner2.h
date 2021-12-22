@@ -16,14 +16,15 @@ GNU General Public License for more details.
 
 #include "compiler.h"
 
-typedef struct
-{
+typedef struct {
     SGFLT gainL, gainR;
-}t_pn2_panner2;
+} t_pn2_panner2;
 
 
-void g_pn2_init(t_pn2_panner2 * self);
-void v_pn2_set(t_pn2_panner2 * self, SGFLT a_pan, SGFLT a_law);
+void g_pn2_init(t_pn2_panner2* self);
+void v_pn2_set(t_pn2_panner2* self, SGFLT a_pan, SGFLT a_law);
+// Normalize the volume at center to remain unchanged
+void v_pn2_set_normalize(t_pn2_panner2* self, SGFLT a_pan, SGFLT a_law);
 
 #endif /* PANNER2_H */
 

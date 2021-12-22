@@ -803,6 +803,11 @@ void v_fm1_process_midi_event(
 
             t_fm1_osc* f_pfx_osc = NULL;
             t_fm1_poly_voice* f_fm1_voice = &plugin_data->data[f_voice];
+            v_pn2_set_normalize(
+                &f_fm1_voice->panner,
+                a_event->pan,
+                -3.0
+            );
 
             resampler_linear_reset(&f_fm1_voice->resampler);
             int f_adsr_main_lin = (int)(*plugin_data->adsr_lin_main);
@@ -1139,48 +1144,56 @@ void v_fm1_process_midi_event(
 
             f_fm1_voice->perc_env_on = (int)(*plugin_data->perc_env_on);
 
-            if(f_fm1_voice->perc_env_on)
-            {
-                v_pnv_set(&f_fm1_voice->perc_env,
-                        (*plugin_data->perc_env_time1) * 0.001f,
-                        (*plugin_data->perc_env_pitch1),
-                        (*plugin_data->perc_env_time2) * 0.001f,
-                        (*plugin_data->perc_env_pitch2),
-                        f_fm1_voice->note_f);
+            if(f_fm1_voice->perc_env_on){
+                v_pnv_set(
+                    &f_fm1_voice->perc_env,
+                    (*plugin_data->perc_env_time1) * 0.001f,
+                    (*plugin_data->perc_env_pitch1),
+                    (*plugin_data->perc_env_time2) * 0.001f,
+                    (*plugin_data->perc_env_pitch2),
+                    f_fm1_voice->note_f
+                );
             }
         }
         /*0 velocity, the same as note-off*/
         else
         {
-            v_voc_note_off(plugin_data->voices,
+            v_voc_note_off(
+                plugin_data->voices,
                 a_event->note,
                 (plugin_data->sampleNo),
-                (a_event->tick));
+                (a_event->tick)
+            );
         }
-    }
-    else if (a_event->type == EVENT_NOTEOFF)
-    {
-        v_voc_note_off(plugin_data->voices,
-            a_event->note, (plugin_data->sampleNo),
-            (a_event->tick));
-    }
-    else if (a_event->type == EVENT_CONTROLLER)
-    {
+    } else if (a_event->type == EVENT_NOTEOFF){
+        v_voc_note_off(
+            plugin_data->voices,
+            a_event->note,
+            (plugin_data->sampleNo),
+            (a_event->tick)
+        );
+    } else if (a_event->type == EVENT_CONTROLLER){
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
             "v_fm1_process_midi_event: param %i out of range 1 to 128",
             a_event->param
         );
 
-        v_plugin_event_queue_add(&plugin_data->midi_queue,
-            EVENT_CONTROLLER, a_event->tick,
-            a_event->value, a_event->param);
-    }
-    else if (a_event->type == EVENT_PITCHBEND)
-    {
-        v_plugin_event_queue_add(&plugin_data->midi_queue,
-            EVENT_PITCHBEND, a_event->tick,
-            a_event->value * 0.00012207f, 0);
+        v_plugin_event_queue_add(
+            &plugin_data->midi_queue,
+            EVENT_CONTROLLER,
+            a_event->tick,
+            a_event->value,
+            a_event->param
+        );
+    } else if (a_event->type == EVENT_PITCHBEND){
+        v_plugin_event_queue_add(
+            &plugin_data->midi_queue,
+            EVENT_PITCHBEND,
+            a_event->tick,
+            a_event->value * 0.00012207f,
+            0
+        );
     }
 }
 
@@ -1531,15 +1544,17 @@ void v_run_fm1_voice(
     }
 
     if(a_voice->adsr_prefx){
-        out0[(i_voice)] += (a_voice->multifx_current_sample[0]) *
-            (a_voice->main_vol_lin);
-        out1[(i_voice)] += (a_voice->multifx_current_sample[1]) *
-            (a_voice->main_vol_lin);
+        out0[(i_voice)] += a_voice->multifx_current_sample[0] *
+            a_voice->main_vol_lin * a_voice->panner.gainL;
+        out1[(i_voice)] += a_voice->multifx_current_sample[1] *
+            a_voice->main_vol_lin * a_voice->panner.gainR;
     } else {
-        out0[(i_voice)] += (a_voice->multifx_current_sample[0]) *
-            (a_voice->adsr_main.output) * (a_voice->main_vol_lin);
-        out1[(i_voice)] += (a_voice->multifx_current_sample[1]) *
-            (a_voice->adsr_main.output) * (a_voice->main_vol_lin);
+        out0[(i_voice)] += a_voice->multifx_current_sample[0] *
+            a_voice->adsr_main.output * a_voice->main_vol_lin *
+            a_voice->panner.gainL;
+        out1[(i_voice)] += a_voice->multifx_current_sample[1] *
+            a_voice->adsr_main.output * a_voice->main_vol_lin *
+            a_voice->panner.gainR;
     }
 }
 
@@ -2006,6 +2021,7 @@ void g_fm1_poly_init(
 
     voice->noise_amp = 0.0f;
 
+    g_pn2_init(&voice->panner);
     g_rmp_init(&voice->glide_env, a_sr);
     g_rmp_init(&voice->ramp_env, a_sr);
 

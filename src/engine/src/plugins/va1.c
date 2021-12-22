@@ -23,7 +23,8 @@ void v_run_va1_voice(
     t_va1 *plugin_data,
     t_voc_single_voice * a_poly_voice,
     t_va1_poly_voice *a_voice,
-    PluginData *out,
+    SGFLT *outL,
+    SGFLT *outR,
     int a_i,
     int a_no_events
 );
@@ -262,7 +263,11 @@ NO_OPTIMIZATION PluginHandle g_va1_instantiate(
 
     plugin_data->fs = a_sr;
     hpalloc(
-        (void**)&plugin_data->os_buffer,
+        (void**)&plugin_data->os_bufferL,
+        sizeof(SGFLT) * 4096 * plugin_data->oversample
+    );
+    hpalloc(
+        (void**)&plugin_data->os_bufferR,
         sizeof(SGFLT) * 4096 * plugin_data->oversample
     );
 
@@ -331,13 +336,13 @@ void v_va1_process_midi_event(
     int f_min_note = (int)*plugin_data->min_note;
     int f_max_note = (int)*plugin_data->max_note;
 
-    if (a_event->type == EVENT_NOTEON)
-    {
-        if (a_event->velocity > 0)
-        {
-            if(a_event->note > f_max_note ||
-                a_event->note < f_min_note)
-            {
+    if (a_event->type == EVENT_NOTEON){
+        if (a_event->velocity > 0){
+            if(
+                a_event->note > f_max_note
+                ||
+                a_event->note < f_min_note
+            ){
                 return;
             }
             int f_voice_num = i_pick_voice(
@@ -348,6 +353,11 @@ void v_va1_process_midi_event(
             );
 
             t_va1_poly_voice* f_voice = &plugin_data->data[f_voice_num];
+            v_pn2_set_normalize(
+                &f_voice->panner,
+                a_event->pan,
+                -3.0
+            );
 
             int f_adsr_main_lin = (int)(*plugin_data->adsr_lin_main);
             f_voice->adsr_run_func = FP_ADSR_RUN[f_adsr_main_lin];
@@ -599,7 +609,12 @@ void v_run_va1(
     t_plugin_event_queue_item * f_midi_item;
 
     memset(
-        plugin_data->os_buffer,
+        plugin_data->os_bufferL,
+        0,
+        sizeof(SGFLT) * sample_count * plugin_data->oversample
+    );
+    memset(
+        plugin_data->os_bufferR,
         0,
         sizeof(SGFLT) * sample_count * plugin_data->oversample
     );
@@ -655,7 +670,8 @@ void v_run_va1(
                         plugin_data,
                         &plugin_data->voices.voices[f_i2],
                         &plugin_data->data[f_i2],
-                        plugin_data->os_buffer,
+                        plugin_data->os_bufferL,
+                        plugin_data->os_bufferR,
                         f_i,
                         f_i3
                     );
@@ -668,19 +684,23 @@ void v_run_va1(
         ++plugin_data->sampleNo;
     }
 
-    SGFLT f_avg;
-    SGFLT *f_os_buffer = plugin_data->os_buffer;
+    SGFLT f_avgL, f_avgR;
     SGFLT *f_output0 = plugin_data->output0;
     SGFLT *f_output1 = plugin_data->output1;
     const int os_count = plugin_data->oversample;
     const SGFLT os_recip = plugin_data->os_recip;
 
     for(f_i = f_i2 = 0; f_i < sample_count; ++f_i){
-        f_avg = 0.0f;
+        f_avgL = 0.0f;
+        f_avgR = 0.0f;
         for(f_i3 = 0; f_i3 < os_count; ++f_i3){
-            f_avg += v_nosvf_run_6_pole_lp(
-                &plugin_data->mono_modules.aa_filter,
-                f_os_buffer[f_i2 + f_i3]
+            f_avgL += v_nosvf_run_6_pole_lp(
+                &plugin_data->mono_modules.aa_filterL,
+                plugin_data->os_bufferL[f_i2 + f_i3]
+            );
+            f_avgR += v_nosvf_run_6_pole_lp(
+                &plugin_data->mono_modules.aa_filterR,
+                plugin_data->os_bufferR[f_i2 + f_i3]
             );
         }
 
@@ -695,9 +715,10 @@ void v_run_va1(
             -3.0
         );
 
-        f_avg = f_avg * os_recip * 1.412429;
-        f_output0[f_i] += f_avg * plugin_data->mono_modules.panner.gainL;
-        f_output1[f_i] += f_avg * plugin_data->mono_modules.panner.gainR;
+        f_avgL = f_avgL * os_recip * 1.412429;
+        f_avgR = f_avgR * os_recip * 1.412429;
+        f_output0[f_i] += f_avgL * plugin_data->mono_modules.panner.gainL;
+        f_output1[f_i] += f_avgR * plugin_data->mono_modules.panner.gainR;
         f_i2 += os_count;
     }
 }
@@ -706,7 +727,8 @@ void v_run_va1_voice(
     t_va1 *plugin_data,
     t_voc_single_voice * a_poly_voice,
     t_va1_poly_voice *a_voice,
-    PluginData *out,
+    SGFLT *outL,
+    SGFLT *outR,
     int a_i,
     int a_no_events
 ){
@@ -850,7 +872,10 @@ void v_run_va1_voice(
         current_sample *= a_voice->adsr_amp.output;
     }
 
-    out[(a_i * plugin_data->oversample) + a_no_events] += current_sample;
+    outL[(a_i * plugin_data->oversample) + a_no_events] +=
+        current_sample * a_voice->panner.gainL;
+    outR[(a_i * plugin_data->oversample) + a_no_events] +=
+        current_sample * a_voice->panner.gainR;
 }
 
 PluginDescriptor *va1_plugin_descriptor(){
@@ -951,6 +976,7 @@ void g_va1_poly_init(
 
     g_adsr_init(&f_voice->adsr_amp, a_sr);
     g_adsr_init(&f_voice->adsr_filter, a_sr);
+    g_pn2_init(&f_voice->panner);
 
     g_white_noise_init(&f_voice->white_noise1, a_sr);
     f_voice->noise_amp = 0;
@@ -1004,10 +1030,16 @@ void v_va1_mono_init(t_va1_mono_modules* a_mono, SGFLT a_sr){
     a_mono->pan_smoother.last_value = 0.0f;
     g_sml_init(&a_mono->pitchbend_smoother, a_sr, 1.0f, -1.0f, 0.1f);
     g_pn2_init(&a_mono->panner);
-    g_nosvf_init(&a_mono->aa_filter, a_sr);
+    g_nosvf_init(&a_mono->aa_filterL, a_sr);
+    g_nosvf_init(&a_mono->aa_filterR, a_sr);
 
-    v_nosvf_set_cutoff_base(&a_mono->aa_filter, 120.0f);
-    v_nosvf_add_cutoff_mod(&a_mono->aa_filter, 0.0f);
-    v_nosvf_set_res(&a_mono->aa_filter, -6.0f);
-    v_nosvf_set_cutoff(&a_mono->aa_filter);
+    v_nosvf_set_cutoff_base(&a_mono->aa_filterL, 120.0f);
+    v_nosvf_add_cutoff_mod(&a_mono->aa_filterL, 0.0f);
+    v_nosvf_set_res(&a_mono->aa_filterL, -6.0f);
+    v_nosvf_set_cutoff(&a_mono->aa_filterL);
+
+    v_nosvf_set_cutoff_base(&a_mono->aa_filterR, 120.0f);
+    v_nosvf_add_cutoff_mod(&a_mono->aa_filterR, 0.0f);
+    v_nosvf_set_res(&a_mono->aa_filterR, -6.0f);
+    v_nosvf_set_cutoff(&a_mono->aa_filterR);
 }

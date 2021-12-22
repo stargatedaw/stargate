@@ -4,16 +4,22 @@ from sglib.lib.util import *
 
 
 class abstract_midi_event:
-    """ Allows inheriting classes to be sorted by .start variable
-    , which is left to the iheriter's to implement"""
     def __lt__(self, other):
         return self.start < other.start
 
 class note(abstract_midi_event):
-    def __init__(self, a_start, a_length, a_note_number, a_velocity):
+    def __init__(
+        self,
+        a_start,
+        a_length,
+        a_note_number,
+        a_velocity,
+        pan=0.,
+    ):
         self.start = round(float(a_start), 6)
         self.length = round(float(a_length), 6)
         self.velocity = int(a_velocity)
+        self.pan = round(float(pan), 2)
         self.note_num = int(a_note_number)
         self.is_selected = False
         self.set_end()
@@ -39,6 +45,9 @@ class note(abstract_midi_event):
 
     def set_end(self):
         self.end = round(self.length + self.start, 6)
+
+    def set_pan(self, pan):
+        self.pan = round(float(pan), 2)
 
     def overlaps(self, other):
         if self.note_num == other.note_num:
@@ -74,6 +83,7 @@ class note(abstract_midi_event):
                 round(self.length, 6),
                 self.note_num,
                 self.velocity,
+                self.pan,
             )
         )
 

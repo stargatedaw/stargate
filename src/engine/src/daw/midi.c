@@ -468,7 +468,8 @@ void v_daw_process_midi(
                         f_buff_ev,
                         0,
                         f_event->note,
-                        f_event->velocity
+                        f_event->velocity,
+                        f_event->pan
                     );
 
                     f_buff_ev->tick = f_note_sample_offset;
