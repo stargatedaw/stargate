@@ -9,8 +9,8 @@ from jinja2 import Template
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '-i', 
-        '--install', 
+        '-i',
+        '--install',
         action='store_true',
         dest='install',
         help='Install the package after building',
@@ -73,7 +73,7 @@ build() {
   if [ "${CARCH?}" -eq "x86_64" ]; then
     make distro
   else
-    make distro PLAT_FLAGS="-march=native" 
+    make distro PLAT_FLAGS="-march=native"
   fi
 }
 
@@ -95,6 +95,9 @@ orig_wd = os.path.abspath(
 )
 
 os.chdir(orig_wd)
+# Delete folders that the Arch package utils create, which cause the size of
+# the tar files to grow
+os.system('rm -rf src/stargate-[0-9][0-9].*')
 
 with open("src/meta.json") as f:
     j = json.load(f)
@@ -103,11 +106,11 @@ with open("src/meta.json") as f:
 
 t = Template(PKGBUILD)
 output = t.render(
-	name=MAJOR_VERSION,
-	version=MINOR_VERSION,
+    name=MAJOR_VERSION,
+    version=MINOR_VERSION,
 )
 with open('PKGBUILD', 'w') as f:
-	f.write(output)
+    f.write(output)
 
 assert not os.system('scripts/src.sh')
 assert not os.system('makepkg -g >>PKGBUILD')
