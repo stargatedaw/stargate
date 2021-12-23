@@ -168,6 +168,7 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
             QtCore.Qt.KeyboardModifier.AltModifier
         ):
             if not self.isSelected():
+                shared.PIANO_ROLL_EDITOR.scene.clearSelection()
                 self.setSelected(True)
             self.is_velocity_dragging = True
         elif a_event.modifiers() == (
@@ -176,6 +177,7 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
             QtCore.Qt.KeyboardModifier.ShiftModifier
         ):
             if not self.isSelected():
+                shared.PIANO_ROLL_EDITOR.scene.clearSelection()
                 self.setSelected(True)
             f_list = [
                 x.note_item.start
