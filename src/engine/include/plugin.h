@@ -35,7 +35,7 @@ typedef struct {
     unsigned int tv_nsec;
     int channel;
     int note;
-    int pan;
+    SGFLT pan;
     int velocity;
     int duration;
 
