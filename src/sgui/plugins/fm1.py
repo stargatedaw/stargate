@@ -440,6 +440,12 @@ FM1_MAIN_PITCH = 371
 
 FM1_ADSR_LIN_MAIN = 372
 FM1_MAIN_PAN = 373
+FM1_OSC1_PAN = 374
+FM1_OSC2_PAN = 375
+FM1_OSC3_PAN = 376
+FM1_OSC4_PAN = 377
+FM1_OSC5_PAN = 378
+FM1_OSC6_PAN = 379
 
 OSC_TYPE_LOOKUP = {
     "Off": 0,
@@ -1083,6 +1089,25 @@ class fm1_plugin_ui(AbstractPluginUI):
                 knob_kwargs=knob_kwargs,
             )
             f_osc1_uni_spread.add_to_grid_layout(f_osc1.grid_layout, 5)
+
+            osc_pan = knob_control(
+                f_knob_size,
+                _("Pan"),
+                getattr(
+                    sys.modules[__name__],
+                    f"FM1_OSC{f_i}_PAN",
+                ),
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                -100,
+                100,
+                0,
+                KC_DECIMAL,
+                self.port_dict,
+                self.preset_manager,
+                knob_kwargs=knob_kwargs,
+            )
+            osc_pan.add_to_grid_layout(f_osc1.grid_layout, 6)
 
             f_hlayout1.addWidget(f_osc1.group_box)
 

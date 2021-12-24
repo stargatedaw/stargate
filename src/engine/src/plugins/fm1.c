@@ -63,11 +63,11 @@ struct FM1OscArg {
     t_fm1_poly_voice* a_voice;
 };
 
-SGFLT fm1_run_voice_osc(void* arg){
+struct ResamplerStereoPair fm1_run_voice_osc(void* arg){
     struct FM1OscArg* _arg = (struct FM1OscArg*)arg;
     t_fm1* plugin_data = _arg->plugin_data;
     t_fm1_poly_voice* a_voice = _arg->a_voice;
-    SGFLT result = 0.0;
+    struct ResamplerStereoPair result = {};
     int f_osc_num;
     SGFLT f_macro_amp;
     SGFLT f_osc_amp;
@@ -145,10 +145,16 @@ SGFLT fm1_run_voice_osc(void* arg){
             if(f_osc->osc_audible || f_macro_amp >= 1.0f){
                 f_osc_amp = f_osc->osc_linamp * f_db_to_linear(f_macro_amp);
 
-                if(f_osc_amp > 1.0f){  //clip at 0dB
-                    result += f_osc->fm_last;
+                if(f_osc_amp >= 1.0f){  //clip at 0dB
+                    result.left += f_osc->fm_last *
+                        a_voice->osc_panners[f_osc_num].gainL;
+                    result.right += f_osc->fm_last *
+                        a_voice->osc_panners[f_osc_num].gainR;
                 } else {
-                    result += f_osc->fm_last * f_osc_amp;
+                    result.left += f_osc->fm_last * f_osc_amp *
+                        a_voice->osc_panners[f_osc_num].gainL;
+                    result.right += f_osc->fm_last * f_osc_amp *
+                        a_voice->osc_panners[f_osc_num].gainR;
                 }
             }
         }
@@ -700,6 +706,12 @@ void v_fm1_connect_port(
 
         case FM1_ADSR_LIN_MAIN: plugin->adsr_lin_main = data; break;
         case FM1_MAIN_PAN: plugin->pan = data; break;
+        case FM1_OSC1_PAN: plugin->osc_pan[0] = data; break;
+        case FM1_OSC2_PAN: plugin->osc_pan[1] = data; break;
+        case FM1_OSC3_PAN: plugin->osc_pan[2] = data; break;
+        case FM1_OSC4_PAN: plugin->osc_pan[3] = data; break;
+        case FM1_OSC5_PAN: plugin->osc_pan[4] = data; break;
+        case FM1_OSC6_PAN: plugin->osc_pan[5] = data; break;
     }
 }
 
@@ -803,6 +815,7 @@ void v_fm1_process_midi_event(
 
             t_fm1_osc* f_pfx_osc = NULL;
             t_fm1_poly_voice* f_fm1_voice = &plugin_data->data[f_voice];
+            // Per-note pan
             v_pn2_set_normalize(
                 &f_fm1_voice->panner,
                 a_event->pan,
@@ -882,6 +895,12 @@ void v_fm1_process_midi_event(
 
                 f_pfx_osc->osc_uni_spread =
                     (*plugin_data->osc_uni_spread[f_i]) * 0.01f;
+
+                v_pn2_set_normalize(
+                    &f_fm1_voice->osc_panners[f_i],
+                    *plugin_data->osc_pan[f_i] * 0.01,
+                    -3.0
+                );
 
                 int f_i2;
                 for(f_i2 = 0; f_i2 < FM1_OSC_COUNT; ++f_i2){
@@ -1450,35 +1469,40 @@ void v_run_fm1_voice(
         .a_voice = a_voice,
     };
 
-    //a_voice->current_sample = fm1_run_voice_osc(&osc_arg);
-    a_voice->current_sample = resampler_linear_run_mono(
+    a_voice->current_sample = resampler_linear_run(
         &a_voice->resampler,
         &osc_arg
     );
 
+    SGFLT noise_sample;
+
     if(a_voice->noise_prefx){
         if(a_voice->adsr_noise_on){
             v_adsr_run(&a_voice->adsr_noise);
-            a_voice->current_sample +=
-                a_voice->noise_func_ptr(&a_voice->white_noise1) *
-                (a_voice->noise_linamp) * a_voice->adsr_noise.output;
+            noise_sample = a_voice->noise_func_ptr(
+                &a_voice->white_noise1
+            ) * a_voice->noise_linamp * a_voice->adsr_noise.output;
+            a_voice->current_sample.left += noise_sample;
+            a_voice->current_sample.right += noise_sample;
         } else {
-            a_voice->current_sample +=
-                (a_voice->noise_func_ptr(&a_voice->white_noise1) *
-                (a_voice->noise_linamp));
+            noise_sample = a_voice->noise_func_ptr(
+                &a_voice->white_noise1
+            ) * a_voice->noise_linamp;
+            a_voice->current_sample.left += noise_sample;
+            a_voice->current_sample.right += noise_sample;
         }
     }
 
-    prefetch(&a_voice->multifx_current_sample, 1);
-
     if(a_voice->adsr_prefx){
-        a_voice->current_sample *= (a_voice->adsr_main.output);
+        a_voice->current_sample.left *= a_voice->adsr_main.output;
+        a_voice->current_sample.right *= a_voice->adsr_main.output;
     }
 
-    a_voice->current_sample = (a_voice->current_sample) * (a_voice->amp);
+    a_voice->current_sample.left *= a_voice->amp;
+    a_voice->current_sample.right *= a_voice->amp;
 
-    a_voice->multifx_current_sample[0] = (a_voice->current_sample);
-    a_voice->multifx_current_sample[1] = (a_voice->current_sample);
+    a_voice->multifx_current_sample[0] = a_voice->current_sample.left;
+    a_voice->multifx_current_sample[1] = a_voice->current_sample.right;
 
     t_fm1_pfx_group * f_pfx_group;
     int i_dst, f_dst;
@@ -1928,6 +1952,9 @@ PluginDescriptor *fm1_plugin_descriptor(){
         set_pyfx_port(f_result, f_port,  0.0f, -100.0f, 100.0f);
         ++f_port;
     }
+    for(f_port = FM1_OSC1_PAN; f_port <= FM1_OSC6_PAN; ++f_port){
+        set_pyfx_port(f_result, f_port,  0.0f, -100.0f, 100.0f);
+    }
 
     f_result->cleanup = v_cleanup_fm1;
     f_result->connect_port = v_fm1_connect_port;
@@ -1973,6 +2000,7 @@ void g_fm1_poly_init(
         f_osc->adsr_amp_on = 0;
         f_osc->osc_linamp = 1.0f;
         f_osc->osc_audible = 1;
+        g_pn2_init(&voice->osc_panners[f_i]);
 
         for(f_i2 = 0; f_i2 < FM1_OSC_COUNT; ++f_i2){
             f_osc->fm_osc_values[f_i2] = 0.0f;
@@ -2000,7 +2028,7 @@ void g_fm1_poly_init(
     voice->last_pitch = 66.0f;
     voice->base_pitch = 66.0f;
 
-    voice->current_sample = 0.0f;
+    resampler_stereo_pair_init(&voice->current_sample);
 
     voice->amp = 1.0f;
     voice->note_f = voice_num;

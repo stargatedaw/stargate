@@ -5,8 +5,12 @@
 #include "compiler.h"
 #include "./test_resampler_linear.h"
 
-SGFLT fake_generator(void* arg){
-    return *(SGFLT*)arg;
+struct ResamplerStereoPair fake_generator(void* arg){
+    SGFLT value = *(SGFLT*)arg;
+    return (struct ResamplerStereoPair){
+        .left  = value,
+        .right = value,
+    };
 }
 
 void TestResamplerLinearSameValue(){
@@ -20,7 +24,7 @@ void TestResamplerLinearSameValue(){
     };
     struct ResamplerLinear self;
     SGFLT value = 1.0;
-    SGFLT ret;
+    struct ResamplerStereoPair ret;
     int i, j;
 
     for(i = 0; i < 2; ++i){
@@ -32,8 +36,9 @@ void TestResamplerLinearSameValue(){
             fake_generator
         );
         for(j = 0; j < 10; ++j){
-            ret = resampler_linear_run_mono(&self, &value);
-            assert(ret == value);
+            ret = resampler_linear_run(&self, &value);
+            assert(ret.left == value);
+            assert(ret.right == value);
         }
         resampler_linear_reset(&self);
     }

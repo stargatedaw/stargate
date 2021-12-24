@@ -3,11 +3,12 @@
 
 #include "compiler.h"
 
-struct ResamplerGenerateRet {
-    SGFLT samples[2];
+struct ResamplerStereoPair {
+    SGFLT left;
+    SGFLT right;
 };
 
-typedef SGFLT (*resample_generate)(void*);
+typedef struct ResamplerStereoPair(*resample_generate)(void*);
 
 // Generates audio from a source function at a different (or same) sample
 // rate as Stargate, and resamples the audio using linear interpolation
@@ -20,8 +21,8 @@ struct ResamplerLinear {
     // the internal clock
     double pos;
     double inc;
-    SGFLT previous;
-    SGFLT next;
+    struct ResamplerStereoPair previous;
+    struct ResamplerStereoPair next;
     resample_generate func;
 };
 
@@ -37,7 +38,7 @@ void resampler_linear_init(
     resample_generate func
 );
 
-SGFLT resampler_linear_run_mono(
+struct ResamplerStereoPair resampler_linear_run(
     struct ResamplerLinear* self,
     void* func_arg
 );
@@ -45,6 +46,10 @@ SGFLT resampler_linear_run_mono(
 // Reset the resampler at note-on
 void resampler_linear_reset(
     struct ResamplerLinear* self
+);
+
+void resampler_stereo_pair_init(
+    struct ResamplerStereoPair* self
 );
 
 #endif

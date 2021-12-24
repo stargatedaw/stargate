@@ -469,10 +469,16 @@ GNU General Public License for more details.
 #define FM1_MAIN_PITCH 371
 #define FM1_ADSR_LIN_MAIN 372
 #define FM1_MAIN_PAN 373
+#define FM1_OSC1_PAN 374
+#define FM1_OSC2_PAN 375
+#define FM1_OSC3_PAN 376
+#define FM1_OSC4_PAN 377
+#define FM1_OSC5_PAN 378
+#define FM1_OSC6_PAN 379
 
 /* must be 1 + highest value above
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
-#define FM1_COUNT 374
+#define FM1_COUNT 380
 
 #define FM1_POLYPHONY 24
 #define FM1_POLYPHONY_THRESH 12
@@ -514,7 +520,7 @@ typedef struct {
     t_adsr adsr_main;
     /*This corresponds to the current sample being processed on this voice.
      * += this to the output buffer when finished.*/
-    SGFLT current_sample;
+    struct ResamplerStereoPair current_sample;
     t_ramp_env glide_env;
     t_adsr adsr_amp;
     t_adsr adsr_filter;
@@ -543,6 +549,7 @@ typedef struct {
     t_pnv_perc_env perc_env;
 
     t_fm1_osc osc[FM1_OSC_COUNT];
+    t_pn2_panner2 osc_panners[FM1_OSC_COUNT];
 
     SGFLT noise_amp;
     SGFLT noise_linamp;
@@ -611,6 +618,9 @@ typedef struct {
     PluginData *osc_tune[FM1_OSC_COUNT];
     PluginData *osc_vol[FM1_OSC_COUNT];
     PluginData *osc_type[FM1_OSC_COUNT];
+    PluginData *osc_uni_voice[FM1_OSC_COUNT];
+    PluginData *osc_uni_spread[FM1_OSC_COUNT];
+    PluginData *osc_pan[FM1_OSC_COUNT];
 
     PluginData *osc_fm[FM1_OSC_COUNT][FM1_OSC_COUNT];
 
@@ -642,9 +652,6 @@ typedef struct {
     PluginData *noise_decay;
     PluginData *noise_sustain;
     PluginData *noise_release;
-
-    PluginData *osc_uni_voice[FM1_OSC_COUNT];
-    PluginData *osc_uni_spread[FM1_OSC_COUNT];
 
     PluginData *main_glide;
     PluginData *main_pb_amt;

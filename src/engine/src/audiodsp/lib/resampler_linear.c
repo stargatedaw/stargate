@@ -11,16 +11,16 @@ void resampler_linear_init(
     self->same = internal_rate == target_rate;
     self->first = 1;
     self->pos = 0.0;
-    self->previous = 0.0;
-    self->next = 0.0;
+    resampler_stereo_pair_init(&self->previous);
+    resampler_stereo_pair_init(&self->next);
     self->inc = (double)internal_rate / (double)target_rate;
 }
 
-SGFLT resampler_linear_run_mono(
+struct ResamplerStereoPair resampler_linear_run(
     struct ResamplerLinear* self,
     void* func_arg
 ){
-    SGFLT result;
+    struct ResamplerStereoPair result;
 
     if(self->same){
         return self->func(func_arg);
@@ -30,9 +30,14 @@ SGFLT resampler_linear_run_mono(
         self->next = self->func(func_arg);
         self->first = 0;
     }
-    result = f_linear_interpolate(
-        self->previous,
-        self->next,
+    result.left = f_linear_interpolate(
+        self->previous.left,
+        self->next.left,
+        self->pos
+    );
+    result.right = f_linear_interpolate(
+        self->previous.right,
+        self->next.right,
         self->pos
     );
     self->pos += self->inc;
@@ -49,4 +54,11 @@ void resampler_linear_reset(
 ){
     self->first = 1;
     self->pos = 0.0;
+}
+
+void resampler_stereo_pair_init(
+    struct ResamplerStereoPair* self
+){
+    self->left = 0.0;
+    self->right = 0.0;
 }
