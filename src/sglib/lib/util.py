@@ -432,22 +432,26 @@ def rubberband(
     return f_proc
 
 def sbsms(
-    a_src_path,
-    a_dest_path,
-    a_timestretch_amt,
-    a_pitch_shift,
+    src_path,
+    dest_path,
+    timestretch_start,
+    pitch_start,
+    timestretch_end=None,
+    pitch_end=None,
 ):
-    f_cmd = [
+    cmd = [
         SBSMS,
-        a_src_path,
-        a_dest_path,
-        str(1.0 / a_timestretch_amt),
-        str(1.0 / a_timestretch_amt),
-        str(a_pitch_shift), str(a_pitch_shift)
+        src_path,
+        dest_path,
+        str(1.0 / timestretch_start),
+        str(1.0 /timestretch_end) if timestretch_end is not None \
+            else str(1.0 / timestretch_start),
+        str(pitch_start),
+        str(pitch_end) if pitch_end is not None else str(pitch_start),
     ]
-    LOG.info("Running {}".format(" ".join(f_cmd)))
-    f_proc = subprocess.Popen(f_cmd, encoding='UTF-8')
-    return f_proc
+    LOG.info("Running {}".format(" ".join(cmd)))
+    proc = subprocess.Popen(cmd, encoding='UTF-8')
+    return proc
 
 def paulstretch(
     a_src_path,

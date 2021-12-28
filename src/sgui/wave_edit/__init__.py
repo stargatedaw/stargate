@@ -887,12 +887,6 @@ class WaveEditorWidget:
         LOG.info(f_base_file_name)
 
         def on_ok(a_val=None):
-            f_stretch = f_timestretch_amt.value()
-            f_crispness = f_crispness_combobox.currentIndex()
-            f_preserve_formants = f_preserve_formants_checkbox.isChecked()
-            f_algo = str(f_algo_combobox.currentText())
-            f_pitch = f_pitch_shift.value()
-
             f_file, f_filter = QFileDialog.getSaveFileName(
                 MAIN_WINDOW,
                 "Save file as...",
@@ -905,11 +899,18 @@ class WaveEditorWidget:
             f_file = str(f_file)
             if f_file == "":
                 return
+
+            f_algo = str(f_algo_combobox.currentText())
+            f_stretch = f_timestretch_amt.value()
+            f_pitch = f_pitch_shift.value()
+
             if not f_file.endswith(".wav"):
                 f_file += ".wav"
             self.last_offline_dir = os.path.dirname(f_file)
 
             if f_algo == "Rubberband":
+                f_crispness = f_crispness_combobox.currentIndex()
+                f_preserve_formants = f_preserve_formants_checkbox.isChecked()
                 f_proc = util.rubberband(
                     f_path,
                     f_file,
@@ -919,11 +920,17 @@ class WaveEditorWidget:
                     f_preserve_formants,
                 )
             elif f_algo == "SBSMS":
+                stretch_end = timestretch_end.value() \
+                    if timestretch_end_checkbox.isChecked() else None
+                pitch_end = pitch_shift_end.value() if \
+                    pitch_shift_end_checkbox.isChecked() else None
                 f_proc = util.sbsms(
                     f_path,
                     f_file,
                     f_stretch,
                     f_pitch,
+                    stretch_end,
+                    pitch_end,
                 )
             elif f_algo == "Paulstretch":
                 f_proc = util.paulstretch(
@@ -941,21 +948,24 @@ class WaveEditorWidget:
         def on_cancel(a_val=None):
             f_window.close()
 
-        def algo_changed(index):
+        def algo_changed(index=None):
             algo = str(f_algo_combobox.currentText())
             if algo == "Rubberband":
                 f_timestretch_amt.setRange(0.2, 4.0)
                 pitch_shift_label.show()
                 f_pitch_shift.show()
-                f_groupbox.show()
+                rubberband_groupbox.show()
+                sbsms_groupbox.hide()
             elif algo == "SBSMS":
                 f_timestretch_amt.setRange(0.2, 4.0)
                 pitch_shift_label.show()
                 f_pitch_shift.show()
-                f_groupbox.hide()
+                rubberband_groupbox.hide()
+                sbsms_groupbox.show()
             elif algo == "Paulstretch":
                 f_timestretch_amt.setRange(0.2, 30.0)
-                f_groupbox.hide()
+                rubberband_groupbox.hide()
+                sbsms_groupbox.hide()
                 f_pitch_shift.hide()
                 pitch_shift_label.hide()
 
@@ -988,8 +998,41 @@ class WaveEditorWidget:
 
         f_time_gridlayout.addWidget(f_algo_combobox, 0, 1)
 
-        f_groupbox = QGroupBox(_("Rubberband Options"))
-        f_layout.addWidget(f_groupbox)
+        rubberband_groupbox = QGroupBox(_("Rubberband Options"))
+        f_layout.addWidget(rubberband_groupbox)
+        rubberband_groupbox_layout = QGridLayout(rubberband_groupbox)
+        rubberband_groupbox_layout.addWidget(QLabel(_("Crispness")), 12, 0)
+        f_crispness_combobox = QComboBox()
+        f_crispness_combobox.addItems(CRISPNESS_SETTINGS)
+        f_crispness_combobox.setCurrentIndex(5)
+        rubberband_groupbox_layout.addWidget(f_crispness_combobox, 12, 1)
+        f_preserve_formants_checkbox = QCheckBox("Preserve formants?")
+        f_preserve_formants_checkbox.setChecked(True)
+        rubberband_groupbox_layout.addWidget(
+            f_preserve_formants_checkbox,
+            18,
+            1,
+        )
+
+        sbsms_groupbox = QGroupBox(_("SBSMS Options"))
+        f_layout.addWidget(sbsms_groupbox)
+        sbsms_groupbox_layout = QGridLayout(sbsms_groupbox)
+        pitch_shift_end_checkbox = QCheckBox(_("Pitch Shift End"))
+        sbsms_groupbox_layout.addWidget(pitch_shift_end_checkbox, 10, 0)
+        pitch_shift_end = QDoubleSpinBox()
+        sbsms_groupbox_layout.addWidget(pitch_shift_end, 10, 1)
+        pitch_shift_end.setRange(-36, 36)
+        pitch_shift_end.setValue(0.0)
+        pitch_shift_end.setDecimals(6)
+        timestretch_end_checkbox = QCheckBox(_("Time Stretch End"))
+        sbsms_groupbox_layout.addWidget(timestretch_end_checkbox, 20, 0)
+        timestretch_end = QDoubleSpinBox()
+        sbsms_groupbox_layout.addWidget(timestretch_end, 20, 1)
+        timestretch_end.setRange(0.2, 4.0)
+        timestretch_end.setDecimals(6)
+        timestretch_end.setSingleStep(0.1)
+        timestretch_end.setValue(1.0)
+
         f_layout.addItem(
             QSpacerItem(
                 1,
@@ -998,16 +1041,6 @@ class WaveEditorWidget:
                 QSizePolicy.Policy.Expanding,
             ),
         )
-        f_groupbox_layout = QGridLayout(f_groupbox)
-        f_groupbox_layout.addWidget(QLabel(_("Crispness")), 12, 0)
-        f_crispness_combobox = QComboBox()
-        f_crispness_combobox.addItems(CRISPNESS_SETTINGS)
-        f_crispness_combobox.setCurrentIndex(5)
-        f_groupbox_layout.addWidget(f_crispness_combobox, 12, 1)
-        f_preserve_formants_checkbox = QCheckBox("Preserve formants?")
-        f_preserve_formants_checkbox.setChecked(True)
-        f_groupbox_layout.addWidget(f_preserve_formants_checkbox, 18, 1)
-
         algorithms = ["Rubberband"]
         if util.SBSMS:
             algorithms.append('SBSMS')
@@ -1016,6 +1049,7 @@ class WaveEditorWidget:
         f_algo_combobox.addItems(algorithms)
         f_algo_combobox.currentIndexChanged.connect(algo_changed)
         f_algo_combobox.setMinimumWidth(120)
+        algo_changed()
 
         f_hlayout2 = QHBoxLayout()
         f_layout.addLayout(f_hlayout2)
