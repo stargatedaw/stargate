@@ -226,7 +226,7 @@ typedef struct {
     int is_previewing;  //Set this to self->ab_mode on playback
     SGFLT preview_amp_lin;
     int preview_max_sample_count;
-    t_pyaudio_input * audio_inputs;
+    t_audio_input * audio_inputs;
     pthread_mutex_t audio_inputs_mutex;
     pthread_t audio_recording_thread;
     int audio_recording_quit_notifier ;

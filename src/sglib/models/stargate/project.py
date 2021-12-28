@@ -15,6 +15,7 @@ from sglib.models.project.abstract import AbstractProject
 from sglib.log import LOG
 import collections
 import datetime
+import glob
 import json
 import os
 import shutil
@@ -153,6 +154,11 @@ class SgProject(AbstractProject):
             with open(self.plugin_uid_file, "w", newline="\n") as f_handle:
                 f_handle.write(str(0))
             return 0
+
+    def clear_audio_tmp_folder(self):
+        pattern = os.path.join(self.audio_tmp_folder, '*')
+        for path in glob.glob(pattern):
+            os.remove(path)
 
     def create_backup(self, a_name=None):
         f_backup_name = a_name if a_name else \

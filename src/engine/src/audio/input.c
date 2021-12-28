@@ -5,11 +5,12 @@
 #include "stargate.h"
 #include "csv/2d.h"
 #include "files.h"
+#include "globals.h"
 #include "audio/input.h"
 
 
-void g_pyaudio_input_init(
-    t_pyaudio_input * f_result,
+void g_audio_input_init(
+    t_audio_input * f_result,
     SGFLT a_sr
 ){
     f_result->channels = 1;
@@ -42,7 +43,7 @@ void g_pyaudio_input_init(
 }
 
 void v_audio_input_record_set(
-    t_pyaudio_input * self,
+    t_audio_input * self,
     char * a_file_out
 ){
     if(self->sndfile){
@@ -64,6 +65,7 @@ void v_audio_input_record_set(
         }
 
         self->sndfile = sf_open(a_file_out, SFM_WRITE, &self->sf_info);
+        sg_assert_ptr(self->sndfile, "sf_open failed for %s", a_file_out);
     }
 }
 
@@ -77,7 +79,7 @@ void v_audio_input_run(
 ){
     int f_i2;
     SGFLT f_tmp_sample;
-    t_pyaudio_input * f_ai = &STARGATE->audio_inputs[f_index];
+    t_audio_input * f_ai = &STARGATE->audio_inputs[f_index];
 
     int f_output_mode = f_ai->output_mode;
 
@@ -190,7 +192,7 @@ void v_update_audio_inputs(char * a_project_folder){
     char f_inputs_file[2048];
     char f_tmp_file_name[2048];
 
-    t_pyaudio_input * f_ai;
+    t_audio_input * f_ai;
     sprintf(
         f_inputs_file,
         "%s%sinput.txt",
@@ -299,14 +301,14 @@ void v_update_audio_inputs(char * a_project_folder){
 }
 
 void * v_audio_recording_thread(void* a_arg){
-    t_pyaudio_input * f_ai;
+    t_audio_input * f_ai;
     int f_count;
     int f_i;
     int f_frames;
 
     sleep(3);
 
-    while(1){
+    while(!exiting){
         int f_did_something = 0;
 
         pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
@@ -361,12 +363,13 @@ void * v_audio_recording_thread(void* a_arg){
         }
     }
 
+    log_info("Audio recording thread exiting");
     return (void*)1;
 }
 
 void v_stop_record_audio(){
     int f_i, f_frames, f_count;
-    t_pyaudio_input * f_ai;
+    t_audio_input * f_ai;
     char f_file_name_old[2048];
     char f_file_name_new[2048];
 
@@ -413,11 +416,6 @@ void v_stop_record_audio(){
             );
 
             rename(f_file_name_old, f_file_name_new);
-
-            v_audio_input_record_set(
-                &STARGATE->audio_inputs[f_i],
-                f_file_name_old
-            );
         }
     }
 
@@ -428,7 +426,8 @@ void v_stop_record_audio(){
 
 void v_prepare_to_record_audio(){
     int f_i;
-    t_pyaudio_input * f_ai;
+    t_audio_input * f_ai;
+    char path[2048];
 
     pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
 
@@ -439,6 +438,18 @@ void v_prepare_to_record_audio(){
         f_ai->flush_last_buffer_pending = 0;
         f_ai->buffer_iterator[0] = 0;
         f_ai->buffer_iterator[1] = 0;
+        if(f_ai->rec){
+            sprintf(
+                path,
+                "%s%i",
+                STARGATE->audio_tmp_folder,
+                f_i
+            );
+            v_audio_input_record_set(
+                &STARGATE->audio_inputs[f_i],
+                path
+            );
+        }
     }
 
     pthread_mutex_unlock(&STARGATE->audio_inputs_mutex);

@@ -209,7 +209,10 @@ class TransportWidget(AbstractTransportWidget):
                 return
 
             f_sample_count = shared.CURRENT_SEQUENCE.get_sample_count(
-                self.rec_start, self.rec_end, util.SAMPLE_RATE)
+                self.rec_start,
+                self.rec_end,
+                util.SAMPLE_RATE,
+            )
 
             item_lib.save_recorded_items(
                 f_file_name,
@@ -234,6 +237,10 @@ class TransportWidget(AbstractTransportWidget):
                 )
             )
 
+        def cancel_handler():
+            constants.PROJECT.clear_audio_tmp_folder()
+            f_window.close()
+
         f_window = QDialog(shared.MAIN_WINDOW)
         f_window.setWindowTitle(_("Save Recorded Files"))
         f_window.setMinimumWidth(330)
@@ -248,13 +255,12 @@ class TransportWidget(AbstractTransportWidget):
         f_ok_button = QPushButton(_("Save"))
         f_ok_button.clicked.connect(ok_handler)
         f_cancel_button = QPushButton(_("Discard"))
-        f_cancel_button.clicked.connect(f_window.close)
+        f_cancel_button.clicked.connect(cancel_handler)
         f_ok_cancel_layout = QHBoxLayout()
         f_ok_cancel_layout.addWidget(f_ok_button)
         f_ok_cancel_layout.addWidget(f_cancel_button)
         f_layout.addLayout(f_ok_cancel_layout, 8, 2)
         f_window.exec()
-
 
     def on_rec(self):
         if self.loop_mode_checkbox.isChecked():

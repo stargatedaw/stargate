@@ -338,11 +338,11 @@ void g_stargate_get(
 
     hpalloc(
         (void**)&STARGATE->audio_inputs,
-        sizeof(t_pyaudio_input) * AUDIO_INPUT_TRACK_COUNT
+        sizeof(t_audio_input) * AUDIO_INPUT_TRACK_COUNT
     );
 
     for(f_i = 0; f_i < AUDIO_INPUT_TRACK_COUNT; ++f_i){
-        g_pyaudio_input_init(
+        g_audio_input_init(
             &STARGATE->audio_inputs[f_i],
             a_sr
         );
@@ -1181,7 +1181,7 @@ void v_sg_configure(const char* a_key, const char* a_value){
         a_value = str_split(a_value, buf, '|');
         SGFLT f_vol = atof(buf);
         SGFLT f_vol_linear = f_db_to_linear_fast(f_vol);
-        t_pyaudio_input * f_input = &STARGATE->audio_inputs[f_index];
+        t_audio_input * f_input = &STARGATE->audio_inputs[f_index];
         f_input->vol = f_vol;
         f_input->vol_linear = f_vol_linear;
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_KILL_ENGINE)){
