@@ -10,7 +10,8 @@ void v_daw_offline_render(
     char * a_file_out,
     int a_create_file,
     int a_stem,
-    int sequence_uid
+    int sequence_uid,
+    int print_progress
 ){
     SNDFILE * f_sndfile = NULL;
     int f_stem_count = self->routing_graph->track_pool_sorted_count;
@@ -81,18 +82,22 @@ void v_daw_offline_render(
 #if SG_OS == _OS_LINUX
     struct timespec f_start, f_finish;
     clock_gettime(CLOCK_REALTIME, &f_start);
-
-    int current_beat = (int)self->ts[0].ml_current_beat;
-    printf("Beat %i of %i", current_beat, (int)a_end_beat);
-    int last_beat = current_beat;
+    int current_beat, last_beat;
+    if(print_progress){
+        current_beat = (int)self->ts[0].ml_current_beat;
+        printf("Beat %i of %i", current_beat, (int)a_end_beat);
+        last_beat = current_beat;
+    }
 #endif
     while(self->ts[0].ml_current_beat < a_end_beat){
 #if SG_OS == _OS_LINUX
-        current_beat = (int)self->ts[0].ml_current_beat;
-        if(current_beat > last_beat){
-            last_beat = current_beat;
-            printf("\rBeat %i of %i", current_beat, (int)a_end_beat);
-            fflush(stdout);
+        if(print_progress){
+            current_beat = (int)self->ts[0].ml_current_beat;
+            if(current_beat > last_beat){
+                last_beat = current_beat;
+                printf("\rBeat %i of %i", current_beat, (int)a_end_beat);
+                fflush(stdout);
+            }
         }
 #endif
         for(f_i = 0; f_i < f_block_size; ++f_i){
@@ -139,7 +144,9 @@ void v_daw_offline_render(
     }
 
 #if SG_OS == _OS_LINUX
-    printf("\n");
+    if(print_progress){
+        printf("\n");
+    }
 
     clock_gettime(CLOCK_REALTIME, &f_finish);
     double f_elapsed = v_print_benchmark(

@@ -181,7 +181,7 @@ void daw_process_qwerty_midi(
     int a_thread_num,
     t_daw_thread_storage * a_ts
 );
-void v_daw_offline_render(t_daw*, double, double, char*, int, int, int);
+void v_daw_offline_render(t_daw*, double, double, char*, int, int, int, int);
 void v_daw_audio_items_run(
     t_daw*,
     t_daw_item_ref*,

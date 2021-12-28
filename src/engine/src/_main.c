@@ -124,7 +124,10 @@ void print_help(){
     printf(
         "%s daw [project_dir] [output_file] [start_beat] "
         "[end_beat] [sample_rate] [buffer_size] [thread_count] "
-        "[huge_pages] [stem] [sequence_uid]\n\n",
+        "[huge_pages] [stem] [sequence_uid] [--no-print-progress] "
+        "[--no-file]\n"
+        "--no-print-progress: Do not print progress updates\n"
+        "--no-file: Do not create the rendered file\n\n",
         STARGATE_VERSION
     );
     printf("Sound check (play a short test tone and exit):\n");
@@ -189,8 +192,8 @@ int _main(int argc, char** argv){
 
     USE_HUGEPAGES = f_huge_pages;
 
-    if(argc > 6){
-        for(j = 6; j < argc; ++j){
+    if(argc > 7){
+        for(j = 7; j < argc; ++j){
             if(!strcmp(argv[j], "--sleep")){
                 NO_HARDWARE_USLEEP = 1;
                 NO_HARDWARE = 1;
@@ -199,7 +202,9 @@ int _main(int argc, char** argv){
             } else if(!strcmp(argv[j], "--single-thread")){
                 SINGLE_THREAD = 1;
             } else {
-                log_info("Invalid argument [%i] %s", j, argv[j]);
+                print_help();
+                log_error("Invalid argument [%i] %s", j, argv[j]);
+                exit(1);
             }
         }
     }
@@ -237,7 +242,10 @@ int daw_render(int argc, char** argv){
     int sequence_uid = atoi(argv[11]);
 
     if(f_thread_count < 1 || f_thread_count > MAX_WORKER_THREADS){
-        log_error("Error: Thread count out of range 1-16, exiting");
+        log_error(
+            "Error: Thread count out of range 1-%i, exiting",
+            MAX_WORKER_THREADS
+        );
         exit(1);
     }
 
@@ -254,11 +262,18 @@ int daw_render(int argc, char** argv){
     USE_HUGEPAGES = f_huge_pages;
 
     int f_create_file = 1;
+    int print_progress = 1;
 
     int f_i;
     for(f_i = 12; f_i < argc; ++f_i){
         if(!strcmp(argv[f_i], "--no-file")){
             f_create_file = 0;
+        } else if(!strcmp(argv[f_i], "--no-print-progress")){
+            print_progress = 0;
+        } else {
+            print_help();
+            log_error("Invalid argument [%i] %s", f_i, argv[f_i]);
+            exit(1);
         }
     }
 
@@ -296,7 +311,8 @@ int daw_render(int argc, char** argv){
         f_output_file,
         f_create_file,
         f_stem_render,
-        sequence_uid
+        sequence_uid,
+        print_progress
     );
 
     v_destructor();

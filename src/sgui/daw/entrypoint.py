@@ -306,6 +306,7 @@ class MainWindow(QScrollArea):
                     util.USE_HUGEPAGES,
                     f_stem,
                     constants.DAW_CURRENT_SEQUENCE_UID,
+                    '--no-print-progress',
                 )
             ]
             LOG.info(f"Rendering {f_cmd} to '{f_out_file}'")
