@@ -359,7 +359,8 @@ class TransportWidget(AbstractTransportWidget):
     def on_rec(self):
         if not self.audio_inputs.active():
             QMessageBox.warning(
-                self.group_box, _("Error"),
+                self.group_box,
+                _("Error"),
                 _("No audio inputs are active, cannot record.  "
                 "Enable one or more inputs in the transport drop-down.\n"
                 "If there are no inputs in the drop-down, you will need "
@@ -375,7 +376,10 @@ class TransportWidget(AbstractTransportWidget):
             f_txt = str(f_name_lineedit.text()).strip()
             if not f_txt:
                 QMessageBox.warning(
-                    MAIN_WINDOW, _("Error"), _("Name cannot be empty"))
+                    MAIN_WINDOW,
+                    _("Error"),
+                    _("Name cannot be empty"),
+                )
                 return
             for x in ("\\", "/", "~", "|"):
                 if x in f_txt:
@@ -384,7 +388,9 @@ class TransportWidget(AbstractTransportWidget):
                         _("Invalid char '{}'".format(x)))
                     return
             for f_i, f_ai in zip(
-            range(len(self.audio_inputs.inputs)), self.audio_inputs.inputs):
+                range(len(self.audio_inputs.inputs)),
+                self.audio_inputs.inputs,
+            ):
                 f_val = f_ai.get_value()
                 if f_val.rec:
                     f_path = os.path.join(
@@ -414,11 +420,7 @@ class TransportWidget(AbstractTransportWidget):
             f_window.close()
 
         def on_cancel():
-            for f_file in os.listdir(constants.PROJECT.audio_tmp_folder):
-                if f_file.endswith(".wav"):
-                    f_path = os.path.join(
-                        constants.PROJECT.audio_tmp_folder, f_file)
-                    os.remove(f_path)
+            constants.PROJECT.clear_audio_tmp_folder()
             f_window.close()
 
         def dialog_close_event(a_event):
@@ -437,7 +439,8 @@ class TransportWidget(AbstractTransportWidget):
         f_name_lineedit.setMinimumWidth(330)
         f_hlayout.addWidget(f_name_lineedit)
         f_open_rec_dir_checkbox = QRadioButton(
-            _("Open recording directory in the file browser when finished?"))
+            _("Open recording directory in the file browser when finished?"),
+        )
         f_layout.addWidget(f_open_rec_dir_checkbox)
         if self.open_rec_dir:
             f_open_rec_dir_checkbox.setChecked(True)
@@ -887,7 +890,7 @@ class WaveEditorWidget:
             f_stretch = f_timestretch_amt.value()
             f_crispness = f_crispness_combobox.currentIndex()
             f_preserve_formants = f_preserve_formants_checkbox.isChecked()
-            f_algo = f_algo_combobox.currentIndex()
+            f_algo = str(f_algo_combobox.currentText())
             f_pitch = f_pitch_shift.value()
 
             f_file, f_filter = QFileDialog.getSaveFileName(
@@ -906,13 +909,30 @@ class WaveEditorWidget:
                 f_file += ".wav"
             self.last_offline_dir = os.path.dirname(f_file)
 
-            if f_algo == 0:
+            if f_algo == "Rubberband":
                 f_proc = util.rubberband(
-                    f_path, f_file, f_stretch, f_pitch, f_crispness,
-                    f_preserve_formants)
-            elif f_algo == 1:
+                    f_path,
+                    f_file,
+                    f_stretch,
+                    f_pitch,
+                    f_crispness,
+                    f_preserve_formants,
+                )
+            elif f_algo == "SBSMS":
                 f_proc = util.sbsms(
-                    f_path, f_file, f_stretch, f_pitch)
+                    f_path,
+                    f_file,
+                    f_stretch,
+                    f_pitch,
+                )
+            elif f_algo == "Paulstretch":
+                f_proc = util.paulstretch(
+                    f_path,
+                    f_file,
+                    f_stretch,
+                )
+            else:
+                raise ValueError(f"Invalid algorithm {f_algo}")
 
             f_proc.wait()
             self.open_file(f_file)
@@ -920,6 +940,24 @@ class WaveEditorWidget:
 
         def on_cancel(a_val=None):
             f_window.close()
+
+        def algo_changed(index):
+            algo = str(f_algo_combobox.currentText())
+            if algo == "Rubberband":
+                f_timestretch_amt.setRange(0.2, 4.0)
+                pitch_shift_label.show()
+                f_pitch_shift.show()
+                f_groupbox.show()
+            elif algo == "SBSMS":
+                f_timestretch_amt.setRange(0.2, 4.0)
+                pitch_shift_label.show()
+                f_pitch_shift.show()
+                f_groupbox.hide()
+            elif algo == "Paulstretch":
+                f_timestretch_amt.setRange(0.2, 30.0)
+                f_groupbox.hide()
+                f_pitch_shift.hide()
+                pitch_shift_label.hide()
 
         f_window = QDialog(self.widget)
         f_window.setMinimumWidth(390)
@@ -930,27 +968,36 @@ class WaveEditorWidget:
         f_time_gridlayout = QGridLayout()
         f_layout.addLayout(f_time_gridlayout)
 
-        f_time_gridlayout.addWidget(QLabel(_("Pitch(semitones):")), 0, 0)
+        pitch_shift_label = QLabel(_("Pitch(semitones):"))
+        f_time_gridlayout.addWidget(pitch_shift_label, 10, 0)
         f_pitch_shift = QDoubleSpinBox()
         f_pitch_shift.setRange(-36, 36)
         f_pitch_shift.setValue(0.0)
         f_pitch_shift.setDecimals(6)
-        f_time_gridlayout.addWidget(f_pitch_shift, 0, 1)
+        f_time_gridlayout.addWidget(f_pitch_shift, 10, 1)
 
-        f_time_gridlayout.addWidget(QLabel(_("Stretch:")), 3, 0)
+        f_time_gridlayout.addWidget(QLabel(_("Stretch:")), 5, 0)
         f_timestretch_amt = QDoubleSpinBox()
         f_timestretch_amt.setRange(0.2, 4.0)
         f_timestretch_amt.setDecimals(6)
         f_timestretch_amt.setSingleStep(0.1)
         f_timestretch_amt.setValue(1.0)
-        f_time_gridlayout.addWidget(f_timestretch_amt, 3, 1)
-        f_time_gridlayout.addWidget(QLabel(_("Algorithm:")), 6, 0)
+        f_time_gridlayout.addWidget(f_timestretch_amt, 5, 1)
+        f_time_gridlayout.addWidget(QLabel(_("Algorithm:")), 0, 0)
         f_algo_combobox = QComboBox()
-        f_algo_combobox.addItems(["Rubberband", "SBSMS"])
-        f_time_gridlayout.addWidget(f_algo_combobox, 6, 1)
+
+        f_time_gridlayout.addWidget(f_algo_combobox, 0, 1)
 
         f_groupbox = QGroupBox(_("Rubberband Options"))
         f_layout.addWidget(f_groupbox)
+        f_layout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         f_groupbox_layout = QGridLayout(f_groupbox)
         f_groupbox_layout.addWidget(QLabel(_("Crispness")), 12, 0)
         f_crispness_combobox = QComboBox()
@@ -960,6 +1007,15 @@ class WaveEditorWidget:
         f_preserve_formants_checkbox = QCheckBox("Preserve formants?")
         f_preserve_formants_checkbox.setChecked(True)
         f_groupbox_layout.addWidget(f_preserve_formants_checkbox, 18, 1)
+
+        algorithms = ["Rubberband"]
+        if util.SBSMS:
+            algorithms.append('SBSMS')
+        if util.PAULSTRETCH_PATH:
+            algorithms.append('Paulstretch')
+        f_algo_combobox.addItems(algorithms)
+        f_algo_combobox.currentIndexChanged.connect(algo_changed)
+        f_algo_combobox.setMinimumWidth(120)
 
         f_hlayout2 = QHBoxLayout()
         f_layout.addLayout(f_hlayout2)

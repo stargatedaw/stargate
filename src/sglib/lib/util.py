@@ -449,6 +449,22 @@ def sbsms(
     f_proc = subprocess.Popen(f_cmd, encoding='UTF-8')
     return f_proc
 
+def paulstretch(
+    a_src_path,
+    a_dest_path,
+    a_timestretch_amt,
+):
+    f_cmd = [
+        PAULSTRETCH_PATH,
+        'paulstretch',
+        "-s", str(a_timestretch_amt),
+        a_src_path,
+        a_dest_path,
+    ]
+    LOG.info("Running {}".format(" ".join(f_cmd)))
+    f_proc = subprocess.Popen(f_cmd, encoding='UTF-8')
+    return f_proc
+
 def read_file_text(a_file):
     with open(pi_path(a_file)) as f_handle:
         return f_handle.read()

@@ -530,7 +530,7 @@ QCheckBox::indicator:hover
 
 QHeaderView::section {
     background-color: #aaaaaa;
-	color: #222222;
+    color: #222222;
     border: 1px solid #222222;
     padding: 4px;
 }
@@ -1234,8 +1234,9 @@ class sampler1_plugin_ui(AbstractPluginUI):
         actionImportSfz = menuFile.addAction(
             _("Import SFZ..."))
         menuFile.addSeparator()
-        actionTsPs = menuFile.addAction(
-            _("Time-Stretch/Pitch-Shift..."))
+        # Doesn't work, needs a re-write
+        #actionTsPs = menuFile.addAction(
+        #    _("Time-Stretch/Pitch-Shift..."))
 
         menubar.setMenu(menuFile)
         menuFile.addSeparator()
@@ -1263,7 +1264,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         actionMapToMonoFX.triggered.connect(self.mapAllSamplesToOneMonoFXgroup)
         actionClearAllSamples.triggered.connect(self.clearAllSamples)
         actionImportSfz.triggered.connect(self.sfz_dialog)
-        actionTsPs.triggered.connect(self.stretch_shift_dialog)
+        #actionTsPs.triggered.connect(self.stretch_shift_dialog)
         f_map_octaves_action.triggered.connect(self.map_2_octaves_per_sample)
 
         actionSetAllHighPitches.triggered.connect(self.set_all_high_notes)
@@ -2383,7 +2384,10 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_path = str(self.file_selector.file_path.text()).strip()
         if f_path == "":
             QMessageBox.warning(
-                self.widget, _("Error"), _("No sample selected"))
+                self.widget,
+                _("Error"),
+                _("No sample selected"),
+            )
             return
 
         f_base_file_name = os.path.split(f_path)[1]
@@ -2420,8 +2424,11 @@ class sampler1_plugin_ui(AbstractPluginUI):
                 f_new_note = f_i + f_base_note
                 f_note_str = util.note_num_to_string(f_new_note)
                 if f_new_note < 0 or f_new_note > 90:
-                    LOG.error("Skipping note {}, out of permissible "
-                        "range".format(f_note_str))
+                    LOG.error(
+                        "Skipping note {}, out of permissible range".format(
+                            f_note_str,
+                        ),
+                    )
                     continue
                 if not f_is_single:
                     self.sample_base_pitches[f_selected_index].set_value(
@@ -2432,8 +2439,13 @@ class sampler1_plugin_ui(AbstractPluginUI):
                         f_new_note + f_step_m1, True)
                     f_selected_index += 1
                 f_file = os.path.join(
-                    f_dir, "{}-{}-{}.wav".format(
-                        f_uid, f_base_file_name, f_note_str))
+                    f_dir,
+                    "{}-{}-{}.wav".format(
+                        f_uid,
+                        f_base_file_name,
+                        f_note_str,
+                    ),
+                )
                 if f_algo == 0:
                     f_proc = util.rubberband(
                         f_path, f_file, f_stretch, f_i,
@@ -2454,8 +2466,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
 
             self.load_files(f_file_list)
 
-            shutil.rmtree(f_dir)
-            os.sgdir(f_dir)
+            constants.PROJECT.clear_audio_tmp_folder()
 
             f_window.close()
 
