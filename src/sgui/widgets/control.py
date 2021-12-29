@@ -28,7 +28,12 @@ class AbstractUiControl:
         a_port_dict=None,
         a_preset_mgr=None,
         a_default_value=None,
+        min_text=None,
+        max_text=None,
+        text_lookup=None,  # Required to be a tuple if KC_TEXT
     ):
+        self.min_text = min_text
+        self.max_text = max_text
         if a_label is None:
             self.name_label = None
         else:
@@ -92,25 +97,34 @@ class AbstractUiControl:
 
     def value_conversion(self, a_value):
         """ Convert a control value to a human-readable string """
+        if self.min_text and a_value == self.control.minimum():
+            return self.min_text
+        elif self.max_text and a_value == self.control.maximum():
+            return self.max_text
+        elif self.val_conversion == _shared.KC_TEXT:
+            return self.text_lookup[a_value]
+
         f_value = float(a_value)
         f_dec_value = 0.0
-        retval = None
         if self.val_conversion == _shared.KC_NONE:
-            pass
+            return None
         elif self.val_conversion in (
-        _shared.KC_DECIMAL, _shared.KC_TIME_DECIMAL,_shared.KC_HZ_DECIMAL):
-            retval = (str(round(f_value * .01, 2)))
+            _shared.KC_DECIMAL,
+            _shared.KC_TIME_DECIMAL,
+            _shared.KC_HZ_DECIMAL
+        ):
+            return str(round(f_value * .01, 2))
         elif self.val_conversion in (
             _shared.KC_INTEGER,
             _shared.KC_INT_PITCH,
             _shared.KC_MILLISECOND,
         ):
-            retval = str(int(f_value))
+            return str(int(f_value))
         elif self.val_conversion == _shared.KC_PITCH:
             f_val = int(pitch_to_hz(f_value))
             if f_val >= 1000:
                 f_val = str(round(f_val * 0.001, 1)) + "k"
-            retval = (str(f_val))
+            return str(f_val)
         elif self.val_conversion == _shared.KC_127_PITCH:
             f_val = int(
                 pitch_to_hz(
@@ -119,7 +133,7 @@ class AbstractUiControl:
             )
             if f_val >= 1000:
                 f_val = str(round(f_val * 0.001, 1)) + "k"
-            retval = (str(f_val))
+            return (str(f_val))
         elif self.val_conversion == _shared.KC_127_PITCH_MIN_MAX:
             mult = (
                 self.max_label_value_127 - self.min_label_value_127
@@ -130,28 +144,28 @@ class AbstractUiControl:
             LOG.info(f"{f_value} {f_val} {pitch} {mult}")
             if f_val >= 1000:
                 f_val = str(round(f_val * 0.001, 1)) + "k"
-            retval = str(f_val)
+            return str(f_val)
         elif self.val_conversion == _shared.KC_127_ZERO_TO_X:
             f_dec_value = (float(f_value) *
                 self.label_value_127_multiply_by) - \
                 self.label_value_127_add_to
             f_dec_value = ((int)(f_dec_value * 10.0)) * 0.1
-            retval = (str(round(f_dec_value, 2)))
+            return str(round(f_dec_value, 2))
         elif self.val_conversion == _shared.KC_127_ZERO_TO_X_INT:
             f_dec_value = (float(f_value) *
                 self.label_value_127_multiply_by) - \
                 self.label_value_127_add_to
-            retval = (str(int(f_dec_value)))
+            return str(int(f_dec_value))
         elif self.val_conversion == _shared.KC_LOG_TIME:
             f_dec_value = float(f_value) * 0.01
             f_dec_value = f_dec_value * f_dec_value
-            retval = (str(round(f_dec_value, 2)))
+            return str(round(f_dec_value, 2))
         elif self.val_conversion == _shared.KC_TENTH:
-            retval = (str(round(f_value * .1, 1)))
-        else:
-            assert False, "Unknown self.val_conversion: {}".format(
-                self.val_conversion)
-        return retval
+            return str(round(f_value * .1, 1))
+
+        raise ValueError(
+            f"Unknown self.val_conversion: {self.val_conversion}",
+        )
 
     def control_value_changed(self, a_value):
         if not self.suppress_changes:
@@ -584,11 +598,17 @@ class knob_control(AbstractUiControl):
         a_port_dict=None,
         a_preset_mgr=None,
         knob_kwargs={},
+        min_text=None,
+        max_text=None,
+        text_lookup=None
     ):
-        AbstractUiControl.__init__(
-            self, a_label, a_port_num, a_rel_callback,
-            a_val_callback, a_val_conversion, a_port_dict, a_preset_mgr,
-            a_default_val)
+        if a_val_conversion == _shared.KC_TEXT:
+            assert (
+                text_lookup
+                and
+                a_min_val == 0
+                and a_max_val == len(text_lookup)
+            ), (text_lookup, a_min_val, a_max_val)
         self.control = PixmapKnob(
             a_size,
             a_min_val,
@@ -602,6 +622,20 @@ class knob_control(AbstractUiControl):
         self.value_label.setObjectName("plugin_value_label")
         self.value_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.value_label.setMinimumWidth(15)
+        AbstractUiControl.__init__(
+            self,
+            a_label,
+            a_port_num,
+            a_rel_callback,
+            a_val_callback,
+            a_val_conversion,
+            a_port_dict,
+            a_preset_mgr,
+            a_default_val,
+            min_text,
+            max_text,
+            text_lookup,
+        )
         self.set_value(a_default_val)
 
 
@@ -618,8 +652,19 @@ class slider_control(AbstractUiControl):
         a_default_val,
         a_val_conversion=_shared.KC_NONE,
         a_port_dict=None,
-        a_preset_mgr=None
+        a_preset_mgr=None,
+        min_text=None,
+        max_text=None,
     ):
+        self.control = QSlider(a_orientation)
+        self.control.contextMenuEvent = self.contextMenuEvent
+        self.control.setRange(int(a_min_val), int(a_max_val))
+        self.control.valueChanged.connect(self.control_value_changed)
+        self.control.sliderReleased.connect(self.control_released)
+        self.value_label = QLabel("")
+        self.value_label.setObjectName("plugin_value_label")
+        self.value_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.value_label.setMinimumWidth(15)
         AbstractUiControl.__init__(
             self,
             a_label,
@@ -630,16 +675,9 @@ class slider_control(AbstractUiControl):
             a_port_dict,
             a_preset_mgr,
             a_default_val,
+            min_text,
+            max_text,
         )
-        self.control = QSlider(a_orientation)
-        self.control.contextMenuEvent = self.contextMenuEvent
-        self.control.setRange(int(a_min_val), int(a_max_val))
-        self.control.valueChanged.connect(self.control_value_changed)
-        self.control.sliderReleased.connect(self.control_released)
-        self.value_label = QLabel("")
-        self.value_label.setObjectName("plugin_value_label")
-        self.value_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.value_label.setMinimumWidth(15)
         self.set_value(a_default_val)
 
 

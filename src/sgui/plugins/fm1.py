@@ -1052,6 +1052,7 @@ class fm1_plugin_ui(AbstractPluginUI):
                 1 if f_i == 1 else 0,
                 knob_kwargs=knob_kwargs,
                 nested_lookup=OSC_TYPE_LOOKUP,
+                vol_min_text="-inf",
             )
             f_osc1.pitch_knob.control.setRange(-72, 72)
             f_osc1_uni_voices = knob_control(
@@ -1090,6 +1091,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             )
             f_osc1_uni_spread.add_to_grid_layout(f_osc1.grid_layout, 5)
 
+            knob_kwargs['arc_type'] = ArcType.BIDIRECTIONAL
             osc_pan = knob_control(
                 f_knob_size,
                 _("Pan"),
@@ -1107,6 +1109,7 @@ class fm1_plugin_ui(AbstractPluginUI):
                 self.preset_manager,
                 knob_kwargs=knob_kwargs,
             )
+            knob_kwargs.pop('arc_type')
             osc_pan.add_to_grid_layout(f_osc1.grid_layout, 6)
 
             f_hlayout1.addWidget(f_osc1.group_box)

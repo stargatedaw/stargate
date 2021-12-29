@@ -24,6 +24,7 @@ class osc_widget:
         a_pb_port=None,
         knob_kwargs={},
         nested_lookup=None,
+        vol_min_text=None,
     ):
         self.grid_layout = QGridLayout()
         self.group_box = QGroupBox(str(a_label))
@@ -74,6 +75,7 @@ class osc_widget:
             a_port_dict=a_port_dict,
             a_preset_mgr=a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            min_text=vol_min_text,
         )
         if nested_lookup:
             self.osc_type_combobox = NestedComboboxControl(
