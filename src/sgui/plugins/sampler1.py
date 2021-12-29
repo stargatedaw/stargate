@@ -2804,7 +2804,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
                             SAMPLER1_MAX_SAMPLE_COUNT,
                         ),
                     )
-                    return
+                    break
                 if "sample" in f_sample.dict:
                     if os.path.sep == '/':
                         f_sample_file = f_sample.dict["sample"].replace(
