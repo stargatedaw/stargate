@@ -29,7 +29,8 @@ and why, read the
   hardware: Raspberry Pi 4, or a 15 year old laptop with a
   dual core CPU, 1GB of RAM and a 720p display.
 - Support for display resolution from 720p to 4k and above.
-- Optional portable flash drive install on Windows
+- Optional portable flash drive install on Windows and
+  [MacOS](docs/troubleshooting/macos_install.md)
 - Broad audio and MIDI hardware support using Portaudio and Portmidi
 
 # Screenshots
