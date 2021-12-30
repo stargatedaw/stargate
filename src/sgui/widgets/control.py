@@ -600,14 +600,40 @@ class knob_control(AbstractUiControl):
         knob_kwargs={},
         min_text=None,
         max_text=None,
-        text_lookup=None
+        text_lookup=None,
     ):
+        """
+            a_size: The size of the knob (x or y), in pixels
+            a_label: The text to display as the name label
+            a_port_num: The port number of this control
+            a_rel_callback: The callback function on knob release
+            a_val_callback: The callback function on knob value changed
+            a_min_val: The minimum value of this knob
+            a_max_val: The maximum value of this knob
+            a_default_val: The default value of this knob
+            a_val_conversion:
+                The conversion algorithm from raw knob value to the
+                value label
+            a_port_dict: The plugin port dictionary
+            a_preset_mgr: The plugin preset manager
+            knob_kwargs: Keyword arguments to pass to PixmapKnob(...)
+            min_text:
+                Special text to display on the value label when it is at
+                it's minimum value
+            max_text:
+                Special text to display on the value label when it is at
+                it's maximum value
+            text_lookup:
+                A tuple of strings to display as the knob value label.  If
+                not None, a_min_val must be 0, a_max_val must be
+                len(text_lookup) - 1, and a_val_conversion=_shared.KC_TEXT.
+        """
         if a_val_conversion == _shared.KC_TEXT:
             assert (
                 text_lookup
                 and
                 a_min_val == 0
-                and a_max_val == len(text_lookup)
+                and a_max_val == len(text_lookup) - 1
             ), (text_lookup, a_min_val, a_max_val)
         self.control = PixmapKnob(
             a_size,
