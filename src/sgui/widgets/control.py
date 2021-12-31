@@ -14,10 +14,62 @@ from sglib.log import LOG
 from sgui.sgqt import *
 import collections
 import math
+from typing import Optional, Tuple
 
 LAST_TEMPO_COMBOBOX_INDEX = 2
 
-class AbstractUiControl:
+class GridLayoutControl:
+    def add_to_grid_layout(
+            self,
+            a_layout,
+            a_x,
+            a_alignment=QtCore.Qt.AlignmentFlag.AlignHCenter,
+            a_row=0,
+        ):
+        row_offset = a_row * 3
+        if self.name_label is not None:
+            if a_alignment:
+                a_layout.addWidget(
+                    self.name_label,
+                    row_offset,
+                    a_x,
+                    alignment=a_alignment,
+                )
+            else:
+                a_layout.addWidget(
+                    self.name_label,
+                    row_offset,
+                    a_x,
+                )
+        if a_alignment:
+            a_layout.addWidget(
+                self.control,
+                row_offset + 1,
+                a_x,
+                alignment=a_alignment,
+            )
+        else:
+            a_layout.addWidget(
+                self.control,
+                row_offset + 1,
+                a_x,
+            )
+        if self.value_label is not None:
+            if a_alignment:
+                a_layout.addWidget(
+                    self.value_label,
+                    row_offset + 2,
+                    a_x,
+                    alignment=a_alignment,
+                )
+            else:
+                a_layout.addWidget(
+                    self.value_label,
+                    row_offset + 2,
+                    a_x,
+                )
+
+class AbstractUiControl(GridLayoutControl):
     def __init__(
         self,
         a_label,
@@ -173,56 +225,6 @@ class AbstractUiControl:
 
         if self.value_label is not None:
             self.value_label.setText(self.value_conversion(a_value))
-
-    def add_to_grid_layout(
-            self,
-            a_layout,
-            a_x,
-            a_alignment=QtCore.Qt.AlignmentFlag.AlignHCenter,
-            a_row=0,
-        ):
-        row_offset = a_row * 3
-        if self.name_label is not None:
-            if a_alignment:
-                a_layout.addWidget(
-                    self.name_label,
-                    row_offset,
-                    a_x,
-                    alignment=a_alignment,
-                )
-            else:
-                a_layout.addWidget(
-                    self.name_label,
-                    row_offset,
-                    a_x,
-                )
-        if a_alignment:
-            a_layout.addWidget(
-                self.control,
-                row_offset + 1,
-                a_x,
-                alignment=a_alignment,
-            )
-        else:
-            a_layout.addWidget(
-                self.control,
-                row_offset + 1,
-                a_x,
-            )
-        if self.value_label is not None:
-            if a_alignment:
-                a_layout.addWidget(
-                    self.value_label,
-                    row_offset + 2,
-                    a_x,
-                    alignment=a_alignment,
-                )
-            else:
-                a_layout.addWidget(
-                    self.value_label,
-                    row_offset + 2,
-                    a_x,
-                )
 
     def set_value_dialog(self):
         def ok_handler(a_self=None, a_val=None):
@@ -527,6 +529,38 @@ class AbstractUiControl:
 
         f_menu.exec(QCursor.pos())
 
+class MultiplexedControl(GridLayoutControl):
+    """ A control whose name label is a QComboBox or combobox_control
+
+        If the name_label is a custom combobox_control, the selected state
+        will be sent to the engine and stored in the plugin state file,
+        as long as the selected item is not in @excluded_items
+    """
+    def __init__(
+        self,
+        controls: Tuple[AbstractUiControl],
+        name_label: Optional[QComboBox]=None,
+    ):
+        self.controls = controls
+        self.port_num = port_num
+
+        if name_label:
+            self.name_label = name_label
+        else:
+            items = [str(x.name_label.text()) for x in controls]
+            self.name_label = QComboBox()
+            self.name_label.addItems(items)
+        self.name_label.currentIndexChanged.connect(self.index_changed)
+
+        self.control = QStackedWidget()
+        self.value_label = QStackedWidget()
+        for control in controls:
+            self.control.addWidget(control.control)
+            self.value_label.addWidget(control.value_label)
+
+    def index_changed(self, index):
+        self.control.setCurrentIndex(index)
+        self.value_label.setCurrentIndex(index)
 
 class null_control:
     """ For controls with no visual representation,

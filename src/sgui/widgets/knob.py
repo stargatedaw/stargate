@@ -91,9 +91,8 @@ class PixmapKnob(QDial):
             Additional keyword arguments to pass to the QPen for the
             foreground arc.
         @draw_line:
-            True to draw a ine from the center of the knob to the end of
+            True to draw a line from the center of the knob to the end of
             the arc.
-
         """
         self.arc_brush = arc_brush if arc_brush else QColor(
             theme.SYSTEM_COLORS.widgets.knob_arc_pen,
