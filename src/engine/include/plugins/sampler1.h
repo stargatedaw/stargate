@@ -442,9 +442,6 @@ PluginDescriptor *sampler1_plugin_descriptor();
 
 //End PolyFX Mod Matrix
 
-/*This is the last control port, + 1 */
-#define SAMPLER1_LAST_REGULAR_CONTROL_PORT 106
-
 /*The first port to use when enumerating the ports for mod_matrix controls.  All of the mod_matrix ports should be sequential,
  * any additional ports should prepend this port number*/
 #define SAMPLER1_FIRST_SAMPLE_TABLE_PORT 106

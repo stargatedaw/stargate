@@ -204,7 +204,234 @@ void connectPortSampler(
 ){
     t_sampler1 *plugin = (t_sampler1*)instance;
 
-    if(port < SAMPLER1_LAST_REGULAR_CONTROL_PORT){
+    if(
+        port >= SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MIN)].basePitch = data;
+    } else if(
+        port >= SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MIN)].low_note = data;
+    } else if(
+        port >= SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MIN)].high_note = data;
+    } else if(
+        port >= LMS_SAMPLE_VOLUME_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_VOLUME_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - LMS_SAMPLE_VOLUME_PORT_RANGE_MIN)].sample_vol = data;
+    } else if(
+        port >= SAMPLER1_SAMPLE_START_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_START_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_SAMPLE_START_PORT_RANGE_MIN)].sampleStarts = data;
+    } else if(
+        port >= SAMPLER1_SAMPLE_END_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_END_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_SAMPLE_END_PORT_RANGE_MIN)].sampleEnds = data;
+    } else if(
+        port >= SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MIN)].sample_vel_sens = data;
+    } else if(
+        port >= SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MIN)].sample_vel_low = data;
+    } else if(
+        port >= SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MIN)].sample_vel_high = data;
+    } else if(
+        port >= SAMPLER1_PITCH_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_PITCH_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_PITCH_PORT_RANGE_MIN)].sample_pitch = data;
+    } else if(
+        port >= SAMPLER1_TUNE_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_TUNE_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_TUNE_PORT_RANGE_MIN)].sample_tune = data;
+    } else if(
+        port >= SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MIN)].sample_interpolation_mode = data;
+    } else if(
+        port >= SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MIN)].sampleLoopStarts = data;
+    } else if(
+        port >= SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MIN)].sampleLoopEnds = data;
+    } else if(
+        port >= SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MIN)].sampleLoopModes = data;
+    } else if(
+        port >= SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MAX
+    ){
+        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MIN)][0][0] = data;
+    } else if(
+        port >= SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MAX
+    ){
+        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MIN)][0][1] = data;
+    } else if(
+        port >= SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MAX
+    ){
+        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MIN)][0][2] = data;
+    }
+    else if(
+        port >= SAMPLER1_MONO_FX0_COMBOBOX_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX0_COMBOBOX_PORT_RANGE_MAX
+    ){
+        plugin->mfx_comboboxes[(port - SAMPLER1_MONO_FX0_COMBOBOX_PORT_RANGE_MIN)][0] = data;
+    } else if(  //MonoFX1
+        port >= SAMPLER1_MONO_FX1_KNOB0_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX1_KNOB0_PORT_RANGE_MAX
+    ){
+        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX1_KNOB0_PORT_RANGE_MIN)][1][0] = data;
+    } else if(
+        port >= SAMPLER1_MONO_FX1_KNOB1_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX1_KNOB1_PORT_RANGE_MAX
+    ){
+        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX1_KNOB1_PORT_RANGE_MIN)][1][1] = data;
+    } else if(
+        port >= SAMPLER1_MONO_FX1_KNOB2_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX1_KNOB2_PORT_RANGE_MAX
+    ){
+        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX1_KNOB2_PORT_RANGE_MIN)][1][2] = data;
+    } else if(
+        port >= SAMPLER1_MONO_FX1_COMBOBOX_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX1_COMBOBOX_PORT_RANGE_MAX
+    ){
+        plugin->mfx_comboboxes[(port - SAMPLER1_MONO_FX1_COMBOBOX_PORT_RANGE_MIN)][1] = data;
+    } else if(  //MonoFX2
+        port >= SAMPLER1_MONO_FX2_KNOB0_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX2_KNOB0_PORT_RANGE_MAX
+    ){
+        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX2_KNOB0_PORT_RANGE_MIN)][2][0] = data;
+    } else if(
+        port >= SAMPLER1_MONO_FX2_KNOB1_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX2_KNOB1_PORT_RANGE_MAX
+    ){
+        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX2_KNOB1_PORT_RANGE_MIN)][2][1] = data;
+    } else if(
+        port >= SAMPLER1_MONO_FX2_KNOB2_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX2_KNOB2_PORT_RANGE_MAX
+    ){
+        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX2_KNOB2_PORT_RANGE_MIN)][2][2] = data;
+    } else if(
+        port >= SAMPLER1_MONO_FX2_COMBOBOX_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX2_COMBOBOX_PORT_RANGE_MAX
+    ){
+        plugin->mfx_comboboxes[(port - SAMPLER1_MONO_FX2_COMBOBOX_PORT_RANGE_MIN)][2] = data;
+    } else if(  //MonoFX3
+        port >= SAMPLER1_MONO_FX3_KNOB0_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX3_KNOB0_PORT_RANGE_MAX
+    ){
+        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX3_KNOB0_PORT_RANGE_MIN)][3][0] = data;
+    } else if(
+        port >= SAMPLER1_MONO_FX3_KNOB1_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX3_KNOB1_PORT_RANGE_MAX
+    ){
+        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX3_KNOB1_PORT_RANGE_MIN)][3][1] = data;
+    } else if(
+        port >= SAMPLER1_MONO_FX3_KNOB2_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX3_KNOB2_PORT_RANGE_MAX
+    ){
+        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX3_KNOB2_PORT_RANGE_MIN)][3][2] = data;
+    } else if(
+        port >= SAMPLER1_MONO_FX3_COMBOBOX_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX3_COMBOBOX_PORT_RANGE_MAX
+    ){
+        plugin->mfx_comboboxes[(port - SAMPLER1_MONO_FX3_COMBOBOX_PORT_RANGE_MIN)][3] = data;
+    } else if(
+        port >= SAMPLER1_SAMPLE_MONO_FX_GROUP_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_MONO_FX_GROUP_PORT_RANGE_MAX
+    ){
+        plugin->sample_mfx_groups[(port - SAMPLER1_SAMPLE_MONO_FX_GROUP_PORT_RANGE_MIN)] = data;
+    } else if(
+        port >= SAMPLER1_NOISE_AMP_MIN
+        &&
+        port < SAMPLER1_NOISE_AMP_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_NOISE_AMP_MIN)].noise_amp = data;
+    } else if(
+        port >= SAMPLER1_NOISE_TYPE_MIN
+        &&
+        port < SAMPLER1_NOISE_TYPE_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_NOISE_TYPE_MIN)].noise_type = data;
+    } else if(
+        port >= SAMPLER1_SAMPLE_FADE_IN_MIN
+        &&
+        port < SAMPLER1_SAMPLE_FADE_IN_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_SAMPLE_FADE_IN_MIN)].sampleFadeInEnds = data;
+    } else if(
+        port >= SAMPLER1_SAMPLE_FADE_OUT_MIN
+        &&
+        port < SAMPLER1_SAMPLE_FADE_OUT_MAX
+    ){
+        plugin->samples[(port - SAMPLER1_SAMPLE_FADE_OUT_MIN)].sampleFadeOutStarts = data;
+    } else if(
+        port >= SAMPLER1_FIRST_EQ_PORT
+        &&
+        port < SAMPLER1_LAST_EQ_PORT
+    ){
+        int f_port = port - SAMPLER1_FIRST_EQ_PORT;
+        int f_instance = f_port / 18;
+        int f_diff = f_port % 18;
+        v_eq6_connect_port(
+            &plugin->mono_modules.mfx[f_instance].eqs, f_diff, data);
+    } else {
         switch (port){
             case SAMPLER1_ATTACK: plugin->attack = data; break;
             case SAMPLER1_ATTACK_START: plugin->attack_start = data; break;
@@ -471,271 +698,59 @@ void connectPortSampler(
 
             //End PolyFX mod matrix
             case SAMPLER1_LFO_PITCH: plugin->lfo_pitch = data; break;
+            case SAMPLER1_LFO_PITCH_FINE: plugin->lfo_pitch_fine = data; break;
+            case SAMPLER1_MIN_NOTE: plugin->min_note = data; break;
+            case SAMPLER1_MAX_NOTE: plugin->max_note = data; break;
+            case SAMPLER1_MAIN_PITCH: plugin->main_pitch = data; break;
+            case SAMPLER1_ADSR_LIN_MAIN: plugin->adsr_lin_main = data; break;
             default:
-                sg_abort("Unknown port %i", port);
+                sg_abort("Unknown port: %i", port);
                 break;
         }
-    } else if(
-        port >= SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MIN)].basePitch = data;
-    } else if(
-        port >= SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MIN)].low_note = data;
-    } else if(
-        port >= SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MIN)].high_note = data;
-    } else if(
-        port >= LMS_SAMPLE_VOLUME_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_SAMPLE_VOLUME_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - LMS_SAMPLE_VOLUME_PORT_RANGE_MIN)].sample_vol = data;
-    } else if(
-        port >= SAMPLER1_SAMPLE_START_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_SAMPLE_START_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_SAMPLE_START_PORT_RANGE_MIN)].sampleStarts = data;
-    } else if(
-        port >= SAMPLER1_SAMPLE_END_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_SAMPLE_END_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_SAMPLE_END_PORT_RANGE_MIN)].sampleEnds = data;
-    } else if(
-        port >= SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MIN)].sample_vel_sens = data;
-    } else if(
-        port >= SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MIN)].sample_vel_low = data;
-    } else if(
-        port >= SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MIN)].sample_vel_high = data;
-    } else if(
-        port >= SAMPLER1_PITCH_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_PITCH_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_PITCH_PORT_RANGE_MIN)].sample_pitch = data;
-    } else if(
-        port >= SAMPLER1_TUNE_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_TUNE_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_TUNE_PORT_RANGE_MIN)].sample_tune = data;
-    } else if(
-        port >= SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MIN)].sample_interpolation_mode = data;
-    } else if(
-        port >= SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MIN)].sampleLoopStarts = data;
-    } else if(
-        port >= SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MIN)].sampleLoopEnds = data;
-    } else if(
-        port >= SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MAX
-    ){
-        plugin->samples[(port - SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MIN)].sampleLoopModes = data;
-    } else if(
-        port >= SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MAX
-    ){
-        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MIN)][0][0] = data;
-    } else if(
-        port >= SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MAX
-    ){
-        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MIN)][0][1] = data;
-    } else if(
-        port >= SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MIN
-        &&
-        port < SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MAX
-    ){
-        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MIN)][0][2] = data;
     }
-    else if((port >= SAMPLER1_MONO_FX0_COMBOBOX_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX0_COMBOBOX_PORT_RANGE_MAX))
-    {
-        plugin->mfx_comboboxes[(port - SAMPLER1_MONO_FX0_COMBOBOX_PORT_RANGE_MIN)][0] = data;
-    }
-    //MonoFX1
-    else if((port >= SAMPLER1_MONO_FX1_KNOB0_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX1_KNOB0_PORT_RANGE_MAX))
-    {
-        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX1_KNOB0_PORT_RANGE_MIN)][1][0] = data;
-    }
-    else if((port >= SAMPLER1_MONO_FX1_KNOB1_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX1_KNOB1_PORT_RANGE_MAX))
-    {
-        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX1_KNOB1_PORT_RANGE_MIN)][1][1] = data;
-    }
-    else if((port >= SAMPLER1_MONO_FX1_KNOB2_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX1_KNOB2_PORT_RANGE_MAX))
-    {
-        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX1_KNOB2_PORT_RANGE_MIN)][1][2] = data;
-    }
-    else if((port >= SAMPLER1_MONO_FX1_COMBOBOX_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX1_COMBOBOX_PORT_RANGE_MAX))
-    {
-        plugin->mfx_comboboxes[(port - SAMPLER1_MONO_FX1_COMBOBOX_PORT_RANGE_MIN)][1] = data;
-    }
-    //MonoFX2
-    else if((port >= SAMPLER1_MONO_FX2_KNOB0_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX2_KNOB0_PORT_RANGE_MAX))
-    {
-        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX2_KNOB0_PORT_RANGE_MIN)][2][0] = data;
-    }
-    else if((port >= SAMPLER1_MONO_FX2_KNOB1_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX2_KNOB1_PORT_RANGE_MAX))
-    {
-        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX2_KNOB1_PORT_RANGE_MIN)][2][1] = data;
-    }
-    else if((port >= SAMPLER1_MONO_FX2_KNOB2_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX2_KNOB2_PORT_RANGE_MAX))
-    {
-        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX2_KNOB2_PORT_RANGE_MIN)][2][2] = data;
-    }
-    else if((port >= SAMPLER1_MONO_FX2_COMBOBOX_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX2_COMBOBOX_PORT_RANGE_MAX))
-    {
-        plugin->mfx_comboboxes[(port - SAMPLER1_MONO_FX2_COMBOBOX_PORT_RANGE_MIN)][2] = data;
-    }
-    //MonoFX3
-    else if((port >= SAMPLER1_MONO_FX3_KNOB0_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX3_KNOB0_PORT_RANGE_MAX))
-    {
-        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX3_KNOB0_PORT_RANGE_MIN)][3][0] = data;
-    }
-    else if((port >= SAMPLER1_MONO_FX3_KNOB1_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX3_KNOB1_PORT_RANGE_MAX))
-    {
-        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX3_KNOB1_PORT_RANGE_MIN)][3][1] = data;
-    }
-    else if((port >= SAMPLER1_MONO_FX3_KNOB2_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX3_KNOB2_PORT_RANGE_MAX))
-    {
-        plugin->mfx_knobs[(port - SAMPLER1_MONO_FX3_KNOB2_PORT_RANGE_MIN)][3][2] = data;
-    }
-    else if((port >= SAMPLER1_MONO_FX3_COMBOBOX_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX3_COMBOBOX_PORT_RANGE_MAX))
-    {
-        plugin->mfx_comboboxes[(port - SAMPLER1_MONO_FX3_COMBOBOX_PORT_RANGE_MIN)][3] = data;
-    }
-
-    else if((port >= SAMPLER1_SAMPLE_MONO_FX_GROUP_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_SAMPLE_MONO_FX_GROUP_PORT_RANGE_MAX))
-    {
-        plugin->sample_mfx_groups[(port - SAMPLER1_SAMPLE_MONO_FX_GROUP_PORT_RANGE_MIN)] = data;
-    }
-    else if(port >= SAMPLER1_NOISE_AMP_MIN && port < SAMPLER1_NOISE_AMP_MAX)
-    {
-        plugin->samples[(port - SAMPLER1_NOISE_AMP_MIN)].noise_amp = data;
-    }
-    else if(port >= SAMPLER1_NOISE_TYPE_MIN && port < SAMPLER1_NOISE_TYPE_MAX)
-    {
-        plugin->samples[(port - SAMPLER1_NOISE_TYPE_MIN)].noise_type = data;
-    }
-    else if(port >= SAMPLER1_SAMPLE_FADE_IN_MIN &&
-            port < SAMPLER1_SAMPLE_FADE_IN_MAX)
-    {
-        plugin->samples[(port - SAMPLER1_SAMPLE_FADE_IN_MIN)].sampleFadeInEnds = data;
-    }
-    else if(port >= SAMPLER1_SAMPLE_FADE_OUT_MIN &&
-            port < SAMPLER1_SAMPLE_FADE_OUT_MAX)
-    {
-        plugin->samples[(port - SAMPLER1_SAMPLE_FADE_OUT_MIN)].sampleFadeOutStarts = data;
-    }
-    else if(port >= SAMPLER1_FIRST_EQ_PORT &&
-            port < SAMPLER1_LAST_EQ_PORT)
-    {
-        int f_port = port - SAMPLER1_FIRST_EQ_PORT;
-        int f_instance = f_port / 18;
-        int f_diff = f_port % 18;
-        v_eq6_connect_port(
-            &plugin->mono_modules.mfx[f_instance].eqs, f_diff, data);
-    }
-    else if(port == SAMPLER1_LFO_PITCH_FINE)
-    {
-        plugin->lfo_pitch_fine = data;
-    }
-    else if(port == SAMPLER1_MIN_NOTE)
-    {
-        plugin->min_note = data;
-    }
-    else if(port == SAMPLER1_MAX_NOTE)
-    {
-        plugin->max_note = data;
-    }
-    else if(port == SAMPLER1_MAIN_PITCH)
-    {
-        plugin->main_pitch = data;
-    }
-    else if(port == SAMPLER1_ADSR_LIN_MAIN)
-    {
-        plugin->adsr_lin_main = data;
-    }
-
 }
 
-void v_sampler1_load(PluginHandle instance,
-        PluginDescriptor * Descriptor, char * a_file_path)
-{
+void v_sampler1_load(
+    PluginHandle instance,
+    PluginDescriptor * Descriptor,
+    char * a_file_path
+){
     t_sampler1 *plugin_data = (t_sampler1*)instance;
-    generic_file_loader(instance, Descriptor,
-        a_file_path, plugin_data->port_table, &plugin_data->cc_map);
+    generic_file_loader(
+        instance,
+        Descriptor,
+        a_file_path,
+        plugin_data->port_table,
+        &plugin_data->cc_map
+    );
 }
 
-void v_sampler1_set_port_value(PluginHandle Instance,
-        int a_port, SGFLT a_value)
-{
+void v_sampler1_set_port_value(
+    PluginHandle Instance,
+    int a_port,
+    SGFLT a_value
+){
     t_sampler1 *plugin_data = (t_sampler1*)Instance;
     plugin_data->port_table[a_port] = a_value;
 }
 
-PluginHandle instantiateSampler(PluginDescriptor * descriptor,
-        int s_rate,
-        fp_get_audio_pool_item_from_host a_host_audio_pool_func,
-        int a_plugin_uid, fp_queue_message a_queue_func)
-{
+PluginHandle instantiateSampler(
+    PluginDescriptor * descriptor,
+    int s_rate,
+    fp_get_audio_pool_item_from_host a_host_audio_pool_func,
+    int a_plugin_uid,
+    fp_queue_message a_queue_func
+){
     audio_pool_get_func = a_host_audio_pool_func;
     t_sampler1 *plugin_data;
 
     hpalloc((void**)&plugin_data, sizeof(t_sampler1));
 
     plugin_data->descriptor = descriptor;
-    plugin_data->voices = g_voc_get_voices(SAMPLER1_POLYPHONY,
-            SAMPLER1_POLYPHONY_THRESH);
+    plugin_data->voices = g_voc_get_voices(
+        SAMPLER1_POLYPHONY,
+        SAMPLER1_POLYPHONY_THRESH
+    );
 
     plugin_data->plugin_uid = a_plugin_uid;
 
