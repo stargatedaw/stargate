@@ -280,7 +280,11 @@ void v_ev_set_noteon(
     int a_channel,
     int a_note,
     int a_velocity,
-    SGFLT pan
+    SGFLT pan,
+    SGFLT attack,
+    SGFLT decay,
+    SGFLT sustain,
+    SGFLT release
 );
 void v_ev_set_noteoff(
     t_seq_event* a_event,
@@ -298,4 +302,5 @@ NO_OPTIMIZATION void g_plugin_init(
     fp_queue_message a_queue_func
 );
 
+SGFLT set_pmn_adsr(SGFLT, SGFLT, SGFLT, SGFLT);
 #endif

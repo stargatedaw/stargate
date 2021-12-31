@@ -43,6 +43,38 @@ class note(abstract_midi_event):
             self.velocity == other.velocity
         )
 
+    def get_pmn_param(self, param):
+        if param == 0:
+            return self.velocity
+        elif param == 1:
+            return self.pan
+        elif param == 2:
+            return self.attack
+        elif param == 3:
+            return self.decay
+        elif param == 4:
+            return self.sustain
+        elif param == 5:
+            return self.release
+        else:
+            raise ValueError(param)
+
+    def set_pmn_param(self, param, value):
+        if param == 0:
+            self.velocity = value
+        elif param == 1:
+            self.pan = value
+        elif param == 2:
+            self.attack = value
+        elif param == 3:
+            self.decay = value
+        elif param == 4:
+            self.sustain = value
+        elif param == 5:
+            self.release = value
+        else:
+            raise ValueError(param)
+
     def set_start(self, a_start):
         self.start = round(float(a_start), 6)
         self.set_end()

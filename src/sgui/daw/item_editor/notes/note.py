@@ -73,22 +73,19 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
             f_y = (1.0 - (f_vel * 0.007874016)) * f_rect.height()
             f_width = f_rect.width()
             self.vel_line.setLine(0.0, f_y, f_width, f_y)
-        elif _shared.PARAMETER == 1:
-            pan = self.note_item.pan
+        elif _shared.PARAMETER >= 1:
+            value = self.note_item.get_pmn_param(_shared.PARAMETER)
             f_rect = self.rect()
-            f_y = (1.0 - ((pan + 1.0) * 0.5)) * f_rect.height()
+            f_y = (1.0 - ((value + 1.0) * 0.5)) * f_rect.height()
             f_width = f_rect.width()
             self.vel_line.setLine(0.0, f_y, f_width, f_y)
-        else:
-            raise ValueError(_shared.PARAMETER)
 
     def set_brush(self):
         if _shared.PARAMETER == 0:  # velocity
             pos = (1.0 - (self.note_item.velocity / 127.0))
-        elif _shared.PARAMETER == 1:  # pan
-            pos = (1.0 - ((self.note_item.pan + 1.0) * 0.5))
-        else:
-            raise ValueError(_shared.PARAMETER)
+        elif _shared.PARAMETER >= 1:
+            value = self.note_item.get_pmn_param(_shared.PARAMETER)
+            pos = (1.0 - ((value + 1.0) * 0.5))
 
         pos = clip_value(pos, 0.0, 1.0)
         color = color_interpolate(
@@ -221,16 +218,18 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
             for f_item in shared.PIANO_ROLL_EDITOR.get_selected_items():
                 if _shared.PARAMETER == 0:
                     f_item.orig_value = f_item.note_item.velocity
-                elif _shared.PARAMETER == 1:
-                    f_item.orig_value = f_item.note_item.pan
-                else:
-                    raise ValueError(_shared.PARAMETER)
+                elif _shared.PARAMETER >= 1:
+                    f_item.orig_value = f_item.note_item.get_pmn_param(
+                        _shared.PARAMETER,
+                    )
                 f_item.set_brush()
             for f_item in shared.PIANO_ROLL_EDITOR.note_items:
                 if _shared.PARAMETER == 0:
                     f_item.note_text.setText(str(f_item.note_item.velocity))
-                if _shared.PARAMETER == 1:
-                    f_item.note_text.setText(str(f_item.note_item.pan))
+                if _shared.PARAMETER >= 1:
+                    f_item.note_text.setText(
+                        str(f_item.note_item.get_pmn_param(_shared.PARAMETER)),
+                    )
         shared.PIANO_ROLL_EDITOR.click_enabled = True
 
     def mouseMoveEvent(self, a_event):
@@ -273,15 +272,18 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
                     f_new_vel = int(f_new_vel)
                     f_item.note_item.velocity = f_new_vel
                     f_item.note_text.setText(str(f_new_vel))
-                elif _shared.PARAMETER == 1:
-                    new_pan = clip_value(
+                elif _shared.PARAMETER >= 1:
+                    new_value = clip_value(
                         (f_val * 0.01) + f_item.orig_value,
                         -1.0,
                         1.0,
                     )
-                    new_pan = round(new_pan, 2)
-                    f_item.note_item.pan = new_pan
-                    f_item.note_text.setText(str(new_pan))
+                    new_value = round(new_value, 2)
+                    f_item.note_item.set_pmn_param(
+                        _shared.PARAMETER,
+                        new_value,
+                    )
+                    f_item.note_text.setText(str(new_value))
                 f_item.set_brush()
                 f_item.set_vel_line()
             elif self.is_velocity_curving:
@@ -307,15 +309,15 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
                     f_item.note_text.setText(str(f_new_vel))
                     f_item.set_brush()
                     f_item.set_vel_line()
-                elif _shared.PARAMETER == 1:
+                elif _shared.PARAMETER >= 1:
                     f_start = f_item.note_item.start
                     if f_start == self.vc_mid:
-                        new_pan = (f_val * 0.01) + f_item.orig_value
+                        new_value = (f_val * 0.01) + f_item.orig_value
                     else:
                         if f_start > self.vc_mid:
                             f_frac = (f_start -
                                 self.vc_mid) / (self.vc_end - self.vc_mid)
-                            new_pan = linear_interpolate(
+                            new_value = linear_interpolate(
                                 f_val * 0.01,
                                 0.003 * f_val,
                                 f_frac,
@@ -323,16 +325,19 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
                         else:
                             f_frac = (f_start -
                                 self.vc_start) / (self.vc_mid - self.vc_start)
-                            new_pan = linear_interpolate(
+                            new_value = linear_interpolate(
                                 0.003 * f_val,
                                 f_val * 0.01,
                                 f_frac,
                             )
-                        new_pan += f_item.orig_value
-                    new_pan = clip_value(new_pan, -1.0, 1.0)
-                    new_pan = round(new_pan, 2)
-                    f_item.note_item.pan = new_pan
-                    f_item.note_text.setText(str(new_pan))
+                        new_value += f_item.orig_value
+                    new_value = clip_value(new_value, -1.0, 1.0)
+                    new_value = round(new_value, 2)
+                    f_item.note_item.set_pmn_param(
+                        _shared.PARAMETER,
+                        new_value,
+                    )
+                    f_item.note_text.setText(str(new_value))
                     f_item.set_brush()
                     f_item.set_vel_line()
             else:

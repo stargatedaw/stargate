@@ -393,7 +393,8 @@ void v_va1_process_midi_event(
                 (*plugin_data->main_pb_amt) + (*plugin_data->osc2pb);
 
             f_voice->dist_out_gain = f_db_to_linear_fast(
-                (*plugin_data->dist_out_gain) * 0.01f);
+                (*plugin_data->dist_out_gain) * 0.01f
+            );
 
             f_voice->mdist_fp = g_mds_get_fp((int)(*plugin_data->dist_type));
 
@@ -415,12 +416,15 @@ void v_va1_process_midi_event(
                 f_voice->target_pitch
             );
 
-            f_voice->osc1_linamp =
-                f_db_to_linear_fast(*(plugin_data->osc1vol));
-            f_voice->osc2_linamp =
-                f_db_to_linear_fast(*(plugin_data->osc2vol));
-            f_voice->noise_linamp =
-                f_db_to_linear_fast(*(plugin_data->noise_amp));
+            f_voice->osc1_linamp = f_db_to_linear_fast(
+                *(plugin_data->osc1vol)
+            );
+            f_voice->osc2_linamp = f_db_to_linear_fast(
+                *(plugin_data->osc2vol)
+            );
+            f_voice->noise_linamp = f_db_to_linear_fast(
+                *(plugin_data->noise_amp)
+            );
 
             f_voice->noise_func_ptr = fp_get_noise_func_ptr(
                 (int)(*(plugin_data->noise_type))
@@ -438,18 +442,42 @@ void v_va1_process_midi_event(
                 *plugin_data->lfo_type
             );
 
-            SGFLT f_attack = *(plugin_data->attack) * .01;
-            f_attack = (f_attack) * (f_attack);
-            SGFLT f_decay = *(plugin_data->decay) * .01;
-            f_decay = (f_decay) * (f_decay);
-            SGFLT f_release = *(plugin_data->release) * .01;
-            f_release = (f_release) * (f_release);
+            SGFLT f_attack = set_pmn_adsr(
+                *(plugin_data->attack) * .01,
+                a_event->attack,
+                *(plugin_data->attack_start) * .01,
+                *(plugin_data->attack_end) * .01
+            );
+            f_attack = f_attack * f_attack;
+
+            SGFLT f_decay = set_pmn_adsr(
+                *(plugin_data->decay) * .01,
+                a_event->decay,
+                *(plugin_data->decay_start) * .01,
+                *(plugin_data->decay_end) * .01
+            );
+            f_decay = f_decay * f_decay;
+
+            SGFLT sustain = set_pmn_adsr(
+                *plugin_data->sustain,
+                a_event->sustain,
+                *plugin_data->sustain_start,
+                *plugin_data->sustain_end
+            );
+
+            SGFLT f_release = set_pmn_adsr(
+                *(plugin_data->release) * .01,
+                a_event->release,
+                *(plugin_data->release_start) * .01,
+                *(plugin_data->release_end) * .01
+            );
+            f_release = f_release * f_release;
 
             FP_ADSR_SET[f_adsr_main_lin](
                 &f_voice->adsr_amp,
                 f_attack,
                 f_decay,
-                *(plugin_data->sustain),
+                sustain,
                 f_release
             );
 
@@ -744,16 +772,16 @@ void v_run_va1_voice(
         //i_voice =  (a_poly_voice.on) - (plugin_data->sampleNo);
     }
 
-    if (!a_no_events &&
-       (plugin_data->sampleNo == a_poly_voice->off) &&
-       ((a_voice->adsr_amp.stage) < ADSR_STAGE_RELEASE))
-    {
-        if(a_poly_voice->n_state == note_state_killed)
-        {
+    if(
+        !a_no_events
+        &&
+        plugin_data->sampleNo == a_poly_voice->off
+        &&
+        a_voice->adsr_amp.stage < ADSR_STAGE_RELEASE
+    ){
+        if(a_poly_voice->n_state == note_state_killed){
             v_va1_poly_note_off(a_voice, 1);
-        }
-        else
-        {
+        } else {
             v_va1_poly_note_off(a_voice, 0);
         }
     }

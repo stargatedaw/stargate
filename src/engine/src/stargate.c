@@ -5,6 +5,8 @@
 #include "globals.h"
 #include "ipc.h"
 #include "audiodsp/lib/amp.h"
+#include "audiodsp/lib/interpolate-cubic.h"
+#include "audiodsp/lib/interpolate-linear.h"
 #include "audiodsp/lib/lmalloc.h"
 #include "plugin.h"
 #include "stargate.h"
@@ -722,6 +724,10 @@ void g_pynote_init(
     f_result->start = a_start;
     f_result->velocity = a_vel;
     f_result->pan = pan;
+    f_result->attack = attack;
+    f_result->decay = decay;
+    f_result->sustain = sustain;
+    f_result->release = release;
 }
 
 void g_pycc_init(
@@ -737,8 +743,7 @@ void g_pycc_init(
 }
 
 t_seq_event * g_pycc_get(int a_cc_num, SGFLT a_cc_val, SGFLT a_start){
-    t_seq_event * f_result =
-        (t_seq_event*)malloc(sizeof(t_seq_event));
+    t_seq_event * f_result = (t_seq_event*)malloc(sizeof(t_seq_event));
     g_pycc_init(f_result, a_cc_num, a_cc_val, a_start);
     return f_result;
 }
@@ -753,10 +758,8 @@ void g_pypitchbend_init(
     f_result->value = a_value;
 }
 
-t_seq_event * g_pypitchbend_get(SGFLT a_start, SGFLT a_value)
-{
-    t_seq_event * f_result =
-        (t_seq_event*)malloc(sizeof(t_seq_event));
+t_seq_event * g_pypitchbend_get(SGFLT a_start, SGFLT a_value){
+    t_seq_event * f_result = (t_seq_event*)malloc(sizeof(t_seq_event));
     g_pypitchbend_init(f_result, a_start, a_value);
     return f_result;
 }

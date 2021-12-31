@@ -138,7 +138,7 @@ typedef struct {
     t_sg_seq_event_period sample_periods[2];
 } t_sg_seq_event_result;
 
-typedef struct{
+typedef struct {
     int count;
     int pos;
     t_sg_seq_event * events;
@@ -149,15 +149,15 @@ typedef struct{
     SGFLT playback_inc;
     SGFLT samples_per_beat;
     t_sample_period period;
-}t_sg_seq_event_list;
+} t_sg_seq_event_list;
 
 
-typedef struct{
+typedef struct {
     int thread_num;
     int stack_size;
-}t_thread_args;
+} t_thread_args;
 
-typedef struct{
+typedef struct {
     char pad1[CACHE_LINE_SIZE];
     /*This is reset to bus_count each cycle and the
      * bus track processed when count reaches 0*/
@@ -190,14 +190,14 @@ typedef struct{
     t_seq_event event_buffer[MAX_EVENT_BUFFER_SIZE];
     struct ShdsList * event_list;
     char pad2[CACHE_LINE_SIZE];
-}t_pytrack;
+} t_pytrack;
 
-typedef struct{
+typedef struct {
     void (*run)(int sample_count, SGFLT **output, SGFLT *a_input_buffers);
     void (*osc_send)(t_osc_send_data*);
     void (*audio_inputs)();
     void (*mix)();
-}t_sg_host;
+} t_sg_host;
 
 typedef struct {
     t_sg_thread_storage thread_storage[MAX_WORKER_THREADS];
@@ -254,7 +254,7 @@ typedef struct {
 typedef struct {
     int output_track;
     int on;
-}t_midi_routing;
+} t_midi_routing;
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];

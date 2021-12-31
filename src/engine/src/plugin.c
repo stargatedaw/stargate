@@ -200,13 +200,21 @@ void v_ev_set_noteon(
     int a_channel,
     int a_note,
     int a_velocity,
-    SGFLT pan
+    SGFLT pan,
+    SGFLT attack,
+    SGFLT decay,
+    SGFLT sustain,
+    SGFLT release
 ){
     a_event->type = EVENT_NOTEON;
     a_event->channel = a_channel;
     a_event->note = a_note;
     a_event->velocity = a_velocity;
     a_event->pan = pan;
+    a_event->attack = attack;
+    a_event->decay = decay;
+    a_event->sustain = sustain;
+    a_event->release = release;
 }
 
 void v_ev_set_controller(
@@ -444,6 +452,26 @@ void generic_file_loader(
 
     g_free_2d_char_array(f_2d_array);
 
+}
+
+SGFLT set_pmn_adsr(
+    SGFLT value,
+    SGFLT param,
+    SGFLT start,
+    SGFLT end
+){
+    if(param > 0.0){
+        if(end <= value){
+            return value;
+        }
+        return f_linear_interpolate(value, end, param);
+    } else if(param < 0.0){
+        if(start >= value){
+            return value;
+        }
+        return f_linear_interpolate(value, start, -param);
+    }
+    return value;
 }
 
 NO_OPTIMIZATION void g_plugin_init(
