@@ -63,10 +63,10 @@ class ADSRMainWidget:
             self.delay_knob.add_to_grid_layout(self.layout, 0)
             self.clipboard_dict["delay"] = self.delay_knob
         self.attack_knobs = []
-        for name, port in (
-            ('Attack', attack_port),
-            ('Att. Start', attack_pmn_start_port),
-            ('Att. End', attack_pmn_end_port),
+        for name, port, default in (
+            ('Attack', attack_port, a_attack_default),
+            ('Att. Start', attack_pmn_start_port, 0),
+            ('Att. End', attack_pmn_end_port, 200),
         ):
             knob = knob_control(
                 a_size,
@@ -76,7 +76,7 @@ class ADSRMainWidget:
                 a_val_callback,
                 0,
                 200,
-                a_attack_default,
+                default,
                 a_knob_type,
                 a_port_dict,
                 a_preset_mgr,
@@ -105,10 +105,10 @@ class ADSRMainWidget:
             self.hold_knob.add_to_grid_layout(self.layout, 3)
             self.clipboard_dict["hold"] = self.hold_knob
         self.decay_knobs = []
-        for name, port in (
-            ("Decay", decay_port),
-            ("Dec. Start", decay_pmn_start_port),
-            ("Dec. End", decay_pmn_end_port),
+        for name, port, default in (
+            ("Decay", decay_port, 50),
+            ("Dec. Start", decay_pmn_start_port, 10),
+            ("Dec. End", decay_pmn_end_port, 200),
         ):
             knob = knob_control(
                 a_size,
@@ -118,7 +118,7 @@ class ADSRMainWidget:
                 a_val_callback,
                 10,
                 200,
-                50,
+                default,
                 a_knob_type,
                 a_port_dict,
                 a_preset_mgr,
@@ -129,10 +129,10 @@ class ADSRMainWidget:
             self.decay_knobs,
         )
         self.sustain_knobs = []
-        for name, port in (
-            ("Sustain", sustain_port),
-            ("Sus. Start", sustain_pmn_start_port),
-            ("Sus. End", sustain_pmn_end_port),
+        for name, port, default_lin, default_db in (
+            ("Sustain", sustain_port, 100, 0),
+            ("Sus. Start", sustain_pmn_start_port, 0, -30),
+            ("Sus. End", sustain_pmn_end_port, 100, 0),
         ):
             if a_sustain_in_db:
                 knob = knob_control(
@@ -143,7 +143,7 @@ class ADSRMainWidget:
                     a_val_callback,
                     -30,
                     0,
-                    0,
+                    default_db,
                     _shared.KC_INTEGER,
                     a_port_dict,
                     a_preset_mgr,
@@ -159,7 +159,7 @@ class ADSRMainWidget:
                     a_val_callback,
                     0,
                     100,
-                    100,
+                    default_lin,
                     _shared.KC_DECIMAL,
                     a_port_dict,
                     a_preset_mgr,
@@ -171,10 +171,10 @@ class ADSRMainWidget:
             self.sustain_knobs,
         )
         self.release_knobs = []
-        for name, port in (
-            ("Release", release_port),
-            ("Rel. Start", release_pmn_start_port),
-            ("Rel. End", release_pmn_end_port),
+        for name, port, default in (
+            ("Release", release_port, 50),
+            ("Rel. Start", release_pmn_start_port, 10),
+            ("Rel. End", release_pmn_end_port, 400),
         ):
             knob = knob_control(
                 a_size,
