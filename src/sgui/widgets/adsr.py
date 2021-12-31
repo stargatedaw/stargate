@@ -1,5 +1,6 @@
 from . import _shared
 from .control import *
+from sglib import math as sg_math
 from sglib.lib.translate import _
 from sgui.sgqt import *
 
@@ -187,7 +188,31 @@ class adsr_widget:
             for k, v in self.clipboard_dict.items()])
 
     def paste(self):
-        if ADSR_CLIPBOARD:
-            for k, v in self.clipboard_dict.items():
+        if not ADSR_CLIPBOARD:
+            return
+        for k, v in self.clipboard_dict.items():
+            if k in ADSR_CLIPBOARD:
                 v.set_value(ADSR_CLIPBOARD[k], True)
+            elif k == 'sustain' and 'sustain_db' in ADSR_CLIPBOARD:
+                v.set_value(
+                    int(
+                        sg_math.db_to_lin(
+                            ADSR_CLIPBOARD['sustain_db'],
+                        ) * 100
+                    ),
+                    True,
+                )
+            elif k == 'sustain_db' and 'sustain' in ADSR_CLIPBOARD:
+                v.set_value(
+                    int(
+                        sg_math.lin_to_db(
+                            ADSR_CLIPBOARD['sustain'] * 0.01,
+                        ),
+                    ),
+                    True,
+                )
+            else:
+                LOG.warning(
+                    f'{k} not in clipboard: {ADSR_CLIPBOARD}, not applying'
+                )
 
