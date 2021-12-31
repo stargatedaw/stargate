@@ -85,6 +85,7 @@ class ADSRMainWidget:
             self.attack_knobs.append(knob)
         self.attack_knob = MultiplexedControl(
             self.attack_knobs,
+            a_size,
         )
 
         if a_hold_port is not None:
@@ -127,6 +128,7 @@ class ADSRMainWidget:
             self.decay_knobs.append(knob)
         self.decay_knob = MultiplexedControl(
             self.decay_knobs,
+            a_size,
         )
         self.sustain_knobs = []
         for name, port, default_lin, default_db in (
@@ -149,7 +151,6 @@ class ADSRMainWidget:
                     a_preset_mgr,
                     knob_kwargs=knob_kwargs,
                 )
-                self.clipboard_dict["sustain_db"] = self.sustain_knob
             else:
                 knob = knob_control(
                     a_size,
@@ -165,11 +166,15 @@ class ADSRMainWidget:
                     a_preset_mgr,
                     knob_kwargs=knob_kwargs,
                 )
-                self.clipboard_dict["sustain"] = self.sustain_knob
             self.sustain_knobs.append(knob)
         self.sustain_knob = MultiplexedControl(
             self.sustain_knobs,
+            a_size,
         )
+        if a_sustain_in_db:
+            self.clipboard_dict["sustain_db"] = self.sustain_knob
+        else:
+            self.clipboard_dict["sustain"] = self.sustain_knob
         self.release_knobs = []
         for name, port, default in (
             ("Release", release_port, 50),
@@ -193,6 +198,7 @@ class ADSRMainWidget:
             self.release_knobs.append(knob)
         self.release_knob = MultiplexedControl(
             self.release_knobs,
+            a_size,
         )
         self.attack_knob.add_to_grid_layout(self.layout, 2)
         self.decay_knob.add_to_grid_layout(self.layout, 4)

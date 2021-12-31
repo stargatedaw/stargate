@@ -539,10 +539,10 @@ class MultiplexedControl(GridLayoutControl):
     def __init__(
         self,
         controls: Tuple[AbstractUiControl],
+        size: Optional[int]=None,
         name_label: Optional[QComboBox]=None,
     ):
         self.controls = controls
-        self.port_num = port_num
 
         if name_label:
             self.name_label = name_label
@@ -551,9 +551,15 @@ class MultiplexedControl(GridLayoutControl):
             self.name_label = QComboBox()
             self.name_label.addItems(items)
         self.name_label.currentIndexChanged.connect(self.index_changed)
+        self.name_label.setObjectName("plugin_name_label")
 
+        stylesheet = "background-color: transparent;"
         self.control = QStackedWidget()
+        if size is not None:
+            self.control.setFixedSize(size, size)
+        self.control.setStyleSheet(stylesheet)
         self.value_label = QStackedWidget()
+        self.value_label.setStyleSheet(stylesheet)
         for control in controls:
             self.control.addWidget(control.control)
             self.value_label.addWidget(control.value_label)
