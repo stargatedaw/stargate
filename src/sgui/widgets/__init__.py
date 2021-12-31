@@ -4,6 +4,7 @@ from .abstract_plugin_ui import AbstractPluginUI
 from .add_mul_dialog import add_mul_dialog
 from .additive_osc import *
 from .adsr import adsr_widget
+from .adsr_main import ADSRMainWidget
 from .audio_item_viewer import *
 from .control import *
 from .hardware_dialog import hardware_dialog
