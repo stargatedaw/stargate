@@ -77,6 +77,14 @@ VA1_OSC2_PB = 53
 VA1_DIST_TYPE = 54
 VA1_ADSR_LIN_MAIN = 55
 VA1_PAN = 56
+VA1_ATTACK_PMN_START = 57
+VA1_ATTACK_PMN_END = 58
+VA1_DECAY_PMN_START = 59
+VA1_DECAY_PMN_END = 60
+VA1_SUSTAIN_PMN_START = 61
+VA1_SUSTAIN_PMN_END = 62
+VA1_RELEASE_PMN_START = 63
+VA1_RELEASE_PMN_END = 64
 
 
 VA1_PORT_MAP = {
@@ -177,6 +185,12 @@ QComboBox {
     border: 1px solid #222222;
     border-radius: 6px;
     color: #222222;
+}
+
+QComboBox#plugin_name_label {
+    background: transparent;
+    border: transparent;
+    color: #cccccc;
 }
 
 QScrollBar:horizontal
@@ -469,13 +483,21 @@ class VA1PluginUI(AbstractPluginUI):
         self.hlayout1.addWidget(self.osc2.group_box)
         self.hlayout2 = QHBoxLayout()
         self.main_layout.addLayout(self.hlayout2)
-        self.adsr_amp = adsr_widget(
+        self.adsr_amp = ADSRMainWidget(
             f_knob_size,
             True,
             VA1_ATTACK,
+            VA1_ATTACK_PMN_START,
+            VA1_ATTACK_PMN_END,
             VA1_DECAY,
+            VA1_DECAY_PMN_START,
+            VA1_DECAY_PMN_END,
             VA1_SUSTAIN,
+            VA1_SUSTAIN_PMN_START,
+            VA1_SUSTAIN_PMN_END,
             VA1_RELEASE,
+            VA1_RELEASE_PMN_START,
+            VA1_RELEASE_PMN_END,
             _("ADSR Amp"),
             self.plugin_rel_callback,
             self.plugin_val_callback,

@@ -94,12 +94,19 @@ void v_va1_connect_port(
 ){
     t_va1* plugin = (t_va1*)instance;
 
-    switch (port)
-    {
+    switch (port){
         case VA1_ATTACK: plugin->attack = data; break;
+        case VA1_ATTACK_PMN_START: plugin->attack_start = data; break;
+        case VA1_ATTACK_PMN_END: plugin->attack_end = data; break;
         case VA1_DECAY: plugin->decay = data; break;
+        case VA1_DECAY_PMN_START: plugin->decay_start = data; break;
+        case VA1_DECAY_PMN_END: plugin->decay_end = data; break;
         case VA1_SUSTAIN: plugin->sustain = data; break;
+        case VA1_SUSTAIN_PMN_START: plugin->sustain_start = data; break;
+        case VA1_SUSTAIN_PMN_END: plugin->sustain_end = data; break;
         case VA1_RELEASE: plugin->release = data; break;
+        case VA1_RELEASE_PMN_START: plugin->release_start = data; break;
+        case VA1_RELEASE_PMN_END: plugin->release_end = data; break;
         case VA1_TIMBRE: plugin->timbre = data; break;
         case VA1_RES: plugin->res = data; break;
         case VA1_DIST: plugin->dist = data; break;
@@ -230,8 +237,7 @@ void v_va1_connect_port(
         case VA1_ADSR_LIN_MAIN: plugin->adsr_lin_main = data; break;
         case VA1_PAN: plugin->pan = data; break;
         default:
-            sg_assert(
-                0,
+            sg_abort(
                 "v_va1_connect_port: unknown port %i",
                 port
             );
@@ -882,9 +888,17 @@ PluginDescriptor *va1_plugin_descriptor(){
     PluginDescriptor *f_result = get_pyfx_descriptor(VA1_COUNT);
 
     set_pyfx_port(f_result, VA1_ATTACK, 10.0f, 0.0f, 200.0f);
+    set_pyfx_port(f_result, VA1_ATTACK_PMN_START, 0.0f, 0.0f, 200.0f);
+    set_pyfx_port(f_result, VA1_ATTACK_PMN_END, 200.0f, 0.0f, 200.0f);
     set_pyfx_port(f_result, VA1_DECAY, 10.0f, 10.0f, 200.0f);
-    set_pyfx_port(f_result, VA1_SUSTAIN, 0.0f, -60.0f, 0.0f);
+    set_pyfx_port(f_result, VA1_DECAY_PMN_START, 10.0f, 10.0f, 200.0f);
+    set_pyfx_port(f_result, VA1_DECAY_PMN_END, 200.0f, 10.0f, 200.0f);
+    set_pyfx_port(f_result, VA1_SUSTAIN, 0.0f, -30.0f, 0.0f);
+    set_pyfx_port(f_result, VA1_SUSTAIN_PMN_START, -30.0f, -30.0f, 0.0f);
+    set_pyfx_port(f_result, VA1_SUSTAIN_PMN_END, 0.0f, -30.0f, 0.0f);
     set_pyfx_port(f_result, VA1_RELEASE, 50.0f, 10.0f, 400.0f);
+    set_pyfx_port(f_result, VA1_RELEASE_PMN_START, 10.0f, 10.0f, 400.0f);
+    set_pyfx_port(f_result, VA1_RELEASE_PMN_END, 400.0f, 10.0f, 400.0f);
     set_pyfx_port(f_result, VA1_TIMBRE, 124.0f, 20.0f, 124.0f);
     set_pyfx_port(f_result, VA1_RES, -120.0f, -300.0f, 0.0f);
     set_pyfx_port(f_result, VA1_DIST, 15.0f, 0.0f, 48.0f);

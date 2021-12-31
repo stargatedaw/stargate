@@ -87,10 +87,18 @@ GNU General Public License for more details.
 #define VA1_DIST_TYPE 54
 #define VA1_ADSR_LIN_MAIN 55
 #define VA1_PAN 56
+#define VA1_ATTACK_PMN_START 57
+#define VA1_ATTACK_PMN_END 58
+#define VA1_DECAY_PMN_START 59
+#define VA1_DECAY_PMN_END 60
+#define VA1_SUSTAIN_PMN_START 61
+#define VA1_SUSTAIN_PMN_END 62
+#define VA1_RELEASE_PMN_START 63
+#define VA1_RELEASE_PMN_END 64
 
 /* must be 1 + highest value above
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
-#define VA1_COUNT 57
+#define VA1_COUNT 65
 
 #define VA1_POLYPHONY 24
 #define VA1_POLYPHONY_THRESH 12
@@ -167,9 +175,17 @@ typedef struct {
     PluginData *tune;
     PluginData *adsr_lin_main;
     PluginData *attack;
+    PluginData *attack_start;
+    PluginData *attack_end;
     PluginData *decay;
+    PluginData *decay_start;
+    PluginData *decay_end;
     PluginData *sustain;
+    PluginData *sustain_start;
+    PluginData *sustain_end;
     PluginData *release;
+    PluginData *release_start;
+    PluginData *release_end;
     PluginData *timbre;
     PluginData *res;
     PluginData *filter_type;
