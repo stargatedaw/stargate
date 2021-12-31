@@ -1541,6 +1541,14 @@ class sampler1_plugin_ui(AbstractPluginUI):
 
         self.hlayout2 = QHBoxLayout()
         self.main_layout.addLayout(self.hlayout2)
+        self.main_layout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
 
         self.adsr_amp = ADSRMainWidget(
             f_knob_size,
