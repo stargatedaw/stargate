@@ -1,4 +1,4 @@
-from sgui.sgqt import QtCore, Signal
+from sgui.sgqt import QMessageBox, QtCore, Signal
 from sglib.ipc.abstract import AbstractIPCTransport
 from sglib import constants
 from sglib.lib import engine
