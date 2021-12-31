@@ -12,7 +12,7 @@ and why, read the
     https://github.com/stargateaudio/stargate-v1-demo-projects)
 - [Download instruments for Sampler1](https://github.com/sfzinstruments)
 - [Download or contribute to our public domain sample pack](
-    https://github.com/stargateaudio/stargate-sample-pack)
+    https://github.com/stargateaudio/stargate/blob/main/docs/troubleshooting/macos_install.md#portable-install-mode)
 
 # Features
 - A digital audio workstation (DAW) with a powerful pattern-based workflow
