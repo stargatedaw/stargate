@@ -204,52 +204,30 @@ void connectPortSampler(
 ){
     t_sampler1 *plugin = (t_sampler1*)instance;
 
-    if(port < SAMPLER1_LAST_REGULAR_CONTROL_PORT)
-    {
-        switch (port)
-        {
-            case SAMPLER1_ATTACK:
-                plugin->attack = data;
-                break;
-            case SAMPLER1_DECAY:
-                plugin->decay = data;
-                break;
-            case SAMPLER1_SUSTAIN:
-                plugin->sustain = data;
-                break;
-            case SAMPLER1_RELEASE:
-                plugin->release = data;
-                break;
-            case SAMPLER1_FILTER_ATTACK:
-                plugin->attack_f = data;
-                break;
-            case SAMPLER1_FILTER_DECAY:
-                plugin->decay_f = data;
-                break;
-            case SAMPLER1_FILTER_SUSTAIN:
-                plugin->sustain_f = data;
-                break;
-            case SAMPLER1_FILTER_RELEASE:
-                plugin->release_f = data;
-                break;
-            case SAMPLER1_MAIN_VOLUME:
-                plugin->main_vol = data;
-                break;
-            case SAMPLER1_MAIN_GLIDE:
-                plugin->main_glide = data;
-                break;
-            case SAMPLER1_MAIN_PITCHBEND_AMT:
-                plugin->main_pb_amt = data;
-                break;
-            case SAMPLER1_PITCH_ENV_TIME:
-                plugin->pitch_env_time = data;
-                break;
-            case SAMPLER1_LFO_FREQ:
-                plugin->lfo_freq = data;
-                break;
-            case SAMPLER1_LFO_TYPE:
-                plugin->lfo_type = data;
-                break;
+    if(port < SAMPLER1_LAST_REGULAR_CONTROL_PORT){
+        switch (port){
+            case SAMPLER1_ATTACK: plugin->attack = data; break;
+            case SAMPLER1_ATTACK_START: plugin->attack_start = data; break;
+            case SAMPLER1_ATTACK_END: plugin->attack_end = data; break;
+            case SAMPLER1_DECAY: plugin->decay = data; break;
+            case SAMPLER1_DECAY_START: plugin->decay_start = data; break;
+            case SAMPLER1_DECAY_END: plugin->decay_end = data; break;
+            case SAMPLER1_SUSTAIN: plugin->sustain = data; break;
+            case SAMPLER1_SUSTAIN_START: plugin->sustain_start = data; break;
+            case SAMPLER1_SUSTAIN_END: plugin->sustain_end = data; break;
+            case SAMPLER1_RELEASE: plugin->release = data; break;
+            case SAMPLER1_RELEASE_START: plugin->release_start = data; break;
+            case SAMPLER1_RELEASE_END: plugin->release_end = data; break;
+            case SAMPLER1_FILTER_ATTACK: plugin->attack_f = data; break;
+            case SAMPLER1_FILTER_DECAY: plugin->decay_f = data; break;
+            case SAMPLER1_FILTER_SUSTAIN: plugin->sustain_f = data; break;
+            case SAMPLER1_FILTER_RELEASE: plugin->release_f = data; break;
+            case SAMPLER1_MAIN_VOLUME: plugin->main_vol = data; break;
+            case SAMPLER1_MAIN_GLIDE: plugin->main_glide = data; break;
+            case SAMPLER1_MAIN_PITCHBEND_AMT: plugin->main_pb_amt = data; break;
+            case SAMPLER1_PITCH_ENV_TIME: plugin->pitch_env_time = data; break;
+            case SAMPLER1_LFO_FREQ: plugin->lfo_freq = data; break;
+            case SAMPLER1_LFO_TYPE: plugin->lfo_type = data; break;
 
             case SAMPLER1_FX0_KNOB0: plugin->pfx_mod_knob[0][0] = data; break;
             case SAMPLER1_FX0_KNOB1: plugin->pfx_mod_knob[0][1] = data; break;
@@ -270,178 +248,340 @@ void connectPortSampler(
             case SAMPLER1_FX3_COMBOBOX: plugin->fx_combobox[3] = data; break;
             //End from MultiFX
             /*PolyFX mod matrix port connections*/
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC0CTRL0: plugin->polyfx_mod_matrix[0][0][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC0CTRL1: plugin->polyfx_mod_matrix[0][0][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC0CTRL2: plugin->polyfx_mod_matrix[0][0][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC1CTRL0: plugin->polyfx_mod_matrix[0][1][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC1CTRL1: plugin->polyfx_mod_matrix[0][1][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC1CTRL2: plugin->polyfx_mod_matrix[0][1][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC2CTRL0: plugin->polyfx_mod_matrix[0][2][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC2CTRL1: plugin->polyfx_mod_matrix[0][2][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC2CTRL2: plugin->polyfx_mod_matrix[0][2][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC3CTRL0: plugin->polyfx_mod_matrix[0][3][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC3CTRL1: plugin->polyfx_mod_matrix[0][3][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC3CTRL2: plugin->polyfx_mod_matrix[0][3][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC0CTRL0: plugin->polyfx_mod_matrix[1][0][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC0CTRL1: plugin->polyfx_mod_matrix[1][0][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC0CTRL2: plugin->polyfx_mod_matrix[1][0][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC1CTRL0: plugin->polyfx_mod_matrix[1][1][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC1CTRL1: plugin->polyfx_mod_matrix[1][1][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC1CTRL2: plugin->polyfx_mod_matrix[1][1][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC2CTRL0: plugin->polyfx_mod_matrix[1][2][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC2CTRL1: plugin->polyfx_mod_matrix[1][2][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC2CTRL2: plugin->polyfx_mod_matrix[1][2][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC3CTRL0: plugin->polyfx_mod_matrix[1][3][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC3CTRL1: plugin->polyfx_mod_matrix[1][3][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC3CTRL2: plugin->polyfx_mod_matrix[1][3][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC0CTRL0: plugin->polyfx_mod_matrix[2][0][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC0CTRL1: plugin->polyfx_mod_matrix[2][0][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC0CTRL2: plugin->polyfx_mod_matrix[2][0][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC1CTRL0: plugin->polyfx_mod_matrix[2][1][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC1CTRL1: plugin->polyfx_mod_matrix[2][1][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC1CTRL2: plugin->polyfx_mod_matrix[2][1][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC2CTRL0: plugin->polyfx_mod_matrix[2][2][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC2CTRL1: plugin->polyfx_mod_matrix[2][2][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC2CTRL2: plugin->polyfx_mod_matrix[2][2][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC3CTRL0: plugin->polyfx_mod_matrix[2][3][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC3CTRL1: plugin->polyfx_mod_matrix[2][3][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC3CTRL2: plugin->polyfx_mod_matrix[2][3][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC0CTRL0: plugin->polyfx_mod_matrix[3][0][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC0CTRL1: plugin->polyfx_mod_matrix[3][0][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC0CTRL2: plugin->polyfx_mod_matrix[3][0][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC1CTRL0: plugin->polyfx_mod_matrix[3][1][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC1CTRL1: plugin->polyfx_mod_matrix[3][1][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC1CTRL2: plugin->polyfx_mod_matrix[3][1][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC2CTRL0: plugin->polyfx_mod_matrix[3][2][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC2CTRL1: plugin->polyfx_mod_matrix[3][2][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC2CTRL2: plugin->polyfx_mod_matrix[3][2][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC3CTRL0: plugin->polyfx_mod_matrix[3][3][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC3CTRL1: plugin->polyfx_mod_matrix[3][3][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC3CTRL2: plugin->polyfx_mod_matrix[3][3][2] = data; break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC0CTRL0:
+                plugin->polyfx_mod_matrix[0][0][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC0CTRL1:
+                plugin->polyfx_mod_matrix[0][0][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC0CTRL2:
+                plugin->polyfx_mod_matrix[0][0][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC1CTRL0:
+                plugin->polyfx_mod_matrix[0][1][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC1CTRL1:
+                plugin->polyfx_mod_matrix[0][1][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC1CTRL2:
+                plugin->polyfx_mod_matrix[0][1][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC2CTRL0:
+                plugin->polyfx_mod_matrix[0][2][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC2CTRL1:
+                plugin->polyfx_mod_matrix[0][2][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC2CTRL2:
+                plugin->polyfx_mod_matrix[0][2][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC3CTRL0:
+                plugin->polyfx_mod_matrix[0][3][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC3CTRL1:
+                plugin->polyfx_mod_matrix[0][3][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC3CTRL2:
+                plugin->polyfx_mod_matrix[0][3][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC0CTRL0:
+                plugin->polyfx_mod_matrix[1][0][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC0CTRL1:
+                plugin->polyfx_mod_matrix[1][0][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC0CTRL2:
+                plugin->polyfx_mod_matrix[1][0][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC1CTRL0:
+                plugin->polyfx_mod_matrix[1][1][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC1CTRL1:
+                plugin->polyfx_mod_matrix[1][1][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC1CTRL2:
+                plugin->polyfx_mod_matrix[1][1][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC2CTRL0:
+                plugin->polyfx_mod_matrix[1][2][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC2CTRL1:
+                plugin->polyfx_mod_matrix[1][2][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC2CTRL2:
+                plugin->polyfx_mod_matrix[1][2][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC3CTRL0:
+                plugin->polyfx_mod_matrix[1][3][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC3CTRL1:
+                plugin->polyfx_mod_matrix[1][3][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC3CTRL2:
+                plugin->polyfx_mod_matrix[1][3][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC0CTRL0:
+                plugin->polyfx_mod_matrix[2][0][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC0CTRL1:
+                plugin->polyfx_mod_matrix[2][0][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC0CTRL2:
+                plugin->polyfx_mod_matrix[2][0][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC1CTRL0:
+                plugin->polyfx_mod_matrix[2][1][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC1CTRL1:
+                plugin->polyfx_mod_matrix[2][1][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC1CTRL2:
+                plugin->polyfx_mod_matrix[2][1][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC2CTRL0:
+                plugin->polyfx_mod_matrix[2][2][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC2CTRL1:
+                plugin->polyfx_mod_matrix[2][2][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC2CTRL2:
+                plugin->polyfx_mod_matrix[2][2][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC3CTRL0:
+                plugin->polyfx_mod_matrix[2][3][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC3CTRL1:
+                plugin->polyfx_mod_matrix[2][3][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC3CTRL2:
+                plugin->polyfx_mod_matrix[2][3][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC0CTRL0:
+                plugin->polyfx_mod_matrix[3][0][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC0CTRL1:
+                plugin->polyfx_mod_matrix[3][0][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC0CTRL2:
+                plugin->polyfx_mod_matrix[3][0][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC1CTRL0:
+                plugin->polyfx_mod_matrix[3][1][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC1CTRL1:
+                plugin->polyfx_mod_matrix[3][1][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC1CTRL2:
+                plugin->polyfx_mod_matrix[3][1][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC2CTRL0:
+                plugin->polyfx_mod_matrix[3][2][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC2CTRL1:
+                plugin->polyfx_mod_matrix[3][2][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC2CTRL2:
+                plugin->polyfx_mod_matrix[3][2][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC3CTRL0:
+                plugin->polyfx_mod_matrix[3][3][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC3CTRL1:
+                plugin->polyfx_mod_matrix[3][3][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC3CTRL2:
+                plugin->polyfx_mod_matrix[3][3][2] = data;
+                break;
 
             //keyboard tracking
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC4CTRL0: plugin->polyfx_mod_matrix[0][4][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC4CTRL1: plugin->polyfx_mod_matrix[0][4][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC4CTRL2: plugin->polyfx_mod_matrix[0][4][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC4CTRL0: plugin->polyfx_mod_matrix[1][4][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC4CTRL1: plugin->polyfx_mod_matrix[1][4][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC4CTRL2: plugin->polyfx_mod_matrix[1][4][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC4CTRL0: plugin->polyfx_mod_matrix[2][4][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC4CTRL1: plugin->polyfx_mod_matrix[2][4][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC4CTRL2: plugin->polyfx_mod_matrix[2][4][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC4CTRL0: plugin->polyfx_mod_matrix[3][4][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC4CTRL1: plugin->polyfx_mod_matrix[3][4][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC4CTRL2: plugin->polyfx_mod_matrix[3][4][2] = data; break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC4CTRL0:
+                plugin->polyfx_mod_matrix[0][4][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC4CTRL1:
+                plugin->polyfx_mod_matrix[0][4][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC4CTRL2:
+                plugin->polyfx_mod_matrix[0][4][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC4CTRL0:
+                plugin->polyfx_mod_matrix[1][4][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC4CTRL1:
+                plugin->polyfx_mod_matrix[1][4][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC4CTRL2:
+                plugin->polyfx_mod_matrix[1][4][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC4CTRL0:
+                plugin->polyfx_mod_matrix[2][4][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC4CTRL1:
+                plugin->polyfx_mod_matrix[2][4][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC4CTRL2:
+                plugin->polyfx_mod_matrix[2][4][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC4CTRL0:
+                plugin->polyfx_mod_matrix[3][4][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC4CTRL1:
+                plugin->polyfx_mod_matrix[3][4][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC4CTRL2:
+                plugin->polyfx_mod_matrix[3][4][2] = data;
+                break;
 
             //velocity tracking
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC5CTRL0: plugin->polyfx_mod_matrix[0][5][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC5CTRL1: plugin->polyfx_mod_matrix[0][5][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST0SRC5CTRL2: plugin->polyfx_mod_matrix[0][5][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC5CTRL0: plugin->polyfx_mod_matrix[1][5][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC5CTRL1: plugin->polyfx_mod_matrix[1][5][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST1SRC5CTRL2: plugin->polyfx_mod_matrix[1][5][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC5CTRL0: plugin->polyfx_mod_matrix[2][5][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC5CTRL1: plugin->polyfx_mod_matrix[2][5][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST2SRC5CTRL2: plugin->polyfx_mod_matrix[2][5][2] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC5CTRL0: plugin->polyfx_mod_matrix[3][5][0] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC5CTRL1: plugin->polyfx_mod_matrix[3][5][1] = data; break;
-            case SAMPLER1_PFXMATRIX_GRP0DST3SRC5CTRL2: plugin->polyfx_mod_matrix[3][5][2] = data; break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC5CTRL0:
+                plugin->polyfx_mod_matrix[0][5][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC5CTRL1:
+                plugin->polyfx_mod_matrix[0][5][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST0SRC5CTRL2:
+                plugin->polyfx_mod_matrix[0][5][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC5CTRL0:
+                plugin->polyfx_mod_matrix[1][5][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC5CTRL1:
+                plugin->polyfx_mod_matrix[1][5][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST1SRC5CTRL2:
+                plugin->polyfx_mod_matrix[1][5][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC5CTRL0:
+                plugin->polyfx_mod_matrix[2][5][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC5CTRL1:
+                plugin->polyfx_mod_matrix[2][5][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST2SRC5CTRL2:
+                plugin->polyfx_mod_matrix[2][5][2] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC5CTRL0:
+                plugin->polyfx_mod_matrix[3][5][0] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC5CTRL1:
+                plugin->polyfx_mod_matrix[3][5][1] = data;
+                break;
+            case SAMPLER1_PFXMATRIX_GRP0DST3SRC5CTRL2:
+                plugin->polyfx_mod_matrix[3][5][2] = data;
+                break;
 
             //End PolyFX mod matrix
             case SAMPLER1_LFO_PITCH: plugin->lfo_pitch = data; break;
             default:
+                sg_abort("Unknown port %i", port);
                 break;
         }
-    }
-    else if((port >= SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MIN)].basePitch = data;
-    }
-    else if((port >= SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MIN)].low_note = data;
-    }
-    else if((port >= SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MIN)].high_note = data;
-    }
-    else if((port >= LMS_SAMPLE_VOLUME_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_SAMPLE_VOLUME_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= LMS_SAMPLE_VOLUME_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_VOLUME_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - LMS_SAMPLE_VOLUME_PORT_RANGE_MIN)].sample_vol = data;
-    }
-    else if((port >= SAMPLER1_SAMPLE_START_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_SAMPLE_START_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_SAMPLE_START_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_START_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_SAMPLE_START_PORT_RANGE_MIN)].sampleStarts = data;
-    }
-    else if((port >= SAMPLER1_SAMPLE_END_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_SAMPLE_END_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_SAMPLE_END_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_END_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_SAMPLE_END_PORT_RANGE_MIN)].sampleEnds = data;
-    }
-    else if((port >= SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MIN)].sample_vel_sens = data;
-    }
-    else if((port >= SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MIN)].sample_vel_low = data;
-    }
-    else if((port >= SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MIN)].sample_vel_high = data;
-    }
-    else if((port >= SAMPLER1_PITCH_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_PITCH_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_PITCH_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_PITCH_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_PITCH_PORT_RANGE_MIN)].sample_pitch = data;
-    }
-    else if((port >= SAMPLER1_TUNE_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_TUNE_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_TUNE_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_TUNE_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_TUNE_PORT_RANGE_MIN)].sample_tune = data;
-    }
-    else if((port >= SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MIN)].sample_interpolation_mode = data;
-    }
-
-    else if((port >= SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MIN)].sampleLoopStarts = data;
-    }
-    else if((port >= SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MIN)].sampleLoopEnds = data;
-    }
-    else if((port >= SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MAX
+    ){
         plugin->samples[(port - SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MIN)].sampleLoopModes = data;
-    }
-    else if((port >= SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MAX
+    ){
         plugin->mfx_knobs[(port - SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MIN)][0][0] = data;
-    }
-    else if((port >= SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MAX
+    ){
         plugin->mfx_knobs[(port - SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MIN)][0][1] = data;
-    }
-    else if((port >= SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MIN) &&
-            (port < SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MAX))
-    {
+    } else if(
+        port >= SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MIN
+        &&
+        port < SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MAX
+    ){
         plugin->mfx_knobs[(port - SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MIN)][0][2] = data;
     }
     else if((port >= SAMPLER1_MONO_FX0_COMBOBOX_PORT_RANGE_MIN) &&
@@ -1297,15 +1437,44 @@ void v_sampler1_process_midi_event(
             v_adsr_retrigger(&f_voice->adsr_filter);
             v_lfs_sync(&f_voice->lfo1, 0.0f, *(plugin_data->lfo_type));
 
-            SGFLT f_attack_a = (*(plugin_data->attack) * .01);
+            SGFLT f_attack_a = set_pmn_adsr(
+                (*plugin_data->attack) * .01,
+                a_event->attack,
+                (*plugin_data->attack_start) * .01,
+                (*plugin_data->attack_end) * .01
+            );
             f_attack_a *= f_attack_a;
-            SGFLT f_decay_a = (*(plugin_data->decay) * .01);
+
+            SGFLT f_decay_a = set_pmn_adsr(
+                (*plugin_data->decay) * .01,
+                a_event->decay,
+                (*plugin_data->decay_start) * .01,
+                (*plugin_data->decay_end) * .01
+            );
             f_decay_a *= f_decay_a;
-            SGFLT f_release_a = (*(plugin_data->release) * .01);
+
+            SGFLT sustain = set_pmn_adsr(
+                (*plugin_data->sustain),
+                a_event->sustain,
+                (*plugin_data->sustain_start),
+                (*plugin_data->sustain_end)
+            );
+
+            SGFLT f_release_a = set_pmn_adsr(
+                (*plugin_data->release) * .01,
+                a_event->release,
+                (*plugin_data->release) * .01,
+                (*plugin_data->release) * .01
+            );
             f_release_a *= f_release_a;
-            FP_ADSR_SET[f_adsr_main_lin](&f_voice->adsr_amp,
-                f_attack_a, f_decay_a, (*(plugin_data->sustain)),
-                f_release_a);
+
+            FP_ADSR_SET[f_adsr_main_lin](
+                &f_voice->adsr_amp,
+                f_attack_a,
+                f_decay_a,
+                sustain,
+                f_release_a
+            );
 
             SGFLT f_attack_f = (*(plugin_data->attack_f) * .01);
             f_attack_f *= f_attack_f;
@@ -1616,9 +1785,17 @@ PluginDescriptor *sampler1_plugin_descriptor(){
     PluginDescriptor *f_result = get_pyfx_descriptor(SAMPLER1_PORT_COUNT);
 
     set_pyfx_port(f_result, SAMPLER1_ATTACK, 0.0f, 0.0f, 200.0f);
+    set_pyfx_port(f_result, SAMPLER1_ATTACK_START, 0.0f, 0.0f, 200.0f);
+    set_pyfx_port(f_result, SAMPLER1_ATTACK_END, 200.0f, 0.0f, 200.0f);
     set_pyfx_port(f_result, SAMPLER1_DECAY, 50.0f, 10.0f, 200.0f);
-    set_pyfx_port(f_result, SAMPLER1_SUSTAIN, 0.0f, -60, 0);
+    set_pyfx_port(f_result, SAMPLER1_DECAY_START, 10.0f, 10.0f, 200.0f);
+    set_pyfx_port(f_result, SAMPLER1_DECAY_END, 200.0f, 10.0f, 200.0f);
+    set_pyfx_port(f_result, SAMPLER1_SUSTAIN, 0.0f, -30, 0);
+    set_pyfx_port(f_result, SAMPLER1_SUSTAIN_START, -30.0, -30, 0);
+    set_pyfx_port(f_result, SAMPLER1_SUSTAIN_END, 0.0f, -30, 0);
     set_pyfx_port(f_result, SAMPLER1_RELEASE, 50.0f, 10.0f, 400.0f);
+    set_pyfx_port(f_result, SAMPLER1_RELEASE_START, 10.0f, 10.0f, 400.0f);
+    set_pyfx_port(f_result, SAMPLER1_RELEASE_END, 400.0f, 10.0f, 400.0f);
     set_pyfx_port(f_result, SAMPLER1_FILTER_ATTACK, 10.0f, 0.0f, 200.0f);
     set_pyfx_port(f_result, SAMPLER1_FILTER_DECAY, 50.0f, 10.0f, 200.0f);
     set_pyfx_port(f_result, SAMPLER1_FILTER_SUSTAIN, 100.0f, 0.0f, 100.0f);

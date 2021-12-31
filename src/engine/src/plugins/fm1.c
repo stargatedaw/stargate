@@ -211,18 +211,18 @@ void v_fm1_connect_port(
     plugin = (t_fm1 *) instance;
 
     switch (port){
-        case FM1_ATTACK_MAIN:
-            plugin->attack_main = data;
-            break;
-        case FM1_DECAY_MAIN:
-            plugin->decay_main = data;
-            break;
-        case FM1_SUSTAIN_MAIN:
-            plugin->sustain_main = data;
-            break;
-        case FM1_RELEASE_MAIN:
-            plugin->release_main = data;
-            break;
+        case FM1_ATTACK_MAIN: plugin->attack_main = data; break;
+        case FM1_ATTACK_MAIN_START: plugin->attack_main_start = data; break;
+        case FM1_ATTACK_MAIN_END: plugin->attack_main_end = data; break;
+        case FM1_DECAY_MAIN: plugin->decay_main = data; break;
+        case FM1_DECAY_MAIN_START: plugin->decay_main_start = data; break;
+        case FM1_DECAY_MAIN_END: plugin->decay_main_end = data; break;
+        case FM1_SUSTAIN_MAIN: plugin->sustain_main = data; break;
+        case FM1_SUSTAIN_MAIN_START: plugin->sustain_main_start = data; break;
+        case FM1_SUSTAIN_MAIN_END: plugin->sustain_main_end = data; break;
+        case FM1_RELEASE_MAIN: plugin->release_main = data; break;
+        case FM1_RELEASE_MAIN_START: plugin->release_main_start = data; break;
+        case FM1_RELEASE_MAIN_END: plugin->release_main_end = data; break;
 
         case FM1_ATTACK1: plugin->attack[0] = data; break;
         case FM1_DECAY1: plugin->decay[0] = data; break;
@@ -1025,18 +1025,42 @@ void v_fm1_process_midi_event(
 
             v_adsr_retrigger(&f_fm1_voice->adsr_main);
 
-            SGFLT f_attack = *(plugin_data->attack_main) * .01f;
+            SGFLT f_attack = set_pmn_adsr(
+                (*plugin_data->attack_main) * .01f,
+                a_event->attack,
+                (*plugin_data->attack_main_start) * .01f,
+                (*plugin_data->attack_main_end) * .01f
+            );
             f_attack = (f_attack) * (f_attack);
-            SGFLT f_decay = *(plugin_data->decay_main) * .01f;
+
+            SGFLT f_decay = set_pmn_adsr(
+                *(plugin_data->decay_main) * .01f,
+                a_event->decay,
+                *(plugin_data->decay_main_start) * .01f,
+                *(plugin_data->decay_main_end) * .01f
+            );
             f_decay = (f_decay) * (f_decay);
-            SGFLT f_release = *(plugin_data->release_main) * .01f;
+
+            SGFLT sustain = set_pmn_adsr(
+                (*plugin_data->sustain_main),
+                a_event->sustain,
+                (*plugin_data->sustain_main_start),
+                (*plugin_data->sustain_main_end)
+            );
+
+            SGFLT f_release = set_pmn_adsr(
+                (*plugin_data->release_main) * .01f,
+                a_event->release,
+                (*plugin_data->release_main_start) * .01f,
+                (*plugin_data->release_main_end) * .01f
+            );
             f_release = (f_release) * (f_release);
 
             FP_ADSR_SET[f_adsr_main_lin](
                 &f_fm1_voice->adsr_main,
                 f_attack,
                 f_decay,
-                *(plugin_data->sustain_main),
+                sustain,
                 f_release
             );
 
@@ -1659,9 +1683,17 @@ PluginDescriptor *fm1_plugin_descriptor(){
     PluginDescriptor *f_result = get_pyfx_descriptor(FM1_COUNT);
 
     set_pyfx_port(f_result, FM1_ATTACK_MAIN, 10.0f, 0.0f, 200.0f);
+    set_pyfx_port(f_result, FM1_ATTACK_MAIN_START, 0.0f, 0.0f, 200.0f);
+    set_pyfx_port(f_result, FM1_ATTACK_MAIN_END, 200.0f, 0.0f, 200.0f);
     set_pyfx_port(f_result, FM1_DECAY_MAIN, 50.0f, 10.0f, 200.0f);
+    set_pyfx_port(f_result, FM1_DECAY_MAIN_START, 10.0f, 10.0f, 200.0f);
+    set_pyfx_port(f_result, FM1_DECAY_MAIN_END, 200.0f, 10.0f, 200.0f);
     set_pyfx_port(f_result, FM1_SUSTAIN_MAIN, 0.0f, -30.0f, 0.0f);
+    set_pyfx_port(f_result, FM1_SUSTAIN_MAIN_START, -30.0f, -30.0f, 0.0f);
+    set_pyfx_port(f_result, FM1_SUSTAIN_MAIN_END, 0.0f, -30.0f, 0.0f);
     set_pyfx_port(f_result, FM1_RELEASE_MAIN, 50.0f, 10.0f, 400.0f);
+    set_pyfx_port(f_result, FM1_RELEASE_MAIN_START, 10.0f, 10.0f, 400.0f);
+    set_pyfx_port(f_result, FM1_RELEASE_MAIN_END, 400.0f, 10.0f, 400.0f);
     set_pyfx_port(f_result, FM1_ATTACK1, 10.0f, 0.0f, 200.0f);
     set_pyfx_port(f_result, FM1_DECAY1, 50.0f, 10.0f, 200.0f);
     set_pyfx_port(f_result, FM1_SUSTAIN1, 0.0f, -30.0f, 0.0f);

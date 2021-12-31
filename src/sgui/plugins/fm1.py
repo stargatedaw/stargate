@@ -447,6 +447,15 @@ FM1_OSC4_PAN = 377
 FM1_OSC5_PAN = 378
 FM1_OSC6_PAN = 379
 
+FM1_ATTACK_MAIN_START = 380
+FM1_ATTACK_MAIN_END = 381
+FM1_DECAY_MAIN_START = 382
+FM1_DECAY_MAIN_END = 383
+FM1_SUSTAIN_MAIN_START = 384
+FM1_SUSTAIN_MAIN_END = 385
+FM1_RELEASE_MAIN_START = 386
+FM1_RELEASE_MAIN_END = 387
+
 OSC_TYPE_LOOKUP = {
     "Off": 0,
     "Plain Saw": 1,
@@ -645,6 +654,12 @@ QLabel#plugin_name_label,
 QLabel#plugin_value_label {
     background: none;
     border: none;
+    color: #222222;
+}
+
+QComboBox#plugin_name_label {
+    background: transparent;
+    border: transparent;
     color: #222222;
 }
 
@@ -1413,13 +1428,21 @@ class fm1_plugin_ui(AbstractPluginUI):
 
         self.hlayout_main.addWidget(self.main.group_box)
 
-        self.adsr_amp_main = adsr_widget(
+        self.adsr_amp_main = ADSRMainWidget(
             f_knob_size,
             True,
             FM1_ATTACK_MAIN,
+            FM1_ATTACK_MAIN_START,
+            FM1_ATTACK_MAIN_END,
             FM1_DECAY_MAIN,
+            FM1_DECAY_MAIN_START,
+            FM1_DECAY_MAIN_END,
             FM1_SUSTAIN_MAIN,
+            FM1_SUSTAIN_MAIN_START,
+            FM1_SUSTAIN_MAIN_END,
             FM1_RELEASE_MAIN,
+            FM1_RELEASE_MAIN_START,
+            FM1_RELEASE_MAIN_END,
             _("AHDSR Main"),
             self.plugin_rel_callback,
             self.plugin_val_callback,

@@ -219,9 +219,17 @@ typedef struct st_sampler1 {
     PluginData *main_pitch;
     PluginData *adsr_lin_main;
     PluginData *attack;
+    PluginData *attack_start;
+    PluginData *attack_end;
     PluginData *decay;
+    PluginData *decay_start;
+    PluginData *decay_end;
     PluginData *sustain;
+    PluginData *sustain_start;
+    PluginData *sustain_end;
     PluginData *release;
+    PluginData *release_start;
+    PluginData *release_end;
 
     PluginData *attack_f;
     PluginData *decay_f;
@@ -569,9 +577,16 @@ PluginDescriptor *sampler1_plugin_descriptor();
 #define SAMPLER1_MIN_NOTE (SAMPLER1_LFO_PITCH_FINE + 1)
 #define SAMPLER1_MAX_NOTE (SAMPLER1_MIN_NOTE + 1)
 #define SAMPLER1_MAIN_PITCH (SAMPLER1_MAX_NOTE + 1)
-#define SAMPLER1_ADSR_LIN_MAIN (SAMPLER1_MAIN_PITCH + 1)
+#define SAMPLER1_ADSR_LIN_MAIN (SAMPLER1_MAIN_PITCH + 1)  // 5510
+#define SAMPLER1_ATTACK_START 5511
+#define SAMPLER1_ATTACK_END 5512
+#define SAMPLER1_DECAY_START 5513
+#define SAMPLER1_DECAY_END 5514
+#define SAMPLER1_SUSTAIN_START 5515
+#define SAMPLER1_SUSTAIN_END 5516
+#define SAMPLER1_RELEASE_START 5517
+#define SAMPLER1_RELEASE_END 5518
 
-#define SAMPLER1_PORT_COUNT (SAMPLER1_ADSR_LIN_MAIN + 1)
-
+#define SAMPLER1_PORT_COUNT 5519
 
 #endif

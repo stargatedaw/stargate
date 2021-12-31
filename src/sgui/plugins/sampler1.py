@@ -291,7 +291,16 @@ SAMPLER1_LFO_PITCH_FINE = SAMPLER1_LAST_EQ_PORT
 SAMPLER1_MIN_NOTE = SAMPLER1_LFO_PITCH_FINE + 1
 SAMPLER1_MAX_NOTE = SAMPLER1_MIN_NOTE + 1
 SAMPLER1_MAIN_PITCH = SAMPLER1_MAX_NOTE + 1
-SAMPLER1_ADSR_LIN_MAIN = SAMPLER1_MAIN_PITCH + 1
+SAMPLER1_ADSR_LIN_MAIN = SAMPLER1_MAIN_PITCH + 1  # 5510
+
+SAMPLER1_ATTACK_START = 5511
+SAMPLER1_ATTACK_END = 5512
+SAMPLER1_DECAY_START = 5513
+SAMPLER1_DECAY_END = 5514
+SAMPLER1_SUSTAIN_START = 5515
+SAMPLER1_SUSTAIN_END = 5516
+SAMPLER1_RELEASE_START = 5517
+SAMPLER1_RELEASE_END = 5518
 
 
 SAMPLER1_PORT_MAP = {
@@ -396,6 +405,13 @@ QLabel#plugin_name_label{
     background: none;
     color: #222222;
 }
+
+QComboBox#plugin_name_label {
+    background: transparent;
+    border: transparent;
+    color: #222222;
+}
+
 
 QLabel#plugin_value_label{
     background: none;
@@ -1526,18 +1542,35 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.hlayout2 = QHBoxLayout()
         self.main_layout.addLayout(self.hlayout2)
 
-        self.adsr_amp = adsr_widget(
-            f_knob_size, True, SAMPLER1_ATTACK,
-            SAMPLER1_DECAY, SAMPLER1_SUSTAIN,
-            SAMPLER1_RELEASE, _("ADSR Amp"),
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, a_attack_default=0, a_knob_type=KC_LOG_TIME,
-            a_lin_port=SAMPLER1_ADSR_LIN_MAIN, a_lin_default=1,
+        self.adsr_amp = ADSRMainWidget(
+            f_knob_size,
+            True,
+            SAMPLER1_ATTACK,
+            SAMPLER1_ATTACK_START,
+            SAMPLER1_ATTACK_END,
+            SAMPLER1_DECAY,
+            SAMPLER1_DECAY_START,
+            SAMPLER1_DECAY_END,
+            SAMPLER1_SUSTAIN,
+            SAMPLER1_SUSTAIN_START,
+            SAMPLER1_SUSTAIN_END,
+            SAMPLER1_RELEASE,
+            SAMPLER1_RELEASE_START,
+            SAMPLER1_RELEASE_END,
+            _("ADSR Amp"),
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            a_attack_default=0,
+            a_knob_type=KC_LOG_TIME,
+            a_lin_port=SAMPLER1_ADSR_LIN_MAIN,
+            a_lin_default=1,
             knob_kwargs=knob_kwargs,
         )
         #overriding the default for self, because we want a
         #low minimum default that won't click
-        self.adsr_amp.release_knob.control.setMinimum(5)
+        for knob in self.adsr_amp.release_knobs:
+            knob.control.setMinimum(5)
         self.hlayout2.addWidget(self.adsr_amp.groupbox)
         self.adsr_filter = adsr_widget(
             f_knob_size, False, SAMPLER1_FILTER_ATTACK,

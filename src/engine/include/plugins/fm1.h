@@ -476,9 +476,18 @@ GNU General Public License for more details.
 #define FM1_OSC5_PAN 378
 #define FM1_OSC6_PAN 379
 
+#define FM1_ATTACK_MAIN_START 380
+#define FM1_ATTACK_MAIN_END 381
+#define FM1_DECAY_MAIN_START 382
+#define FM1_DECAY_MAIN_END 383
+#define FM1_SUSTAIN_MAIN_START 384
+#define FM1_SUSTAIN_MAIN_END 385
+#define FM1_RELEASE_MAIN_START 386
+#define FM1_RELEASE_MAIN_END 387
+
 /* must be 1 + highest value above
  * CHANGE THIS IF YOU ADD OR TAKE AWAY ANYTHING*/
-#define FM1_COUNT 380
+#define FM1_COUNT 388
 
 #define FM1_POLYPHONY 24
 #define FM1_POLYPHONY_THRESH 12
@@ -599,10 +608,18 @@ typedef struct {
     PluginData *output1;
     PluginData *adsr_lin_main;
     PluginData *attack_main;
+    PluginData *attack_main_start;
+    PluginData *attack_main_end;
     PluginData *hold_main;
     PluginData *decay_main;
+    PluginData *decay_main_start;
+    PluginData *decay_main_end;
     PluginData *sustain_main;
+    PluginData *sustain_main_start;
+    PluginData *sustain_main_end;
     PluginData *release_main;
+    PluginData *release_main_start;
+    PluginData *release_main_end;
 
     PluginData *attack[FM1_OSC_COUNT];
     PluginData *decay[FM1_OSC_COUNT];
