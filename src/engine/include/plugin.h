@@ -36,6 +36,10 @@ typedef struct {
     int channel;
     int note;
     SGFLT pan;
+    SGFLT attack;
+    SGFLT decay;
+    SGFLT sustain;
+    SGFLT release;
     int velocity;
     int duration;
 

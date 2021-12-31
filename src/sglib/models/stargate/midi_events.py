@@ -15,11 +15,19 @@ class note(abstract_midi_event):
         a_note_number,
         a_velocity,
         pan=0.,
+        attack=0.,
+        decay=0.,
+        sustain=0.,
+        release=0.,
     ):
         self.start = round(float(a_start), 6)
         self.length = round(float(a_length), 6)
         self.velocity = int(a_velocity)
         self.pan = round(float(pan), 2)
+        self.attack = round(float(attack), 2)
+        self.decay = round(float(decay), 2)
+        self.sustain = round(float(sustain), 2)
+        self.release = round(float(release), 2)
         self.note_num = int(a_note_number)
         self.is_selected = False
         self.set_end()
@@ -84,6 +92,10 @@ class note(abstract_midi_event):
                 self.note_num,
                 self.velocity,
                 self.pan,
+                self.attack,
+                self.decay,
+                self.sustain,
+                self.release,
             )
         )
 

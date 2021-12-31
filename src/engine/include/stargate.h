@@ -307,7 +307,11 @@ void g_pynote_init(
     int a_vel,
     SGFLT a_start,
     SGFLT a_length,
-    SGFLT pan
+    SGFLT pan,
+    SGFLT attack,
+    SGFLT decay,
+    SGFLT sustain,
+    SGFLT release
 );
 void v_set_control_from_atm(
     t_seq_event *event,

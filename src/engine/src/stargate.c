@@ -710,7 +710,11 @@ void g_pynote_init(
     int a_vel,
     SGFLT a_start,
     SGFLT a_length,
-    SGFLT pan
+    SGFLT pan,
+    SGFLT attack,
+    SGFLT decay,
+    SGFLT sustain,
+    SGFLT release
 ){
     f_result->type = EVENT_NOTEON;
     f_result->length = a_length;

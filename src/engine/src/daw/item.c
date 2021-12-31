@@ -77,10 +77,25 @@ void g_daw_item_get(t_daw* self, int a_uid){
             v_iterate_2d_char_array(f_current_string);
             int f_vel = atoi(f_current_string->current_str);
             SGFLT pan = 0.0;
+            SGFLT attack = 0.0;
+            SGFLT decay = 0.0;
+            SGFLT sustain = 0.0;
+            SGFLT release = 0.0;
             // TODO: Stargate v2: Remove if statement
             if(!f_current_string->eol){
                 v_iterate_2d_char_array(f_current_string);
                 pan = atof(f_current_string->current_str);
+            }
+            // TODO: Stargate v2: Remove if statement
+            if(!f_current_string->eol){
+                v_iterate_2d_char_array(f_current_string);
+                attack = atof(f_current_string->current_str);
+                v_iterate_2d_char_array(f_current_string);
+                decay = atof(f_current_string->current_str);
+                v_iterate_2d_char_array(f_current_string);
+                sustain = atof(f_current_string->current_str);
+                v_iterate_2d_char_array(f_current_string);
+                release = atof(f_current_string->current_str);
             }
             g_pynote_init(
                 &f_result->events[f_event_pos],
@@ -88,7 +103,11 @@ void g_daw_item_get(t_daw* self, int a_uid){
                 f_vel,
                 f_start,
                 f_length,
-                pan
+                pan,
+                attack,
+                decay,
+                sustain,
+                release
             );
             ++f_event_pos;
         }
@@ -101,8 +120,12 @@ void g_daw_item_get(t_daw* self, int a_uid){
             v_iterate_2d_char_array(f_current_string);
             SGFLT f_cc_val = atof(f_current_string->current_str);
 
-            g_pycc_init(&f_result->events[f_event_pos],
-                f_cc_num, f_cc_val, f_start);
+            g_pycc_init(
+                &f_result->events[f_event_pos],
+                f_cc_num,
+                f_cc_val,
+                f_start
+            );
             ++f_event_pos;
         }
         else if(f_type == 'p') //pitchbend
@@ -112,15 +135,22 @@ void g_daw_item_get(t_daw* self, int a_uid){
             v_iterate_2d_char_array(f_current_string);
             SGFLT f_pb_val = atof(f_current_string->current_str) * 8192.0f;
 
-            g_pypitchbend_init(&f_result->events[f_event_pos],
-                    f_start, f_pb_val);
+            g_pypitchbend_init(
+                &f_result->events[f_event_pos],
+                f_start,
+                f_pb_val
+            );
             ++f_event_pos;
         }
         else if(f_type == 'a') //audio item
         {
-            t_audio_item * f_new =
-                g_audio_item_load_single(f_sr,
-                    f_current_string, 0, STARGATE->audio_pool, 0);
+            t_audio_item * f_new = g_audio_item_load_single(
+                f_sr,
+                f_current_string,
+                0,
+                STARGATE->audio_pool,
+                0
+            );
             if(!f_new)  //EOF'd...
             {
                 break;
