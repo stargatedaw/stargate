@@ -196,12 +196,18 @@ class item:
         try:
             self.notes.remove(a_note)
         except Exception as ex:
-            LOG.error("Exception in remove_note:\n{}".format(ex))
-            print((repr(traceback.extract_stack())))
+            LOG.exception(f"Exception in remove_note: {ex}")
 
-    def velocity_mod(self, a_amt, a_start_beat=0.0,
-                     a_end_beat=4.0, a_line=False,
-                     a_end_amt=127, a_add=False, a_notes=None):
+    def velocity_mod(
+        self,
+        a_amt,
+        a_start_beat=0.0,
+        a_end_beat=4.0,
+        a_line=False,
+        a_end_amt=127,
+        a_add=False,
+        a_notes=None,
+    ):
         """ velocity_mod
         (self, a_amt, #The amount to add or subtract
          a_start_beat=0.0, #modify values with a start at >= this, and...
@@ -245,8 +251,12 @@ class item:
                     note.velocity = 1
 
     def quantize(
-            self, a_beat_frac, a_events_move_with_item=False,
-            a_notes=None, a_selected_only=False):
+        self,
+        a_beat_frac,
+        a_events_move_with_item=False,
+        a_notes=None,
+        a_selected_only=False,
+    ):
         f_notes = []
         f_ccs = []
         f_pbs = []
@@ -303,8 +313,13 @@ class item:
         return f_result
 
     def transpose(
-            self, a_semitones, a_octave=0, a_notes=None,
-            a_selected_only=False, a_duplicate=False):
+        self,
+        a_semitones,
+        a_octave=0,
+        a_notes=None,
+        a_selected_only=False,
+        a_duplicate=False,
+    ):
         f_total = a_semitones + (a_octave * 12)
         f_notes = []
         f_result = []
@@ -565,7 +580,8 @@ class item:
                 elif f_event_arr[0] == "a":
                     f_result.add_item(
                         int(f_event_arr[1]),
-                        DawAudioItem.from_arr(f_event_arr[2:]))
+                        DawAudioItem.from_arr(f_event_arr[2:]),
+                    )
                 elif f_event_arr[0] == "f":
                     f_items_arr = []
                     f_item_index = f_event_arr[1]

@@ -33,6 +33,8 @@ class note(abstract_midi_event):
         self.set_end()
 
     def __eq__(self, other):
+        # TODO: What uses this, and should velocity be part of it?
+        #       Add the other exprssion parametesr?
         return(
             self.start == other.start
             and
@@ -73,7 +75,7 @@ class note(abstract_midi_event):
         elif param == 5:
             self.release = value
         else:
-            raise ValueError(param)
+            raise IndexError(param)
 
     def set_start(self, a_start):
         self.start = round(float(a_start), 6)

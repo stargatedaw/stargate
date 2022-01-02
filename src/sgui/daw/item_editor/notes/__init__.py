@@ -89,7 +89,8 @@ class PianoRollEditorWidget:
         #self.paste_action.setShortcut(QKeySequence.Paste)
 
         self.select_all_action = self.edit_actions_menu.addAction(
-            _("Select All"))
+            _("Select All"),
+        )
         self.select_all_action.triggered.connect(self.select_all)
         self.select_all_action.setShortcut(QKeySequence.StandardKey.SelectAll)
 
@@ -124,10 +125,12 @@ class PianoRollEditorWidget:
         self.transpose_menu.addSeparator()
 
         self.up_semitone_action = self.transpose_menu.addAction(
-            _("Up Semitone"))
+            _("Up Semitone"),
+        )
         self.up_semitone_action.triggered.connect(self.transpose_up_semitone)
         self.up_semitone_action.setShortcut(
-            QKeySequence.fromString("SHIFT+UP"))
+            QKeySequence.fromString("SHIFT+UP"),
+        )
 
         self.down_semitone_action = self.transpose_menu.addAction(
             _("Down Semitone"),
@@ -160,7 +163,8 @@ class PianoRollEditorWidget:
         self.velocity_random_menu = self.velocity_menu.addMenu(_("Randomness"))
         self.random_types = [_("None"), _("Tight"), _("Loose")]
         self.vel_rand_action_group = QActionGroup(
-            self.velocity_random_menu)
+            self.velocity_random_menu,
+        )
         self.velocity_random_menu.triggered.connect(self.vel_rand_triggered)
 
         for f_i, f_type in zip(
@@ -190,6 +194,31 @@ class PianoRollEditorWidget:
             f_action.my_index = f_i
             if f_i == 0:
                 f_action.setChecked(True)
+
+        self.expression_menu = self.edit_menu.addMenu(_("Expression"))
+        self.reset_velocity_action = self.expression_menu.addAction(
+            _("Reset Velocity"),
+        )
+        self.reset_velocity_action.triggered.connect(self.reset_velocity)
+        self.reset_pan_action = self.expression_menu.addAction(_("Reset Pan"))
+        self.reset_pan_action.triggered.connect(self.reset_pan)
+        self.reset_attack_action = self.expression_menu.addAction(
+            _("Reset Attack"),
+        )
+        self.reset_attack_action.triggered.connect(self.reset_attack)
+        self.reset_decay_action = self.expression_menu.addAction(
+            _("Reset Decay"),
+        )
+        self.reset_decay_action.triggered.connect(self.reset_decay)
+        self.reset_sustain_action = self.expression_menu.addAction(
+            _("Reset Sustain"),
+        )
+        self.reset_sustain_action.triggered.connect(self.reset_sustain)
+        self.reset_release_action = self.expression_menu.addAction(
+            _("Reset Release"),
+        )
+        self.reset_release_action.triggered.connect(self.reset_release)
+
 
         self.edit_menu.addSeparator()
 
@@ -247,13 +276,17 @@ class PianoRollEditorWidget:
         if not shared.ITEM_EDITOR.enabled:
             shared.ITEM_EDITOR.show_not_enabled_warning()
             return
-        shared.ITEM_EDITOR.quantize_dialog(shared.PIANO_ROLL_EDITOR.has_selected)
+        shared.ITEM_EDITOR.quantize_dialog(
+            shared.PIANO_ROLL_EDITOR.has_selected,
+        )
 
     def transpose_dialog(self):
         if not shared.ITEM_EDITOR.enabled:
             shared.ITEM_EDITOR.show_not_enabled_warning()
             return
-        shared.ITEM_EDITOR.transpose_dialog(shared.PIANO_ROLL_EDITOR.has_selected)
+        shared.ITEM_EDITOR.transpose_dialog(
+            shared.PIANO_ROLL_EDITOR.has_selected,
+        )
 
     def select_all(self):
         if not shared.ITEM_EDITOR.enabled:
@@ -298,7 +331,9 @@ class PianoRollEditorWidget:
 
     def set_vel_rand(self, a_val=None):
         shared.PIANO_ROLL_EDITOR.set_vel_rand(
-            self.vel_random_index, self.vel_emphasis_index)
+            self.vel_random_index,
+            self.vel_emphasis_index,
+        )
 
     def on_delete_selected(self):
         shared.PIANO_ROLL_EDITOR.delete_selected()
@@ -310,11 +345,39 @@ class PianoRollEditorWidget:
     def reload_handler(self, a_val=None):
         constants.DAW_PROJECT.set_midi_scale(
             self.scale_key_combobox.currentIndex(),
-            self.scale_combobox.currentIndex())
+            self.scale_combobox.currentIndex(),
+        )
         if shared.CURRENT_ITEM:
             shared.PIANO_ROLL_EDITOR.set_selected_strings()
             global_open_items()
             shared.PIANO_ROLL_EDITOR.draw_item()
         else:
             shared.PIANO_ROLL_EDITOR.clear_drawn_items()
+
+    def set_expression_param(self, param: int, value=0.0):
+        if shared.PIANO_ROLL_EDITOR.has_selected:
+            for note in shared.PIANO_ROLL_EDITOR.get_selected_items():
+                note.note_item.set_pmn_param(param, value)
+        else:
+            for note in shared.CURRENT_ITEM.notes:
+                note.set_pmn_param(param, value)
+        shared.global_save_and_reload_items()
+
+    def reset_velocity(self):
+        self.set_expression_param(0, 100)
+
+    def reset_pan(self):
+        self.set_expression_param(1)
+
+    def reset_attack(self):
+        self.set_expression_param(2)
+
+    def reset_decay(self):
+        self.set_expression_param(3)
+
+    def reset_sustain(self):
+        self.set_expression_param(4)
+
+    def reset_release(self):
+        self.set_expression_param(5)
 
