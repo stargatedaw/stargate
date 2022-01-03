@@ -2,6 +2,9 @@
 This document describes how to build Stargate DAW for Arch Linux
 and it's derivatives like Manjaro.
 
+Note that Stargate DAW is available in [AUR](
+  https://aur.archlinux.org/packages/stargate/)
+
 # Procedure
 ```
 git clone https://github.com/stargateaudio/stargate.git

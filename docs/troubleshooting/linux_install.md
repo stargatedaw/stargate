@@ -71,7 +71,9 @@ code and asks you what to do, enter `i` for "ignore"
 # Arch / PKGBUILD
 Arch, Manjaro, EndeavourOS and many others.
 
-[See this document](../src/linux/arch_linux.md)
+Stargate DAW is available in [AUR](
+  https://aur.archlinux.org/packages/stargate/)
+To build it yourself, [see this document](../src/linux/arch_linux.md)
 
 # Building from source code
 
