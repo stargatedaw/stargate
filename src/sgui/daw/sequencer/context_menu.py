@@ -228,13 +228,14 @@ def on_rename_items():
         global SEQUENCE_CLIPBOARD
         #Clear the clipboard, otherwise the names could be invalid
         SEQUENCE_CLIPBOARD = []
-        item_uid = shared.CURRENT_ITEM.uid
         constants.DAW_PROJECT.rename_items(f_result, f_new_name)
         constants.DAW_PROJECT.commit(_("Rename items"))
         shared.SEQ_WIDGET.open_sequence()
-        item_lookup = constants.DAW_PROJECT.get_items_dict()
-        new_name = item_lookup.name_lookup[item_uid]
-        shared.global_open_items(new_name)
+        if shared.CURRENT_ITEM:
+            item_uid = shared.CURRENT_ITEM.uid
+            item_lookup = constants.DAW_PROJECT.get_items_dict()
+            new_name = item_lookup.name_lookup[item_uid]
+            shared.global_open_items(new_name)
         f_window.close()
 
     def cancel_handler():
