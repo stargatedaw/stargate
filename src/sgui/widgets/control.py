@@ -16,6 +16,7 @@ import collections
 import math
 from typing import Optional, Tuple
 
+
 LAST_TEMPO_COMBOBOX_INDEX = 2
 
 class GridLayoutControl:
@@ -219,12 +220,14 @@ class AbstractUiControl(GridLayoutControl):
             f"Unknown self.val_conversion: {self.val_conversion}",
         )
 
-    def control_value_changed(self, a_value):
+    def control_value_changed(self, a_value=None):
         if not self.suppress_changes:
             self.val_callback(self.port_num, self.control.value())
 
         if self.value_label is not None:
-            self.value_label.setText(self.value_conversion(a_value))
+            self.value_label.setText(
+                self.value_conversion(self.control.value()),
+            )
 
     def set_value_dialog(self):
         def ok_handler(a_self=None, a_val=None):
@@ -567,6 +570,15 @@ class MultiplexedControl(GridLayoutControl):
     def index_changed(self, index):
         self.control.setCurrentIndex(index)
         self.value_label.setCurrentIndex(index)
+
+    def get_value(self):
+        index = self.name_label.currentIndex()
+        return self.controls[index].get_value()
+
+    def set_value(self, value, changed=False):
+        index = self.name_label.currentIndex()
+        return self.controls[index].set_value(value, changed)
+
 
 class null_control:
     """ For controls with no visual representation,

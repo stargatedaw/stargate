@@ -20,6 +20,8 @@ KC_TEXT = 14
 
 TEMPO = 128.0
 
+ADSR_CLIPBOARD = {}
+
 def set_global_tempo(a_tempo):
     global TEMPO
     TEMPO = a_tempo

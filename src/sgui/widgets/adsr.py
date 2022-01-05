@@ -5,8 +5,6 @@ from sglib.lib.translate import _
 from sgui.sgqt import *
 
 
-ADSR_CLIPBOARD = {}
-
 class adsr_widget:
     def __init__(
         self,
@@ -183,30 +181,29 @@ class adsr_widget:
         f_menu.exec(QCursor.pos())
 
     def copy(self):
-        global ADSR_CLIPBOARD
-        ADSR_CLIPBOARD = dict([(k, v.get_value())
+        _shared.ADSR_CLIPBOARD = dict([(k, v.get_value())
             for k, v in self.clipboard_dict.items()])
 
     def paste(self):
-        if not ADSR_CLIPBOARD:
+        if not _shared.ADSR_CLIPBOARD:
             return
         for k, v in self.clipboard_dict.items():
-            if k in ADSR_CLIPBOARD:
-                v.set_value(ADSR_CLIPBOARD[k], True)
-            elif k == 'sustain' and 'sustain_db' in ADSR_CLIPBOARD:
+            if k in _shared.ADSR_CLIPBOARD:
+                v.set_value(_shared.ADSR_CLIPBOARD[k], True)
+            elif k == 'sustain' and 'sustain_db' in _shared.ADSR_CLIPBOARD:
                 v.set_value(
                     int(
                         sg_math.db_to_lin(
-                            ADSR_CLIPBOARD['sustain_db'],
+                            _shared.ADSR_CLIPBOARD['sustain_db'],
                         ) * 100
                     ),
                     True,
                 )
-            elif k == 'sustain_db' and 'sustain' in ADSR_CLIPBOARD:
+            elif k == 'sustain_db' and 'sustain' in _shared.ADSR_CLIPBOARD:
                 v.set_value(
                     int(
                         sg_math.lin_to_db(
-                            ADSR_CLIPBOARD['sustain'] * 0.01,
+                            _shared.ADSR_CLIPBOARD['sustain'] * 0.01,
                         ),
                     ),
                     True,
