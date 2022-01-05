@@ -413,7 +413,10 @@ def init():
     cut_action.setShortcut(QKeySequence.StandardKey.Cut)
 
     paste_orig_action = MENU.addAction(_("Paste to Original Track"))
-    paste_orig_action.triggered.connect(_shared.paste_clipboard)
+    paste_orig_action.triggered.connect(_shared.paste_orig)
+
+    paste_selected_action = MENU.addAction(_("Paste to Selected Track"))
+    paste_selected_action.triggered.connect(_shared.paste_selected)
 
     MENU.addSeparator()
     MENU.addAction(_shared.delete_action)

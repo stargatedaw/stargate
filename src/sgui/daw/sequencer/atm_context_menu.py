@@ -357,7 +357,7 @@ def init():
     MENU.addAction(_shared.copy_action)
 
     paste_action = MENU.addAction(_("Paste"))
-    paste_action.triggered.connect(_shared.paste_clipboard)
+    paste_action.triggered.connect(_shared._paste)
 
     paste_ctrl_action = MENU.addAction(_("Paste Plugin Control"))
     paste_ctrl_action.triggered.connect(paste_atm_point)

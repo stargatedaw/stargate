@@ -74,8 +74,10 @@ def copy_selected():
         return
     if SEQUENCE_EDITOR_MODE == 0:
         global SEQUENCE_CLIPBOARD
-        SEQUENCE_CLIPBOARD = [x.audio_item.clone() for x in
-            shared.SEQUENCER.get_selected_items()]
+        SEQUENCE_CLIPBOARD = [
+            x.audio_item.clone()
+            for x in shared.SEQUENCER.get_selected_items()
+        ]
         if SEQUENCE_CLIPBOARD:
             SEQUENCE_CLIPBOARD.sort()
             f_start = int(SEQUENCE_CLIPBOARD[0].start_beat)
@@ -95,7 +97,13 @@ def copy_selected():
             for f_item in ATM_CLIPBOARD:
                 f_item.beat -= f_start
 
-def paste_clipboard():
+def paste_orig():
+    _paste()
+
+def paste_selected():
+    _paste(False)
+
+def _paste(orig=True):
     if (
         glbl_shared.IS_PLAYING
         or
@@ -106,32 +114,50 @@ def paste_clipboard():
     f_track, f_beat, f_val = shared.SEQUENCER.current_coord
     f_beat = int(f_beat)
     if SEQUENCE_EDITOR_MODE == 0:
+        if not SEQUENCE_CLIPBOARD:
+            return
         shared.SEQUENCER.selected_item_strings = set()
+        track_start = min(x.track_num for x in SEQUENCE_CLIPBOARD)
         for f_item in SEQUENCE_CLIPBOARD:
             f_new_item = f_item.clone()
             f_new_item.start_beat += f_beat
+            if not orig:
+                f_new_item.track_num += -track_start + f_track
             shared.CURRENT_SEQUENCE.add_item_ref_by_uid(f_new_item)
             shared.SEQUENCER.selected_item_strings.add(str(f_new_item))
         constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
         shared.SEQ_WIDGET.open_sequence()
     elif SEQUENCE_EDITOR_MODE == 1:
+        if not ATM_CLIPBOARD:
+            return
         f_track_port_num, f_track_index = shared.TRACK_PANEL.has_automation(
-            shared.SEQUENCER.current_coord[0])
+            shared.SEQUENCER.current_coord[0],
+        )
         if f_track_port_num is None:
             QMessageBox.warning(
-                shared.SEQUENCER, _("Error"),
-                _("No automation selected for this track"))
+                shared.SEQUENCER,
+                _("Error"),
+                _("No automation selected for this track"),
+            )
             return
         f_track_params = shared.TRACK_PANEL.get_atm_params(f_track)
         f_end = ATM_CLIPBOARD[-1].beat + f_beat
         f_point = ATM_CLIPBOARD[0]
         shared.ATM_SEQUENCE.clear_range(
-            f_point.index, f_point.port_num, f_beat, f_end)
+            f_point.index,
+            f_point.port_num,
+            f_beat,
+            f_end,
+        )
         for f_point in ATM_CLIPBOARD:
             shared.ATM_SEQUENCE.add_point(
                 DawAtmPoint(
-                    f_point.beat + f_beat, f_track_port_num,
-                    f_point.cc_val, *f_track_params))
+                    f_point.beat + f_beat,
+                    f_track_port_num,
+                    f_point.cc_val,
+                    *f_track_params,
+                ),
+            )
         shared.SEQUENCER.automation_save_callback()
 
 def delete_selected():
