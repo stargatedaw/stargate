@@ -13,7 +13,7 @@ void v_daw_process_track(
 ){
     int f_i, f_i2;
     double f_current_beat, f_next_beat;
-    t_pytrack * f_track = self->track_pool[a_global_track_num];
+    t_track * f_track = self->track_pool[a_global_track_num];
     t_daw_track_seq * f_seq =
         &self->en_song->sequences->tracks[a_global_track_num];
     int f_item_ref_count = 0;
@@ -297,7 +297,7 @@ void v_daw_process_track(
     }
 }
 
-void v_daw_wait_for_bus(t_pytrack * a_track){
+void v_daw_wait_for_bus(t_track * a_track){
     int f_bus_count = DAW->routing_graph->bus_count[a_track->track_num];
     int f_i;
 
@@ -332,15 +332,15 @@ void v_daw_wait_for_bus(t_pytrack * a_track){
 
 void v_daw_sum_track_outputs(
     t_daw* self,
-    t_pytrack* a_track,
+    t_track* a_track,
     int a_sample_count,
     int a_playback_mode,
     t_daw_thread_storage* a_ts
 ){
     int f_bus_num;
     int f_i2;
-    t_pytrack * f_bus;
-    t_pytrack_routing * f_route;
+    t_track * f_bus;
+    t_track_routing * f_route;
     t_plugin * f_plugin = 0;
     SGFLT ** f_buff;
     SGFLT ** f_track_buff = a_track->buffers;

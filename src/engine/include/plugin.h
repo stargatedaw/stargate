@@ -251,14 +251,14 @@ void generic_file_loader(
     SGFLT * a_table,
     t_plugin_cc_map * a_cc_map
 );
-void set_pyfx_port(
+void set_plugin_port(
     PluginDescriptor * a_desc,
     int a_port,
     SGFLT a_default,
     SGFLT a_min,
     SGFLT a_max
 );
-PluginDescriptor * get_pyfx_descriptor(int a_port_count);
+PluginDescriptor * get_plugin_descriptor(int a_port_count);
 SGFLT f_atm_to_ctrl_val(
     PluginDescriptor *self,
     int a_port,

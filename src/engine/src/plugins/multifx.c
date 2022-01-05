@@ -370,40 +370,40 @@ void v_multifx_run(
 }
 
 PluginDescriptor *multifx_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(MULTIFX_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(MULTIFX_COUNT);
 
-    set_pyfx_port(f_result, MULTIFX_FX0_KNOB0, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX0_KNOB1, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX0_KNOB2, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX0_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
-    set_pyfx_port(f_result, MULTIFX_FX1_KNOB0, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX1_KNOB1, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX1_KNOB2, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX1_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
-    set_pyfx_port(f_result, MULTIFX_FX2_KNOB0, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX2_KNOB1, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX2_KNOB2, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX2_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
-    set_pyfx_port(f_result, MULTIFX_FX3_KNOB0, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX3_KNOB1, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX3_KNOB2, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX3_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
-    set_pyfx_port(f_result, MULTIFX_FX4_KNOB0, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX4_KNOB1, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX4_KNOB2, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX4_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
-    set_pyfx_port(f_result, MULTIFX_FX5_KNOB0, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX5_KNOB1, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX5_KNOB2, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX5_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
-    set_pyfx_port(f_result, MULTIFX_FX6_KNOB0, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX6_KNOB1, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX6_KNOB2, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX6_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
-    set_pyfx_port(f_result, MULTIFX_FX7_KNOB0, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX7_KNOB1, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX7_KNOB2, 64.0f, 0.0f, 127.0f);
-    set_pyfx_port(f_result, MULTIFX_FX7_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_plugin_port(f_result, MULTIFX_FX0_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX0_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX0_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX0_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_plugin_port(f_result, MULTIFX_FX1_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX1_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX1_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX1_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_plugin_port(f_result, MULTIFX_FX2_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX2_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX2_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX2_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_plugin_port(f_result, MULTIFX_FX3_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX3_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX3_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX3_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_plugin_port(f_result, MULTIFX_FX4_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX4_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX4_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX4_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_plugin_port(f_result, MULTIFX_FX5_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX5_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX5_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX5_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_plugin_port(f_result, MULTIFX_FX6_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX6_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX6_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX6_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
+    set_plugin_port(f_result, MULTIFX_FX7_KNOB0, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX7_KNOB1, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX7_KNOB2, 64.0f, 0.0f, 127.0f);
+    set_plugin_port(f_result, MULTIFX_FX7_COMBOBOX, 0.0f, 0.0f, MULTIFX3KNOB_MAX_INDEX);
 
 
     f_result->cleanup = v_multifx_cleanup;

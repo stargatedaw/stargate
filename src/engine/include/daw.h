@@ -92,7 +92,7 @@ typedef struct {
 
 typedef struct {
     int track_pool_sorted[MAX_WORKER_THREADS][DN_TRACK_COUNT];
-    t_pytrack_routing routes[DN_TRACK_COUNT][MAX_ROUTING_COUNT];
+    t_track_routing routes[DN_TRACK_COUNT][MAX_ROUTING_COUNT];
     int bus_count[DN_TRACK_COUNT];
     int track_pool_sorted_count;
 } t_daw_routing_graph;
@@ -126,7 +126,7 @@ typedef struct {
     t_sg_seq_event_result seq_event_result;
     t_daw_song* en_song;
     t_daw_sequence* seq_pool[DAW_MAX_SONG_COUNT];
-    t_pytrack* track_pool[DN_TRACK_COUNT];
+    t_track* track_pool[DN_TRACK_COUNT];
     t_daw_routing_graph * routing_graph;
 
     int loop_mode;  //0 == Off, 1 == On
@@ -169,14 +169,14 @@ int i_daw_song_index_from_sequence_uid(t_daw*, int);
 void v_daw_update_track_send(t_daw * self, int a_lock);
 void v_daw_process_external_midi(
     t_daw * data,
-    t_pytrack * a_track,
+    t_track * a_track,
     int sample_count,
     int a_thread_num,
     t_daw_thread_storage * a_ts
 );
 void daw_process_qwerty_midi(
     t_daw * data,
-    t_pytrack * a_track,
+    t_track * a_track,
     int sample_count,
     int a_thread_num,
     t_daw_thread_storage * a_ts
@@ -237,8 +237,8 @@ void v_daw_set_playback_mode(
  * @output: The track number to output to
  * @type:   ROUTE_TYPE_AUDIO 0, ROUTE_TYPE_SIDECHAIN 1, ROUTE_TYPE_MIDI 2
 */
-void v_pytrack_routing_set(t_pytrack_routing*, int, int);
-void v_pytrack_routing_free(t_pytrack_routing*);
+void v_track_routing_set(t_track_routing*, int, int);
+void v_track_routing_free(t_track_routing*);
 void v_daw_run_engine(
     int a_sample_count,
     SGFLT** a_output,
@@ -246,10 +246,10 @@ void v_daw_run_engine(
 );
 void v_daw_osc_send(t_osc_send_data * a_buffers);
 void g_daw_instantiate();
-void v_daw_wait_for_bus(t_pytrack * a_track);
+void v_daw_wait_for_bus(t_track * a_track);
 void v_daw_sum_track_outputs(
     t_daw * self,
-    t_pytrack * a_track,
+    t_track * a_track,
     int a_sample_count,
     int a_playback_mode,
     t_daw_thread_storage * a_ts

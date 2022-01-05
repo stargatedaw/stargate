@@ -97,7 +97,7 @@ void g_daw_item_get(t_daw* self, int a_uid){
                 v_iterate_2d_char_array(f_current_string);
                 release = atof(f_current_string->current_str);
             }
-            g_pynote_init(
+            g_note_init(
                 &f_result->events[f_event_pos],
                 f_note,
                 f_vel,
@@ -120,7 +120,7 @@ void g_daw_item_get(t_daw* self, int a_uid){
             v_iterate_2d_char_array(f_current_string);
             SGFLT f_cc_val = atof(f_current_string->current_str);
 
-            g_pycc_init(
+            g_cc_init(
                 &f_result->events[f_event_pos],
                 f_cc_num,
                 f_cc_val,
@@ -135,7 +135,7 @@ void g_daw_item_get(t_daw* self, int a_uid){
             v_iterate_2d_char_array(f_current_string);
             SGFLT f_pb_val = atof(f_current_string->current_str) * 8192.0f;
 
-            g_pypitchbend_init(
+            g_pitchbend_init(
                 &f_result->events[f_event_pos],
                 f_start,
                 f_pb_val

@@ -190,7 +190,7 @@ typedef struct {
     t_seq_event event_buffer[MAX_EVENT_BUFFER_SIZE];
     struct ShdsList * event_list;
     char pad2[CACHE_LINE_SIZE];
-} t_pytrack;
+} t_track;
 
 typedef struct {
     void (*run)(int sample_count, SGFLT **output, SGFLT *a_input_buffers);
@@ -264,10 +264,10 @@ typedef struct {
     int active;
     int type;
     char pad2[CACHE_LINE_SIZE];
-} t_pytrack_routing;
+} t_track_routing;
 
 void g_stargate_get(SGFLT, t_midi_device_list*);
-t_pytrack * g_pytrack_get(int, SGFLT);
+t_track * g_track_get(int, SGFLT);
 void v_zero_buffer(SGFLT**, int);
 double v_print_benchmark(
     char * a_message,
@@ -276,9 +276,9 @@ double v_print_benchmark(
 );
 void * v_audio_recording_thread(void* a_arg);
 void v_queue_osc_message(char*, char*);
-void v_set_plugin_index(t_pytrack*, int, int, int, int, int);
+void v_set_plugin_index(t_track*, int, int, int, int, int);
 
-t_pytrack_routing * g_pytrack_routing_get();
+t_track_routing * g_track_routing_get();
 void v_set_host(int);
 
 void v_sg_set_tempo(t_sg_seq_event_list*, SGFLT);
@@ -290,18 +290,18 @@ void v_sg_set_playback_pos(
     double a_beat,
     long a_current_sample
 );
-void g_pypitchbend_init(
+void g_pitchbend_init(
     t_seq_event * f_result,
     SGFLT a_start,
     SGFLT a_value
 );
-void g_pycc_init(
+void g_cc_init(
     t_seq_event * f_result,
     int a_cc_num,
     SGFLT a_cc_val,
     SGFLT a_start
 );
-void g_pynote_init(
+void g_note_init(
     t_seq_event* f_result,
     int a_note,
     int a_vel,
@@ -316,10 +316,10 @@ void g_pynote_init(
 void v_set_control_from_atm(
     t_seq_event *event,
     int a_plugin_uid,
-    t_pytrack * f_track
+    t_track * f_track
 );
 void v_open_track(
-    t_pytrack* a_track,
+    t_track* a_track,
     char* a_tracks_folder,
     int a_index
 );
@@ -382,7 +382,7 @@ double f_samples_to_beat_count(
 double f_bpm_to_seconds_per_beat(double a_tempo);
 void v_set_control_from_cc(
     t_seq_event* event,
-    t_pytrack* f_track
+    t_track* f_track
 );
 void v_sg_configure(const char* a_key, const char* a_value);
 void v_run_main_loop(

@@ -39,7 +39,7 @@ void v_daw_set_playback_mode(
         {
             int f_i = 0;
             int f_i2;
-            t_pytrack * f_track;
+            t_track * f_track;
             int f_old_mode = STARGATE->playback_mode;
 
             if(a_lock)

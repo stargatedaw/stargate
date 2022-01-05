@@ -246,7 +246,7 @@ void v_daw_configure(const char* a_key, const char* a_value){
         a_value = str_split(a_value, buf, '|');
         int f_power = atoi(buf);
 
-        t_pytrack * f_track = DAW->track_pool[f_track_num];
+        t_track * f_track = DAW->track_pool[f_track_num];
 
         v_set_plugin_index(
             f_track,

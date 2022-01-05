@@ -226,7 +226,7 @@ void v_daw_process_atm(
     t_daw_thread_storage * a_ts
 ){
     int f_i, f_i2;
-    t_pytrack * f_track = self->track_pool[f_track_num];
+    t_track * f_track = self->track_pool[f_track_num];
     t_plugin * f_plugin = f_track->plugins[f_index];
     t_atm_tick * tick;
 

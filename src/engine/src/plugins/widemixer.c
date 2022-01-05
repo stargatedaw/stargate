@@ -509,23 +509,23 @@ void v_widemixer_run(
 }
 
 PluginDescriptor *widemixer_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(WIDEMIXER_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(WIDEMIXER_COUNT);
 
-    set_pyfx_port(f_result, WIDEMIXER_VOL_SLIDER, 0.0f, -5000.0f, 0.0f);
-    set_pyfx_port(f_result, WIDEMIXER_GAIN, 0.0f, -2400.0f, 2400.0f);
-    set_pyfx_port(f_result, WIDEMIXER_PAN, 0.0f, -100.0f, 100.0f);
-    set_pyfx_port(f_result, WIDEMIXER_LAW, -300.0f, -600.0f, 0.0f);
+    set_plugin_port(f_result, WIDEMIXER_VOL_SLIDER, 0.0f, -5000.0f, 0.0f);
+    set_plugin_port(f_result, WIDEMIXER_GAIN, 0.0f, -2400.0f, 2400.0f);
+    set_plugin_port(f_result, WIDEMIXER_PAN, 0.0f, -100.0f, 100.0f);
+    set_plugin_port(f_result, WIDEMIXER_LAW, -300.0f, -600.0f, 0.0f);
 
-    set_pyfx_port(f_result, WIDEMIXER_INVERT_MODE, 0.0f, 0.0f, 3.0f);
-    set_pyfx_port(f_result, WIDEMIXER_STEREO_MODE, 0.0f, 0.0f, 3.0f);
-    set_pyfx_port(f_result, WIDEMIXER_BASS_MONO_ON, 0.0f, 0.0f, 1.0f);
-    set_pyfx_port(f_result, WIDEMIXER_BASS_MONO, 250.0f, 50.0f, 500.0f);
-    set_pyfx_port(f_result, WIDEMIXER_BASS_MONO_SOLO, 0.0f, 0.0f, 1.0f);
-    set_pyfx_port(f_result, WIDEMIXER_STEREO_EMPHASIS, 0.0f, -100.0f, 100.0f);
-    set_pyfx_port(f_result, WIDEMIXER_DC_OFFSET, 0.0f, 0.0f, 1.0f);
-    set_pyfx_port(f_result, WIDEMIXER_MUTE, 0.0f, 0.0f, 1.0f);
-    set_pyfx_port(f_result, WIDEMIXER_BASS_MONO_LOW, 0.0f, -240.0f, 240.0f);
-    set_pyfx_port(f_result, WIDEMIXER_BASS_MONO_HIGH, 0.0f, -240.0f, 240.0f);
+    set_plugin_port(f_result, WIDEMIXER_INVERT_MODE, 0.0f, 0.0f, 3.0f);
+    set_plugin_port(f_result, WIDEMIXER_STEREO_MODE, 0.0f, 0.0f, 3.0f);
+    set_plugin_port(f_result, WIDEMIXER_BASS_MONO_ON, 0.0f, 0.0f, 1.0f);
+    set_plugin_port(f_result, WIDEMIXER_BASS_MONO, 250.0f, 50.0f, 500.0f);
+    set_plugin_port(f_result, WIDEMIXER_BASS_MONO_SOLO, 0.0f, 0.0f, 1.0f);
+    set_plugin_port(f_result, WIDEMIXER_STEREO_EMPHASIS, 0.0f, -100.0f, 100.0f);
+    set_plugin_port(f_result, WIDEMIXER_DC_OFFSET, 0.0f, 0.0f, 1.0f);
+    set_plugin_port(f_result, WIDEMIXER_MUTE, 0.0f, 0.0f, 1.0f);
+    set_plugin_port(f_result, WIDEMIXER_BASS_MONO_LOW, 0.0f, -240.0f, 240.0f);
+    set_plugin_port(f_result, WIDEMIXER_BASS_MONO_HIGH, 0.0f, -240.0f, 240.0f);
 
     f_result->cleanup = v_widemixer_cleanup;
     f_result->connect_port = v_widemixer_connect_port;

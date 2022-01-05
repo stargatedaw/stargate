@@ -29,7 +29,7 @@ void g_wave_edit_get(){
     int f_i = 0;
     while(f_i < 1)
     {
-        wave_edit->track_pool[f_i] = g_pytrack_get(f_i, f_sample_rate);
+        wave_edit->track_pool[f_i] = g_track_get(f_i, f_sample_rate);
         ++f_i;
     }
 }
@@ -297,7 +297,7 @@ void v_run_wave_editor(
     t_plugin * f_plugin;
 
     int f_global_track_num = 0;
-    t_pytrack * f_track = self->track_pool[f_global_track_num];
+    t_track * f_track = self->track_pool[f_global_track_num];
     int f_i;
 
     for(f_i = 0; f_i < sample_count; ++f_i)
@@ -543,7 +543,7 @@ void v_we_configure(const char* a_key, const char* a_value){
         int f_plugin_uid = atoi(f_val_arr->array[3]);
         int f_power = atoi(f_val_arr->array[4]);
 
-        t_pytrack * f_track = wave_edit->track_pool[f_track_num];
+        t_track * f_track = wave_edit->track_pool[f_track_num];
 
         v_set_plugin_index(
             f_track, f_index, f_plugin_index, f_plugin_uid, f_power, 1);

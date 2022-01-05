@@ -220,10 +220,10 @@ void v_xfade_run(
 }
 
 PluginDescriptor *xfade_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(XFADE_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(XFADE_COUNT);
 
-    set_pyfx_port(f_result, XFADE_SLIDER, 0.0f, -100.0f, 100.0f);
-    set_pyfx_port(f_result, XFADE_MIDPOINT, -300.0f, -600.0f, 0.0f);
+    set_plugin_port(f_result, XFADE_SLIDER, 0.0f, -100.0f, 100.0f);
+    set_plugin_port(f_result, XFADE_MIDPOINT, -300.0f, -600.0f, 0.0f);
 
     f_result->cleanup = v_xfade_cleanup;
     f_result->connect_port = v_xfade_connect_port;

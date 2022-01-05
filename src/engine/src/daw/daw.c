@@ -66,7 +66,7 @@ t_daw * g_daw_get(){
     }
 
     for(f_i = 0; f_i < DN_TRACK_COUNT; ++f_i){
-        f_result->track_pool[f_i] = g_pytrack_get(
+        f_result->track_pool[f_i] = g_track_get(
             f_i,
             STARGATE->thread_storage[0].sample_rate
         );
@@ -579,7 +579,7 @@ void v_daw_run_engine(
 
         v_daw_process((t_thread_args*)STARGATE->main_thread_args);
 
-        t_pytrack * f_main_track = self->track_pool[0];
+        t_track * f_main_track = self->track_pool[0];
         SGFLT ** f_main_buff = f_main_track->buffers;
 
         //wait for the other threads to finish
@@ -607,7 +607,7 @@ void v_daw_run_engine(
 }
 
 void v_daw_process(t_thread_args * f_args){
-    t_pytrack * f_track;
+    t_track * f_track;
     int f_track_index;
     t_daw * self = DAW;
     int f_i = f_args->thread_num;
@@ -678,7 +678,7 @@ void v_daw_zero_all_buffers(t_daw * self){
 void v_daw_panic(t_daw * self){
     int f_i;
     int f_i2;
-    t_pytrack * f_track;
+    t_track * f_track;
     t_plugin * f_plugin;
 
     for(f_i = 0; f_i < DN_TRACK_COUNT; ++f_i){

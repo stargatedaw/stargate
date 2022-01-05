@@ -332,12 +332,12 @@ void v_sgchnl_run(
 }
 
 PluginDescriptor *sgchnl_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(SGCHNL_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(SGCHNL_COUNT);
 
-    set_pyfx_port(f_result, SGCHNL_VOL_SLIDER, 0.0f, -5000.0f, 0.0f);
-    set_pyfx_port(f_result, SGCHNL_GAIN, 0.0f, -2400.0f, 2400.0f);
-    set_pyfx_port(f_result, SGCHNL_PAN, 0.0f, -100.0f, 100.0f);
-    set_pyfx_port(f_result, SGCHNL_LAW, -300.0f, -600.0f, 0.0f);
+    set_plugin_port(f_result, SGCHNL_VOL_SLIDER, 0.0f, -5000.0f, 0.0f);
+    set_plugin_port(f_result, SGCHNL_GAIN, 0.0f, -2400.0f, 2400.0f);
+    set_plugin_port(f_result, SGCHNL_PAN, 0.0f, -100.0f, 100.0f);
+    set_plugin_port(f_result, SGCHNL_LAW, -300.0f, -600.0f, 0.0f);
 
     f_result->cleanup = v_sgchnl_cleanup;
     f_result->connect_port = v_sgchnl_connect_port;

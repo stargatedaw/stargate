@@ -245,11 +245,11 @@ void v_sg_vocoder_run(
 }
 
 PluginDescriptor *sg_vocoder_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(SG_VOCODER_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(SG_VOCODER_COUNT);
 
-    set_pyfx_port(f_result, SG_VOCODER_WET, 0.0f, -500.0f, 0.0f);
-    set_pyfx_port(f_result, SG_VOCODER_MODULATOR, -500.0f, -500.0f, 0.0f);
-    set_pyfx_port(f_result, SG_VOCODER_CARRIER, -500.0f, -500.0f, 0.0f);
+    set_plugin_port(f_result, SG_VOCODER_WET, 0.0f, -500.0f, 0.0f);
+    set_plugin_port(f_result, SG_VOCODER_MODULATOR, -500.0f, -500.0f, 0.0f);
+    set_plugin_port(f_result, SG_VOCODER_CARRIER, -500.0f, -500.0f, 0.0f);
 
     f_result->cleanup = v_sg_vocoder_cleanup;
     f_result->connect_port = v_sg_vocoder_connect_port;

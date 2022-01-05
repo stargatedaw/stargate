@@ -91,8 +91,8 @@ void v_daw_set_midi_device(
      */
     t_daw_midi_routing_list * f_list = &self->midi_routing;
     t_midi_routing * f_route = &f_list->routes[a_device];
-    t_pytrack * f_track_old = NULL;
-    t_pytrack * f_track_new = self->track_pool[a_output];
+    t_track * f_track_old = NULL;
+    t_track * f_track_new = self->track_pool[a_output];
 
     if(f_route->output_track != -1){
         f_track_old = self->track_pool[f_route->output_track];
@@ -143,7 +143,7 @@ void v_daw_set_midi_device(
 
 void daw_process_qwerty_midi(
     t_daw * self,
-    t_pytrack * a_track,
+    t_track * a_track,
     int sample_count,
     int a_thread_num,
     t_daw_thread_storage * a_ts
@@ -181,7 +181,7 @@ void daw_process_qwerty_midi(
 
 void v_daw_process_external_midi(
     t_daw * self,
-    t_pytrack * a_track,
+    t_track * a_track,
     int sample_count,
     int a_thread_num,
     t_daw_thread_storage * a_ts
@@ -341,7 +341,7 @@ void v_daw_process_note_offs(
     int f_i,
     t_daw_thread_storage * a_ts
 ){
-    t_pytrack * f_track = self->track_pool[f_i];
+    t_track * f_track = self->track_pool[f_i];
     long f_current_sample = a_ts->current_sample;
     long f_next_current_sample = a_ts->f_next_current_sample;
 
@@ -389,7 +389,7 @@ void v_daw_process_midi(
     t_daw_item * f_current_item;
     double f_adjusted_start;
     int f_i;
-    t_pytrack * f_track = self->track_pool[a_track_num];
+    t_track * f_track = self->track_pool[a_track_num];
 
     double f_track_current_period_beats = (a_ts->ml_current_beat);
     double f_track_next_period_beats = (a_ts->ml_next_beat);

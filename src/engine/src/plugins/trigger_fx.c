@@ -427,17 +427,17 @@ void v_triggerfx_run(
 }
 
 PluginDescriptor *triggerfx_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(TRIGGERFX_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(TRIGGERFX_COUNT);
 
-    set_pyfx_port(f_result, TRIGGERFX_GATE_NOTE, 120.0f, 0.0f, 120.0f);
-    set_pyfx_port(f_result, TRIGGERFX_GATE_MODE, 0.0f, 0.0f, 2.0f);
-    set_pyfx_port(f_result, TRIGGERFX_GATE_WET, 0.0f, 0.0f, 100.0f);
-    set_pyfx_port(f_result, TRIGGERFX_GATE_PITCH, 60.0f, 20.0f, 120.0f);
+    set_plugin_port(f_result, TRIGGERFX_GATE_NOTE, 120.0f, 0.0f, 120.0f);
+    set_plugin_port(f_result, TRIGGERFX_GATE_MODE, 0.0f, 0.0f, 2.0f);
+    set_plugin_port(f_result, TRIGGERFX_GATE_WET, 0.0f, 0.0f, 100.0f);
+    set_plugin_port(f_result, TRIGGERFX_GATE_PITCH, 60.0f, 20.0f, 120.0f);
 
-    set_pyfx_port(f_result, TRIGGERFX_GLITCH_ON, 0.0f, 0.0f, 1.0f);
-    set_pyfx_port(f_result, TRIGGERFX_GLITCH_NOTE, 120.0f, 0.0f, 120.0f);
-    set_pyfx_port(f_result, TRIGGERFX_GLITCH_TIME, 10.0f, 1.0f, 25.0f);
-    set_pyfx_port(f_result, TRIGGERFX_GLITCH_PB, 0.0f, 0.0f, 36.0f);
+    set_plugin_port(f_result, TRIGGERFX_GLITCH_ON, 0.0f, 0.0f, 1.0f);
+    set_plugin_port(f_result, TRIGGERFX_GLITCH_NOTE, 120.0f, 0.0f, 120.0f);
+    set_plugin_port(f_result, TRIGGERFX_GLITCH_TIME, 10.0f, 1.0f, 25.0f);
+    set_plugin_port(f_result, TRIGGERFX_GLITCH_PB, 0.0f, 0.0f, 36.0f);
 
     f_result->cleanup = v_triggerfx_cleanup;
     f_result->connect_port = v_triggerfx_connect_port;

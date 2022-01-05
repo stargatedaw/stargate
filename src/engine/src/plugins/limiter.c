@@ -226,12 +226,12 @@ void v_sg_lim_run(
 
 
 PluginDescriptor *sg_lim_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(SG_LIM_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(SG_LIM_COUNT);
 
-    set_pyfx_port(f_result, SG_LIM_THRESHOLD, 0.0f, -360.0f, 0.0f);
-    set_pyfx_port(f_result, SG_LIM_CEILING, 0.0f, -180.0f, 0.0f);
-    set_pyfx_port(f_result, SG_LIM_RELEASE, 500.0f, 50.0f, 1500.0f);
-    set_pyfx_port(f_result, SG_LIM_UI_MSG_ENABLED, 0.0f, 0.0f, 1.0f);
+    set_plugin_port(f_result, SG_LIM_THRESHOLD, 0.0f, -360.0f, 0.0f);
+    set_plugin_port(f_result, SG_LIM_CEILING, 0.0f, -180.0f, 0.0f);
+    set_plugin_port(f_result, SG_LIM_RELEASE, 500.0f, 50.0f, 1500.0f);
+    set_plugin_port(f_result, SG_LIM_UI_MSG_ENABLED, 0.0f, 0.0f, 1.0f);
 
     f_result->cleanup = v_sg_lim_cleanup;
     f_result->connect_port = v_sg_lim_connect_port;

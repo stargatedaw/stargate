@@ -1797,273 +1797,273 @@ void v_sampler1_configure(
 }
 
 PluginDescriptor *sampler1_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(SAMPLER1_PORT_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(SAMPLER1_PORT_COUNT);
 
-    set_pyfx_port(f_result, SAMPLER1_ATTACK, 0.0f, 0.0f, 200.0f);
-    set_pyfx_port(f_result, SAMPLER1_ATTACK_START, 0.0f, 0.0f, 200.0f);
-    set_pyfx_port(f_result, SAMPLER1_ATTACK_END, 200.0f, 0.0f, 200.0f);
-    set_pyfx_port(f_result, SAMPLER1_DECAY, 50.0f, 10.0f, 200.0f);
-    set_pyfx_port(f_result, SAMPLER1_DECAY_START, 10.0f, 10.0f, 200.0f);
-    set_pyfx_port(f_result, SAMPLER1_DECAY_END, 200.0f, 10.0f, 200.0f);
-    set_pyfx_port(f_result, SAMPLER1_SUSTAIN, 0.0f, -30, 0);
-    set_pyfx_port(f_result, SAMPLER1_SUSTAIN_START, -30.0, -30, 0);
-    set_pyfx_port(f_result, SAMPLER1_SUSTAIN_END, 0.0f, -30, 0);
-    set_pyfx_port(f_result, SAMPLER1_RELEASE, 50.0f, 10.0f, 400.0f);
-    set_pyfx_port(f_result, SAMPLER1_RELEASE_START, 10.0f, 10.0f, 400.0f);
-    set_pyfx_port(f_result, SAMPLER1_RELEASE_END, 400.0f, 10.0f, 400.0f);
-    set_pyfx_port(f_result, SAMPLER1_FILTER_ATTACK, 10.0f, 0.0f, 200.0f);
-    set_pyfx_port(f_result, SAMPLER1_FILTER_DECAY, 50.0f, 10.0f, 200.0f);
-    set_pyfx_port(f_result, SAMPLER1_FILTER_SUSTAIN, 100.0f, 0.0f, 100.0f);
-    set_pyfx_port(f_result, SAMPLER1_FILTER_RELEASE, 50.0f, 10.0f, 400.0f);
-    set_pyfx_port(f_result, SAMPLER1_MAIN_VOLUME, -6.0f, -24, 24);
-    set_pyfx_port(f_result, SAMPLER1_MAIN_GLIDE, 0.0f, 0.0f, 200.0f);
-    set_pyfx_port(f_result, SAMPLER1_MAIN_PITCHBEND_AMT, 18.0f, 1, 36);
-    set_pyfx_port(f_result, SAMPLER1_PITCH_ENV_TIME, 100.0f, 1.0f, 600.0f);
-    set_pyfx_port(f_result, SAMPLER1_LFO_FREQ, 200.0f, 10, 1600);
-    set_pyfx_port(f_result, SAMPLER1_LFO_TYPE, 0.0f, 0, 2);
-    set_pyfx_port(f_result, SAMPLER1_FX0_KNOB0, 64.0f, 0, 127);
-    set_pyfx_port(f_result, SAMPLER1_FX0_KNOB1, 64.0f, 0, 127);
-    set_pyfx_port(f_result, SAMPLER1_FX0_KNOB2, 64.0f, 0, 127);
-    set_pyfx_port(f_result, SAMPLER1_FX0_COMBOBOX, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
-    set_pyfx_port(f_result, SAMPLER1_FX1_KNOB0, 64.0f, 0, 127);
-    set_pyfx_port(f_result, SAMPLER1_FX1_KNOB1, 64.0f, 0, 127);
-    set_pyfx_port(f_result, SAMPLER1_FX1_KNOB2, 64.0f, 0, 127);
-    set_pyfx_port(f_result, SAMPLER1_FX1_COMBOBOX, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
-    set_pyfx_port(f_result, SAMPLER1_FX2_KNOB0, 64.0f, 0, 127);
-    set_pyfx_port(f_result, SAMPLER1_FX2_KNOB1, 64.0f, 0, 127);
-    set_pyfx_port(f_result, SAMPLER1_FX2_KNOB2, 64.0f, 0, 127);
-    set_pyfx_port(f_result, SAMPLER1_FX2_COMBOBOX, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
-    set_pyfx_port(f_result, SAMPLER1_FX3_KNOB0, 64.0f, 0, 127);
-    set_pyfx_port(f_result, SAMPLER1_FX3_KNOB1, 64.0f, 0, 127);
-    set_pyfx_port(f_result, SAMPLER1_FX3_KNOB2, 64.0f, 0, 127);
-    set_pyfx_port(f_result, SAMPLER1_FX3_COMBOBOX, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
-    set_pyfx_port(f_result, SAMPLER1_MAIN_PITCH, 0.0f, -36.0f, 36.0f);
+    set_plugin_port(f_result, SAMPLER1_ATTACK, 0.0f, 0.0f, 200.0f);
+    set_plugin_port(f_result, SAMPLER1_ATTACK_START, 0.0f, 0.0f, 200.0f);
+    set_plugin_port(f_result, SAMPLER1_ATTACK_END, 200.0f, 0.0f, 200.0f);
+    set_plugin_port(f_result, SAMPLER1_DECAY, 50.0f, 10.0f, 200.0f);
+    set_plugin_port(f_result, SAMPLER1_DECAY_START, 10.0f, 10.0f, 200.0f);
+    set_plugin_port(f_result, SAMPLER1_DECAY_END, 200.0f, 10.0f, 200.0f);
+    set_plugin_port(f_result, SAMPLER1_SUSTAIN, 0.0f, -30, 0);
+    set_plugin_port(f_result, SAMPLER1_SUSTAIN_START, -30.0, -30, 0);
+    set_plugin_port(f_result, SAMPLER1_SUSTAIN_END, 0.0f, -30, 0);
+    set_plugin_port(f_result, SAMPLER1_RELEASE, 50.0f, 10.0f, 400.0f);
+    set_plugin_port(f_result, SAMPLER1_RELEASE_START, 10.0f, 10.0f, 400.0f);
+    set_plugin_port(f_result, SAMPLER1_RELEASE_END, 400.0f, 10.0f, 400.0f);
+    set_plugin_port(f_result, SAMPLER1_FILTER_ATTACK, 10.0f, 0.0f, 200.0f);
+    set_plugin_port(f_result, SAMPLER1_FILTER_DECAY, 50.0f, 10.0f, 200.0f);
+    set_plugin_port(f_result, SAMPLER1_FILTER_SUSTAIN, 100.0f, 0.0f, 100.0f);
+    set_plugin_port(f_result, SAMPLER1_FILTER_RELEASE, 50.0f, 10.0f, 400.0f);
+    set_plugin_port(f_result, SAMPLER1_MAIN_VOLUME, -6.0f, -24, 24);
+    set_plugin_port(f_result, SAMPLER1_MAIN_GLIDE, 0.0f, 0.0f, 200.0f);
+    set_plugin_port(f_result, SAMPLER1_MAIN_PITCHBEND_AMT, 18.0f, 1, 36);
+    set_plugin_port(f_result, SAMPLER1_PITCH_ENV_TIME, 100.0f, 1.0f, 600.0f);
+    set_plugin_port(f_result, SAMPLER1_LFO_FREQ, 200.0f, 10, 1600);
+    set_plugin_port(f_result, SAMPLER1_LFO_TYPE, 0.0f, 0, 2);
+    set_plugin_port(f_result, SAMPLER1_FX0_KNOB0, 64.0f, 0, 127);
+    set_plugin_port(f_result, SAMPLER1_FX0_KNOB1, 64.0f, 0, 127);
+    set_plugin_port(f_result, SAMPLER1_FX0_KNOB2, 64.0f, 0, 127);
+    set_plugin_port(f_result, SAMPLER1_FX0_COMBOBOX, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
+    set_plugin_port(f_result, SAMPLER1_FX1_KNOB0, 64.0f, 0, 127);
+    set_plugin_port(f_result, SAMPLER1_FX1_KNOB1, 64.0f, 0, 127);
+    set_plugin_port(f_result, SAMPLER1_FX1_KNOB2, 64.0f, 0, 127);
+    set_plugin_port(f_result, SAMPLER1_FX1_COMBOBOX, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
+    set_plugin_port(f_result, SAMPLER1_FX2_KNOB0, 64.0f, 0, 127);
+    set_plugin_port(f_result, SAMPLER1_FX2_KNOB1, 64.0f, 0, 127);
+    set_plugin_port(f_result, SAMPLER1_FX2_KNOB2, 64.0f, 0, 127);
+    set_plugin_port(f_result, SAMPLER1_FX2_COMBOBOX, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
+    set_plugin_port(f_result, SAMPLER1_FX3_KNOB0, 64.0f, 0, 127);
+    set_plugin_port(f_result, SAMPLER1_FX3_KNOB1, 64.0f, 0, 127);
+    set_plugin_port(f_result, SAMPLER1_FX3_KNOB2, 64.0f, 0, 127);
+    set_plugin_port(f_result, SAMPLER1_FX3_COMBOBOX, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
+    set_plugin_port(f_result, SAMPLER1_MAIN_PITCH, 0.0f, -36.0f, 36.0f);
 
     int f_i = SAMPLER1_PFXMATRIX_GRP0DST0SRC0CTRL0;
 
     while(f_i <= SAMPLER1_PFXMATRIX_GRP0DST3SRC5CTRL2)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, -100.0f, 100.0f);
+        set_plugin_port(f_result, f_i, 0.0f, -100.0f, 100.0f);
         ++f_i;
     }
 
-    set_pyfx_port(f_result, SAMPLER1_LFO_PITCH, 0.0f, -36.0f, 36.0f);
+    set_plugin_port(f_result, SAMPLER1_LFO_PITCH, 0.0f, -36.0f, 36.0f);
 
     f_i = SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MIN;
 
     while(f_i < SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 60.0f, 0, 120);
+        set_plugin_port(f_result, f_i, 60.0f, 0, 120);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, 0, 120);
+        set_plugin_port(f_result, f_i, 0.0f, 0, 120);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 120.0f, 0, 120);
+        set_plugin_port(f_result, f_i, 120.0f, 0, 120);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_VOLUME_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, -50, 36);
+        set_plugin_port(f_result, f_i, 0.0f, -50, 36);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_START_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, 0.0f, 1000.0f);
+        set_plugin_port(f_result, f_i, 0.0f, 0.0f, 1000.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_END_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 1000.0f, 0.0f, 1000.0f);
+        set_plugin_port(f_result, f_i, 1000.0f, 0.0f, 1000.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_VEL_SENS_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 10.0f, 0.0f, 20.0f);
+        set_plugin_port(f_result, f_i, 10.0f, 0.0f, 20.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_VEL_LOW_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 1.0f, 1.0f, 127.0f);
+        set_plugin_port(f_result, f_i, 1.0f, 1.0f, 127.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_VEL_HIGH_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 128.0f, 1.0f, 128.0f);
+        set_plugin_port(f_result, f_i, 128.0f, 1.0f, 128.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_PITCH_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, -36.0f, 36.0f);
+        set_plugin_port(f_result, f_i, 0.0f, -36.0f, 36.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_TUNE_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, -100.0f, 100.0f);
+        set_plugin_port(f_result, f_i, 0.0f, -100.0f, 100.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 1.0f, 0.0f, 3.0f);
+        set_plugin_port(f_result, f_i, 1.0f, 0.0f, 3.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, 0.0f, 1000.0f);
+        set_plugin_port(f_result, f_i, 0.0f, 0.0f, 1000.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 1000.0f, 0.0f, 1000.0f);
+        set_plugin_port(f_result, f_i, 1000.0f, 0.0f, 1000.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, 0.0f, 1.0f);
+        set_plugin_port(f_result, f_i, 0.0f, 0.0f, 1.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 64.0f, 0.0f, 127.0f);
+        set_plugin_port(f_result, f_i, 64.0f, 0.0f, 127.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 64.0f, 0, 127);
+        set_plugin_port(f_result, f_i, 64.0f, 0, 127);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 64.0f, 0, 127);
+        set_plugin_port(f_result, f_i, 64.0f, 0, 127);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX0_COMBOBOX_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
+        set_plugin_port(f_result, f_i, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX1_KNOB0_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 64.0f, 0, 127);
+        set_plugin_port(f_result, f_i, 64.0f, 0, 127);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX1_KNOB1_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 64.0f, 0, 127);
+        set_plugin_port(f_result, f_i, 64.0f, 0, 127);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX1_KNOB2_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 64.0f, 0, 127);
+        set_plugin_port(f_result, f_i, 64.0f, 0, 127);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX1_COMBOBOX_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
+        set_plugin_port(f_result, f_i, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX2_KNOB0_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 64.0f, 0, 127);
+        set_plugin_port(f_result, f_i, 64.0f, 0, 127);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX2_KNOB1_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 64.0f, 0, 127);
+        set_plugin_port(f_result, f_i, 64.0f, 0, 127);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX2_KNOB2_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 64.0f, 0, 127);
+        set_plugin_port(f_result, f_i, 64.0f, 0, 127);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX2_COMBOBOX_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
+        set_plugin_port(f_result, f_i, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX3_KNOB0_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 64.0f, 0, 127);
+        set_plugin_port(f_result, f_i, 64.0f, 0, 127);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX3_KNOB1_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 64.0f, 0, 127);
+        set_plugin_port(f_result, f_i, 64.0f, 0, 127);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX3_KNOB2_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 64.0f, 0, 127);
+        set_plugin_port(f_result, f_i, 64.0f, 0, 127);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_MONO_FX3_COMBOBOX_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
+        set_plugin_port(f_result, f_i, 0.0f, 0, MULTIFX3KNOB_MAX_INDEX);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_MONO_FX_GROUP_PORT_RANGE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, 0, (SAMPLER1_MAX_SAMPLE_COUNT - 1));
+        set_plugin_port(f_result, f_i, 0.0f, 0, (SAMPLER1_MAX_SAMPLE_COUNT - 1));
         ++f_i;
     }
 
     while(f_i < SAMPLER1_NOISE_AMP_MAX)
     {
-        set_pyfx_port(f_result, f_i, -30.0f, -60.0f, 0.0f);
+        set_plugin_port(f_result, f_i, -30.0f, -60.0f, 0.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_NOISE_TYPE_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, 0.0f, 2.0f);
+        set_plugin_port(f_result, f_i, 0.0f, 0.0f, 2.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_FADE_IN_MAX)
     {
-        set_pyfx_port(f_result, f_i, 0.0f, 0.0f, 1000.0f);
+        set_plugin_port(f_result, f_i, 0.0f, 0.0f, 1000.0f);
         ++f_i;
     }
 
     while(f_i < SAMPLER1_SAMPLE_FADE_OUT_MAX)
     {
-        set_pyfx_port(f_result, f_i, 1000.0f, 0.0f, 1000.0f);
+        set_plugin_port(f_result, f_i, 1000.0f, 0.0f, 1000.0f);
         ++f_i;
     }
 
@@ -2076,13 +2076,13 @@ PluginDescriptor *sampler1_plugin_descriptor(){
         int f_i3 = 0;
         while(f_i3 < 6)
         {
-            set_pyfx_port(f_result, f_i, (f_i3 * 18.0f) + 24.0f, 20.0f, 120.0f);
+            set_plugin_port(f_result, f_i, (f_i3 * 18.0f) + 24.0f, 20.0f, 120.0f);
             ++f_i;
 
-            set_pyfx_port(f_result, f_i, 300.0f, 100.0f, 600.0f);
+            set_plugin_port(f_result, f_i, 300.0f, 100.0f, 600.0f);
             ++f_i;
 
-            set_pyfx_port(f_result, f_i, 0.0f, -240.0f, 240.0f);
+            set_plugin_port(f_result, f_i, 0.0f, -240.0f, 240.0f);
             ++f_i;
 
             ++f_i3;
@@ -2091,11 +2091,11 @@ PluginDescriptor *sampler1_plugin_descriptor(){
         ++f_i2;
     }
 
-    set_pyfx_port(f_result, SAMPLER1_LFO_PITCH_FINE, 0.0f, -100.0f, 100.0f);
+    set_plugin_port(f_result, SAMPLER1_LFO_PITCH_FINE, 0.0f, -100.0f, 100.0f);
 
-    set_pyfx_port(f_result, SAMPLER1_MIN_NOTE, 0.0f, 0.0f, 120.0f);
-    set_pyfx_port(f_result, SAMPLER1_MAX_NOTE, 120.0f, 0.0f, 120.0f);
-    set_pyfx_port(f_result, SAMPLER1_ADSR_LIN_MAIN, 1.0f, 0.0f, 1.0f);
+    set_plugin_port(f_result, SAMPLER1_MIN_NOTE, 0.0f, 0.0f, 120.0f);
+    set_plugin_port(f_result, SAMPLER1_MAX_NOTE, 120.0f, 0.0f, 120.0f);
+    set_plugin_port(f_result, SAMPLER1_ADSR_LIN_MAIN, 1.0f, 0.0f, 1.0f);
 
     f_result->cleanup = cleanupSampler;
     f_result->connect_port = connectPortSampler;

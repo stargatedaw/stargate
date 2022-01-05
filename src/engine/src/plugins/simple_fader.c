@@ -296,9 +296,9 @@ void v_sfader_run(
 }
 
 PluginDescriptor *sfader_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(SFADER_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(SFADER_COUNT);
 
-    set_pyfx_port(f_result, SFADER_VOL_SLIDER, 0.0f, -5000.0f, 0.0f);
+    set_plugin_port(f_result, SFADER_VOL_SLIDER, 0.0f, -5000.0f, 0.0f);
 
     f_result->cleanup = v_sfader_cleanup;
     f_result->connect_port = v_sfader_connect_port;

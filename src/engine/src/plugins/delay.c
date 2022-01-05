@@ -250,15 +250,15 @@ void v_sgdelay_run(
 }
 
 PluginDescriptor *sgdelay_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(SGDELAY_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(SGDELAY_COUNT);
 
-    set_pyfx_port(f_result, SGDELAY_DELAY_TIME, 50.0f, 10.0f, 100.0f);
-    set_pyfx_port(f_result, SGDELAY_FEEDBACK, -120.0f, -200.0f, 0.0f);
-    set_pyfx_port(f_result, SGDELAY_DRY, 0.0f, -300.0f, 0.0f);
-    set_pyfx_port(f_result, SGDELAY_WET, -120.0f, -300.0f, 0.0f);
-    set_pyfx_port(f_result, SGDELAY_DUCK, -20.0f, -40.0f, 0.0f);
-    set_pyfx_port(f_result, SGDELAY_CUTOFF, 90.0f, 40.0f, 118.0f);
-    set_pyfx_port(f_result, SGDELAY_STEREO, 100.0f, 0.0f, 100.0f);
+    set_plugin_port(f_result, SGDELAY_DELAY_TIME, 50.0f, 10.0f, 100.0f);
+    set_plugin_port(f_result, SGDELAY_FEEDBACK, -120.0f, -200.0f, 0.0f);
+    set_plugin_port(f_result, SGDELAY_DRY, 0.0f, -300.0f, 0.0f);
+    set_plugin_port(f_result, SGDELAY_WET, -120.0f, -300.0f, 0.0f);
+    set_plugin_port(f_result, SGDELAY_DUCK, -20.0f, -40.0f, 0.0f);
+    set_plugin_port(f_result, SGDELAY_CUTOFF, 90.0f, 40.0f, 118.0f);
+    set_plugin_port(f_result, SGDELAY_STEREO, 100.0f, 0.0f, 100.0f);
 
 
     f_result->cleanup = v_sgdelay_cleanup;

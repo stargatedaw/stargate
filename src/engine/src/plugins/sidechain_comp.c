@@ -280,14 +280,14 @@ void v_scc_run(
 }
 
 PluginDescriptor *scc_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(SCC_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(SCC_COUNT);
 
-    set_pyfx_port(f_result, SCC_THRESHOLD, -24.0f, -36.0f, -6.0f);
-    set_pyfx_port(f_result, SCC_RATIO, 20.0f, 1.0f, 100.0f);
-    set_pyfx_port(f_result, SCC_ATTACK, 20.0f, 0.0f, 100.0f);
-    set_pyfx_port(f_result, SCC_RELEASE, 50.0f, 20.0f, 300.0f);
-    set_pyfx_port(f_result, SCC_WET, 100.0f, 0.0f, 100.0f);
-    set_pyfx_port(f_result, SCC_UI_MSG_ENABLED, 0.0f, 0.0f, 1.0f);
+    set_plugin_port(f_result, SCC_THRESHOLD, -24.0f, -36.0f, -6.0f);
+    set_plugin_port(f_result, SCC_RATIO, 20.0f, 1.0f, 100.0f);
+    set_plugin_port(f_result, SCC_ATTACK, 20.0f, 0.0f, 100.0f);
+    set_plugin_port(f_result, SCC_RELEASE, 50.0f, 20.0f, 300.0f);
+    set_plugin_port(f_result, SCC_WET, 100.0f, 0.0f, 100.0f);
+    set_plugin_port(f_result, SCC_UI_MSG_ENABLED, 0.0f, 0.0f, 1.0f);
 
     f_result->cleanup = v_scc_cleanup;
     f_result->connect_port = v_scc_connect_port;

@@ -16,7 +16,7 @@
 typedef struct{
     t_audio_pool_item* ab_wav_item;
     t_audio_item* ab_audio_item;
-    t_pytrack* track_pool[1];
+    t_track* track_pool[1];
     char* tracks_folder;
     char* project_folder;
 }t_wave_edit;

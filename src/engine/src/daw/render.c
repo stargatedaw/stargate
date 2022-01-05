@@ -204,7 +204,7 @@ void v_daw_offline_render_prep(t_daw * self){
     log_info("Warming up plugins for offline rendering...");
     int f_i;
     int f_i2;
-    t_pytrack * f_track;
+    t_track * f_track;
     t_plugin * f_plugin;
     SGFLT sample_rate = STARGATE->thread_storage[0].sample_rate;
 

@@ -269,17 +269,17 @@ void v_sg_comp_run(
 
 
 PluginDescriptor *sg_comp_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(SG_COMP_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(SG_COMP_COUNT);
 
-    set_pyfx_port(f_result, SG_COMP_THRESHOLD, -120.0f, -360.0f, -60.0f);
-    set_pyfx_port(f_result, SG_COMP_RATIO, 20.0f, 10.0f, 100.0f);
-    set_pyfx_port(f_result, SG_COMP_KNEE, 0.0f, 0.0f, 120.0f);
-    set_pyfx_port(f_result, SG_COMP_ATTACK, 50.0f, 0.0f, 500.0f);
-    set_pyfx_port(f_result, SG_COMP_RELEASE, 100.0f, 10.0f, 500.0f);
-    set_pyfx_port(f_result, SG_COMP_GAIN, 0.0f, -360.0f, 360.0f);
-    set_pyfx_port(f_result, SG_COMP_MODE, 0.0f, 0.0f, 1.0f);
-    set_pyfx_port(f_result, SG_COMP_RMS_TIME, 2.0f, 1.0f, 5.0f);
-    set_pyfx_port(f_result, SG_COMP_UI_MSG_ENABLED, 0.0f, 0.0f, 1.0f);
+    set_plugin_port(f_result, SG_COMP_THRESHOLD, -120.0f, -360.0f, -60.0f);
+    set_plugin_port(f_result, SG_COMP_RATIO, 20.0f, 10.0f, 100.0f);
+    set_plugin_port(f_result, SG_COMP_KNEE, 0.0f, 0.0f, 120.0f);
+    set_plugin_port(f_result, SG_COMP_ATTACK, 50.0f, 0.0f, 500.0f);
+    set_plugin_port(f_result, SG_COMP_RELEASE, 100.0f, 10.0f, 500.0f);
+    set_plugin_port(f_result, SG_COMP_GAIN, 0.0f, -360.0f, 360.0f);
+    set_plugin_port(f_result, SG_COMP_MODE, 0.0f, 0.0f, 1.0f);
+    set_plugin_port(f_result, SG_COMP_RMS_TIME, 2.0f, 1.0f, 5.0f);
+    set_plugin_port(f_result, SG_COMP_UI_MSG_ENABLED, 0.0f, 0.0f, 1.0f);
 
     f_result->cleanup = v_sg_comp_cleanup;
     f_result->connect_port = v_sg_comp_connect_port;

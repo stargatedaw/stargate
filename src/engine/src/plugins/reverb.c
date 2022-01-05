@@ -302,16 +302,16 @@ void v_sreverb_run(
 }
 
 PluginDescriptor *sreverb_plugin_descriptor(){
-    PluginDescriptor *f_result = get_pyfx_descriptor(SREVERB_COUNT);
+    PluginDescriptor *f_result = get_plugin_descriptor(SREVERB_COUNT);
 
-    set_pyfx_port(f_result, SREVERB_REVERB_TIME, 50.0f, 0.0f, 100.0f);
-    set_pyfx_port(f_result, SREVERB_REVERB_WET, -120.0f, -500.0f, 0.0f);
-    set_pyfx_port(f_result, SREVERB_REVERB_COLOR, 90.0f, 48.0f, 120.0f);
-    set_pyfx_port(f_result, SREVERB_REVERB_DRY, 0.0f, -500.0f, 0.0f);
-    set_pyfx_port(f_result, SREVERB_REVERB_PRE_DELAY, 10.0f, 0.0f, 1000.0f);
-    set_pyfx_port(f_result, SREVERB_REVERB_HP, 50.0f, 20.0f, 96.0f);
-    set_pyfx_port(f_result, SREVERB_DRY_PAN, 0.0f, -100.0f, 100.0f);
-    set_pyfx_port(f_result, SREVERB_WET_PAN, 0.0f, -100.0f, 100.0f);
+    set_plugin_port(f_result, SREVERB_REVERB_TIME, 50.0f, 0.0f, 100.0f);
+    set_plugin_port(f_result, SREVERB_REVERB_WET, -120.0f, -500.0f, 0.0f);
+    set_plugin_port(f_result, SREVERB_REVERB_COLOR, 90.0f, 48.0f, 120.0f);
+    set_plugin_port(f_result, SREVERB_REVERB_DRY, 0.0f, -500.0f, 0.0f);
+    set_plugin_port(f_result, SREVERB_REVERB_PRE_DELAY, 10.0f, 0.0f, 1000.0f);
+    set_plugin_port(f_result, SREVERB_REVERB_HP, 50.0f, 20.0f, 96.0f);
+    set_plugin_port(f_result, SREVERB_DRY_PAN, 0.0f, -100.0f, 100.0f);
+    set_plugin_port(f_result, SREVERB_WET_PAN, 0.0f, -100.0f, 100.0f);
 
 
     f_result->cleanup = v_sreverb_cleanup;

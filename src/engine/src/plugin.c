@@ -240,7 +240,7 @@ void v_ev_set_atm(
     a_event->value = a_value;
 }
 
-PluginDescriptor * get_pyfx_descriptor(int a_port_count){
+PluginDescriptor * get_plugin_descriptor(int a_port_count){
     PluginDescriptor *f_result = (PluginDescriptor*)malloc(
         sizeof(PluginDescriptor)
     );
@@ -260,7 +260,7 @@ PluginDescriptor * get_pyfx_descriptor(int a_port_count){
     return f_result;
 }
 
-void set_pyfx_port(
+void set_plugin_port(
     PluginDescriptor * a_desc,
     int a_port,
     SGFLT a_default,
@@ -269,24 +269,24 @@ void set_pyfx_port(
 ){
     sg_assert(
         (int)(a_port >= 0 && a_port < a_desc->PortCount),
-        "set_pyfx_port: a_port %i out of range 0 to %i",
+        "set_plugin_port: a_port %i out of range 0 to %i",
         a_port,
         a_desc->PortCount
     );
     sg_assert(
         (int)(!a_desc->PortDescriptors[a_port]),
-        "set_pyfx_port: a_port %i already set",
+        "set_plugin_port: a_port %i already set",
         a_port
     );
     sg_assert(
         (int)(a_min < a_max),
-        "set_pyfx_port: a_min %f >= a_max %f",
+        "set_plugin_port: a_min %f >= a_max %f",
         a_min,
         a_max
     );
     sg_assert(
         (int)(a_default >= a_min && a_default <= a_max),
-        "set_pyfx_port: a_default %f out of range %f to %f",
+        "set_plugin_port: a_default %f out of range %f to %f",
         a_default,
         a_min,
         a_max

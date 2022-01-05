@@ -373,7 +373,7 @@ void g_stargate_get(
 void v_set_control_from_atm(
     t_seq_event *event,
     int a_plugin_uid,
-    t_pytrack * f_track
+    t_track * f_track
 ){
     if(!STARGATE->is_offline_rendering)
     {
@@ -386,7 +386,7 @@ void v_set_control_from_atm(
 
 void v_set_control_from_cc(
     t_seq_event* event,
-    t_pytrack* f_track
+    t_track* f_track
 ){
     if(!STARGATE->is_offline_rendering){
         sprintf(
@@ -472,7 +472,7 @@ void v_zero_buffer(SGFLT ** a_buffers, int a_count)
 }
 
 NO_OPTIMIZATION void v_open_track(
-    t_pytrack* a_track,
+    t_track* a_track,
     char* a_tracks_folder,
     int a_index
 ){
@@ -534,12 +534,12 @@ NO_OPTIMIZATION void v_open_track(
     }
 }
 
-t_pytrack * g_pytrack_get(int a_track_num, SGFLT a_sr)
+t_track * g_track_get(int a_track_num, SGFLT a_sr)
 {
     int f_i = 0;
 
-    t_pytrack * f_result;
-    clalloc((void**)&f_result, sizeof(t_pytrack));
+    t_track * f_result;
+    clalloc((void**)&f_result, sizeof(t_track));
 
     f_result->track_num = a_track_num;
     f_result->channels = 2;
@@ -706,7 +706,7 @@ void v_wait_for_threads(){
     }
 }
 
-void g_pynote_init(
+void g_note_init(
     t_seq_event* f_result,
     int a_note,
     int a_vel,
@@ -730,7 +730,7 @@ void g_pynote_init(
     f_result->release = release;
 }
 
-void g_pycc_init(
+void g_cc_init(
     t_seq_event * f_result,
     int a_cc_num,
     SGFLT a_cc_val,
@@ -742,13 +742,13 @@ void g_pycc_init(
     f_result->start = a_start;
 }
 
-t_seq_event * g_pycc_get(int a_cc_num, SGFLT a_cc_val, SGFLT a_start){
+t_seq_event * g_cc_get(int a_cc_num, SGFLT a_cc_val, SGFLT a_start){
     t_seq_event * f_result = (t_seq_event*)malloc(sizeof(t_seq_event));
-    g_pycc_init(f_result, a_cc_num, a_cc_val, a_start);
+    g_cc_init(f_result, a_cc_num, a_cc_val, a_start);
     return f_result;
 }
 
-void g_pypitchbend_init(
+void g_pitchbend_init(
     t_seq_event * f_result,
     SGFLT a_start,
     SGFLT a_value
@@ -758,9 +758,9 @@ void g_pypitchbend_init(
     f_result->value = a_value;
 }
 
-t_seq_event * g_pypitchbend_get(SGFLT a_start, SGFLT a_value){
+t_seq_event * g_pitchbend_get(SGFLT a_start, SGFLT a_value){
     t_seq_event * f_result = (t_seq_event*)malloc(sizeof(t_seq_event));
-    g_pypitchbend_init(f_result, a_start, a_value);
+    g_pitchbend_init(f_result, a_start, a_value);
     return f_result;
 }
 
@@ -1391,7 +1391,7 @@ t_audio_pool_item * g_audio_pool_item_get_plugin(int a_uid)
  * SEGFAULT on ARM (which could not be reproduced on x86)
  * This is not a performance-critical function. */
 NO_OPTIMIZATION void v_set_plugin_index(
-    t_pytrack * f_track,
+    t_track * f_track,
     int a_index,
     int a_plugin_index,
     int a_plugin_uid,

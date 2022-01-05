@@ -95,7 +95,7 @@ t_daw_routing_graph * g_daw_routing_graph_get(t_daw * self)
                 v_iterate_2d_char_array(f_2d_array);
                 int f_sidechain = atoi(f_2d_array->current_str);
 
-                v_pytrack_routing_set(
+                v_track_routing_set(
                     &f_result->routes[f_track_num][f_index],
                     f_output,
                     f_sidechain
@@ -130,8 +130,8 @@ void g_daw_midi_routing_list_init(t_daw_midi_routing_list * self)
     }
 }
 
-void v_pytrack_routing_set(
-    t_pytrack_routing* self,
+void v_track_routing_set(
+    t_track_routing* self,
     int a_output,
     int a_type
 ){
@@ -145,6 +145,6 @@ void v_pytrack_routing_set(
     }
 }
 
-void v_pytrack_routing_free(t_pytrack_routing * self){
+void v_track_routing_free(t_track_routing * self){
     free(self);
 }
