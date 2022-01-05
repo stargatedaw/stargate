@@ -139,7 +139,7 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
             self.showing_resize_cursor = False
 
     def get_selected_string(self):
-        return str(self.note_item)
+        return self.note_item.selection_str()
 
     def hoverEnterEvent(self, a_event):
         QGraphicsRectItem.hoverEnterEvent(self, a_event)

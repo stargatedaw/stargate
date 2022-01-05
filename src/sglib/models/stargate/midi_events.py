@@ -133,6 +133,14 @@ class note(abstract_midi_event):
             )
         )
 
+    def selection_str(self):
+        return "|".join(
+            str(x) for x in (
+                round(self.start, 6),
+                self.note_num,
+            )
+        )
+
     def clone(self):
         return note.from_str(str(self))
 

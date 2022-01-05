@@ -304,6 +304,7 @@ class PianoRollEditor(AbstractItemEditor):
             _shared.piano_roll_set_delete_mode(False)
         else:
             QGraphicsScene.mouseReleaseEvent(self.scene, a_event)
+            self.set_selected_strings()
         self.click_enabled = True
 
     def sceneMousePressEvent(self, a_event):

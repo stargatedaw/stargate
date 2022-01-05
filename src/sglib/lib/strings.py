@@ -114,8 +114,8 @@ Press the Delete button on your keyboard to delete selected notes
 Click and drag the note end to change the length of selected notes
 
 Parameter Settings:
-The "Parameter" combobox  can currently be set to "Velocity" or "Pan".  These
-mouse modifiers will set the parameter:
+The "Parameter" combobox can be used to set various parameters per-note.
+These mouse modifiers will modify the parameter:
 
 CTRL+ALT+click+drag-up/down to adjust the parameter value of selected notes
 CTRL+SHIFT+click+drag-up/down to create a parameter value curve for the
