@@ -64,12 +64,16 @@ def create_sample_graph(
                 f_low_peaks = f_low_peaks * f_vol
 
             for f_peak in f_high_peaks:
-                f_result.lineTo(f_width_pos, f_section_div2 -
-                    (f_peak * f_section_div2))
+                f_result.lineTo(
+                    f_width_pos,
+                    f_section_div2 - (f_peak * f_section_div2),
+                )
                 f_width_pos += f_width_inc
             for f_peak in f_low_peaks:
-                f_result.lineTo(f_width_pos, (f_peak * -1.0 *
-                    f_section_div2) + f_section_div2)
+                f_result.lineTo(
+                    f_width_pos,
+                    (f_peak * -1.0 * f_section_div2) + f_section_div2,
+                )
                 f_width_pos -= f_width_inc
             f_result.closeSubpath()
             f_paths.append(f_result)
