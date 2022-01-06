@@ -24,6 +24,9 @@ def create_sample_graph(
         f_len = len(sample_graph.high_peaks[0])
         f_slice_start = int(f_ss * f_len)
         f_slice_end = int(f_se * f_len)
+        if a_audio_item.reversed:
+            f_slice_start = f_len - f_slice_end
+            f_slice_end = f_len - f_slice_start
         #a_width *= f_width_frac
     else:
         f_slice_start = None
@@ -48,20 +51,17 @@ def create_sample_graph(
             f_result = QPainterPath()
             f_width_pos = 1.0
             f_result.moveTo(f_width_pos, f_section_div2)
+            f_high_peaks = sample_graph.high_peaks[f_i][
+                f_slice_start:f_slice_end]
+            f_low_peaks = sample_graph.low_peaks[f_i][
+                f_slice_start:f_slice_end]
             if a_audio_item and a_audio_item.reversed:
-                f_high_peaks = sample_graph.high_peaks[f_i][
-                    f_slice_end:f_slice_start:-1]
-                f_low_peaks = sample_graph.low_peaks[f_i][::-1]
-                f_low_peaks = f_low_peaks[f_slice_start:f_slice_end]
-            else:
-                f_high_peaks = sample_graph.high_peaks[f_i][
-                    f_slice_start:f_slice_end]
-                f_low_peaks = sample_graph.low_peaks[f_i][::-1]
-                f_low_peaks = f_low_peaks[f_slice_end:f_slice_start:-1]
+                f_high_peaks = f_high_peaks[::-1]
+                f_low_peaks = f_low_peaks[::-1]
 
             if a_audio_item:
-                f_high_peaks = f_high_peaks * f_vol
-                f_low_peaks = f_low_peaks * f_vol
+                f_high_peaks *= f_vol
+                f_low_peaks *= f_vol
 
             for f_peak in f_high_peaks:
                 f_result.lineTo(
@@ -69,7 +69,7 @@ def create_sample_graph(
                     f_section_div2 - (f_peak * f_section_div2),
                 )
                 f_width_pos += f_width_inc
-            for f_peak in f_low_peaks:
+            for f_peak in reversed(f_low_peaks):
                 f_result.lineTo(
                     f_width_pos,
                     (f_peak * -1.0 * f_section_div2) + f_section_div2,

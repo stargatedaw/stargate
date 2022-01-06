@@ -105,8 +105,6 @@ class SampleGraph:
                     self.low_peaks[int(f_line_arr[1])].append(f_p_val)
                 else:
                     print("Invalid sample_graph [2] value " + f_line_arr[2])
-        for f_list in self.low_peaks:
-            f_list.reverse()
 
         self.low_peaks = [numpy.array(x) for x in self.low_peaks]
         self.high_peaks = [numpy.array(x) for x in self.high_peaks]
