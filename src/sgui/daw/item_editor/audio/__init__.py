@@ -18,6 +18,7 @@ from sglib.lib import strings as sg_strings
 from sglib.lib.util import *
 from sglib.lib.translate import _
 from sglib.log import LOG
+from sglib.math import linear_interpolate
 from sgui.sgqt import *
 from sglib.models import theme
 from sglib.models.stargate.audio_pool import PerFileFX
@@ -842,13 +843,22 @@ class AudioItemSeqWidget(FileDragDropper):
         global_open_audio_items(a_reload=False)
 
 def set_audio_seq_zoom(a_horizontal, a_vertical):
+    # Normalize 1-10 to 0-1
+    horizontal = (a_horizontal - 1.) * 1.11111111
     f_width = float(shared.AUDIO_SEQ.rect().width()) - \
         float(shared.AUDIO_SEQ.verticalScrollBar().width()) - 6.0
     f_sequence_length = shared.CURRENT_ITEM_LEN
-    f_sequence_px = f_sequence_length * 100.0
-    f_sequence_scale = f_width / f_sequence_px
+    min_px_per_beat = f_width / f_sequence_length
+    max_px_per_beat = max(
+        min_px_per_beat * 6.,
+        50.
+    )
 
-    shared.AUDIO_PX_PER_BEAT = 100.0 * a_horizontal * f_sequence_scale
+    shared.AUDIO_PX_PER_BEAT = linear_interpolate(
+        min_px_per_beat,
+        max_px_per_beat,
+        horizontal,
+    )
     shared.AUDIO_SEQ.px_per_beat = shared.AUDIO_PX_PER_BEAT
     set_audio_snap(shared.AUDIO_SNAP_VAL)
     shared.AUDIO_ITEM_HEIGHT = 75.0 * a_vertical
