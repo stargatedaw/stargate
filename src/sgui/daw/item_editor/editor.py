@@ -307,6 +307,12 @@ class ItemEditorWidget:
         shared.AUDIO_SEQ.set_zoom(float(a_val) * 0.1)
         self.tab_changed()
 
+    def increment_hzoom(self, up):
+        inc = 1 if up else -1
+        self.zoom_slider.setValue(
+            self.zoom_slider.value() + inc,
+        )
+
     def add_cc(self, a_cc):
         shared.CURRENT_ITEM.add_cc(a_cc)
 

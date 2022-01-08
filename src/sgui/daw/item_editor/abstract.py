@@ -96,3 +96,11 @@ class AbstractItemEditor(QGraphicsView):
                 shared.CURRENT_ITEM_REF.start_offset
             shared.global_set_playback_pos(f_beat if f_beat >= 0 else 0)
 
+    def wheelEvent(self, event):
+        if event.modifiers() == QtCore.Qt.KeyboardModifier.ControlModifier:
+            shared.ITEM_EDITOR.increment_hzoom(
+                event.pixelDelta().y() > 0,
+            )
+        else:
+            QGraphicsView.wheelEvent(self, event)
+

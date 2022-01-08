@@ -4,7 +4,6 @@
 
 from sglib import constants
 from . import _shared
-from ..abstract import AbstractItemEditor, ItemEditorHeader
 from .editor import PianoRollEditor
 from .key import PianoKeyItem
 from .note import PianoRollNoteItem
