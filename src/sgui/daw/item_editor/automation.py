@@ -251,7 +251,6 @@ class AutomationEditor(AbstractItemEditor):
             )
             f_end_line.setPen(end_pen)
 
-
     def draw_grid(self):
         self.set_width()
         f_beat_pen = QPen()
@@ -263,7 +262,12 @@ class AutomationEditor(AbstractItemEditor):
             f_labels = [0, '1.0', 0, '0', 0, '-1.0']
         for i in range(1, 6):
             f_line = QGraphicsLineItem(
-                0, 0, self.automation_width, 0, self.y_axis)
+                0,
+                0,
+                self.automation_width,
+                0,
+                self.y_axis,
+            )
             f_line.setPos(self.axis_size, self.viewer_height * (i - 1) / 4)
             if i % 2:
                 f_label = get_font().QGraphicsSimpleTextItem(
@@ -287,14 +291,20 @@ class AutomationEditor(AbstractItemEditor):
             f_beat.setFlag(
                 QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
             )
-
-            f_number = get_font().QGraphicsSimpleTextItem(
-                str(i + 1), self.header)
-            f_number.setFlag(
-                QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
-            )
-            f_number.setPos(self.px_per_beat * i + 5, 2)
-            f_number.setBrush(QtCore.Qt.GlobalColor.white)
+            if i < shared.CURRENT_ITEM_LEN:
+                f_number = get_font().QGraphicsSimpleTextItem(
+                    str(i + 1), self.header)
+                f_number.setFlag(
+                    QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
+                )
+                f_number.setPos(self.px_per_beat * i + 5, 2)
+                f_number.setBrush(QtCore.Qt.GlobalColor.white)
+        self.setSceneRect(
+            0.0,
+            0.0,
+            float((self.px_per_beat * shared.CURRENT_ITEM_LEN) + 20.0),
+            float(self.height()),
+        )
 #                for j in range(0, 16):
 #                    f_line = QGraphicsLineItem(
 #                        0, 0, 0, self.viewer_height, self.header)
@@ -670,7 +680,8 @@ class AutomationEditorWidget:
         f_layout.addWidget(QLabel(_("Instrument Pitchbend")), 10, 0)
         f_ipb_spinbox = QSpinBox()
         f_ipb_spinbox.setToolTip(
-            _("Set this to the same setting that your instrument plugin uses"))
+            _("Set this to the same setting that your instrument plugin uses"),
+        )
         f_ipb_spinbox.setRange(2, 36)
         f_ipb_spinbox.setValue(int(LAST_IPB_VALUE))
         f_layout.addWidget(f_ipb_spinbox, 10, 1)
@@ -683,9 +694,7 @@ class AutomationEditorWidget:
         f_layout.addWidget(f_epb_spinbox, 20, 1)
 
         f_layout.addWidget(
-            QLabel(
-                sg_strings.pitchbend_dialog,
-            ),
+            QLabel(sg_strings.pitchbend_dialog),
             30,
             1,
         )
@@ -763,7 +772,8 @@ class AutomationItem(QGraphicsEllipseItem):
                 elif f_point.pos().x() > self.parent_view.grid_max_start_time:
                     f_point.setPos(
                         self.parent_view.grid_max_start_time,
-                        f_point.pos().y())
+                        f_point.pos().y(),
+                    )
                 if f_point.pos().y() < AUTOMATION_MIN_HEIGHT:
                     f_point.setPos(f_point.pos().x(), AUTOMATION_MIN_HEIGHT)
                 elif f_point.pos().y() > self.parent_view.total_height:
