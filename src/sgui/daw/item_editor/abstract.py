@@ -96,11 +96,20 @@ class AbstractItemEditor(QGraphicsView):
                 shared.CURRENT_ITEM_REF.start_offset
             shared.global_set_playback_pos(f_beat if f_beat >= 0 else 0)
 
+    def scroll_to_pos(self, pos, up=True):
+        scene_pos = self.mapToScene(int(pos.x()), int(pos.y()))
+        if up:
+            x_pos = scene_pos.x() - (pos.x() * 0.5)
+        else:
+            x_pos = scene_pos.x() - (pos.x() * 1.5)
+        self.horizontalScrollBar().setValue(int(x_pos))
+
     def wheelEvent(self, event):
         if event.modifiers() == QtCore.Qt.KeyboardModifier.ControlModifier:
-            shared.ITEM_EDITOR.increment_hzoom(
-                event.pixelDelta().y() > 0,
-            )
+            up = event.pixelDelta().y() > 0
+            shared.ITEM_EDITOR.increment_hzoom(up)
+            pos = event.position()
+            self.scroll_to_pos(pos, up)
         else:
             QGraphicsView.wheelEvent(self, event)
 
