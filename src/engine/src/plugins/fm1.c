@@ -1125,7 +1125,7 @@ void v_fm1_process_midi_event(
             }
 
             //Get the noise function pointer
-            f_fm1_voice->noise_func_ptr = fp_get_noise_func_ptr(
+            f_fm1_voice->noise_func_ptr = fp_noise_stereo_get(
                 (int)(*(plugin_data->noise_type))
             );
 
@@ -1144,16 +1144,22 @@ void v_fm1_process_midi_event(
             SGFLT f_release_a = (*(plugin_data->pfx_release) * .01);
             f_release_a *= f_release_a;
 
-            v_adsr_set_adsr_db(&f_fm1_voice->adsr_amp,
-                    f_attack_a, f_decay_a, (*(plugin_data->pfx_sustain)),
-                    f_release_a);
+            v_adsr_set_adsr_db(
+                &f_fm1_voice->adsr_amp,
+                f_attack_a,
+                f_decay_a,
+                *(plugin_data->pfx_sustain),
+                f_release_a
+            );
 
             v_adsr_set_delay_time(
                 &f_fm1_voice->adsr_amp,
-                (*(plugin_data->pfx_delay) * .01));
+                (*(plugin_data->pfx_delay) * .01)
+            );
             v_adsr_set_hold_time(
                 &f_fm1_voice->adsr_amp,
-                (*(plugin_data->pfx_hold) * .01));
+                (*(plugin_data->pfx_hold) * .01)
+            );
 
             SGFLT f_attack_f = (*(plugin_data->pfx_attack_f) * .01);
             f_attack_f *= f_attack_f;
@@ -1162,16 +1168,22 @@ void v_fm1_process_midi_event(
             SGFLT f_release_f = (*(plugin_data->pfx_release_f) * .01);
             f_release_f *= f_release_f;
 
-            v_adsr_set_adsr(&f_fm1_voice->adsr_filter,
-                    f_attack_f, f_decay_f,
-                    (*(plugin_data->pfx_sustain_f) * .01), f_release_f);
+            v_adsr_set_adsr(
+                &f_fm1_voice->adsr_filter,
+                f_attack_f,
+                f_decay_f,
+                *(plugin_data->pfx_sustain_f) * .01,
+                f_release_f
+            );
 
             v_adsr_set_delay_time(
                 &f_fm1_voice->adsr_filter,
-                (*(plugin_data->pfx_delay_f) * .01));
+                (*(plugin_data->pfx_delay_f) * .01)
+            );
             v_adsr_set_hold_time(
                 &f_fm1_voice->adsr_filter,
-                (*(plugin_data->pfx_hold_f) * .01));
+                (*(plugin_data->pfx_hold_f) * .01)
+            );
 
             /*Retrigger the pitch envelope*/
             v_rmp_retrigger_curve(
@@ -1498,22 +1510,22 @@ void v_run_fm1_voice(
         &osc_arg
     );
 
-    SGFLT noise_sample;
+    struct SamplePair noise_sample = a_voice->noise_func_ptr(
+        a_voice->white_noise
+    );
 
     if(a_voice->noise_prefx){
         if(a_voice->adsr_noise_on){
             v_adsr_run(&a_voice->adsr_noise);
-            noise_sample = a_voice->noise_func_ptr(
-                &a_voice->white_noise1
-            ) * a_voice->noise_linamp * a_voice->adsr_noise.output;
-            a_voice->current_sample.left += noise_sample;
-            a_voice->current_sample.right += noise_sample;
+            a_voice->current_sample.left += noise_sample.left
+                * a_voice->noise_linamp * a_voice->adsr_noise.output;
+            a_voice->current_sample.right += noise_sample.right
+                * a_voice->noise_linamp * a_voice->adsr_noise.output;
         } else {
-            noise_sample = a_voice->noise_func_ptr(
-                &a_voice->white_noise1
-            ) * a_voice->noise_linamp;
-            a_voice->current_sample.left += noise_sample;
-            a_voice->current_sample.right += noise_sample;
+            a_voice->current_sample.left +=
+                noise_sample.left * a_voice->noise_linamp;
+            a_voice->current_sample.right +=
+                noise_sample.right * a_voice->noise_linamp;
         }
     }
 
@@ -1573,22 +1585,20 @@ void v_run_fm1_voice(
     a_voice->multifx_current_sample[1] *= a_voice->lfo_amp_output;
 
     if(!a_voice->noise_prefx){
+        SGFLT f_noise_amp;
         if(a_voice->adsr_noise_on){
             v_adsr_run(&a_voice->adsr_noise);
-            SGFLT f_noise =
-                a_voice->noise_func_ptr(&a_voice->white_noise1) *
-                (a_voice->noise_linamp) * a_voice->adsr_noise.output *
+            f_noise_amp =
+                a_voice->noise_linamp *
+                a_voice->adsr_noise.output *
                 a_voice->adsr_main.output;
-            out0[(i_voice)] += f_noise;
-            out1[(i_voice)] += f_noise;
         } else {
-            SGFLT f_noise =
-                (a_voice->noise_func_ptr(&a_voice->white_noise1) *
-                (a_voice->noise_linamp)) *
+            f_noise_amp =
+                a_voice->noise_linamp *
                 a_voice->adsr_main.output;
-            out0[(i_voice)] += f_noise;
-            out1[(i_voice)] += f_noise;
         }
+        out0[i_voice] += noise_sample.left * f_noise_amp;
+        out1[i_voice] += noise_sample.right * f_noise_amp;
     }
 
     if(a_voice->adsr_prefx){
@@ -2049,7 +2059,8 @@ void g_fm1_poly_init(
         fm1_run_voice_osc
     );
 
-    g_white_noise_init(&voice->white_noise1, a_sr);
+    g_white_noise_init(&voice->white_noise[0], a_sr);
+    g_white_noise_init(&voice->white_noise[1], a_sr);
     voice->noise_amp = 0;
 
     g_rmp_init(&voice->glide_env, a_sr);
@@ -2104,7 +2115,7 @@ void g_fm1_poly_init(
     voice->modulator_outputs[6] = &(a_mono->fm_macro_smoother[0].last_value);
     voice->modulator_outputs[7] = &(a_mono->fm_macro_smoother[1].last_value);
 
-    voice->noise_func_ptr = f_run_noise_off;
+    voice->noise_func_ptr = noise_off_stereo_run;
 
     voice->perc_env_on = 0;
     g_pnv_init(&voice->perc_env, a_sr);

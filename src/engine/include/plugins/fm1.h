@@ -539,7 +539,6 @@ typedef struct {
     t_lfs_lfo lfo1;
     SGFLT lfo_amount_output, lfo_amp_output, lfo_pitch_output;
     t_adsr adsr_lfo;
-    fp_noise_func_ptr noise_func_ptr;
 
     SGFLT note_f;
     int note;
@@ -562,7 +561,8 @@ typedef struct {
 
     SGFLT noise_amp;
     SGFLT noise_linamp;
-    t_white_noise white_noise1;
+    fp_noise_stereo noise_func_ptr;
+    t_white_noise white_noise[2];
     SGFLT noise_sample;
     t_adsr adsr_noise;
     int adsr_noise_on;

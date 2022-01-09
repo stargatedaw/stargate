@@ -17,6 +17,18 @@ fp_noise_func_ptr fp_get_noise_func_ptr(int a_index){
     return f_noise_func_ptr_arr[a_index];
 }
 
+fp_noise_stereo FP_NOISE_STEREO[] = {
+    noise_off_stereo_run,
+    white_noise_mono_run,
+    pink_noise_mono_run,
+    white_noise_stereo_run,
+    pink_noise_stereo_run,
+};
+
+fp_noise_stereo fp_noise_stereo_get(int a_index){
+    return FP_NOISE_STEREO[a_index];
+}
+
 unsigned int seed_helper = 18;
 
 void g_white_noise_init(t_white_noise * f_result, SGFLT a_sample_rate)
@@ -51,16 +63,6 @@ void g_white_noise_init(t_white_noise * f_result, SGFLT a_sample_rate)
 
         f_result->sample_array[f_i] = (f_sample1 + f_sample2 + f_sample3) * .5f;
     }
-}
-
-/* t_white_noise * g_get_white_noise(SGFLT a_sample_rate)
- */
-t_white_noise * g_get_white_noise(SGFLT a_sample_rate)
-{
-    t_white_noise * f_result;
-    hpalloc((void**)&f_result, sizeof(t_white_noise));
-    g_white_noise_init(f_result, a_sample_rate);
-    return f_result;
 }
 
 /* SGFLT f_run_white_noise(t_white_noise * a_w_noise)
@@ -107,3 +109,30 @@ SGFLT f_run_noise_off(t_white_noise * a_w_noise){
     return 0.0f;
 }
 
+struct SamplePair white_noise_mono_run(t_white_noise* self){
+    SGFLT sample = f_run_white_noise(&self[0]);
+    return (struct SamplePair){sample, sample};
+}
+
+struct SamplePair pink_noise_mono_run(t_white_noise* self){
+    SGFLT sample = f_run_pink_noise(&self[0]);
+    return (struct SamplePair){sample, sample};
+}
+
+struct SamplePair white_noise_stereo_run(t_white_noise* self){
+    SGFLT left = f_run_white_noise(&self[0]);
+    SGFLT right = f_run_white_noise(&self[1]);
+
+    return (struct SamplePair){left, right};
+}
+
+struct SamplePair pink_noise_stereo_run(t_white_noise* self){
+    SGFLT left = f_run_pink_noise(&self[0]);
+    SGFLT right = f_run_pink_noise(&self[1]);
+
+    return (struct SamplePair){left, right};
+}
+
+struct SamplePair noise_off_stereo_run(t_white_noise* self){
+    return  (struct SamplePair){0.0, 0.0};
+}

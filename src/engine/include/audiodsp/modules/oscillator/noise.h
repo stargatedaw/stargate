@@ -21,16 +21,15 @@ GNU General Public License for more details.
 #include "compiler.h"
 
 
-typedef struct st_white_noise
-{
+typedef struct {
     int array_count, read_head;
     SGFLT * sample_array;
     SGFLT b0,b1,b2,b3,b4,b5,b6;  //pink noise coefficients
-}t_white_noise;
+} t_white_noise;
 
 typedef SGFLT (*fp_noise_func_ptr)(t_white_noise*);
+typedef struct SamplePair (*fp_noise_stereo)(t_white_noise*);
 
-t_white_noise * g_get_white_noise(SGFLT);
 /* SGFLT f_run_white_noise(t_white_noise * a_w_noise)
  *
  * returns a single sample of white noise
@@ -43,10 +42,16 @@ SGFLT f_run_white_noise(t_white_noise *);
 SGFLT f_run_pink_noise(t_white_noise *);
 SGFLT f_run_noise_off(t_white_noise *);
 fp_noise_func_ptr fp_get_noise_func_ptr(int);
+fp_noise_stereo fp_noise_stereo_get(int);
 
 //fp_noise_func_ptr f_noise_func_ptr_arr[];
-
 void g_white_noise_init(t_white_noise * f_result, SGFLT a_sample_rate);
+
+struct SamplePair noise_off_stereo_run(t_white_noise*);
+struct SamplePair white_noise_mono_run(t_white_noise*);
+struct SamplePair pink_noise_mono_run(t_white_noise*);
+struct SamplePair white_noise_stereo_run(t_white_noise*);
+struct SamplePair pink_noise_stereo_run(t_white_noise*);
 
 #endif /* NOISE_H */
 

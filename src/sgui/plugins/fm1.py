@@ -1519,17 +1519,33 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.noise_amp.add_to_grid_layout(self.groupbox_noise_layout, 0)
 
         self.noise_type = combobox_control(
-            87, _("Type"), FM1_NOISE_TYPE,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            [_("Off"), _("White"), _("Pink")], self.port_dict,
-             a_preset_mgr=self.preset_manager)
+            87,
+            _("Type"),
+            FM1_NOISE_TYPE,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            [
+                _("Off"),
+                _("White"),
+                _("Pink"),
+                _('White Stereo'),
+                _('Pink Stereo')
+            ],
+            self.port_dict,
+            a_preset_mgr=self.preset_manager,
+        )
         self.noise_type.control.setMaximumWidth(87)
         self.noise_type.add_to_grid_layout(self.groupbox_noise_layout, 1)
 
         self.noise_prefx = checkbox_control(
-            "PreFX", FM1_NOISE_PREFX,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, a_preset_mgr=self.preset_manager, a_default=1)
+            "PreFX",
+            FM1_NOISE_PREFX,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            a_preset_mgr=self.preset_manager,
+            a_default=1,
+        )
         self.noise_prefx.add_to_grid_layout(self.groupbox_noise_layout, 6)
 
         self.modulation_vlayout.addItem(
