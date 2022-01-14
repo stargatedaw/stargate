@@ -23,8 +23,7 @@ GNU General Public License for more details.
 #include "audiodsp/lib/denormal.h"
 #include "compiler.h"
 
-typedef struct
-{
+typedef struct {
     int buffer_size;  //The size of input_buffer
     int input_pointer;  //The index where the current sample is written to
     SGFLT delay_pointer; //
@@ -42,7 +41,7 @@ typedef struct
     SGFLT * input_buffer;
     //t_lin_interpolater * linear;
     //t_pit_pitch_core * pitch_core;
-}t_mcm_multicomb;
+} t_mcm_multicomb;
 
 /* v_mcm_run(
  * t_mcm_multicomb*,

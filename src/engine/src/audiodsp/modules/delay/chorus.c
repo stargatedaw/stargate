@@ -6,27 +6,48 @@
 #include "audiodsp/modules/delay/chorus.h"
 
 
-void g_crs_init(t_crs_chorus * f_result, SGFLT a_sr, int a_huge_pages){
-    f_result->buffer_size = (int)(a_sr * 0.050f);
-    f_result->buffer_size_SGFLT = ((SGFLT)(f_result->buffer_size));
+void g_crs_init(
+    t_crs_chorus* f_result,
+    SGFLT a_sr,
+    int a_huge_pages
+){
+    int buffer_size = (int)(a_sr * 0.050f);
+    SGFLT* buffer;
 
     if(a_huge_pages){
         hpalloc(
-            (void**)&f_result->buffer,
-            sizeof(SGFLT) * f_result->buffer_size
+            (void**)&buffer,
+            sizeof(SGFLT) * buffer_size
         );
     } else {
         lmalloc(
-            (void**)&f_result->buffer,
-            sizeof(SGFLT) * f_result->buffer_size
+            (void**)&buffer,
+            sizeof(SGFLT) * buffer_size
         );
     }
 
     int f_i;
-    for(f_i = 0; f_i < f_result->buffer_size; ++f_i){
-        f_result->buffer[f_i] = 0.0f;
+    for(f_i = 0; f_i < buffer_size; ++f_i){
+        buffer[f_i] = 0.0;
     }
 
+    g_crs_init_buffer(
+        f_result,
+        a_sr,
+        buffer,
+        buffer_size
+    );
+}
+
+void g_crs_init_buffer(
+    t_crs_chorus* f_result,
+    SGFLT a_sr,
+    SGFLT* buffer,
+    int buffer_size
+){
+    f_result->buffer = buffer;
+    f_result->buffer_size = buffer_size;
+    f_result->buffer_size_SGFLT = ((SGFLT)(f_result->buffer_size));
     f_result->pos_left = 0.0f;
     f_result->pos_right = 0.0f;
     f_result->buffer_ptr = 0;

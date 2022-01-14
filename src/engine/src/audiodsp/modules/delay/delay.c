@@ -155,30 +155,35 @@ void v_dly_run_tap_lin(t_delay_simple* a_dly,t_delay_tap* a_tap){
     );
 }
 
-void g_dly_init(t_delay_simple * f_result, SGFLT a_max_size, SGFLT a_sr){
-    f_result->write_head = 0;
-    f_result->sample_rate = a_sr;
-    f_result->tempo = 999;
-    f_result->tempo_recip = 999;
+void g_dly_init(t_delay_simple * self, SGFLT a_max_size, SGFLT a_sr){
+    int f_i;
     //add 2400 samples to ensure we don't overrun our buffer
-    f_result->sample_count = (int)((a_max_size * a_sr) + 2400);
+    int sample_count = (int)((a_max_size * a_sr) + 2400);
+    SGFLT* buffer;
+
     hpalloc(
-        (void**)&f_result->buffer,
-        sizeof(SGFLT) * f_result->sample_count
+        (void**)&buffer,
+        sizeof(SGFLT) * sample_count
     );
 
-    int f_i;
-
-    for(f_i = 0; f_i < (f_result->sample_count); ++f_i){
-        f_result->buffer[f_i] = 0.0f;
+    for(f_i = 0; f_i < sample_count; ++f_i){
+        buffer[f_i] = 0.0f;
     }
+    g_dly_init_buffer(self, a_sr, buffer, sample_count);
 }
 
-t_delay_simple * g_dly_get_delay(SGFLT a_max_size, SGFLT a_sr){
-    t_delay_simple * f_result;
-    hpalloc((void**)&f_result, sizeof(t_delay_simple));
-    g_dly_init(f_result, a_max_size, a_sr);
-    return f_result;
+void g_dly_init_buffer(
+    t_delay_simple * self,
+    SGFLT a_sr,
+    SGFLT* buffer,
+    int sample_count
+){
+    self->buffer = buffer;
+    self->sample_count = sample_count;
+    self->write_head = 0;
+    self->sample_rate = a_sr;
+    self->tempo = 999;
+    self->tempo_recip = 999;
 }
 
 void g_dly_tap_init(t_delay_tap * f_result){

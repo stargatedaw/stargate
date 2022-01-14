@@ -21,9 +21,8 @@ GNU General Public License for more details.
 #include "audiodsp/modules/filter/svf_stereo.h"
 #include "compiler.h"
 
-typedef struct
-{
-    SGFLT * buffer;
+typedef struct {
+    SGFLT* buffer;
     SGFLT wet_lin, wet_db, freq_last, mod_amt;
     SGFLT output0, output1;
     SGFLT delay_offset_amt, delay_offset;
@@ -33,12 +32,18 @@ typedef struct
     t_lfs_lfo lfo;
     t_svf2_filter hp;
     t_svf2_filter lp;
-}t_crs_chorus;
+} t_crs_chorus;
 
-void v_crs_free(t_crs_chorus *);
+void v_crs_free(t_crs_chorus*);
 void v_crs_chorus_set(t_crs_chorus*, SGFLT, SGFLT);
 void v_crs_chorus_run(t_crs_chorus*, SGFLT, SGFLT);
-void g_crs_init(t_crs_chorus * f_result, SGFLT a_sr, int a_huge_pages);
+void g_crs_init(t_crs_chorus* f_result, SGFLT a_sr, int a_huge_pages);
+void g_crs_init_buffer(
+    t_crs_chorus* self,
+    SGFLT a_sr,
+    SGFLT* buffer,
+    int buffer_size
+);
 
 #endif /* CHORUS_H */
 

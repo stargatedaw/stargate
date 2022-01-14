@@ -29,13 +29,13 @@ t_sg_delay * g_ldl_get_delay(SGFLT a_seconds, SGFLT a_sr){
     f_result->feedback1 = 0.0f;
     f_result->feedback_db = -50.0f;
     f_result->feedback_linear = 0.0f;
-    f_result->dw0 = g_dw_get_dry_wet();
-    f_result->dw1 = g_dw_get_dry_wet();
+    dry_wet_init(&f_result->dw0);
+    dry_wet_init(&f_result->dw1);
     g_axf_init(&f_result->stereo_xfade0, -3.0f);
     g_axf_init(&f_result->stereo_xfade1, -3.0f);
 
-    f_result->feedback_env_follower = g_enf_get_env_follower(a_sr);
-    f_result->input_env_follower = g_enf_get_env_follower(a_sr);
+    env_follower_init(&f_result->feedback_env_follower, a_sr);
+    env_follower_init(&f_result->input_env_follower, a_sr);
     f_result->combined_inputs = 0.0f;
 
     g_lim_init(&f_result->limiter, a_sr, 1);
@@ -90,18 +90,18 @@ void v_ldl_run_delay(t_sg_delay* a_dly, SGFLT a_in0, SGFLT a_in1)
     }
 
     v_dw_run_dry_wet(
-        a_dly->dw0,
+        &a_dly->dw0,
         a_in0,
         a_dly->feedback0 * a_dly->limiter_gain
     );
     v_dw_run_dry_wet(
-        a_dly->dw1,
+        &a_dly->dw1,
         a_in1,
         a_dly->feedback1 * a_dly->limiter_gain
     );
 
-    a_dly->output0 = (a_dly->dw0->output);
-    a_dly->output1 = (a_dly->dw1->output);
+    a_dly->output0 = (a_dly->dw0.output);
+    a_dly->output1 = (a_dly->dw1.output);
 }
 
 
@@ -148,7 +148,7 @@ void v_ldl_set_delay(
     v_svf_set_cutoff(&a_dly->svf0);
     v_svf_set_cutoff(&a_dly->svf1);
 
-    v_dw_set_dry_wet(a_dly->dw0, a_dry, a_wet);
-    v_dw_set_dry_wet(a_dly->dw1, a_dry, a_wet);
+    v_dw_set_dry_wet(&a_dly->dw0, a_dry, a_wet);
+    v_dw_set_dry_wet(&a_dly->dw1, a_dry, a_wet);
 }
 

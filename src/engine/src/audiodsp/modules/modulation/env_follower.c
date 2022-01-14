@@ -8,9 +8,7 @@
  * t_enf_env_follower * a_enf,
  * SGFLT a_input)  //the signal to follow
  */
-void v_enf_run_env_follower(t_enf_env_follower * a_enf, SGFLT a_input)
-{
-
+void v_enf_run_env_follower(t_enf_env_follower * a_enf, SGFLT a_input){
     //Get absolute value.  This is much faster than fabs
     if(a_input < 0)
     {
@@ -40,24 +38,30 @@ void v_enf_run_env_follower(t_enf_env_follower * a_enf, SGFLT a_input)
 #endif
 }
 
+void env_follower_init(t_enf_env_follower* self, SGFLT a_sr){
+    self->input = 0;
+    self->output_smoothed = 0;
+    self->smoother = g_opl_get_one_pole(a_sr);
+
+    // Set the smoother to 10hz.  The reciprocal of the hz value is the
+    // total smoother time
+    v_opl_set_coeff_hz(self->smoother, 10);
+
+#ifdef ENF_DEBUG_MODE
+    self->debug_counter = 0;
+#endif
+}
+
 /* t_enf_env_follower * g_enf_get_env_follower(
  * SGFLT a_sr //sample rate
  * )
  */
-t_enf_env_follower * g_enf_get_env_follower(SGFLT a_sr)
-{
-    t_enf_env_follower * f_result = (t_enf_env_follower*)malloc(sizeof(t_enf_env_follower));
+t_enf_env_follower * g_enf_get_env_follower(SGFLT a_sr){
+    t_enf_env_follower * self = (t_enf_env_follower*)malloc(
+        sizeof(t_enf_env_follower)
+    );
+    env_follower_init(self, a_sr);
 
-    f_result->input = 0;
-    f_result->output_smoothed = 0;
-    f_result->smoother = g_opl_get_one_pole(a_sr);
-
-    v_opl_set_coeff_hz(f_result->smoother, 10);  //Set the smoother to 10hz.  The reciprocal of the hz value is the total smoother time
-
-#ifdef ENF_DEBUG_MODE
-    f_result->debug_counter = 0;
-#endif
-
-    return f_result;
+    return self;
 }
 

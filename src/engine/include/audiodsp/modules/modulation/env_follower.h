@@ -30,11 +30,8 @@ typedef struct st_enf_env_follower
 #endif
 }t_enf_env_follower;
 
-/* t_enf_env_follower * g_enf_get_env_follower(
- * SGFLT a_sr //sample rate
- * )
- */
-t_enf_env_follower * g_enf_get_env_follower(SGFLT);
+t_enf_env_follower* g_enf_get_env_follower(SGFLT);
+void env_follower_init(t_enf_env_follower*, SGFLT);
 void v_enf_run_env_follower(t_enf_env_follower*, SGFLT);
 
 #endif /* ENV_FOLLOWER_H */

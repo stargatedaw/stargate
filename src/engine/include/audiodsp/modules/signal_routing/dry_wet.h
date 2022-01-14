@@ -18,14 +18,13 @@ GNU General Public License for more details.
 #include "audiodsp/lib/amp.h"
 #include "compiler.h"
 
-typedef struct
-{
+typedef struct {
     SGFLT wet_db;
     SGFLT wet_linear;
     SGFLT dry_db;
     SGFLT dry_linear;
     SGFLT output;
-}t_dw_dry_wet;
+} t_dw_dry_wet;
 
 /*void v_dw_set_dry_wet(
  * t_dw_dry_wet* a_dw,
@@ -40,6 +39,7 @@ void v_dw_set_dry_wet(t_dw_dry_wet*,SGFLT,SGFLT);
  */
 void v_dw_run_dry_wet(t_dw_dry_wet*,SGFLT,SGFLT);
 t_dw_dry_wet* g_dw_get_dry_wet();
+void dry_wet_init(t_dw_dry_wet*);
 
 #endif /* DRY_WET_H */
 

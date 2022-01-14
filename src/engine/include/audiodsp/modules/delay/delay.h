@@ -19,8 +19,7 @@ GNU General Public License for more details.
 #include "audiodsp/lib/lmalloc.h"
 #include "compiler.h"
 
-typedef struct st_delay_tap
-{
+typedef struct {
     int read_head;
     int read_head_p1;
     SGFLT fraction;
@@ -30,22 +29,26 @@ typedef struct st_delay_tap
     SGFLT delay_pitch;
     SGFLT delay_hz;
     SGFLT output;
-}t_delay_tap;
+} t_delay_tap;
 
-
-typedef struct
-{
+typedef struct {
     int write_head;
     SGFLT sample_rate;
     SGFLT tempo;
     SGFLT tempo_recip;
     int sample_count;
     SGFLT* buffer;
-}t_delay_simple;
+} t_delay_simple;
 
 
 t_delay_simple * g_dly_get_delay(SGFLT, SGFLT);
 void g_dly_init(t_delay_simple * f_result, SGFLT a_max_size, SGFLT a_sr);
+void g_dly_init_buffer(
+    t_delay_simple* f_result,
+    SGFLT a_sr,
+    SGFLT* buffer,
+    int sample_count
+);
 t_delay_tap * g_dly_get_tap();
 void v_dly_set_delay_seconds(t_delay_simple*,t_delay_tap*,SGFLT);
 void v_dly_set_delay_lin(t_delay_simple*,t_delay_tap*,SGFLT);

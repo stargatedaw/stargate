@@ -61,6 +61,11 @@ void v_rvb_reverb_set(t_rvb_reverb*, SGFLT, SGFLT, SGFLT, SGFLT, SGFLT);
 void v_rvb_reverb_run(t_rvb_reverb*, SGFLT, SGFLT);
 void v_rvb_panic(t_rvb_reverb* self);
 void g_rvb_reverb_init(t_rvb_reverb* f_result, SGFLT a_sr);
+void g_rvb_reverb_init_buffer(
+    t_rvb_reverb* f_result,
+    SGFLT a_sr,
+    SGFLT** buffer
+);
 
 #endif /* REVERB_H */
 

@@ -32,17 +32,18 @@ void v_dw_run_dry_wet(t_dw_dry_wet* a_dw, SGFLT a_dry, SGFLT a_wet)
     a_dw->output = ((a_dw->dry_linear) * a_dry) + ((a_dw->wet_linear) * a_wet);
 }
 
-t_dw_dry_wet* g_dw_get_dry_wet()
-{
-    t_dw_dry_wet* f_result;
+void dry_wet_init(t_dw_dry_wet* self){
+    self->wet_db = -50.0f;
+    self->wet_linear = 0.0f;
+    self->dry_db = 0.0f;
+    self->dry_linear = 1.0f;
+    self->output = 0.0f;
+}
 
-    lmalloc((void**)&f_result, sizeof(t_dw_dry_wet));
+t_dw_dry_wet* g_dw_get_dry_wet(){
+    t_dw_dry_wet* self;
+    lmalloc((void**)&self, sizeof(t_dw_dry_wet));
+    dry_wet_init(self);
 
-    f_result->wet_db = -50.0f;
-    f_result->wet_linear = 0.0f;
-    f_result->dry_db = 0.0f;
-    f_result->dry_linear = 1.0f;
-    f_result->output = 0.0f;
-
-    return f_result;
+    return self;
 }

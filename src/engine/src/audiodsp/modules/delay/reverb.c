@@ -140,9 +140,35 @@ void v_rvb_panic(t_rvb_reverb * self){
     }
 }
 
-void g_rvb_reverb_init(t_rvb_reverb * f_result, SGFLT a_sr){
+void g_rvb_reverb_init(t_rvb_reverb* f_result, SGFLT a_sr){
     int f_i, i;
+    SGFLT* buffer[2];
+    for(i = 0; i < 2; ++i){
+        hpalloc(
+            (void**)&buffer[i],
+            sizeof(SGFLT) * (a_sr + 5000)
+        );
 
+        for(f_i = 0; f_i < a_sr + 5000; ++f_i){
+            buffer[i][f_i] = 0.0f;
+        }
+    }
+    g_rvb_reverb_init_buffer(
+        f_result,
+        a_sr,
+        buffer
+    );
+}
+
+void g_rvb_reverb_init_buffer(
+    t_rvb_reverb * f_result,
+    SGFLT a_sr,
+    SGFLT** buffer
+){
+    int f_i;
+
+    f_result->predelay_buffer[0] = buffer[0];
+    f_result->predelay_buffer[1] = buffer[1];
     f_result->color = 1.0f;
     // Force set it the first time
     f_result->time = -123.5f;
@@ -189,17 +215,6 @@ void g_rvb_reverb_init(t_rvb_reverb * f_result, SGFLT a_sr){
     f_result->predelay_counter = 0;
     f_result->last_predelay = -1234.0f;
     f_result->predelay_size = (int)(a_sr * 0.01f);
-
-    for(i = 0; i < 2; ++i){
-        hpalloc(
-            (void**)&f_result->predelay_buffer[i],
-            sizeof(SGFLT) * (a_sr + 5000)
-        );
-
-        for(f_i = 0; f_i < (a_sr + 5000); ++f_i){
-            f_result->predelay_buffer[i][f_i] = 0.0f;
-        }
-    }
 
     v_rvb_reverb_set(f_result, 0.5f, 0.0f, 55.5f, 0.01f, 60.0f);
 }

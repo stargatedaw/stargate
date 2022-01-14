@@ -29,8 +29,7 @@ GNU General Public License for more details.
  * ping-pong, etc... modes
  * feedback can be routed out and back into the module.
  */
-typedef struct
-{
+typedef struct {
     t_delay_tap tap0;
     t_delay_tap tap1;
     SGFLT output0;  //mixed signal out
@@ -39,13 +38,13 @@ typedef struct
     SGFLT feedback1;  //feedback out/in
     SGFLT feedback_db;
     SGFLT feedback_linear;
-    t_dw_dry_wet * dw0;
-    t_dw_dry_wet * dw1;
+    t_dw_dry_wet dw0;
+    t_dw_dry_wet dw1;
     t_audio_xfade stereo_xfade0;
     t_audio_xfade stereo_xfade1;
 
-    t_enf_env_follower * feedback_env_follower;  //Checks for overflow
-    t_enf_env_follower * input_env_follower;  //Checks for overflow
+    t_enf_env_follower feedback_env_follower;  //Checks for overflow
+    t_enf_env_follower input_env_follower;  //Checks for overflow
     SGFLT wet_dry_diff;  //difference between wet and dry output volume
     SGFLT combined_inputs;  //Add output 0 and 1
     t_lim_limiter limiter;
@@ -57,7 +56,7 @@ typedef struct
     t_delay_simple delay0;
     t_delay_simple delay1;
 
-}t_sg_delay;
+} t_sg_delay;
 
 /*t_sg_delay * g_ldl_get_delay(
  * SGFLT a_seconds, //The maximum amount of time for the delay to buffer
