@@ -46,29 +46,30 @@ PluginDescriptor_Function PLUGIN_DESC_FUNCS[] = {
 };
 
 
-void v_cc_mapping_init(t_cc_mapping* self)
-{
+void v_cc_mapping_init(t_cc_mapping* self){
     int f_i;
     self->count = 0;
 
-    for(f_i = 0; f_i < 5; ++f_i)
-    {
+    for(f_i = 0; f_i < 5; ++f_i){
         self->lows[f_i] = 0.0f;
         self->highs[f_i] = 1.0f;
         self->ports[f_i] = -1;
     }
 }
 
-void v_cc_mapping_set(t_cc_mapping* self, int a_port, SGFLT a_low, SGFLT a_high)
-{
+void v_cc_mapping_set(
+    t_cc_mapping* self,
+    int a_port,
+    SGFLT a_low,
+    SGFLT a_high
+){
     self->ports[self->count] = a_port;
     self->lows[self->count] = a_low;
     self->highs[self->count] = a_high;
     self->count++;
 }
 
-void v_cc_map_init(t_plugin_cc_map * self)
-{
+void v_cc_map_init(t_plugin_cc_map * self){
     int f_i = 0;
     while(f_i < 128)
     {
@@ -77,14 +78,17 @@ void v_cc_map_init(t_plugin_cc_map * self)
     }
 }
 
-void v_cc_map_translate(t_plugin_cc_map *self, PluginDescriptor *desc,
-    SGFLT *a_port_table, int a_cc, SGFLT a_value)
-{
+void v_cc_map_translate(
+    t_plugin_cc_map* self,
+    PluginDescriptor* desc,
+    SGFLT* a_port_table,
+    int a_cc,
+    SGFLT a_value
+){
     int f_i;
     a_value *= 0.007874f;  // a_val / 127.0f
 
-    for(f_i = 0; f_i < self->map[a_cc].count; ++f_i)
-    {
+    for(f_i = 0; f_i < self->map[a_cc].count; ++f_i){
         int f_port = self->map[a_cc].ports[f_i];
         PluginPortRangeHint * f_range = &desc->PortRangeHints[f_port];
         SGFLT f_diff = f_range->UpperBound - f_range->LowerBound;
@@ -126,8 +130,7 @@ void v_plugin_event_queue_add(
     );
 }
 
-void v_plugin_event_queue_reset(t_plugin_event_queue * self)
-{
+void v_plugin_event_queue_reset(t_plugin_event_queue * self){
     self->pos = 0;
     self->count = 0;
 }
@@ -137,14 +140,14 @@ t_plugin_event_queue_item * v_plugin_event_queue_iter(
     int a_sample_num
 ){
     t_plugin_event_queue_item * f_item = &self->items[self->pos];
-    if(self->pos < self->count &&
-       a_sample_num == f_item->tick)
-    {
+    if(
+        self->pos < self->count
+        &&
+        a_sample_num == f_item->tick
+    ){
        ++self->pos;
        return f_item;
-    }
-    else
-    {
+    } else {
         return 0;
     }
 }
@@ -154,12 +157,12 @@ void v_plugin_event_queue_atm_set(
     int a_sample_num,
     SGFLT * a_table
 ){
-    while(1)
-    {
-        t_plugin_event_queue_item * f_item =
-            v_plugin_event_queue_iter(self, a_sample_num);
-        if(!f_item)
-        {
+    while(1){
+        t_plugin_event_queue_item * f_item = v_plugin_event_queue_iter(
+            self,
+            a_sample_num
+        );
+        if(!f_item){
             break;
         }
 
@@ -167,8 +170,7 @@ void v_plugin_event_queue_atm_set(
     }
 }
 
-void v_ev_clear(t_seq_event * a_event)
-{
+void v_ev_clear(t_seq_event * a_event){
     a_event->type = -1;
     a_event->tick = 0;
 }
@@ -298,8 +300,7 @@ void set_plugin_port(
     a_desc->PortRangeHints[a_port].UpperBound = a_max;
 }
 
-PluginData g_get_port_default(PluginDescriptor *plugin, int port)
-{
+PluginData g_get_port_default(PluginDescriptor *plugin, int port){
     PluginPortRangeHint hint = plugin->PortRangeHints[port];
     sg_assert(
         (int)(
