@@ -16,11 +16,13 @@ from .file_browser import (
 )
 from .file_select import file_select_widget
 from .filter import filter_widget
+from .freq_splitter import FreqSplitter
 from .knob import *
 from .lfo import lfo_widget
 from .lfo_dialog import lfo_dialog
 from .main import main_widget
 from .multifx import MultiFXSingle
+from .multifx10 import MultiFX10
 from .note_selector import note_selector_widget
 from .ordered_table import ordered_table_dialog
 from .paif import per_audio_item_fx_widget

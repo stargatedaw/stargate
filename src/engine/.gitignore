@@ -5,6 +5,7 @@
 *.rpm
 *.so
 *.swp
+*.tar.bz2
 /tmp/
 /test_tmp/*wav*
 bench.out

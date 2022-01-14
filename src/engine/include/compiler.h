@@ -62,6 +62,8 @@
     #define sg_read_audio sf_readf_float
 #endif
 
+typedef SGFLT PluginData;
+
 struct SamplePair {
     SGFLT left;
     SGFLT right;

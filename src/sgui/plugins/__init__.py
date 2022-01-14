@@ -31,6 +31,7 @@ from sgui.plugins import (
     fm1,
     limiter,
     multifx,
+    nabu,
     reverb,
     sampler1,
     sidechain_comp,
@@ -68,6 +69,7 @@ PLUGIN_NAMES = [
     "TriggerFX",
     "X-Fade",
     'Wide Mixer',
+    'Nabu',
 ]
 
 PLUGIN_UIDS = {
@@ -88,11 +90,12 @@ PLUGIN_UIDS = {
     "SG Vocoder": 14,
     "SG Limiter": 15,
     'Wide Mixer': 16,
+    'Nabu': 17,
 }
 
 PLUGINS_SYNTH = ["VA1", "FM1"]
 PLUGINS_SAMPLER = ["Sampler1",]
-PLUGINS_EFFECTS = ["MultiFX", "SG Delay", "SG EQ", "SG Reverb"]
+PLUGINS_EFFECTS = ["MultiFX", 'Nabu', "SG Delay", "SG EQ", "SG Reverb"]
 PLUGINS_MIDI_TRIGGERED = ["TriggerFX"]
 PLUGINS_DYNAMICS = ["SG Compressor", "SG Limiter"]
 PLUGINS_SIDECHAIN = ["Sidechain Comp.", "X-Fade", "SG Vocoder",]
@@ -142,6 +145,7 @@ PLUGIN_UI_TYPES = {
     14: vocoder.sg_vocoder_plugin_ui,
     15: limiter.LimiterPluginUI,
     16: widemixer.WideMixerPluginUI,
+    17: nabu.NabuPluginUI,
 }
 
 PORTMAP_DICT = {
@@ -161,6 +165,7 @@ PORTMAP_DICT = {
     "SG Vocoder": vocoder.SG_VOCODER_PORT_MAP,
     "SG Limiter": limiter.SG_LIM_PORT_MAP,
     "Wide Mixer": widemixer.WIDEMIXER_PORT_MAP,
+    'Nabu': nabu.NABU_PORT_MAP,
 }
 
 def get_plugin_uid_by_name(a_name):

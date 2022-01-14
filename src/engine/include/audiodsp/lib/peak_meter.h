@@ -20,16 +20,14 @@ GNU General Public License for more details.
 #include "compiler.h"
 
 // a peak meter
-typedef struct
-{
+typedef struct {
     volatile SGFLT value[2];
     int buffer_pos;
     volatile int dirty;
-}t_pkm_peak_meter;
+} t_pkm_peak_meter;
 
 // a gain reduction meter
-typedef struct
-{
+typedef struct {
     SGFLT gain_redux;
     int counter;
     int count;

@@ -14,6 +14,7 @@
 #include "plugins/vocoder.h"
 #include "plugins/vocoder.h"
 #include "plugins/multifx.h"
+#include "plugins/nabu.h"
 #include "plugins/va1.h"
 #include "plugins/sidechain_comp.h"
 #include "plugins/simple_fader.h"
@@ -43,6 +44,7 @@ PluginDescriptor_Function PLUGIN_DESC_FUNCS[] = {
     sg_vocoder_plugin_descriptor, //14
     sg_lim_plugin_descriptor, //15
     widemixer_plugin_descriptor, //16
+    nabu_plugin_descriptor, //17
 };
 
 

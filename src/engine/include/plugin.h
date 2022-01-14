@@ -14,8 +14,6 @@
 
 typedef void (*fp_queue_message)(char*, char*);
 
-typedef SGFLT PluginData;
-
 typedef int PluginPortDescriptor;
 
 
@@ -26,6 +24,13 @@ typedef struct _PluginPortRangeHint {
 } PluginPortRangeHint;
 
 typedef void * PluginHandle;
+
+struct MIDIEvent {
+    int type;
+    int tick;
+    int port;
+    SGFLT value;
+};
 
 // MIDI event
 typedef struct {

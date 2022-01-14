@@ -212,12 +212,14 @@ void v_sg_lim_run(
         ++f_i;
     }
 
-    if((int)(*plugin_data->peak_meter))
-    {
-        if(f_lim->peak_tracker.dirty)
-        {
-            sprintf(plugin_data->ui_msg_buff, "%i|gain|%f",
-                plugin_data->plugin_uid, f_lim->peak_tracker.gain_redux);
+    if((int)(*plugin_data->peak_meter)){
+        if(f_lim->peak_tracker.dirty){
+            sprintf(
+                plugin_data->ui_msg_buff,
+                "%i|gain|%f",
+                plugin_data->plugin_uid,
+                f_lim->peak_tracker.gain_redux
+            );
             plugin_data->queue_func("ui", plugin_data->ui_msg_buff);
             v_pkm_redux_lin_reset(&f_lim->peak_tracker);
         }
