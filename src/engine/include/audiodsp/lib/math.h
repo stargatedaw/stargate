@@ -11,8 +11,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
 
-#ifndef LMS_MATH_H
-#define LMS_MATH_H
+#ifndef SG_MATH_H
+#define SG_MATH_H
 
 #include "audiodsp/lib/interpolate-linear.h"
 #include "compiler.h"
@@ -53,5 +53,5 @@ SGFLT f_sg_sqrt(SGFLT);
 #define arr_sqrt_count 401
 //SGFLT arr_sqrt [arr_sqrt_count];
 
-#endif /* LMS_MATH_H */
+#endif /* SG_MATH_H */
 

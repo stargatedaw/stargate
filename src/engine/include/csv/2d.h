@@ -17,7 +17,7 @@ void g_free_2d_char_array(t_2d_char_array * a_array);
 t_2d_char_array * g_get_2d_array(int a_size);
 /* Return a 2d array of strings from a file delimited by
  * "|" and "\n" individual fields are
- * limited to being the size of LMS_TINY_STRING */
+ * limited to being the size of SG_TINY_STRING */
 t_2d_char_array * g_get_2d_array_from_file(
     const char * a_file,
     int a_size

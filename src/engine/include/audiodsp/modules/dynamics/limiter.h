@@ -25,7 +25,7 @@ GNU General Public License for more details.
 #include "audiodsp/lib/peak_meter.h"
 #include "compiler.h"
 
-#define LMS_HOLD_TIME_DIVISOR 500.0f
+#define SG_HOLD_TIME_DIVISOR 500.0f
 
 typedef struct st_lim_limiter
 {

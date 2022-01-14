@@ -47,7 +47,7 @@ void v_lim_set(t_lim_limiter*a_lim, SGFLT a_thresh, SGFLT a_ceiling,
         }
 
 
-        a_lim->r = (a_lim->sr_recip / a_lim->release) * LMS_HOLD_TIME_DIVISOR;
+        a_lim->r = (a_lim->sr_recip / a_lim->release) * SG_HOLD_TIME_DIVISOR;
         a_lim->last_release = a_release;
     }
 }
@@ -124,7 +124,7 @@ void v_lim_run(t_lim_limiter *a_lim, SGFLT a_in0, SGFLT a_in1)
 
 void g_lim_init(t_lim_limiter * f_result, SGFLT a_sr, int a_huge_pages)
 {
-    f_result->holdtime = ((int)(a_sr / LMS_HOLD_TIME_DIVISOR));
+    f_result->holdtime = ((int)(a_sr / SG_HOLD_TIME_DIVISOR));
 
     f_result->buffer_size = f_result->holdtime; // (int)(a_sr*0.003f);
     f_result->buffer_index = 0;

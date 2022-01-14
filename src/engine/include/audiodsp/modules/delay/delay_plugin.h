@@ -10,10 +10,10 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
-#ifndef LMS_DELAY_H
-#define LMS_DELAY_H
+#ifndef SG_DELAY_H
+#define SG_DELAY_H
 
-//#define LMS_DELAY_DEBUG_MODE
+//#define SG_DELAY_DEBUG_MODE
 
 #include "delay.h"
 #include "audiodsp/lib/amp.h"
@@ -85,5 +85,5 @@ void v_ldl_set_delay(
 );
 void v_ldl_run_delay(t_sg_delay*,SGFLT,SGFLT);
 
-#endif /* LMS_DELAY_H */
+#endif /* SG_DELAY_H */
 

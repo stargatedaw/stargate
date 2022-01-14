@@ -223,11 +223,11 @@ void connectPortSampler(
     ){
         plugin->samples[(port - SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MIN)].high_note = data;
     } else if(
-        port >= LMS_SAMPLE_VOLUME_PORT_RANGE_MIN
+        port >= SG_SAMPLE_VOLUME_PORT_RANGE_MIN
         &&
         port < SAMPLER1_SAMPLE_VOLUME_PORT_RANGE_MAX
     ){
-        plugin->samples[(port - LMS_SAMPLE_VOLUME_PORT_RANGE_MIN)].sample_vol = data;
+        plugin->samples[(port - SG_SAMPLE_VOLUME_PORT_RANGE_MIN)].sample_vol = data;
     } else if(
         port >= SAMPLER1_SAMPLE_START_PORT_RANGE_MIN
         &&

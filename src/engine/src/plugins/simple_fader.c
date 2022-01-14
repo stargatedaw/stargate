@@ -344,8 +344,8 @@ void v_sfader_destructor()
         free((PluginPortRangeHint *) f_result->PortRangeHints);
         free(f_result);
     }
-    if (LMSDDescriptor) {
-        free(LMSDDescriptor);
+    if (SGDDescriptor) {
+        free(SGDDescriptor);
     }
 }
 */
