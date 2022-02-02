@@ -45,8 +45,7 @@ SGFLT f_pkm_compare(SGFLT a_audio, SGFLT a_peak);
 void v_pkm_reset(t_pkm_peak_meter * self);
 void v_pkm_run(
     t_pkm_peak_meter * self,
-    SGFLT * a_in0,
-    SGFLT * a_in1,
+    struct SamplePair* buffer,
     int a_count
 );
 

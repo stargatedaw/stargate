@@ -149,8 +149,8 @@ void v_daw_audio_items_run(
     t_daw* self,
     t_daw_item_ref* a_item_ref,
     int a_sample_count,
-    SGFLT** a_buff,
-    SGFLT** a_sc_buff,
+    struct SamplePair* a_buff,
+    struct SamplePair* a_sc_buff,
     int* a_sc_dirty,
     t_daw_thread_storage* daw_ts,
     t_sg_thread_storage*  sg_ts
@@ -330,13 +330,13 @@ void v_daw_audio_items_run(
                     }
 
                     if(f_output_mode != 1){
-                        a_buff[0][f_i2] += f_tmp_sample0;
-                        a_buff[1][f_i2] += f_tmp_sample1;
+                        a_buff[f_i2].left += f_tmp_sample0;
+                        a_buff[f_i2].right += f_tmp_sample1;
                     }
 
                     if(f_output_mode > 0){
-                        a_sc_buff[0][f_i2] += f_tmp_sample0;
-                        a_sc_buff[1][f_i2] += f_tmp_sample1;
+                        a_sc_buff[f_i2].left += f_tmp_sample0;
+                        a_sc_buff[f_i2].right += f_tmp_sample1;
                     }
                 } else if(f_audio_item->audio_pool_item->channels == 2){
                     sg_assert(
@@ -411,13 +411,13 @@ void v_daw_audio_items_run(
                     }
 
                     if(f_output_mode != 1){
-                        a_buff[0][f_i2] += f_tmp_sample0;
-                        a_buff[1][f_i2] += f_tmp_sample1;
+                        a_buff[f_i2].left += f_tmp_sample0;
+                        a_buff[f_i2].right += f_tmp_sample1;
                     }
 
                     if(f_output_mode > 0){
-                        a_sc_buff[0][f_i2] += f_tmp_sample0;
-                        a_sc_buff[1][f_i2] += f_tmp_sample1;
+                        a_sc_buff[f_i2].left += f_tmp_sample0;
+                        a_sc_buff[f_i2].right += f_tmp_sample1;
                     }
 
                 } else {
@@ -474,13 +474,13 @@ void v_daw_audio_items_run(
 
 void v_daw_run_engine(
     int a_sample_count,
-    SGFLT **a_output,
+    struct SamplePair* a_output,
     SGFLT *a_input_buffers
 ){
     t_daw * self = DAW;
     t_sg_seq_event_period * f_seq_period;
     int f_period, sample_count;
-    SGFLT * output[2];
+    struct SamplePair* output;
 
     if(STARGATE->playback_mode != PLAYBACK_MODE_OFF){
         v_sg_seq_event_list_set(
@@ -512,8 +512,7 @@ void v_daw_run_engine(
         f_seq_period = &self->seq_event_result.sample_periods[f_period];
 
         sample_count = f_seq_period->period.sample_count;
-        output[0] = f_seq_period->period.buffers[0];
-        output[1] = f_seq_period->period.buffers[1];
+        output = f_seq_period->period.buffers;
         //notify the worker threads to wake up
         int f_i;
         for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
@@ -580,7 +579,7 @@ void v_daw_run_engine(
         v_daw_process((t_thread_args*)STARGATE->main_thread_args);
 
         t_track * f_main_track = self->track_pool[0];
-        SGFLT ** f_main_buff = f_main_track->buffers;
+        struct SamplePair* f_main_buff = f_main_track->buffers;
 
         //wait for the other threads to finish
         v_wait_for_threads();
@@ -595,8 +594,8 @@ void v_daw_run_engine(
         );
 
         for(f_i = 0; f_i < sample_count; ++f_i){
-            output[0][f_i] = f_main_buff[0][f_i];
-            output[1][f_i] = f_main_buff[1][f_i];
+            output[f_i].left = f_main_buff[f_i].left;
+            output[f_i].right = f_main_buff[f_i].right;
         }
 
         v_zero_buffer(f_main_buff, sample_count);
@@ -668,7 +667,7 @@ void v_daw_process(t_thread_args * f_args){
 
 void v_daw_zero_all_buffers(t_daw * self){
     int f_i;
-    SGFLT ** f_buff;
+    struct SamplePair* f_buff;
     for(f_i = 0; f_i < DN_TRACK_COUNT; ++f_i){
         f_buff = self->track_pool[f_i]->buffers;
         v_zero_buffer(f_buff, FRAMES_PER_BUFFER);

@@ -41,8 +41,7 @@ void v_sgeq_on_stop(PluginHandle instance)
 
 void v_sgeq_connect_buffer(
     PluginHandle instance,
-    int a_index,
-    SGFLT * DataLocation,
+    struct SamplePair* DataLocation,
     int a_is_sidechain
 ){
     if(a_is_sidechain){
@@ -50,22 +49,7 @@ void v_sgeq_connect_buffer(
     }
 
     t_sgeq *plugin = (t_sgeq*)instance;
-
-    switch(a_index){
-        case 0:
-            plugin->output0 = DataLocation;
-            break;
-        case 1:
-            plugin->output1 = DataLocation;
-            break;
-        default:
-            sg_assert(
-                0,
-                "v_sgeq_connect_buffer: Unknown port %i",
-                a_index
-            );
-            break;
-    }
+    plugin->output = DataLocation;
 }
 
 void v_sgeq_connect_port(
@@ -368,12 +352,12 @@ void v_sgeq_run(
 
                     mm->pre_fx_func_ptr[f_i2](
                         f_fx,
-                        plugin_data->output0[f_i],
-                        plugin_data->output1[f_i]
+                        plugin_data->output[f_i].left,
+                        plugin_data->output[f_i].right
                     );
 
-                    plugin_data->output0[f_i] = f_fx->output0;
-                    plugin_data->output1[f_i] = f_fx->output1;
+                    plugin_data->output[f_i].left = f_fx->output0;
+                    plugin_data->output[f_i].right = f_fx->output1;
                 }
             }
         }
@@ -388,11 +372,11 @@ void v_sgeq_run(
                 );
                 v_pkq_run(
                     &mm->eqs[f_i2],
-                    plugin_data->output0[f_i],
-                    plugin_data->output1[f_i]
+                    plugin_data->output[f_i].left,
+                    plugin_data->output[f_i].right
                 );
-                plugin_data->output0[f_i] = mm->eqs[f_i2].output0;
-                plugin_data->output1[f_i] = mm->eqs[f_i2].output1;
+                plugin_data->output[f_i].left = mm->eqs[f_i2].output0;
+                plugin_data->output[f_i].right = mm->eqs[f_i2].output1;
             }
         }
 
@@ -426,12 +410,12 @@ void v_sgeq_run(
 
                     mm->post_fx_func_ptr[f_i2](
                         f_fx,
-                        plugin_data->output0[f_i],
-                        plugin_data->output1[f_i]
+                        plugin_data->output[f_i].left,
+                        plugin_data->output[f_i].right
                     );
 
-                    plugin_data->output0[f_i] = f_fx->output0;
-                    plugin_data->output1[f_i] = f_fx->output1;
+                    plugin_data->output[f_i].left = f_fx->output0;
+                    plugin_data->output[f_i].right = f_fx->output1;
                 }
             }
         }
@@ -440,8 +424,7 @@ void v_sgeq_run(
     if((int)(*plugin_data->spectrum_analyzer_on)){
         v_spa_run(
             plugin_data->mono_modules.spectrum_analyzer,
-            plugin_data->output0,
-            plugin_data->output1,
+            plugin_data->output,
             sample_count
         );
         if(plugin_data->mono_modules.spectrum_analyzer->str_buf[0] != '\0'){

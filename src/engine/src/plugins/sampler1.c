@@ -115,32 +115,17 @@ void v_sampler1_on_stop(PluginHandle instance)
     plugin->sv_pitch_bend_value = 0.0f;
 }
 
-void sampler1ConnectBuffer(PluginHandle instance, int a_index,
-        SGFLT * DataLocation, int a_is_sidechain)
-{
-    if(a_is_sidechain)
-    {
+void sampler1ConnectBuffer(
+    PluginHandle instance,
+    struct SamplePair* DataLocation,
+    int a_is_sidechain
+){
+    if(a_is_sidechain){
         return;
     }
 
     t_sampler1 *plugin = (t_sampler1 *) instance;
-
-    switch(a_index)
-    {
-        case 0:
-            plugin->output[0] = DataLocation;
-            break;
-        case 1:
-            plugin->output[1] = DataLocation;
-            break;
-        default:
-            sg_assert(
-                0,
-                "sampler1ConnectBuffer: unknown port %i",
-                a_index
-            );
-            break;
-    }
+    plugin->output = DataLocation;
 }
 
 void v_sampler1_poly_note_off(
@@ -1673,9 +1658,9 @@ void v_run_sg_sampler1(
             v_eq6_run(&plugin_data->mono_modules.mfx[f_monofx_index].eqs,
                 f_temp_sample0, f_temp_sample1);
 
-            plugin_data->output[0][f_i] +=
+            plugin_data->output[f_i].left +=
                 plugin_data->mono_modules.mfx[f_monofx_index].eqs.output0;
-            plugin_data->output[1][f_i] +=
+            plugin_data->output[f_i].right +=
                 plugin_data->mono_modules.mfx[f_monofx_index].eqs.output1;
         }
         ++plugin_data->sampleNo;

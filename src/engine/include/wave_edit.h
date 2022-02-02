@@ -29,7 +29,7 @@ void v_set_we_file(t_wave_edit * self, const char * a_file);
 void v_set_wave_editor_item(t_wave_edit * self, const char * a_string);
 void v_run_wave_editor(
     int sample_count,
-    SGFLT **output,
+    struct SamplePair* output,
     SGFLT * a_input
 );
 /* Set the plaaback mode

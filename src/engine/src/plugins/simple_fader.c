@@ -40,24 +40,25 @@ void v_sfader_on_stop(PluginHandle instance)
     //t_sfader *plugin = (t_sfader*)instance;
 }
 
-void v_sfader_connect_buffer(PluginHandle instance, int a_index,
-        SGFLT * DataLocation, int a_is_sidechain)
-{
-    if(a_is_sidechain)
-    {
+void v_sfader_connect_buffer(
+    PluginHandle instance,
+    struct SamplePair* DataLocation,
+    int a_is_sidechain
+){
+    if(a_is_sidechain){
         return;
     }
 
     t_sfader *plugin = (t_sfader*)instance;
-    plugin->buffers[a_index] = DataLocation;
+    plugin->buffers = DataLocation;
 }
 
-void v_sfader_connect_port(PluginHandle instance, int port,
-        PluginData * data)
-{
-    t_sfader *plugin;
-
-    plugin = (t_sfader *) instance;
+void v_sfader_connect_port(
+    PluginHandle instance,
+    int port,
+    PluginData * data
+){
+    t_sfader *plugin = (t_sfader*)instance;
 
     switch (port)
     {
@@ -166,8 +167,7 @@ void v_sfader_process_midi(
 void v_sfader_run_mixing(
     PluginHandle instance,
     int sample_count,
-    SGFLT** output_buffers,
-    int output_count,
+    struct SamplePair* output_buffers,
     struct ShdsList* midi_events,
     struct ShdsList * atm_events,
     t_pkm_peak_meter* peak_meter
@@ -219,9 +219,9 @@ void v_sfader_run_mixing(
             plugin_data->mono_modules.volume_smoother.last_value
         );
 
-        left = plugin_data->buffers[0][f_i] *
+        left = plugin_data->buffers[f_i].left *
             plugin_data->mono_modules.vol_linear;
-        right = plugin_data->buffers[1][f_i] *
+        right = plugin_data->buffers[f_i].right *
             plugin_data->mono_modules.vol_linear;
         if(peak_meter){
             v_pkm_run_single(
@@ -230,8 +230,8 @@ void v_sfader_run_mixing(
                 right
             );
         }
-        output_buffers[0][f_i] += left;
-        output_buffers[1][f_i] += right;
+        output_buffers[f_i].left += left;
+        output_buffers[f_i].right += right;
     }
 
 }
@@ -287,9 +287,9 @@ void v_sfader_run(
                 plugin_data->mono_modules.volume_smoother.last_value
             );
 
-            plugin_data->buffers[0][f_i] *=
+            plugin_data->buffers[f_i].left *=
                 (plugin_data->mono_modules.vol_linear);
-            plugin_data->buffers[1][f_i] *=
+            plugin_data->buffers[f_i].right *=
                 (plugin_data->mono_modules.vol_linear);
         }
     }

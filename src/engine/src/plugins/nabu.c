@@ -38,22 +38,14 @@ void v_nabu_on_stop(PluginHandle instance){
 
 void v_nabu_connect_buffer(
     PluginHandle instance,
-    int a_index,
-    SGFLT * DataLocation,
+    struct SamplePair* DataLocation,
     int a_is_sidechain
 ){
     if(a_is_sidechain){
         return;
     }
     struct NabuPlugin* plugin = (struct NabuPlugin*)instance;
-
-    switch(a_index){
-        case 0: plugin->output0 = DataLocation; break;
-        case 1: plugin->output1 = DataLocation; break;
-        default:
-            sg_abort("v_nabu_connect_buffer: unknown port %i", a_index);
-            break;
-    }
+    plugin->output = DataLocation;
 }
 
 void v_nabu_connect_port(
@@ -331,8 +323,8 @@ void v_nabu_run(
 
             if(splits){
                 int output;
-                splitter_input[0] = plugin_data->output0[i_mono_out];
-                splitter_input[1] = plugin_data->output1[i_mono_out];
+                splitter_input[0] = plugin_data->output[i_mono_out].left;
+                splitter_input[1] = plugin_data->output[i_mono_out].right;
                 freq_splitter_run(&mm->splitter, splitter_input);
                 for(j = 0; j < splits + 1; ++j){
                     output = (int)(*plugin_data->splitter_controls.output[j]);
@@ -358,8 +350,8 @@ void v_nabu_run(
                     &&
                     !(split_mask & (1 << step->mf10_index))
                 ){
-                    step->input.left += plugin_data->output0[i_mono_out];
-                    step->input.right += plugin_data->output1[i_mono_out];
+                    step->input.left += plugin_data->output[i_mono_out].left;
+                    step->input.right += plugin_data->output[i_mono_out].right;
                 }
                 for(j = 0; j < step->meta.knob_count; ++j){
                     v_sml_run(
@@ -404,8 +396,8 @@ void v_nabu_run(
                 step->output->right += step->dry_wet_pan.output.right;
             }
 
-            plugin_data->output0[i_mono_out] = mm->output.left;
-            plugin_data->output1[i_mono_out] = mm->output.right;
+            plugin_data->output[i_mono_out].left = mm->output.left;
+            plugin_data->output[i_mono_out].right = mm->output.right;
         }
     }
 

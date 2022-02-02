@@ -604,8 +604,7 @@ typedef struct {
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
-    PluginData *output0;
-    PluginData *output1;
+    struct SamplePair* output;
     PluginData *adsr_lin_main;
     PluginData *attack_main;
     PluginData *attack_main_start;

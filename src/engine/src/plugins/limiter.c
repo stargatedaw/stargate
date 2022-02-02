@@ -39,30 +39,13 @@ void v_sg_lim_on_stop(PluginHandle instance)
 
 void v_sg_lim_connect_buffer(
     PluginHandle instance,
-    int a_index,
-    SGFLT* DataLocation,
+    struct SamplePair* DataLocation,
     int a_is_sidechain
 ){
     t_sg_lim *plugin = (t_sg_lim*)instance;
 
-    if(!a_is_sidechain)
-    {
-        switch(a_index)
-        {
-            case 0:
-                plugin->output0 = DataLocation;
-                break;
-            case 1:
-                plugin->output1 = DataLocation;
-                break;
-            default:
-                sg_assert(
-                    0,
-                    "v_sg_lim_connect_buffer: unknown port %i",
-                    a_index
-                );
-                break;
-        }
+    if(!a_is_sidechain){
+        plugin->output = DataLocation;
     }
 }
 
@@ -205,10 +188,14 @@ void v_sg_lim_run(
             *plugin_data->threshold * 0.1f, *plugin_data->ceiling * 0.1f,
             *plugin_data->release);
 
-        v_lim_run(f_lim, plugin_data->output0[f_i], plugin_data->output1[f_i]);
+        v_lim_run(
+            f_lim,
+            plugin_data->output[f_i].left,
+            plugin_data->output[f_i].right
+        );
 
-        plugin_data->output0[f_i] = f_lim->output0;
-        plugin_data->output1[f_i] = f_lim->output1;
+        plugin_data->output[f_i].left = f_lim->output0;
+        plugin_data->output[f_i].right = f_lim->output1;
         ++f_i;
     }
 

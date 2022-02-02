@@ -60,8 +60,7 @@ void v_spa_compute_fft(t_spa_spectrum_analyzer *a_spa);
  */
 void v_spa_run(
     t_spa_spectrum_analyzer *a_spa,
-    SGFLT * a_buf0,
-    SGFLT * a_buf1,
+    struct SamplePair* buffer,
     int a_count
 );
 

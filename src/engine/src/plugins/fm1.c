@@ -24,8 +24,7 @@ void v_run_fm1_voice(
     t_fm1*,
     t_voc_single_voice*,
     t_fm1_poly_voice*,
-    PluginData*,
-    PluginData*,
+    struct SamplePair*,
     int,
     int
 );
@@ -174,8 +173,7 @@ void v_fm1_on_stop(PluginHandle instance){
 
 void v_fm1_connect_buffer(
     PluginHandle instance,
-    int a_index,
-    SGFLT * DataLocation,
+    struct SamplePair* DataLocation,
     int a_is_sidechain
 ){
     if(a_is_sidechain){
@@ -183,22 +181,7 @@ void v_fm1_connect_buffer(
     }
 
     t_fm1 *plugin = (t_fm1*)instance;
-
-    switch(a_index){
-        case 0:
-            plugin->output0 = DataLocation;
-            break;
-        case 1:
-            plugin->output1 = DataLocation;
-            break;
-        default:
-            sg_assert(
-                0,
-                "v_fm1_connect_buffer: unknown port %i",
-                a_index
-            );
-            break;
-    }
+    plugin->output = DataLocation;
 }
 
 void v_fm1_connect_port(
@@ -1389,8 +1372,7 @@ void v_run_fm1(
                     plugin_data,
                     &plugin_data->voices->voices[f_i],
                     pvoice,
-                    plugin_data->output0,
-                    plugin_data->output1,
+                    plugin_data->output,
                     i_iterator,
                     f_i
                 );
@@ -1401,8 +1383,8 @@ void v_run_fm1(
 
         v_svf2_run_4_pole_lp(
             &plugin_data->mono_modules.aa_filter,
-            plugin_data->output0[i_iterator],
-            plugin_data->output1[i_iterator]
+            plugin_data->output[i_iterator].left,
+            plugin_data->output[i_iterator].right
         );
         v_sml_run(
             &plugin_data->mono_modules.pan_smoother,
@@ -1414,10 +1396,10 @@ void v_run_fm1(
             plugin_data->mono_modules.pan_smoother.last_value,
             -3.0
         );
-        plugin_data->output0[i_iterator] +=
+        plugin_data->output[i_iterator].left +=
             plugin_data->mono_modules.aa_filter.output0 *
             plugin_data->mono_modules.panner.gainL;
-        plugin_data->output1[i_iterator] +=
+        plugin_data->output[i_iterator].right +=
             plugin_data->mono_modules.aa_filter.output1 *
             plugin_data->mono_modules.panner.gainR;
 
@@ -1431,8 +1413,7 @@ void v_run_fm1_voice(
     t_fm1* plugin_data,
     t_voc_single_voice* a_poly_voice,
     t_fm1_poly_voice* a_voice,
-    PluginData* out0,
-    PluginData *out1,
+    struct SamplePair* out,
     int a_i,
     int a_voice_num
 ){
@@ -1597,20 +1578,20 @@ void v_run_fm1_voice(
                 a_voice->noise_linamp *
                 a_voice->adsr_main.output;
         }
-        out0[i_voice] += noise_sample.left * f_noise_amp;
-        out1[i_voice] += noise_sample.right * f_noise_amp;
+        out[i_voice].left += noise_sample.left * f_noise_amp;
+        out[i_voice].right += noise_sample.right * f_noise_amp;
     }
 
     if(a_voice->adsr_prefx){
-        out0[(i_voice)] += a_voice->multifx_current_sample[0] *
+        out[i_voice].left += a_voice->multifx_current_sample[0] *
             a_voice->main_vol_lin * a_voice->panner.gainL;
-        out1[(i_voice)] += a_voice->multifx_current_sample[1] *
+        out[i_voice].right += a_voice->multifx_current_sample[1] *
             a_voice->main_vol_lin * a_voice->panner.gainR;
     } else {
-        out0[(i_voice)] += a_voice->multifx_current_sample[0] *
+        out[i_voice].left += a_voice->multifx_current_sample[0] *
             a_voice->adsr_main.output * a_voice->main_vol_lin *
             a_voice->panner.gainL;
-        out1[(i_voice)] += a_voice->multifx_current_sample[1] *
+        out[i_voice].right += a_voice->multifx_current_sample[1] *
             a_voice->adsr_main.output * a_voice->main_vol_lin *
             a_voice->panner.gainR;
     }

@@ -44,8 +44,8 @@ typedef struct {
     PluginData * wet;
     PluginData * modulator;
     PluginData * carrier;
-    SGFLT * buffers[2];
-    SGFLT * sc_buffers[2];
+    struct SamplePair* buffers;
+    struct SamplePair* sc_buffers;
     SGFLT fs;
     t_sg_vocoder_mono_modules mono_modules;
 

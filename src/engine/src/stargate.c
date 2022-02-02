@@ -29,7 +29,7 @@
 int SG_OFFLINE_RENDER = 0;
 
 SGFLT MAIN_VOL = 1.0f;
-SGFLT **pluginOutputBuffers;
+struct SamplePair* pluginOutputBuffers;
 t_stargate * STARGATE = NULL;
 int ZERO = 0;
 
@@ -62,15 +62,15 @@ void v_default_mix(){
         );
 
         for(f_i = 0; f_i < framesPerBuffer; ++f_i){
-            out[f_i2 + MAIN_OUT_L] = (float)pluginOutputBuffers[0][f_i];
-            out[f_i2 + MAIN_OUT_R] = (float)pluginOutputBuffers[1][f_i];
+            out[f_i2 + MAIN_OUT_L] = (float)pluginOutputBuffers[f_i].left;
+            out[f_i2 + MAIN_OUT_R] = (float)pluginOutputBuffers[f_i].right;
             f_i2 += OUTPUT_CH_COUNT;
         }
     } else {
         for(f_i = 0; f_i < framesPerBuffer; ++f_i){
-            *out = (float)pluginOutputBuffers[0][f_i];  // left
+            *out = (float)pluginOutputBuffers[f_i].left;
             ++out;
-            *out = (float)pluginOutputBuffers[1][f_i];  // right
+            *out = (float)pluginOutputBuffers[f_i].right;
             ++out;
         }
     }
@@ -79,10 +79,8 @@ void v_default_mix(){
 void g_sample_period_init(t_sample_period *self){
     int f_i;
 
-    self->buffers[0] = NULL;
-    self->buffers[1] = NULL;
-    self->sc_buffers[0] = NULL;
-    self->sc_buffers[1] = NULL;
+    self->buffers = NULL;
+    self->sc_buffers = NULL;
     self->input_buffer = NULL;
     self->current_sample = 0;
     self->sample_count = 0;
@@ -120,8 +118,8 @@ void g_seq_event_result_init(t_sg_seq_event_result * self){
 
 void v_sample_period_split(
     t_sample_period_split* self,
-    SGFLT** a_buffers,
-    SGFLT** a_sc_buffers,
+    struct SamplePair* a_buffers,
+    struct SamplePair* a_sc_buffers,
     int a_sample_count,
     double a_period_start_beat,
     double a_period_end_beat,
@@ -143,17 +141,13 @@ void v_sample_period_split(
     ){
         self->count = 1;
         self->periods[0].sample_count = a_sample_count;
-        self->periods[0].buffers[0] = a_buffers[0];
-        self->periods[0].buffers[1] = a_buffers[1];
+        self->periods[0].buffers = a_buffers;
 
-        if(a_sc_buffers)
-        {
-            self->periods[0].sc_buffers[0] = a_sc_buffers[0];
-            self->periods[0].sc_buffers[1] = a_sc_buffers[1];
+        if(a_sc_buffers){
+            self->periods[0].sc_buffers = a_sc_buffers;
         }
 
-        if(a_input_buffer)
-        {
+        if(a_input_buffer){
             self->periods[0].input_buffer = a_input_buffer;
         }
     } else if(
@@ -168,12 +162,10 @@ void v_sample_period_split(
             self->periods[0].start_beat = a_period_start_beat;
             self->periods[0].end_beat = a_period_end_beat;
 
-            self->periods[0].buffers[0] = a_buffers[0];
-            self->periods[0].buffers[1] = a_buffers[1];
+            self->periods[0].buffers = a_buffers;
 
             if(a_sc_buffers){
-                self->periods[0].sc_buffers[0] = a_sc_buffers[0];
-                self->periods[0].sc_buffers[1] = a_sc_buffers[1];
+                self->periods[0].sc_buffers = a_sc_buffers;
             }
 
             if(a_input_buffer){
@@ -202,24 +194,20 @@ void v_sample_period_split(
 
             self->periods[1].current_sample = a_current_sample + (long)f_split;
 
-            self->periods[0].buffers[0] = a_buffers[0];
-            self->periods[0].buffers[1] = a_buffers[1];
+            self->periods[0].buffers = a_buffers;
 
             if(a_sc_buffers){
-                self->periods[0].sc_buffers[0] = a_sc_buffers[0];
-                self->periods[0].sc_buffers[1] = a_sc_buffers[1];
+                self->periods[0].sc_buffers = a_sc_buffers;
             }
 
             if(a_input_buffer){
                 self->periods[0].input_buffer = a_input_buffer;
             }
 
-            self->periods[1].buffers[0] = &a_buffers[0][f_split];
-            self->periods[1].buffers[1] = &a_buffers[1][f_split];
+            self->periods[1].buffers = &a_buffers[f_split];
 
             if(a_sc_buffers){
-                self->periods[1].sc_buffers[0] = &a_sc_buffers[0][f_split];
-                self->periods[1].sc_buffers[1] = &a_sc_buffers[1][f_split];
+                self->periods[1].sc_buffers = &a_sc_buffers[f_split];
             }
 
             if(a_input_buffer){
@@ -247,12 +235,10 @@ void v_sample_period_split(
             self->periods[0].sample_count = f_split;
             self->periods[1].current_sample = a_current_sample + (long)f_split;
 
-            self->periods[0].buffers[0] = a_buffers[0];
-            self->periods[0].buffers[1] = a_buffers[1];
+            self->periods[0].buffers = a_buffers;
 
             if(a_sc_buffers){
-                self->periods[0].sc_buffers[0] = a_sc_buffers[0];
-                self->periods[0].sc_buffers[1] = a_sc_buffers[1];
+                self->periods[0].sc_buffers = a_sc_buffers;
             }
 
             if(a_input_buffer){
@@ -266,12 +252,10 @@ void v_sample_period_split(
             self->periods[1].current_sample = a_current_sample + (long)f_split;
 
             self->periods[1].sample_count = f_split;
-            self->periods[1].buffers[0] = &a_buffers[0][f_split];
-            self->periods[1].buffers[1] = &a_buffers[1][f_split];
+            self->periods[1].buffers = &a_buffers[f_split];
 
             if(a_sc_buffers){
-                self->periods[1].sc_buffers[0] = &a_sc_buffers[0][f_split];
-                self->periods[1].sc_buffers[1] = &a_sc_buffers[1][f_split];
+                self->periods[1].sc_buffers = &a_sc_buffers[f_split];
             }
 
             if(a_input_buffer){
@@ -285,12 +269,10 @@ void v_sample_period_split(
 
             f_split = a_sample_count - f_split;
             self->periods[2].sample_count = f_split;
-            self->periods[2].buffers[0] = &a_buffers[0][f_split];
-            self->periods[2].buffers[1] = &a_buffers[1][f_split];
+            self->periods[2].buffers = &a_buffers[f_split];
 
             if(a_sc_buffers){
-                self->periods[2].sc_buffers[0] = &a_sc_buffers[0][f_split];
-                self->periods[2].sc_buffers[1] = &a_sc_buffers[1][f_split];
+                self->periods[2].sc_buffers = &a_sc_buffers[f_split];
             }
 
             if(a_input_buffer){
@@ -459,15 +441,12 @@ double v_print_benchmark(
 }
 #endif
 
-void v_zero_buffer(SGFLT ** a_buffers, int a_count)
-{
-    int f_i2 = 0;
+void v_zero_buffer(struct SamplePair* a_buffers, int a_count){
+    int i;
 
-    while(f_i2 < a_count)
-    {
-        a_buffers[0][f_i2] = 0.0f;
-        a_buffers[1][f_i2] = 0.0f;
-        ++f_i2;
+    for(i = 0; i < a_count; ++i){
+        a_buffers[i].left = 0.0f;
+        a_buffers[i].right = 0.0f;
     }
 }
 
@@ -534,8 +513,7 @@ NO_OPTIMIZATION void v_open_track(
     }
 }
 
-t_track * g_track_get(int a_track_num, SGFLT a_sr)
-{
+t_track * g_track_get(int a_track_num, SGFLT a_sr){
     int f_i = 0;
 
     t_track * f_result;
@@ -551,20 +529,14 @@ t_track * g_track_get(int a_track_num, SGFLT a_sr)
 
     pthread_spin_init(&f_result->lock, 0);
 
-    hpalloc((void**)&f_result->buffers, (sizeof(SGFLT*) * f_result->channels));
-    hpalloc((void**)&f_result->sc_buffers,
-        (sizeof(SGFLT*) * f_result->channels));
-
-    for(f_i = 0; f_i < f_result->channels; ++f_i){
-        clalloc(
-            (void**)&f_result->buffers[f_i],
-            sizeof(SGFLT) * FRAMES_PER_BUFFER
-        );
-        clalloc(
-            (void**)&f_result->sc_buffers[f_i],
-            sizeof(SGFLT) * FRAMES_PER_BUFFER
-        );
-    }
+    clalloc(
+        (void**)&f_result->buffers,
+        sizeof(struct SamplePair) * FRAMES_PER_BUFFER
+    );
+    clalloc(
+        (void**)&f_result->sc_buffers,
+        sizeof(struct SamplePair) * FRAMES_PER_BUFFER
+    );
 
     v_zero_buffer(f_result->buffers, FRAMES_PER_BUFFER);
     v_zero_buffer(f_result->sc_buffers, FRAMES_PER_BUFFER);
@@ -684,16 +656,14 @@ int i_beat_count_to_samples(
 
 void v_buffer_mix(
     int a_count,
-    SGFLT ** __restrict__ a_buffer_src,
-    SGFLT ** __restrict__ a_buffer_dest
+    struct SamplePair* a_buffer_src,
+    struct SamplePair* a_buffer_dest
 ){
-    int f_i2 = 0;
+    int i;
 
-    while(f_i2 < a_count)
-    {
-        a_buffer_dest[0][f_i2] += a_buffer_src[0][f_i2];
-        a_buffer_dest[1][f_i2] += a_buffer_src[1][f_i2];
-        ++f_i2;
+    for(i = 0; i < a_count; ++i){
+        a_buffer_dest[i].left += a_buffer_src[i].left;
+        a_buffer_dest[i].right += a_buffer_src[i].right;
     }
 }
 
@@ -815,7 +785,7 @@ void v_sg_set_time_params(t_sample_period * self)
 void v_sg_seq_event_result_set_default(
     t_sg_seq_event_result * self,
     t_sg_seq_event_list * a_list,
-    SGFLT** a_buffers,
+    struct SamplePair* a_buffers,
     SGFLT * a_input_buffers,
     int a_input_count,
     int a_sample_count,
@@ -828,16 +798,15 @@ void v_sg_seq_event_result_set_default(
     v_sg_set_time_params(f_period);
     f_period->current_sample = a_current_sample;
     f_period->sample_count = a_sample_count;
-    f_period->buffers[0] = a_buffers[0];
-    f_period->buffers[1] = a_buffers[1];
+    f_period->buffers = a_buffers;
     f_period->input_buffer = a_input_buffers;
 }
 
 void v_set_sample_period(
     t_sample_period * self,
     SGFLT a_playback_inc,
-    SGFLT ** a_buffers,
-    SGFLT ** a_sc_buffers,
+    struct SamplePair* a_buffers,
+    struct SamplePair* a_sc_buffers,
     SGFLT * a_input_buffers,
     int a_sample_count,
     long a_current_sample
@@ -847,19 +816,13 @@ void v_set_sample_period(
     self->current_sample = a_current_sample;
     self->sample_count = a_sample_count;
 
-    if(a_sc_buffers)
-    {
-        self->sc_buffers[0] = a_sc_buffers[0];
-        self->sc_buffers[1] = a_sc_buffers[1];
-    }
-    else
-    {
-        self->sc_buffers[0] = NULL;
-        self->sc_buffers[1] = NULL;
+    if(a_sc_buffers){
+        self->sc_buffers = a_sc_buffers;
+    } else {
+        self->sc_buffers = NULL;
     }
 
-    self->buffers[0] = a_buffers[0];
-    self->buffers[1] = a_buffers[1];
+    self->buffers = a_buffers;
     self->input_buffer = a_input_buffers;
 }
 
@@ -905,7 +868,7 @@ void v_sg_set_playback_pos(
 void v_sg_seq_event_list_set(
     t_sg_seq_event_list * self,
     t_sg_seq_event_result* a_result,
-    SGFLT** a_buffers,
+    struct SamplePair* a_buffers,
     SGFLT* a_input_buffers,
     int a_input_count,
     int a_sample_count,
@@ -1398,9 +1361,9 @@ NO_OPTIMIZATION void v_set_plugin_index(
     int a_power,
     int a_lock
 ){
-    int f_i, i;
-    SGFLT buffer[2][512] = {{}, {}};
-    SGFLT sc_buffer[2][512] = {{}, {}};
+    int i;
+    struct SamplePair buffer[512] = {};
+    struct SamplePair sc_buffer[512] = {};
     int sample_rate = (int)STARGATE->thread_storage[0].sample_rate;
     t_plugin * f_plugin = NULL;
     struct ShdsList midi_list, atm_list;
@@ -1445,26 +1408,12 @@ NO_OPTIMIZATION void v_set_plugin_index(
             // or render
             f_plugin->descriptor->connect_buffer(
                 f_plugin->plugin_handle,
-                0,
-                buffer[0],
+                buffer,
                 0
             );
             f_plugin->descriptor->connect_buffer(
                 f_plugin->plugin_handle,
-                1,
-                buffer[1],
-                0
-            );
-            f_plugin->descriptor->connect_buffer(
-                f_plugin->plugin_handle,
-                0,
-                sc_buffer[0],
-                1
-            );
-            f_plugin->descriptor->connect_buffer(
-                f_plugin->plugin_handle,
-                1,
-                sc_buffer[1],
+                sc_buffer,
                 1
             );
             for(i = 0; i < (sample_rate / 512); ++i){
@@ -1487,19 +1436,16 @@ NO_OPTIMIZATION void v_set_plugin_index(
         f_plugin->power = a_power;
 
         log_info("Connecting buffers");
-        for(f_i = 0; f_i < f_track->channels; ++f_i){
-            f_plugin->descriptor->connect_buffer(
-                f_plugin->plugin_handle,
-                f_i, f_track->buffers[f_i],
-                0
-            );
-            f_plugin->descriptor->connect_buffer(
-                f_plugin->plugin_handle,
-                f_i,
-                f_track->sc_buffers[f_i],
-                1
-            );
-        }
+        f_plugin->descriptor->connect_buffer(
+            f_plugin->plugin_handle,
+            f_track->buffers,
+            0
+        );
+        f_plugin->descriptor->connect_buffer(
+            f_plugin->plugin_handle,
+            f_track->sc_buffers,
+            1
+        );
     }
 
     f_track->plugins[a_index] = f_plugin;
@@ -1511,7 +1457,7 @@ NO_OPTIMIZATION void v_set_plugin_index(
 }
 
 void v_run(
-    SGFLT** buffers,
+    struct SamplePair* buffers,
     SGFLT* a_input,
     int sample_count
 ){
@@ -1524,8 +1470,8 @@ void v_run(
         int f_i;
 
         for(f_i = 0; f_i < sample_count; ++f_i){
-            buffers[0][f_i] = 0.0f;
-            buffers[1][f_i] = 0.0f;
+            buffers[f_i].left = 0.0f;
+            buffers[f_i].right = 0.0f;
         }
     }
 
@@ -1534,7 +1480,7 @@ void v_run(
 
 void v_run_main_loop(
     int sample_count,
-    SGFLT** a_buffers,
+    struct SamplePair* a_buffers,
     PluginData* a_input_buffers
 ){
     STARGATE->current_host->run(sample_count, a_buffers, a_input_buffers);
@@ -1565,12 +1511,12 @@ void v_run_main_loop(
                         (STARGATE->preview_amp_lin); // *
                         //(f_audio_item->fade_vol);
 
-                    a_buffers[0][f_i] = f_tmp_sample;
-                    a_buffers[1][f_i] = f_tmp_sample;
+                    a_buffers[f_i].left = f_tmp_sample;
+                    a_buffers[f_i].right = f_tmp_sample;
                 }
                 else if(f_wav_item->channels > 1)
                 {
-                    a_buffers[0][f_i] = f_cubic_interpolate_ptr_ifh(
+                    a_buffers[f_i].left = f_cubic_interpolate_ptr_ifh(
                         (f_wav_item->samples[0]),
                         (f_audio_item->sample_read_heads[0].whole_number),
                         (f_audio_item->sample_read_heads[0].fraction)
@@ -1578,7 +1524,7 @@ void v_run_main_loop(
                         STARGATE->preview_amp_lin; // *
                         //(f_audio_item->fade_vol);
 
-                    a_buffers[1][f_i] = f_cubic_interpolate_ptr_ifh(
+                    a_buffers[f_i].right = f_cubic_interpolate_ptr_ifh(
                         (f_wav_item->samples[1]),
                         (f_audio_item->sample_read_heads[0].whole_number),
                         (f_audio_item->sample_read_heads[0].fraction)
@@ -1608,8 +1554,8 @@ void v_run_main_loop(
     if(!STARGATE->is_offline_rendering && MAIN_VOL != 1.0f){
         int f_i;
         for(f_i = 0; f_i < sample_count; ++f_i){
-            a_buffers[0][f_i] *= MAIN_VOL;
-            a_buffers[1][f_i] *= MAIN_VOL;
+            a_buffers[f_i].left *= MAIN_VOL;
+            a_buffers[f_i].right *= MAIN_VOL;
         }
     }
 

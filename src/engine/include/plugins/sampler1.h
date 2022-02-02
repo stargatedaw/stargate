@@ -208,7 +208,7 @@ typedef struct {
 
 typedef struct st_sampler1 {
     char pad1[CACHE_LINE_SIZE];
-    PluginData *output[2];
+    struct SamplePair* output;
     t_sampler1_sample samples[SAMPLER1_MAX_SAMPLE_COUNT];
 
     PluginData *mfx_knobs[SAMPLER1_MONO_FX_GROUPS_COUNT][

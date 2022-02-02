@@ -271,8 +271,7 @@ void v_daw_process_track(
     if(!f_plugin){
         v_pkm_run(
             f_track->peak_meter,
-            f_track->buffers[0],
-            f_track->buffers[1],
+            f_track->buffers,
             a_sample_count
         );
     }
@@ -342,8 +341,8 @@ void v_daw_sum_track_outputs(
     t_track * f_bus;
     t_track_routing * f_route;
     t_plugin * f_plugin = 0;
-    SGFLT ** f_buff;
-    SGFLT ** f_track_buff = a_track->buffers;
+    struct SamplePair* f_buff;
+    struct SamplePair* f_track_buff = a_track->buffers;
 
     if(
         !a_track->mute
@@ -378,8 +377,8 @@ void v_daw_sum_track_outputs(
         while(f_i2 < a_sample_count){
             f_rmp_run_ramp(&a_track->fade_env);
 
-            f_track_buff[0][f_i2] *= (1.0f - a_track->fade_env.output);
-            f_track_buff[1][f_i2] *= (1.0f - a_track->fade_env.output);
+            f_track_buff[f_i2].left *= (1.0f - a_track->fade_env.output);
+            f_track_buff[f_i2].right *= (1.0f - a_track->fade_env.output);
             ++f_i2;
         }
 
@@ -389,8 +388,8 @@ void v_daw_sum_track_outputs(
     } else if(a_track->fade_state == FADE_STATE_RETURNING){
         while(f_i2 < a_sample_count){
             f_rmp_run_ramp(&a_track->fade_env);
-            f_track_buff[0][f_i2] *= a_track->fade_env.output;
-            f_track_buff[1][f_i2] *= a_track->fade_env.output;
+            f_track_buff[f_i2].left *= a_track->fade_env.output;
+            f_track_buff[f_i2].right *= a_track->fade_env.output;
             ++f_i2;
         }
 
@@ -472,7 +471,6 @@ void v_daw_sum_track_outputs(
                     f_plugin->plugin_handle,
                     a_sample_count,
                     f_buff,
-                    2,
                     a_track->event_list,
                     f_plugin->atm_list,
                     a_track->peak_meter

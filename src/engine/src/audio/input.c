@@ -71,8 +71,8 @@ void v_audio_input_record_set(
 
 void v_audio_input_run(
     int f_index,
-    SGFLT ** output,
-    SGFLT ** sc_output,
+    struct SamplePair* output,
+    struct SamplePair* sc_output,
     SGFLT * a_input,
     int sample_count,
     int * a_sc_dirty
@@ -148,20 +148,20 @@ void v_audio_input_run(
             f_tmp_sample = a_input[f_buffer_pos] * (f_ai->vol_linear);
 
             if(f_output_mode != 1){
-                output[0][f_i2] += f_tmp_sample;
+                output[f_i2].left += f_tmp_sample;
             }
 
             if(f_output_mode > 0){
-                sc_output[0][f_i2] += f_tmp_sample;
+                sc_output[f_i2].left += f_tmp_sample;
             }
 
             if(f_ai->stereo_ch == -1){
                 if(f_output_mode != 1){
-                    output[1][f_i2] += f_tmp_sample;
+                    output[f_i2].right += f_tmp_sample;
                 }
 
                 if(f_output_mode > 0){
-                    sc_output[1][f_i2] += f_tmp_sample;
+                    sc_output[f_i2].right += f_tmp_sample;
                 }
             }
 
@@ -175,11 +175,11 @@ void v_audio_input_run(
                 f_tmp_sample = a_input[f_buffer_pos] * (f_ai->vol_linear);
 
                 if(f_output_mode != 1){
-                    output[1][f_i2] += f_tmp_sample;
+                    output[f_i2].right += f_tmp_sample;
                 }
 
                 if(f_output_mode > 0){
-                    sc_output[1][f_i2] += f_tmp_sample;
+                    sc_output[f_i2].right += f_tmp_sample;
                 }
 
                 f_buffer_pos += AUDIO_INPUT_TRACK_COUNT;

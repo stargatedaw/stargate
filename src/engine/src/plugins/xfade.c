@@ -40,24 +40,25 @@ void v_xfade_on_stop(PluginHandle instance)
     //t_xfade *plugin = (t_xfade*)instance;
 }
 
-void v_xfade_connect_buffer(PluginHandle instance, int a_index,
-        SGFLT * DataLocation, int a_is_sidechain)
-{
+void v_xfade_connect_buffer(
+    PluginHandle instance,
+    struct SamplePair* DataLocation,
+    int a_is_sidechain
+){
     t_xfade *plugin = (t_xfade*)instance;
 
-    if(a_is_sidechain)
-    {
-        plugin->sc_buffers[a_index] = DataLocation;
-    }
-    else
-    {
-        plugin->buffers[a_index] = DataLocation;
+    if(a_is_sidechain){
+        plugin->sc_buffers = DataLocation;
+    } else {
+        plugin->buffers = DataLocation;
     }
 }
 
-void v_xfade_connect_port(PluginHandle instance, int port,
-        PluginData * data)
-{
+void v_xfade_connect_port(
+    PluginHandle instance,
+    int port,
+    PluginData * data
+){
     t_xfade *plugin;
 
     plugin = (t_xfade *) instance;
@@ -203,16 +204,16 @@ void v_xfade_run(
         v_pn2_set(&plugin_data->mono_modules.panner,
             plugin_data->mono_modules.pan_smoother.last_value, f_pan_law);
 
-        plugin_data->buffers[0][f_i] *=
+        plugin_data->buffers[f_i].left *=
             plugin_data->mono_modules.panner.gainL;
-        plugin_data->buffers[0][f_i] +=
-            plugin_data->sc_buffers[0][f_i] *
+        plugin_data->buffers[f_i].left +=
+            plugin_data->sc_buffers[f_i].left *
             plugin_data->mono_modules.panner.gainR;
 
-        plugin_data->buffers[1][f_i] *=
+        plugin_data->buffers[f_i].right *=
             plugin_data->mono_modules.panner.gainL;
-        plugin_data->buffers[1][f_i] +=
-            plugin_data->sc_buffers[1][f_i] *
+        plugin_data->buffers[f_i].right +=
+            plugin_data->sc_buffers[f_i].right *
             plugin_data->mono_modules.panner.gainR;
 
         ++f_i;

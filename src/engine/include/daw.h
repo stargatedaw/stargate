@@ -186,8 +186,8 @@ void v_daw_audio_items_run(
     t_daw*,
     t_daw_item_ref*,
     int,
-    SGFLT**,
-    SGFLT**,
+    struct SamplePair*,
+    struct SamplePair*,
     int*,
     t_daw_thread_storage*,
     t_sg_thread_storage*
@@ -241,7 +241,7 @@ void v_track_routing_set(t_track_routing*, int, int);
 void v_track_routing_free(t_track_routing*);
 void v_daw_run_engine(
     int a_sample_count,
-    SGFLT** a_output,
+    struct SamplePair* a_output,
     SGFLT* a_input_buffers
 );
 void v_daw_osc_send(t_osc_send_data * a_buffers);

@@ -40,8 +40,7 @@ void v_sgchnl_on_stop(PluginHandle instance)
 
 void v_sgchnl_connect_buffer(
     PluginHandle instance,
-    int a_index,
-    SGFLT * DataLocation,
+    struct SamplePair* DataLocation,
     int a_is_sidechain
 ){
     if(a_is_sidechain){
@@ -49,7 +48,7 @@ void v_sgchnl_connect_buffer(
     }
 
     t_sgchnl *plugin = (t_sgchnl*)instance;
-    plugin->buffers[a_index] = DataLocation;
+    plugin->buffers = DataLocation;
 }
 
 void v_sgchnl_connect_port(
@@ -79,7 +78,6 @@ PluginHandle g_sgchnl_instantiate(
 ){
     t_sgchnl *plugin_data;
     hpalloc((void**)&plugin_data, sizeof(t_sgchnl));
-    hpalloc((void**)&plugin_data->buffers, sizeof(SGFLT*) * 2);
 
     plugin_data->descriptor = descriptor;
     plugin_data->fs = s_rate;
@@ -179,8 +177,7 @@ void v_sgchnl_process_midi(
 void v_sgchnl_run_mixing(
     PluginHandle instance,
     int sample_count,
-    SGFLT ** output_buffers,
-    int output_count,
+    struct SamplePair* output_buffers,
     struct ShdsList* midi_events,
     struct ShdsList * atm_events,
     t_pkm_peak_meter* peak_meter
@@ -244,9 +241,9 @@ void v_sgchnl_run_mixing(
             plugin_data->mono_modules.volume_smoother.last_value - f_pan_law
         );
 
-        left = plugin_data->buffers[0][f_i] *
+        left = plugin_data->buffers[f_i].left *
             f_vol_linear * f_gain * plugin_data->mono_modules.panner.gainL;
-        right = plugin_data->buffers[1][f_i] *
+        right = plugin_data->buffers[f_i].right *
             f_vol_linear * f_gain * plugin_data->mono_modules.panner.gainR;
         if(peak_meter){
             v_pkm_run_single(
@@ -255,8 +252,8 @@ void v_sgchnl_run_mixing(
                 right
             );
         }
-        output_buffers[0][f_i] += left;
-        output_buffers[1][f_i] += right;
+        output_buffers[f_i].left += left;
+        output_buffers[f_i].right += right;
     }
 }
 
@@ -324,9 +321,9 @@ void v_sgchnl_run(
             (plugin_data->mono_modules.volume_smoother.last_value)
         );
 
-        plugin_data->buffers[0][f_i] *=
+        plugin_data->buffers[f_i].left *=
             f_vol_linear * f_gain * plugin_data->mono_modules.panner.gainL;
-        plugin_data->buffers[1][f_i] *=
+        plugin_data->buffers[f_i].right *=
             f_vol_linear * f_gain * plugin_data->mono_modules.panner.gainR;
     }
 }

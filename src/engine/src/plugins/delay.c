@@ -46,33 +46,15 @@ void v_sgdelay_on_stop(PluginHandle instance)
 
 void v_sgdelay_connect_buffer(
     PluginHandle instance,
-    int a_index,
-    SGFLT * DataLocation,
+    struct SamplePair* DataLocation,
     int a_is_sidechain
 ){
-    if(a_is_sidechain)
-    {
+    if(a_is_sidechain){
         return;
     }
 
     t_sgdelay *plugin = (t_sgdelay*)instance;
-
-    switch(a_index)
-    {
-        case 0:
-            plugin->output0 = DataLocation;
-            break;
-        case 1:
-            plugin->output1 = DataLocation;
-            break;
-        default:
-            sg_assert(
-                0,
-                "v_sgdelay_connect_buffer: unknown port %i",
-                a_index
-            );
-            break;
-    }
+    plugin->output = DataLocation;
 }
 
 void v_sgdelay_connect_port(
@@ -237,13 +219,14 @@ void v_sgdelay_run(
             (*plugin_data->cutoff));
 
         v_ldl_run_delay(plugin_data->mono_modules.delay,
-                (plugin_data->output0[(f_i)]),
-                (plugin_data->output1[(f_i)]));
+            plugin_data->output[f_i].left,
+            plugin_data->output[f_i].right
+        );
 
-        plugin_data->output0[(f_i)] =
-                (plugin_data->mono_modules.delay->output0);
-        plugin_data->output1[(f_i)] =
-                (plugin_data->mono_modules.delay->output1);
+        plugin_data->output[f_i].left =
+            plugin_data->mono_modules.delay->output0;
+        plugin_data->output[f_i].right =
+            plugin_data->mono_modules.delay->output1;
 
         ++f_i;
     }

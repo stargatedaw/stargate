@@ -87,7 +87,7 @@
 
 extern int SG_OFFLINE_RENDER;
 extern SGFLT MAIN_VOL;
-extern SGFLT **pluginOutputBuffers;
+extern struct SamplePair* pluginOutputBuffers;
 extern int ZERO;
 
 /* An automation clock event */
@@ -105,8 +105,8 @@ typedef struct {
     double start_beat;
     double end_beat;
     SGFLT period_inc_beats;
-    SGFLT * buffers[2];
-    SGFLT * sc_buffers[2];
+    struct SamplePair* buffers;
+    struct SamplePair* sc_buffers;
     SGFLT * input_buffer;
     int atm_tick_count;
     t_atm_tick atm_ticks[ATM_TICK_BUFFER_SIZE];
@@ -172,8 +172,8 @@ typedef struct {
     t_plugin * plugins[MAX_PLUGIN_TOTAL_COUNT];
     int track_num;
     t_pkm_peak_meter * peak_meter;
-    SGFLT ** buffers;
-    SGFLT ** sc_buffers;
+    struct SamplePair* buffers;
+    struct SamplePair* sc_buffers;
     int sc_buffers_dirty;
     int channels;
     pthread_spinlock_t lock;
@@ -193,7 +193,11 @@ typedef struct {
 } t_track;
 
 typedef struct {
-    void (*run)(int sample_count, SGFLT **output, SGFLT *a_input_buffers);
+    void (*run)(
+        int sample_count,
+        struct SamplePair* output,
+        SGFLT *a_input_buffers
+    );
     void (*osc_send)(t_osc_send_data*);
     void (*audio_inputs)();
     void (*mix)();
@@ -268,7 +272,7 @@ typedef struct {
 
 void g_stargate_get(SGFLT, t_midi_device_list*);
 t_track * g_track_get(int, SGFLT);
-void v_zero_buffer(SGFLT**, int);
+void v_zero_buffer(struct SamplePair*, int);
 double v_print_benchmark(
     char * a_message,
     struct timespec a_start,
@@ -325,14 +329,14 @@ void v_open_track(
 );
 void v_buffer_mix(
     int a_count,
-    SGFLT ** __restrict__ a_buffer_src,
-    SGFLT ** __restrict__ a_buffer_dest
+    struct SamplePair* a_buffer_src,
+    struct SamplePair* a_buffer_dest
 );
 void g_sg_seq_event_list_init(t_sg_seq_event_list * self);
 void v_sample_period_split(
     t_sample_period_split* self,
-    SGFLT ** a_buffers,
-    SGFLT ** a_sc_buffers,
+    struct SamplePair* a_buffers,
+    struct SamplePair* a_sc_buffers,
     int a_sample_count,
     double a_period_start_beat,
     double a_period_end_beat,
@@ -352,7 +356,7 @@ void v_sample_period_set_atm_events(
 void v_sg_seq_event_result_set_default(
     t_sg_seq_event_result * self,
     t_sg_seq_event_list * a_list,
-    SGFLT** a_buffers,
+    struct SamplePair* a_buffers,
     SGFLT * a_input_buffers,
     int a_input_count,
     int a_sample_count,
@@ -361,7 +365,7 @@ void v_sg_seq_event_result_set_default(
 void v_sg_seq_event_list_set(
     t_sg_seq_event_list * self,
     t_sg_seq_event_result* a_result,
-    SGFLT** a_buffers,
+    struct SamplePair* a_buffers,
     SGFLT* a_input_buffers,
     int a_input_count,
     int a_sample_count,
@@ -387,11 +391,11 @@ void v_set_control_from_cc(
 void v_sg_configure(const char* a_key, const char* a_value);
 void v_run_main_loop(
     int sample_count,
-    SGFLT** a_buffers,
+    struct SamplePair* a_buffers,
     PluginData* a_input_buffers
 );
 void v_run(
-    SGFLT** buffers,
+    struct SamplePair* buffers,
     SGFLT* a_input,
     int sample_count
 );

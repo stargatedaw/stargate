@@ -63,8 +63,7 @@ void v_pkm_reset(t_pkm_peak_meter * self){
 
 void v_pkm_run(
     t_pkm_peak_meter * self,
-    SGFLT * a_in0,
-    SGFLT * a_in1,
+    struct SamplePair* buffer,
     int a_count
 ){
     if(self->dirty){
@@ -75,11 +74,11 @@ void v_pkm_run(
     self->buffer_pos = 0;
     while(self->buffer_pos < a_count){
         self->value[0] = f_pkm_compare(
-            a_in0[self->buffer_pos],
+            buffer[self->buffer_pos].left,
             self->value[0]
         );
         self->value[1] = f_pkm_compare(
-            a_in1[self->buffer_pos],
+            buffer[self->buffer_pos].right,
             self->value[1]
         );
         self->buffer_pos += PEAK_STEP_SIZE;

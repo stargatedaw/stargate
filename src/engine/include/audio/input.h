@@ -32,8 +32,8 @@ void g_audio_input_init(t_audio_input *, SGFLT);
 
 void v_audio_input_run(
     int f_index,
-    SGFLT** output,
-    SGFLT** sc_output,
+    struct SamplePair* output,
+    struct SamplePair* sc_output,
     SGFLT* a_input,
     int sample_count,
     int * a_sc_dirty

@@ -41,11 +41,8 @@ typedef struct {
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
-    PluginData *output0;
-    PluginData *output1;
-
-    PluginData *sc_input0;
-    PluginData *sc_input1;
+    struct SamplePair* output;
+    struct SamplePair* sc_input;
 
     PluginData *threshold;
     PluginData *ratio;

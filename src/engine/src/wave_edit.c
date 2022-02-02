@@ -132,15 +132,8 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
     SGFLT * f_output = NULL;
     lmalloc((void**)&f_output, sizeof(SGFLT) * (f_block_size * 2));
 
-    SGFLT ** f_buffer = NULL;
-    lmalloc((void**)&f_buffer, sizeof(SGFLT*) * 2);
-
-    int f_i = 0;
-    while(f_i < 2)
-    {
-        lmalloc((void**)&f_buffer[f_i], sizeof(SGFLT) * f_block_size);
-        ++f_i;
-    }
+    struct SamplePair* f_buffer = NULL;
+    lmalloc((void**)&f_buffer, sizeof(struct SamplePair) * f_block_size);
 
     v_we_set_playback_mode(self, PLAYBACK_MODE_PLAY, 0);
 
@@ -168,8 +161,8 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
 
         while(f_i < f_block_size)
         {
-            f_buffer[0][f_i] = 0.0f;
-            f_buffer[1][f_i] = 0.0f;
+            f_buffer[f_i].left = 0.0f;
+            f_buffer[f_i].right = 0.0f;
             ++f_i;
         }
 
@@ -179,9 +172,9 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
         /*Interleave the samples...*/
         while(f_i < f_block_size)
         {
-            f_output[f_size] = f_buffer[0][f_i];
+            f_output[f_size] = f_buffer[f_i].left;
             ++f_size;
-            f_output[f_size] = f_buffer[1][f_i];
+            f_output[f_size] = f_buffer[f_i].right;
             ++f_size;
             ++f_i;
         }
@@ -202,8 +195,6 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
 
     sf_close(f_sndfile);
 
-    free(f_buffer[0]);
-    free(f_buffer[1]);
     free(f_output);
 
     char f_tmp_finished[1024];
@@ -289,7 +280,7 @@ void v_set_wave_editor_item(
 
 void v_run_wave_editor(
     int sample_count,
-    SGFLT **output,
+    struct SamplePair* output,
     SGFLT * a_input
 ){
     int sent_stop = 0;
@@ -302,14 +293,13 @@ void v_run_wave_editor(
 
     for(f_i = 0; f_i < sample_count; ++f_i)
     {
-        output[0][f_i] = 0.0f;
-        output[1][f_i] = 0.0f;
+        output[f_i].left = 0.0f;
+        output[f_i].right = 0.0f;
     }
 
     if(a_input)
     {
-        for(f_i = 0; f_i < AUDIO_INPUT_TRACK_COUNT; ++f_i)
-        {
+        for(f_i = 0; f_i < AUDIO_INPUT_TRACK_COUNT; ++f_i){
             v_audio_input_run(f_i, output, NULL, a_input, sample_count, NULL);
         }
     }
@@ -341,12 +331,12 @@ void v_run_wave_editor(
                     self->ab_audio_item->vols_linear[0] *
                     self->ab_audio_item->fade_vols[0];
 
-                    output[0][f_i] = f_tmp_sample;
-                    output[1][f_i] = f_tmp_sample;
+                    output[f_i].left = f_tmp_sample;
+                    output[f_i].right = f_tmp_sample;
                 }
                 else if(self->ab_wav_item->channels > 1)
                 {
-                    output[0][f_i] = f_cubic_interpolate_ptr_ifh(
+                    output[f_i].left = f_cubic_interpolate_ptr_ifh(
                         self->ab_wav_item->samples[0],
                         self->ab_audio_item->sample_read_heads[0].whole_number,
                         self->ab_audio_item->sample_read_heads[0].fraction
@@ -355,7 +345,7 @@ void v_run_wave_editor(
                     self->ab_audio_item->vols_linear[0] *
                     self->ab_audio_item->fade_vols[0];
 
-                    output[1][f_i] = f_cubic_interpolate_ptr_ifh(
+                    output[f_i].right = f_cubic_interpolate_ptr_ifh(
                     (self->ab_wav_item->samples[1]),
                     (self->ab_audio_item->sample_read_heads[0].whole_number),
                     (self->ab_audio_item->sample_read_heads[0].fraction)) *
@@ -390,12 +380,12 @@ void v_run_wave_editor(
         }
     }
 
-    SGFLT ** f_buff = f_track->buffers;
+    struct SamplePair* f_buff = f_track->buffers;
 
     for(f_i = 0; f_i < sample_count; ++f_i)
     {
-        f_buff[0][f_i] = output[0][f_i];
-        f_buff[1][f_i] = output[1][f_i];
+        f_buff[f_i].left = output[f_i].left;
+        f_buff[f_i].right = output[f_i].right;
     }
 
     for(f_i = 0; f_i < MAX_PLUGIN_COUNT; ++f_i)
@@ -414,14 +404,13 @@ void v_run_wave_editor(
 
     for(f_i = 0; f_i < sample_count; ++f_i)
     {
-        output[0][f_i] = f_buff[0][f_i];
-        output[1][f_i] = f_buff[1][f_i];
+        output[f_i].left = f_buff[f_i].left;
+        output[f_i].right = f_buff[f_i].right;
     }
 
     v_pkm_run(
         f_track->peak_meter,
-        f_buff[0],
-        f_buff[1],
+        f_buff,
         STARGATE->sample_count
     );
 }
@@ -561,18 +550,15 @@ void v_we_test(){
 
     v_set_host(SG_HOST_WAVE_EDIT);
     v_we_set_playback_mode(wave_edit, PLAYBACK_MODE_REC, 0);
-    SGFLT * f_output_arr[2];
+    struct SamplePair* f_output_arr;
 
     int f_i, f_i2;
 
-    for(f_i = 0; f_i < 2; ++f_i)
-    {
-        hpalloc((void**)&f_output_arr[f_i], sizeof(SGFLT) * 1024);
+    hpalloc((void**)&f_output_arr, sizeof(struct SamplePair) * 1024);
 
-        for(f_i2 = 0; f_i2 < 1024; ++f_i2)
-        {
-            f_output_arr[f_i][f_i2] = 0.0f;
-        }
+    for(f_i2 = 0; f_i2 < 1024; ++f_i2){
+        f_output_arr[f_i2].left = 0.0f;
+        f_output_arr[f_i2].right = 0.0f;
     }
 
     SGFLT * f_input_arr;

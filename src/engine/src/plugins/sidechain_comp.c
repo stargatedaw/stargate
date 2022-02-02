@@ -37,47 +37,17 @@ void v_scc_on_stop(PluginHandle instance)
     //t_scc *plugin = (t_scc*)instance;
 }
 
-void v_scc_connect_buffer(PluginHandle instance, int a_index,
-        SGFLT * DataLocation, int a_is_sidechain)
-{
+void v_scc_connect_buffer(
+    PluginHandle instance,
+    struct SamplePair* DataLocation,
+    int a_is_sidechain
+){
     t_scc *plugin = (t_scc*)instance;
 
-    if(a_is_sidechain)
-    {
-        switch(a_index)
-        {
-            case 0:
-                plugin->sc_input0 = DataLocation;
-                break;
-            case 1:
-                plugin->sc_input1 = DataLocation;
-                break;
-            default:
-                sg_assert(
-                    0, "v_scc_connect_buffer: unknown port %i",
-                    a_index
-                );
-                break;
-        }
-    }
-    else
-    {
-        switch(a_index)
-        {
-            case 0:
-                plugin->output0 = DataLocation;
-                break;
-            case 1:
-                plugin->output1 = DataLocation;
-                break;
-            default:
-                sg_assert(
-                    0,
-                    "v_scc_connect_buffer: unknown sidechain port %i",
-                    a_index
-                );
-                break;
-        }
+    if(a_is_sidechain){
+        plugin->sc_input = DataLocation;
+    } else {
+        plugin->output = DataLocation;
     }
 }
 
@@ -254,14 +224,14 @@ void v_scc_run(
 
         v_scc_run_comp(
             f_cmp,
-            plugin_data->sc_input0[f_i],
-            plugin_data->sc_input1[f_i],
-            plugin_data->output0[f_i],
-            plugin_data->output1[f_i]
+            plugin_data->sc_input[f_i].left,
+            plugin_data->sc_input[f_i].right,
+            plugin_data->output[f_i].left,
+            plugin_data->output[f_i].right
         );
 
-        plugin_data->output0[f_i] = f_cmp->output0;
-        plugin_data->output1[f_i] = f_cmp->output1;
+        plugin_data->output[f_i].left = f_cmp->output0;
+        plugin_data->output[f_i].right = f_cmp->output1;
         ++f_i;
     }
 

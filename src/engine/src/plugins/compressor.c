@@ -35,28 +35,13 @@ void v_sg_comp_on_stop(PluginHandle instance){
 
 void v_sg_comp_connect_buffer(
     PluginHandle instance,
-    int a_index,
-    SGFLT * DataLocation,
+    struct SamplePair* DataLocation,
     int a_is_sidechain
 ){
     t_sg_comp* plugin = (t_sg_comp*)instance;
 
     if(!a_is_sidechain){
-        switch(a_index){
-            case 0:
-                plugin->output0 = DataLocation;
-                break;
-            case 1:
-                plugin->output1 = DataLocation;
-                break;
-            default:
-                sg_assert(
-                    0,
-                    "v_sg_comp_connect_buffer: unknown port %i",
-                    a_index
-                );
-                break;
-        }
+        plugin->output = DataLocation;
     }
 }
 
@@ -237,19 +222,19 @@ void v_sg_comp_run(
             v_cmp_set_rms(f_cmp, (*plugin_data->rms_time) * 0.01f);
             v_cmp_run_rms(
                 f_cmp,
-                plugin_data->output0[f_i],
-                plugin_data->output1[f_i]
+                plugin_data->output[f_i].left,
+                plugin_data->output[f_i].right
             );
         } else {
             v_cmp_run(
                 f_cmp,
-                plugin_data->output0[f_i],
-                plugin_data->output1[f_i]
+                plugin_data->output[f_i].left,
+                plugin_data->output[f_i].right
             );
         }
 
-        plugin_data->output0[f_i] = f_cmp->output0 * f_gain;
-        plugin_data->output1[f_i] = f_cmp->output1 * f_gain;
+        plugin_data->output[f_i].left = f_cmp->output0 * f_gain;
+        plugin_data->output[f_i].right = f_cmp->output1 * f_gain;
         ++f_i;
     }
 

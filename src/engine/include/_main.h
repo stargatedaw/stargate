@@ -23,7 +23,7 @@ void print_help();
 int main_loop();
 void v_run_main_loop(
     int sample_count,
-    SGFLT **output,
+    struct SamplePair* output,
     SGFLT *a_input_buffers
 );
 void set_thread_params();

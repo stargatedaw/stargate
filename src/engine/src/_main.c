@@ -443,18 +443,11 @@ NO_OPTIMIZATION void set_thread_params(){
 
 NO_OPTIMIZATION void alloc_output_buffers(){
     log_info("Allocating output buffers");
+
     hpalloc(
         (void**)&pluginOutputBuffers,
-        2 * sizeof(SGFLT*)
+        sizeof(struct SamplePair) * FRAMES_PER_BUFFER
     );
-
-    int f_i;
-    for(f_i = 0; f_i < 2; ++f_i){
-        hpalloc(
-            (void**)&pluginOutputBuffers[f_i],
-            sizeof(SGFLT) * FRAMES_PER_BUFFER
-        );
-    }
 }
 
 NO_OPTIMIZATION int init_audio_hardware(

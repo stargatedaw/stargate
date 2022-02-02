@@ -107,11 +107,10 @@ typedef struct _PluginDescriptor {
         PluginData * DataLocation
     );
 
-    // Assign the audio buffer at DataLocation to index a_index
+    // Assign the audio buffer at DataLocation
     void (*connect_buffer)(
         PluginHandle Instance,
-        int a_index,
-        SGFLT* DataLocation,
+        struct SamplePair* DataLocation,
         int a_is_sidechain
     );
 
@@ -157,8 +156,7 @@ typedef struct _PluginDescriptor {
     void (*run_mixing)(
         PluginHandle Instance,
         int SampleCount,
-        SGFLT** output_buffers,
-        int output_count,
+        struct SamplePair* output_buffers,
         struct ShdsList* midi_events,
         struct ShdsList* atm_events,
         t_pkm_peak_meter* peak_meter

@@ -48,7 +48,7 @@ typedef struct
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
-    SGFLT * buffers[2];
+    struct SamplePair* buffers;
     PluginData *vol_slider;
     PluginData *gain;
     PluginData *pan;

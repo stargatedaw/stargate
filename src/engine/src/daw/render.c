@@ -35,12 +35,9 @@ void v_daw_offline_render(
 
     SGFLT * f_output = (SGFLT*)malloc(sizeof(SGFLT) * (f_block_size * 2));
 
-    SGFLT ** f_buffer;
-    lmalloc((void**)&f_buffer, sizeof(SGFLT*) * 2);
+    struct SamplePair* f_buffer;
 
-    for(f_i = 0; f_i < 2; ++f_i){
-        lmalloc((void**)&f_buffer[f_i], sizeof(SGFLT) * f_block_size);
-    }
+    lmalloc((void**)&f_buffer, sizeof(struct SamplePair) * f_block_size);
 
     //We must set it back afterwards, or the UI will be wrong...
     int f_old_loop_mode = self->loop_mode;
@@ -101,8 +98,8 @@ void v_daw_offline_render(
         }
 #endif
         for(f_i = 0; f_i < f_block_size; ++f_i){
-            f_buffer[0][f_i] = 0.0f;
-            f_buffer[1][f_i] = 0.0f;
+            f_buffer[f_i].left = 0.0f;
+            f_buffer[f_i].right = 0.0f;
         }
 
         v_daw_run_engine(f_block_size, f_buffer, NULL);
@@ -111,12 +108,13 @@ void v_daw_offline_render(
             for(f_i2 = 0; f_i2 < f_stem_count; ++f_i2){
                 f_size = 0;
                 int f_track_num = f_tps[f_i2];
-                SGFLT ** f_track_buff = self->track_pool[f_track_num]->buffers;
+                struct SamplePair* f_track_buff =
+                    self->track_pool[f_track_num]->buffers;
                 /*Interleave the samples...*/
                 for(f_i = 0; f_i < f_block_size; ++f_i){
-                    f_output[f_size] = f_track_buff[0][f_i];
+                    f_output[f_size] = f_track_buff[f_i].left;
                     ++f_size;
-                    f_output[f_size] = f_track_buff[1][f_i];
+                    f_output[f_size] = f_track_buff[f_i].right;
                     ++f_size;
                 }
 
@@ -129,9 +127,9 @@ void v_daw_offline_render(
         f_size = 0;
         /*Interleave the samples...*/
         for(f_i = 0; f_i < f_block_size; ++f_i){
-            f_output[f_size] = f_buffer[0][f_i];
+            f_output[f_size] = f_buffer[f_i].left;
             ++f_size;
-            f_output[f_size] = f_buffer[1][f_i];
+            f_output[f_size] = f_buffer[f_i].right;
             ++f_size;
         }
 
@@ -178,8 +176,6 @@ void v_daw_offline_render(
 
     sf_close(f_sndfile);
 
-    free(f_buffer[0]);
-    free(f_buffer[1]);
     free(f_buffer);
     free(f_output);
 

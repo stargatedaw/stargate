@@ -117,14 +117,14 @@ void v_spa_compute_fft(t_spa_spectrum_analyzer *a_spa){
  */
 void v_spa_run(
     t_spa_spectrum_analyzer *a_spa,
-    SGFLT * a_buf0,
-    SGFLT * a_buf1,
+    struct SamplePair* buffer,
     int a_count
 ){
     int f_i;
 
     for(f_i = 0; f_i < a_count; ++f_i){
-        a_spa->samples[a_spa->buf_pos] = (a_buf0[f_i] + a_buf1[f_i]) * 0.5f;
+        a_spa->samples[a_spa->buf_pos] =
+            (buffer[f_i].left + buffer[f_i].right) * 0.5f;
         ++a_spa->buf_pos;
 
         if(a_spa->buf_pos >= a_spa->samples_count){

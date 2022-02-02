@@ -45,30 +45,14 @@ void v_sreverb_on_stop(PluginHandle instance){
 
 void v_sreverb_connect_buffer(
     PluginHandle instance,
-    int a_index,
-    SGFLT * DataLocation,
+    struct SamplePair* DataLocation,
     int a_is_sidechain
 ){
     if(a_is_sidechain){
         return;
     }
     t_sreverb *plugin = (t_sreverb*)instance;
-
-    switch(a_index){
-        case 0:
-            plugin->output0 = DataLocation;
-            break;
-        case 1:
-            plugin->output1 = DataLocation;
-            break;
-        default:
-            sg_assert(
-                0,
-                "v_sreverb_connect_buffer: unknown port %i",
-                a_index
-            );
-            break;
-    }
+    plugin->output = DataLocation;
 }
 
 void v_sreverb_connect_port(
@@ -266,8 +250,8 @@ void v_sreverb_run(
 
         v_rvb_reverb_run(
             &mm->reverb,
-            plugin_data->output0[f_i],
-            plugin_data->output1[f_i]
+            plugin_data->output[f_i].left,
+            plugin_data->output[f_i].right
         );
 
         v_sml_run(
@@ -292,12 +276,12 @@ void v_sreverb_run(
             -3.0
         );
 
-        plugin_data->output0[f_i] =
-            (plugin_data->output0[f_i] * f_dry_vol * mm->dry_panner.gainL) +
-            (mm->reverb.output[0] * mm->wet_panner.gainL);
-        plugin_data->output1[f_i] =
-            (plugin_data->output1[f_i] * f_dry_vol * mm->dry_panner.gainR) +
-            (mm->reverb.output[1] * mm->wet_panner.gainR);
+        plugin_data->output[f_i].left = (
+            plugin_data->output[f_i].left * f_dry_vol * mm->dry_panner.gainL
+        ) + (mm->reverb.output[0] * mm->wet_panner.gainL);
+        plugin_data->output[f_i].right = (
+            plugin_data->output[f_i].right * f_dry_vol * mm->dry_panner.gainR
+        ) + (mm->reverb.output[1] * mm->wet_panner.gainR);
     }
 }
 

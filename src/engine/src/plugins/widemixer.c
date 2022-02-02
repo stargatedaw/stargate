@@ -90,58 +90,63 @@ static SGFLT run_widemixer(
 
     if(runvars->invert_mode){
         if(runvars->invert_mode == WIDEMIXER_INVERT_MODE_LEFT){
-            plugin->buffers[0][sample_num] *= -1.0;
+            plugin->buffers[sample_num].left *= -1.0;
         } else if(runvars->invert_mode == WIDEMIXER_INVERT_MODE_RIGHT){
-            plugin->buffers[1][sample_num] *= -1.0;
+            plugin->buffers[sample_num].right *= -1.0;
         } else if(runvars->invert_mode == WIDEMIXER_INVERT_MODE_BOTH){
-            plugin->buffers[0][sample_num] *= -1.0;
-            plugin->buffers[1][sample_num] *= -1.0;
+            plugin->buffers[sample_num].left *= -1.0;
+            plugin->buffers[sample_num].right *= -1.0;
         }
     }
 
     if(runvars->stereo_mode){
         if(runvars->stereo_mode == WIDEMIXER_STEREO_MODE_LEFT){
-            plugin->buffers[1][sample_num] = plugin->buffers[0][sample_num];
+            plugin->buffers[sample_num].right =
+                plugin->buffers[sample_num].left;
         } else if(runvars->stereo_mode == WIDEMIXER_STEREO_MODE_RIGHT){
-            plugin->buffers[0][sample_num] = plugin->buffers[1][sample_num];
+            plugin->buffers[sample_num].left =
+                plugin->buffers[sample_num].right;
         } else if(runvars->stereo_mode == WIDEMIXER_STEREO_MODE_SWAP){
-            tmp = plugin->buffers[0][sample_num];
-            plugin->buffers[0][sample_num] = plugin->buffers[1][sample_num];
-            plugin->buffers[1][sample_num] = tmp;
+            tmp = plugin->buffers[sample_num].left;
+            plugin->buffers[sample_num].left =
+                plugin->buffers[sample_num].right;
+            plugin->buffers[sample_num].right = tmp;
         }
     }
 
-    side[0] = plugin->buffers[0][sample_num] - plugin->buffers[1][sample_num];
-    side[1] = plugin->buffers[1][sample_num] - plugin->buffers[0][sample_num];
-    mid = plugin->buffers[0][sample_num] - side[0];
+    side[0] =
+        plugin->buffers[sample_num].left - plugin->buffers[sample_num].right;
+    side[1] =
+        plugin->buffers[sample_num].right - plugin->buffers[sample_num].left;
+    mid = plugin->buffers[sample_num].left - side[0];
 
     if(runvars->mid_side >= 0.01){
         v_axf_set_xfade(
             &plugin->mono_modules.xfade,
             runvars->mid_side
         );
-        plugin->buffers[0][sample_num] = f_axf_run_xfade(
+        plugin->buffers[sample_num].left = f_axf_run_xfade(
             &plugin->mono_modules.xfade,
-            plugin->buffers[0][sample_num],
+            plugin->buffers[sample_num].left,
             side[0]
         );
-        plugin->buffers[1][sample_num] = f_axf_run_xfade(
+        plugin->buffers[sample_num].right = f_axf_run_xfade(
             &plugin->mono_modules.xfade,
-            plugin->buffers[1][sample_num],
+            plugin->buffers[sample_num].right,
             side[1]
         );
     } else if(runvars->mid_side <= -0.01){
         tmp = runvars->mid_side + 1.0;
         v_axf_set_xfade(&plugin->mono_modules.xfade, tmp);
-        plugin->buffers[0][sample_num] = f_axf_run_xfade(
+        plugin->buffers[sample_num].left = f_axf_run_xfade(
             &plugin->mono_modules.xfade,
             mid,
-            plugin->buffers[0][sample_num]
+            plugin->buffers[sample_num].left
         );
-        plugin->buffers[1][sample_num] = f_axf_run_xfade(
+        plugin->buffers[sample_num].right = f_axf_run_xfade(
             &plugin->mono_modules.xfade,
             mid,
-            plugin->buffers[1][sample_num]
+            plugin->buffers[sample_num].right
         );
     }
 
@@ -168,27 +173,27 @@ static SGFLT run_widemixer(
         v_svf2_run(
             &plugin->mono_modules.bass_mono_filter,
             &plugin->mono_modules.bass_mono_filter.filter_kernels[0][0],
-            plugin->buffers[0][sample_num]
+            plugin->buffers[sample_num].left
         );
         v_svf2_run(
             &plugin->mono_modules.bass_mono_filter,
             &plugin->mono_modules.bass_mono_filter.filter_kernels[0][1],
-            plugin->buffers[1][sample_num]
+            plugin->buffers[sample_num].right
         );
         // 0.708 == -3dB
         if(runvars->bass_mono_solo){
-            plugin->buffers[0][sample_num] = (
+            plugin->buffers[sample_num].left = (
                 filter->filter_kernels[0][0].lp
                 +
                 filter->filter_kernels[0][1].lp
             ) * runvars->bass_mono_low * 0.708;
-            plugin->buffers[1][sample_num] = (
+            plugin->buffers[sample_num].right = (
                 filter->filter_kernels[0][0].lp
                 +
                 filter->filter_kernels[0][1].lp
             ) * runvars->bass_mono_low * 0.708;
         } else {
-            plugin->buffers[0][sample_num] = (
+            plugin->buffers[sample_num].left = (
                 (
                     (
                         filter->filter_kernels[0][0].lp
@@ -203,7 +208,7 @@ static SGFLT run_widemixer(
                     ) * runvars->bass_mono_high
                 )
             );
-            plugin->buffers[1][sample_num] = (
+            plugin->buffers[sample_num].right = (
                 (
                     (
                         filter->filter_kernels[0][0].lp
@@ -221,13 +226,13 @@ static SGFLT run_widemixer(
         }
 
         if(runvars->dc_offset){
-            plugin->buffers[0][sample_num] = f_dco_run(
+            plugin->buffers[sample_num].left = f_dco_run(
                 &plugin->mono_modules.dc_filter[0],
-                plugin->buffers[0][sample_num]
+                plugin->buffers[sample_num].left
             );
-            plugin->buffers[1][sample_num] = f_dco_run(
+            plugin->buffers[sample_num].right = f_dco_run(
                 &plugin->mono_modules.dc_filter[1],
-                plugin->buffers[1][sample_num]
+                plugin->buffers[sample_num].right
             );
         }
     }
@@ -258,8 +263,7 @@ void v_widemixer_on_stop(PluginHandle instance){
 
 void v_widemixer_connect_buffer(
     PluginHandle instance,
-    int a_index,
-    SGFLT* DataLocation,
+    struct SamplePair* DataLocation,
     int a_is_sidechain
 ){
     if(a_is_sidechain){
@@ -267,7 +271,7 @@ void v_widemixer_connect_buffer(
     }
 
     t_widemixer *plugin = (t_widemixer*)instance;
-    plugin->buffers[a_index] = DataLocation;
+    plugin->buffers = DataLocation;
 }
 
 void v_widemixer_connect_port(
@@ -419,8 +423,7 @@ void v_widemixer_process_midi(
 void v_widemixer_run_mixing(
     PluginHandle instance,
     int sample_count,
-    SGFLT ** output_buffers,
-    int output_count,
+    struct SamplePair* output_buffers,
     struct ShdsList* midi_events,
     struct ShdsList * atm_events,
     t_pkm_peak_meter* peak_meter
@@ -445,17 +448,17 @@ void v_widemixer_run_mixing(
             f_i
         );
         if(runvars.mute){
-            plugin_data->buffers[0][f_i] = 0.0;
-            plugin_data->buffers[1][f_i] = 0.0;
+            plugin_data->buffers[f_i].left = 0.0;
+            plugin_data->buffers[f_i].right = 0.0;
             if(peak_meter){
                 v_pkm_run_single(peak_meter, 0.0, 0.0);
             }
             continue;
         }
-        left = plugin_data->buffers[0][f_i] *
+        left = plugin_data->buffers[f_i].left *
             f_vol_linear * runvars.gain *
             plugin_data->mono_modules.panner.gainL;
-        right = plugin_data->buffers[1][f_i] *
+        right = plugin_data->buffers[f_i].right *
             f_vol_linear * runvars.gain *
             plugin_data->mono_modules.panner.gainR;
         if(peak_meter){
@@ -465,8 +468,8 @@ void v_widemixer_run_mixing(
                 right
             );
         }
-        output_buffers[0][f_i] += left;
-        output_buffers[1][f_i] += right;
+        output_buffers[f_i].left += left;
+        output_buffers[f_i].right += right;
     }
 }
 
@@ -495,14 +498,14 @@ void v_widemixer_run(
             f_i
         );
         if(runvars.mute){
-            plugin_data->buffers[0][f_i] = 0.0;
-            plugin_data->buffers[1][f_i] = 0.0;
+            plugin_data->buffers[f_i].left = 0.0;
+            plugin_data->buffers[f_i].right = 0.0;
             continue;
         }
-        plugin_data->buffers[0][f_i] *=
+        plugin_data->buffers[f_i].left *=
             f_vol_linear * runvars.gain *
             plugin_data->mono_modules.panner.gainL;
-        plugin_data->buffers[1][f_i] *=
+        plugin_data->buffers[f_i].right *=
             f_vol_linear * runvars.gain *
             plugin_data->mono_modules.panner.gainR;
     }

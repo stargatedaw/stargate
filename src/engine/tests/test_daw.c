@@ -6,9 +6,8 @@
 void TestDAWE2E(){
     int buffer_size = 128;
     int i;
-    SGFLT** buffer = malloc(sizeof(SGFLT*) * 2);
-    buffer[0] = malloc(sizeof(SGFLT) * buffer_size);
-    buffer[1] = malloc(sizeof(SGFLT) * buffer_size);
+    struct SamplePair* buffer =
+        malloc(sizeof(struct SamplePair) * buffer_size);
     v_activate(
         1,
         "./test_fixtures/projects/daw_e2e",
@@ -27,6 +26,7 @@ void TestDAWE2E(){
     for(i = 0; i < 10; ++i){
         v_daw_run_engine(buffer_size, buffer, NULL);
     }
+    free(buffer);
 }
 
 void TestDAW(){

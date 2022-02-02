@@ -168,10 +168,8 @@ typedef struct {
     char pad1[CACHE_LINE_SIZE];
     int oversample;
     SGFLT os_recip;
-    PluginData *os_bufferL;
-    PluginData *os_bufferR;
-    PluginData *output0;
-    PluginData *output1;
+    struct SamplePair* os_buffer;
+    struct SamplePair* output;
     PluginData *tune;
     PluginData *adsr_lin_main;
     PluginData *attack;

@@ -124,8 +124,7 @@ typedef struct {
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
-    PluginData *output0;
-    PluginData *output1;
+    struct SamplePair* output;
 
     PluginData *eq_freq[6];
     PluginData *eq_res[6];

@@ -63,8 +63,7 @@ struct NabuMonoModules {
 
 struct NabuPlugin {
     char pad1[CACHE_LINE_SIZE];
-    PluginData *output0;
-    PluginData *output1;
+    struct SamplePair* output;
 
     struct FreqSplitterControls splitter_controls;
     PluginData* ui_msg_enabled;
