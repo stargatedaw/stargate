@@ -103,10 +103,7 @@ PluginHandle g_sreverb_instantiate(
         a_plugin_uid
     );
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data,
-        descriptor
-    );
+    g_get_port_table((void**)plugin_data, descriptor);
 
     v_cc_map_init(&plugin_data->cc_map);
 
@@ -285,6 +282,11 @@ void v_sreverb_run(
     }
 }
 
+SGFLT* sreverb_get_port_table(PluginHandle instance){
+    t_sreverb* plugin_data = (t_sreverb*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *sreverb_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(SREVERB_COUNT);
 
@@ -297,10 +299,10 @@ PluginDescriptor *sreverb_plugin_descriptor(){
     set_plugin_port(f_result, SREVERB_DRY_PAN, 0.0f, -100.0f, 100.0f);
     set_plugin_port(f_result, SREVERB_WET_PAN, 0.0f, -100.0f, 100.0f);
 
-
     f_result->cleanup = v_sreverb_cleanup;
     f_result->connect_port = v_sreverb_connect_port;
     f_result->connect_buffer = v_sreverb_connect_buffer;
+    f_result->get_port_table = sreverb_get_port_table;
     f_result->instantiate = g_sreverb_instantiate;
     f_result->panic = v_sreverb_panic;
     f_result->load = v_sreverb_load;

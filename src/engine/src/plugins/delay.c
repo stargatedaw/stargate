@@ -100,8 +100,7 @@ PluginHandle g_sgdelay_instantiate(
         plugin_data->plugin_uid
     );
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data, descriptor);
+    g_get_port_table((void**)plugin_data, descriptor);
 
     v_cc_map_init(&plugin_data->cc_map);
 
@@ -232,6 +231,11 @@ void v_sgdelay_run(
     }
 }
 
+SGFLT* sgdelay_get_port_table(PluginHandle instance){
+    t_sgdelay *plugin_data = (t_sgdelay*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *sgdelay_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(SGDELAY_COUNT);
 
@@ -243,10 +247,10 @@ PluginDescriptor *sgdelay_plugin_descriptor(){
     set_plugin_port(f_result, SGDELAY_CUTOFF, 90.0f, 40.0f, 118.0f);
     set_plugin_port(f_result, SGDELAY_STEREO, 100.0f, 0.0f, 100.0f);
 
-
     f_result->cleanup = v_sgdelay_cleanup;
     f_result->connect_port = v_sgdelay_connect_port;
     f_result->connect_buffer = v_sgdelay_connect_buffer;
+    f_result->get_port_table = sgdelay_get_port_table;
     f_result->instantiate = g_sgdelay_instantiate;
     f_result->panic = v_sgdelay_panic;
     f_result->load = v_sgdelay_load;

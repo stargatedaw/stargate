@@ -740,7 +740,7 @@ typedef struct {
     SGFLT sv_last_note;  //For glide
     SGFLT sv_pitch_bend_value;
     t_plugin_event_queue midi_queue;
-    SGFLT * port_table;
+    SGFLT port_table[FM1_COUNT];
     t_plugin_event_queue atm_queue;
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;

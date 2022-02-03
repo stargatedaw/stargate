@@ -787,8 +787,7 @@ PluginHandle instantiateSampler(
     );
     plugin_data->sampleNo = 0;
 
-    plugin_data->port_table = g_get_port_table(
-            (void**)plugin_data, descriptor);
+    g_get_port_table((void**)plugin_data, descriptor);
 
     v_cc_map_init(&plugin_data->cc_map);
 
@@ -1781,6 +1780,11 @@ void v_sampler1_configure(
     }
 }
 
+SGFLT* sampler1_get_port_table(PluginHandle instance){
+    t_sampler1* plugin_data = (t_sampler1*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *sampler1_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(SAMPLER1_PORT_COUNT);
 
@@ -2085,6 +2089,7 @@ PluginDescriptor *sampler1_plugin_descriptor(){
     f_result->cleanup = cleanupSampler;
     f_result->connect_port = connectPortSampler;
     f_result->connect_buffer = sampler1ConnectBuffer;
+    f_result->get_port_table = sampler1_get_port_table;
     f_result->instantiate = instantiateSampler;
     f_result->panic = sampler1Panic;
     f_result->load = v_sampler1_load;

@@ -258,7 +258,7 @@ typedef struct {
 
     t_plugin_event_queue midi_queue;
     t_plugin_event_queue atm_queue;
-    SGFLT * port_table;
+    SGFLT port_table[VA1_COUNT];
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
     char pad2[CACHE_LINE_SIZE];

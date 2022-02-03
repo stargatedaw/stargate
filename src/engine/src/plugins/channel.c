@@ -90,8 +90,7 @@ PluginHandle g_sgchnl_instantiate(
         plugin_data->plugin_uid
     );
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data, descriptor);
+    g_get_port_table((void**)plugin_data, descriptor);
 
     v_cc_map_init(&plugin_data->cc_map);
 
@@ -328,6 +327,11 @@ void v_sgchnl_run(
     }
 }
 
+SGFLT* sgchnl_get_port_table(PluginHandle instance){
+    t_sgchnl *plugin_data = (t_sgchnl*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *sgchnl_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(SGCHNL_COUNT);
 
@@ -339,6 +343,7 @@ PluginDescriptor *sgchnl_plugin_descriptor(){
     f_result->cleanup = v_sgchnl_cleanup;
     f_result->connect_port = v_sgchnl_connect_port;
     f_result->connect_buffer = v_sgchnl_connect_buffer;
+    f_result->get_port_table = sgchnl_get_port_table;
     f_result->instantiate = g_sgchnl_instantiate;
     f_result->panic = v_sgchnl_panic;
     f_result->load = v_sgchnl_load;

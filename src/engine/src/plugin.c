@@ -318,34 +318,24 @@ PluginData g_get_port_default(PluginDescriptor *plugin, int port){
     return hint.DefaultValue;
 }
 
-SGFLT * g_get_port_table(
+void g_get_port_table(
     PluginHandle * handle,
     PluginDescriptor * descriptor
 ){
-    SGFLT * pluginControlIns;
+    SGFLT* pluginControlIns = descriptor->get_port_table(handle);
     int j;
-    int f_i = 0;
 
-    hpalloc(
-        (void**)(&pluginControlIns),
-        sizeof(SGFLT) * descriptor->PortCount
-    );
-
-    f_i = 0;
-    while(f_i < descriptor->PortCount){
-        pluginControlIns[f_i] = 0.0f;
-        f_i++;
+    for(j = 0; j < descriptor->PortCount; ++j){
+        pluginControlIns[j] = 0.0f;
     }
 
-    for (j = 0; j < descriptor->PortCount; j++){
+    for (j = 0; j < descriptor->PortCount; ++j){
         PluginPortDescriptor pod = descriptor->PortDescriptors[j];
         if(pod){
             pluginControlIns[j] = g_get_port_default(descriptor, j);
             descriptor->connect_port(handle, j, &pluginControlIns[j]);
         }
     }
-
-    return pluginControlIns;
 }
 
 void v_generic_cc_map_set(t_plugin_cc_map * a_cc_map, char * a_str){

@@ -84,8 +84,7 @@ PluginHandle g_sg_lim_instantiate(PluginDescriptor * descriptor,
         a_plugin_uid
     );
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data, descriptor);
+    g_get_port_table((void**)plugin_data, descriptor);
 
     v_cc_map_init(&plugin_data->cc_map);
 
@@ -214,6 +213,11 @@ void v_sg_lim_run(
 }
 
 
+SGFLT* sglim_get_port_table(PluginHandle instance){
+    t_sg_lim *plugin_data = (t_sg_lim*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *sg_lim_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(SG_LIM_COUNT);
 
@@ -225,6 +229,7 @@ PluginDescriptor *sg_lim_plugin_descriptor(){
     f_result->cleanup = v_sg_lim_cleanup;
     f_result->connect_port = v_sg_lim_connect_port;
     f_result->connect_buffer = v_sg_lim_connect_buffer;
+    f_result->get_port_table = sglim_get_port_table;
     f_result->instantiate = g_sg_lim_instantiate;
     f_result->panic = v_sg_lim_panic;
     f_result->load = v_sg_lim_load;

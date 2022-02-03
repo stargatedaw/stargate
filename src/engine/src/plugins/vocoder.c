@@ -90,17 +90,18 @@ PluginHandle g_sg_vocoder_instantiate(PluginDescriptor * descriptor,
         plugin_data->plugin_uid
     );
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data, descriptor);
+    g_get_port_table((void**)plugin_data, descriptor);
 
     v_cc_map_init(&plugin_data->cc_map);
 
     return (PluginHandle) plugin_data;
 }
 
-void v_sg_vocoder_load(PluginHandle instance,
-        PluginDescriptor * Descriptor, char * a_file_path)
-{
+void v_sg_vocoder_load(
+    PluginHandle instance,
+    PluginDescriptor * Descriptor,
+    char * a_file_path
+){
     t_sg_vocoder *plugin_data = (t_sg_vocoder*)instance;
     generic_file_loader(instance, Descriptor,
         a_file_path, plugin_data->port_table, &plugin_data->cc_map);
@@ -165,9 +166,11 @@ void v_sg_vocoder_process_midi(
 
 
 void v_sg_vocoder_run(
-        PluginHandle instance, int sample_count,
-        struct ShdsList * midi_events, struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    struct ShdsList* midi_events,
+    struct ShdsList * atm_events
+){
     t_sg_vocoder *plugin_data = (t_sg_vocoder*)instance;
 
     t_plugin_event_queue_item * f_midi_item;
@@ -248,6 +251,11 @@ void v_sg_vocoder_run(
     }
 }
 
+SGFLT* sg_vocoder_get_port_table(PluginHandle instance){
+    t_sg_vocoder* plugin_data = (t_sg_vocoder*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *sg_vocoder_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(SG_VOCODER_COUNT);
 
@@ -258,6 +266,7 @@ PluginDescriptor *sg_vocoder_plugin_descriptor(){
     f_result->cleanup = v_sg_vocoder_cleanup;
     f_result->connect_port = v_sg_vocoder_connect_port;
     f_result->connect_buffer = v_sg_vocoder_connect_buffer;
+    f_result->get_port_table = sg_vocoder_get_port_table;
     f_result->instantiate = g_sg_vocoder_instantiate;
     f_result->panic = v_sg_vocoder_panic;
     f_result->load = v_sg_vocoder_load;

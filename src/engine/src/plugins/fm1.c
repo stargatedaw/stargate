@@ -737,10 +737,7 @@ PluginHandle g_fm1_instantiate(
     plugin_data->sv_pitch_bend_value = 0.0f;
     plugin_data->sv_last_note = -1.0f;  //For glide
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data,
-        descriptor
-    );
+    g_get_port_table((void**)plugin_data, descriptor);
 
     v_cc_map_init(&plugin_data->cc_map);
 
@@ -1669,6 +1666,10 @@ void v_fm1_configure(
     }
 }
 
+SGFLT* fm1_get_port_table(PluginHandle instance){
+    t_fm1 *plugin_data = (t_fm1*)instance;
+    return plugin_data->port_table;
+}
 
 PluginDescriptor *fm1_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(FM1_COUNT);
@@ -1982,6 +1983,7 @@ PluginDescriptor *fm1_plugin_descriptor(){
     f_result->cleanup = v_cleanup_fm1;
     f_result->connect_port = v_fm1_connect_port;
     f_result->connect_buffer = v_fm1_connect_buffer;
+    f_result->get_port_table = fm1_get_port_table;
     f_result->instantiate = g_fm1_instantiate;
     f_result->panic = fm1Panic;
     f_result->load = v_fm1_load;

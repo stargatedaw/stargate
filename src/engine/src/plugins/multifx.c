@@ -138,10 +138,7 @@ PluginHandle g_multifx_instantiate(
 
     plugin_data->is_on = 0;
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data,
-        descriptor
-    );
+    g_get_port_table((void**)plugin_data, descriptor);
 
     v_cc_map_init(&plugin_data->cc_map);
 
@@ -351,6 +348,11 @@ void v_multifx_run(
     }
 }
 
+SGFLT* multifx_get_port_table(PluginHandle instance){
+    t_multifx *plugin_data = (t_multifx*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *multifx_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(MULTIFX_COUNT);
 
@@ -391,6 +393,7 @@ PluginDescriptor *multifx_plugin_descriptor(){
     f_result->cleanup = v_multifx_cleanup;
     f_result->connect_port = v_multifx_connect_port;
     f_result->connect_buffer = v_multifx_connect_buffer;
+    f_result->get_port_table = multifx_get_port_table;
     f_result->instantiate = g_multifx_instantiate;
     f_result->panic = v_multifx_panic;
     f_result->load = v_multifx_load;

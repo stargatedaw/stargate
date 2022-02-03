@@ -88,7 +88,7 @@ PluginHandle g_sg_comp_instantiate(
         a_plugin_uid
     );
 
-    plugin_data->port_table = g_get_port_table(
+    g_get_port_table(
         (void**)plugin_data,
         descriptor
     );
@@ -252,6 +252,10 @@ void v_sg_comp_run(
     }
 }
 
+SGFLT* sgcomp_get_port_table(PluginHandle instance){
+    t_sg_comp *plugin_data = (t_sg_comp*)instance;
+    return plugin_data->port_table;
+}
 
 PluginDescriptor *sg_comp_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(SG_COMP_COUNT);
@@ -269,6 +273,7 @@ PluginDescriptor *sg_comp_plugin_descriptor(){
     f_result->cleanup = v_sg_comp_cleanup;
     f_result->connect_port = v_sg_comp_connect_port;
     f_result->connect_buffer = v_sg_comp_connect_buffer;
+    f_result->get_port_table = sgcomp_get_port_table;
     f_result->instantiate = g_sg_comp_instantiate;
     f_result->panic = v_sg_comp_panic;
     f_result->load = v_sg_comp_load;

@@ -275,10 +275,7 @@ NO_OPTIMIZATION PluginHandle g_va1_instantiate(
     //initialize all monophonic modules
     v_va1_mono_init(&plugin_data->mono_modules, plugin_data->fs);
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data,
-        descriptor
-    );
+    g_get_port_table((void**)plugin_data, descriptor);
     plugin_data->descriptor = descriptor;
 
     v_cc_map_init(&plugin_data->cc_map);
@@ -881,6 +878,11 @@ void v_run_va1_voice(
         current_sample * a_voice->panner.gainR;
 }
 
+SGFLT* va1_get_port_table(PluginHandle instance){
+    t_va1* plugin_data = (t_va1*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *va1_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(VA1_COUNT);
 
@@ -952,6 +954,7 @@ PluginDescriptor *va1_plugin_descriptor(){
     f_result->cleanup = v_cleanup_va1;
     f_result->connect_port = v_va1_connect_port;
     f_result->connect_buffer = v_va1_connect_buffer;
+    f_result->get_port_table = va1_get_port_table;
     f_result->instantiate = g_va1_instantiate;
     f_result->panic = va1Panic;
     f_result->load = v_va1_load;

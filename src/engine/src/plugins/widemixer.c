@@ -329,10 +329,7 @@ PluginHandle g_widemixer_instantiate(
         plugin_data->plugin_uid
     );
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data,
-        descriptor
-    );
+    g_get_port_table((void**)plugin_data, descriptor);
 
     v_cc_map_init(&plugin_data->cc_map);
 
@@ -511,6 +508,11 @@ void v_widemixer_run(
     }
 }
 
+SGFLT* widemixer_get_port_table(PluginHandle instance){
+    t_widemixer* plugin_data = (t_widemixer*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *widemixer_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(WIDEMIXER_COUNT);
 
@@ -533,6 +535,7 @@ PluginDescriptor *widemixer_plugin_descriptor(){
     f_result->cleanup = v_widemixer_cleanup;
     f_result->connect_port = v_widemixer_connect_port;
     f_result->connect_buffer = v_widemixer_connect_buffer;
+    f_result->get_port_table = widemixer_get_port_table;
     f_result->instantiate = g_widemixer_instantiate;
     f_result->panic = v_widemixer_panic;
     f_result->load = v_widemixer_load;

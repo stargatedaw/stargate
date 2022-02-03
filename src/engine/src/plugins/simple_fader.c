@@ -84,19 +84,18 @@ PluginHandle g_sfader_instantiate(PluginDescriptor * descriptor,
         plugin_data->plugin_uid
     );
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data,
-        descriptor
-    );
+    g_get_port_table((void**)plugin_data, descriptor);
 
     v_cc_map_init(&plugin_data->cc_map);
 
     return (PluginHandle) plugin_data;
 }
 
-void v_sfader_load(PluginHandle instance,
-        PluginDescriptor * Descriptor, char * a_file_path)
-{
+void v_sfader_load(
+    PluginHandle instance,
+    PluginDescriptor * Descriptor,
+    char * a_file_path
+){
     t_sfader *plugin_data = (t_sfader*)instance;
     generic_file_loader(
         instance,
@@ -107,9 +106,11 @@ void v_sfader_load(PluginHandle instance,
     );
 }
 
-void v_sfader_set_port_value(PluginHandle Instance,
-        int a_port, SGFLT a_value)
-{
+void v_sfader_set_port_value(
+    PluginHandle Instance,
+    int a_port,
+    SGFLT a_value
+){
     t_sfader *plugin_data = (t_sfader*)Instance;
     plugin_data->port_table[a_port] = a_value;
 }
@@ -138,9 +139,10 @@ void v_sfader_process_midi_event(
 
 
 void v_sfader_process_midi(
-        PluginHandle instance, struct ShdsList * events,
-        struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    struct ShdsList * events,
+    struct ShdsList * atm_events
+){
     t_sfader *plugin_data = (t_sfader*)instance;
     int f_i = 0;
     v_plugin_event_queue_reset(&plugin_data->midi_queue);
@@ -295,6 +297,11 @@ void v_sfader_run(
     }
 }
 
+SGFLT* sfader_get_port_table(PluginHandle instance){
+    t_sfader* plugin_data = (t_sfader*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *sfader_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(SFADER_COUNT);
 
@@ -303,6 +310,7 @@ PluginDescriptor *sfader_plugin_descriptor(){
     f_result->cleanup = v_sfader_cleanup;
     f_result->connect_port = v_sfader_connect_port;
     f_result->connect_buffer = v_sfader_connect_buffer;
+    f_result->get_port_table = sfader_get_port_table;
     f_result->instantiate = g_sfader_instantiate;
     f_result->panic = v_sfader_panic;
     f_result->load = v_sfader_load;

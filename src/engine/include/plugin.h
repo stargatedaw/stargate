@@ -122,6 +122,7 @@ typedef struct _PluginDescriptor {
         struct _PluginDescriptor * Descriptor,
         char * a_file_path
     );
+    SGFLT* (*get_port_table)(PluginHandle instance);
 
     void (*set_port_value)(PluginHandle Instance, int a_port, SGFLT a_value);
 
@@ -243,7 +244,7 @@ void v_ev_set_atm(
     int a_port_num,
     int a_value
 );
-SGFLT * g_get_port_table(
+void g_get_port_table(
     PluginHandle * handle,
     PluginDescriptor * descriptor
 );

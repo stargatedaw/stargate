@@ -109,10 +109,7 @@ PluginHandle g_triggerfx_instantiate(
         plugin_data->plugin_uid
     );
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data,
-        descriptor
-    );
+    g_get_port_table((void**)plugin_data, descriptor);
 
     v_cc_map_init(&plugin_data->cc_map);
 
@@ -409,6 +406,11 @@ void v_triggerfx_run(
 
 }
 
+SGFLT* triggerfx_get_port_table(PluginHandle instance){
+    t_triggerfx* plugin_data = (t_triggerfx*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *triggerfx_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(TRIGGERFX_COUNT);
 
@@ -425,6 +427,7 @@ PluginDescriptor *triggerfx_plugin_descriptor(){
     f_result->cleanup = v_triggerfx_cleanup;
     f_result->connect_port = v_triggerfx_connect_port;
     f_result->connect_buffer = v_triggerfx_connect_buffer;
+    f_result->get_port_table = triggerfx_get_port_table;
     f_result->instantiate = g_triggerfx_instantiate;
     f_result->panic = v_triggerfx_panic;
     f_result->load = v_triggerfx_load;

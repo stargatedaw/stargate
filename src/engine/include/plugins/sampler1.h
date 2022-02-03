@@ -67,261 +67,6 @@ GNU General Public License for more details.
 #define SAMPLER1_MONO_FX_GROUPS_COUNT SAMPLER1_MAX_SAMPLE_COUNT
 #define SAMPLER1_MONO_FX_COUNT 4
 
-struct st_sampler1;
-
-typedef struct
-{
-    t_mf3_multi multieffect[SAMPLER1_MONO_FX_COUNT];
-    fp_mf3_run fx_func_ptr[SAMPLER1_MONO_FX_COUNT];
-    t_eq6 eqs;
-}t_sampler1_mfx_group;
-
-typedef struct
-{
-    fp_mf3_run fx_func_ptr;
-    fp_mf3_reset fx_reset_ptr;
-    t_mf3_multi multieffect;
-    int polyfx_mod_counts;
-}t_sampler1_pfx_group;
-
-typedef struct {
-    t_smoother_linear pitchbend_smoother;
-
-    t_dco_dc_offset_filter dc_offset_filters[2];
-    t_sampler1_mfx_group mfx[SAMPLER1_MONO_FX_GROUPS_COUNT];
-
-    t_white_noise white_noise1[SAMPLER1_NOISE_COUNT];
-    int noise_current_index;
-
-    t_sinc_interpolator sinc_interpolator;
-} t_sampler1_mono_modules;
-
-typedef struct
-{
-    int sample_fade_in_end_sample;
-    SGFLT sample_fade_in_inc;
-    int sample_fade_out_start_sample;
-    SGFLT sample_fade_out_dec;
-    SGFLT sample_fade_amp;
-    t_int_frac_read_head sample_read_heads;
-    SGFLT vel_sens_output;
-}t_sampler1_pfx_sample;
-
-typedef struct
-{
-    t_pn2_panner2 panner;
-    t_adsr adsr_filter;
-    fp_adsr_run adsr_run_func;
-    t_adsr adsr_amp;
-    t_ramp_env glide_env;
-    t_ramp_env ramp_env;
-
-    // For glide
-    SGFLT last_pitch;
-    SGFLT base_pitch;
-
-    SGFLT target_pitch;
-
-    SGFLT filter_output;  //For assigning the filter output to
-
-    // This corresponds to the current sample being processed on this voice.
-    // += this to the output buffer when finished.
-    SGFLT current_sample;
-
-    t_lfs_lfo lfo1;
-
-    SGFLT note_f;
-    SGFLT noise_sample;
-
-    t_sampler1_pfx_sample samples[SAMPLER1_MAX_SAMPLE_COUNT];
-
-    t_sampler1_pfx_group effects [SAMPLER1_MODULAR_POLYFX_COUNT];
-
-    SGFLT multifx_current_sample[2];
-
-    SGFLT * modulator_outputs[SAMPLER1_MODULATOR_COUNT];
-
-    int noise_index;
-
-    SGFLT velocity_track;
-    SGFLT keyboard_track;
-    int velocities;
-
-    //Sample indexes for each note to play
-    int sample_indexes[SAMPLER1_MAX_SAMPLE_COUNT];
-    //The count of sample indexes to iterate through
-    int sample_indexes_count;
-
-    //PolyFX modulation streams
-     //The index of the control to mod, currently 0-2
-    int polyfx_mod_ctrl_indexes[SAMPLER1_MODULAR_POLYFX_COUNT][
-        (SAMPLER1_CONTROLS_PER_MOD_EFFECT * SAMPLER1_MODULATOR_COUNT)];
-    //The index of the modulation source(LFO, ADSR, etc...) to multiply by
-    int polyfx_mod_src_index[SAMPLER1_MODULAR_POLYFX_COUNT][
-        (SAMPLER1_CONTROLS_PER_MOD_EFFECT * SAMPLER1_MODULATOR_COUNT)];
-    //The value of the mod_matrix knob, multiplied by .01
-    SGFLT polyfx_mod_matrix_values[SAMPLER1_MODULAR_POLYFX_COUNT][
-        (SAMPLER1_CONTROLS_PER_MOD_EFFECT * SAMPLER1_MODULATOR_COUNT)];
-
-    //Active PolyFX to process
-    int active_polyfx[SAMPLER1_MODULAR_POLYFX_COUNT];
-    int active_polyfx_count;
-
-} t_sampler1_poly_voice;
-
-typedef struct {
-    PluginData *basePitch;
-    PluginData *low_note;
-    PluginData *high_note;
-    PluginData *sample_vol;
-    PluginData *sampleStarts;
-    PluginData *sampleEnds;
-    PluginData *sampleLoopStarts;
-    PluginData *sampleLoopEnds;
-    PluginData *sampleLoopModes;
-    PluginData *sampleFadeInEnds;
-    PluginData *sampleFadeOutStarts;
-    PluginData *sample_vel_sens;
-    PluginData *sample_vel_low;
-    PluginData *sample_vel_high;
-    PluginData *sample_pitch;
-    PluginData *sample_tune;
-    PluginData *sample_interpolation_mode;
-    PluginData *noise_amp;
-    PluginData *noise_type;
-    //For the per-sample interpolation modes
-    int (*ratio_function_ptr)(struct st_sampler1 * plugin_data, int n);
-    void (*interpolation_mode)(struct st_sampler1 * plugin_data, int n, int ch);
-    SGFLT       sample_last_interpolated_value;
-    t_audio_pool_item * audio_pool_items;
-    SGFLT       sampleStartPos;
-    SGFLT       sampleEndPos;
-    // There is no sampleLoopEndPos because the regular
-    // sample end is re-used for this purpose
-    SGFLT       sampleLoopStartPos;
-    SGFLT       sample_amp;     //linear, for multiplying
-    SGFLT adjusted_base_pitch;
-    fp_noise_func_ptr noise_func_ptr;
-    int noise_index;
-    SGFLT noise_linamp;
-}t_sampler1_sample;
-
-typedef struct st_sampler1 {
-    char pad1[CACHE_LINE_SIZE];
-    struct SamplePair* output;
-    t_sampler1_sample samples[SAMPLER1_MAX_SAMPLE_COUNT];
-
-    PluginData *mfx_knobs[SAMPLER1_MONO_FX_GROUPS_COUNT][
-        SAMPLER1_MONO_FX_COUNT][SAMPLER1_CONTROLS_PER_MOD_EFFECT];
-    PluginData *mfx_comboboxes[SAMPLER1_MONO_FX_GROUPS_COUNT][
-        SAMPLER1_MONO_FX_COUNT];
-
-    PluginData *main_pitch;
-    PluginData *adsr_lin_main;
-    PluginData *attack;
-    PluginData *attack_start;
-    PluginData *attack_end;
-    PluginData *decay;
-    PluginData *decay_start;
-    PluginData *decay_end;
-    PluginData *sustain;
-    PluginData *sustain_start;
-    PluginData *sustain_end;
-    PluginData *release;
-    PluginData *release_start;
-    PluginData *release_end;
-
-    PluginData *attack_f;
-    PluginData *decay_f;
-    PluginData *sustain_f;
-    PluginData *release_f;
-
-    PluginData *main_vol;
-
-    PluginData *main_glide;
-    PluginData *main_pb_amt;
-
-    PluginData *pitch_env_time;
-
-    PluginData *lfo_freq;
-    PluginData *lfo_type;
-    PluginData *lfo_pitch;
-    PluginData *lfo_pitch_fine;
-
-    PluginData *min_note;
-    PluginData *max_note;
-
-    //Corresponds to the actual knobs on the effects themselves,
-    //not the mod matrix
-    PluginData *pfx_mod_knob[SAMPLER1_MODULAR_POLYFX_COUNT][
-        SAMPLER1_CONTROLS_PER_MOD_EFFECT];
-
-    PluginData *fx_combobox[SAMPLER1_MODULAR_POLYFX_COUNT];
-
-    //PolyFX Mod Matrix
-    //Corresponds to the mod matrix spinboxes
-    PluginData *polyfx_mod_matrix[SAMPLER1_MODULAR_POLYFX_COUNT][
-        SAMPLER1_MODULATOR_COUNT][SAMPLER1_CONTROLS_PER_MOD_EFFECT];
-
-    //End from PolyFX Mod Matrix
-
-    //These 2 calculate which channels are assigned to a sample
-    //and should be processed
-    int monofx_channel_index[SAMPLER1_MONO_FX_GROUPS_COUNT];
-    int monofx_channel_index_count;
-    //Tracks which indexes are in use
-    int monofx_channel_index_tracker[SAMPLER1_MONO_FX_GROUPS_COUNT];
-    //The MonoFX group selected for each sample
-    PluginData *sample_mfx_groups[SAMPLER1_MONO_FX_GROUPS_COUNT];
-    int sample_mfx_groups_index[SAMPLER1_MONO_FX_GROUPS_COUNT];
-    /*TODO:  Deprecate these 2?*/
-    int loaded_samples[SAMPLER1_MAX_SAMPLE_COUNT];
-    int loaded_samples_count;
-    /*Used as a boolean when determining if a sample has already been loaded*/
-    int sample_is_loaded;
-    /*The index of the current sample being played*/
-    int current_sample;
-
-    SGFLT ratio;
-    t_voc_voices * voices;
-    long         sampleNo;
-
-    SGFLT sample[2];
-
-    t_sampler1_mono_modules mono_modules;
-    t_pit_ratio * smp_pit_ratio;
-    t_sampler1_poly_voice * data[SAMPLER1_POLYPHONY];
-
-    //These are used for storing the mono FX buffers from the polyphonic voices.
-    SGFLT mono_fx_buffers[SAMPLER1_MONO_FX_GROUPS_COUNT][2];
-    //For indexing operations that don't need to track realtime events closely
-    int i_slow_index;
-
-    SGFLT amp;  //linear amplitude, from the main volume knob
-
-    SGFLT sv_pitch_bend_value;
-    SGFLT sv_last_note;  //For glide
-
-    t_plugin_event_queue midi_queue;
-    t_plugin_event_queue atm_queue;
-    SGFLT * port_table;
-    int plugin_uid;
-    t_plugin_cc_map cc_map;
-    PluginDescriptor * descriptor;
-    char pad2[CACHE_LINE_SIZE];
-} t_sampler1;
-
-
-t_sampler1_poly_voice * g_sampler1_poly_init(SGFLT);
-
-void v_sampler1_poly_note_off(
-    t_sampler1_poly_voice * a_voice,
-    int a_fast_release
-);
-
-void g_sampler1_mono_init(t_sampler1_mono_modules*, SGFLT);
-PluginDescriptor *sampler1_plugin_descriptor();
-
 // Ports
 
 #define SAMPLER1_LABEL "Sampler1"
@@ -585,5 +330,259 @@ PluginDescriptor *sampler1_plugin_descriptor();
 #define SAMPLER1_RELEASE_END 5518
 
 #define SAMPLER1_PORT_COUNT 5519
+struct st_sampler1;
+
+typedef struct
+{
+    t_mf3_multi multieffect[SAMPLER1_MONO_FX_COUNT];
+    fp_mf3_run fx_func_ptr[SAMPLER1_MONO_FX_COUNT];
+    t_eq6 eqs;
+}t_sampler1_mfx_group;
+
+typedef struct
+{
+    fp_mf3_run fx_func_ptr;
+    fp_mf3_reset fx_reset_ptr;
+    t_mf3_multi multieffect;
+    int polyfx_mod_counts;
+}t_sampler1_pfx_group;
+
+typedef struct {
+    t_smoother_linear pitchbend_smoother;
+
+    t_dco_dc_offset_filter dc_offset_filters[2];
+    t_sampler1_mfx_group mfx[SAMPLER1_MONO_FX_GROUPS_COUNT];
+
+    t_white_noise white_noise1[SAMPLER1_NOISE_COUNT];
+    int noise_current_index;
+
+    t_sinc_interpolator sinc_interpolator;
+} t_sampler1_mono_modules;
+
+typedef struct
+{
+    int sample_fade_in_end_sample;
+    SGFLT sample_fade_in_inc;
+    int sample_fade_out_start_sample;
+    SGFLT sample_fade_out_dec;
+    SGFLT sample_fade_amp;
+    t_int_frac_read_head sample_read_heads;
+    SGFLT vel_sens_output;
+}t_sampler1_pfx_sample;
+
+typedef struct
+{
+    t_pn2_panner2 panner;
+    t_adsr adsr_filter;
+    fp_adsr_run adsr_run_func;
+    t_adsr adsr_amp;
+    t_ramp_env glide_env;
+    t_ramp_env ramp_env;
+
+    // For glide
+    SGFLT last_pitch;
+    SGFLT base_pitch;
+
+    SGFLT target_pitch;
+
+    SGFLT filter_output;  //For assigning the filter output to
+
+    // This corresponds to the current sample being processed on this voice.
+    // += this to the output buffer when finished.
+    SGFLT current_sample;
+
+    t_lfs_lfo lfo1;
+
+    SGFLT note_f;
+    SGFLT noise_sample;
+
+    t_sampler1_pfx_sample samples[SAMPLER1_MAX_SAMPLE_COUNT];
+
+    t_sampler1_pfx_group effects [SAMPLER1_MODULAR_POLYFX_COUNT];
+
+    SGFLT multifx_current_sample[2];
+
+    SGFLT * modulator_outputs[SAMPLER1_MODULATOR_COUNT];
+
+    int noise_index;
+
+    SGFLT velocity_track;
+    SGFLT keyboard_track;
+    int velocities;
+
+    //Sample indexes for each note to play
+    int sample_indexes[SAMPLER1_MAX_SAMPLE_COUNT];
+    //The count of sample indexes to iterate through
+    int sample_indexes_count;
+
+    //PolyFX modulation streams
+     //The index of the control to mod, currently 0-2
+    int polyfx_mod_ctrl_indexes[SAMPLER1_MODULAR_POLYFX_COUNT][
+        (SAMPLER1_CONTROLS_PER_MOD_EFFECT * SAMPLER1_MODULATOR_COUNT)];
+    //The index of the modulation source(LFO, ADSR, etc...) to multiply by
+    int polyfx_mod_src_index[SAMPLER1_MODULAR_POLYFX_COUNT][
+        (SAMPLER1_CONTROLS_PER_MOD_EFFECT * SAMPLER1_MODULATOR_COUNT)];
+    //The value of the mod_matrix knob, multiplied by .01
+    SGFLT polyfx_mod_matrix_values[SAMPLER1_MODULAR_POLYFX_COUNT][
+        (SAMPLER1_CONTROLS_PER_MOD_EFFECT * SAMPLER1_MODULATOR_COUNT)];
+
+    //Active PolyFX to process
+    int active_polyfx[SAMPLER1_MODULAR_POLYFX_COUNT];
+    int active_polyfx_count;
+
+} t_sampler1_poly_voice;
+
+typedef struct {
+    PluginData *basePitch;
+    PluginData *low_note;
+    PluginData *high_note;
+    PluginData *sample_vol;
+    PluginData *sampleStarts;
+    PluginData *sampleEnds;
+    PluginData *sampleLoopStarts;
+    PluginData *sampleLoopEnds;
+    PluginData *sampleLoopModes;
+    PluginData *sampleFadeInEnds;
+    PluginData *sampleFadeOutStarts;
+    PluginData *sample_vel_sens;
+    PluginData *sample_vel_low;
+    PluginData *sample_vel_high;
+    PluginData *sample_pitch;
+    PluginData *sample_tune;
+    PluginData *sample_interpolation_mode;
+    PluginData *noise_amp;
+    PluginData *noise_type;
+    //For the per-sample interpolation modes
+    int (*ratio_function_ptr)(struct st_sampler1 * plugin_data, int n);
+    void (*interpolation_mode)(struct st_sampler1 * plugin_data, int n, int ch);
+    SGFLT       sample_last_interpolated_value;
+    t_audio_pool_item * audio_pool_items;
+    SGFLT       sampleStartPos;
+    SGFLT       sampleEndPos;
+    // There is no sampleLoopEndPos because the regular
+    // sample end is re-used for this purpose
+    SGFLT       sampleLoopStartPos;
+    SGFLT       sample_amp;     //linear, for multiplying
+    SGFLT adjusted_base_pitch;
+    fp_noise_func_ptr noise_func_ptr;
+    int noise_index;
+    SGFLT noise_linamp;
+}t_sampler1_sample;
+
+typedef struct st_sampler1 {
+    char pad1[CACHE_LINE_SIZE];
+    struct SamplePair* output;
+    t_sampler1_sample samples[SAMPLER1_MAX_SAMPLE_COUNT];
+
+    PluginData *mfx_knobs[SAMPLER1_MONO_FX_GROUPS_COUNT][
+        SAMPLER1_MONO_FX_COUNT][SAMPLER1_CONTROLS_PER_MOD_EFFECT];
+    PluginData *mfx_comboboxes[SAMPLER1_MONO_FX_GROUPS_COUNT][
+        SAMPLER1_MONO_FX_COUNT];
+
+    PluginData *main_pitch;
+    PluginData *adsr_lin_main;
+    PluginData *attack;
+    PluginData *attack_start;
+    PluginData *attack_end;
+    PluginData *decay;
+    PluginData *decay_start;
+    PluginData *decay_end;
+    PluginData *sustain;
+    PluginData *sustain_start;
+    PluginData *sustain_end;
+    PluginData *release;
+    PluginData *release_start;
+    PluginData *release_end;
+
+    PluginData *attack_f;
+    PluginData *decay_f;
+    PluginData *sustain_f;
+    PluginData *release_f;
+
+    PluginData *main_vol;
+
+    PluginData *main_glide;
+    PluginData *main_pb_amt;
+
+    PluginData *pitch_env_time;
+
+    PluginData *lfo_freq;
+    PluginData *lfo_type;
+    PluginData *lfo_pitch;
+    PluginData *lfo_pitch_fine;
+
+    PluginData *min_note;
+    PluginData *max_note;
+
+    //Corresponds to the actual knobs on the effects themselves,
+    //not the mod matrix
+    PluginData *pfx_mod_knob[SAMPLER1_MODULAR_POLYFX_COUNT][
+        SAMPLER1_CONTROLS_PER_MOD_EFFECT];
+
+    PluginData *fx_combobox[SAMPLER1_MODULAR_POLYFX_COUNT];
+
+    //PolyFX Mod Matrix
+    //Corresponds to the mod matrix spinboxes
+    PluginData *polyfx_mod_matrix[SAMPLER1_MODULAR_POLYFX_COUNT][
+        SAMPLER1_MODULATOR_COUNT][SAMPLER1_CONTROLS_PER_MOD_EFFECT];
+
+    //End from PolyFX Mod Matrix
+
+    //These 2 calculate which channels are assigned to a sample
+    //and should be processed
+    int monofx_channel_index[SAMPLER1_MONO_FX_GROUPS_COUNT];
+    int monofx_channel_index_count;
+    //Tracks which indexes are in use
+    int monofx_channel_index_tracker[SAMPLER1_MONO_FX_GROUPS_COUNT];
+    //The MonoFX group selected for each sample
+    PluginData *sample_mfx_groups[SAMPLER1_MONO_FX_GROUPS_COUNT];
+    int sample_mfx_groups_index[SAMPLER1_MONO_FX_GROUPS_COUNT];
+    /*TODO:  Deprecate these 2?*/
+    int loaded_samples[SAMPLER1_MAX_SAMPLE_COUNT];
+    int loaded_samples_count;
+    /*Used as a boolean when determining if a sample has already been loaded*/
+    int sample_is_loaded;
+    /*The index of the current sample being played*/
+    int current_sample;
+
+    SGFLT ratio;
+    t_voc_voices * voices;
+    long         sampleNo;
+
+    SGFLT sample[2];
+
+    t_sampler1_mono_modules mono_modules;
+    t_pit_ratio * smp_pit_ratio;
+    t_sampler1_poly_voice * data[SAMPLER1_POLYPHONY];
+
+    //These are used for storing the mono FX buffers from the polyphonic voices.
+    SGFLT mono_fx_buffers[SAMPLER1_MONO_FX_GROUPS_COUNT][2];
+    //For indexing operations that don't need to track realtime events closely
+    int i_slow_index;
+
+    SGFLT amp;  //linear amplitude, from the main volume knob
+
+    SGFLT sv_pitch_bend_value;
+    SGFLT sv_last_note;  //For glide
+
+    t_plugin_event_queue midi_queue;
+    t_plugin_event_queue atm_queue;
+    SGFLT port_table[SAMPLER1_PORT_COUNT];
+    int plugin_uid;
+    t_plugin_cc_map cc_map;
+    PluginDescriptor * descriptor;
+    char pad2[CACHE_LINE_SIZE];
+} t_sampler1;
+
+
+t_sampler1_poly_voice * g_sampler1_poly_init(SGFLT);
+
+void v_sampler1_poly_note_off(
+    t_sampler1_poly_voice * a_voice,
+    int a_fast_release
+);
+
+void g_sampler1_mono_init(t_sampler1_mono_modules*, SGFLT);
+PluginDescriptor *sampler1_plugin_descriptor();
 
 #endif

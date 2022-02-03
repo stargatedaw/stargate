@@ -155,7 +155,7 @@ typedef struct {
     int plugin_uid;
     fp_queue_message queue_func;
 
-    SGFLT * port_table;
+    SGFLT port_table[SGEQ_COUNT];
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
     char pad2[CACHE_LINE_SIZE];

@@ -141,7 +141,7 @@ PluginHandle g_nabu_instantiate(
 
     plugin_data->is_on = 0;
 
-    plugin_data->port_table = g_get_port_table(
+    g_get_port_table(
         (void**)plugin_data,
         descriptor
     );
@@ -435,6 +435,11 @@ void v_nabu_run(
     }
 }
 
+SGFLT* nabu_get_port_table(PluginHandle instance){
+    struct NabuPlugin *plugin_data = (struct NabuPlugin*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor* nabu_plugin_descriptor(){
     int i, j, port;
     PluginDescriptor* f_result = get_plugin_descriptor(NABU_PORT_COUNT);
@@ -549,6 +554,7 @@ PluginDescriptor* nabu_plugin_descriptor(){
     f_result->cleanup = v_nabu_cleanup;
     f_result->connect_port = v_nabu_connect_port;
     f_result->connect_buffer = v_nabu_connect_buffer;
+    f_result->get_port_table = nabu_get_port_table;
     f_result->instantiate = g_nabu_instantiate;
     f_result->panic = v_nabu_panic;
     f_result->load = v_nabu_load;

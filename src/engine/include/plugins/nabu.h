@@ -82,7 +82,7 @@ struct NabuPlugin {
     int plugin_uid;
     fp_queue_message queue_func;
 
-    SGFLT * port_table;
+    SGFLT port_table[NABU_PORT_COUNT];
     t_plugin_cc_map cc_map;
     PluginDescriptor * descriptor;
     char msg_buff[1024];

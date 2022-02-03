@@ -167,10 +167,7 @@ PluginHandle g_sgeq_instantiate(
         plugin_data->plugin_uid
     );
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data,
-        descriptor
-    );
+    g_get_port_table((void**)plugin_data, descriptor);
 
     v_cc_map_init(&plugin_data->cc_map);
 
@@ -438,6 +435,11 @@ void v_sgeq_run(
 
 }
 
+SGFLT* sgeq_get_port_table(PluginHandle instance){
+    t_sgeq *plugin_data = (t_sgeq*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *sgeq_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(SGEQ_COUNT);
 
@@ -514,6 +516,7 @@ PluginDescriptor *sgeq_plugin_descriptor(){
     f_result->cleanup = v_sgeq_cleanup;
     f_result->connect_port = v_sgeq_connect_port;
     f_result->connect_buffer = v_sgeq_connect_buffer;
+    f_result->get_port_table = sgeq_get_port_table;
     f_result->instantiate = g_sgeq_instantiate;
     f_result->panic = v_sgeq_panic;
     f_result->load = v_sgeq_load;

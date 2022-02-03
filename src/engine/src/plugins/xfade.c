@@ -88,9 +88,7 @@ PluginHandle g_xfade_instantiate(PluginDescriptor * descriptor,
         plugin_data->plugin_uid
     );
 
-    plugin_data->port_table = g_get_port_table(
-        (void**)plugin_data, descriptor);
-
+    g_get_port_table((void**)plugin_data, descriptor);
     v_cc_map_init(&plugin_data->cc_map);
 
     return (PluginHandle) plugin_data;
@@ -220,6 +218,11 @@ void v_xfade_run(
     }
 }
 
+SGFLT* xfade_get_port_table(PluginHandle instance){
+    t_xfade* plugin_data = (t_xfade*)instance;
+    return plugin_data->port_table;
+}
+
 PluginDescriptor *xfade_plugin_descriptor(){
     PluginDescriptor *f_result = get_plugin_descriptor(XFADE_COUNT);
 
@@ -229,6 +232,7 @@ PluginDescriptor *xfade_plugin_descriptor(){
     f_result->cleanup = v_xfade_cleanup;
     f_result->connect_port = v_xfade_connect_port;
     f_result->connect_buffer = v_xfade_connect_buffer;
+    f_result->get_port_table = xfade_get_port_table;
     f_result->instantiate = g_xfade_instantiate;
     f_result->panic = v_xfade_panic;
     f_result->load = v_xfade_load;
