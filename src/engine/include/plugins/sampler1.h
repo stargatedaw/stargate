@@ -553,7 +553,7 @@ typedef struct st_sampler1 {
 
     t_sampler1_mono_modules mono_modules;
     t_pit_ratio * smp_pit_ratio;
-    t_sampler1_poly_voice * data[SAMPLER1_POLYPHONY];
+    t_sampler1_poly_voice data[SAMPLER1_POLYPHONY];
 
     //These are used for storing the mono FX buffers from the polyphonic voices.
     SGFLT mono_fx_buffers[SAMPLER1_MONO_FX_GROUPS_COUNT][2];
@@ -575,7 +575,7 @@ typedef struct st_sampler1 {
 } t_sampler1;
 
 
-t_sampler1_poly_voice * g_sampler1_poly_init(SGFLT);
+void g_sampler1_poly_init(t_sampler1_poly_voice*, SGFLT);
 
 void v_sampler1_poly_note_off(
     t_sampler1_poly_voice * a_voice,
