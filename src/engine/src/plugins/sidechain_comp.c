@@ -122,30 +122,6 @@ void v_scc_set_port_value(
     plugin_data->port_table[a_port] = a_value;
 }
 
-void v_scc_process_midi_event(
-    t_scc * plugin_data,
-    t_seq_event * a_event
-){
-    if (a_event->type == EVENT_CONTROLLER){
-        sg_assert(
-            a_event->param >= 1 && a_event->param < 128,
-            "v_scc_process_midi_event: param %i out of range 1 to 129",
-            a_event->param
-        );
-
-        plugin_data->midi_event_types[plugin_data->midi_event_count] =
-                EVENT_CONTROLLER;
-        plugin_data->midi_event_ticks[plugin_data->midi_event_count] =
-                a_event->tick;
-        plugin_data->midi_event_ports[plugin_data->midi_event_count] =
-                a_event->param;
-        plugin_data->midi_event_values[plugin_data->midi_event_count] =
-                a_event->value;
-
-        ++plugin_data->midi_event_count;
-    }
-}
-
 void v_scc_run(
     PluginHandle instance,
     int sample_count,
@@ -153,61 +129,24 @@ void v_scc_run(
     struct ShdsList* atm_events
 ){
     t_scc *plugin_data = (t_scc*)instance;
-
-    t_seq_event **events = (t_seq_event**)midi_events->data;
-
-    int event_count = midi_events->len;
-
     t_scc_sidechain_comp * f_cmp = &plugin_data->mono_modules.sidechain_comp;
+    int f_i;
 
-    int f_i = 0;
-    int midi_event_pos = 0;
-    plugin_data->midi_event_count = 0;
+    effect_translate_midi_events(
+        midi_events,
+        &plugin_data->midi_events,
+        &plugin_data->atm_queue,
+        atm_events
+    );
 
-    for(f_i = 0; f_i < event_count; ++f_i){
-        v_scc_process_midi_event(plugin_data, events[f_i]);
-    }
-
-    v_plugin_event_queue_reset(&plugin_data->atm_queue);
-
-    t_seq_event * ev_tmp;
-    for(f_i = 0; f_i < atm_events->len; ++f_i){
-        ev_tmp = (t_seq_event*)atm_events->data[f_i];
-        v_plugin_event_queue_add(
-            &plugin_data->atm_queue,
-            ev_tmp->type,
-            ev_tmp->tick,
-            ev_tmp->value,
-            ev_tmp->port
-        );
-    }
-
-    f_i = 0;
-
-    while(f_i < sample_count){
-        while(
-            midi_event_pos < plugin_data->midi_event_count
-            &&
-            plugin_data->midi_event_ticks[midi_event_pos] == f_i
-        ){
-            if(
-                plugin_data->midi_event_types[midi_event_pos]
-                ==
-                EVENT_CONTROLLER
-            ){
-                v_cc_map_translate(
-                    &plugin_data->cc_map, plugin_data->descriptor,
-                    plugin_data->port_table,
-                    plugin_data->midi_event_ports[midi_event_pos],
-                    plugin_data->midi_event_values[midi_event_pos]);
-            }
-            ++midi_event_pos;
-        }
-
-        v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue,
+    for(f_i = 0; f_i < sample_count; ++f_i){
+        effect_process_events(
             f_i,
-            plugin_data->port_table
+            &plugin_data->midi_events,
+            plugin_data->port_table,
+            plugin_data->descriptor,
+            &plugin_data->cc_map,
+            &plugin_data->atm_queue
         );
 
         v_scc_set(
@@ -229,7 +168,6 @@ void v_scc_run(
 
         plugin_data->output[f_i].left = f_cmp->output0;
         plugin_data->output[f_i].right = f_cmp->output1;
-        ++f_i;
     }
 
     if((int)(*plugin_data->peak_meter)){

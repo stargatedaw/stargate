@@ -132,7 +132,6 @@ void v_sfader_process_midi_event(
     }
 }
 
-
 void v_sfader_process_midi(
     PluginHandle instance,
     struct ShdsList * events,
