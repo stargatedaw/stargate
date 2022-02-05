@@ -188,35 +188,26 @@ void v_multifx_process_midi_event(
     t_multifx * plugin_data,
     t_seq_event * a_event
 ){
-    if (a_event->type == EVENT_CONTROLLER)
-    {
+    struct MIDIEvent* midi_event;
+    if (a_event->type == EVENT_CONTROLLER){
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
             "v_multifx_process_midi_event: param %i out of range 1 to 128",
             a_event->param
         );
+        midi_event = &plugin_data->midi_events[plugin_data->midi_event_count];
+        midi_event->type = EVENT_CONTROLLER;
+        midi_event->tick = a_event->tick;
+        midi_event->port = a_event->param;
+        midi_event->value = a_event->value;
 
-        plugin_data->midi_event_types[plugin_data->midi_event_count] =
-                EVENT_CONTROLLER;
-        plugin_data->midi_event_ticks[plugin_data->midi_event_count] =
-                a_event->tick;
-        plugin_data->midi_event_ports[plugin_data->midi_event_count] =
-                a_event->param;
-        plugin_data->midi_event_values[plugin_data->midi_event_count] =
-                a_event->value;
-
-        if(!plugin_data->is_on)
-        {
+        if(!plugin_data->is_on){
             v_multifx_check_if_on(plugin_data);
 
             //Meaning that we now have set the port anyways because the
             //main loop won't be running
-            if(!plugin_data->is_on)
-            {
-                plugin_data->port_table[plugin_data->midi_event_ports[
-                        plugin_data->midi_event_count]] =
-                        plugin_data->midi_event_values[
-                        plugin_data->midi_event_count];
+            if(!plugin_data->is_on){
+                plugin_data->port_table[midi_event->port] = midi_event->value;
             }
         }
 
@@ -237,7 +228,6 @@ void v_multifx_run(
     int event_count = midi_events->len;
 
     int event_pos;
-    int midi_event_pos = 0;
     plugin_data->midi_event_count = 0;
 
     for(event_pos = 0; event_pos < event_count; ++event_pos){
@@ -272,28 +262,15 @@ void v_multifx_run(
         int i_mono_out = 0;
 
         while((i_mono_out) < sample_count){
-            while(
-                midi_event_pos < plugin_data->midi_event_count
-                &&
-                plugin_data->midi_event_ticks[midi_event_pos] == i_mono_out
-            ){
-                if(plugin_data->midi_event_types[midi_event_pos] ==
-                        EVENT_CONTROLLER)
-                {
-                    v_cc_map_translate(
-                        &plugin_data->cc_map, plugin_data->descriptor,
-                        plugin_data->port_table,
-                        plugin_data->midi_event_ports[midi_event_pos],
-                        plugin_data->midi_event_values[midi_event_pos]);
-                }
-                ++midi_event_pos;
-            }
-
-            v_plugin_event_queue_atm_set(
-                &plugin_data->atm_queue,
+            effect_process_events(
                 i_mono_out,
-                plugin_data->port_table)
-            ;
+                plugin_data->midi_event_count,
+                plugin_data->midi_events,
+                plugin_data->port_table,
+                plugin_data->descriptor,
+                &plugin_data->cc_map,
+                &plugin_data->atm_queue
+            );
 
             plugin_data->mono_modules.current_sample0 =
                 plugin_data->output[i_mono_out].left;

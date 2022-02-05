@@ -77,97 +77,58 @@ PluginHandle g_sg_lim_instantiate(
     return (PluginHandle) plugin_data;
 }
 
-void v_sg_lim_load(PluginHandle instance,
-        PluginDescriptor * Descriptor, char * a_file_path)
-{
+void v_sg_lim_load(
+    PluginHandle instance,
+    PluginDescriptor * Descriptor,
+    char * a_file_path
+){
     t_sg_lim *plugin_data = (t_sg_lim*)instance;
-    generic_file_loader(instance, Descriptor,
-        a_file_path, plugin_data->port_table, &plugin_data->cc_map);
+    generic_file_loader(
+        instance,
+        Descriptor,
+        a_file_path,
+        plugin_data->port_table,
+        &plugin_data->cc_map
+    );
 }
 
-void v_sg_lim_set_port_value(PluginHandle Instance,
-        int a_port, SGFLT a_value)
-{
+void v_sg_lim_set_port_value(
+    PluginHandle Instance,
+    int a_port,
+    SGFLT a_value
+){
     t_sg_lim *plugin_data = (t_sg_lim*)Instance;
     plugin_data->port_table[a_port] = a_value;
 }
 
-void v_sg_lim_process_midi_event(
-    t_sg_lim * plugin_data,
-    t_seq_event * a_event
-){
-    if (a_event->type == EVENT_CONTROLLER)
-    {
-        sg_assert(
-            a_event->param >= 1 && a_event->param < 128,
-            "v_sg_lim_process_midi_event: param %i out of range 1 to 128",
-            a_event->param
-        );
-
-        plugin_data->midi_event_types[plugin_data->midi_event_count] =
-                EVENT_CONTROLLER;
-        plugin_data->midi_event_ticks[plugin_data->midi_event_count] =
-                a_event->tick;
-        plugin_data->midi_event_ports[plugin_data->midi_event_count] =
-                a_event->param;
-        plugin_data->midi_event_values[plugin_data->midi_event_count] =
-                a_event->value;
-
-        ++plugin_data->midi_event_count;
-    }
-}
-
 void v_sg_lim_run(
-        PluginHandle instance, int sample_count,
-        struct ShdsList * midi_events, struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    struct ShdsList* midi_events,
+    struct ShdsList* atm_events
+){
     t_sg_lim *plugin_data = (t_sg_lim*)instance;
-
-    t_seq_event **events = (t_seq_event**)midi_events->data;
-    int event_count = midi_events->len;
-
     int f_i = 0;
-    int midi_event_pos = 0;
-    t_lim_limiter * f_lim = &plugin_data->mono_modules.limiter;
-    plugin_data->midi_event_count = 0;
+    t_lim_limiter* f_lim = &plugin_data->mono_modules.limiter;
 
-    for(f_i = 0; f_i < event_count; ++f_i)
-    {
-        v_sg_lim_process_midi_event(plugin_data, events[f_i]);
-    }
+    effect_translate_midi_events(
+        midi_events,
+        plugin_data->midi_events,
+        &plugin_data->midi_event_count,
+        &plugin_data->atm_queue,
+        atm_events
+    );
 
-    v_plugin_event_queue_reset(&plugin_data->atm_queue);
-
-    t_seq_event * ev_tmp;
-    for(f_i = 0; f_i < atm_events->len; ++f_i)
-    {
-        ev_tmp = (t_seq_event*)atm_events->data[f_i];
-        v_plugin_event_queue_add(
-            &plugin_data->atm_queue, ev_tmp->type,
-            ev_tmp->tick, ev_tmp->value, ev_tmp->port);
-    }
-
-    f_i = 0;
-
-    while(f_i < sample_count)
-    {
-        while(midi_event_pos < plugin_data->midi_event_count &&
-                plugin_data->midi_event_ticks[midi_event_pos] == f_i)
-        {
-            if(plugin_data->midi_event_types[midi_event_pos] ==
-                    EVENT_CONTROLLER)
-            {
-                v_cc_map_translate(
-                    &plugin_data->cc_map, plugin_data->descriptor,
-                    plugin_data->port_table,
-                    plugin_data->midi_event_ports[midi_event_pos],
-                    plugin_data->midi_event_values[midi_event_pos]);
-            }
-            ++midi_event_pos;
-        }
-
-        v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue, f_i, plugin_data->port_table);
+    for(f_i = 0; f_i < sample_count; ++f_i){
+        effect_process_events(
+            f_i,
+            plugin_data->midi_event_count,
+            plugin_data->midi_events,
+            plugin_data->port_table,
+            plugin_data->descriptor,
+            &plugin_data->cc_map,
+            &plugin_data->atm_queue
+        );
 
         v_lim_set(
             f_lim,
@@ -200,7 +161,6 @@ void v_sg_lim_run(
         }
     }
 }
-
 
 SGFLT* sglim_get_port_table(PluginHandle instance){
     t_sg_lim *plugin_data = (t_sg_lim*)instance;

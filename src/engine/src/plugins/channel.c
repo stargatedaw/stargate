@@ -17,8 +17,7 @@ GNU General Public License for more details.
 #include "plugins/channel.h"
 
 
-void v_sgchnl_cleanup(PluginHandle instance)
-{
+void v_sgchnl_cleanup(PluginHandle instance){
     free(instance);
 }
 
@@ -102,59 +101,6 @@ void v_sgchnl_set_port_value(
     plugin_data->port_table[a_port] = a_value;
 }
 
-void v_sgchnl_process_midi_event(
-    t_sgchnl * plugin_data,
-    t_seq_event * a_event
-){
-    if (a_event->type == EVENT_CONTROLLER)
-    {
-        sg_assert(
-            a_event->param >= 1 && a_event->param < 128,
-            "v_sgchnl_process_midi_event: param %i out of range 1 to 128",
-            a_event->param
-        );
-
-        plugin_data->midi_event_types[plugin_data->midi_event_count] =
-                EVENT_CONTROLLER;
-        plugin_data->midi_event_ticks[plugin_data->midi_event_count] =
-                a_event->tick;
-        plugin_data->midi_event_ports[plugin_data->midi_event_count] =
-                a_event->param;
-        plugin_data->midi_event_values[plugin_data->midi_event_count] =
-                a_event->value;
-
-        ++plugin_data->midi_event_count;
-    }
-}
-
-void v_sgchnl_process_midi(
-    PluginHandle instance,
-    struct ShdsList * events,
-    struct ShdsList * atm_events
-){
-    t_sgchnl *plugin_data = (t_sgchnl*)instance;
-    int f_i = 0;
-    plugin_data->midi_event_count = 0;
-
-    for(f_i = 0; f_i < events->len; ++f_i)
-    {
-        v_sgchnl_process_midi_event(
-            plugin_data, (t_seq_event*)events->data[f_i]);
-    }
-
-    v_plugin_event_queue_reset(&plugin_data->atm_queue);
-
-    t_seq_event * ev_tmp;
-    for(f_i = 0; f_i < atm_events->len; ++f_i)
-    {
-        ev_tmp = (t_seq_event*)atm_events->data[f_i];
-        v_plugin_event_queue_add(
-            &plugin_data->atm_queue, ev_tmp->type,
-            ev_tmp->tick, ev_tmp->value, ev_tmp->port);
-    }
-}
-
-
 void v_sgchnl_run_mixing(
     PluginHandle instance,
     int sample_count,
@@ -166,7 +112,13 @@ void v_sgchnl_run_mixing(
     t_sgchnl *plugin_data = (t_sgchnl*)instance;
     float left, right;
 
-    v_sgchnl_process_midi(instance, midi_events, atm_events);
+    effect_translate_midi_events(
+        midi_events,
+        plugin_data->midi_events,
+        &plugin_data->midi_event_count,
+        &plugin_data->atm_queue,
+        atm_events
+    );
 
     SGFLT f_vol_linear;
     SGFLT f_gain = f_db_to_linear_fast(
@@ -174,34 +126,17 @@ void v_sgchnl_run_mixing(
     );
     SGFLT f_pan_law = plugin_data->port_table[SGCHNL_LAW] * 0.01f;
 
-    int midi_event_pos = 0;
     int f_i;
 
     for(f_i = 0; f_i < sample_count; ++f_i){
-        while(
-            midi_event_pos < plugin_data->midi_event_count
-            &&
-            plugin_data->midi_event_ticks[midi_event_pos] == f_i
-        ){
-            if(
-                plugin_data->midi_event_types[midi_event_pos]
-                ==
-                EVENT_CONTROLLER
-            ){
-                v_cc_map_translate(
-                    &plugin_data->cc_map, plugin_data->descriptor,
-                    plugin_data->port_table,
-                    plugin_data->midi_event_ports[midi_event_pos],
-                    plugin_data->midi_event_values[midi_event_pos]
-                );
-            }
-            ++midi_event_pos;
-        }
-
-        v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue,
+        effect_process_events(
             f_i,
-            plugin_data->port_table
+            plugin_data->midi_event_count,
+            plugin_data->midi_events,
+            plugin_data->port_table,
+            plugin_data->descriptor,
+            &plugin_data->cc_map,
+            &plugin_data->atm_queue
         );
 
         v_sml_run(
@@ -247,43 +182,29 @@ void v_sgchnl_run(
     struct ShdsList * atm_events
 ){
     t_sgchnl *plugin_data = (t_sgchnl*)instance;
-
-    v_sgchnl_process_midi(instance, midi_events, atm_events);
-
-    int midi_event_pos = 0;
+    effect_translate_midi_events(
+        midi_events,
+        plugin_data->midi_events,
+        &plugin_data->midi_event_count,
+        &plugin_data->atm_queue,
+        atm_events
+    );
     int f_i;
-
     SGFLT f_vol_linear;
-
     SGFLT f_gain = f_db_to_linear_fast(
         plugin_data->port_table[SGCHNL_GAIN] * 0.01f
     );
     SGFLT f_pan_law = plugin_data->port_table[SGCHNL_LAW] * 0.01f;
 
     for(f_i = 0; f_i < sample_count; ++f_i){
-        while(
-            midi_event_pos < plugin_data->midi_event_count
-            &&
-            plugin_data->midi_event_ticks[midi_event_pos] == f_i
-        ){
-            if(
-                plugin_data->midi_event_types[midi_event_pos]
-                ==
-                EVENT_CONTROLLER
-            ){
-                v_cc_map_translate(
-                    &plugin_data->cc_map, plugin_data->descriptor,
-                    plugin_data->port_table,
-                    plugin_data->midi_event_ports[midi_event_pos],
-                    plugin_data->midi_event_values[midi_event_pos]);
-            }
-            ++midi_event_pos;
-        }
-
-        v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue,
+        effect_process_events(
             f_i,
-            plugin_data->port_table
+            plugin_data->midi_event_count,
+            plugin_data->midi_events,
+            plugin_data->port_table,
+            plugin_data->descriptor,
+            &plugin_data->cc_map,
+            &plugin_data->atm_queue
         );
 
         v_sml_run(
@@ -356,8 +277,6 @@ void v_sgchnl_mono_init(
     g_sml_init(&a_mono->pan_smoother, a_sr, 100.0f, -100.0f, 0.1f);
     a_mono->pan_smoother.last_value = 0.0f;
 }
-
-
 
 /*
 void v_sgchnl_destructor()

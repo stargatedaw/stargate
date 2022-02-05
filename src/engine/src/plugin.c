@@ -525,6 +525,88 @@ int seq_event_cmpfunc(void *self, void *other){
 
     return self_ev->tick < other_ev->tick;
 }
+
+void effect_translate_midi_events(
+    struct ShdsList* source_events,
+    struct MIDIEvent* dest_events,
+    int* midi_event_count,
+    t_plugin_event_queue* atm_queue,
+    struct ShdsList* atm_events
+){
+    *midi_event_count = 0;
+    int f_i;
+    t_seq_event* source_event;
+    t_seq_event* ev_tmp;
+    struct MIDIEvent* dest_event;
+    for(f_i = 0; f_i < source_events->len; ++f_i){
+        source_event = (t_seq_event*)source_events->data[f_i];
+        if (source_event->type == EVENT_CONTROLLER){
+            sg_assert(
+                source_event->param >= 1 && source_event->param < 128,
+                "v_sgchnl_process_midi_event: param %i out of range 1 to 128",
+                source_event->param
+            );
+
+            dest_event = &dest_events[*midi_event_count];
+            dest_event->type = EVENT_CONTROLLER;
+            dest_event->tick = source_event->tick;
+            dest_event->port = source_event->param;
+            dest_event->value = source_event->value;
+
+            ++(*midi_event_count);
+        }
+    }
+
+    v_plugin_event_queue_reset(atm_queue);
+
+    for(f_i = 0; f_i < atm_events->len; ++f_i){
+        ev_tmp = (t_seq_event*)atm_events->data[f_i];
+        v_plugin_event_queue_add(
+            atm_queue,
+            ev_tmp->type,
+            ev_tmp->tick,
+            ev_tmp->value,
+            ev_tmp->port
+        );
+    }
+}
+
+void effect_process_events(
+    int sample_num,
+    int midi_event_count,
+    struct MIDIEvent* midi_events,
+    SGFLT* port_table,
+    PluginDescriptor* descriptor,
+    t_plugin_cc_map* cc_map,
+    t_plugin_event_queue* atm_queue
+){
+    struct MIDIEvent* midi_event;
+    int midi_event_pos = 0;
+    while(
+        midi_event_pos < midi_event_count
+        &&
+        midi_events[midi_event_pos].tick == sample_num
+    ){
+        midi_event = &midi_events[midi_event_pos];
+        if(midi_event->type == EVENT_CONTROLLER){
+            v_cc_map_translate(
+                cc_map,
+                descriptor,
+                port_table,
+                midi_event->port,
+                midi_event->value
+            );
+        }
+        ++midi_event_pos;
+    }
+
+    v_plugin_event_queue_atm_set(
+        atm_queue,
+        sample_num,
+        port_table
+    );
+}
+
 /*
 void v_free_plugin(t_plugin * a_plugin)
 {

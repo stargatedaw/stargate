@@ -47,11 +47,8 @@ typedef struct {
     SGFLT fs;
     t_sg_lim_mono_modules mono_modules;
 
-    int midi_event_types[200];
-    int midi_event_ticks[200];
-    SGFLT midi_event_values[200];
-    int midi_event_ports[200];
     int midi_event_count;
+    struct MIDIEvent midi_events[200];
     t_plugin_event_queue atm_queue;
     int plugin_uid;
     fp_queue_message queue_func;

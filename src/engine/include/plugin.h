@@ -32,6 +32,11 @@ struct MIDIEvent {
     SGFLT value;
 };
 
+struct MIDIEvents {
+    int count;
+    struct MIDIEvent events[200];
+};
+
 // MIDI event
 typedef struct {
     int type;
@@ -307,4 +312,26 @@ NO_OPTIMIZATION void g_plugin_init(
 );
 
 SGFLT set_pmn_adsr(SGFLT, SGFLT, SGFLT, SGFLT);
+
+// Called once per sample period.  Does not process MIDI notes, only suitable
+// for effects
+void effect_translate_midi_events(
+    struct ShdsList* source_events,
+    struct MIDIEvent* dest_events,
+    int* midi_event_count,
+    t_plugin_event_queue* atm_queue,
+    struct ShdsList* atm_events
+);
+
+// Called once per sample, does not process MIDI notes
+void effect_process_events(
+    int sample_num,
+    int midi_event_count,
+    struct MIDIEvent* midi_events,
+    SGFLT* port_table,
+    PluginDescriptor * descriptor,
+    t_plugin_cc_map* cc_map,
+    t_plugin_event_queue* atm_queue
+);
+
 #endif
