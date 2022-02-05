@@ -732,7 +732,8 @@ PluginHandle instantiateSampler(
     hpalloc((void**)&plugin_data, sizeof(t_sampler1));
 
     plugin_data->descriptor = descriptor;
-    plugin_data->voices = g_voc_get_voices(
+    g_voc_voices_init(
+        &plugin_data->voices,
         SAMPLER1_POLYPHONY,
         SAMPLER1_POLYPHONY_THRESH
     );
@@ -902,7 +903,7 @@ void run_sampler_interpolation_none(
 }
 
 void add_sample_sg_sampler1(t_sampler1* plugin_data, int n){
-    t_voc_single_voice * f_poly_voice = &plugin_data->voices->voices[n];
+    t_voc_single_voice * f_poly_voice = &plugin_data->voices.voices[n];
 
     if((f_poly_voice->on) > (plugin_data->sampleNo)){
         return;
@@ -1147,7 +1148,7 @@ void v_sampler1_process_midi_event(
                 return;
             }
             int f_voice_num = i_pick_voice(
-                plugin_data->voices,
+                &plugin_data->voices,
                 f_note,
                 plugin_data->sampleNo,
                 a_event->tick
@@ -1495,15 +1496,23 @@ void v_sampler1_process_midi_event(
         }
         else
         {
-            v_voc_note_off(plugin_data->voices, a_event->note,
-                    plugin_data->sampleNo, a_event->tick);
+            v_voc_note_off(
+                &plugin_data->voices,
+                a_event->note,
+                plugin_data->sampleNo,
+                a_event->tick
+            );
         }
     }
     else if (a_event->type == EVENT_NOTEOFF )
     {
         f_note = a_event->note;
-        v_voc_note_off(plugin_data->voices, a_event->note,
-                plugin_data->sampleNo, a_event->tick);
+        v_voc_note_off(
+            &plugin_data->voices,
+            a_event->note,
+            plugin_data->sampleNo,
+            a_event->tick
+        );
     }
     else if (a_event->type == EVENT_CONTROLLER)
     {

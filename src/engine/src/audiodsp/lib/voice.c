@@ -47,13 +47,6 @@ void g_voc_voices_init(
     }
 }
 
-t_voc_voices * g_voc_get_voices(int a_count, int a_thresh){
-    t_voc_voices * f_result;
-    hpalloc((void**)&f_result, sizeof(t_voc_voices));
-    g_voc_voices_init(f_result, a_count, a_thresh);
-    return f_result;
-}
-
 int i_get_oldest_voice(
     t_voc_voices *data,
     int a_running,

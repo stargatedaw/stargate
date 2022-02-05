@@ -546,8 +546,8 @@ typedef struct st_sampler1 {
     int current_sample;
 
     SGFLT ratio;
-    t_voc_voices * voices;
-    long         sampleNo;
+    t_voc_voices voices;
+    long sampleNo;
 
     SGFLT sample[2];
 

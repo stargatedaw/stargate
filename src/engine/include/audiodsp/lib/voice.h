@@ -48,9 +48,6 @@ typedef struct {
     int poly_mode;
 } t_voc_voices;
 
-t_voc_voices * g_voc_get_voices(int, int);
-
-
 void g_voc_single_init(t_voc_single_voice * f_result, int a_voice_number);
 
 /* int i_pick_voice(
