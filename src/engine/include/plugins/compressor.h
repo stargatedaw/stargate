@@ -48,17 +48,6 @@ typedef struct {
     char pad1[CACHE_LINE_SIZE];
     struct SamplePair* output;
 
-    PluginData *threshold;
-    PluginData *ratio;
-    PluginData *knee;
-    PluginData *attack;
-    PluginData *release;
-    PluginData *gain;
-    PluginData *mode;
-    PluginData *rms_time;
-    PluginData *peak_meter;
-
-
     SGFLT fs;
     t_sg_comp_mono_modules mono_modules;
 

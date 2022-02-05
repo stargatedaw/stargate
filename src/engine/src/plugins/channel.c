@@ -56,17 +56,7 @@ void v_sgchnl_connect_port(
     int port,
     PluginData * data
 ){
-    t_sgchnl *plugin;
-
-    plugin = (t_sgchnl *) instance;
-
-    switch (port)
-    {
-        case SGCHNL_VOL_SLIDER: plugin->vol_slider = data; break;
-        case SGCHNL_GAIN: plugin->gain = data; break;
-        case SGCHNL_PAN: plugin->pan = data; break;
-        case SGCHNL_LAW: plugin->pan_law = data; break;
-    }
+    // connection-less
 }
 
 PluginHandle g_sgchnl_instantiate(
@@ -187,8 +177,10 @@ void v_sgchnl_run_mixing(
     v_sgchnl_process_midi(instance, midi_events, atm_events);
 
     SGFLT f_vol_linear;
-    SGFLT f_gain = f_db_to_linear_fast((*plugin_data->gain) * 0.01f);
-    SGFLT f_pan_law = (*plugin_data->pan_law) * 0.01f;
+    SGFLT f_gain = f_db_to_linear_fast(
+        plugin_data->port_table[SGCHNL_GAIN] * 0.01f
+    );
+    SGFLT f_pan_law = plugin_data->port_table[SGCHNL_LAW] * 0.01f;
 
     int midi_event_pos = 0;
     int f_i;
@@ -222,12 +214,12 @@ void v_sgchnl_run_mixing(
 
         v_sml_run(
             &plugin_data->mono_modules.volume_smoother,
-            (*plugin_data->vol_slider * 0.01f)
+            (plugin_data->port_table[SGCHNL_VOL_SLIDER] * 0.01f)
         );
 
         v_sml_run(
             &plugin_data->mono_modules.pan_smoother,
-            (*plugin_data->pan * 0.01f)
+            plugin_data->port_table[SGCHNL_PAN] * 0.01f
         );
 
         v_pn2_set(
@@ -271,8 +263,10 @@ void v_sgchnl_run(
 
     SGFLT f_vol_linear;
 
-    SGFLT f_gain = f_db_to_linear_fast((*plugin_data->gain) * 0.01f);
-    SGFLT f_pan_law = (*plugin_data->pan_law) * 0.01f;
+    SGFLT f_gain = f_db_to_linear_fast(
+        plugin_data->port_table[SGCHNL_GAIN] * 0.01f
+    );
+    SGFLT f_pan_law = plugin_data->port_table[SGCHNL_LAW] * 0.01f;
 
     for(f_i = 0; f_i < sample_count; ++f_i){
         while(
@@ -302,12 +296,12 @@ void v_sgchnl_run(
 
         v_sml_run(
             &plugin_data->mono_modules.volume_smoother,
-            (*plugin_data->vol_slider * 0.01f)
+            (plugin_data->port_table[SGCHNL_VOL_SLIDER] * 0.01f)
         );
 
         v_sml_run(
             &plugin_data->mono_modules.pan_smoother,
-            (*plugin_data->pan * 0.01f)
+            (plugin_data->port_table[SGCHNL_PAN] * 0.01f)
         );
 
         v_pn2_set(

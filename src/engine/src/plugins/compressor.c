@@ -50,21 +50,7 @@ void v_sg_comp_connect_port(
     int port,
     PluginData * data
 ){
-    t_sg_comp *plugin;
-
-    plugin = (t_sg_comp *) instance;
-
-    switch (port){
-        case SG_COMP_THRESHOLD: plugin->threshold = data; break;
-        case SG_COMP_RATIO: plugin->ratio = data; break;
-        case SG_COMP_KNEE: plugin->knee = data; break;
-        case SG_COMP_ATTACK: plugin->attack = data; break;
-        case SG_COMP_RELEASE: plugin->release = data; break;
-        case SG_COMP_GAIN: plugin->gain = data; break;
-        case SG_COMP_MODE: plugin->mode = data; break;
-        case SG_COMP_RMS_TIME: plugin->rms_time = data; break;
-        case SG_COMP_UI_MSG_ENABLED: plugin->peak_meter = data; break;
-    }
+    // connection-less
 }
 
 PluginHandle g_sg_comp_instantiate(
@@ -156,9 +142,11 @@ void v_sg_comp_run(
 
     int f_i = 0;
     int midi_event_pos = 0;
-    int f_is_rms = (int)(*plugin_data->mode);
+    int f_is_rms = (int)(plugin_data->port_table[SG_COMP_MODE]);
     t_cmp_compressor * f_cmp = &plugin_data->mono_modules.compressor;
-    SGFLT f_gain = f_db_to_linear_fast((*plugin_data->gain) * 0.1f);
+    SGFLT f_gain = f_db_to_linear_fast(
+        plugin_data->port_table[SG_COMP_GAIN] * 0.1
+    );
     plugin_data->midi_event_count = 0;
 
     for(f_i = 0; f_i < event_count; ++f_i){
@@ -210,16 +198,19 @@ void v_sg_comp_run(
 
         v_cmp_set(
             f_cmp,
-            *plugin_data->threshold * 0.1f,
-            (*plugin_data->ratio) * 0.1f,
-            *plugin_data->knee * 0.1f,
-            *plugin_data->attack * 0.001f,
-            *plugin_data->release * 0.001f,
-            *plugin_data->gain * 0.1f
+            plugin_data->port_table[SG_COMP_THRESHOLD] * 0.1f,
+            plugin_data->port_table[SG_COMP_RATIO] * 0.1f,
+            plugin_data->port_table[SG_COMP_KNEE] * 0.1f,
+            plugin_data->port_table[SG_COMP_ATTACK] * 0.001f,
+            plugin_data->port_table[SG_COMP_RELEASE] * 0.001f,
+            plugin_data->port_table[SG_COMP_GAIN] * 0.1f
         );
 
         if(f_is_rms){
-            v_cmp_set_rms(f_cmp, (*plugin_data->rms_time) * 0.01f);
+            v_cmp_set_rms(
+                f_cmp,
+                plugin_data->port_table[SG_COMP_RMS_TIME] * 0.01f
+            );
             v_cmp_run_rms(
                 f_cmp,
                 plugin_data->output[f_i].left,
@@ -238,7 +229,7 @@ void v_sg_comp_run(
         ++f_i;
     }
 
-    if((int)(*plugin_data->peak_meter)){
+    if((int)(plugin_data->port_table[SG_COMP_UI_MSG_ENABLED])){
         if(f_cmp->peak_tracker.dirty){
             sprintf(
                 plugin_data->ui_msg_buff,

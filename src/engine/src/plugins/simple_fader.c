@@ -58,12 +58,7 @@ void v_sfader_connect_port(
     int port,
     PluginData * data
 ){
-    t_sfader *plugin = (t_sfader*)instance;
-
-    switch (port)
-    {
-        case SFADER_VOL_SLIDER: plugin->vol_slider = data; break;
-    }
+    // connection-less
 }
 
 PluginHandle g_sfader_instantiate(PluginDescriptor * descriptor,
@@ -214,7 +209,7 @@ void v_sfader_run_mixing(
 
         v_sml_run(
             &plugin_data->mono_modules.volume_smoother,
-            (*plugin_data->vol_slider * 0.01f)
+            (plugin_data->port_table[SFADER_VOL_SLIDER] * 0.01f)
         );
 
         plugin_data->mono_modules.vol_linear = f_db_to_linear_fast(
@@ -277,13 +272,13 @@ void v_sfader_run(
 
         v_sml_run(
             &plugin_data->mono_modules.volume_smoother,
-            (*plugin_data->vol_slider * 0.01f)
+            (plugin_data->port_table[SFADER_VOL_SLIDER] * 0.01f)
         );
 
         if(
             plugin_data->mono_modules.volume_smoother.last_value != 0.0f
             ||
-            (*plugin_data->vol_slider != 0.0f)
+            (plugin_data->port_table[SFADER_VOL_SLIDER] != 0.0f)
         ){
             plugin_data->mono_modules.vol_linear = f_db_to_linear_fast(
                 plugin_data->mono_modules.volume_smoother.last_value
