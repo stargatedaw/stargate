@@ -143,7 +143,6 @@ void v_sg_lim_run(
 
         plugin_data->output[f_i].left = f_lim->output0;
         plugin_data->output[f_i].right = f_lim->output1;
-        ++f_i;
     }
 
     if((int)(plugin_data->port_table[SG_LIM_UI_MSG_ENABLED])){

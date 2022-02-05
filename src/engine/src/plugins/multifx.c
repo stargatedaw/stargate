@@ -225,7 +225,8 @@ void v_multifx_run(
 ){
     t_multifx *plugin_data = (t_multifx*)instance;
     t_mf3_multi * f_fx;
-
+    int f_i = 0;
+    int i_mono_out = 0;
     t_seq_event **events = (t_seq_event**)midi_events->data;
     int event_count = midi_events->len;
 
@@ -235,8 +236,6 @@ void v_multifx_run(
     for(event_pos = 0; event_pos < event_count; ++event_pos){
         v_multifx_process_midi_event(plugin_data, events[event_pos]);
     }
-
-    int f_i = 0;
 
     v_plugin_event_queue_reset(&plugin_data->atm_queue);
 
@@ -261,9 +260,7 @@ void v_multifx_run(
     }
 
     if(plugin_data->is_on){
-        int i_mono_out = 0;
-
-        while((i_mono_out) < sample_count){
+        for(i_mono_out = 0; i_mono_out < sample_count; ++i_mono_out){
             effect_process_events(
                 i_mono_out,
                 &plugin_data->midi_events,
@@ -317,11 +314,9 @@ void v_multifx_run(
             }
 
             plugin_data->output[i_mono_out].left =
-                    (plugin_data->mono_modules.current_sample0);
+                plugin_data->mono_modules.current_sample0;
             plugin_data->output[i_mono_out].right =
-                    (plugin_data->mono_modules.current_sample1);
-
-            ++i_mono_out;
+                plugin_data->mono_modules.current_sample1;
         }
     }
 }
