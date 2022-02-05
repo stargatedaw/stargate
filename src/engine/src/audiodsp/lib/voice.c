@@ -29,11 +29,16 @@ void g_voc_voices_init(
         a_count
     );
 
+    sg_assert(
+        a_count <= MAX_VOICES,
+        "a_count %i > MAX_VOICES %i",
+        a_count,
+        MAX_VOICES
+    );
+
     voices->count = a_count;
     voices->thresh = a_thresh;
     voices->poly_mode = POLY_MODE_RETRIG;
-
-    hpalloc((void**)&voices->voices, sizeof(t_voc_single_voice) * a_count);
 
     int f_i;
 

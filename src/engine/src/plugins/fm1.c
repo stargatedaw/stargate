@@ -718,12 +718,13 @@ PluginHandle g_fm1_instantiate(
 
     int i;
 
-    plugin_data->voices = g_voc_get_voices(
+    g_voc_voices_init(
+        &plugin_data->voices,
         FM1_POLYPHONY,
         FM1_POLYPHONY_THRESH
     );
 
-    for (i = 0; i < FM1_POLYPHONY; ++i){
+    for(i = 0; i < FM1_POLYPHONY; ++i){
         g_fm1_poly_init(
             &plugin_data->data[i],
             plugin_data->fs,
@@ -787,7 +788,7 @@ void v_fm1_process_midi_event(
             }
 
             int f_voice = i_pick_voice(
-                plugin_data->voices,
+                &plugin_data->voices,
                 a_event->note,
                 plugin_data->sampleNo,
                 a_event->tick
@@ -1194,7 +1195,7 @@ void v_fm1_process_midi_event(
         else
         {
             v_voc_note_off(
-                plugin_data->voices,
+                &plugin_data->voices,
                 a_event->note,
                 (plugin_data->sampleNo),
                 (a_event->tick)
@@ -1202,7 +1203,7 @@ void v_fm1_process_midi_event(
         }
     } else if (a_event->type == EVENT_NOTEOFF){
         v_voc_note_off(
-            plugin_data->voices,
+            &plugin_data->voices,
             a_event->note,
             (plugin_data->sampleNo),
             (a_event->tick)
@@ -1253,13 +1254,13 @@ void v_run_fm1(
         unlikely(
             f_poly_mode == POLY_MODE_MONO
             &&
-            plugin_data->voices->poly_mode != POLY_MODE_MONO
+            plugin_data->voices.poly_mode != POLY_MODE_MONO
         )
     ){
         fm1Panic(instance);  //avoid hung notes
     }
 
-    plugin_data->voices->poly_mode = f_poly_mode;
+    plugin_data->voices.poly_mode = f_poly_mode;
 
     int f_i;
 
@@ -1367,14 +1368,14 @@ void v_run_fm1(
             if(pvoice->adsr_main.stage != ADSR_STAGE_OFF){
                 v_run_fm1_voice(
                     plugin_data,
-                    &plugin_data->voices->voices[f_i],
+                    &plugin_data->voices.voices[f_i],
                     pvoice,
                     plugin_data->output,
                     i_iterator,
                     f_i
                 );
             } else {
-                plugin_data->voices->voices[f_i].n_state = note_state_off;
+                plugin_data->voices.voices[f_i].n_state = note_state_off;
             }
         }
 

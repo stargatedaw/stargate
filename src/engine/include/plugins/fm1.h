@@ -730,7 +730,7 @@ typedef struct {
         [FM1_CONTROLS_PER_MOD_EFFECT];
 
     t_fm1_poly_voice data[FM1_POLYPHONY];
-    t_voc_voices * voices;
+    t_voc_voices voices;
 
     long sampleNo;
 

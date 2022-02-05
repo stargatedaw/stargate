@@ -16,14 +16,14 @@ GNU General Public License for more details.
 
 #define VOICES_MAX_MIDI_NOTE_NUMBER 128
 #define MIDI_NOTES  128
+#define MAX_VOICES 32
 
 #define POLY_MODE_RETRIG 0
 #define POLY_MODE_FREE 1
 #define POLY_MODE_MONO 2
 #define POLY_MODE_MONO2 3
 
-typedef enum
-{
+typedef enum {
     note_state_off = 0,
     note_state_running,
     /*Synths should iterate voices looking for any voice note_state
@@ -33,22 +33,20 @@ typedef enum
     note_state_killed
 } note_state;
 
-typedef struct
-{
+typedef struct {
     int voice_number;
     int note;
     note_state n_state;
     long on;
     long off;
-}t_voc_single_voice;
+} t_voc_single_voice;
 
-typedef struct
-{
-    t_voc_single_voice * voices;
+typedef struct {
+    t_voc_single_voice voices[MAX_VOICES];
     int count;
     int thresh;  //when to start aggressively killing voices
     int poly_mode;
-}t_voc_voices;
+} t_voc_voices;
 
 t_voc_voices * g_voc_get_voices(int, int);
 
