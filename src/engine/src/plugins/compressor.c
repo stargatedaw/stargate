@@ -45,14 +45,6 @@ void v_sg_comp_connect_buffer(
     }
 }
 
-void v_sg_comp_connect_port(
-    PluginHandle instance,
-    int port,
-    PluginData * data
-){
-    // connection-less
-}
-
 PluginHandle g_sg_comp_instantiate(
     PluginDescriptor * descriptor,
     int s_rate,
@@ -262,8 +254,8 @@ PluginDescriptor *sg_comp_plugin_descriptor(){
     set_plugin_port(f_result, SG_COMP_UI_MSG_ENABLED, 0.0f, 0.0f, 1.0f);
 
     f_result->cleanup = v_sg_comp_cleanup;
-    f_result->connect_port = v_sg_comp_connect_port;
     f_result->connect_buffer = v_sg_comp_connect_buffer;
+    f_result->connect_port = NULL;
     f_result->get_port_table = sgcomp_get_port_table;
     f_result->instantiate = g_sg_comp_instantiate;
     f_result->panic = v_sg_comp_panic;

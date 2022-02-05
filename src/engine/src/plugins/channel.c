@@ -51,14 +51,6 @@ void v_sgchnl_connect_buffer(
     plugin->buffers = DataLocation;
 }
 
-void v_sgchnl_connect_port(
-    PluginHandle instance,
-    int port,
-    PluginData * data
-){
-    // connection-less
-}
-
 PluginHandle g_sgchnl_instantiate(
     PluginDescriptor * descriptor,
     int s_rate,
@@ -335,8 +327,8 @@ PluginDescriptor *sgchnl_plugin_descriptor(){
     set_plugin_port(f_result, SGCHNL_LAW, -300.0f, -600.0f, 0.0f);
 
     f_result->cleanup = v_sgchnl_cleanup;
-    f_result->connect_port = v_sgchnl_connect_port;
     f_result->connect_buffer = v_sgchnl_connect_buffer;
+    f_result->connect_port = NULL;
     f_result->get_port_table = sgchnl_get_port_table;
     f_result->instantiate = g_sgchnl_instantiate;
     f_result->panic = v_sgchnl_panic;

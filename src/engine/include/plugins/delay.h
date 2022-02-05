@@ -60,14 +60,6 @@ typedef struct {
     char pad1[CACHE_LINE_SIZE];
     struct SamplePair* output;
 
-    PluginData *delay_time;
-    PluginData *feedback;
-    PluginData *dry;
-    PluginData *wet;
-    PluginData *duck;
-    PluginData *cutoff;
-    PluginData *stereo;
-
     SGFLT fs;
     t_sgdelay_mono_modules mono_modules;
 

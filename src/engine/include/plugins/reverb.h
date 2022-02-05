@@ -55,23 +55,14 @@ typedef struct {
     char pad1[CACHE_LINE_SIZE];
     struct SamplePair* output;
 
-    PluginData *reverb_time;
-    PluginData *reverb_dry;
-    PluginData *reverb_wet;
-    PluginData *reverb_color;
-    PluginData *reverb_hp;
-    PluginData *reverb_predelay;
-    PluginData *dry_pan;
-    PluginData *wet_pan;
-
     SGFLT fs;
     t_sreverb_mono_modules mono_modules;
 
+    int midi_event_count;
     int midi_event_types[200];
     int midi_event_ticks[200];
     SGFLT midi_event_values[200];
     int midi_event_ports[200];
-    int midi_event_count;
     t_plugin_event_queue atm_queue;
     int plugin_uid;
     fp_queue_message queue_func;

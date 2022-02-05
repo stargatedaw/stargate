@@ -44,11 +44,6 @@ typedef struct {
 
     struct SamplePair* output;
 
-    PluginData *threshold;
-    PluginData *ceiling;
-    PluginData *release;
-    PluginData *peak_meter;
-
     SGFLT fs;
     t_sg_lim_mono_modules mono_modules;
 

@@ -57,27 +57,6 @@ void v_sgdelay_connect_buffer(
     plugin->output = DataLocation;
 }
 
-void v_sgdelay_connect_port(
-    PluginHandle instance,
-    int port,
-    PluginData * data
-){
-    t_sgdelay *plugin;
-
-    plugin = (t_sgdelay *) instance;
-
-    switch (port)
-    {
-        case SGDELAY_DELAY_TIME: plugin->delay_time = data; break;
-        case SGDELAY_FEEDBACK: plugin->feedback = data; break;
-        case SGDELAY_DRY: plugin->dry = data;  break;
-        case SGDELAY_WET: plugin->wet = data; break;
-        case SGDELAY_DUCK: plugin->duck = data; break;
-        case SGDELAY_CUTOFF: plugin->cutoff = data; break;
-        case SGDELAY_STEREO: plugin->stereo = data; break;
-    }
-}
-
 PluginHandle g_sgdelay_instantiate(
     PluginDescriptor * descriptor,
     int s_rate,
@@ -207,15 +186,18 @@ void v_sgdelay_run(
 
         v_sml_run(
             &plugin_data->mono_modules.time_smoother,
-            (*(plugin_data->delay_time))
+            plugin_data->port_table[SGDELAY_DELAY_TIME]
         );
 
         v_ldl_set_delay(plugin_data->mono_modules.delay,
-            (plugin_data->mono_modules.time_smoother.last_value * 0.01f),
-            (*plugin_data->feedback) * 0.1f,
-            (*plugin_data->wet) * 0.1f, (*plugin_data->dry) * 0.1f,
-            (*(plugin_data->stereo) * .01), (*plugin_data->duck),
-            (*plugin_data->cutoff));
+            plugin_data->mono_modules.time_smoother.last_value * 0.01f,
+            plugin_data->port_table[SGDELAY_FEEDBACK] * 0.1f,
+            plugin_data->port_table[SGDELAY_WET] * 0.1f,
+            plugin_data->port_table[SGDELAY_DRY] * 0.1f,
+            plugin_data->port_table[SGDELAY_STEREO] * .01,
+            plugin_data->port_table[SGDELAY_DUCK],
+            plugin_data->port_table[SGDELAY_CUTOFF]
+        );
 
         v_ldl_run_delay(plugin_data->mono_modules.delay,
             plugin_data->output[f_i].left,
@@ -248,7 +230,7 @@ PluginDescriptor *sgdelay_plugin_descriptor(){
     set_plugin_port(f_result, SGDELAY_STEREO, 100.0f, 0.0f, 100.0f);
 
     f_result->cleanup = v_sgdelay_cleanup;
-    f_result->connect_port = v_sgdelay_connect_port;
+    f_result->connect_port = NULL;
     f_result->connect_buffer = v_sgdelay_connect_buffer;
     f_result->get_port_table = sgdelay_get_port_table;
     f_result->instantiate = g_sgdelay_instantiate;

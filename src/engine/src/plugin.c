@@ -329,11 +329,13 @@ void g_get_port_table(
         pluginControlIns[j] = 0.0f;
     }
 
-    for (j = 0; j < descriptor->PortCount; ++j){
-        PluginPortDescriptor pod = descriptor->PortDescriptors[j];
-        if(pod){
-            pluginControlIns[j] = g_get_port_default(descriptor, j);
-            descriptor->connect_port(handle, j, &pluginControlIns[j]);
+    if(descriptor->connect_port){
+        for (j = 0; j < descriptor->PortCount; ++j){
+            PluginPortDescriptor pod = descriptor->PortDescriptors[j];
+            if(pod){
+                pluginControlIns[j] = g_get_port_default(descriptor, j);
+                descriptor->connect_port(handle, j, &pluginControlIns[j]);
+            }
         }
     }
 }

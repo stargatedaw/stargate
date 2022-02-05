@@ -49,27 +49,13 @@ void v_sg_lim_connect_buffer(
     }
 }
 
-void v_sg_lim_connect_port(
-    PluginHandle instance,
-    int port,
-    PluginData * data
+PluginHandle g_sg_lim_instantiate(
+    PluginDescriptor * descriptor,
+    int s_rate,
+    fp_get_audio_pool_item_from_host a_host_audio_pool_func,
+    int a_plugin_uid,
+    fp_queue_message a_queue_func
 ){
-    t_sg_lim *plugin;
-
-    plugin = (t_sg_lim *) instance;
-
-    switch (port){
-        case SG_LIM_THRESHOLD: plugin->threshold = data; break;
-        case SG_LIM_CEILING: plugin->ceiling = data; break;
-        case SG_LIM_RELEASE: plugin->release = data; break;
-        case SG_LIM_UI_MSG_ENABLED: plugin->peak_meter = data; break;
-    }
-}
-
-PluginHandle g_sg_lim_instantiate(PluginDescriptor * descriptor,
-        int s_rate, fp_get_audio_pool_item_from_host a_host_audio_pool_func,
-        int a_plugin_uid, fp_queue_message a_queue_func)
-{
     t_sg_lim *plugin_data;
     hpalloc((void**)&plugin_data, sizeof(t_sg_lim));
 
@@ -183,9 +169,12 @@ void v_sg_lim_run(
         v_plugin_event_queue_atm_set(
             &plugin_data->atm_queue, f_i, plugin_data->port_table);
 
-        v_lim_set(f_lim,
-            *plugin_data->threshold * 0.1f, *plugin_data->ceiling * 0.1f,
-            *plugin_data->release);
+        v_lim_set(
+            f_lim,
+            plugin_data->port_table[SG_LIM_THRESHOLD] * 0.1f,
+            plugin_data->port_table[SG_LIM_CEILING] * 0.1f,
+            plugin_data->port_table[SG_LIM_RELEASE]
+        );
 
         v_lim_run(
             f_lim,
@@ -198,7 +187,7 @@ void v_sg_lim_run(
         ++f_i;
     }
 
-    if((int)(*plugin_data->peak_meter)){
+    if((int)(plugin_data->port_table[SG_LIM_UI_MSG_ENABLED])){
         if(f_lim->peak_tracker.dirty){
             sprintf(
                 plugin_data->ui_msg_buff,
@@ -227,7 +216,7 @@ PluginDescriptor *sg_lim_plugin_descriptor(){
     set_plugin_port(f_result, SG_LIM_UI_MSG_ENABLED, 0.0f, 0.0f, 1.0f);
 
     f_result->cleanup = v_sg_lim_cleanup;
-    f_result->connect_port = v_sg_lim_connect_port;
+    f_result->connect_port = NULL;
     f_result->connect_buffer = v_sg_lim_connect_buffer;
     f_result->get_port_table = sglim_get_port_table;
     f_result->instantiate = g_sg_lim_instantiate;

@@ -55,33 +55,6 @@ void v_sreverb_connect_buffer(
     plugin->output = DataLocation;
 }
 
-void v_sreverb_connect_port(
-    PluginHandle instance,
-    int port,
-    PluginData * data
-){
-    t_sreverb *plugin = (t_sreverb*)instance;
-
-    switch (port)
-    {
-        case SREVERB_REVERB_TIME: plugin->reverb_time = data; break;
-        case SREVERB_REVERB_WET: plugin->reverb_wet = data; break;
-        case SREVERB_REVERB_COLOR: plugin->reverb_color = data; break;
-        case SREVERB_REVERB_DRY: plugin->reverb_dry = data; break;
-        case SREVERB_REVERB_PRE_DELAY: plugin->reverb_predelay = data; break;
-        case SREVERB_REVERB_HP: plugin->reverb_hp = data; break;
-        case SREVERB_DRY_PAN: plugin->dry_pan = data; break;
-        case SREVERB_WET_PAN: plugin->wet_pan = data; break;
-        default:
-            sg_assert(
-                0,
-                "v_sreverb_connect_port: unknown port %i",
-                port
-            );
-            break;
-    }
-}
-
 PluginHandle g_sreverb_instantiate(
     PluginDescriptor * descriptor,
     int s_rate,
@@ -224,12 +197,12 @@ void v_sreverb_run(
 
         v_sml_run(
             &mm->reverb_smoother,
-            (*plugin_data->reverb_wet) * 0.1f
+            plugin_data->port_table[SREVERB_REVERB_WET] * 0.1f
         );
 
         v_sml_run(
             &mm->reverb_dry_smoother,
-            (*plugin_data->reverb_dry) * 0.1f
+            plugin_data->port_table[SREVERB_REVERB_DRY] * 0.1f
         );
         f_dry_vol = f_db_to_linear_fast(
             mm->reverb_dry_smoother.last_value
@@ -237,13 +210,14 @@ void v_sreverb_run(
 
         v_rvb_reverb_set(
             &mm->reverb,
-            (*plugin_data->reverb_time) * 0.01f,
+            plugin_data->port_table[SREVERB_REVERB_TIME] * 0.01f,
             f_db_to_linear_fast(
                 mm->reverb_smoother.last_value
             ),
-            (*plugin_data->reverb_color),
-            (*plugin_data->reverb_predelay) * 0.001f,
-            (*plugin_data->reverb_hp));
+            plugin_data->port_table[SREVERB_REVERB_COLOR],
+            plugin_data->port_table[SREVERB_REVERB_PRE_DELAY] * 0.001f,
+            plugin_data->port_table[SREVERB_REVERB_HP]
+        );
 
         v_rvb_reverb_run(
             &mm->reverb,
@@ -253,7 +227,7 @@ void v_sreverb_run(
 
         v_sml_run(
             &mm->dry_pan_smoother,
-            (*plugin_data->dry_pan * 0.01f)
+            plugin_data->port_table[SREVERB_DRY_PAN] * 0.01f
         );
 
         v_pn2_set(
@@ -264,7 +238,7 @@ void v_sreverb_run(
 
         v_sml_run(
             &mm->wet_pan_smoother,
-            (*plugin_data->wet_pan * 0.01f)
+            plugin_data->port_table[SREVERB_WET_PAN] * 0.01f
         );
 
         v_pn2_set(
@@ -300,7 +274,7 @@ PluginDescriptor *sreverb_plugin_descriptor(){
     set_plugin_port(f_result, SREVERB_WET_PAN, 0.0f, -100.0f, 100.0f);
 
     f_result->cleanup = v_sreverb_cleanup;
-    f_result->connect_port = v_sreverb_connect_port;
+    f_result->connect_port = NULL;
     f_result->connect_buffer = v_sreverb_connect_buffer;
     f_result->get_port_table = sreverb_get_port_table;
     f_result->instantiate = g_sreverb_instantiate;
