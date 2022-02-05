@@ -528,12 +528,11 @@ int seq_event_cmpfunc(void *self, void *other){
 
 void effect_translate_midi_events(
     struct ShdsList* source_events,
-    struct MIDIEvent* dest_events,
-    int* midi_event_count,
+    struct MIDIEvents* dest_events,
     t_plugin_event_queue* atm_queue,
     struct ShdsList* atm_events
 ){
-    *midi_event_count = 0;
+    dest_events->count = 0;
     int f_i;
     t_seq_event* source_event;
     t_seq_event* ev_tmp;
@@ -547,13 +546,13 @@ void effect_translate_midi_events(
                 source_event->param
             );
 
-            dest_event = &dest_events[*midi_event_count];
+            dest_event = &dest_events->events[dest_events->count];
             dest_event->type = EVENT_CONTROLLER;
             dest_event->tick = source_event->tick;
             dest_event->port = source_event->param;
             dest_event->value = source_event->value;
 
-            ++(*midi_event_count);
+            ++dest_events->count;
         }
     }
 
@@ -573,8 +572,7 @@ void effect_translate_midi_events(
 
 void effect_process_events(
     int sample_num,
-    int midi_event_count,
-    struct MIDIEvent* midi_events,
+    struct MIDIEvents* midi_events,
     SGFLT* port_table,
     PluginDescriptor* descriptor,
     t_plugin_cc_map* cc_map,
@@ -583,11 +581,11 @@ void effect_process_events(
     struct MIDIEvent* midi_event;
     int midi_event_pos = 0;
     while(
-        midi_event_pos < midi_event_count
+        midi_event_pos < midi_events->count
         &&
-        midi_events[midi_event_pos].tick == sample_num
+        midi_events->events[midi_event_pos].tick == sample_num
     ){
-        midi_event = &midi_events[midi_event_pos];
+        midi_event = &midi_events->events[midi_event_pos];
         if(midi_event->type == EVENT_CONTROLLER){
             v_cc_map_translate(
                 cc_map,

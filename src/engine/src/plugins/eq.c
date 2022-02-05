@@ -249,8 +249,7 @@ void v_sgeq_run(
 
     effect_translate_midi_events(
         midi_events,
-        plugin_data->midi_events,
-        &plugin_data->midi_event_count,
+        &plugin_data->midi_events,
         &plugin_data->atm_queue,
         atm_events
     );
@@ -258,8 +257,7 @@ void v_sgeq_run(
     for(f_i = 0; f_i < sample_count; ++f_i){
         effect_process_events(
             f_i,
-            plugin_data->midi_event_count,
-            plugin_data->midi_events,
+            &plugin_data->midi_events,
             plugin_data->port_table,
             plugin_data->descriptor,
             &plugin_data->cc_map,

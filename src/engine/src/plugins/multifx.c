@@ -195,7 +195,9 @@ void v_multifx_process_midi_event(
             "v_multifx_process_midi_event: param %i out of range 1 to 128",
             a_event->param
         );
-        midi_event = &plugin_data->midi_events[plugin_data->midi_event_count];
+        midi_event = &plugin_data->midi_events.events[
+            plugin_data->midi_events.count
+        ];
         midi_event->type = EVENT_CONTROLLER;
         midi_event->tick = a_event->tick;
         midi_event->port = a_event->param;
@@ -211,7 +213,7 @@ void v_multifx_process_midi_event(
             }
         }
 
-        ++plugin_data->midi_event_count;
+        ++plugin_data->midi_events.count;
     }
 }
 
@@ -228,7 +230,7 @@ void v_multifx_run(
     int event_count = midi_events->len;
 
     int event_pos;
-    plugin_data->midi_event_count = 0;
+    plugin_data->midi_events.count = 0;
 
     for(event_pos = 0; event_pos < event_count; ++event_pos){
         v_multifx_process_midi_event(plugin_data, events[event_pos]);
@@ -264,8 +266,7 @@ void v_multifx_run(
         while((i_mono_out) < sample_count){
             effect_process_events(
                 i_mono_out,
-                plugin_data->midi_event_count,
-                plugin_data->midi_events,
+                &plugin_data->midi_events,
                 plugin_data->port_table,
                 plugin_data->descriptor,
                 &plugin_data->cc_map,

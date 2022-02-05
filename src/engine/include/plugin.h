@@ -317,8 +317,7 @@ SGFLT set_pmn_adsr(SGFLT, SGFLT, SGFLT, SGFLT);
 // for effects
 void effect_translate_midi_events(
     struct ShdsList* source_events,
-    struct MIDIEvent* dest_events,
-    int* midi_event_count,
+    struct MIDIEvents* dest_events,
     t_plugin_event_queue* atm_queue,
     struct ShdsList* atm_events
 );
@@ -326,8 +325,7 @@ void effect_translate_midi_events(
 // Called once per sample, does not process MIDI notes
 void effect_process_events(
     int sample_num,
-    int midi_event_count,
-    struct MIDIEvent* midi_events,
+    struct MIDIEvents* midi_events,
     SGFLT* port_table,
     PluginDescriptor * descriptor,
     t_plugin_cc_map* cc_map,

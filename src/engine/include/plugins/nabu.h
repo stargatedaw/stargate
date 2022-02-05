@@ -76,8 +76,8 @@ struct NabuPlugin {
     int ui_buff_count;
     int ui_buff_limit;
 
-    struct MIDIEvent midi_events[200];
     int midi_event_count;
+    struct MIDIEvent midi_events[200];
     t_plugin_event_queue atm_queue;
     int plugin_uid;
     fp_queue_message queue_func;

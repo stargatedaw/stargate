@@ -146,8 +146,7 @@ typedef struct {
 
     int i_buffer_clear;
 
-    int midi_event_count;
-    struct MIDIEvent midi_events[200];
+    struct MIDIEvents midi_events;
     t_plugin_event_queue atm_queue;
     int plugin_uid;
     fp_queue_message queue_func;
