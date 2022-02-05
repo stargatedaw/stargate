@@ -517,6 +517,7 @@ typedef struct{
 
     t_adsr adsr_amp_osc;
     int adsr_amp_on;
+    t_pn2_panner2 panner;
 } t_fm1_osc;
 
 typedef struct {
@@ -557,7 +558,6 @@ typedef struct {
     t_pnv_perc_env perc_env;
 
     t_fm1_osc osc[FM1_OSC_COUNT];
-    t_pn2_panner2 osc_panners[FM1_OSC_COUNT];
 
     SGFLT noise_amp;
     SGFLT noise_linamp;
@@ -602,6 +602,28 @@ typedef struct {
 
 } t_fm1_poly_voice;
 
+struct FM1OscControl {
+    PluginData *attack;
+    PluginData *decay;
+    PluginData *sustain;
+    PluginData *release;
+
+    PluginData *adsr_checked;
+
+    PluginData *adsr_fm_delay;
+    PluginData *adsr_fm_hold;
+
+    PluginData *pitch;
+    PluginData *tune;
+    PluginData *vol;
+    PluginData *type;
+    PluginData *uni_voice;
+    PluginData *uni_spread;
+    PluginData *pan;
+
+    PluginData *fm[FM1_OSC_COUNT];
+};
+
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
     struct SamplePair* output;
@@ -620,25 +642,7 @@ typedef struct {
     PluginData *release_main_start;
     PluginData *release_main_end;
 
-    PluginData *attack[FM1_OSC_COUNT];
-    PluginData *decay[FM1_OSC_COUNT];
-    PluginData *sustain[FM1_OSC_COUNT];
-    PluginData *release[FM1_OSC_COUNT];
-
-    PluginData *adsr_checked[FM1_OSC_COUNT];
-
-    PluginData *adsr_fm_delay[FM1_OSC_COUNT];
-    PluginData *adsr_fm_hold[FM1_OSC_COUNT];
-
-    PluginData *osc_pitch[FM1_OSC_COUNT];
-    PluginData *osc_tune[FM1_OSC_COUNT];
-    PluginData *osc_vol[FM1_OSC_COUNT];
-    PluginData *osc_type[FM1_OSC_COUNT];
-    PluginData *osc_uni_voice[FM1_OSC_COUNT];
-    PluginData *osc_uni_spread[FM1_OSC_COUNT];
-    PluginData *osc_pan[FM1_OSC_COUNT];
-
-    PluginData *osc_fm[FM1_OSC_COUNT][FM1_OSC_COUNT];
+    struct FM1OscControl osc[FM1_OSC_COUNT];
 
     PluginData *main_vol;
     PluginData *pan;

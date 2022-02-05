@@ -83,8 +83,8 @@ struct ResamplerStereoPair fm1_run_voice_osc(void* arg){
                 f_osc->osc_uni_spread,
                 (
                     a_voice->base_pitch +
-                    (*plugin_data->osc_pitch[f_osc_num]) +
-                    ((*plugin_data->osc_tune[f_osc_num]) * 0.01f)
+                    (*plugin_data->osc[f_osc_num].pitch) +
+                    ((*plugin_data->osc[f_osc_num].tune) * 0.01f)
                 )
             );
 
@@ -146,14 +146,14 @@ struct ResamplerStereoPair fm1_run_voice_osc(void* arg){
 
                 if(f_osc_amp >= 1.0f){  //clip at 0dB
                     result.left += f_osc->fm_last *
-                        a_voice->osc_panners[f_osc_num].gainL;
+                        a_voice->osc[f_osc_num].panner.gainL;
                     result.right += f_osc->fm_last *
-                        a_voice->osc_panners[f_osc_num].gainR;
+                        a_voice->osc[f_osc_num].panner.gainR;
                 } else {
                     result.left += f_osc->fm_last * f_osc_amp *
-                        a_voice->osc_panners[f_osc_num].gainL;
+                        a_voice->osc[f_osc_num].panner.gainL;
                     result.right += f_osc->fm_last * f_osc_amp *
-                        a_voice->osc_panners[f_osc_num].gainR;
+                        a_voice->osc[f_osc_num].panner.gainR;
                 }
             }
         }
@@ -207,14 +207,14 @@ void v_fm1_connect_port(
         case FM1_RELEASE_MAIN_START: plugin->release_main_start = data; break;
         case FM1_RELEASE_MAIN_END: plugin->release_main_end = data; break;
 
-        case FM1_ATTACK1: plugin->attack[0] = data; break;
-        case FM1_DECAY1: plugin->decay[0] = data; break;
-        case FM1_SUSTAIN1: plugin->sustain[0] = data; break;
-        case FM1_RELEASE1: plugin->release[0] = data; break;
-        case FM1_ATTACK2: plugin->attack[1] = data; break;
-        case FM1_DECAY2: plugin->decay[1] = data; break;
-        case FM1_SUSTAIN2: plugin->sustain[1] = data; break;
-        case FM1_RELEASE2: plugin->release[1] = data; break;
+        case FM1_ATTACK1: plugin->osc[0].attack = data; break;
+        case FM1_DECAY1: plugin->osc[0].decay = data; break;
+        case FM1_SUSTAIN1: plugin->osc[0].sustain = data; break;
+        case FM1_RELEASE1: plugin->osc[0].release = data; break;
+        case FM1_ATTACK2: plugin->osc[1].attack = data; break;
+        case FM1_DECAY2: plugin->osc[1].decay = data; break;
+        case FM1_SUSTAIN2: plugin->osc[1].sustain = data; break;
+        case FM1_RELEASE2: plugin->osc[1].release = data; break;
 
         case FM1_NOISE_AMP:
             plugin->noise_amp = data;
@@ -223,42 +223,42 @@ void v_fm1_connect_port(
             plugin->main_vol = data;
             break;
         case FM1_OSC1_PITCH:
-            plugin->osc_pitch[0] = data;
+            plugin->osc[0].pitch = data;
             break;
         case FM1_OSC1_TUNE:
-            plugin->osc_tune[0] = data;
+            plugin->osc[0].tune = data;
             break;
-        case FM1_OSC1_TYPE: plugin->osc_type[0] = data; break;
+        case FM1_OSC1_TYPE: plugin->osc[0].type = data; break;
         case FM1_OSC1_VOLUME:
-            plugin->osc_vol[0] = data;
+            plugin->osc[0].vol = data;
             break;
         case FM1_OSC2_PITCH:
-            plugin->osc_pitch[1] = data;
+            plugin->osc[1].pitch = data;
             break;
         case FM1_OSC2_TUNE:
-            plugin->osc_tune[1] = data;
+            plugin->osc[1].tune = data;
             break;
-        case FM1_OSC2_TYPE: plugin->osc_type[1] = data; break;
+        case FM1_OSC2_TYPE: plugin->osc[1].type = data; break;
         case FM1_OSC2_VOLUME:
-            plugin->osc_vol[1] = data;
+            plugin->osc[1].vol = data;
             break;
         case FM1_OSC1_UNISON_VOICES:
-            plugin->osc_uni_voice[0] = data;
+            plugin->osc[0].uni_voice = data;
             break;
         case FM1_OSC1_UNISON_SPREAD:
-            plugin->osc_uni_spread[0] = data;
+            plugin->osc[0].uni_spread = data;
             break;
         case FM1_OSC2_UNISON_VOICES:
-            plugin->osc_uni_voice[1] = data;
+            plugin->osc[1].uni_voice = data;
             break;
         case FM1_OSC2_UNISON_SPREAD:
-            plugin->osc_uni_spread[1] = data;
+            plugin->osc[1].uni_spread = data;
             break;
         case FM1_OSC3_UNISON_VOICES:
-            plugin->osc_uni_voice[2] = data;
+            plugin->osc[2].uni_voice = data;
             break;
         case FM1_OSC3_UNISON_SPREAD:
-            plugin->osc_uni_spread[2] = data;
+            plugin->osc[2].uni_spread = data;
             break;
         case FM1_MAIN_GLIDE:
             plugin->main_glide = data;
@@ -400,8 +400,8 @@ void v_fm1_connect_port(
 
 
         case FM1_NOISE_TYPE: plugin->noise_type = data; break;
-        case FM1_ADSR1_CHECKBOX: plugin->adsr_checked[0] = data; break;
-        case FM1_ADSR2_CHECKBOX: plugin->adsr_checked[1] = data; break;
+        case FM1_ADSR1_CHECKBOX: plugin->osc[0].adsr_checked = data; break;
+        case FM1_ADSR2_CHECKBOX: plugin->osc[1].adsr_checked = data; break;
 
         case FM1_LFO_AMP: plugin->lfo_amp = data; break;
         case FM1_LFO_PITCH: plugin->lfo_pitch = data; break;
@@ -409,29 +409,29 @@ void v_fm1_connect_port(
         case FM1_PITCH_ENV_AMT: plugin->pitch_env_amt = data; break;
         case FM1_LFO_AMOUNT: plugin->lfo_amount = data; break;
 
-        case FM1_OSC3_PITCH: plugin->osc_pitch[2] = data; break;
-        case FM1_OSC3_TUNE: plugin->osc_tune[2] = data; break;
-        case FM1_OSC3_TYPE: plugin->osc_type[2] = data; break;
-        case FM1_OSC3_VOLUME: plugin->osc_vol[2] = data;  break;
+        case FM1_OSC3_PITCH: plugin->osc[2].pitch = data; break;
+        case FM1_OSC3_TUNE: plugin->osc[2].tune = data; break;
+        case FM1_OSC3_TYPE: plugin->osc[2].type = data; break;
+        case FM1_OSC3_VOLUME: plugin->osc[2].vol = data;  break;
 
-        case FM1_OSC1_FM1: plugin->osc_fm[0][0] = data;  break;
-        case FM1_OSC1_FM2: plugin->osc_fm[0][1] = data;  break;
-        case FM1_OSC1_FM3: plugin->osc_fm[0][2] = data;  break;
+        case FM1_OSC1_FM1: plugin->osc[0].fm[0] = data;  break;
+        case FM1_OSC1_FM2: plugin->osc[0].fm[1] = data;  break;
+        case FM1_OSC1_FM3: plugin->osc[0].fm[2] = data;  break;
 
-        case FM1_OSC2_FM1: plugin->osc_fm[1][0] = data;  break;
-        case FM1_OSC2_FM2: plugin->osc_fm[1][1] = data;  break;
-        case FM1_OSC2_FM3: plugin->osc_fm[1][2] = data;  break;
+        case FM1_OSC2_FM1: plugin->osc[1].fm[0] = data;  break;
+        case FM1_OSC2_FM2: plugin->osc[1].fm[1] = data;  break;
+        case FM1_OSC2_FM3: plugin->osc[1].fm[2] = data;  break;
 
-        case FM1_OSC3_FM1: plugin->osc_fm[2][0] = data;  break;
-        case FM1_OSC3_FM2: plugin->osc_fm[2][1] = data;  break;
-        case FM1_OSC3_FM3: plugin->osc_fm[2][2] = data;  break;
+        case FM1_OSC3_FM1: plugin->osc[2].fm[0] = data;  break;
+        case FM1_OSC3_FM2: plugin->osc[2].fm[1] = data;  break;
+        case FM1_OSC3_FM3: plugin->osc[2].fm[2] = data;  break;
 
-        case FM1_ATTACK3: plugin->attack[2] = data; break;
-        case FM1_DECAY3: plugin->decay[2] = data; break;
-        case FM1_SUSTAIN3: plugin->sustain[2] = data; break;
-        case FM1_RELEASE3: plugin->release[2] = data; break;
+        case FM1_ATTACK3: plugin->osc[2].attack = data; break;
+        case FM1_DECAY3: plugin->osc[2].decay = data; break;
+        case FM1_SUSTAIN3: plugin->osc[2].sustain = data; break;
+        case FM1_RELEASE3: plugin->osc[2].release = data; break;
 
-        case FM1_ADSR3_CHECKBOX: plugin->adsr_checked[2] = data; break;
+        case FM1_ADSR3_CHECKBOX: plugin->osc[2].adsr_checked = data; break;
 
         case FM1_PERC_ENV_PITCH1: plugin->perc_env_pitch1 = data; break;
         case FM1_PERC_ENV_TIME1: plugin->perc_env_time1 = data; break;
@@ -443,29 +443,29 @@ void v_fm1_connect_port(
 
         case FM1_MONO_MODE: plugin->mono_mode = data; break;
 
-        case FM1_OSC1_FM4: plugin->osc_fm[0][3] = data;  break;
-        case FM1_OSC2_FM4: plugin->osc_fm[1][3] = data;  break;
-        case FM1_OSC3_FM4: plugin->osc_fm[2][3] = data;  break;
+        case FM1_OSC1_FM4: plugin->osc[0].fm[3] = data;  break;
+        case FM1_OSC2_FM4: plugin->osc[1].fm[3] = data;  break;
+        case FM1_OSC3_FM4: plugin->osc[2].fm[3] = data;  break;
 
-        case FM1_OSC4_UNISON_VOICES: plugin->osc_uni_voice[3] = data; break;
-        case FM1_OSC4_UNISON_SPREAD: plugin->osc_uni_spread[3] = data; break;
+        case FM1_OSC4_UNISON_VOICES: plugin->osc[3].uni_voice = data; break;
+        case FM1_OSC4_UNISON_SPREAD: plugin->osc[3].uni_spread = data; break;
 
-        case FM1_OSC4_PITCH: plugin->osc_pitch[3] = data; break;
-        case FM1_OSC4_TUNE: plugin->osc_tune[3] = data; break;
-        case FM1_OSC4_TYPE: plugin->osc_type[3] = data; break;
-        case FM1_OSC4_VOLUME: plugin->osc_vol[3] = data;  break;
+        case FM1_OSC4_PITCH: plugin->osc[3].pitch = data; break;
+        case FM1_OSC4_TUNE: plugin->osc[3].tune = data; break;
+        case FM1_OSC4_TYPE: plugin->osc[3].type = data; break;
+        case FM1_OSC4_VOLUME: plugin->osc[3].vol = data;  break;
 
-        case FM1_OSC4_FM1: plugin->osc_fm[3][0] = data;  break;
-        case FM1_OSC4_FM2: plugin->osc_fm[3][1] = data;  break;
-        case FM1_OSC4_FM3: plugin->osc_fm[3][2] = data;  break;
-        case FM1_OSC4_FM4: plugin->osc_fm[3][3] = data;  break;
+        case FM1_OSC4_FM1: plugin->osc[3].fm[0] = data;  break;
+        case FM1_OSC4_FM2: plugin->osc[3].fm[1] = data;  break;
+        case FM1_OSC4_FM3: plugin->osc[3].fm[2] = data;  break;
+        case FM1_OSC4_FM4: plugin->osc[3].fm[3] = data;  break;
 
-        case FM1_ATTACK4: plugin->attack[3] = data; break;
-        case FM1_DECAY4: plugin->decay[3] = data; break;
-        case FM1_SUSTAIN4: plugin->sustain[3] = data; break;
-        case FM1_RELEASE4: plugin->release[3] = data; break;
+        case FM1_ATTACK4: plugin->osc[3].attack = data; break;
+        case FM1_DECAY4: plugin->osc[3].decay = data; break;
+        case FM1_SUSTAIN4: plugin->osc[3].sustain = data; break;
+        case FM1_RELEASE4: plugin->osc[3].release = data; break;
 
-        case FM1_ADSR4_CHECKBOX: plugin->adsr_checked[3] = data; break;
+        case FM1_ADSR4_CHECKBOX: plugin->osc[3].adsr_checked = data; break;
 
         case FM1_FM_MACRO1: plugin->fm_macro[0] = data; break;
         case FM1_FM_MACRO1_OSC1_FM1: plugin->fm_macro_values[0][0][0] = data; break;
@@ -517,15 +517,15 @@ void v_fm1_connect_port(
         case FM1_LFO_PITCH_FINE: plugin->lfo_pitch_fine = data; break;
         case FM1_ADSR_PREFX: plugin->adsr_prefx = data; break;
 
-        case FM1_ADSR1_DELAY: plugin->adsr_fm_delay[0] = data; break;
-        case FM1_ADSR2_DELAY: plugin->adsr_fm_delay[1] = data; break;
-        case FM1_ADSR3_DELAY: plugin->adsr_fm_delay[2] = data; break;
-        case FM1_ADSR4_DELAY: plugin->adsr_fm_delay[3] = data; break;
+        case FM1_ADSR1_DELAY: plugin->osc[0].adsr_fm_delay = data; break;
+        case FM1_ADSR2_DELAY: plugin->osc[1].adsr_fm_delay = data; break;
+        case FM1_ADSR3_DELAY: plugin->osc[2].adsr_fm_delay = data; break;
+        case FM1_ADSR4_DELAY: plugin->osc[3].adsr_fm_delay = data; break;
 
-        case FM1_ADSR1_HOLD: plugin->adsr_fm_hold[0] = data; break;
-        case FM1_ADSR2_HOLD: plugin->adsr_fm_hold[1] = data; break;
-        case FM1_ADSR3_HOLD: plugin->adsr_fm_hold[2] = data; break;
-        case FM1_ADSR4_HOLD: plugin->adsr_fm_hold[3] = data; break;
+        case FM1_ADSR1_HOLD: plugin->osc[0].adsr_fm_hold = data; break;
+        case FM1_ADSR2_HOLD: plugin->osc[1].adsr_fm_hold = data; break;
+        case FM1_ADSR3_HOLD: plugin->osc[2].adsr_fm_hold = data; break;
+        case FM1_ADSR4_HOLD: plugin->osc[3].adsr_fm_hold = data; break;
 
         case FM1_PFX_ADSR_DELAY: plugin->pfx_delay = data; break;
         case FM1_PFX_ADSR_F_DELAY: plugin->pfx_delay_f = data; break;
@@ -550,45 +550,45 @@ void v_fm1_connect_port(
         case FM1_RELEASE_LFO: plugin->lfo_release = data; break;
         case FM1_ADSR_LFO_ON: plugin->lfo_adsr_on = data; break;
 
-        case FM1_OSC5_TYPE: plugin->osc_type[4] = data; break;
-        case FM1_OSC5_PITCH: plugin->osc_pitch[4] = data; break;
-        case FM1_OSC5_TUNE: plugin->osc_tune[4] = data; break;
-        case FM1_OSC5_VOLUME: plugin->osc_vol[4] = data; break;
-        case FM1_OSC5_UNISON_VOICES: plugin->osc_uni_voice[4] = data; break;
-        case FM1_OSC5_UNISON_SPREAD: plugin->osc_uni_spread[4] = data; break;
-        case FM1_OSC1_FM5: plugin->osc_fm[0][4] = data; break;
-        case FM1_OSC2_FM5: plugin->osc_fm[1][4] = data; break;
-        case FM1_OSC3_FM5: plugin->osc_fm[2][4] = data; break;
-        case FM1_OSC4_FM5: plugin->osc_fm[3][4] = data; break;
-        case FM1_OSC5_FM5: plugin->osc_fm[4][4] = data; break;
-        case FM1_OSC6_FM5: plugin->osc_fm[5][4] = data; break;
-        case FM1_ADSR5_DELAY: plugin->adsr_fm_delay[4] = data; break;
-        case FM1_ATTACK5 : plugin->attack[4] = data; break;
-        case FM1_ADSR5_HOLD: plugin->adsr_fm_hold[4] = data; break;
-        case FM1_DECAY5  : plugin->decay[4] = data; break;
-        case FM1_SUSTAIN5: plugin->sustain[4] = data; break;
-        case FM1_RELEASE5: plugin->release[4] = data; break;
-        case FM1_ADSR5_CHECKBOX: plugin->adsr_checked[4] = data; break;
+        case FM1_OSC5_TYPE: plugin->osc[4].type = data; break;
+        case FM1_OSC5_PITCH: plugin->osc[4].pitch = data; break;
+        case FM1_OSC5_TUNE: plugin->osc[4].tune = data; break;
+        case FM1_OSC5_VOLUME: plugin->osc[4].vol = data; break;
+        case FM1_OSC5_UNISON_VOICES: plugin->osc[4].uni_voice = data; break;
+        case FM1_OSC5_UNISON_SPREAD: plugin->osc[4].uni_spread = data; break;
+        case FM1_OSC1_FM5: plugin->osc[0].fm[4] = data; break;
+        case FM1_OSC2_FM5: plugin->osc[1].fm[4] = data; break;
+        case FM1_OSC3_FM5: plugin->osc[2].fm[4] = data; break;
+        case FM1_OSC4_FM5: plugin->osc[3].fm[4] = data; break;
+        case FM1_OSC5_FM5: plugin->osc[4].fm[4] = data; break;
+        case FM1_OSC6_FM5: plugin->osc[5].fm[4] = data; break;
+        case FM1_ADSR5_DELAY: plugin->osc[4].adsr_fm_delay = data; break;
+        case FM1_ATTACK5 : plugin->osc[4].attack = data; break;
+        case FM1_ADSR5_HOLD: plugin->osc[4].adsr_fm_hold = data; break;
+        case FM1_DECAY5  : plugin->osc[4].decay = data; break;
+        case FM1_SUSTAIN5: plugin->osc[4].sustain = data; break;
+        case FM1_RELEASE5: plugin->osc[4].release = data; break;
+        case FM1_ADSR5_CHECKBOX: plugin->osc[4].adsr_checked = data; break;
 
-        case FM1_OSC6_TYPE: plugin->osc_type[5] = data; break;
-        case FM1_OSC6_PITCH: plugin->osc_pitch[5] = data; break;
-        case FM1_OSC6_TUNE: plugin->osc_tune[5] = data; break;
-        case FM1_OSC6_VOLUME: plugin->osc_vol[5] = data; break;
-        case FM1_OSC6_UNISON_VOICES: plugin->osc_uni_voice[5] = data; break;
-        case FM1_OSC6_UNISON_SPREAD: plugin->osc_uni_spread[5] = data; break;
-        case FM1_OSC1_FM6: plugin->osc_fm[0][5] = data; break;
-        case FM1_OSC2_FM6: plugin->osc_fm[1][5] = data; break;
-        case FM1_OSC3_FM6: plugin->osc_fm[2][5] = data; break;
-        case FM1_OSC4_FM6: plugin->osc_fm[3][5] = data; break;
-        case FM1_OSC5_FM6: plugin->osc_fm[4][5] = data; break;
-        case FM1_OSC6_FM6: plugin->osc_fm[5][5] = data; break;
-        case FM1_ADSR6_DELAY: plugin->adsr_fm_delay[5] = data; break;
-        case FM1_ATTACK6: plugin->attack[5] = data; break;
-        case FM1_ADSR6_HOLD: plugin->adsr_fm_hold[5] = data; break;
-        case FM1_DECAY6  : plugin->decay[5] = data; break;
-        case FM1_SUSTAIN6: plugin->sustain[5] = data; break;
-        case FM1_RELEASE6: plugin->release[5] = data; break;
-        case FM1_ADSR6_CHECKBOX: plugin->adsr_checked[5] = data; break;
+        case FM1_OSC6_TYPE: plugin->osc[5].type = data; break;
+        case FM1_OSC6_PITCH: plugin->osc[5].pitch = data; break;
+        case FM1_OSC6_TUNE: plugin->osc[5].tune = data; break;
+        case FM1_OSC6_VOLUME: plugin->osc[5].vol = data; break;
+        case FM1_OSC6_UNISON_VOICES: plugin->osc[5].uni_voice = data; break;
+        case FM1_OSC6_UNISON_SPREAD: plugin->osc[5].uni_spread = data; break;
+        case FM1_OSC1_FM6: plugin->osc[0].fm[5] = data; break;
+        case FM1_OSC2_FM6: plugin->osc[1].fm[5] = data; break;
+        case FM1_OSC3_FM6: plugin->osc[2].fm[5] = data; break;
+        case FM1_OSC4_FM6: plugin->osc[3].fm[5] = data; break;
+        case FM1_OSC5_FM6: plugin->osc[4].fm[5] = data; break;
+        case FM1_OSC6_FM6: plugin->osc[5].fm[5] = data; break;
+        case FM1_ADSR6_DELAY: plugin->osc[5].adsr_fm_delay = data; break;
+        case FM1_ATTACK6: plugin->osc[5].attack = data; break;
+        case FM1_ADSR6_HOLD: plugin->osc[5].adsr_fm_hold = data; break;
+        case FM1_DECAY6  : plugin->osc[5].decay = data; break;
+        case FM1_SUSTAIN6: plugin->osc[5].sustain = data; break;
+        case FM1_RELEASE6: plugin->osc[5].release = data; break;
+        case FM1_ADSR6_CHECKBOX: plugin->osc[5].adsr_checked = data; break;
 
         case FM1_FM_MACRO1_OSC1_FM5: plugin->fm_macro_values[0][0][4] = data; break;
         case FM1_FM_MACRO1_OSC2_FM5: plugin->fm_macro_values[0][1][4] = data; break;
@@ -644,15 +644,15 @@ void v_fm1_connect_port(
         case FM1_FM_MACRO2_OSC5_VOL: plugin->amp_macro_values[1][4] = data; break;
         case FM1_FM_MACRO2_OSC6_VOL: plugin->amp_macro_values[1][5] = data; break;
 
-        case FM1_OSC5_FM1: plugin->osc_fm[4][0] = data; break;
-        case FM1_OSC5_FM2: plugin->osc_fm[4][1] = data; break;
-        case FM1_OSC5_FM3: plugin->osc_fm[4][2] = data; break;
-        case FM1_OSC5_FM4: plugin->osc_fm[4][3] = data; break;
+        case FM1_OSC5_FM1: plugin->osc[4].fm[0] = data; break;
+        case FM1_OSC5_FM2: plugin->osc[4].fm[1] = data; break;
+        case FM1_OSC5_FM3: plugin->osc[4].fm[2] = data; break;
+        case FM1_OSC5_FM4: plugin->osc[4].fm[3] = data; break;
 
-        case FM1_OSC6_FM1: plugin->osc_fm[5][0] = data; break;
-        case FM1_OSC6_FM2: plugin->osc_fm[5][1] = data; break;
-        case FM1_OSC6_FM3: plugin->osc_fm[5][2] = data; break;
-        case FM1_OSC6_FM4: plugin->osc_fm[5][3] = data; break;
+        case FM1_OSC6_FM1: plugin->osc[5].fm[0] = data; break;
+        case FM1_OSC6_FM2: plugin->osc[5].fm[1] = data; break;
+        case FM1_OSC6_FM3: plugin->osc[5].fm[2] = data; break;
+        case FM1_OSC6_FM4: plugin->osc[5].fm[3] = data; break;
 
         case FM1_NOISE_PREFX: plugin->noise_prefx = data; break;
 
@@ -689,12 +689,12 @@ void v_fm1_connect_port(
 
         case FM1_ADSR_LIN_MAIN: plugin->adsr_lin_main = data; break;
         case FM1_MAIN_PAN: plugin->pan = data; break;
-        case FM1_OSC1_PAN: plugin->osc_pan[0] = data; break;
-        case FM1_OSC2_PAN: plugin->osc_pan[1] = data; break;
-        case FM1_OSC3_PAN: plugin->osc_pan[2] = data; break;
-        case FM1_OSC4_PAN: plugin->osc_pan[3] = data; break;
-        case FM1_OSC5_PAN: plugin->osc_pan[4] = data; break;
-        case FM1_OSC6_PAN: plugin->osc_pan[5] = data; break;
+        case FM1_OSC1_PAN: plugin->osc[0].pan = data; break;
+        case FM1_OSC2_PAN: plugin->osc[1].pan = data; break;
+        case FM1_OSC3_PAN: plugin->osc[2].pan = data; break;
+        case FM1_OSC4_PAN: plugin->osc[3].pan = data; break;
+        case FM1_OSC5_PAN: plugin->osc[4].pan = data; break;
+        case FM1_OSC6_PAN: plugin->osc[5].pan = data; break;
     }
 }
 
@@ -847,7 +847,7 @@ void v_fm1_process_midi_event(
             SGFLT f_db;
 
             for(f_i = 0; f_i < FM1_OSC_COUNT; ++f_i){
-                int f_osc_type = (int)(*plugin_data->osc_type[f_i]) - 1;
+                int f_osc_type = (int)(*plugin_data->osc[f_i].type) - 1;
                 f_pfx_osc = &f_fm1_voice->osc[f_i];
 
                 if(f_osc_type >= 0){
@@ -869,7 +869,7 @@ void v_fm1_process_midi_event(
                     );
                     v_osc_wav_set_uni_voice_count(
                         &f_pfx_osc->osc_wavtable,
-                        *plugin_data->osc_uni_voice[f_i]
+                        *plugin_data->osc[f_i].uni_voice
                     );
                 } else {
                     f_pfx_osc->osc_on = 0;
@@ -877,18 +877,18 @@ void v_fm1_process_midi_event(
                 }
 
                 f_pfx_osc->osc_uni_spread =
-                    (*plugin_data->osc_uni_spread[f_i]) * 0.01f;
+                    (*plugin_data->osc[f_i].uni_spread) * 0.01f;
 
                 v_pn2_set_normalize(
-                    &f_fm1_voice->osc_panners[f_i],
-                    *plugin_data->osc_pan[f_i] * 0.01,
+                    &f_fm1_voice->osc[f_i].panner,
+                    *plugin_data->osc[f_i].pan * 0.01,
                     -3.0
                 );
 
                 int f_i2;
                 for(f_i2 = 0; f_i2 < FM1_OSC_COUNT; ++f_i2){
                     f_pfx_osc->osc_fm[f_i2] =
-                        (*plugin_data->osc_fm[f_i][f_i2]) * 0.005;
+                        (*plugin_data->osc[f_i].fm[f_i2]) * 0.005;
                     // TODO: FM2
                     // Make this control exponential, will break backwards
                     // compatibility of old projects and presets
@@ -897,7 +897,7 @@ void v_fm1_process_midi_event(
                     // f_pfx_osc->osc_fm[f_i2] *= f_pfx_osc->osc_fm[f_i2];
                 }
 
-                f_db = (*plugin_data->osc_vol[f_i]);
+                f_db = (*plugin_data->osc[f_i].vol);
 
                 v_adsr_retrigger(&f_pfx_osc->adsr_amp_osc);
 
@@ -910,31 +910,31 @@ void v_fm1_process_midi_event(
                 }
 
                 f_pfx_osc->adsr_amp_on =
-                    (int)(*plugin_data->adsr_checked[f_i]);
+                    (int)(*plugin_data->osc[f_i].adsr_checked);
 
                 if(f_pfx_osc->adsr_amp_on){
-                    SGFLT f_attack1 = *(plugin_data->attack[f_i]) * .01f;
+                    SGFLT f_attack1 = *(plugin_data->osc[f_i].attack) * .01f;
                     f_attack1 = (f_attack1) * (f_attack1);
-                    SGFLT f_decay1 = *(plugin_data->decay[f_i]) * .01f;
+                    SGFLT f_decay1 = *(plugin_data->osc[f_i].decay) * .01f;
                     f_decay1 = (f_decay1) * (f_decay1);
-                    SGFLT f_release1 = *(plugin_data->release[f_i]) * .01f;
+                    SGFLT f_release1 = *(plugin_data->osc[f_i].release) * .01f;
                     f_release1 = (f_release1) * (f_release1);
 
                     v_adsr_set_adsr_db(
                         &f_pfx_osc->adsr_amp_osc,
                         f_attack1,
                         f_decay1,
-                        *(plugin_data->sustain[f_i]),
+                        *(plugin_data->osc[f_i].sustain),
                         f_release1
                     );
 
                     v_adsr_set_delay_time(
                         &f_pfx_osc->adsr_amp_osc,
-                        (*plugin_data->adsr_fm_delay[f_i]) * 0.01f
+                        (*plugin_data->osc[f_i].adsr_fm_delay) * 0.01f
                     );
                     v_adsr_set_hold_time(
                         &f_pfx_osc->adsr_amp_osc,
-                        (*plugin_data->adsr_fm_hold[f_i]) * 0.01f
+                        (*plugin_data->osc[f_i].adsr_fm_hold) * 0.01f
                     );
                 }
 
@@ -1326,7 +1326,7 @@ void v_run_fm1(
             int f_i = 0;
 
             for(f_i = 0; f_i < FM1_OSC_COUNT; ++f_i){
-                f_osc_type[f_i] = (int)(*plugin_data->osc_type[f_i]) - 1;
+                f_osc_type[f_i] = (int)(*plugin_data->osc[f_i].type) - 1;
             }
 
             for(f_voice = 0; f_voice < FM1_POLYPHONY; ++f_voice){
@@ -2023,7 +2023,7 @@ void g_fm1_poly_init(
         f_osc->adsr_amp_on = 0;
         f_osc->osc_linamp = 1.0f;
         f_osc->osc_audible = 1;
-        g_pn2_init(&voice->osc_panners[f_i]);
+        g_pn2_init(&f_osc->panner);
 
         for(f_i2 = 0; f_i2 < FM1_OSC_COUNT; ++f_i2){
             f_osc->fm_osc_values[f_i2] = 0.0f;
