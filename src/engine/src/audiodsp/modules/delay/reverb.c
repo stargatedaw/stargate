@@ -169,7 +169,7 @@ void g_rvb_reverb_init_buffer(
 
     f_result->predelay_buffer[0] = buffer[0];
     f_result->predelay_buffer[1] = buffer[1];
-    f_result->color = 1.0f;
+    f_result->color = -12345.67;
     // Force set it the first time
     f_result->time = -123.5f;
     f_result->wet = 0.0f;
