@@ -137,8 +137,8 @@ void v_plugin_event_queue_reset(t_plugin_event_queue * self){
     self->count = 0;
 }
 
-t_plugin_event_queue_item * v_plugin_event_queue_iter(
-    t_plugin_event_queue *self,
+t_plugin_event_queue_item* v_plugin_event_queue_iter(
+    t_plugin_event_queue* self,
     int a_sample_num
 ){
     t_plugin_event_queue_item * f_item = &self->items[self->pos];
@@ -150,7 +150,7 @@ t_plugin_event_queue_item * v_plugin_event_queue_iter(
        ++self->pos;
        return f_item;
     } else {
-        return 0;
+        return NULL;
     }
 }
 
@@ -159,8 +159,9 @@ void v_plugin_event_queue_atm_set(
     int a_sample_num,
     SGFLT * a_table
 ){
+    t_plugin_event_queue_item * f_item;
     while(1){
-        t_plugin_event_queue_item * f_item = v_plugin_event_queue_iter(
+        f_item = v_plugin_event_queue_iter(
             self,
             a_sample_num
         );
