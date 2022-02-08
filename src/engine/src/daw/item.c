@@ -24,7 +24,7 @@ void g_daw_item_get(t_daw* self, int a_uid){
     f_result->events = NULL;
 
     char f_full_path[2048];
-    sprintf(f_full_path, "%s%i", self->item_folder, a_uid);
+    sg_snprintf(f_full_path, 2048, "%s%i", self->item_folder, a_uid);
 
     t_2d_char_array * f_current_string = g_get_2d_array_from_file(
         f_full_path,

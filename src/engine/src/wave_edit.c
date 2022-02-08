@@ -199,7 +199,7 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
 
     char f_tmp_finished[1024];
 
-    sprintf(f_tmp_finished, "%s.finished", a_file_out);
+    sg_snprintf(f_tmp_finished, 1024, "%s.finished", a_file_out);
 
     v_write_to_file(f_tmp_finished, "finished");
 
@@ -240,15 +240,30 @@ void v_set_we_file(t_wave_edit * self, const char * a_uid){
 }
 
 void v_we_open_tracks(){
-    v_open_track(wave_edit->track_pool[0], wave_edit->tracks_folder, 0);
+    v_open_track(
+        wave_edit->track_pool[0],
+        wave_edit->tracks_folder,
+        0
+    );
 }
 
 void v_we_open_project(){
-    sprintf(wave_edit->project_folder, "%s%sprojects%swave_edit",
-        STARGATE->project_folder, PATH_SEP, PATH_SEP);
+    sg_snprintf(
+        wave_edit->project_folder,
+        1024,
+        "%s%sprojects%swave_edit",
+        STARGATE->project_folder,
+        PATH_SEP,
+        PATH_SEP
+    );
 
-    sprintf(wave_edit->tracks_folder, "%s%stracks",
-        wave_edit->project_folder, PATH_SEP);
+    sg_snprintf(
+        wave_edit->tracks_folder,
+        1024,
+        "%s%stracks",
+        wave_edit->project_folder,
+        PATH_SEP
+    );
     v_we_open_tracks();
 }
 
@@ -257,7 +272,7 @@ void v_set_wave_editor_item(
     const char * a_val
 ){
     t_2d_char_array * f_current_string = g_get_2d_array(MEDIUM_STRING);
-    sprintf(f_current_string->array, "%s", a_val);
+    sg_snprintf(f_current_string->array, MEDIUM_STRING, "%s", a_val);
     t_audio_item * f_old = self->ab_audio_item;
     t_audio_item * f_result = g_audio_item_load_single(
         STARGATE->thread_storage[0].sample_rate,
@@ -420,8 +435,9 @@ void v_we_osc_send(t_osc_send_data * a_buffers){
 
     f_i = 0;
     t_pkm_peak_meter * f_pkm = wave_edit->track_pool[0]->peak_meter;
-    sprintf(
+    sg_snprintf(
         a_buffers->f_tmp1,
+        OSC_MAX_MESSAGE_SIZE,
         "%i:%f:%f",
         f_i,
         f_pkm->value[0],
@@ -438,7 +454,7 @@ void v_we_osc_send(t_osc_send_data * a_buffers){
             0].whole_number)
         / (SGFLT)(wave_edit->ab_audio_item->audio_pool_item->length);
 
-        sprintf(a_buffers->f_msg, "%f", f_frac);
+        sg_snprintf(a_buffers->f_msg, 128, "%f", f_frac);
         v_queue_osc_message("wec", a_buffers->f_msg);
     }
 
@@ -478,8 +494,10 @@ void v_we_osc_send(t_osc_send_data * a_buffers){
 
         for(f_i = 0; f_i < f_index; ++f_i)
         {
-            sprintf(
-                a_buffers->f_tmp2, "%s|%s\n",
+            sg_snprintf(
+                a_buffers->f_tmp2,
+                OSC_MAX_MESSAGE_SIZE,
+                "%s|%s\n",
                 a_buffers->osc_queue_keys[f_i],
                 a_buffers->osc_queue_vals[f_i]
             );

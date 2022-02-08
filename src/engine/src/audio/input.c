@@ -193,8 +193,9 @@ void v_update_audio_inputs(char * a_project_folder){
     char f_tmp_file_name[2048];
 
     t_audio_input * f_ai;
-    sprintf(
+    sg_snprintf(
         f_inputs_file,
+        2048,
         "%s%sinput.txt",
         a_project_folder,
         PATH_SEP
@@ -260,8 +261,9 @@ void v_update_audio_inputs(char * a_project_folder){
             f_ai->vol = f_vol;
             f_ai->vol_linear = f_db_to_linear_fast(f_vol);
 
-            sprintf(
+            sg_snprintf(
                 f_tmp_file_name,
+                2048,
                 "%s%i",
                 STARGATE->audio_tmp_folder,
                 f_index
@@ -287,8 +289,9 @@ void v_update_audio_inputs(char * a_project_folder){
             f_ai->vol = 0.0f;
             f_ai->vol_linear = 1.0f;
 
-            sprintf(
+            sg_snprintf(
                 f_tmp_file_name,
+                2048,
                 "%s%i",
                 STARGATE->audio_tmp_folder,
                 f_i
@@ -401,15 +404,17 @@ void v_stop_record_audio(){
             sf_close(f_ai->sndfile);
             f_ai->sndfile = NULL;
 
-            sprintf(
+            sg_snprintf(
                 f_file_name_old,
+                2048,
                 "%s%i",
                 STARGATE->audio_tmp_folder,
                 f_i
             );
 
-            sprintf(
+            sg_snprintf(
                 f_file_name_new,
+                2048,
                 "%s%i.wav",
                 STARGATE->audio_tmp_folder,
                 f_i
@@ -439,8 +444,9 @@ void v_prepare_to_record_audio(){
         f_ai->buffer_iterator[0] = 0;
         f_ai->buffer_iterator[1] = 0;
         if(f_ai->rec){
-            sprintf(
+            sg_snprintf(
                 path,
+                2048,
                 "%s%i",
                 STARGATE->audio_tmp_folder,
                 f_i

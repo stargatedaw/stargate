@@ -182,9 +182,9 @@ void v_daw_offline_render(
     char f_tmp_finished[1024];
 
     if(a_stem){
-        sprintf(f_tmp_finished, "%s/finished", a_file_out);
+        sg_snprintf(f_tmp_finished, 1024, "%s/finished", a_file_out);
     } else {
-        sprintf(f_tmp_finished, "%s.finished", a_file_out);
+        sg_snprintf(f_tmp_finished, 1024, "%s.finished", a_file_out);
     }
 
     v_write_to_file(f_tmp_finished, "finished");

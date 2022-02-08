@@ -129,6 +129,14 @@ void sg_assert_ptr(void* cond, char* msg, ...)
     __attribute__((format(printf, 2, 3)));
 void sg_abort(char* msg, ...) __attribute__((format(printf, 1, 2)));
 
+// snprintf that aborts and logs a message when @size is exceeded
+void sg_snprintf(
+    char* str,
+    size_t size,
+    char* fmt,
+    ...
+) __attribute__((format(printf, 3, 4)));
+
 typedef struct {
     char padding1[CACHE_LINE_SIZE];
     SGFLT sample_rate;

@@ -222,8 +222,10 @@ void v_destructor(){
         if(STARGATE->audio_inputs[f_i].sndfile)
         {
             sf_close(STARGATE->audio_inputs[f_i].sndfile);
-            sprintf(
-                tmp_sndfile_name, "%s%i.wav",
+            sg_snprintf(
+                tmp_sndfile_name,
+                2048,
+                "%s%i.wav",
                 STARGATE->audio_tmp_folder,
                 f_i
             );

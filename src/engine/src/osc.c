@@ -67,13 +67,15 @@ void v_queue_osc_message(
         );
     } else {
         pthread_spin_lock(&STARGATE->ui_spinlock);
-        sprintf(
+        sg_snprintf(
             STARGATE->osc_queue_keys[STARGATE->osc_queue_index],
+            12,
             "%s",
             a_key
         );
-        sprintf(
+        sg_snprintf(
             STARGATE->osc_queue_vals[STARGATE->osc_queue_index],
+            65536,
             "%s",
             a_val
         );

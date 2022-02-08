@@ -13,7 +13,13 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self)
     t_daw_atm_point * last_point = NULL;
 
     char f_file[1024] = "\0";
-    sprintf(f_file, "%s%sautomation.txt", self->project_folder, PATH_SEP);
+    sg_snprintf(
+        f_file,
+        1024,
+        "%s%sautomation.txt",
+        self->project_folder,
+        PATH_SEP
+    );
 
     if(i_file_exists(f_file))
     {

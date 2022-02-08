@@ -17,8 +17,9 @@ void v_open_project(const char* a_project_folder, int a_first_load){
 #endif
 
     char stargate_dot_project[1024];
-    sprintf(
+    sg_snprintf(
         stargate_dot_project,
+        1024,
         "%s%sstargate.project",
         a_project_folder,
         PATH_SEP
@@ -32,51 +33,63 @@ void v_open_project(const char* a_project_folder, int a_first_load){
         exit(321);
     }
     log_info("Setting files and folders");
-    sprintf(STARGATE->project_folder, "%s", a_project_folder);
-    sprintf(
+    sg_snprintf(
+        STARGATE->project_folder,
+        1024,
+        "%s",
+        a_project_folder
+    );
+    sg_snprintf(
         STARGATE->plugins_folder,
+        1024,
         "%s%sprojects%splugins%s",
         STARGATE->project_folder,
         PATH_SEP,
         PATH_SEP,
         PATH_SEP
     );
-    sprintf(
+    sg_snprintf(
         STARGATE->samples_folder,
+        1024,
         "%s%saudio%ssamples",
         STARGATE->project_folder,
         PATH_SEP,
         PATH_SEP
     );  //No trailing slash
-    sprintf(
+    sg_snprintf(
         STARGATE->samplegraph_folder,
+        1024,
         "%s%saudio%ssamplegraph",
         STARGATE->project_folder,
         PATH_SEP,
         PATH_SEP
     );  //No trailing slash
 
-    sprintf(
+    sg_snprintf(
         STARGATE->audio_pool->samples_folder,
+        1024,
         "%s",
         STARGATE->samples_folder
     );
 
-    sprintf(
+    sg_snprintf(
         STARGATE->audio_pool_file,
+        1024,
         "%s%saudio%saudio_pool",
         STARGATE->project_folder,
         PATH_SEP,
         PATH_SEP
     );
-    sprintf(
+    sg_snprintf(
         STARGATE->audio_folder,
+        1024,
         "%s%saudio",
         STARGATE->project_folder,
         PATH_SEP
     );
-    sprintf(
+    sg_snprintf(
         STARGATE->audio_tmp_folder,
+        1024,
         "%s%saudio%sfiles%stmp%s",
         STARGATE->project_folder,
         PATH_SEP,

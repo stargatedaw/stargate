@@ -172,8 +172,9 @@ void v_scc_run(
 
     if((int)(*plugin_data->peak_meter)){
         if(f_cmp->peak_tracker.dirty){
-            sprintf(
+            sg_snprintf(
                 plugin_data->ui_msg_buff,
+                64,
                 "%i|gain|%f",
                 plugin_data->plugin_uid,
                 f_cmp->peak_tracker.gain_redux

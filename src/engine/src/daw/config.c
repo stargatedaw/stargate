@@ -338,8 +338,9 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
     a_buffers->f_tmp2[0] = '\0';
 
     f_pkm = DAW->track_pool[0]->peak_meter;
-    sprintf(
+    sg_snprintf(
         a_buffers->f_tmp2,
+        OSC_MAX_MESSAGE_SIZE,
         "%i:%f:%f",
         0,
         f_pkm->value[0],
@@ -350,8 +351,9 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
     for(f_i = 1; f_i < DN_TRACK_COUNT; ++f_i){
         f_pkm = DAW->track_pool[f_i]->peak_meter;
         if(!f_pkm->dirty){  //has ran since last v_pkm_reset())
-            sprintf(
+            sg_snprintf(
                 a_buffers->f_tmp1,
+                OSC_MAX_MESSAGE_SIZE,
                 "|%i:%f:%f",
                 f_i,
                 f_pkm->value[0],
@@ -372,8 +374,9 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
         &&
         !STARGATE->is_offline_rendering
     ){
-        sprintf(
+        sg_snprintf(
             a_buffers->f_msg,
+            128,
             "%f",
             DAW->ts[0].ml_current_beat
         );
@@ -414,8 +417,9 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
 
         if(!STARGATE->is_offline_rendering){
             for(f_i = 0; f_i < f_index; ++f_i){
-                sprintf(
+                sg_snprintf(
                     a_buffers->f_tmp1,
+                    OSC_MAX_MESSAGE_SIZE,
                     "%s|%s\n",
                     a_buffers->osc_queue_keys[f_i],
                     a_buffers->osc_queue_vals[f_i]

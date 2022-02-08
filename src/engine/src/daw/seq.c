@@ -182,8 +182,9 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
 
 
     char f_full_path[TINY_STRING];
-    sprintf(
+    sg_snprintf(
         f_full_path,
+        TINY_STRING,
         "%s%ssongs%s%i",
         self->project_folder,
         PATH_SEP,
@@ -338,8 +339,9 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
 
 NO_OPTIMIZATION void v_daw_open_tracks(){
     char f_file_name[1024];
-    sprintf(
+    sg_snprintf(
         f_file_name,
+        1024,
         "%s%sprojects%sdaw%stracks.txt",
         STARGATE->project_folder,
         PATH_SEP,

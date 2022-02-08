@@ -54,8 +54,9 @@ t_daw_routing_graph * g_daw_routing_graph_get(t_daw * self)
     f_result->track_pool_sorted_count = 0;
 
     char f_tmp[1024];
-    sprintf(
+    sg_snprintf(
         f_tmp,
+        1024,
         "%s%sprojects%sdaw%srouting.txt",
         STARGATE->project_folder,
         PATH_SEP,

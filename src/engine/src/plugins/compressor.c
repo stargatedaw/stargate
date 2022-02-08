@@ -164,8 +164,9 @@ void v_sg_comp_run(
 
     if((int)(plugin_data->port_table[SG_COMP_UI_MSG_ENABLED])){
         if(f_cmp->peak_tracker.dirty){
-            sprintf(
+            sg_snprintf(
                 plugin_data->ui_msg_buff,
+                64,
                 "%i|gain|%f",
                 plugin_data->plugin_uid,
                 f_cmp->peak_tracker.gain_redux

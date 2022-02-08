@@ -92,7 +92,7 @@ NO_OPTIMIZATION int midiDeviceInit(
     self->loaded = 0;
     self->f_device_id = pmNoDevice;
     self->name[0] = '\0';
-    sprintf(self->name, "%s", f_midi_device_name);
+    sg_snprintf(self->name, 256, "%s", f_midi_device_name);
 
     if(strcmp(f_midi_device_name, "None"))
     {

@@ -43,7 +43,7 @@ void v_ui_send(char * a_path, char * a_msg){
         msg_len
     );
     char msg[60000];
-    sprintf(msg, "%s\n%s", a_path, a_msg);
+    sg_snprintf(msg, 60000, "%s\n%s", a_path, a_msg);
     ipc_client_send(msg);
 }
 
@@ -357,11 +357,15 @@ void v_set_control_from_atm(
     int a_plugin_uid,
     t_track * f_track
 ){
-    if(!STARGATE->is_offline_rendering)
-    {
-        sprintf(
-            f_track->osc_cursor_message, "%i|%i|%f",
-            a_plugin_uid, event->port, event->value);
+    if(!STARGATE->is_offline_rendering){
+        sg_snprintf(
+            f_track->osc_cursor_message,
+            128,
+            "%i|%i|%f",
+            a_plugin_uid,
+            event->port,
+            event->value
+        );
         v_queue_osc_message("pc", f_track->osc_cursor_message);
     }
 }
@@ -371,11 +375,13 @@ void v_set_control_from_cc(
     t_track* f_track
 ){
     if(!STARGATE->is_offline_rendering){
-        sprintf(
+        sg_snprintf(
             f_track->osc_cursor_message,
+            128,
             "%i|%i|%i",
-            f_track->track_num, event->param,
-            (int)(event->value)
+            f_track->track_num,
+            event->param,
+            (int)event->value
         );
         v_queue_osc_message("cc", f_track->osc_cursor_message);
     }
@@ -457,7 +463,14 @@ NO_OPTIMIZATION void v_open_track(
 ){
     char f_file_name[1024];
 
-    sprintf(f_file_name, "%s%s%i", a_tracks_folder, PATH_SEP, a_index);
+    sg_snprintf(
+        f_file_name,
+        1024,
+        "%s%s%i",
+        a_tracks_folder,
+        PATH_SEP,
+        a_index
+    );
 
     if(i_file_exists(f_file_name)){
         log_info("%s exists, opening track", f_file_name);
@@ -1215,7 +1228,7 @@ void v_sg_configure(const char* a_key, const char* a_value){
     {
         t_2d_char_array * f_arr = g_get_2d_array(SMALL_STRING);
         char f_tmp_char[SMALL_STRING];
-        sprintf(f_tmp_char, "%s", a_value);
+        sg_snprintf(f_tmp_char, SMALL_STRING, "%s", a_value);
         f_arr->array = f_tmp_char;
         char * f_in_file = (char*)malloc(sizeof(char) * TINY_STRING);
         v_iterate_2d_char_array(f_arr);
@@ -1258,7 +1271,7 @@ void v_sg_configure(const char* a_key, const char* a_value){
     {
         t_2d_char_array * f_arr = g_get_2d_array(SMALL_STRING);
         char f_tmp_char[SMALL_STRING];
-        sprintf(f_tmp_char, "%s", a_value);
+        sg_snprintf(f_tmp_char, SMALL_STRING, "%s", a_value);
         f_arr->array = f_tmp_char;
         char * f_in_file = (char*)malloc(sizeof(char) * TINY_STRING);
         v_iterate_2d_char_array(f_arr);

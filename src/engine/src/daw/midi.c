@@ -17,8 +17,9 @@ void v_daw_set_midi_devices(){
         return;
     }
 
-    sprintf(
+    sg_snprintf(
         f_path,
+        2048,
         "%s%sprojects%sdaw%smidi_routing.txt",
         STARGATE->project_folder,
         PATH_SEP,

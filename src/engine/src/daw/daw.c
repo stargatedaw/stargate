@@ -89,7 +89,7 @@ void g_daw_seq_pool_load(t_daw* self){
     int i;
     char path[2048];
     for(i = 0; i < DAW_MAX_SONG_COUNT; ++i){
-        snprintf(path, 1024, "%s%i", self->sequence_folder, i);
+        sg_snprintf(path, 2048, "%s%i", self->sequence_folder, i);
         if(i_file_exists(path)){
             self->seq_pool[i] = g_daw_sequence_get(self, i);
         }
@@ -98,16 +98,44 @@ void g_daw_seq_pool_load(t_daw* self){
 
 void v_daw_open_project(int a_first_load){
     log_info("Setting DAW project folders");
-    sprintf(DAW->project_folder, "%s%sprojects%sdaw",
-        STARGATE->project_folder, PATH_SEP, PATH_SEP);
-    sprintf(DAW->item_folder, "%s%sitems%s",
-        DAW->project_folder, PATH_SEP, PATH_SEP);
-    sprintf(DAW->sequence_folder, "%s%ssongs%s",
-        DAW->project_folder, PATH_SEP, PATH_SEP);
-    sprintf(DAW->tracks_folder, "%s%stracks",
-        DAW->project_folder, PATH_SEP);
-    sprintf(DAW->seq_event_file, "%s%sseq_event.txt",
-        DAW->project_folder, PATH_SEP);
+    sg_snprintf(
+        DAW->project_folder,
+        1024,
+        "%s%sprojects%sdaw",
+        STARGATE->project_folder,
+        PATH_SEP,
+        PATH_SEP
+    );
+    sg_snprintf(
+        DAW->item_folder,
+        1024,
+        "%s%sitems%s",
+        DAW->project_folder,
+        PATH_SEP,
+        PATH_SEP
+    );
+    sg_snprintf(
+        DAW->sequence_folder,
+        1024,
+        "%s%ssongs%s",
+        DAW->project_folder,
+        PATH_SEP,
+        PATH_SEP
+    );
+    sg_snprintf(
+        DAW->tracks_folder,
+        1024,
+        "%s%stracks",
+        DAW->project_folder,
+        PATH_SEP
+    );
+    sg_snprintf(
+        DAW->seq_event_file,
+        1024,
+        "%s%sseq_event.txt",
+        DAW->project_folder,
+        PATH_SEP
+    );
 
     int f_i;
 

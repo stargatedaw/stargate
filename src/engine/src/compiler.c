@@ -218,3 +218,22 @@ void sg_assert_ptr(void* cond, char* msg, ...){
         _sg_abort(args, msg);
     }
 }
+
+void sg_snprintf(
+    char* str,
+    size_t size,
+    char* fmt,
+    ...
+){
+    size_t length;
+    va_list args;
+    va_start(args, fmt);
+    length = vsnprintf(str, size, fmt, args);
+    va_end(args);
+    sg_assert(
+        length < size,
+        "length %i < size %i",
+        (int)length,
+        (int)size
+    );
+}

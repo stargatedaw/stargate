@@ -162,7 +162,7 @@ void get_file_setting(
     char * f_home = get_home_dir();
     char f_filename[256];
 
-    sprintf(f_filename, "%s.txt", a_name);
+    sg_snprintf(f_filename, 256, "%s.txt", a_name);
 
     char * path_list[4] = {
         f_home, STARGATE_VERSION, "config", f_filename
@@ -172,12 +172,9 @@ void get_file_setting(
 
     log_info("get_file_setting:  %s", f_path);
 
-    if(i_file_exists(f_path))
-    {
+    if(i_file_exists(f_path)){
         get_string_from_file(f_path, TINY_STRING, a_dest);
-    }
-    else
-    {
+    } else {
         sprintf(a_dest, "%s", a_default);
     }
 }
