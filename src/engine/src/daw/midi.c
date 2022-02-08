@@ -232,8 +232,9 @@ void v_daw_process_external_midi(
                         f_sample_rate
                     );
 
-                sprintf(
+                sg_snprintf(
                     f_osc_msg,
+                    1024,
                     "on|%f|%i|%i|%i|%ld",
                     f_beat,
                     a_track->track_num,
@@ -244,7 +245,12 @@ void v_daw_process_external_midi(
                 v_queue_osc_message("mrec", f_osc_msg);
             }
 
-            sprintf(f_osc_msg, "1|%i", events[f_i2].note);
+            sg_snprintf(
+                f_osc_msg,
+                1024,
+                "1|%i",
+                events[f_i2].note
+            );
             v_queue_osc_message("ne", f_osc_msg);
 
         } else if(events[f_i2].type == EVENT_NOTEOFF){
@@ -256,8 +262,9 @@ void v_daw_process_external_midi(
                         f_sample_rate
                     );
 
-                sprintf(
+                sg_snprintf(
                     f_osc_msg,
+                    1024,
                     "off|%f|%i|%i|%ld",
                     f_beat,
                     a_track->track_num,
@@ -267,7 +274,12 @@ void v_daw_process_external_midi(
                 v_queue_osc_message("mrec", f_osc_msg);
             }
 
-            sprintf(f_osc_msg, "0|%i", events[f_i2].note);
+            sg_snprintf(
+                f_osc_msg,
+                1024,
+                "0|%i",
+                events[f_i2].note
+            );
             v_queue_osc_message("ne", f_osc_msg);
         } else if(events[f_i2].type == EVENT_PITCHBEND){
             if(f_playback_mode == PLAYBACK_MODE_REC){
@@ -278,8 +290,9 @@ void v_daw_process_external_midi(
                         f_sample_rate
                     );
 
-                sprintf(
+                sg_snprintf(
                     f_osc_msg,
+                    1024,
                     "pb|%f|%i|%f|%ld",
                     f_beat,
                     a_track->track_num,
@@ -294,7 +307,7 @@ void v_daw_process_external_midi(
             if(f_midi_learn){
                 STARGATE->midi_learn = 0;
                 f_midi_learn = 0;
-                sprintf(f_osc_msg, "%i", controller);
+                sg_snprintf(f_osc_msg, 1024, "%i", controller);
                 v_queue_osc_message("ml", f_osc_msg);
             }
 
@@ -312,8 +325,9 @@ void v_daw_process_external_midi(
                         f_sample_rate
                     );
 
-                sprintf(
+                sg_snprintf(
                     f_osc_msg,
+                    1024,
                     "cc|%f|%i|%i|%f|%ld",
                     f_beat,
                     a_track->track_num,

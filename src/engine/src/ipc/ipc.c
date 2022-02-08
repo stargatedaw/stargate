@@ -68,8 +68,9 @@ void encode_ui_message(
     struct UIMessage* self,
     char* data
 ){
-    sprintf(
+    sg_snprintf(
         data,
+        60128,
         "%s\n%s",
         self->path,
         self->value
