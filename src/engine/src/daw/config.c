@@ -8,6 +8,7 @@
 #include "daw.h"
 #include "daw/config.h"
 #include "files.h"
+#include "globals.h"
 #include "osc.h"
 
 
@@ -15,6 +16,7 @@ void v_daw_configure(const char* a_key, const char* a_value){
     char buf[1024];
     t_daw* self = DAW;
     log_info("v_daw_configure:  key: \"%s\", value: \"%s\"", a_key, a_value);
+    pthread_mutex_lock(&CONFIG_LOCK);
 
     if(!strcmp(a_key, DN_CONFIGURE_KEY_NOTE_ON)){
         a_value = str_split(a_value, buf, '|');
@@ -290,19 +292,14 @@ void v_daw_configure(const char* a_key, const char* a_value){
         STARGATE->is_offline_rendering = 0;
         pthread_spin_unlock(&STARGATE->main_lock);
 
-    }
-    else if(!strcmp(a_key, DN_CONFIGURE_KEY_SET_POS))
-    {
-        if(STARGATE->playback_mode != 0)
-        {
-            return;
+    } else if(!strcmp(a_key, DN_CONFIGURE_KEY_SET_POS)){
+        if(STARGATE->playback_mode == 0){
+            double f_beat = atof(a_value);
+
+            pthread_spin_lock(&STARGATE->main_lock);
+            v_daw_set_playback_cursor(self, f_beat);
+            pthread_spin_unlock(&STARGATE->main_lock);
         }
-
-        double f_beat = atof(a_value);
-
-        pthread_spin_lock(&STARGATE->main_lock);
-        v_daw_set_playback_cursor(self, f_beat);
-        pthread_spin_unlock(&STARGATE->main_lock);
     }
     else if(!strcmp(a_key, DN_CONFIGURE_KEY_MIDI_DEVICE))
     {
@@ -328,6 +325,7 @@ void v_daw_configure(const char* a_key, const char* a_value){
             a_value
         );
     }
+    pthread_mutex_unlock(&CONFIG_LOCK);
 }
 
 void v_daw_osc_send(t_osc_send_data * a_buffers){

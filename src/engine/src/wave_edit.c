@@ -16,6 +16,7 @@ GNU General Public License for more details.
 #include "wave_edit.h"
 #include "csv/1d.h"
 #include "files.h"
+#include "globals.h"
 
 t_wave_edit * wave_edit;
 
@@ -520,6 +521,7 @@ void v_we_update_audio_inputs(){
 
 void v_we_configure(const char* a_key, const char* a_value){
     log_info("v_we_configure:  key: \"%s\", value: \"%s\"", a_key, a_value);
+    pthread_mutex_lock(&CONFIG_LOCK);
 
     if(!strcmp(a_key, WN_CONFIGURE_KEY_LOAD_AB_OPEN)){
         v_set_we_file(wave_edit, a_value);
@@ -559,6 +561,7 @@ void v_we_configure(const char* a_key, const char* a_value){
     } else {
         log_info("Unknown configure message key: %s, value %s", a_key, a_value);
     }
+    pthread_mutex_unlock(&CONFIG_LOCK);
 }
 
 void v_we_test(){
