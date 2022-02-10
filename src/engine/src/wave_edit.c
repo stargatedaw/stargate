@@ -412,6 +412,9 @@ void v_run_wave_editor(
             f_plugin->descriptor->run_replacing(
                 f_plugin->plugin_handle,
                 sample_count,
+                f_track->buffers,
+                f_track->sc_buffers,
+                f_track->buffers,
                 f_track->event_list,
                 f_plugin->atm_list
             );

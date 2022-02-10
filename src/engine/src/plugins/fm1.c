@@ -25,7 +25,6 @@ void v_run_fm1_voice(
     t_voc_single_voice*,
     t_fm1_poly_voice*,
     struct SamplePair*,
-    int,
     int
 );
 
@@ -169,19 +168,6 @@ void v_fm1_on_stop(PluginHandle instance){
     }
 
     plugin->sv_pitch_bend_value = 0.0f;
-}
-
-void v_fm1_connect_buffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    if(a_is_sidechain){
-        return;
-    }
-
-    t_fm1 *plugin = (t_fm1*)instance;
-    plugin->output = DataLocation;
 }
 
 void v_fm1_connect_port(
@@ -1236,11 +1222,15 @@ void v_fm1_process_midi_event(
 void v_run_fm1(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffer,
+    struct SamplePair* sc_buffer,
+    struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList* atm_events
 ){
     t_fm1 *plugin_data = (t_fm1*) instance;
     t_fm1_poly_voice* pvoice;
+    struct SamplePair sample;
 
     t_seq_event **events = (t_seq_event**)midi_events->data;
     int event_count = midi_events->len;
@@ -1363,6 +1353,8 @@ void v_run_fm1(
             (*plugin_data->fm_macro[1] * 0.01f)
         );
 
+        sample.left = 0.0;
+        sample.right = 0.0;
         for(f_i = 0; f_i < FM1_POLYPHONY; ++f_i){
             pvoice = &plugin_data->data[f_i];
             if(pvoice->adsr_main.stage != ADSR_STAGE_OFF){
@@ -1370,8 +1362,7 @@ void v_run_fm1(
                     plugin_data,
                     &plugin_data->voices.voices[f_i],
                     pvoice,
-                    plugin_data->output,
-                    i_iterator,
+                    &sample,
                     f_i
                 );
             } else {
@@ -1381,8 +1372,8 @@ void v_run_fm1(
 
         v_svf2_run_4_pole_lp(
             &plugin_data->mono_modules.aa_filter,
-            plugin_data->output[i_iterator].left,
-            plugin_data->output[i_iterator].right
+            sample.left,
+            sample.right
         );
         v_sml_run(
             &plugin_data->mono_modules.pan_smoother,
@@ -1394,17 +1385,17 @@ void v_run_fm1(
             plugin_data->mono_modules.pan_smoother.last_value,
             -3.0
         );
-        plugin_data->output[i_iterator].left +=
+        output_buffer[i_iterator].left = input_buffer[i_iterator].left + (
             plugin_data->mono_modules.aa_filter.output0 *
-            plugin_data->mono_modules.panner.gainL;
-        plugin_data->output[i_iterator].right +=
+            plugin_data->mono_modules.panner.gainL
+        );
+        output_buffer[i_iterator].right = input_buffer[i_iterator].right + (
             plugin_data->mono_modules.aa_filter.output1 *
-            plugin_data->mono_modules.panner.gainR;
+            plugin_data->mono_modules.panner.gainR
+        );
 
         ++plugin_data->sampleNo;
     }
-
-    //plugin_data->sampleNo += sample_count;
 }
 
 void v_run_fm1_voice(
@@ -1412,11 +1403,8 @@ void v_run_fm1_voice(
     t_voc_single_voice* a_poly_voice,
     t_fm1_poly_voice* a_voice,
     struct SamplePair* out,
-    int a_i,
     int a_voice_num
 ){
-    int i_voice = a_i;
-
     if(plugin_data->sampleNo < a_poly_voice->on){
         return;
     }
@@ -1576,20 +1564,20 @@ void v_run_fm1_voice(
                 a_voice->noise_linamp *
                 a_voice->adsr_main.output;
         }
-        out[i_voice].left += noise_sample.left * f_noise_amp;
-        out[i_voice].right += noise_sample.right * f_noise_amp;
+        out->left += noise_sample.left * f_noise_amp;
+        out->right += noise_sample.right * f_noise_amp;
     }
 
     if(a_voice->adsr_prefx){
-        out[i_voice].left += a_voice->multifx_current_sample[0] *
+        out->left += a_voice->multifx_current_sample[0] *
             a_voice->main_vol_lin * a_voice->panner.gainL;
-        out[i_voice].right += a_voice->multifx_current_sample[1] *
+        out->right += a_voice->multifx_current_sample[1] *
             a_voice->main_vol_lin * a_voice->panner.gainR;
     } else {
-        out[i_voice].left += a_voice->multifx_current_sample[0] *
+        out->left += a_voice->multifx_current_sample[0] *
             a_voice->adsr_main.output * a_voice->main_vol_lin *
             a_voice->panner.gainL;
-        out[i_voice].right += a_voice->multifx_current_sample[1] *
+        out->right += a_voice->multifx_current_sample[1] *
             a_voice->adsr_main.output * a_voice->main_vol_lin *
             a_voice->panner.gainR;
     }
@@ -1983,7 +1971,6 @@ PluginDescriptor *fm1_plugin_descriptor(){
 
     f_result->cleanup = v_cleanup_fm1;
     f_result->connect_port = v_fm1_connect_port;
-    f_result->connect_buffer = v_fm1_connect_buffer;
     f_result->get_port_table = fm1_get_port_table;
     f_result->instantiate = g_fm1_instantiate;
     f_result->panic = fm1Panic;

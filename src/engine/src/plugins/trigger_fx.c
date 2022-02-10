@@ -49,19 +49,6 @@ void v_triggerfx_on_stop(PluginHandle instance){
     plugin->sv_pitch_bend_value = 0.0f;
 }
 
-void v_triggerfx_connect_buffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    if(a_is_sidechain){
-        return;
-    }
-
-    t_triggerfx *plugin = (t_triggerfx*)instance;
-    plugin->output = DataLocation;
-}
-
 void v_triggerfx_connect_port(
     PluginHandle instance,
     int port,
@@ -273,6 +260,9 @@ void v_triggerfx_process_midi_event(
 void v_triggerfx_run(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffer,
+    struct SamplePair* sc_buffer,
+    struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList* atm_events
 ){
@@ -361,10 +351,8 @@ void v_triggerfx_run(
         v_plugin_event_queue_atm_set(
             &plugin_data->atm_queue, f_i, plugin_data->port_table);
 
-        plugin_data->mono_modules.current_sample0 =
-            plugin_data->output[f_i].left;
-        plugin_data->mono_modules.current_sample1 =
-            plugin_data->output[f_i].right;
+        plugin_data->mono_modules.current_sample0 = input_buffer[f_i].left;
+        plugin_data->mono_modules.current_sample1 = input_buffer[f_i].right;
 
         v_sml_run(&plugin_data->mono_modules.pitchbend_smoother,
                 (plugin_data->sv_pitch_bend_value));
@@ -385,21 +373,18 @@ void v_triggerfx_run(
                     plugin_data->mono_modules.glitch.output1;
         }
 
-        if(f_gate_on)
-        {
+        if(f_gate_on){
             v_triggerfx_run_gate(plugin_data,
-                    plugin_data->mono_modules.current_sample0,
-                    plugin_data->mono_modules.current_sample1);
+                plugin_data->mono_modules.current_sample0,
+                plugin_data->mono_modules.current_sample1);
             plugin_data->mono_modules.current_sample0 =
-                    plugin_data->mono_modules.gate.output[0];
+                plugin_data->mono_modules.gate.output[0];
             plugin_data->mono_modules.current_sample1 =
-                    plugin_data->mono_modules.gate.output[1];
+                plugin_data->mono_modules.gate.output[1];
         }
 
-        plugin_data->output[f_i].left =
-            plugin_data->mono_modules.current_sample0;
-        plugin_data->output[f_i].right =
-            plugin_data->mono_modules.current_sample1;
+        output_buffer[f_i].left = plugin_data->mono_modules.current_sample0;
+        output_buffer[f_i].right = plugin_data->mono_modules.current_sample1;
 
         ++f_i;
     }
@@ -426,7 +411,6 @@ PluginDescriptor *triggerfx_plugin_descriptor(){
 
     f_result->cleanup = v_triggerfx_cleanup;
     f_result->connect_port = v_triggerfx_connect_port;
-    f_result->connect_buffer = v_triggerfx_connect_buffer;
     f_result->get_port_table = triggerfx_get_port_table;
     f_result->instantiate = g_triggerfx_instantiate;
     f_result->panic = v_triggerfx_panic;

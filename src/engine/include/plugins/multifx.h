@@ -85,7 +85,6 @@ typedef struct {
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
-    struct SamplePair* output;
 
     PluginData *fx_knob0[8];
     PluginData *fx_knob1[8];

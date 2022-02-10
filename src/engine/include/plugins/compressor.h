@@ -46,7 +46,6 @@ void v_sg_comp_mono_init(t_sg_comp_mono_modules*, SGFLT, int);
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
-    struct SamplePair* output;
 
     SGFLT fs;
     t_sg_comp_mono_modules mono_modules;

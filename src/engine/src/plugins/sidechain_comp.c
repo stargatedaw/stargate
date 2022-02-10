@@ -37,20 +37,6 @@ void v_scc_on_stop(PluginHandle instance)
     //t_scc *plugin = (t_scc*)instance;
 }
 
-void v_scc_connect_buffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    t_scc *plugin = (t_scc*)instance;
-
-    if(a_is_sidechain){
-        plugin->sc_input = DataLocation;
-    } else {
-        plugin->output = DataLocation;
-    }
-}
-
 void v_scc_connect_port(
     PluginHandle instance,
     int port,
@@ -125,6 +111,9 @@ void v_scc_set_port_value(
 void v_scc_run(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffer,
+    struct SamplePair* sc_buffer,
+    struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList* atm_events
 ){
@@ -160,14 +149,14 @@ void v_scc_run(
 
         v_scc_run_comp(
             f_cmp,
-            plugin_data->sc_input[f_i].left,
-            plugin_data->sc_input[f_i].right,
-            plugin_data->output[f_i].left,
-            plugin_data->output[f_i].right
+            sc_buffer[f_i].left,
+            sc_buffer[f_i].right,
+            input_buffer[f_i].left,
+            input_buffer[f_i].right
         );
 
-        plugin_data->output[f_i].left = f_cmp->output0;
-        plugin_data->output[f_i].right = f_cmp->output1;
+        output_buffer[f_i].left = f_cmp->output0;
+        output_buffer[f_i].right = f_cmp->output1;
     }
 
     if((int)(*plugin_data->peak_meter)){
@@ -202,7 +191,6 @@ PluginDescriptor *scc_plugin_descriptor(){
 
     f_result->cleanup = v_scc_cleanup;
     f_result->connect_port = v_scc_connect_port;
-    f_result->connect_buffer = v_scc_connect_buffer;
     f_result->get_port_table = scc_get_port_table;
     f_result->instantiate = g_scc_instantiate;
     f_result->panic = v_scc_panic;

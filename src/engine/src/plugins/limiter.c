@@ -37,18 +37,6 @@ void v_sg_lim_on_stop(PluginHandle instance)
     //t_sg_lim *plugin = (t_sg_lim*)instance;
 }
 
-void v_sg_lim_connect_buffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    t_sg_lim *plugin = (t_sg_lim*)instance;
-
-    if(!a_is_sidechain){
-        plugin->output = DataLocation;
-    }
-}
-
 PluginHandle g_sg_lim_instantiate(
     PluginDescriptor * descriptor,
     int s_rate,
@@ -104,6 +92,9 @@ void v_sg_lim_set_port_value(
 void v_sg_lim_run(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffer,
+    struct SamplePair* sc_buffer,
+    struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList* atm_events
 ){
@@ -137,12 +128,12 @@ void v_sg_lim_run(
 
         v_lim_run(
             f_lim,
-            plugin_data->output[f_i].left,
-            plugin_data->output[f_i].right
+            input_buffer[f_i].left,
+            input_buffer[f_i].right
         );
 
-        plugin_data->output[f_i].left = f_lim->output0;
-        plugin_data->output[f_i].right = f_lim->output1;
+        output_buffer[f_i].left = f_lim->output0;
+        output_buffer[f_i].right = f_lim->output1;
     }
 
     if((int)(plugin_data->port_table[SG_LIM_UI_MSG_ENABLED])){
@@ -175,7 +166,6 @@ PluginDescriptor *sg_lim_plugin_descriptor(){
 
     f_result->cleanup = v_sg_lim_cleanup;
     f_result->connect_port = NULL;
-    f_result->connect_buffer = v_sg_lim_connect_buffer;
     f_result->get_port_table = sglim_get_port_table;
     f_result->instantiate = g_sg_lim_instantiate;
     f_result->panic = v_sg_lim_panic;

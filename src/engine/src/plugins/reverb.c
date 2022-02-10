@@ -43,18 +43,6 @@ void v_sreverb_on_stop(PluginHandle instance){
     //t_sreverb *plugin = (t_sreverb*)instance;
 }
 
-void v_sreverb_connect_buffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    if(a_is_sidechain){
-        return;
-    }
-    t_sreverb *plugin = (t_sreverb*)instance;
-    plugin->output = DataLocation;
-}
-
 PluginHandle g_sreverb_instantiate(
     PluginDescriptor * descriptor,
     int s_rate,
@@ -110,6 +98,9 @@ void v_sreverb_set_port_value(
 void v_sreverb_run(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffer,
+    struct SamplePair* sc_buffer,
+    struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList * atm_events
 ){
@@ -168,8 +159,8 @@ void v_sreverb_run(
 
         v_rvb_reverb_run(
             &mm->reverb,
-            plugin_data->output[f_i].left,
-            plugin_data->output[f_i].right
+            input_buffer[f_i].left,
+            input_buffer[f_i].right
         );
 
         v_sml_run(
@@ -194,11 +185,11 @@ void v_sreverb_run(
             -3.0
         );
 
-        plugin_data->output[f_i].left = (
-            plugin_data->output[f_i].left * f_dry_vol * mm->dry_panner.gainL
+        output_buffer[f_i].left = (
+            input_buffer[f_i].left * f_dry_vol * mm->dry_panner.gainL
         ) + (mm->reverb.output[0] * mm->wet_panner.gainL);
-        plugin_data->output[f_i].right = (
-            plugin_data->output[f_i].right * f_dry_vol * mm->dry_panner.gainR
+        output_buffer[f_i].right = (
+            input_buffer[f_i].right * f_dry_vol * mm->dry_panner.gainR
         ) + (mm->reverb.output[1] * mm->wet_panner.gainR);
     }
 }
@@ -222,7 +213,6 @@ PluginDescriptor *sreverb_plugin_descriptor(){
 
     f_result->cleanup = v_sreverb_cleanup;
     f_result->connect_port = NULL;
-    f_result->connect_buffer = v_sreverb_connect_buffer;
     f_result->get_port_table = sreverb_get_port_table;
     f_result->instantiate = g_sreverb_instantiate;
     f_result->panic = v_sreverb_panic;

@@ -626,7 +626,6 @@ struct FM1OscControl {
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
-    struct SamplePair* output;
     PluginData *adsr_lin_main;
     PluginData *attack_main;
     PluginData *attack_main_start;

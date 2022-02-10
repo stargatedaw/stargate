@@ -259,6 +259,9 @@ void v_daw_process_track(
             f_plugin->descriptor->run_replacing(
                 f_plugin->plugin_handle,
                 a_sample_count,
+                f_track->buffers,
+                f_track->sc_buffers,
+                f_track->buffers,
                 f_track->event_list,
                 f_plugin->atm_list
             );
@@ -470,6 +473,8 @@ void v_daw_sum_track_outputs(
                 f_plugin->descriptor->run_mixing(
                     f_plugin->plugin_handle,
                     a_sample_count,
+                    a_track->buffers,
+                    a_track->sc_buffers,
                     f_buff,
                     a_track->event_list,
                     f_plugin->atm_list,

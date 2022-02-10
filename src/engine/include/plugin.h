@@ -112,13 +112,6 @@ typedef struct _PluginDescriptor {
         PluginData * DataLocation
     );
 
-    // Assign the audio buffer at DataLocation
-    void (*connect_buffer)(
-        PluginHandle Instance,
-        struct SamplePair* DataLocation,
-        int a_is_sidechain
-    );
-
     void (*cleanup)(PluginHandle Instance);
 
     // Load the plugin state file at a_file_path
@@ -152,6 +145,9 @@ typedef struct _PluginDescriptor {
     void (*run_replacing)(
         PluginHandle Instance,
         int SampleCount,
+        struct SamplePair* input_buffer,
+        struct SamplePair* sc_buffer,
+        struct SamplePair* output_buffer,
         struct ShdsList* midi_events,
         struct ShdsList* atm_events
     );
@@ -162,7 +158,9 @@ typedef struct _PluginDescriptor {
     void (*run_mixing)(
         PluginHandle Instance,
         int SampleCount,
-        struct SamplePair* output_buffers,
+        struct SamplePair* input_buffer,
+        struct SamplePair* sc_buffer,
+        struct SamplePair* output_buffer,
         struct ShdsList* midi_events,
         struct ShdsList* atm_events,
         t_pkm_peak_meter* peak_meter

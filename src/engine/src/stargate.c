@@ -1419,20 +1419,13 @@ NO_OPTIMIZATION void v_set_plugin_index(
             // Warm up control smoothers and anything else by running for
             // one second, avoids strangeness at the beginning of playback
             // or render
-            f_plugin->descriptor->connect_buffer(
-                f_plugin->plugin_handle,
-                buffer,
-                0
-            );
-            f_plugin->descriptor->connect_buffer(
-                f_plugin->plugin_handle,
-                sc_buffer,
-                1
-            );
             for(i = 0; i < (sample_rate / 512); ++i){
                 f_plugin->descriptor->run_replacing(
                     f_plugin->plugin_handle,
                     512,
+                    buffer,
+                    sc_buffer,
+                    buffer,
                     &midi_list,
                     &atm_list
                 );
@@ -1447,18 +1440,6 @@ NO_OPTIMIZATION void v_set_plugin_index(
 
     if(f_plugin){
         f_plugin->power = a_power;
-
-        log_info("Connecting buffers");
-        f_plugin->descriptor->connect_buffer(
-            f_plugin->plugin_handle,
-            f_track->buffers,
-            0
-        );
-        f_plugin->descriptor->connect_buffer(
-            f_plugin->plugin_handle,
-            f_track->sc_buffers,
-            1
-        );
     }
 
     f_track->plugins[a_index] = f_plugin;

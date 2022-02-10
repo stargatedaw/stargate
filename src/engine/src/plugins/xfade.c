@@ -40,20 +40,6 @@ void v_xfade_on_stop(PluginHandle instance)
     //t_xfade *plugin = (t_xfade*)instance;
 }
 
-void v_xfade_connect_buffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    t_xfade *plugin = (t_xfade*)instance;
-
-    if(a_is_sidechain){
-        plugin->sc_buffers = DataLocation;
-    } else {
-        plugin->buffers = DataLocation;
-    }
-}
-
 void v_xfade_connect_port(
     PluginHandle instance,
     int port,
@@ -70,10 +56,13 @@ void v_xfade_connect_port(
     }
 }
 
-PluginHandle g_xfade_instantiate(PluginDescriptor * descriptor,
-        int s_rate, fp_get_audio_pool_item_from_host a_host_audio_pool_func,
-        int a_plugin_uid, fp_queue_message a_queue_func)
-{
+PluginHandle g_xfade_instantiate(
+    PluginDescriptor * descriptor,
+    int s_rate,
+    fp_get_audio_pool_item_from_host a_host_audio_pool_func,
+    int a_plugin_uid,
+    fp_queue_message a_queue_func
+){
     t_xfade *plugin_data;
     hpalloc((void**)&plugin_data, sizeof(t_xfade));
 
@@ -94,24 +83,29 @@ PluginHandle g_xfade_instantiate(PluginDescriptor * descriptor,
     return (PluginHandle) plugin_data;
 }
 
-void v_xfade_load(PluginHandle instance,
-        PluginDescriptor * Descriptor, char * a_file_path)
-{
+void v_xfade_load(
+    PluginHandle instance,
+    PluginDescriptor * Descriptor,
+    char * a_file_path
+){
     t_xfade *plugin_data = (t_xfade*)instance;
     generic_file_loader(instance, Descriptor,
         a_file_path, plugin_data->port_table, &plugin_data->cc_map);
 }
 
-void v_xfade_set_port_value(PluginHandle Instance,
-        int a_port, SGFLT a_value)
-{
+void v_xfade_set_port_value(
+    PluginHandle Instance,
+    int a_port,
+    SGFLT a_value
+){
     t_xfade *plugin_data = (t_xfade*)Instance;
     plugin_data->port_table[a_port] = a_value;
 }
 
 void v_xfade_process_midi_event(
-    t_xfade * plugin_data, t_seq_event * a_event)
-{
+    t_xfade * plugin_data,
+    t_seq_event * a_event
+){
 
     if (a_event->type == EVENT_CONTROLLER)
     {
@@ -136,16 +130,16 @@ void v_xfade_process_midi_event(
 
 
 void v_xfade_process_midi(
-        PluginHandle instance, struct ShdsList * events,
-        struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    struct ShdsList* events,
+    struct ShdsList* atm_events
+){
     t_xfade *plugin_data = (t_xfade*)instance;
     int f_i = 0;
 
     plugin_data->midi_event_count = 0;
 
-    for(f_i = 0; f_i < events->len; ++f_i)
-    {
+    for(f_i = 0; f_i < events->len; ++f_i){
         v_xfade_process_midi_event(
             plugin_data, (t_seq_event*)events->data[f_i]);
     }
@@ -153,20 +147,27 @@ void v_xfade_process_midi(
     v_plugin_event_queue_reset(&plugin_data->atm_queue);
 
     t_seq_event * ev_tmp;
-    for(f_i = 0; f_i < atm_events->len; ++f_i)
-    {
+    for(f_i = 0; f_i < atm_events->len; ++f_i){
         ev_tmp = (t_seq_event*)atm_events->data[f_i];
         v_plugin_event_queue_add(
-            &plugin_data->atm_queue, ev_tmp->type,
-            ev_tmp->tick, ev_tmp->value, ev_tmp->port);
+            &plugin_data->atm_queue,
+            ev_tmp->type,
+            ev_tmp->tick,
+            ev_tmp->value,
+            ev_tmp->port
+        );
     }
 }
 
-
 void v_xfade_run(
-        PluginHandle instance, int sample_count,
-        struct ShdsList * midi_events, struct ShdsList * atm_events)
-{
+    PluginHandle instance,
+    int sample_count,
+    struct SamplePair* input_buffer,
+    struct SamplePair* sc_buffer,
+    struct SamplePair* output_buffer,
+    struct ShdsList* midi_events,
+    struct ShdsList* atm_events
+){
     t_xfade *plugin_data = (t_xfade*)instance;
 
     v_xfade_process_midi(instance, midi_events, atm_events);
@@ -175,46 +176,59 @@ void v_xfade_run(
     int f_i = 0;
 
     SGFLT f_pan_law = (*plugin_data->pan_law) * 0.01f;
+    struct SamplePair sample;
 
-    while(f_i < sample_count)
-    {
-        while(midi_event_pos < plugin_data->midi_event_count &&
-            plugin_data->midi_event_ticks[midi_event_pos] == f_i)
-        {
-            if(plugin_data->midi_event_types[midi_event_pos] ==
-                    EVENT_CONTROLLER)
-            {
+    for(f_i = 0; f_i < sample_count; ++f_i){
+        sample.left = input_buffer[f_i].left;
+        sample.right = input_buffer[f_i].right;
+        while(
+            midi_event_pos < plugin_data->midi_event_count
+            &&
+            plugin_data->midi_event_ticks[midi_event_pos] == f_i
+        ){
+            if(
+                plugin_data->midi_event_types[midi_event_pos]
+                ==
+                EVENT_CONTROLLER
+            ){
                 v_cc_map_translate(
                     &plugin_data->cc_map, plugin_data->descriptor,
                     plugin_data->port_table,
                     plugin_data->midi_event_ports[midi_event_pos],
-                    plugin_data->midi_event_values[midi_event_pos]);
+                    plugin_data->midi_event_values[midi_event_pos]
+                );
             }
             ++midi_event_pos;
         }
 
         v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue, f_i, plugin_data->port_table);
+            &plugin_data->atm_queue,
+            f_i,
+            plugin_data->port_table
+        );
 
-        v_sml_run(&plugin_data->mono_modules.pan_smoother,
-            (*plugin_data->pan * 0.01f));
+        v_sml_run(
+            &plugin_data->mono_modules.pan_smoother,
+            (*plugin_data->pan * 0.01f)
+        );
 
-        v_pn2_set(&plugin_data->mono_modules.panner,
-            plugin_data->mono_modules.pan_smoother.last_value, f_pan_law);
+        v_pn2_set(
+            &plugin_data->mono_modules.panner,
+            plugin_data->mono_modules.pan_smoother.last_value,
+            f_pan_law
+        );
 
-        plugin_data->buffers[f_i].left *=
-            plugin_data->mono_modules.panner.gainL;
-        plugin_data->buffers[f_i].left +=
-            plugin_data->sc_buffers[f_i].left *
-            plugin_data->mono_modules.panner.gainR;
+        sample.left *= plugin_data->mono_modules.panner.gainL;
+        output_buffer[f_i].left = sample.left + (
+            sc_buffer[f_i].left *
+            plugin_data->mono_modules.panner.gainR
+        );
 
-        plugin_data->buffers[f_i].right *=
-            plugin_data->mono_modules.panner.gainL;
-        plugin_data->buffers[f_i].right +=
-            plugin_data->sc_buffers[f_i].right *
-            plugin_data->mono_modules.panner.gainR;
-
-        ++f_i;
+        sample.right *= plugin_data->mono_modules.panner.gainL;
+        output_buffer[f_i].right = sample.right + (
+            sc_buffer[f_i].right *
+            plugin_data->mono_modules.panner.gainR
+        );
     }
 }
 
@@ -231,7 +245,6 @@ PluginDescriptor *xfade_plugin_descriptor(){
 
     f_result->cleanup = v_xfade_cleanup;
     f_result->connect_port = v_xfade_connect_port;
-    f_result->connect_buffer = v_xfade_connect_buffer;
     f_result->get_port_table = xfade_get_port_table;
     f_result->instantiate = g_xfade_instantiate;
     f_result->panic = v_xfade_panic;

@@ -44,19 +44,6 @@ void v_sgdelay_on_stop(PluginHandle instance)
     //t_sgdelay *plugin = (t_sgdelay*)instance;
 }
 
-void v_sgdelay_connect_buffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    if(a_is_sidechain){
-        return;
-    }
-
-    t_sgdelay *plugin = (t_sgdelay*)instance;
-    plugin->output = DataLocation;
-}
-
 PluginHandle g_sgdelay_instantiate(
     PluginDescriptor * descriptor,
     int s_rate,
@@ -108,6 +95,9 @@ void v_sgdelay_set_port_value(
 void v_sgdelay_run(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffer,
+    struct SamplePair* sc_buffer,
+    struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList* atm_events
 ){
@@ -147,14 +137,12 @@ void v_sgdelay_run(
         );
 
         v_ldl_run_delay(plugin_data->mono_modules.delay,
-            plugin_data->output[f_i].left,
-            plugin_data->output[f_i].right
+            input_buffer[f_i].left,
+            input_buffer[f_i].right
         );
 
-        plugin_data->output[f_i].left =
-            plugin_data->mono_modules.delay->output0;
-        plugin_data->output[f_i].right =
-            plugin_data->mono_modules.delay->output1;
+        output_buffer[f_i].left = plugin_data->mono_modules.delay->output0;
+        output_buffer[f_i].right = plugin_data->mono_modules.delay->output1;
     }
 }
 
@@ -176,7 +164,6 @@ PluginDescriptor *sgdelay_plugin_descriptor(){
 
     f_result->cleanup = v_sgdelay_cleanup;
     f_result->connect_port = NULL;
-    f_result->connect_buffer = v_sgdelay_connect_buffer;
     f_result->get_port_table = sgdelay_get_port_table;
     f_result->instantiate = g_sgdelay_instantiate;
     f_result->panic = v_sgdelay_panic;

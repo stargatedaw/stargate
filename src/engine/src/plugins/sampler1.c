@@ -111,19 +111,6 @@ void v_sampler1_on_stop(PluginHandle instance)
     plugin->sv_pitch_bend_value = 0.0f;
 }
 
-void sampler1ConnectBuffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    if(a_is_sidechain){
-        return;
-    }
-
-    t_sampler1 *plugin = (t_sampler1 *) instance;
-    plugin->output = DataLocation;
-}
-
 void v_sampler1_poly_note_off(
     t_sampler1_poly_voice* a_voice,
     int a_fast_release
@@ -1530,6 +1517,9 @@ void v_sampler1_process_midi_event(
 void v_run_sg_sampler1(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffer,
+    struct SamplePair* sc_buffer,
+    struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList *atm_events
 ){
@@ -1658,9 +1648,9 @@ void v_run_sg_sampler1(
             v_eq6_run(&plugin_data->mono_modules.mfx[f_monofx_index].eqs,
                 f_temp_sample0, f_temp_sample1);
 
-            plugin_data->output[f_i].left +=
+            output_buffer[f_i].left = input_buffer[f_i].left +
                 plugin_data->mono_modules.mfx[f_monofx_index].eqs.output0;
-            plugin_data->output[f_i].right +=
+            output_buffer[f_i].right = input_buffer[f_i].right +
                 plugin_data->mono_modules.mfx[f_monofx_index].eqs.output1;
         }
         ++plugin_data->sampleNo;
@@ -2089,7 +2079,6 @@ PluginDescriptor *sampler1_plugin_descriptor(){
 
     f_result->cleanup = cleanupSampler;
     f_result->connect_port = connectPortSampler;
-    f_result->connect_buffer = sampler1ConnectBuffer;
     f_result->get_port_table = sampler1_get_port_table;
     f_result->instantiate = instantiateSampler;
     f_result->panic = sampler1Panic;

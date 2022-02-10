@@ -48,7 +48,6 @@ typedef struct
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
-    struct SamplePair* buffers;
     SGFLT fs;
     t_sgchnl_mono_modules mono_modules;
 

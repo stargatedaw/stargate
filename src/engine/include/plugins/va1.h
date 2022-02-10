@@ -169,7 +169,6 @@ typedef struct {
     int oversample;
     SGFLT os_recip;
     struct SamplePair* os_buffer;
-    struct SamplePair* output;
     PluginData *tune;
     PluginData *adsr_lin_main;
     PluginData *attack;

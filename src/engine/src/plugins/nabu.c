@@ -36,18 +36,6 @@ void v_nabu_on_stop(PluginHandle instance){
     //struct NabuPlugin *plugin = (struct NabuPlugin*)instance;
 }
 
-void v_nabu_connect_buffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    if(a_is_sidechain){
-        return;
-    }
-    struct NabuPlugin* plugin = (struct NabuPlugin*)instance;
-    plugin->output = DataLocation;
-}
-
 void v_nabu_connect_port(
     PluginHandle instance,
     int port,
@@ -213,6 +201,9 @@ void v_nabu_process_midi_event(
 void v_nabu_run(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffer,
+    struct SamplePair* sc_buffer,
+    struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList* atm_events
 ){
@@ -323,8 +314,8 @@ void v_nabu_run(
 
             if(splits){
                 int output;
-                splitter_input[0] = plugin_data->output[i_mono_out].left;
-                splitter_input[1] = plugin_data->output[i_mono_out].right;
+                splitter_input[0] = input_buffer[i_mono_out].left;
+                splitter_input[1] = input_buffer[i_mono_out].right;
                 freq_splitter_run(&mm->splitter, splitter_input);
                 for(j = 0; j < splits + 1; ++j){
                     output = (int)(*plugin_data->splitter_controls.output[j]);
@@ -350,8 +341,8 @@ void v_nabu_run(
                     &&
                     !(split_mask & (1 << step->mf10_index))
                 ){
-                    step->input.left += plugin_data->output[i_mono_out].left;
-                    step->input.right += plugin_data->output[i_mono_out].right;
+                    step->input.left += input_buffer[i_mono_out].left;
+                    step->input.right += input_buffer[i_mono_out].right;
                 }
                 for(j = 0; j < step->meta.knob_count; ++j){
                     v_sml_run(
@@ -396,8 +387,8 @@ void v_nabu_run(
                 step->output->right += step->dry_wet_pan.output.right;
             }
 
-            plugin_data->output[i_mono_out].left = mm->output.left;
-            plugin_data->output[i_mono_out].right = mm->output.right;
+            output_buffer[i_mono_out].left = mm->output.left;
+            output_buffer[i_mono_out].right = mm->output.right;
         }
     }
 
@@ -553,7 +544,6 @@ PluginDescriptor* nabu_plugin_descriptor(){
     );
     f_result->cleanup = v_nabu_cleanup;
     f_result->connect_port = v_nabu_connect_port;
-    f_result->connect_buffer = v_nabu_connect_buffer;
     f_result->get_port_table = nabu_get_port_table;
     f_result->instantiate = g_nabu_instantiate;
     f_result->panic = v_nabu_panic;

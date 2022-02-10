@@ -55,19 +55,6 @@ void v_va1_on_stop(PluginHandle instance){
     plugin->sv_pitch_bend_value = 0.0f;
 }
 
-void v_va1_connect_buffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    if(a_is_sidechain){
-        return;
-    }
-
-    t_va1 *plugin = (t_va1*)instance;
-    plugin->output = DataLocation;
-}
-
 void v_va1_connect_port(
     PluginHandle instance,
     int port,
@@ -578,6 +565,9 @@ void v_va1_process_midi_event(
 void v_run_va1(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffer,
+    struct SamplePair* sc_buffer,
+    struct SamplePair* output_buffer,
     struct ShdsList * midi_events,
     struct ShdsList * atm_events
 ){
@@ -728,10 +718,10 @@ void v_run_va1(
 
         f_avgL = f_avgL * os_recip * 1.412429;
         f_avgR = f_avgR * os_recip * 1.412429;
-        plugin_data->output[f_i].left +=
-            f_avgL * plugin_data->mono_modules.panner.gainL;
-        plugin_data->output[f_i].right +=
-            f_avgR * plugin_data->mono_modules.panner.gainR;
+        output_buffer[f_i].left = input_buffer[f_i].left +
+            (f_avgL * plugin_data->mono_modules.panner.gainL);
+        output_buffer[f_i].right = input_buffer[f_i].right +
+            (f_avgR * plugin_data->mono_modules.panner.gainR);
         f_i2 += os_count;
     }
 }
@@ -964,7 +954,6 @@ PluginDescriptor *va1_plugin_descriptor(){
 
     f_result->cleanup = v_cleanup_va1;
     f_result->connect_port = v_va1_connect_port;
-    f_result->connect_buffer = v_va1_connect_buffer;
     f_result->get_port_table = va1_get_port_table;
     f_result->instantiate = g_va1_instantiate;
     f_result->panic = va1Panic;

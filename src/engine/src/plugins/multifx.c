@@ -40,18 +40,6 @@ void v_multifx_on_stop(PluginHandle instance)
     //t_multifx *plugin = (t_multifx*)instance;
 }
 
-void v_multifx_connect_buffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    if(a_is_sidechain){
-        return;
-    }
-    t_multifx *plugin = (t_multifx*)instance;
-    plugin->output = DataLocation;
-}
-
 void v_multifx_connect_port(
     PluginHandle instance,
     int port,
@@ -220,6 +208,9 @@ void v_multifx_process_midi_event(
 void v_multifx_run(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffer,
+    struct SamplePair* sc_buffer,
+    struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList *atm_events
 ){
@@ -271,9 +262,9 @@ void v_multifx_run(
             );
 
             plugin_data->mono_modules.current_sample0 =
-                plugin_data->output[i_mono_out].left;
+                input_buffer[i_mono_out].left;
             plugin_data->mono_modules.current_sample1 =
-                plugin_data->output[i_mono_out].right;
+                input_buffer[i_mono_out].right;
 
             for(f_i = 0; f_i < 8; ++f_i){
                 if(
@@ -313,9 +304,9 @@ void v_multifx_run(
                 }
             }
 
-            plugin_data->output[i_mono_out].left =
+            output_buffer[i_mono_out].left =
                 plugin_data->mono_modules.current_sample0;
-            plugin_data->output[i_mono_out].right =
+            output_buffer[i_mono_out].right =
                 plugin_data->mono_modules.current_sample1;
         }
     }
@@ -365,7 +356,6 @@ PluginDescriptor *multifx_plugin_descriptor(){
 
     f_result->cleanup = v_multifx_cleanup;
     f_result->connect_port = v_multifx_connect_port;
-    f_result->connect_buffer = v_multifx_connect_buffer;
     f_result->get_port_table = multifx_get_port_table;
     f_result->instantiate = g_multifx_instantiate;
     f_result->panic = v_multifx_panic;

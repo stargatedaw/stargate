@@ -36,20 +36,6 @@ void v_sg_vocoder_on_stop(PluginHandle instance)
     //t_sg_vocoder *plugin = (t_sg_vocoder*)instance;
 }
 
-void v_sg_vocoder_connect_buffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    t_sg_vocoder *plugin = (t_sg_vocoder*)instance;
-
-    if(a_is_sidechain){
-        plugin->sc_buffers = DataLocation;
-    } else {
-        plugin->buffers = DataLocation;
-    }
-}
-
 void v_sg_vocoder_connect_port(
     PluginHandle instance,
     int port,
@@ -168,6 +154,9 @@ void v_sg_vocoder_process_midi(
 void v_sg_vocoder_run(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffer,
+    struct SamplePair* sc_buffer,
+    struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList * atm_events
 ){
@@ -215,36 +204,36 @@ void v_sg_vocoder_run(
 
         v_vdr_run(
             &plugin_data->mono_modules.vocoder,
-            plugin_data->sc_buffers[f_i].left,
-            plugin_data->sc_buffers[f_i].right,
-            plugin_data->buffers[f_i].left,
-            plugin_data->buffers[f_i].right
+            sc_buffer[f_i].left,
+            sc_buffer[f_i].right,
+            input_buffer[f_i].left,
+            input_buffer[f_i].right
         );
 
         v_sml_run(f_carrier_smoother, *plugin_data->carrier);
         f_amp = f_db_to_linear_fast(
             f_carrier_smoother->last_value * 0.1f
         );
-        plugin_data->buffers[f_i].left *= f_amp;
-        plugin_data->buffers[f_i].right *= f_amp;
+        input_buffer[f_i].left *= f_amp;
+        input_buffer[f_i].right *= f_amp;
 
         v_sml_run(f_wet_smoother, *plugin_data->wet);
         f_amp = f_db_to_linear_fast(f_wet_smoother->last_value * 0.1f);
 
-        plugin_data->buffers[f_i].left +=
-            plugin_data->mono_modules.vocoder.output0 * f_amp;
-        plugin_data->buffers[f_i].right +=
-            plugin_data->mono_modules.vocoder.output1 * f_amp;
+        output_buffer[f_i].left = input_buffer[f_i].left + (
+            plugin_data->mono_modules.vocoder.output0 * f_amp
+        );
+        output_buffer[f_i].right = input_buffer[f_i].right + (
+            plugin_data->mono_modules.vocoder.output1 * f_amp
+        );
 
-        if(*plugin_data->modulator >= -499.0f)
-        {
+        if(*plugin_data->modulator >= -499.0f){
             v_sml_run(f_modulator_smoother, *plugin_data->modulator);
             f_amp = f_db_to_linear_fast(
-                f_modulator_smoother->last_value * 0.1f);
-            plugin_data->buffers[f_i].left +=
-                plugin_data->sc_buffers[f_i].left * f_amp;
-            plugin_data->buffers[f_i].right +=
-                plugin_data->sc_buffers[f_i].right * f_amp;
+                f_modulator_smoother->last_value * 0.1f
+            );
+            output_buffer[f_i].left += sc_buffer[f_i].left * f_amp;
+            output_buffer[f_i].right += sc_buffer[f_i].right * f_amp;
         }
 
         ++f_i;
@@ -265,7 +254,6 @@ PluginDescriptor *sg_vocoder_plugin_descriptor(){
 
     f_result->cleanup = v_sg_vocoder_cleanup;
     f_result->connect_port = v_sg_vocoder_connect_port;
-    f_result->connect_buffer = v_sg_vocoder_connect_buffer;
     f_result->get_port_table = sg_vocoder_get_port_table;
     f_result->instantiate = g_sg_vocoder_instantiate;
     f_result->panic = v_sg_vocoder_panic;

@@ -37,19 +37,6 @@ void v_sgchnl_on_stop(PluginHandle instance)
     //t_sgchnl *plugin = (t_sgchnl*)instance;
 }
 
-void v_sgchnl_connect_buffer(
-    PluginHandle instance,
-    struct SamplePair* DataLocation,
-    int a_is_sidechain
-){
-    if(a_is_sidechain){
-        return;
-    }
-
-    t_sgchnl *plugin = (t_sgchnl*)instance;
-    plugin->buffers = DataLocation;
-}
-
 PluginHandle g_sgchnl_instantiate(
     PluginDescriptor * descriptor,
     int s_rate,
@@ -104,6 +91,8 @@ void v_sgchnl_set_port_value(
 void v_sgchnl_run_mixing(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffers,
+    struct SamplePair* sc_buffers,
     struct SamplePair* output_buffers,
     struct ShdsList* midi_events,
     struct ShdsList * atm_events,
@@ -157,9 +146,9 @@ void v_sgchnl_run_mixing(
             plugin_data->mono_modules.volume_smoother.last_value - f_pan_law
         );
 
-        left = plugin_data->buffers[f_i].left *
+        left = input_buffers[f_i].left *
             f_vol_linear * f_gain * plugin_data->mono_modules.panner.gainL;
-        right = plugin_data->buffers[f_i].right *
+        right = input_buffers[f_i].right *
             f_vol_linear * f_gain * plugin_data->mono_modules.panner.gainR;
         if(peak_meter){
             v_pkm_run_single(
@@ -176,6 +165,9 @@ void v_sgchnl_run_mixing(
 void v_sgchnl_run(
     PluginHandle instance,
     int sample_count,
+    struct SamplePair* input_buffers,
+    struct SamplePair* sc_buffers,
+    struct SamplePair* output_buffers,
     struct ShdsList* midi_events,
     struct ShdsList * atm_events
 ){
@@ -223,9 +215,9 @@ void v_sgchnl_run(
             (plugin_data->mono_modules.volume_smoother.last_value)
         );
 
-        plugin_data->buffers[f_i].left *=
+        output_buffers[f_i].left = input_buffers[f_i].left *
             f_vol_linear * f_gain * plugin_data->mono_modules.panner.gainL;
-        plugin_data->buffers[f_i].right *=
+        output_buffers[f_i].right = input_buffers[f_i].right *
             f_vol_linear * f_gain * plugin_data->mono_modules.panner.gainR;
     }
 }
@@ -244,7 +236,6 @@ PluginDescriptor *sgchnl_plugin_descriptor(){
     set_plugin_port(f_result, SGCHNL_LAW, -300.0f, -600.0f, 0.0f);
 
     f_result->cleanup = v_sgchnl_cleanup;
-    f_result->connect_buffer = v_sgchnl_connect_buffer;
     f_result->connect_port = NULL;
     f_result->get_port_table = sgchnl_get_port_table;
     f_result->instantiate = g_sgchnl_instantiate;
