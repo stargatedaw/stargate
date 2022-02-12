@@ -1385,12 +1385,16 @@ void v_run_fm1(
             plugin_data->mono_modules.pan_smoother.last_value,
             -3.0
         );
+        // Multiplying by 2.0 fixes some unexplained volume bug switching to
+        // the new plugin API.  After a week of reviewing a clean and simple
+        // patch to this file and not seeing any reason for this, just
+        // kludging the volume here instead
         output_buffer[i_iterator].left = input_buffer[i_iterator].left + (
-            plugin_data->mono_modules.aa_filter.output0 *
+            plugin_data->mono_modules.aa_filter.output0 * 2.0 *
             plugin_data->mono_modules.panner.gainL
         );
         output_buffer[i_iterator].right = input_buffer[i_iterator].right + (
-            plugin_data->mono_modules.aa_filter.output1 *
+            plugin_data->mono_modules.aa_filter.output1 * 2.0 *
             plugin_data->mono_modules.panner.gainR
         );
 
