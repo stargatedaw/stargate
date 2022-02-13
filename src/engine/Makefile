@@ -16,13 +16,10 @@ SRC = $(shell find src/ libcds/src -type f -name '*.c')
 CACHE_LINE_SIZE = $(shell getconf LEVEL1_DCACHE_LINESIZE || echo 64)
 
 OPTIMIZE_FLAGS ?= \
-	-ffast-math \
-	-finline-functions \
 	-flto \
 	-fno-stack-protector \
 	-fprefetch-loop-arrays \
 	-fsingle-precision-constant \
-	-fstrength-reduce \
 	# -funroll-loops \
 
 THREAD_LOCAL ?=  -DSG_THREAD_LOCAL=__thread
