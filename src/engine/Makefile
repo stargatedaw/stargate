@@ -19,7 +19,6 @@ OPTIMIZE_FLAGS ?= \
 	-flto \
 	-fno-stack-protector \
 	-fprefetch-loop-arrays \
-	-fsingle-precision-constant \
 	# -funroll-loops \
 
 THREAD_LOCAL ?=  -DSG_THREAD_LOCAL=__thread
