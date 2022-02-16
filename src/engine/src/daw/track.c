@@ -18,6 +18,8 @@ void v_daw_process_track(
         &self->en_song->sequences->tracks[a_global_track_num];
     int f_item_ref_count = 0;
     int f_item_ref_index = 0;
+    struct SamplePair* input;
+    struct SamplePair* output;
     t_daw_item_ref * f_item_ref[3] = {NULL, NULL, NULL};
     t_plugin * f_plugin;
 
@@ -99,7 +101,7 @@ void v_daw_process_track(
 
     v_sample_period_split(
         &f_track->splitter,
-        f_track->buffers,
+        f_track->plugin_plan.input,
         f_track->sc_buffers,
         a_sample_count,
         a_ts->ml_current_beat,
@@ -157,7 +159,7 @@ void v_daw_process_track(
         {
             v_audio_input_run(
                 f_i,
-                f_track->buffers,
+                f_track->plugin_plan.input,
                 f_track->sc_buffers,
                 a_ts->input_buffer,
                 a_ts->sample_count,
@@ -235,7 +237,7 @@ void v_daw_process_track(
                     self,
                     f_item_ref[f_i],
                     a_sample_count,
-                    f_track->buffers,
+                    f_track->plugin_plan.input,
                     f_track->sc_buffers,
                     &f_track->sc_buffers_dirty,
                     a_ts,
@@ -245,9 +247,13 @@ void v_daw_process_track(
         }
     }
 
-    for(f_i = 0; f_i < MAX_PLUGIN_COUNT; ++f_i){
-        f_plugin = f_track->plugins[f_i];
-        if(f_plugin && f_plugin->power){
+    sg_abort("TODO: Copy buffers");
+
+    for(f_i = 0; f_i < f_track->plugin_plan.step_count; ++f_i){
+        f_plugin = f_track->plugin_plan.steps[f_i].plugin;
+        input = f_track->plugin_plan.steps[f_i].input;
+        output = f_track->plugin_plan.steps[f_i].output;
+        if(f_plugin->power){
             v_daw_process_atm(
                 self,
                 a_global_track_num,
@@ -259,9 +265,9 @@ void v_daw_process_track(
             f_plugin->descriptor->run_replacing(
                 f_plugin->plugin_handle,
                 a_sample_count,
-                f_track->buffers,
+                input,
                 f_track->sc_buffers,
-                f_track->buffers,
+                output,
                 f_track->event_list,
                 f_plugin->atm_list
             );
@@ -274,7 +280,7 @@ void v_daw_process_track(
     if(!f_plugin){
         v_pkm_run(
             f_track->peak_meter,
-            f_track->buffers,
+            f_track->plugin_plan.output,
             a_sample_count
         );
     }
@@ -290,7 +296,7 @@ void v_daw_process_track(
     }
 
     if(a_global_track_num && !SG_OFFLINE_RENDER){
-        v_zero_buffer(f_track->buffers, a_sample_count);
+        v_zero_buffer(f_track->plugin_plan.input, a_sample_count);
     }
 
     if(f_track->sc_buffers_dirty){
@@ -345,7 +351,7 @@ void v_daw_sum_track_outputs(
     t_track_routing * f_route;
     t_plugin * f_plugin = 0;
     struct SamplePair* f_buff;
-    struct SamplePair* f_track_buff = a_track->buffers;
+    struct SamplePair* f_track_buff = a_track->plugin_plan.output;
 
     if(
         !a_track->mute
@@ -454,7 +460,7 @@ void v_daw_sum_track_outputs(
             f_buff = f_bus->sc_buffers;
             f_bus->sc_buffers_dirty = 1;
         } else {
-            f_buff = f_bus->buffers;
+            f_buff = f_bus->plugin_plan.output;
         }
 
         if(a_track->fade_state != FADE_STATE_FADED){
@@ -473,7 +479,7 @@ void v_daw_sum_track_outputs(
                 f_plugin->descriptor->run_mixing(
                     f_plugin->plugin_handle,
                     a_sample_count,
-                    a_track->buffers,
+                    a_track->plugin_plan.output,
                     a_track->sc_buffers,
                     f_buff,
                     a_track->event_list,

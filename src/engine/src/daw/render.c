@@ -109,7 +109,7 @@ void v_daw_offline_render(
                 f_size = 0;
                 int f_track_num = f_tps[f_i2];
                 struct SamplePair* f_track_buff =
-                    self->track_pool[f_track_num]->buffers;
+                    self->track_pool[f_track_num]->plugin_plan.output;
                 /*Interleave the samples...*/
                 for(f_i = 0; f_i < f_block_size; ++f_i){
                     f_output[f_size] = f_track_buff[f_i].left;

@@ -396,7 +396,7 @@ void v_run_wave_editor(
         }
     }
 
-    struct SamplePair* f_buff = f_track->buffers;
+    struct SamplePair* f_buff = f_track->audio[0];
 
     for(f_i = 0; f_i < sample_count; ++f_i)
     {
@@ -412,9 +412,9 @@ void v_run_wave_editor(
             f_plugin->descriptor->run_replacing(
                 f_plugin->plugin_handle,
                 sample_count,
-                f_track->buffers,
+                f_track->audio[0],
                 f_track->sc_buffers,
-                f_track->buffers,
+                f_track->audio[0],
                 f_track->event_list,
                 f_plugin->atm_list
             );
@@ -480,12 +480,15 @@ void v_we_osc_send(t_osc_send_data * a_buffers){
 
         //Now grab any that may have been written since the previous copy
 
-        while(f_i < STARGATE->osc_queue_index)
-        {
-            strcpy(a_buffers->osc_queue_keys[f_i],
-                STARGATE->osc_queue_keys[f_i]);
-            strcpy(a_buffers->osc_queue_vals[f_i],
-                STARGATE->osc_queue_vals[f_i]);
+        while(f_i < STARGATE->osc_queue_index){
+            strcpy(
+                a_buffers->osc_queue_keys[f_i],
+                STARGATE->osc_queue_keys[f_i]
+            );
+            strcpy(
+                a_buffers->osc_queue_vals[f_i],
+                STARGATE->osc_queue_vals[f_i]
+            );
             ++f_i;
         }
 

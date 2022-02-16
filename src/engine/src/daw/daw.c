@@ -607,7 +607,7 @@ void v_daw_run_engine(
         v_daw_process((t_thread_args*)STARGATE->main_thread_args);
 
         t_track * f_main_track = self->track_pool[0];
-        struct SamplePair* f_main_buff = f_main_track->buffers;
+        struct SamplePair* f_main_buff = f_main_track->plugin_plan.output;
 
         //wait for the other threads to finish
         v_wait_for_threads();
@@ -694,11 +694,13 @@ void v_daw_process(t_thread_args * f_args){
 
 
 void v_daw_zero_all_buffers(t_daw * self){
-    int f_i;
-    struct SamplePair* f_buff;
-    for(f_i = 0; f_i < DN_TRACK_COUNT; ++f_i){
-        f_buff = self->track_pool[f_i]->buffers;
-        v_zero_buffer(f_buff, FRAMES_PER_BUFFER);
+    int i, j;
+    struct SamplePair* buff;
+    for(i = 0; i < DN_TRACK_COUNT; ++i){
+        for(j = 0; j < MAX_PLUGIN_COUNT + 1; ++j){
+            buff = self->track_pool[i]->audio[j];
+            v_zero_buffer(buff, FRAMES_PER_BUFFER);
+        }
     }
 }
 

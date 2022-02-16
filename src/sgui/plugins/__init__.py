@@ -324,7 +324,7 @@ class AbstractPluginSettings:
             self.controls_widget.setObjectName("plugin_rack")
             self.layout = QHBoxLayout(self.controls_widget)
             self.layout.setContentsMargins(3, 3, 3, 3)
-            self.layout.addWidget(QLabel(_("Plugin")))
+            self.layout.addWidget(QLabel(f"Plugin {a_index + 1: <2}"))
             self.vlayout.addWidget(self.controls_widget)
             self.layout.addWidget(self.plugin_combobox)
             self.power_checkbox.clicked.connect(self.on_power_changed)
@@ -381,7 +381,8 @@ class AbstractPluginSettings:
 
     def get_value(self):
         return track_plugin(
-            self.index, get_plugin_uid_by_name(
+            self.index,
+            get_plugin_uid_by_name(
                 self.plugin_combobox.currentText(),
             ),
             self.plugin_uid,
@@ -497,6 +498,24 @@ class PluginSettingsMain(AbstractPluginSettings):
             a_save_callback,
             a_qcbox=False,
         )
+        self.route_combobox = QComboBox()
+        self.route_combobox.addItems(
+            [str(x) for x in range(a_index + 2, 11)] + ["Output"]
+        )
+        self.route_combobox.currentIndexChanged.connect(self.save_callback)
+        self.route_combobox.setMinimumWidth(90)
+        self.layout.insertWidget(
+            self.layout.count() - 1,
+            QLabel(_("Route")),
+        )
+        self.layout.insertWidget(
+            self.layout.count() - 1,
+            self.route_combobox,
+        )
+        self.layout.insertSpacerItem(
+            self.layout.count() - 1,
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
 
         self.hide_checkbox = QCheckBox()
         self.hide_checkbox.setObjectName("button_hide")
@@ -504,10 +523,6 @@ class PluginSettingsMain(AbstractPluginSettings):
         self.layout.addWidget(self.hide_checkbox)
         self.hide_checkbox.setEnabled(False)
         self.hide_checkbox.stateChanged.connect(self.hide_checkbox_changed)
-
-        self.layout.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
 
     def on_show_ui(self):
         AbstractPluginSettings.on_show_ui(self)
@@ -526,6 +541,15 @@ class PluginSettingsMain(AbstractPluginSettings):
         if a_val:
             constants.DAW_PROJECT.check_output(self.track_num)
 
+    def get_value(self):
+        return track_plugin(
+            self.index,
+            get_plugin_uid_by_name(
+                self.plugin_combobox.currentText(),
+            ),
+            self.plugin_uid,
+            a_power=1 if self.power_checkbox.isChecked() else 0,
+            route=self.route_combobox.currentIndex(),
 
 
 class PluginSettingsMixer(AbstractPluginSettings):

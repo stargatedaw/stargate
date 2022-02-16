@@ -462,6 +462,10 @@ NO_OPTIMIZATION void v_open_track(
     int a_index
 ){
     char f_file_name[1024];
+    int has_routes = 0;
+    int routes[MAX_PLUGIN_COUNT] = {};
+    int routed_to[MAX_PLUGIN_COUNT + 1] = {};
+    int plugin_indices[MAX_PLUGIN_COUNT] = {};
 
     sg_snprintf(
         f_file_name,
@@ -498,6 +502,17 @@ NO_OPTIMIZATION void v_open_track(
                 v_iterate_2d_char_array(f_2d_array); //solo
                 v_iterate_2d_char_array(f_2d_array);
                 int f_power = atoi(f_2d_array->current_str);
+                int route = 0;
+                if(f_plugin_index){
+                    plugin_indices[f_index] = 1;
+                }
+                if(!f_2d_array->eol){
+                    v_iterate_2d_char_array(f_2d_array);
+                    route = atoi(f_2d_array->current_str);
+                    routed_to[route + 1 + f_index] = 1;
+                    has_routes = 1;
+                }
+                routes[f_index] = route;
 
                 v_set_plugin_index(
                     a_track,
@@ -508,12 +523,19 @@ NO_OPTIMIZATION void v_open_track(
                     0
                 );
             } else {
-                sg_assert(
-                    0,
-                    "v_open_track: invalid track identifier '%s'",
+                sg_abort(
+                    "v_open_track: invalid line identifier '%s'",
                     f_2d_array->current_str
                 );
             }
+        }
+        sg_abort("TODO: plugin routing");
+        if(has_routes){
+        } else {
+            a_track->plugin_plan.copy_count = 0;
+            a_track->plugin_plan.step_count = 0;
+            a_track->plugin_plan.input = a_track->audio[0];
+            a_track->plugin_plan.output = a_track->audio[0];
         }
 
         g_free_2d_char_array(f_2d_array);
@@ -523,6 +545,11 @@ NO_OPTIMIZATION void v_open_track(
         for(f_i = 0; f_i < MAX_PLUGIN_COUNT; ++f_i){
             v_set_plugin_index(a_track, f_i, 0, -1, 0, 0);
         }
+
+        a_track->plugin_plan.copy_count = 0;
+        a_track->plugin_plan.step_count = 0;
+        a_track->plugin_plan.input = a_track->audio[0];
+        a_track->plugin_plan.output = a_track->audio[0];
     }
 }
 
@@ -542,16 +569,9 @@ t_track * g_track_get(int a_track_num, SGFLT a_sr){
 
     pthread_spin_init(&f_result->lock, 0);
 
-    clalloc(
-        (void**)&f_result->buffers,
-        sizeof(struct SamplePair) * FRAMES_PER_BUFFER
-    );
-    clalloc(
-        (void**)&f_result->sc_buffers,
-        sizeof(struct SamplePair) * FRAMES_PER_BUFFER
-    );
-
-    v_zero_buffer(f_result->buffers, FRAMES_PER_BUFFER);
+    for(f_i = 0; f_i < MAX_PLUGIN_COUNT + 1; ++f_i){
+        v_zero_buffer(f_result->audio[f_i], FRAMES_PER_BUFFER);
+    }
     v_zero_buffer(f_result->sc_buffers, FRAMES_PER_BUFFER);
 
     f_result->mute = 0;
@@ -563,8 +583,7 @@ t_track * g_track_get(int a_track_num, SGFLT a_sr){
         v_ev_clear(&f_result->event_buffer[f_i]);
     }
 
-    for(f_i = 0; f_i < MAX_PLUGIN_TOTAL_COUNT; ++f_i)
-    {
+    for(f_i = 0; f_i < MAX_PLUGIN_TOTAL_COUNT; ++f_i){
         f_result->plugins[f_i] = NULL;
     }
 

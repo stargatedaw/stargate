@@ -220,6 +220,7 @@ typedef struct {
     PluginDescriptor_Function descfn;
     int mute;
     int solo;
+    int route;
     char pad2[CACHE_LINE_SIZE];
 } t_plugin;
 

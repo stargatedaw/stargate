@@ -157,23 +157,41 @@ typedef struct {
     int stack_size;
 } t_thread_args;
 
+struct PluginPlan {
+    struct SamplePair* input;
+
+    struct {
+        struct SamplePair* src;
+        struct SamplePair* dest;
+    } copies[MAX_PLUGIN_COUNT];
+    int copy_count;
+
+    struct {
+        t_plugin* plugin;
+        struct SamplePair* input;
+        struct SamplePair* output;
+    } steps[MAX_PLUGIN_COUNT];
+
+    struct SamplePair* output;
+    int step_count;
+};
+
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
     /*This is reset to bus_count each cycle and the
      * bus track processed when count reaches 0*/
     volatile int bus_counter;
-    char bus_counter_padding[CACHE_LINE_SIZE - sizeof(int)];
+    char bus_counter_padding[CACHE_LINE_SIZE];
     volatile int status;
-    char status_padding[CACHE_LINE_SIZE - sizeof(int)];
+    char status_padding[CACHE_LINE_SIZE];
     t_sample_period_split splitter;
     int solo;
     int mute;
     int period_event_index;
     t_plugin * plugins[MAX_PLUGIN_TOTAL_COUNT];
+    struct PluginPlan plugin_plan;
     int track_num;
     t_pkm_peak_meter * peak_meter;
-    struct SamplePair* buffers;
-    struct SamplePair* sc_buffers;
     int sc_buffers_dirty;
     int channels;
     pthread_spinlock_t lock;
@@ -189,6 +207,8 @@ typedef struct {
     t_seq_event * extern_midi;
     t_seq_event event_buffer[MAX_EVENT_BUFFER_SIZE];
     struct ShdsList * event_list;
+    struct SamplePair sc_buffers[FRAMES_PER_BUFFER];
+    struct SamplePair audio[MAX_PLUGIN_COUNT + 1][FRAMES_PER_BUFFER];
     char pad2[CACHE_LINE_SIZE];
 } t_track;
 

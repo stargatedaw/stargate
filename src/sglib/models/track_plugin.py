@@ -9,6 +9,7 @@ class track_plugin:
         a_mute=0,
         a_solo=0,
         a_power=1,
+        route=0,
     ):
         self.index = int(a_index)  # index in the plugin chain
         self.plugin_index = int(a_plugin_index) # the plugin type
@@ -16,6 +17,7 @@ class track_plugin:
         self.mute = int(a_mute)
         self.solo = int(a_solo)
         self.power = int(a_power)
+        self.route = int(route)
 
     def get_audio_pool_uids(self):
         if not self.plugin_index:
@@ -26,9 +28,18 @@ class track_plugin:
         return set()
 
     def __str__(self):
-        return "|".join(str(x) for x in
-            ("p", self.index, self.plugin_index,
-             self.plugin_uid, self.mute, self.solo, self.power))
+        return "|".join(
+            str(x) for x in (
+                "p",
+                self.index,
+                self.plugin_index,
+                self.plugin_uid,
+                self.mute,
+                self.solo,
+                self.power,
+                # self.route,
+            )
+        )
 
 
 class track_plugins:
