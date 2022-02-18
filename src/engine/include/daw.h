@@ -213,7 +213,7 @@ void v_daw_panic(t_daw * self);
 void v_daw_process_atm(
     t_daw * self,
     int f_track_num,
-    int f_index,
+    t_plugin* f_plugin,
     int sample_count,
     int a_playback_mode,
     t_daw_thread_storage * a_ts

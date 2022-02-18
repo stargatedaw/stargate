@@ -159,21 +159,15 @@ typedef struct {
 
 struct PluginPlan {
     struct SamplePair* input;
-
-    struct {
-        struct SamplePair* src;
-        struct SamplePair* dest;
-    } copies[MAX_PLUGIN_COUNT];
+    struct SamplePair* output;
     int copy_count;
 
+    int step_count;
     struct {
         t_plugin* plugin;
         struct SamplePair* input;
         struct SamplePair* output;
     } steps[MAX_PLUGIN_COUNT];
-
-    struct SamplePair* output;
-    int step_count;
 };
 
 typedef struct {

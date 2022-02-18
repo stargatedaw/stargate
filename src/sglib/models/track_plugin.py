@@ -37,7 +37,7 @@ class track_plugin:
                 self.mute,
                 self.solo,
                 self.power,
-                # self.route,
+                self.route,
             )
         )
 

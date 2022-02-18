@@ -461,11 +461,11 @@ NO_OPTIMIZATION void v_open_track(
     char* a_tracks_folder,
     int a_index
 ){
+    int i, j;
     char f_file_name[1024];
-    int has_routes = 0;
     int routes[MAX_PLUGIN_COUNT] = {};
     int routed_to[MAX_PLUGIN_COUNT + 1] = {};
-    int plugin_indices[MAX_PLUGIN_COUNT] = {};
+    int plugin_active[MAX_PLUGIN_COUNT] = {};
 
     sg_snprintf(
         f_file_name,
@@ -498,21 +498,20 @@ NO_OPTIMIZATION void v_open_track(
                 int f_plugin_index = atoi(f_2d_array->current_str);
                 v_iterate_2d_char_array(f_2d_array);
                 int f_plugin_uid = atoi(f_2d_array->current_str);
-                v_iterate_2d_char_array(f_2d_array); //mute
-                v_iterate_2d_char_array(f_2d_array); //solo
+                v_iterate_2d_char_array(f_2d_array);  // mute
+                v_iterate_2d_char_array(f_2d_array);  // solo
                 v_iterate_2d_char_array(f_2d_array);
                 int f_power = atoi(f_2d_array->current_str);
                 int route = 0;
-                if(f_plugin_index){
-                    plugin_indices[f_index] = 1;
-                }
                 if(!f_2d_array->eol){
                     v_iterate_2d_char_array(f_2d_array);
                     route = atoi(f_2d_array->current_str);
-                    routed_to[route + 1 + f_index] = 1;
-                    has_routes = 1;
                 }
+                route += + 1 + f_index;
                 routes[f_index] = route;
+                if(f_plugin_index && f_power){
+                    plugin_active[f_index] = 1;
+                }
 
                 v_set_plugin_index(
                     a_track,
@@ -529,14 +528,69 @@ NO_OPTIMIZATION void v_open_track(
                 );
             }
         }
-        sg_abort("TODO: plugin routing");
-        if(has_routes){
+        // Fix the routes to empty plugin slots, determine which
+        // plugins are routed to
+        for(i = 0; i < MAX_PLUGIN_COUNT; ++i){
+            int found = 0;
+            for(j = routes[i] + 1; j < MAX_PLUGIN_COUNT; ++j){
+                if(plugin_active[j]){
+                    found = 1;
+                    routes[i] = j;
+                    ++routed_to[j];
+                    break;
+                }
+            }
+            if(!found){
+                routes[i] = MAX_PLUGIN_COUNT;  // master output of the track
+            }
+        }
+        int multiple_routes = 0;
+        for(i = 0; i < MAX_PLUGIN_COUNT; ++i){
+            if(plugin_active[i] && !routed_to[i]){
+                multiple_routes = 1;
+                break;
+            }
+        }
+
+        a_track->plugin_plan.copy_count = 0;
+        a_track->plugin_plan.step_count = 0;
+        if(multiple_routes){
+            // Set all to their respective plugin buffer
+            // TODO: Optimize to consolidate buffers to individual chains
+            a_track->plugin_plan.input = a_track->audio[0];
+            a_track->plugin_plan.output = a_track->audio[MAX_PLUGIN_COUNT];
+            j = a_track->plugin_plan.step_count;
+            for(i = 0; i < MAX_PLUGIN_COUNT; ++i){
+                if(!plugin_active[i]){
+                    continue;
+                }
+                j = a_track->plugin_plan.step_count;
+                a_track->plugin_plan.steps[j].plugin = a_track->plugins[i];
+                a_track->plugin_plan.steps[j].input = a_track->audio[i];
+                a_track->plugin_plan.steps[j].output =
+                    a_track->audio[routes[i]];
+                ++a_track->plugin_plan.step_count;
+            }
         } else {
-            a_track->plugin_plan.copy_count = 0;
-            a_track->plugin_plan.step_count = 0;
+            // Set all to the first buffer if no routes exist.  Equivalent to
+            // the previous behavior
             a_track->plugin_plan.input = a_track->audio[0];
             a_track->plugin_plan.output = a_track->audio[0];
+            for(i = 0; i < MAX_PLUGIN_COUNT; ++i){
+                if(!plugin_active[i]){
+                    continue;
+                }
+                j = a_track->plugin_plan.step_count;
+                a_track->plugin_plan.steps[j].plugin = a_track->plugins[i];
+                a_track->plugin_plan.steps[j].input = a_track->audio[0];
+                a_track->plugin_plan.steps[j].output = a_track->audio[0];
+                ++a_track->plugin_plan.step_count;
+            }
         }
+        // Set the final step to the track output if not already there
+        a_track->plugin_plan.steps[
+            a_track->plugin_plan.step_count - 1
+        ].output = a_track->plugin_plan.output;
 
         g_free_2d_char_array(f_2d_array);
     } else {

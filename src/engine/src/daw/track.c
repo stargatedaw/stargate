@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "compiler.h"
 #include "stargate.h"
 #include "daw.h"
@@ -247,7 +249,13 @@ void v_daw_process_track(
         }
     }
 
-    sg_abort("TODO: Copy buffers");
+    for(f_i = 1; f_i <= f_track->plugin_plan.copy_count; ++f_i){
+        memcpy(
+            (void*)f_track->audio[f_i],
+            (void*)f_track->audio[0],
+            sizeof(struct SamplePair) * a_sample_count
+        );
+    }
 
     for(f_i = 0; f_i < f_track->plugin_plan.step_count; ++f_i){
         f_plugin = f_track->plugin_plan.steps[f_i].plugin;
@@ -257,7 +265,7 @@ void v_daw_process_track(
             v_daw_process_atm(
                 self,
                 a_global_track_num,
-                f_i,
+                f_plugin,
                 a_sample_count,
                 a_playback_mode,
                 a_ts
@@ -468,7 +476,7 @@ void v_daw_sum_track_outputs(
                 v_daw_process_atm(
                     self,
                     a_track->track_num,
-                    f_plugin_index,
+                    f_plugin,
                     a_sample_count,
                     a_playback_mode,
                     a_ts

@@ -226,14 +226,13 @@ void v_daw_atm_sequence_free(t_daw_atm_sequence * self)
 void v_daw_process_atm(
     t_daw * self,
     int f_track_num,
-    int f_index,
+    t_plugin * f_plugin,
     int sample_count,
     int a_playback_mode,
     t_daw_thread_storage * a_ts
 ){
     int f_i, f_i2;
     t_track * f_track = self->track_pool[f_track_num];
-    t_plugin * f_plugin = f_track->plugins[f_index];
     t_atm_tick * tick;
 
     int f_pool_index = f_plugin->pool_uid;
