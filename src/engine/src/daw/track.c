@@ -468,7 +468,7 @@ void v_daw_sum_track_outputs(
             f_buff = f_bus->sc_buffers;
             f_bus->sc_buffers_dirty = 1;
         } else {
-            f_buff = f_bus->plugin_plan.output;
+            f_buff = f_bus->plugin_plan.input;
         }
 
         if(a_track->fade_state != FADE_STATE_FADED){

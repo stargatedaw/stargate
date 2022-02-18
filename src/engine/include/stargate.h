@@ -110,7 +110,7 @@ typedef struct {
     SGFLT * input_buffer;
     int atm_tick_count;
     t_atm_tick atm_ticks[ATM_TICK_BUFFER_SIZE];
-}t_sample_period;
+} t_sample_period;
 
 typedef struct {
     int count;
