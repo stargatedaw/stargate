@@ -550,6 +550,7 @@ class PluginSettingsMain(AbstractPluginSettings):
             self.plugin_uid,
             a_power=1 if self.power_checkbox.isChecked() else 0,
             route=self.route_combobox.currentIndex(),
+        )
 
 
 class PluginSettingsMixer(AbstractPluginSettings):
