@@ -544,8 +544,16 @@ NO_OPTIMIZATION void v_open_track(
                 routes[i] = MAX_PLUGIN_COUNT;  // master output of the track
             }
         }
-        int multiple_routes = 0;
+        // find the first active plugin
         for(i = 0; i < MAX_PLUGIN_COUNT; ++i){
+            if(plugin_active[i]){
+                break;
+            }
+        }
+        ++i;
+        // Determine if there are multiple routing chains within this track
+        int multiple_routes = 0;
+        for(; i < MAX_PLUGIN_COUNT; ++i){
             if(plugin_active[i] && !routed_to[i]){
                 multiple_routes = 1;
                 break;
@@ -559,7 +567,6 @@ NO_OPTIMIZATION void v_open_track(
             // TODO: Optimize to consolidate buffers to individual chains
             a_track->plugin_plan.input = a_track->audio[0];
             a_track->plugin_plan.output = a_track->audio[MAX_PLUGIN_COUNT];
-            j = a_track->plugin_plan.step_count;
             for(i = 0; i < MAX_PLUGIN_COUNT; ++i){
                 if(!plugin_active[i]){
                     continue;
