@@ -588,9 +588,11 @@ NO_OPTIMIZATION void v_open_track(
             }
         }
         // Set the final step to the track output if not already there
-        a_track->plugin_plan.steps[
-            a_track->plugin_plan.step_count - 1
-        ].output = a_track->plugin_plan.output;
+        if(a_track->plugin_plan.step_count){
+            a_track->plugin_plan.steps[
+                a_track->plugin_plan.step_count - 1
+            ].output = a_track->plugin_plan.output;
+        }
 
         g_free_2d_char_array(f_2d_array);
     } else {
@@ -620,6 +622,9 @@ t_track * g_track_get(int a_track_num, SGFLT a_sr){
     f_result->midi_device = 0;
     f_result->sc_buffers_dirty = 0;
     f_result->event_list = shds_list_new(MAX_EVENT_BUFFER_SIZE, NULL);
+
+    f_result->plugin_plan.copy_count = 0;
+    f_result->plugin_plan.step_count = 0;
 
     pthread_spin_init(&f_result->lock, 0);
 

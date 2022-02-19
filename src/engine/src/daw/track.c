@@ -283,7 +283,7 @@ void v_daw_process_track(
     }
 
 
-    f_plugin = f_track->plugins[f_i];
+    f_plugin = f_track->plugins[MAX_PLUGIN_COUNT];
     // No mixer plugin, run the peak meter
     if(!f_plugin){
         v_pkm_run(
