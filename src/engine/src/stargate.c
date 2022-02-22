@@ -532,7 +532,7 @@ NO_OPTIMIZATION void v_open_track(
         // plugins are routed to
         for(i = 0; i < MAX_PLUGIN_COUNT; ++i){
             int found = 0;
-            for(j = routes[i] + 1; j < MAX_PLUGIN_COUNT; ++j){
+            for(j = routes[i]; j < MAX_PLUGIN_COUNT; ++j){
                 if(plugin_active[j]){
                     found = 1;
                     routes[i] = j;
