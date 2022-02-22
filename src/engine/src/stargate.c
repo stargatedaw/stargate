@@ -595,11 +595,13 @@ NO_OPTIMIZATION void v_open_track(
             }
         }
         // Set the final step to the track output if not already there
+        /*
         if(a_track->plugin_plan.step_count){
             a_track->plugin_plan.steps[
                 a_track->plugin_plan.step_count - 1
             ].output = a_track->plugin_plan.output;
         }
+        */
 
         g_free_2d_char_array(f_2d_array);
     } else {
