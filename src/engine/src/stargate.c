@@ -1507,14 +1507,16 @@ NO_OPTIMIZATION void v_set_plugin_index(
             // one second, avoids strangeness at the beginning of playback
             // or render
             for(i = 0; i < (sample_rate / 512); ++i){
-                f_plugin->descriptor->run_replacing(
+                f_plugin->descriptor->run(
                     f_plugin->plugin_handle,
+                    RunModeReplacing,
                     512,
                     buffer,
                     sc_buffer,
                     buffer,
                     &midi_list,
-                    &atm_list
+                    &atm_list,
+                    NULL
                 );
             }
         }

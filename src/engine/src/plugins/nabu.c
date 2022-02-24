@@ -200,12 +200,14 @@ void v_nabu_process_midi_event(
 
 void v_nabu_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
-    struct ShdsList* atm_events
+    struct ShdsList* atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
     int i, j;
     struct NabuPlugin* plugin_data = (struct NabuPlugin*)instance;
@@ -387,8 +389,13 @@ void v_nabu_run(
                 step->output->right += step->dry_wet_pan.output.right;
             }
 
-            output_buffer[i_mono_out].left = mm->output.left;
-            output_buffer[i_mono_out].right = mm->output.right;
+            _plugin_mix(
+                run_mode,
+                i_mono_out,
+                output_buffer,
+                mm->output.left,
+                mm->output.right
+            );
         }
     }
 
@@ -553,7 +560,7 @@ PluginDescriptor* nabu_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_nabu_run;
+    f_result->run = v_nabu_run;
     f_result->on_stop = v_nabu_on_stop;
     f_result->offline_render_prep = NULL;
 

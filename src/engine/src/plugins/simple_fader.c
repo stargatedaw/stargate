@@ -128,33 +128,38 @@ void v_sfader_process_midi(
     int f_i = 0;
     v_plugin_event_queue_reset(&plugin_data->midi_queue);
 
-    for(f_i = 0; f_i < events->len; ++f_i)
-    {
+    for(f_i = 0; f_i < events->len; ++f_i){
         v_sfader_process_midi_event(
-            plugin_data, (t_seq_event*)events->data[f_i]);
+            plugin_data,
+            (t_seq_event*)events->data[f_i]
+        );
     }
 
     v_plugin_event_queue_reset(&plugin_data->atm_queue);
 
     t_seq_event * ev_tmp;
-    for(f_i = 0; f_i < atm_events->len; ++f_i)
-    {
+    for(f_i = 0; f_i < atm_events->len; ++f_i){
         ev_tmp = (t_seq_event*)atm_events->data[f_i];
         v_plugin_event_queue_add(
-            &plugin_data->atm_queue, ev_tmp->type,
-            ev_tmp->tick, ev_tmp->value, ev_tmp->port);
+            &plugin_data->atm_queue,
+            ev_tmp->type,
+            ev_tmp->tick,
+            ev_tmp->value,
+            ev_tmp->port
+        );
     }
 }
 
 
-void v_sfader_run_mixing(
+void v_sfader_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
-    struct ShdsList * atm_events,
+    struct ShdsList* atm_events,
     t_pkm_peak_meter* peak_meter
 ){
     t_sfader *plugin_data = (t_sfader*)instance;
@@ -213,71 +218,14 @@ void v_sfader_run_mixing(
                 right
             );
         }
-        output_buffer[f_i].left += left;
-        output_buffer[f_i].right += right;
-    }
 
-}
-
-void v_sfader_run(
-    PluginHandle instance,
-    int sample_count,
-    struct SamplePair* input_buffer,
-    struct SamplePair* sc_buffer,
-    struct SamplePair* output_buffer,
-    struct ShdsList* midi_events,
-    struct ShdsList * atm_events
-){
-    t_sfader *plugin_data = (t_sfader*)instance;
-
-    v_sfader_process_midi(instance, midi_events, atm_events);
-
-    t_plugin_event_queue_item * f_midi_item;
-    int midi_event_pos = 0;
-    int f_i;
-
-    for(f_i = 0; f_i < sample_count; ++f_i){
-        while(1){
-            f_midi_item = v_plugin_event_queue_iter(
-                &plugin_data->midi_queue,
-                f_i
-            );
-            if(!f_midi_item){
-                break;
-            }
-
-            if(f_midi_item->type == EVENT_CONTROLLER)
-            {
-                v_cc_map_translate(
-                    &plugin_data->cc_map, plugin_data->descriptor,
-                    plugin_data->port_table, f_midi_item->port,
-                    f_midi_item->value);
-            }
-            ++midi_event_pos;
-        }
-
-        v_plugin_event_queue_atm_set(
-            &plugin_data->atm_queue, f_i, plugin_data->port_table);
-
-        v_sml_run(
-            &plugin_data->mono_modules.volume_smoother,
-            (plugin_data->port_table[SFADER_VOL_SLIDER] * 0.01f)
+        _plugin_mix(
+            run_mode,
+            f_i,
+            output_buffer,
+            left,
+            right
         );
-
-        if(
-            plugin_data->mono_modules.volume_smoother.last_value != 0.0f
-            ||
-            (plugin_data->port_table[SFADER_VOL_SLIDER] != 0.0f)
-        ){
-            plugin_data->mono_modules.vol_linear = f_db_to_linear_fast(
-                plugin_data->mono_modules.volume_smoother.last_value
-            );
-
-            output_buffer[f_i].left = input_buffer[f_i].left *
-                plugin_data->mono_modules.vol_linear;
-            output_buffer[f_i].right = input_buffer[f_i].right *
-                plugin_data->mono_modules.vol_linear;
-        }
     }
 }
 
@@ -302,8 +250,7 @@ PluginDescriptor *sfader_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_sfader_run;
-    f_result->run_mixing = v_sfader_run_mixing;
+    f_result->run = v_sfader_run;
     f_result->on_stop = v_sfader_on_stop;
     f_result->offline_render_prep = NULL;
 

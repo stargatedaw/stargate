@@ -270,14 +270,16 @@ void v_daw_process_track(
                 a_playback_mode,
                 a_ts
             );
-            f_plugin->descriptor->run_replacing(
+            f_plugin->descriptor->run(
                 f_plugin->plugin_handle,
+                RunModeReplacing,
                 a_sample_count,
                 input,
                 f_track->sc_buffers,
                 output,
                 f_track->event_list,
-                f_plugin->atm_list
+                f_plugin->atm_list,
+                NULL
             );
         }
     }
@@ -484,8 +486,9 @@ void v_daw_sum_track_outputs(
 
                 pthread_spin_lock(&f_bus->lock);
 
-                f_plugin->descriptor->run_mixing(
+                f_plugin->descriptor->run(
                     f_plugin->plugin_handle,
+                    RunModeMixing,
                     a_sample_count,
                     a_track->plugin_plan.output,
                     a_track->sc_buffers,

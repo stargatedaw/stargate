@@ -207,12 +207,14 @@ void v_multifx_process_midi_event(
 
 void v_multifx_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
-    struct ShdsList *atm_events
+    struct ShdsList *atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
     t_multifx *plugin_data = (t_multifx*)instance;
     t_mf3_multi * f_fx;
@@ -304,10 +306,13 @@ void v_multifx_run(
                 }
             }
 
-            output_buffer[i_mono_out].left =
-                plugin_data->mono_modules.current_sample0;
-            output_buffer[i_mono_out].right =
-                plugin_data->mono_modules.current_sample1;
+            _plugin_mix(
+                run_mode,
+                i_mono_out,
+                output_buffer,
+                plugin_data->mono_modules.current_sample0,
+                plugin_data->mono_modules.current_sample1
+            );
         }
     }
 }
@@ -365,7 +370,7 @@ PluginDescriptor *multifx_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_multifx_run;
+    f_result->run = v_multifx_run;
     f_result->on_stop = v_multifx_on_stop;
     f_result->offline_render_prep = NULL;
 

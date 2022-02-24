@@ -153,14 +153,17 @@ void v_sg_vocoder_process_midi(
 
 void v_sg_vocoder_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
-    struct ShdsList * atm_events
+    struct ShdsList * atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
     t_sg_vocoder *plugin_data = (t_sg_vocoder*)instance;
+    struct SamplePair sample;
 
     t_plugin_event_queue_item * f_midi_item;
     v_sg_vocoder_process_midi(instance, midi_events, atm_events);
@@ -214,27 +217,34 @@ void v_sg_vocoder_run(
         f_amp = f_db_to_linear_fast(
             f_carrier_smoother->last_value * 0.1f
         );
-        input_buffer[f_i].left *= f_amp;
-        input_buffer[f_i].right *= f_amp;
 
         v_sml_run(f_wet_smoother, *plugin_data->wet);
         f_amp = f_db_to_linear_fast(f_wet_smoother->last_value * 0.1f);
 
-        output_buffer[f_i].left = input_buffer[f_i].left + (
-            plugin_data->mono_modules.vocoder.output0 * f_amp
-        );
-        output_buffer[f_i].right = input_buffer[f_i].right + (
-            plugin_data->mono_modules.vocoder.output1 * f_amp
-        );
+        sample.left = (
+            input_buffer[f_i].left +
+            plugin_data->mono_modules.vocoder.output0
+        ) * f_amp;
+        sample.right = (
+            input_buffer[f_i].right +
+            plugin_data->mono_modules.vocoder.output1
+        ) * f_amp;
 
         if(*plugin_data->modulator >= -499.0f){
             v_sml_run(f_modulator_smoother, *plugin_data->modulator);
             f_amp = f_db_to_linear_fast(
                 f_modulator_smoother->last_value * 0.1f
             );
-            output_buffer[f_i].left += sc_buffer[f_i].left * f_amp;
-            output_buffer[f_i].right += sc_buffer[f_i].right * f_amp;
+            sample.left += sc_buffer[f_i].left * f_amp;
+            sample.right += sc_buffer[f_i].right * f_amp;
         }
+        _plugin_mix(
+            run_mode,
+            f_i,
+            output_buffer,
+            sample.left,
+            sample.right
+        );
 
         ++f_i;
     }
@@ -263,8 +273,7 @@ PluginDescriptor *sg_vocoder_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_sg_vocoder_run;
-    f_result->run_mixing = NULL;
+    f_result->run = v_sg_vocoder_run;
     f_result->on_stop = v_sg_vocoder_on_stop;
     f_result->offline_render_prep = NULL;
 

@@ -564,14 +564,17 @@ void v_va1_process_midi_event(
 
 void v_run_va1(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
-    struct ShdsList * midi_events,
-    struct ShdsList * atm_events
+    struct ShdsList* midi_events,
+    struct ShdsList* atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
     t_va1* plugin_data = (t_va1*) instance;
+    struct SamplePair sample;
 
     t_seq_event **events = (t_seq_event**)midi_events->data;
     int event_count = midi_events->len;
@@ -718,10 +721,17 @@ void v_run_va1(
 
         f_avgL = f_avgL * os_recip * 1.412429;
         f_avgR = f_avgR * os_recip * 1.412429;
-        output_buffer[f_i].left = input_buffer[f_i].left +
+        sample.left = input_buffer[f_i].left +
             (f_avgL * plugin_data->mono_modules.panner.gainL);
-        output_buffer[f_i].right = input_buffer[f_i].right +
+        sample.right = input_buffer[f_i].right +
             (f_avgR * plugin_data->mono_modules.panner.gainR);
+        _plugin_mix(
+            run_mode,
+            f_i,
+            output_buffer,
+            sample.left,
+            sample.right
+        );
         f_i2 += os_count;
     }
 }
@@ -963,7 +973,7 @@ PluginDescriptor *va1_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_run_va1;
+    f_result->run = v_run_va1;
     f_result->offline_render_prep = NULL;
     f_result->on_stop = v_va1_on_stop;
 

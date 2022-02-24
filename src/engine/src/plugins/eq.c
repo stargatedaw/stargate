@@ -221,12 +221,14 @@ int _postfx_check_if_on(t_sgeq *plugin_data){
 
 void v_sgeq_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList * midi_events,
-    struct ShdsList * atm_events
+    struct ShdsList * atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
     t_sgeq *plugin_data = (t_sgeq*)instance;
     t_mf3_multi * f_fx;
@@ -354,8 +356,14 @@ void v_sgeq_run(
                 }
             }
         }
-        output_buffer[f_i].left = sample.left;
-        output_buffer[f_i].right = sample.right;
+
+        _plugin_mix(
+            run_mode,
+            f_i,
+            output_buffer,
+            sample.left,
+            sample.right
+        );
     }
 
     if((int)(*plugin_data->spectrum_analyzer_on)){
@@ -372,7 +380,6 @@ void v_sgeq_run(
             plugin_data->mono_modules.spectrum_analyzer->str_buf[0] = '\0';
         }
     }
-
 }
 
 SGFLT* sgeq_get_port_table(PluginHandle instance){
@@ -464,7 +471,7 @@ PluginDescriptor *sgeq_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_sgeq_run;
+    f_result->run = v_sgeq_run;
     f_result->on_stop = v_sgeq_on_stop;
     f_result->offline_render_prep = NULL;
 

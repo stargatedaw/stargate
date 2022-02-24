@@ -259,12 +259,14 @@ void v_triggerfx_process_midi_event(
 
 void v_triggerfx_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
-    struct ShdsList* atm_events
+    struct ShdsList* atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
     t_triggerfx *plugin_data = (t_triggerfx*)instance;
 
@@ -383,8 +385,13 @@ void v_triggerfx_run(
                 plugin_data->mono_modules.gate.output[1];
         }
 
-        output_buffer[f_i].left = plugin_data->mono_modules.current_sample0;
-        output_buffer[f_i].right = plugin_data->mono_modules.current_sample1;
+        _plugin_mix(
+            run_mode,
+            f_i,
+            output_buffer,
+            plugin_data->mono_modules.current_sample0,
+            plugin_data->mono_modules.current_sample1
+        );
 
         ++f_i;
     }
@@ -420,7 +427,7 @@ PluginDescriptor *triggerfx_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_triggerfx_run;
+    f_result->run = v_triggerfx_run;
     f_result->on_stop = v_triggerfx_on_stop;
     f_result->offline_render_prep = NULL;
 

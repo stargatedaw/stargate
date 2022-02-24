@@ -606,6 +606,24 @@ void effect_process_events(
     );
 }
 
+inline void _plugin_mix(
+    enum PluginRunMode run_mode,
+    int pos,
+    struct SamplePair* output_buffer,
+    SGFLT left,
+    SGFLT right
+){
+    if(run_mode == RunModeReplacing){
+        output_buffer[pos].left = left;
+        output_buffer[pos].right = right;
+    } else if(run_mode == RunModeMixing){
+        output_buffer[pos].left += left;
+        output_buffer[pos].right += right;
+    } else {
+        sg_abort("Invalid run_mode: %d", run_mode);
+    }
+}
+
 /*
 void v_free_plugin(t_plugin * a_plugin)
 {

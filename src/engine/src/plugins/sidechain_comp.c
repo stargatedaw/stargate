@@ -110,12 +110,14 @@ void v_scc_set_port_value(
 
 void v_scc_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
-    struct ShdsList* atm_events
+    struct ShdsList* atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
     t_scc *plugin_data = (t_scc*)instance;
     t_scc_sidechain_comp * f_cmp = &plugin_data->mono_modules.sidechain_comp;
@@ -155,8 +157,13 @@ void v_scc_run(
             input_buffer[f_i].right
         );
 
-        output_buffer[f_i].left = f_cmp->output0;
-        output_buffer[f_i].right = f_cmp->output1;
+        _plugin_mix(
+            run_mode,
+            f_i,
+            output_buffer,
+            f_cmp->output0,
+            f_cmp->output1
+        );
     }
 
     if((int)(*plugin_data->peak_meter)){
@@ -200,7 +207,7 @@ PluginDescriptor *scc_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_scc_run;
+    f_result->run = v_scc_run;
     f_result->on_stop = v_scc_on_stop;
     f_result->offline_render_prep = NULL;
 

@@ -1221,12 +1221,14 @@ void v_fm1_process_midi_event(
 
 void v_run_fm1(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
-    struct ShdsList* atm_events
+    struct ShdsList* atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
     t_fm1 *plugin_data = (t_fm1*) instance;
     t_fm1_poly_voice* pvoice;
@@ -1389,13 +1391,21 @@ void v_run_fm1(
         // the new plugin API.  After a week of reviewing a clean and simple
         // patch to this file and not seeing any reason for this, just
         // kludging the volume here instead
-        output_buffer[i_iterator].left = input_buffer[i_iterator].left + (
+        sample.left = input_buffer[i_iterator].left + (
             plugin_data->mono_modules.aa_filter.output0 * 2.0 *
             plugin_data->mono_modules.panner.gainL
         );
-        output_buffer[i_iterator].right = input_buffer[i_iterator].right + (
+        sample.right = input_buffer[i_iterator].right + (
             plugin_data->mono_modules.aa_filter.output1 * 2.0 *
             plugin_data->mono_modules.panner.gainR
+        );
+
+        _plugin_mix(
+            run_mode,
+            i_iterator,
+            output_buffer,
+            sample.left,
+            sample.right
         );
 
         ++plugin_data->sampleNo;
@@ -1984,7 +1994,7 @@ PluginDescriptor *fm1_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = v_fm1_configure;
-    f_result->run_replacing = v_run_fm1;
+    f_result->run = v_run_fm1;
     f_result->offline_render_prep = v_fm1_or_prep;
     f_result->on_stop = v_fm1_on_stop;
 

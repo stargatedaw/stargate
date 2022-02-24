@@ -88,8 +88,9 @@ void v_sgchnl_set_port_value(
     plugin_data->port_table[a_port] = a_value;
 }
 
-void v_sgchnl_run_mixing(
+void v_sgchnl_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffers,
     struct SamplePair* sc_buffers,
@@ -157,68 +158,14 @@ void v_sgchnl_run_mixing(
                 right
             );
         }
-        output_buffers[f_i].left += left;
-        output_buffers[f_i].right += right;
-    }
-}
 
-void v_sgchnl_run(
-    PluginHandle instance,
-    int sample_count,
-    struct SamplePair* input_buffers,
-    struct SamplePair* sc_buffers,
-    struct SamplePair* output_buffers,
-    struct ShdsList* midi_events,
-    struct ShdsList * atm_events
-){
-    t_sgchnl *plugin_data = (t_sgchnl*)instance;
-    effect_translate_midi_events(
-        midi_events,
-        &plugin_data->midi_events,
-        &plugin_data->atm_queue,
-        atm_events
-    );
-    int f_i;
-    SGFLT f_vol_linear;
-    SGFLT f_gain = f_db_to_linear_fast(
-        plugin_data->port_table[SGCHNL_GAIN] * 0.01f
-    );
-    SGFLT f_pan_law = plugin_data->port_table[SGCHNL_LAW] * 0.01f;
-
-    for(f_i = 0; f_i < sample_count; ++f_i){
-        effect_process_events(
+        _plugin_mix(
+            run_mode,
             f_i,
-            &plugin_data->midi_events,
-            plugin_data->port_table,
-            plugin_data->descriptor,
-            &plugin_data->cc_map,
-            &plugin_data->atm_queue
+            output_buffers,
+            left,
+            right
         );
-
-        v_sml_run(
-            &plugin_data->mono_modules.volume_smoother,
-            (plugin_data->port_table[SGCHNL_VOL_SLIDER] * 0.01f)
-        );
-
-        v_sml_run(
-            &plugin_data->mono_modules.pan_smoother,
-            (plugin_data->port_table[SGCHNL_PAN] * 0.01f)
-        );
-
-        v_pn2_set(
-            &plugin_data->mono_modules.panner,
-            plugin_data->mono_modules.pan_smoother.last_value,
-            f_pan_law
-        );
-
-        f_vol_linear = f_db_to_linear_fast(
-            (plugin_data->mono_modules.volume_smoother.last_value)
-        );
-
-        output_buffers[f_i].left = input_buffers[f_i].left *
-            f_vol_linear * f_gain * plugin_data->mono_modules.panner.gainL;
-        output_buffers[f_i].right = input_buffers[f_i].right *
-            f_vol_linear * f_gain * plugin_data->mono_modules.panner.gainR;
     }
 }
 
@@ -246,8 +193,7 @@ PluginDescriptor *sgchnl_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_sgchnl_run;
-    f_result->run_mixing = v_sgchnl_run_mixing;
+    f_result->run = v_sgchnl_run;
     f_result->on_stop = v_sgchnl_on_stop;
     f_result->offline_render_prep = NULL;
 

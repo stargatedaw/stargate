@@ -91,12 +91,14 @@ void v_sg_lim_set_port_value(
 
 void v_sg_lim_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
-    struct ShdsList* atm_events
+    struct ShdsList* atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
     t_sg_lim *plugin_data = (t_sg_lim*)instance;
     int f_i = 0;
@@ -132,8 +134,13 @@ void v_sg_lim_run(
             input_buffer[f_i].right
         );
 
-        output_buffer[f_i].left = f_lim->output0;
-        output_buffer[f_i].right = f_lim->output1;
+        _plugin_mix(
+            run_mode,
+            f_i,
+            output_buffer,
+            f_lim->output0,
+            f_lim->output1
+        );
     }
 
     if((int)(plugin_data->port_table[SG_LIM_UI_MSG_ENABLED])){
@@ -175,7 +182,7 @@ PluginDescriptor *sg_lim_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_sg_lim_run;
+    f_result->run = v_sg_lim_run;
     f_result->on_stop = v_sg_lim_on_stop;
     f_result->offline_render_prep = NULL;
 

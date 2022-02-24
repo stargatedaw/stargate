@@ -399,8 +399,9 @@ void v_widemixer_process_midi(
 }
 
 
-void v_widemixer_run_mixing(
+void v_widemixer_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
@@ -451,53 +452,13 @@ void v_widemixer_run_mixing(
                 right
             );
         }
-        output_buffer[f_i].left += left;
-        output_buffer[f_i].right += right;
-    }
-}
-
-void v_widemixer_run(
-    PluginHandle instance,
-    int sample_count,
-    struct SamplePair* input_buffer,
-    struct SamplePair* sc_buffer,
-    struct SamplePair* output_buffer,
-    struct ShdsList* midi_events,
-    struct ShdsList * atm_events
-){
-    t_widemixer *plugin_data = (t_widemixer*)instance;
-
-    v_widemixer_process_midi(instance, midi_events, atm_events);
-    struct WMRunVars runvars;
-    init_run_vars(&runvars, plugin_data);
-    struct SamplePair sample;
-
-    int midi_event_pos = 0;
-    int f_i;
-
-    SGFLT f_vol_linear;
-
-    for(f_i = 0; f_i < sample_count; ++f_i){
-        sample.left = input_buffer[f_i].left;
-        sample.right = input_buffer[f_i].right;
-        f_vol_linear = run_widemixer(
-            &runvars,
-            plugin_data,
-            &midi_event_pos,
+        _plugin_mix(
+            run_mode,
             f_i,
-            &sample
+            output_buffer,
+            left,
+            right
         );
-        if(runvars.mute){
-            output_buffer[f_i].left = 0.0;
-            output_buffer[f_i].right = 0.0;
-            continue;
-        }
-        output_buffer[f_i].left = sample.left *
-            f_vol_linear * runvars.gain *
-            plugin_data->mono_modules.panner.gainL;
-        output_buffer[f_i].right = sample.right *
-            f_vol_linear * runvars.gain *
-            plugin_data->mono_modules.panner.gainR;
     }
 }
 
@@ -536,8 +497,7 @@ PluginDescriptor *widemixer_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_widemixer_run;
-    f_result->run_mixing = v_widemixer_run_mixing;
+    f_result->run = v_widemixer_run;
     f_result->on_stop = v_widemixer_on_stop;
     f_result->offline_render_prep = NULL;
 

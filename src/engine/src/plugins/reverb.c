@@ -97,15 +97,18 @@ void v_sreverb_set_port_value(
 
 void v_sreverb_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
-    struct ShdsList * atm_events
+    struct ShdsList * atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
-    t_sreverb *plugin_data = (t_sreverb*)instance;
+    t_sreverb* plugin_data = (t_sreverb*)instance;
     t_sreverb_mono_modules* mm = &plugin_data->mono_modules;
+    struct SamplePair sample;
     int f_i = 0;
 
     effect_translate_midi_events(
@@ -185,12 +188,20 @@ void v_sreverb_run(
             -3.0
         );
 
-        output_buffer[f_i].left = (
+        sample.left = (
             input_buffer[f_i].left * f_dry_vol * mm->dry_panner.gainL
         ) + (mm->reverb.output[0] * mm->wet_panner.gainL);
-        output_buffer[f_i].right = (
+        sample.right = (
             input_buffer[f_i].right * f_dry_vol * mm->dry_panner.gainR
         ) + (mm->reverb.output[1] * mm->wet_panner.gainR);
+
+        _plugin_mix(
+            run_mode,
+            f_i,
+            output_buffer,
+            sample.left,
+            sample.right
+        );
     }
 }
 
@@ -222,7 +233,7 @@ PluginDescriptor *sreverb_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_sreverb_run;
+    f_result->run = v_sreverb_run;
     f_result->on_stop = v_sreverb_on_stop;
     f_result->offline_render_prep = NULL;
 

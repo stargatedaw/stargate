@@ -1516,14 +1516,17 @@ void v_sampler1_process_midi_event(
 
 void v_run_sg_sampler1(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
-    struct ShdsList *atm_events
+    struct ShdsList *atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
     t_sampler1 *plugin_data = (t_sampler1*)instance;
+    struct SamplePair sample;
 
     t_seq_event **events = (t_seq_event**)midi_events->data;
     int event_count = midi_events->len;
@@ -1648,10 +1651,18 @@ void v_run_sg_sampler1(
             v_eq6_run(&plugin_data->mono_modules.mfx[f_monofx_index].eqs,
                 f_temp_sample0, f_temp_sample1);
 
-            output_buffer[f_i].left = input_buffer[f_i].left +
+            sample.left = input_buffer[f_i].left +
                 plugin_data->mono_modules.mfx[f_monofx_index].eqs.output0;
-            output_buffer[f_i].right = input_buffer[f_i].right +
+            sample.right = input_buffer[f_i].right +
                 plugin_data->mono_modules.mfx[f_monofx_index].eqs.output1;
+
+            _plugin_mix(
+                run_mode,
+                f_i,
+                output_buffer,
+                sample.left,
+                sample.right
+            );
         }
         ++plugin_data->sampleNo;
     }
@@ -2088,7 +2099,7 @@ PluginDescriptor *sampler1_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = v_sampler1_configure;
-    f_result->run_replacing = v_run_sg_sampler1;
+    f_result->run = v_run_sg_sampler1;
     f_result->offline_render_prep = NULL;
     f_result->on_stop = v_sampler1_on_stop;
 

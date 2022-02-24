@@ -409,14 +409,16 @@ void v_run_wave_editor(
         f_plugin = f_track->plugins[f_i];
         if(f_plugin && f_plugin->power)
         {
-            f_plugin->descriptor->run_replacing(
+            f_plugin->descriptor->run(
                 f_plugin->plugin_handle,
+                RunModeReplacing,
                 sample_count,
                 f_track->audio[0],
                 f_track->sc_buffers,
                 f_track->audio[0],
                 f_track->event_list,
-                f_plugin->atm_list
+                f_plugin->atm_list,
+                NULL
             );
         }
     }

@@ -94,12 +94,14 @@ void v_sgdelay_set_port_value(
 
 void v_sgdelay_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
-    struct ShdsList* atm_events
+    struct ShdsList* atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
     t_sgdelay *plugin_data = (t_sgdelay*)instance;
     int f_i;
@@ -141,8 +143,13 @@ void v_sgdelay_run(
             input_buffer[f_i].right
         );
 
-        output_buffer[f_i].left = plugin_data->mono_modules.delay->output0;
-        output_buffer[f_i].right = plugin_data->mono_modules.delay->output1;
+        _plugin_mix(
+            run_mode,
+            f_i,
+            output_buffer,
+            plugin_data->mono_modules.delay->output0,
+            plugin_data->mono_modules.delay->output1
+        );
     }
 }
 
@@ -173,7 +180,7 @@ PluginDescriptor *sgdelay_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_sgdelay_run;
+    f_result->run = v_sgdelay_run;
     f_result->on_stop = v_sgdelay_on_stop;
     f_result->offline_render_prep = NULL;
 

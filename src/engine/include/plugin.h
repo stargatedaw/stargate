@@ -16,6 +16,7 @@ typedef void (*fp_queue_message)(char*, char*);
 
 typedef int PluginPortDescriptor;
 
+enum PluginRunMode {RunModeReplacing, RunModeMixing};
 
 typedef struct _PluginPortRangeHint {
   PluginData DefaultValue;
@@ -141,22 +142,9 @@ typedef struct _PluginDescriptor {
         pthread_spinlock_t * a_spinlock
     );
 
-    // Plugins NOT part of a send channel will always call this
-    void (*run_replacing)(
+    void (*run)(
         PluginHandle Instance,
-        int SampleCount,
-        struct SamplePair* input_buffer,
-        struct SamplePair* sc_buffer,
-        struct SamplePair* output_buffer,
-        struct ShdsList* midi_events,
-        struct ShdsList* atm_events
-    );
-
-    // Plugins that are part of a send channel will always call this,
-    // any plugin that isn't a fader/channel type plugin do not need
-    // to implement or set this
-    void (*run_mixing)(
-        PluginHandle Instance,
+        enum PluginRunMode run_mode,
         int SampleCount,
         struct SamplePair* input_buffer,
         struct SamplePair* sc_buffer,
@@ -329,6 +317,14 @@ void effect_process_events(
     PluginDescriptor * descriptor,
     t_plugin_cc_map* cc_map,
     t_plugin_event_queue* atm_queue
+);
+
+inline void _plugin_mix(
+    enum PluginRunMode run_mode,
+    int pos,
+    struct SamplePair* output_buffer,
+    SGFLT left,
+    SGFLT right
 );
 
 #endif

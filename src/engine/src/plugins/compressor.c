@@ -90,12 +90,14 @@ void v_sg_comp_set_port_value(
 
 void v_sg_comp_run(
     PluginHandle instance,
+    enum PluginRunMode run_mode,
     int sample_count,
     struct SamplePair* input_buffer,
     struct SamplePair* sc_buffer,
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
-    struct ShdsList * atm_events
+    struct ShdsList * atm_events,
+    t_pkm_peak_meter* peak_meter
 ){
     t_sg_comp *plugin_data = (t_sg_comp*)instance;
     int f_i = 0;
@@ -149,8 +151,13 @@ void v_sg_comp_run(
             );
         }
 
-        output_buffer[f_i].left = f_cmp->output0 * f_gain;
-        output_buffer[f_i].right = f_cmp->output1 * f_gain;
+        _plugin_mix(
+            run_mode,
+            f_i,
+            output_buffer,
+            f_cmp->output0 * f_gain,
+            f_cmp->output1 * f_gain
+        );
     }
 
     if((int)(plugin_data->port_table[SG_COMP_UI_MSG_ENABLED])){
@@ -197,7 +204,7 @@ PluginDescriptor *sg_comp_plugin_descriptor(){
 
     f_result->API_Version = 1;
     f_result->configure = NULL;
-    f_result->run_replacing = v_sg_comp_run;
+    f_result->run = v_sg_comp_run;
     f_result->on_stop = v_sg_comp_on_stop;
     f_result->offline_render_prep = NULL;
 
