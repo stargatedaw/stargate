@@ -289,7 +289,7 @@ void v_ev_set_noteoff(
     int a_velocity
 );
 
-NO_OPTIMIZATION void g_plugin_init(
+NO_OPTIMIZATION void plugin_activate(
     t_plugin * f_result,
     int a_sample_rate,
     int a_index,

@@ -1442,17 +1442,72 @@ void v_sg_configure(const char* a_key, const char* a_value){
 
 }
 
-
 /*Function for passing to plugins that re-use the wav pool*/
-t_audio_pool_item * g_audio_pool_item_get_plugin(int a_uid)
-{
+t_audio_pool_item* g_audio_pool_item_get_plugin(int a_uid){
     return g_audio_pool_get_item_by_uid(STARGATE->audio_pool, a_uid);
 }
 
+void plugin_init(
+    t_plugin* self,
+    int a_plugin_index,
+    int a_plugin_uid
+){
+    int i;
+    struct SamplePair buffer[512] = {};
+    struct SamplePair sc_buffer[512] = {};
+    int sample_rate = (int)STARGATE->thread_storage[0].sample_rate;
+    struct ShdsList midi_list, atm_list;
+    shds_list_init(&midi_list, 0, NULL);
+    shds_list_init(&atm_list, 0, NULL);
 
-/* Disable the optimizer for this function because it causes a
- * SEGFAULT on ARM (which could not be reproduced on x86)
- * This is not a performance-critical function. */
+    if(!self->active){
+        log_info("Initializing plugin");
+        plugin_activate(
+            self,
+            sample_rate,
+            a_plugin_index,
+            g_audio_pool_item_get_plugin,
+            a_plugin_uid,
+            v_queue_osc_message
+        );
+        log_info("Finished initializing plugin");
+
+        char f_file_name[1024];
+        snprintf(
+            f_file_name,
+            1024,
+            "%s%i",
+            STARGATE->plugins_folder,
+            a_plugin_uid
+        );
+
+        if(i_file_exists(f_file_name)){
+            log_info("Loading plugin");
+            self->descriptor->load(
+                self->plugin_handle,
+                self->descriptor,
+                f_file_name
+            );
+        }
+        // Warm up control smoothers and anything else by running for
+        // one second, avoids strangeness at the beginning of playback
+        // or render
+        for(i = 0; i < (sample_rate / 512); ++i){
+            self->descriptor->run(
+                self->plugin_handle,
+                RunModeReplacing,
+                512,
+                buffer,
+                sc_buffer,
+                buffer,
+                &midi_list,
+                &atm_list,
+                NULL
+            );
+        }
+    }
+}
+
 NO_OPTIMIZATION void v_set_plugin_index(
     t_track * f_track,
     int a_index,
@@ -1461,69 +1516,19 @@ NO_OPTIMIZATION void v_set_plugin_index(
     int a_power,
     int a_lock
 ){
-    int i;
-    struct SamplePair buffer[512] = {};
-    struct SamplePair sc_buffer[512] = {};
-    int sample_rate = (int)STARGATE->thread_storage[0].sample_rate;
     t_plugin * f_plugin = NULL;
-    struct ShdsList midi_list, atm_list;
-    shds_list_init(&midi_list, 0, NULL);
-    shds_list_init(&atm_list, 0, NULL);
 
     if(a_plugin_index){
         log_info("Plugin %i index set to %i", a_index, a_plugin_index);
         f_plugin = &STARGATE->plugin_pool[a_plugin_uid];
-
-        if(!f_plugin->active){
-            log_info("Initializing plugin");
-            g_plugin_init(
-                f_plugin,
-                sample_rate,
-                a_plugin_index,
-                g_audio_pool_item_get_plugin,
-                a_plugin_uid,
-                v_queue_osc_message
-            );
-            log_info("Finished initializing plugin");
-
-            char f_file_name[1024];
-            snprintf(
-                f_file_name,
-                1024,
-                "%s%i",
-                STARGATE->plugins_folder,
-                a_plugin_uid
-            );
-
-            if(i_file_exists(f_file_name)){
-                log_info("Loading plugin");
-                f_plugin->descriptor->load(
-                    f_plugin->plugin_handle,
-                    f_plugin->descriptor,
-                    f_file_name
-                );
-            }
-            // Warm up control smoothers and anything else by running for
-            // one second, avoids strangeness at the beginning of playback
-            // or render
-            for(i = 0; i < (sample_rate / 512); ++i){
-                f_plugin->descriptor->run(
-                    f_plugin->plugin_handle,
-                    RunModeReplacing,
-                    512,
-                    buffer,
-                    sc_buffer,
-                    buffer,
-                    &midi_list,
-                    &atm_list,
-                    NULL
-                );
-            }
-        }
+        plugin_init(
+            f_plugin,
+            a_plugin_index,
+            a_plugin_uid
+        );
     }
 
     if(a_lock){
-        log_info("Locking main_lock");
         pthread_spin_lock(&STARGATE->main_lock);
     }
 
@@ -1534,7 +1539,6 @@ NO_OPTIMIZATION void v_set_plugin_index(
     f_track->plugins[a_index] = f_plugin;
 
     if(a_lock){
-        log_info("Unlocking main_lock");
         pthread_spin_unlock(&STARGATE->main_lock);
     }
 }

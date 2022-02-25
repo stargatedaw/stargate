@@ -470,7 +470,7 @@ SGFLT set_pmn_adsr(
     return value;
 }
 
-NO_OPTIMIZATION void g_plugin_init(
+NO_OPTIMIZATION void plugin_activate(
     t_plugin * f_result,
     int a_sample_rate,
     int a_index,
