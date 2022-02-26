@@ -89,4 +89,5 @@ void shds_list_grow(struct ShdsList * self);
 /* Insertion Sort a list */
 void shds_list_isort(struct ShdsList * self, shds_cmpfunc cmpfunc);
 
+void shds_list_free(struct ShdsList* self, int free_ptr);
 #endif

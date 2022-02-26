@@ -413,6 +413,8 @@ class AbstractPluginSettings:
                 glbl_shared.PLUGIN_UI_DICT.close_plugin_ui(self.plugin_uid)
             self.plugin_uid = constants.PROJECT.get_next_plugin_uid()
             self.plugin_index = f_index
+        if a_save:
+            self.save_callback()
         self.set_plugin_func(
             self.track_num,
             self.index,
@@ -420,13 +422,12 @@ class AbstractPluginSettings:
             self.plugin_uid,
             self.power_checkbox.isChecked(),
         )
-        if a_save:
-            self.save_callback()
         self.on_show_ui()
 
     def on_power_changed(self, a_val=None):
         f_index = get_plugin_uid_by_name(self.plugin_combobox.currentText())
         if f_index:
+            self.save_callback()
             self.set_plugin_func(
                 self.track_num,
                 self.index,
@@ -434,7 +435,6 @@ class AbstractPluginSettings:
                 self.plugin_uid,
                 self.power_checkbox.isChecked(),
             )
-            self.save_callback()
 
     def wheel_event(self, a_event=None):
         pass
@@ -464,6 +464,16 @@ class AbstractPluginSettings:
         else:
             self.plugin_ui.widget.setFixedWidth(1200)
         self.vlayout.addWidget(self.plugin_ui.widget)
+
+    def _save_and_update(self):
+        self.save_callback()
+        self.set_plugin_func(
+            self.track_num,
+            self.index,
+            get_plugin_uid_by_name(self.plugin_combobox.currentText()),
+            self.plugin_uid,
+            self.power_checkbox.isChecked(),
+        )
 
 
 class PluginSettingsMain(AbstractPluginSettings):
@@ -502,7 +512,7 @@ class PluginSettingsMain(AbstractPluginSettings):
         self.route_combobox.addItems(
             [str(x) for x in range(a_index + 2, 11)] + ["Output"]
         )
-        self.route_combobox.currentIndexChanged.connect(self.save_callback)
+        self.route_combobox.currentIndexChanged.connect(self._save_and_update)
         self.route_combobox.setMinimumWidth(90)
         self.layout.insertWidget(
             self.layout.count() - 1,

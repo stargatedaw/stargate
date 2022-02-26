@@ -195,7 +195,7 @@ typedef struct {
      * a sample number of when to release it is stored here*/
     long note_offs[MIDI_NOTE_COUNT];
     int item_event_index;
-    char * osc_cursor_message;
+    char osc_cursor_message[1024];
     int * extern_midi_count;
     t_midi_device * midi_device;
     t_seq_event * extern_midi;
@@ -414,6 +414,7 @@ void v_run(
     int sample_count
 );
 void stop_preview();
+void track_free(t_track* track);
 
 extern t_stargate * STARGATE;
 #endif

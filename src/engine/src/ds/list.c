@@ -74,3 +74,18 @@ void shds_list_grow(struct ShdsList * self){
     }
 }
 
+void shds_list_free(struct ShdsList* self, int free_ptr){
+    int i;
+    if(self->dtor){
+        for(i = 0; i < self->len; ++i){
+           self->dtor(self->data[i]);
+        }
+    }
+
+    shds_free(self->data);
+
+    if(free_ptr){
+        shds_free(self);
+    }
+}
+

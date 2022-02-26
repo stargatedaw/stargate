@@ -456,6 +456,12 @@ void v_zero_buffer(struct SamplePair* a_buffers, int a_count){
     }
 }
 
+void track_free(t_track* track){
+    shds_list_free(track->event_list, 1);
+    free(track->peak_meter);
+    free(track);
+}
+
 NO_OPTIMIZATION void v_open_track(
     t_track* a_track,
     char* a_tracks_folder,
@@ -667,7 +673,7 @@ t_track * g_track_get(int a_track_num, SGFLT a_sr){
     v_rmp_set_time(&f_result->fade_env, 0.03f);
     f_result->fade_state = 0;
 
-    hpalloc((void**)&f_result->osc_cursor_message, sizeof(char) * 1024);
+    f_result->osc_cursor_message[0] = '\0';
 
     f_result->status = STATUS_NOT_PROCESSED;
 
