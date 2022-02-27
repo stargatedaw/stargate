@@ -20,13 +20,18 @@ void v_daw_process_track(
         &self->en_song->sequences->tracks[a_global_track_num];
     int f_item_ref_count = 0;
     int f_item_ref_index = 0;
-    struct SamplePair* input;
-    struct SamplePair* output;
     t_daw_item_ref * f_item_ref[3] = {NULL, NULL, NULL};
     t_plugin * f_plugin;
 
     if(a_ts->is_looping){
         f_seq->pos = 0;
+    }
+
+    for(f_i = 0; f_i < f_track->plugin_plan.zero_count; ++f_i){
+        v_zero_buffer(
+            f_track->audio[f_track->plugin_plan.zeroes[f_i]],
+            a_sample_count
+        );
     }
 
     while(1){
@@ -257,28 +262,27 @@ void v_daw_process_track(
         );
     }
 
+    struct PluginPlanStep* step;
     for(f_i = 0; f_i < f_track->plugin_plan.step_count; ++f_i){
-        f_plugin = f_track->plugin_plan.steps[f_i].plugin;
-        input = f_track->plugin_plan.steps[f_i].input;
-        output = f_track->plugin_plan.steps[f_i].output;
-        if(f_plugin->power){
+        step = &f_track->plugin_plan.steps[f_i];
+        if(step->plugin->power){
             v_daw_process_atm(
                 self,
                 a_global_track_num,
-                f_plugin,
+                step->plugin,
                 a_sample_count,
                 a_playback_mode,
                 a_ts
             );
-            f_plugin->descriptor->run(
-                f_plugin->plugin_handle,
-                RunModeReplacing,
+            step->plugin->descriptor->run(
+                step->plugin->plugin_handle,
+                step->run_mode,
                 a_sample_count,
-                input,
+                step->input,
                 f_track->sc_buffers,
-                output,
+                step->output,
                 f_track->event_list,
-                f_plugin->atm_list,
+                step->plugin->atm_list,
                 NULL
             );
         }

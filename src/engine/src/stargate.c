@@ -548,6 +548,7 @@ NO_OPTIMIZATION void v_open_track(
             }
             if(!found){
                 routes[i] = MAX_PLUGIN_COUNT;  // master output of the track
+                ++routed_to[MAX_PLUGIN_COUNT];
             }
         }
         // find the first active plugin
@@ -566,9 +567,18 @@ NO_OPTIMIZATION void v_open_track(
             }
         }
 
+        struct PluginPlanStep* step;
         a_track->plugin_plan.copy_count = 0;
         a_track->plugin_plan.step_count = 0;
+        a_track->plugin_plan.zero_count = 0;
         if(multiple_routes){
+            for(i = 1; i < MAX_PLUGIN_COUNT + 1; ++i){
+                if(routed_to[i] > 1){
+                    j = a_track->plugin_plan.zero_count;
+                    a_track->plugin_plan.zeroes[j] = i;
+                    ++a_track->plugin_plan.zero_count;
+                }
+            }
             // Set all to their respective plugin buffer
             // TODO: Optimize to consolidate buffers to individual chains
             a_track->plugin_plan.input = a_track->audio[0];
@@ -578,10 +588,15 @@ NO_OPTIMIZATION void v_open_track(
                     continue;
                 }
                 j = a_track->plugin_plan.step_count;
-                a_track->plugin_plan.steps[j].plugin = a_track->plugins[i];
-                a_track->plugin_plan.steps[j].input = a_track->audio[i];
-                a_track->plugin_plan.steps[j].output =
-                    a_track->audio[routes[i]];
+                step = &a_track->plugin_plan.steps[j];
+                step->plugin = a_track->plugins[i];
+                step->input = a_track->audio[i];
+                step->output = a_track->audio[routes[i]];
+                if(routed_to[routes[i]] > 1){
+                    step->run_mode = RunModeMixing;
+                } else {
+                    step->run_mode = RunModeReplacing;
+                }
                 ++a_track->plugin_plan.step_count;
             }
         } else {
@@ -597,6 +612,7 @@ NO_OPTIMIZATION void v_open_track(
                 a_track->plugin_plan.steps[j].plugin = a_track->plugins[i];
                 a_track->plugin_plan.steps[j].input = a_track->audio[0];
                 a_track->plugin_plan.steps[j].output = a_track->audio[0];
+                a_track->plugin_plan.steps[j].run_mode = RunModeReplacing;
                 ++a_track->plugin_plan.step_count;
             }
         }

@@ -162,11 +162,15 @@ struct PluginPlan {
     struct SamplePair* output;
     int copy_count;
 
+    int zero_count;
+    int zeroes[MAX_PLUGIN_COUNT];
+
     int step_count;
-    struct {
+    struct PluginPlanStep {
         t_plugin* plugin;
         struct SamplePair* input;
         struct SamplePair* output;
+        enum PluginRunMode run_mode;
     } steps[MAX_PLUGIN_COUNT];
 };
 
