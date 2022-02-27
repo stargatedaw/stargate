@@ -561,8 +561,10 @@ NO_OPTIMIZATION void v_open_track(
             }
         }
         // find the first active plugin
+        a_track->plugin_plan.input = a_track->audio[0];
         for(i = 0; i < MAX_PLUGIN_COUNT; ++i){
             if(plugin_active[i]){
+                a_track->plugin_plan.input = a_track->audio[i];
                 break;
             }
         }
@@ -595,7 +597,6 @@ NO_OPTIMIZATION void v_open_track(
             }
             // Set all to their respective plugin buffer
             // TODO: Optimize to consolidate buffers to individual chains
-            a_track->plugin_plan.input = a_track->audio[0];
             a_track->plugin_plan.output = a_track->audio[MAX_PLUGIN_COUNT];
             for(i = 0; i < MAX_PLUGIN_COUNT; ++i){
                 if(!plugin_active[i]){
@@ -649,6 +650,7 @@ NO_OPTIMIZATION void v_open_track(
 
         a_track->plugin_plan.copy_count = 0;
         a_track->plugin_plan.step_count = 0;
+        a_track->plugin_plan.zero_count = 0;
         a_track->plugin_plan.input = a_track->audio[0];
         a_track->plugin_plan.output = a_track->audio[0];
     }
