@@ -200,7 +200,7 @@ test:
 	# using gcovr
 	$(CC) \
 		-fpie $(CC_ARGS) $(BUILD_FLAGS) $(DEBUG_FLAGS) $(PLAT_FLAGS) \
-		$(GCOVARGS) \
+		$(GCOVARGS) -fstack-protector \
 	    $(shell find tests -name '*.c') \
 	    -Itests $(LINK_FLAGS) -o $(NAME).tests
 	rm -rf tmp

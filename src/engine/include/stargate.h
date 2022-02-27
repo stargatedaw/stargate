@@ -160,10 +160,12 @@ typedef struct {
 struct PluginPlan {
     struct SamplePair* input;
     struct SamplePair* output;
+
     int copy_count;
+    int copies[MAX_PLUGIN_COUNT];  // array of f_track.audio[...] indices
 
     int zero_count;
-    int zeroes[MAX_PLUGIN_COUNT];
+    int zeroes[MAX_PLUGIN_COUNT];  // array of f_track.audio[...] indices
 
     int step_count;
     struct PluginPlanStep {

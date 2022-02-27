@@ -472,6 +472,7 @@ NO_OPTIMIZATION void v_open_track(
     int routes[MAX_PLUGIN_COUNT] = {};
     int routed_to[MAX_PLUGIN_COUNT + 1] = {};
     int plugin_active[MAX_PLUGIN_COUNT] = {};
+    int audio_inputs[MAX_PLUGIN_COUNT];
 
     sg_snprintf(
         f_file_name,
@@ -509,14 +510,22 @@ NO_OPTIMIZATION void v_open_track(
                 v_iterate_2d_char_array(f_2d_array);
                 int f_power = atoi(f_2d_array->current_str);
                 int route = 0;
+                int audio_input = 1;
                 if(!f_2d_array->eol){
                     v_iterate_2d_char_array(f_2d_array);
                     route = atoi(f_2d_array->current_str);
                 }
-                route += + 1 + f_index;
-                routes[f_index] = route;
-                if(f_plugin_index && f_power){
-                    plugin_active[f_index] = 1;
+                if(!f_2d_array->eol){
+                    v_iterate_2d_char_array(f_2d_array);
+                    audio_input = atoi(f_2d_array->current_str);
+                }
+                if(f_index < MAX_PLUGIN_COUNT){
+                    route += + 1 + f_index;
+                    routes[f_index] = route;
+                    if(f_plugin_index && f_power){
+                        plugin_active[f_index] = 1;
+                    }
+                    audio_inputs[f_index] = audio_input;
                 }
 
                 v_set_plugin_index(
@@ -559,16 +568,21 @@ NO_OPTIMIZATION void v_open_track(
         }
         ++i;
         // Determine if there are multiple routing chains within this track
+        a_track->plugin_plan.copy_count = 0;
         int multiple_routes = 0;
         for(; i < MAX_PLUGIN_COUNT; ++i){
             if(plugin_active[i] && !routed_to[i]){
                 multiple_routes = 1;
+                if(audio_inputs[i]){
+                    j = a_track->plugin_plan.copy_count;
+                    a_track->plugin_plan.copies[j] = i;
+                    ++a_track->plugin_plan.copy_count;
+                }
                 break;
             }
         }
 
         struct PluginPlanStep* step;
-        a_track->plugin_plan.copy_count = 0;
         a_track->plugin_plan.step_count = 0;
         a_track->plugin_plan.zero_count = 0;
         if(multiple_routes){

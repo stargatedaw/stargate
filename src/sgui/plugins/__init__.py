@@ -358,11 +358,7 @@ class AbstractPluginSettings:
                 PLUGIN_SETTINGS_COPY_OBJ.plugin_uid, self.plugin_uid)
         self.on_plugin_change()
 
-    def set_value(self, a_val):
-        """ Set the plugin for this track and plugin index
-
-            @a_val:  A track_plugin
-        """
+    def set_value(self, a_val: track_plugin):
         self.suppress_osc = True
 
         if self.qcbox:
@@ -475,6 +471,10 @@ class AbstractPluginSettings:
             self.power_checkbox.isChecked(),
         )
 
+AUDIO_INPUT_TOOLTIP = """\
+If enabled, this plugin can receive audio input.  Note that it will only
+receive input if no other plugin routes to it.
+"""
 
 class PluginSettingsMain(AbstractPluginSettings):
     def __init__(
@@ -522,6 +522,14 @@ class PluginSettingsMain(AbstractPluginSettings):
             self.layout.count() - 1,
             self.route_combobox,
         )
+        self.audio_input_checkbox = QCheckBox(_("Audio Input"))
+        self.audio_input_checkbox.setChecked(True)
+        self.audio_input_checkbox.stateChanged.connect(self._save_and_update)
+        self.audio_input_checkbox.setToolTip(AUDIO_INPUT_TOOLTIP)
+        self.layout.insertWidget(
+            self.layout.count() - 1,
+            self.audio_input_checkbox,
+        )
         self.layout.insertSpacerItem(
             self.layout.count() - 1,
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
@@ -533,6 +541,13 @@ class PluginSettingsMain(AbstractPluginSettings):
         self.layout.addWidget(self.hide_checkbox)
         self.hide_checkbox.setEnabled(False)
         self.hide_checkbox.stateChanged.connect(self.hide_checkbox_changed)
+
+    def set_value(self, value: track_plugin):
+        AbstractPluginSettings.set_value(self, value)
+        self.suppress_osc = True
+        self.route_combobox.setCurrentIndex(value.route)
+        self.audio_input_checkbox.setChecked(bool(value.audio_input))
+        self.suppress_osc = False
 
     def on_show_ui(self):
         AbstractPluginSettings.on_show_ui(self)
@@ -560,6 +575,7 @@ class PluginSettingsMain(AbstractPluginSettings):
             self.plugin_uid,
             a_power=1 if self.power_checkbox.isChecked() else 0,
             route=self.route_combobox.currentIndex(),
+            audio_input=1 if self.audio_input_checkbox.isChecked() else 0
         )
 
 

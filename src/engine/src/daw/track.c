@@ -271,7 +271,7 @@ void v_daw_process_track(
 
     for(f_i = 1; f_i <= f_track->plugin_plan.copy_count; ++f_i){
         memcpy(
-            (void*)f_track->audio[f_i],
+            (void*)f_track->audio[f_track->plugin_plan.copies[f_i]],
             (void*)f_track->audio[0],
             sizeof(struct SamplePair) * a_sample_count
         );

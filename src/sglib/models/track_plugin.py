@@ -10,6 +10,7 @@ class track_plugin:
         a_solo=0,
         a_power=1,
         route=0,
+        audio_input=1,
     ):
         self.index = int(a_index)  # index in the plugin chain
         self.plugin_index = int(a_plugin_index) # the plugin type
@@ -18,6 +19,7 @@ class track_plugin:
         self.solo = int(a_solo)
         self.power = int(a_power)
         self.route = int(route)
+        self.audio_input = int(audio_input)
 
     def get_audio_pool_uids(self):
         if not self.plugin_index:
@@ -38,6 +40,7 @@ class track_plugin:
                 self.solo,
                 self.power,
                 self.route,
+                self.audio_input,
             )
         )
 
