@@ -547,6 +547,9 @@ NO_OPTIMIZATION void v_open_track(
         // plugins are routed to
         for(i = 0; i < MAX_PLUGIN_COUNT; ++i){
             int found = 0;
+            if(!plugin_active[i]){
+                continue;
+            }
             for(j = routes[i]; j < MAX_PLUGIN_COUNT; ++j){
                 if(plugin_active[j]){
                     found = 1;
@@ -580,7 +583,6 @@ NO_OPTIMIZATION void v_open_track(
                     a_track->plugin_plan.copies[j] = i;
                     ++a_track->plugin_plan.copy_count;
                 }
-                break;
             }
         }
 
