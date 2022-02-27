@@ -250,19 +250,7 @@ void v_daw_configure(const char* a_key, const char* a_value){
         int f_power = atoi(buf);
         */
 
-        t_track* old = DAW->track_pool[f_track_num];
-        t_track* new = g_track_get(
-            f_track_num,
-            STARGATE->thread_storage[0].sample_rate
-        );
-        v_open_track(new, DAW->tracks_folder, f_track_num);
-
-        pthread_spin_lock(&STARGATE->main_lock);
-        DAW->track_pool[f_track_num] = new;
-        pthread_spin_unlock(&STARGATE->main_lock);
-
-        track_free(old);
-
+        daw_track_reload(f_track_num);
         /*
         v_set_plugin_index(
             f_track,

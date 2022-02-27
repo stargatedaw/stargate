@@ -5,6 +5,21 @@
 #include "daw.h"
 
 
+void daw_track_reload(int index){
+    t_track* old = DAW->track_pool[index];
+    t_track* new = g_track_get(
+        index,
+        STARGATE->thread_storage[0].sample_rate
+    );
+    v_open_track(new, DAW->tracks_folder, index);
+
+    pthread_spin_lock(&STARGATE->main_lock);
+    DAW->track_pool[index] = new;
+    pthread_spin_unlock(&STARGATE->main_lock);
+
+    track_free(old);
+}
+
 void v_daw_process_track(
     t_daw * self,
     int a_global_track_num,

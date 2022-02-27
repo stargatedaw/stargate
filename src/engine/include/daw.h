@@ -278,6 +278,10 @@ void g_daw_seq_pool_load(t_daw*);
  * @uid: THe UID of the sequence to play
  */
 void daw_set_sequence(t_daw* self, int uid);
+/* Reload a track from the state file on disk
+ * @index: The track number
+ */
+void daw_track_reload(int index);
 
 extern t_daw * DAW;
 
