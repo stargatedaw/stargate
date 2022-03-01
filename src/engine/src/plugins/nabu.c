@@ -210,6 +210,7 @@ void v_nabu_run(
     t_pkm_peak_meter* peak_meter
 ){
     int i, j;
+    int i_mono_out;
     struct NabuPlugin* plugin_data = (struct NabuPlugin*)instance;
     struct NabuMonoModules* mm = &plugin_data->mono_modules;
     t_mf10_multi * f_fx;
@@ -257,7 +258,6 @@ void v_nabu_run(
     }
 
     if(plugin_data->is_on){
-        int i_mono_out;
         SGFLT freqs[3] = {
             *plugin_data->splitter_controls.freq[0],
             *plugin_data->splitter_controls.freq[1],
@@ -395,6 +395,16 @@ void v_nabu_run(
                 output_buffer,
                 mm->output.left,
                 mm->output.right
+            );
+        }
+    } else {
+        for(i_mono_out = 0; i_mono_out < sample_count; ++i_mono_out){
+            _plugin_mix(
+                run_mode,
+                i_mono_out,
+                output_buffer,
+                input_buffer[i_mono_out].left,
+                input_buffer[i_mono_out].right
             );
         }
     }

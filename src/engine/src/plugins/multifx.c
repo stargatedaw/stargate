@@ -314,6 +314,16 @@ void v_multifx_run(
                 plugin_data->mono_modules.current_sample1
             );
         }
+    } else {
+        for(i_mono_out = 0; i_mono_out < sample_count; ++i_mono_out){
+            _plugin_mix(
+                run_mode,
+                i_mono_out,
+                output_buffer,
+                input_buffer[i_mono_out].left,
+                input_buffer[i_mono_out].right
+            );
+        }
     }
 }
 
