@@ -109,28 +109,16 @@ void v_spa_compute_fft(t_spa_spectrum_analyzer *a_spa){
     }
 }
 
-/* void v_spa_run(struct t_spa_spectrum_analyzer *a_spa,
- * SGFLT * a_buf0, SGFLT * a_buf1, int a_count)
- *
- * Check if a_spa->str_buf[0] == '\0', if not, send a configure message
- * and then set spa->str_buf[0] = '\0'
- */
 void v_spa_run(
     t_spa_spectrum_analyzer *a_spa,
-    struct SamplePair* buffer,
-    int a_count
+    SGFLT sample
 ){
-    int f_i;
+    a_spa->samples[a_spa->buf_pos] = sample;
+    ++a_spa->buf_pos;
 
-    for(f_i = 0; f_i < a_count; ++f_i){
-        a_spa->samples[a_spa->buf_pos] =
-            (buffer[f_i].left + buffer[f_i].right) * 0.5f;
-        ++a_spa->buf_pos;
-
-        if(a_spa->buf_pos >= a_spa->samples_count){
-            a_spa->buf_pos = 0;
-            v_spa_compute_fft(a_spa);
-        }
+    if(a_spa->buf_pos >= a_spa->samples_count){
+        a_spa->buf_pos = 0;
+        v_spa_compute_fft(a_spa);
     }
 }
 

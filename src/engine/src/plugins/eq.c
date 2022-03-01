@@ -238,6 +238,7 @@ void v_sgeq_run(
     t_sgeq_mono_modules* mm = &plugin_data->mono_modules;
     int prefx_on = _prefx_check_if_on(plugin_data);
     int postfx_on = _postfx_check_if_on(plugin_data);
+    int spectrum_analyzer_on = (int)(*plugin_data->spectrum_analyzer_on);
 
     effect_translate_midi_events(
         midi_events,
@@ -364,21 +365,28 @@ void v_sgeq_run(
             sample.left,
             sample.right
         );
+
+
+        if(spectrum_analyzer_on){
+            v_spa_run(
+                plugin_data->mono_modules.spectrum_analyzer,
+                (sample.left + sample.right) * 0.5
+            );
+        }
+
+
     }
 
-    if((int)(*plugin_data->spectrum_analyzer_on)){
-        v_spa_run(
-            plugin_data->mono_modules.spectrum_analyzer,
-            output_buffer,
-            sample_count
+    if(
+        spectrum_analyzer_on
+        &&
+        plugin_data->mono_modules.spectrum_analyzer->str_buf[0] != '\0'
+    ){
+        plugin_data->queue_func(
+            "ui",
+            plugin_data->mono_modules.spectrum_analyzer->str_buf
         );
-        if(plugin_data->mono_modules.spectrum_analyzer->str_buf[0] != '\0'){
-            plugin_data->queue_func(
-                "ui",
-                plugin_data->mono_modules.spectrum_analyzer->str_buf
-            );
-            plugin_data->mono_modules.spectrum_analyzer->str_buf[0] = '\0';
-        }
+        plugin_data->mono_modules.spectrum_analyzer->str_buf[0] = '\0';
     }
 }
 

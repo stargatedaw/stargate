@@ -52,16 +52,10 @@ t_spa_spectrum_analyzer * g_spa_spectrum_analyzer_get(
 
 void v_spa_compute_fft(t_spa_spectrum_analyzer *a_spa);
 
-/* void v_spa_run(struct t_spa_spectrum_analyzer *a_spa,
- * SGFLT * a_buf0, SGFLT * a_buf1, int a_count)
- *
- * Check if a_spa->str_buf[0] == '\0', if not, send a configure message
- * and then set spa->str_buf[0] = '\0'
- */
+// Run for a single sample
 void v_spa_run(
     t_spa_spectrum_analyzer *a_spa,
-    struct SamplePair* buffer,
-    int a_count
+    SGFLT sample
 );
 
 //void g_spa_free(t_spa_spectrum_analyzer *a_spa){;
