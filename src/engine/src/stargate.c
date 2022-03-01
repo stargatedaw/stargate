@@ -591,7 +591,16 @@ NO_OPTIMIZATION void v_open_track(
         a_track->plugin_plan.zero_count = 0;
         if(multiple_routes){
             for(i = 1; i < MAX_PLUGIN_COUNT + 1; ++i){
-                if(routed_to[i] > 1){
+                if(
+                    routed_to[i] > 1
+                    || (
+                        i < MAX_PLUGIN_COUNT
+                        &&
+                        plugin_active[i]
+                        &&
+                        !audio_inputs[i]
+                    )
+                ){
                     j = a_track->plugin_plan.zero_count;
                     a_track->plugin_plan.zeroes[j] = i;
                     ++a_track->plugin_plan.zero_count;
