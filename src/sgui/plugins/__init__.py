@@ -324,11 +324,15 @@ class AbstractPluginSettings:
             self.controls_widget.setObjectName("plugin_rack")
             self.layout = QHBoxLayout(self.controls_widget)
             self.layout.setContentsMargins(3, 3, 3, 3)
-            self.layout.addWidget(QLabel(f"Plugin {a_index + 1: <2}"))
+            self.plugin_label = QLabel(f"Plugin {a_index + 1: <2}")
+            self.layout.addWidget(self.plugin_label)
             self.vlayout.addWidget(self.controls_widget)
             self.layout.addWidget(self.plugin_combobox)
             self.power_checkbox.clicked.connect(self.on_power_changed)
             self.layout.addWidget(self.power_checkbox)
+
+    def reset_routing(self, index):
+        pass
 
     def clear(self):
         self.set_value(track_plugin(self.index, 0, -1))
@@ -462,6 +466,8 @@ class AbstractPluginSettings:
         self.vlayout.addWidget(self.plugin_ui.widget)
 
     def _save_and_update(self):
+        if self.suppress_osc:
+            return
         self.save_callback()
         self.set_plugin_func(
             self.track_num,
@@ -541,6 +547,15 @@ class PluginSettingsMain(AbstractPluginSettings):
         self.layout.addWidget(self.hide_checkbox)
         self.hide_checkbox.setEnabled(False)
         self.hide_checkbox.stateChanged.connect(self.hide_checkbox_changed)
+
+    def reset_routing(self, index):
+        self.plugin_label.setText(f"Plugin {index + 1: <2}")
+        self.audio_input_checkbox.setChecked(True)
+        self.route_combobox.clear()
+        self.route_combobox.addItems(
+            [str(x) for x in range(index + 2, 11)] + ["Output"]
+        )
+        self.route_combobox.setCurrentIndex(0)
 
     def set_value(self, value: track_plugin):
         AbstractPluginSettings.set_value(self, value)
@@ -843,6 +858,7 @@ class PluginRack:
         if f_result:
             for f_i, f_plugin in zip(range(len(f_result)), f_result):
                 f_plugin.index = f_i
+                f_plugin.reset_routing(f_i)
                 f_plugin.on_plugin_change(a_save=False)
             LOG.info(f"{self.plugins} {f_result}")
             self.plugins[0:len(f_result)] = f_result
