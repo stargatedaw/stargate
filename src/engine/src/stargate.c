@@ -521,6 +521,12 @@ NO_OPTIMIZATION void v_open_track(
                 }
                 if(f_index < MAX_PLUGIN_COUNT){
                     route += + 1 + f_index;
+                    sg_assert(
+                        route >= 0 && route <= MAX_PLUGIN_COUNT,
+                        "Route %i on plugin %i is out of range",
+                        route,
+                        f_index
+                    );
                     routes[f_index] = route;
                     if(f_plugin_index && f_power){
                         plugin_active[f_index] = 1;
