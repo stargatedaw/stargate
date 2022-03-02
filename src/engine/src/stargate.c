@@ -701,6 +701,7 @@ t_track * g_track_get(int a_track_num, SGFLT a_sr){
 
     pthread_spin_init(&f_result->lock, 0);
 
+    v_zero_buffer(f_result->input_buffer, FRAMES_PER_BUFFER);
     for(f_i = 0; f_i < MAX_PLUGIN_COUNT + 1; ++f_i){
         v_zero_buffer(f_result->audio[f_i], FRAMES_PER_BUFFER);
     }
