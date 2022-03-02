@@ -564,32 +564,40 @@ NO_OPTIMIZATION void v_open_track(
             }
         }
         // find the first active plugin
-        a_track->plugin_plan.input = a_track->audio[0];
+        int first_active_plugin = MAX_PLUGIN_COUNT;
         for(i = 0; i < MAX_PLUGIN_COUNT; ++i){
             if(plugin_active[i]){
-                a_track->plugin_plan.input = a_track->audio[i];
+                first_active_plugin = i;
                 break;
             }
         }
         ++i;
         // Determine if there are multiple routing chains within this track
-        a_track->plugin_plan.copy_count = 0;
         int multiple_routes = 0;
         for(; i < MAX_PLUGIN_COUNT; ++i){
             if(plugin_active[i] && !routed_to[i]){
                 multiple_routes = 1;
-                if(audio_inputs[i]){
-                    j = a_track->plugin_plan.copy_count;
-                    a_track->plugin_plan.copies[j] = i;
-                    ++a_track->plugin_plan.copy_count;
-                }
+                break;
             }
         }
+
 
         struct PluginPlanStep* step;
         a_track->plugin_plan.step_count = 0;
         a_track->plugin_plan.zero_count = 0;
         if(multiple_routes){
+            // Find buffers to be copied to
+            a_track->plugin_plan.copy_count = 0;
+            a_track->plugin_plan.input = a_track->input_buffer;
+            for(i = first_active_plugin; i < MAX_PLUGIN_COUNT; ++i){
+                if(plugin_active[i] && !routed_to[i] && audio_inputs[i]){
+                    j = a_track->plugin_plan.copy_count;
+                    a_track->plugin_plan.copies[j] = i;
+                    ++a_track->plugin_plan.copy_count;
+                }
+            }
+
+            // Find buffers to be zeroed
             for(i = 1; i < MAX_PLUGIN_COUNT + 1; ++i){
                 if(
                     routed_to[i] > 1
@@ -626,6 +634,7 @@ NO_OPTIMIZATION void v_open_track(
                 ++a_track->plugin_plan.step_count;
             }
         } else {
+            a_track->plugin_plan.copy_count = 0;
             // Set all to the first buffer if no routes exist.  Equivalent to
             // the previous behavior
             a_track->plugin_plan.input = a_track->audio[0];

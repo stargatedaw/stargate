@@ -208,6 +208,7 @@ typedef struct {
     t_seq_event event_buffer[MAX_EVENT_BUFFER_SIZE];
     struct ShdsList * event_list;
     struct SamplePair sc_buffers[FRAMES_PER_BUFFER];
+    struct SamplePair input_buffer[FRAMES_PER_BUFFER];
     struct SamplePair audio[MAX_PLUGIN_COUNT + 1][FRAMES_PER_BUFFER];
     char pad2[CACHE_LINE_SIZE];
 } t_track;

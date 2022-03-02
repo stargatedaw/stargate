@@ -697,6 +697,10 @@ void v_daw_zero_all_buffers(t_daw * self){
     int i, j;
     struct SamplePair* buff;
     for(i = 0; i < DN_TRACK_COUNT; ++i){
+        v_zero_buffer(
+            self->track_pool[i]->input_buffer,
+            FRAMES_PER_BUFFER
+        );
         for(j = 0; j < MAX_PLUGIN_COUNT + 1; ++j){
             buff = self->track_pool[i]->audio[j];
             v_zero_buffer(buff, FRAMES_PER_BUFFER);

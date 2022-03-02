@@ -56,7 +56,7 @@ void v_daw_offline_render(
 
     if(a_stem){
         for(f_i = 0; f_i < f_stem_count; ++f_i){
-            snprintf(
+            sg_snprintf(
                 f_file,
                 2048,
                 "%s%s%i.wav",
