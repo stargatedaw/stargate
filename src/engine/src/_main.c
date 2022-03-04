@@ -135,6 +135,10 @@ void print_help(){
 }
 
 int _main(int argc, char** argv){
+#if SG_OS == _OS_LINUX
+    struct timespec load_start, load_finish;
+    clock_gettime(CLOCK_REALTIME, &load_start);
+#endif
     log_info("Calling engine _main()");
     setup_signal_handling();
     pthread_mutex_init(&FFTW_LOCK, NULL);
@@ -218,6 +222,14 @@ int _main(int argc, char** argv){
     start_socket_thread();
 
     start_engine(argv[2], thread_count);
+#if SG_OS == _OS_LINUX
+    clock_gettime(CLOCK_REALTIME, &load_finish);
+    v_print_benchmark(
+        "project load",
+        load_start,
+        load_finish
+    );
+#endif
     int result = main_loop();
 
     return result;
