@@ -21,7 +21,7 @@ Despite Manjaro being less user friendly than other distros, we recommend it
 for rpi4 because:
 
 - Much smoother graphics, even when running a desktop like KDE.  Not sure why
-  that is, probably newer, better GPU drivers
+  that is, probably newer, better GPU drivers and saner graphic effects config
 - PyQt6 is available, which is much better than PyQt5 for running Stargate DAW.
   Qt6 also has much better support for various alternative platforms like ARM.
 - It seems to be the most stable, polished and reliable distro for the rpi4,
@@ -58,3 +58,27 @@ gpu_mem=512
 If you are using the 2GB model and need more RAM for applications, you could
 try 256MB instead.
 
+## Use the 'performance' CPU governor
+
+This will greatly reduce audio dropouts and improve performance, but you will
+need a proper heavy heatsink on your rpi4.  We recommend getting a heavy-duty
+case that acts as a passive heatsink, something that weighs hundreds of grams.
+
+Before running Stargate, every time.  There are other ways to permanently make
+this setting if you desire.
+
+```
+# Become root
+sudo -i
+
+# Check the existing governor
+cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+
+# Set to performance
+for path in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+  echo performance > $path
+done
+
+# Check that the changes applied
+cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+```
