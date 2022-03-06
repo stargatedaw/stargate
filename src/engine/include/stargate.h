@@ -33,23 +33,31 @@
     #define FRAMES_PER_BUFFER 8192
 #endif
 
-#define STATUS_NOT_PROCESSED 0
-#define STATUS_PROCESSING 1
-#define STATUS_PROCESSED 2
+enum TrackStatus {
+    STATUS_NOT_PROCESSED = 0,
+    STATUS_PROCESSING = 1,
+    STATUS_PROCESSED = 2,
+};
 
-#define PLAYBACK_MODE_OFF 0
-#define PLAYBACK_MODE_PLAY 1
-#define PLAYBACK_MODE_REC 2
+enum PlaybackMode {
+    PLAYBACK_MODE_OFF = 0,
+    PLAYBACK_MODE_PLAY = 1,
+    PLAYBACK_MODE_REC = 2,
+};
 
-#define FADE_STATE_OFF 0
-#define FADE_STATE_FADING 1
-#define FADE_STATE_FADED 2
-#define FADE_STATE_RETURNING 3
+enum FadeState {
+    FADE_STATE_OFF = 0,
+    FADE_STATE_FADING = 1,
+    FADE_STATE_FADED = 2,
+    FADE_STATE_RETURNING = 3,
+};
 
-#define SEQ_EVENT_NONE 0
-#define SEQ_EVENT_LOOP 1
-#define SEQ_EVENT_TEMPO_CHANGE 2
-#define SEQ_EVENT_MARKER 3
+enum SequencerEventType {
+    SEQ_EVENT_NONE = 0,
+    SEQ_EVENT_LOOP = 1,
+    SEQ_EVENT_TEMPO_CHANGE = 2,
+    SEQ_EVENT_MARKER = 3,
+};
 
 #define SG_CONFIGURE_KEY_UPDATE_PLUGIN_CONTROL "pc"
 #define SG_CONFIGURE_KEY_CONFIGURE_PLUGIN "co"
@@ -70,9 +78,10 @@
 #define SG_CONFIGURE_KEY_ENGINE "engine"
 #define SG_CONFIGURE_KEY_CLEAN_AUDIO_POOL "cwp"
 
-#define SG_HOST_DAW 0
-#define SG_HOST_WAVE_EDIT 1
-
+enum StargateHosts {
+    SG_HOST_DAW = 0,
+    SG_HOST_WAVE_EDIT = 1,
+};
 
 #define SG_HOST_COUNT 2
 
@@ -80,9 +89,11 @@
 #define SG_AUTOMATION_RESOLUTION (1.0f / 32.0f)
 #define ATM_TICK_BUFFER_SIZE 16
 
-#define ROUTE_TYPE_AUDIO 0
-#define ROUTE_TYPE_SIDECHAIN 1
-#define ROUTE_TYPE_MIDI 2
+enum TrackRouteTypes {
+    ROUTE_TYPE_AUDIO = 0,
+    ROUTE_TYPE_SIDECHAIN = 1,
+    ROUTE_TYPE_MIDI = 2,
+};
 
 
 extern int SG_OFFLINE_RENDER;
@@ -118,7 +129,7 @@ typedef struct {
 } t_sample_period_split;
 
 typedef struct {
-    int type;  //0:Loop,1:TempoChange
+    enum SequencerEventType type;
     double beat;
     double start_beat;  //currently only for the loop event
     SGFLT tempo;
@@ -182,7 +193,7 @@ typedef struct {
      * bus track processed when count reaches 0*/
     volatile int bus_counter;
     char bus_counter_padding[CACHE_LINE_SIZE];
-    volatile int status;
+    volatile enum TrackStatus status;
     char status_padding[CACHE_LINE_SIZE];
     t_sample_period_split splitter;
     int solo;
@@ -254,8 +265,8 @@ typedef struct {
     t_audio_input * audio_inputs;
     pthread_mutex_t audio_inputs_mutex;
     pthread_t audio_recording_thread;
-    int audio_recording_quit_notifier ;
-    int playback_mode;  //0 == Stop, 1 == Play, 2 == Rec
+    int audio_recording_quit_notifier;
+    enum PlaybackMode playback_mode;
     char * osc_cursor_message;
     int osc_queue_index;
     char osc_queue_keys[OSC_SEND_QUEUE_SIZE][12];
