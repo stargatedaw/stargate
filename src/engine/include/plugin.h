@@ -6,11 +6,13 @@
 #include "compiler.h"
 #include "ds/list.h"
 
-#define EVENT_NOTEON     0
-#define EVENT_NOTEOFF    1
-#define EVENT_PITCHBEND  2
-#define EVENT_CONTROLLER 3
-#define EVENT_AUTOMATION 4
+enum PluginEvent {
+    EVENT_NOTEON = 0,
+    EVENT_NOTEOFF = 1,
+    EVENT_PITCHBEND = 2,
+    EVENT_CONTROLLER = 3,
+    EVENT_AUTOMATION = 4,
+};
 
 typedef void (*fp_queue_message)(char*, char*);
 
@@ -27,7 +29,7 @@ typedef struct _PluginPortRangeHint {
 typedef void * PluginHandle;
 
 struct MIDIEvent {
-    int type;
+    enum PluginEvent type;
     int tick;
     int port;
     SGFLT value;
@@ -40,7 +42,7 @@ struct MIDIEvents {
 
 // MIDI event
 typedef struct {
-    int type;
+    enum PluginEvent type;
     int tick;
     unsigned int tv_sec;
     unsigned int tv_nsec;
@@ -171,7 +173,7 @@ typedef struct _PluginDescriptor {
 typedef PluginDescriptor* (*PluginDescriptor_Function)();
 
 typedef struct {
-    int type;
+    enum PluginEvent type;
     int tick;
     SGFLT value;
     int port;

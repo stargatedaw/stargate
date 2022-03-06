@@ -7,10 +7,11 @@
 #include "daw/limits.h"
 #include "osc.h"
 
-
-#define DN_LOOP_MODE_OFF 0
-#define DN_LOOP_MODE_SEQUENCE 1
-#define DAW_MAX_SONG_COUNT 20
+enum LoopMode {
+    DN_LOOP_MODE_OFF = 0,
+    DN_LOOP_MODE_SEQUENCE = 1,
+    DAW_MAX_SONG_COUNT = 20,
+};
 
 // Events stored from the user's QWERTY keyboard
 struct DawMidiQwertyDevice {
