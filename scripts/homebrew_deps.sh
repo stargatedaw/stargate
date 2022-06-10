@@ -6,7 +6,6 @@
 # Stargate DAW from a Himebrew tap
 
 brew install \
-    create-dmg \
     ffmpeg \
     fftw \
     flac \
