@@ -369,6 +369,8 @@ class hardware_dialog:
             f_input_name_combobox = QComboBox()
             f_input_name_combobox.setMinimumWidth(390)
             f_window_layout.addWidget(f_input_name_combobox, 6, 1)
+        else:
+            f_input_name_combobox = None
         f_window_layout.addWidget(QLabel(_("Sample Rate")), 10, 0)
         f_samplerate_combobox = QComboBox()
         f_samplerate_combobox.addItems(self.sample_rates)
@@ -549,7 +551,7 @@ class hardware_dialog:
                     [""] + f_host_api_input_names[self.subsystem],
                 )
 
-        def combobox_changed(a_self=None, a_val=None):
+        def output_combobox_changed(a_self=None, a_val=None):
             f_str = str(f_device_name_combobox.currentText())
             if not f_str:
                 return
@@ -560,7 +562,16 @@ class hardware_dialog:
             if f_samplerate in self.sample_rates:
                 f_samplerate_combobox.setCurrentIndex(
                     f_samplerate_combobox.findText(f_samplerate))
-            if not util.IS_WINDOWS and not util.IS_MAC_OSX:
+            if util.IS_WINDOWS or util.IS_MAC_OSX:
+                idx_lookup = {
+                    QComboBoxName.itemText(i): i
+                    for i in range(f_input_name_combobox.count())
+                }
+                if f_str in idx_lookup:
+                    f_input_name_combobox.setCurrentIndex(idx_lookup[f_str])
+                else:
+                    f_input_name_combobox.setCurrentIndex(0)
+            else:
                 f_in_count = f_result_dict[
                     self.subsystem][self.device_name].maxInputChannels
                 f_in_count = clip_value(f_in_count, 0, 128)
@@ -762,10 +773,13 @@ class hardware_dialog:
         f_cancel_button.pressed.connect(on_cancel)
 
         f_subsystem_combobox.currentIndexChanged.connect(subsystem_changed)
-        f_device_name_combobox.currentIndexChanged.connect(combobox_changed)
+        f_device_name_combobox.currentIndexChanged.connect(
+            output_combobox_changed,
+        )
         if util.IS_WINDOWS or util.IS_MAC_OSX:
             f_input_name_combobox.currentIndexChanged.connect(
-                input_combobox_changed)
+                input_combobox_changed,
+            )
 
         f_subsystem_combobox.addItems(
             sorted(
@@ -801,7 +815,8 @@ class hardware_dialog:
                     f_name = util.DEVICE_SETTINGS["inputName"]
                     if f_name in f_result_dict[self.subsystem]:
                         f_input_name_combobox.setCurrentIndex(
-                            f_input_name_combobox.findText(f_name))
+                            f_input_name_combobox.findText(f_name),
+                        )
 
         if "audioInputs" in util.DEVICE_SETTINGS:
             f_count = int(util.DEVICE_SETTINGS["audioInputs"])
