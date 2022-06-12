@@ -546,7 +546,7 @@ class hardware_dialog:
             if util.IS_WINDOWS or util.IS_MAC_OSX:
                 f_input_name_combobox.clear()
                 f_input_name_combobox.addItems(
-                    f_host_api_input_names[self.subsystem],
+                    [""] + f_host_api_input_names[self.subsystem],
                 )
 
         def combobox_changed(a_self=None, a_val=None):
@@ -583,6 +583,7 @@ class hardware_dialog:
             self.input_name = f_str
             if not f_str:
                 f_audio_in_spinbox.setMaximum(0)
+                f_audio_in_spinbox.setValue(0)
                 return
             f_in_count = f_result_dict[
                 self.subsystem][self.input_name].maxInputChannels
