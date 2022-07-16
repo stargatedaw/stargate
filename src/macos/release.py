@@ -60,15 +60,14 @@ ARCH_NAMES = {
     'arm64': 'm1',
 }
 
-PKG = f'{MAJOR_VERSION}-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.pkg'
-if os.path.exists(PKG):
-    os.remove(PKG)
+DMG = f'{MAJOR_VERSION}-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.dmg'
+if os.path.exists(DMG):
+    os.remove(DMG)
 
 subprocess.check_call([
-    'pkgbuild',
-    '--identifier', MAJOR_VERSION,
-    '--install-location', '/Applications',
-    '--root', f'{MAJOR_VERSION}.app',
-    PKG,
+    'create-dmg',
+    '--format', 'UDBZ',
+    DMG,
+    f'{MAJOR_VERSION}.app',
 ])
 
