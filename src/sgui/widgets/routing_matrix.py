@@ -39,7 +39,7 @@ class RoutingGraphNode(QGraphicsRectItem):
         )
         # Required for mouseDoubleClickEvent
         self.setFlag(
-            .GraphicsItemFlagQGraphicsItem.GraphicsItemFlag.ItemIsSelectable,
+            QGraphicsItem.GraphicsItemFlag.ItemIsSelectable,
             True,
         )
 
