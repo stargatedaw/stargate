@@ -178,6 +178,8 @@ which will appear as a blue line.
 
 Creating feedback loops is not supported, you will receive an error
 message if an attempted connection creates feedback.
+
+Double-click on a track to open it in the plugin rack
 """
 )
 

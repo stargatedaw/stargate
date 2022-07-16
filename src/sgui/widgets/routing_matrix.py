@@ -2,20 +2,28 @@ from . import _shared
 from sgui.sgqt import *
 from sglib.models import theme
 from sgui.util import get_font
+from sgui.daw import shared as daw_shared
 
 ROUTING_GRAPH_NODE_BRUSH = None
 ROUTING_GRAPH_TO_BRUSH = None
 ROUTING_GRAPH_FROM_BRUSH = None
 
 class RoutingGraphNode(QGraphicsRectItem):
-    def __init__(self, a_text, a_width, a_height):
+    def __init__(
+        self,
+        a_text: str,
+        a_width: float,
+        a_height: float,
+        track_index: int,
+    ):
         QGraphicsRectItem.__init__(
-            self, 
-            0., 
-            0., 
-            float(a_width), 
+            self,
+            0.,
+            0.,
+            float(a_width),
             float(a_height),
         )
+        self.track_index = int(track_index)
         self.text = get_font().QGraphicsSimpleTextItem(a_text, self)
         self.setToolTip(a_text)
         self.text.setPos(3.0, 3.0)
@@ -28,6 +36,17 @@ class RoutingGraphNode(QGraphicsRectItem):
         self.setFlag(
             QGraphicsItem.GraphicsItemFlag.ItemClipsChildrenToShape,
             False,
+        )
+        # Required for mouseDoubleClickEvent
+        self.setFlag(
+            .GraphicsItemFlagQGraphicsItem.GraphicsItemFlag.ItemIsSelectable,
+            True,
+        )
+
+    def mouseDoubleClickEvent(self, event):
+        daw_shared.PLUGIN_RACK.set_index(self.track_index)
+        daw_shared.MAIN_WINDOW.main_tabwidget.setCurrentIndex(
+            daw_shared.TAB_PLUGIN_RACK,
         )
 
     def set_brush(self, a_to=False, a_from=False):
@@ -199,7 +218,9 @@ class RoutingGraphWidget(QGraphicsView):
             f_node_item = RoutingGraphNode(
                 k,
                 self.node_width,
-                self.node_height)
+                self.node_height,
+                f_i,
+            )
             self.node_dict[f_i] = f_node_item
             self.scene.addItem(f_node_item)
             f_x = self.node_width * f_i

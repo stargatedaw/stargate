@@ -690,9 +690,13 @@ class PluginRackTab:
     def rack_index(self):
         return self.track_combobox.currentIndex()
 
+    def set_index(self, index: int):
+        self.track_combobox.setCurrentIndex(index)
+
     def set_tooltips(self, a_enabled):
         self.widget.setToolTip(
-            sg_strings.PluginRack if a_enabled else "")
+            sg_strings.PluginRack if a_enabled else ""
+        )
 
     def set_plugin_order(self):
         index = self.track_combobox.currentIndex()
