@@ -3,11 +3,29 @@ This document describes how to deal with various MacOS issues regarding
 the installation of Stargate DAW.
 
 # "Unverified Developer"
-If your Mac will not open apps from unverified developers, go to
-`Apple Logo->System Preferences->Security & Privacy->General->Stargate...Open anyway`.
-This happens because we do not pay an Apple "partner" a lot of money for a code
-signing certificate.  Literally every application that does not have this
-problem has paid the fee.
+If your Mac will not open apps from unverified developers:
+```
+In the Finder on your Mac, locate the app you want to open.  (NOTE: This will
+be /Applications for Stargate DAW)
+
+Don’t use Launchpad to do this. Launchpad doesn’t allow you to access the
+shortcut menu.
+
+Control-click the app icon, then choose Open from the shortcut menu.
+
+Click Open.
+
+The app is saved as an exception to your security settings, and you can open it
+in the future by double-clicking it just as you can any registered app.
+```
+from [HERE](
+  https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac
+)
+
+Note that the app is unverified because we are refusing to pay the fee or have
+our legal name(s) publicly listed for all to see.  You can verify that the
+downloads have not been modified by comparing the sha256 sums we provide, or
+else build the source code yourself using the instructions provided.
 
 # Unable to record the built-in microphone
 If you wish to record using the built-in MacBook microphone,
