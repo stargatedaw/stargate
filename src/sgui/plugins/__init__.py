@@ -16,6 +16,7 @@ import sys
 
 from sglib.math import clip_value
 from sgui import shared, widgets
+from sgui.daw import shared as daw_shared
 from sgui.widgets.nested_combobox import NestedComboBox
 from sglib.models.stargate import *
 from sglib.models.track_plugin import track_plugin
@@ -910,7 +911,13 @@ class MixerChannel:
         self.sends = {}
         self.outputs = {}
         self.output_labels = {}
-        self.name_label = QLabel(a_name)
+        self.name_label = QPushButton(a_name)
+        self.menu = QMenu()
+        self.menu.addAction(
+            "Open in plugin rack",
+            self.open_rack,
+        )
+        self.name_label.setMenu(self.menu)
         self.vlayout.addWidget(
             self.name_label,
             -1,
@@ -920,6 +927,9 @@ class MixerChannel:
         self.vlayout.addLayout(self.grid_layout, 1)
         self.peak_meter = widgets.peak_meter(20, True)
         self.grid_layout.addWidget(self.peak_meter.widget, 0, 0, 2, 1)
+
+    def open_rack(self):
+        daw_shared.open_rack(self.track_number)
 
     def save_callback(self):
         f_result = self.PROJECT.get_track_plugins(self.track_number)

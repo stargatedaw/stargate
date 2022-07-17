@@ -44,10 +44,7 @@ class RoutingGraphNode(QGraphicsRectItem):
         )
 
     def mouseDoubleClickEvent(self, event):
-        daw_shared.PLUGIN_RACK.set_index(self.track_index)
-        daw_shared.MAIN_WINDOW.main_tabwidget.setCurrentIndex(
-            daw_shared.TAB_PLUGIN_RACK,
-        )
+        daw_shared.open_rack(self.track_index)
 
     def set_brush(self, a_to=False, a_from=False):
         if a_to:

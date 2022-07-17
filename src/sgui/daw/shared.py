@@ -584,6 +584,12 @@ def seconds_to_beats(a_seconds):
         ) / 60.0
     )
 
+def open_rack(track_index: int):
+    """ Open a particular track in the plugin rack
+    """
+    PLUGIN_RACK.set_index(track_index)
+    MAIN_WINDOW.main_tabwidget.setCurrentIndex(TAB_PLUGIN_RACK)
+
 # Only functions, globals must accessed through the module
 __all__ = [
     'active_audio_pool_uids',
