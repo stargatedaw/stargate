@@ -24,7 +24,11 @@ int soundcheck(int argc, char** argv){
         printf("Failed to load hardware config %s\n", argv[2]);
         exit(321);
     }
-    soundcheck_init(&SOUNDCHECK, hardware_config->sample_rate);
+    soundcheck_init(
+        &SOUNDCHECK,
+        hardware_config->sample_rate,
+        hardware_config->test_volume
+    );
     retcode = open_audio_device(
         hardware_config,
         soundcheck_callback
@@ -41,8 +45,9 @@ int soundcheck(int argc, char** argv){
     return 0;
 }
 
-void soundcheck_init(struct SoundCheck* sc, SGFLT sr){
+void soundcheck_init(struct SoundCheck* sc, SGFLT sr, int volume){
     g_adsr_init(&sc->adsr, sr);
+    sc->volume = f_db_to_linear((SGFLT)volume);
 
     g_osc_simple_unison_init(&sc->osc, sr, 0);
     v_osc_set_uni_voice_count(&sc->osc, 1);
@@ -51,7 +56,7 @@ void soundcheck_init(struct SoundCheck* sc, SGFLT sr){
 }
 
 SGFLT soundcheck_run(struct SoundCheck* sc){
-    return f_osc_run_unison_osc(&sc->osc) * 0.2;
+    return f_osc_run_unison_osc(&sc->osc) * sc->volume;
 }
 
 int soundcheck_callback(

@@ -8,12 +8,13 @@
 struct SoundCheck {
     t_adsr adsr;
     t_osc_simple_unison osc;
+    SGFLT volume;
 };
 
 extern struct SoundCheck SOUNDCHECK;
 
 int soundcheck(int arc, char** argv);
-void soundcheck_init(struct SoundCheck*, SGFLT);
+void soundcheck_init(struct SoundCheck*, SGFLT, int);
 SGFLT soundcheck_run(struct SoundCheck*);
 int soundcheck_callback(
     const void *inputBuffer,

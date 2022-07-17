@@ -25,6 +25,7 @@ struct HardwareConfig{
     int thread_count;
     char midi_in_device_names[10][128];
     int midi_in_device_count;
+    int test_volume;
 };
 
 /* Return the default device config path

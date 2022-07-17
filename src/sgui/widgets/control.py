@@ -231,7 +231,7 @@ class AbstractUiControl(GridLayoutControl):
         )
 
     def control_value_changed(self, a_value=None):
-        if not self.suppress_changes:
+        if not self.suppress_changes and self.val_callback:
             self.val_callback(self.port_num, self.control.value())
 
         if self.value_label is not None:

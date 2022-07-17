@@ -13,6 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 """
 
+from sgui.widgets.control import slider_control
 from sglib.lib._ctypes import *
 from sglib.hardware.rpi import is_rpi
 from sglib.lib.process import run_process
@@ -397,17 +398,33 @@ class hardware_dialog:
             f_hugepages_checkbox.setToolTip(_(HUGEPAGES_TOOLTIP))
             f_window_layout.addWidget(f_hugepages_checkbox, 70, 1)
 
-        f_ok_cancel_layout = QHBoxLayout()
-        f_main_layout.addLayout(f_ok_cancel_layout)
+        test_layout = QHBoxLayout()
+        f_main_layout.addLayout(test_layout)
         f_test_button = QPushButton(_("Test"))
+        f_test_button.setMinimumWidth(90)
         f_test_button.setToolTip(
             _("Send a test sound to your soundcard using this configuration"),
         )
-        f_ok_cancel_layout.addWidget(f_test_button)
+        test_layout.addWidget(f_test_button)
+        test_volume_slider = slider_control(
+            QtCore.Qt.Orientation.Horizontal,
+            'Test Volume',
+            0,
+            None,
+            None,
+            -36,
+            -6,
+            -15,
+        )
+        test_layout.addWidget(test_volume_slider.control)
+
+        f_ok_cancel_layout = QHBoxLayout()
+        f_main_layout.addLayout(f_ok_cancel_layout)
         f_ok_button = QPushButton(_("OK"))
         f_ok_cancel_layout.addWidget(f_ok_button)
         f_cancel_button = QPushButton(_("Cancel"))
         f_ok_cancel_layout.addWidget(f_cancel_button)
+
 
         f_count = self.pyaudio.Pa_GetHostApiCount()
 
@@ -646,6 +663,7 @@ class hardware_dialog:
             f_audio_inputs = f_audio_in_spinbox.value()
             f_out_tuple = (f_audio_out_spinbox,) + OUT_SPINBOXES
             f_audio_outputs = "|".join(str(x.value()) for x in f_out_tuple)
+            test_volume = test_volume_slider.control.value()
 
             try:
                 #if (
@@ -703,6 +721,7 @@ class hardware_dialog:
                     f_file.write("hugePages|{}\n".format(f_hugepages))
                 f_file.write("audioInputs|{}\n".format(f_audio_inputs))
                 f_file.write("audioOutputs|{}\n".format(f_audio_outputs))
+                f_file.write("testVolume|{}\n".format(test_volume))
                 for f_midi_in_device in f_midi_in_devices:
                     f_file.write("midiInDevice|{}\n".format(
                         f_midi_in_device))
@@ -821,6 +840,10 @@ class hardware_dialog:
         if "audioInputs" in util.DEVICE_SETTINGS:
             f_count = int(util.DEVICE_SETTINGS["audioInputs"])
             f_audio_in_spinbox.setValue(f_count)
+
+        if "testVolume" in util.DEVICE_SETTINGS:
+            test_volume = int(util.DEVICE_SETTINGS["testVolume"])
+            test_volume_slider.control.setValue(test_volume)
 
         if "audioOutputs" in util.DEVICE_SETTINGS:
             f_count, f_L, f_R = (int(x) for x in

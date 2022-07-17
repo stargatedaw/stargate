@@ -51,6 +51,7 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
         .thread_affinity = 0,
         .thread_count = 0,
         .midi_in_device_count = 0,
+        .test_volume = -15,
     };
 
     char * f_key_char = (char*)malloc(sizeof(char) * TINY_STRING);
@@ -141,6 +142,15 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
                 result->audio_input_count
             );
             AUDIO_INPUT_TRACK_COUNT = result->audio_input_count;
+        } else if(!strcmp(f_key_char, "testVolume")){
+            result->test_volume = atoi(f_value_char);
+            sg_assert(
+                result->test_volume >= -50
+                &&
+                result->test_volume <= -6,
+                "test_volume out of range -36 to -6: %i",
+                result->test_volume
+            );
         } else if(!strcmp(f_key_char, "audioOutputs")){
             t_line_split * f_line = g_split_line(
                 '|',
