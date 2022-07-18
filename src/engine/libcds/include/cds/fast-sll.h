@@ -13,9 +13,9 @@
  *   - That performs well in real-time code
  *   - That does not free old memory until the entire data structure is freed
  *   - That does not allocate memory unless being appended to
- *   - That can accomodate multiple types
+ *   - That can accommodate multiple types
  *   - The application and/or hardware is sensitive to cache performance
- *   - The application does not iterate through the queue very quicly
+ *   - The application does not iterate through the queue very quickly
  *
  * Stores metadata and data of arbitrary sizes interleaved in a single
  * allocation of memory.

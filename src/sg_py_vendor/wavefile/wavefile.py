@@ -31,7 +31,7 @@ from .libsndfile import OPEN_MODES, SEEK_MODES, SF_INFO, FILE_STRINGS
 
 # Vorbis and Flac use utf8.
 # WAV/AIFF use ascii, but if chars beyond 127 are found,
-# we chose to interpret them as utf8. That migth be a wrong choice.
+# we chose to interpret them as utf8. That might be a wrong choice.
 # Same for writing, if users sets a non ASCII char in tag,
 # it will be encoded as utf8 which is a non-standard convention of us.
 _tagencoding = 'utf8'
@@ -131,7 +131,7 @@ class Format :
     ENDMASK  = 0x30000000
 
 class Seek() :
-    SET = SEEK_MODES.SF_SEEK_SET # Relative to the begining of the file
+    SET = SEEK_MODES.SF_SEEK_SET # Relative to the beginning of the file
     CUR = SEEK_MODES.SF_SEEK_CUR # Relative to the last read frame
     END = SEEK_MODES.SF_SEEK_END # Relative to the end of the file
 
@@ -344,7 +344,7 @@ save=saveWave
 
 if __name__ == '__main__' :
 
-    # Writting example
+    # Writing example
     with WaveWriter('synth.ogg', channels=2, format=Format.OGG|Format.VORBIS) as w :
         w.metadata.title = "Some Noise"
         w.metadata.artist = "The Artists"

@@ -131,7 +131,7 @@ void CDSQueueAppend(
  * @return: A pointer to the object in the queue's memory as raw bytes,
  *          or NULL if the queue is empty.
  *          - Do not free the @return pointer itself.
- *          - The pointer becomes invalid next time CDSQueuePurge is callled
+ *          - The pointer becomes invalid next time CDSQueuePurge is called
  */
 char* CDSQueuePop(
     struct CDSQueue* self

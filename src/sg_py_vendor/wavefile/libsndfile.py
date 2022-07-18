@@ -278,7 +278,7 @@ class COMMANDS:
 
     # SFC_SET_ADD_* values are deprecated and will disappear at some
     # time in the future. They are guaranteed to be here up to and
-    # including version 1.0.8 to avoid breakage of existng software.
+    # including version 1.0.8 to avoid breakage of existing software.
     # They currently do nothing and will continue to do nothing.
 
     SFC_SET_ADD_DITHER_ON_WRITE    = 0x1070

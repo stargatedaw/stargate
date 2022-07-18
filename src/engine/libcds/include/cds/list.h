@@ -131,7 +131,7 @@ void CDSListAppend(
  * Usually this approach is more efficient.
  *
  * @self:   The list to append to
- * @return: A pointer to the unitialized memory
+ * @return: A pointer to the uninitialized memory
  */
 char* CDSListAppendEmpty(
     struct CDSList* self
@@ -167,7 +167,7 @@ void CDSListRemove(
  *
  * @self:   The list to insert an element into
  * @index:  The index to insert the element at
- * @object: A pointer to the object ot insert
+ * @object: A pointer to the object to insert
  */
 void CDSListInsert(
     struct CDSList* self,

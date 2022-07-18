@@ -13,7 +13,7 @@
  * @tail:      The last node in the list
  * @len:       The length of the list
  * @objSize:   The size of the value to be stored.
- *             Setting to 0 will do pointer assignemnt instead of copying
+ *             Setting to 0 will do pointer assignment instead of copying
  *             the adata
  * @valueFree: A function to free removed objects, or NULL if the object does
  *             not contain any pointers that need to be freed.  Note that
@@ -32,8 +32,8 @@ struct CDSDLList{
 
 /* A node in a doubly-linked list
  *
- * @prev:  The previous node in the lsit (if any)
- * @next:  The next node in the lsit (if any)
+ * @prev:  The previous node in the list (if any)
+ * @next:  The next node in the list (if any)
  * @value: The data value associated with this node
  */
 struct CDSDLListNode{
@@ -45,7 +45,7 @@ struct CDSDLListNode{
 /* Return a pointer to a new doubly linked list on the heap
  *
  * @objSize:   The sizeof() the objects to be stored in the list
- *             Setting to 0 will do pointer assignemnt instead of copying
+ *             Setting to 0 will do pointer assignment instead of copying
  *             the adata
  * @allocSize: The count of objects to allocate per allocation.  Size of the
  *             memory allocation will be @allocSize * @objSize
@@ -64,7 +64,7 @@ struct CDSDLList* CDSDLListNew(
  *
  * @self:       THe doubly linked list to initialize
  * @objSize:    The sizeof() the objects to be stored in the list
- *              Setting to 0 will do pointer assignemnt instead of copying
+ *              Setting to 0 will do pointer assignment instead of copying
  *              the adata
  * @allocSize:  The count of objects to allocate per allocation.  Size of the
  *              memory allocation will be @allocSize * @objSize

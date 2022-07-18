@@ -99,7 +99,7 @@ struct CDSByteStr* CDSByteStrJoin(
  * @self:   The string to search
  * @substr: The string to look for
  * @start:  The starting index of @self to search from
- * @return: The index of the first occurence of the substring,
+ * @return: The index of the first occurrence of the substring,
  *          or -1 if not found
  */
 long CDSByteStrSearch(

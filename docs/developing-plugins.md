@@ -60,7 +60,7 @@ Use the existing libraries in `src/sgui/widgets/` and
 new plugins by re-using existing, well-tested widgets and DSP routines.  If you
 need to create new widgets or DSP routines, create them in the libraries for
 re-use in other plugins.  For DSP routines, write unit tests that touch every
-line to esnure that there are not memory errors.  You can modify existing
+line to ensure that there are not memory errors.  You can modify existing
 widgets and DSP routines only if the changes to not break backwards
 compatibility.
 

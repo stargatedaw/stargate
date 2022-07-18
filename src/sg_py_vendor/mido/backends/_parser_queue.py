@@ -15,7 +15,7 @@ class ParserQueue:
     """
     Thread safe message queue with built in MIDI parser.
 
-    This should be avaiable to other backend implementations and perhaps
+    This should be available to other backend implementations and perhaps
     also in the public API, but the API needs a bit of review. (Ideally This
     would replace the parser.)
 
@@ -42,7 +42,7 @@ class ParserQueue:
                 self.put(msg)
 
     def _get_py2(self):
-        # In Python 2 queue.get() doesn't respond to CTRL-C. A workaroud is
+        # In Python 2 queue.get() doesn't respond to CTRL-C. A workaround is
         # to call queue.get(timeout=100) (very high timeout) in a loop, but all
         # that does is poll with a timeout of 50 milliseconds. This results in
         # much too high latency.
