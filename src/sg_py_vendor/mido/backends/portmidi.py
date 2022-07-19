@@ -176,7 +176,7 @@ class Input(PortCommon, BaseInput):
         while pm.lib.Pm_Poll(self._stream):
             # TODO: this should be allocated once
             # Read one message. Should return 1.
-            # If num_events < 0, an error occured.
+            # If num_events < 0, an error occurred.
             length = 1  # Buffer length
             num_events = pm.lib.Pm_Read(self._stream, read_buffer, length)
             _check_error(num_events)

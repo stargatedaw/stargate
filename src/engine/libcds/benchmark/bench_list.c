@@ -90,7 +90,7 @@ void BenchListMergeSortBinarySearch(){
     fprintf(
         stderr,
         "# BenchListAppendPop::MergeSort\n"
-        "# interations = size of list\n"
+        "# iterations = size of list\n"
         "# average-per-iteration = time to sort each element of the list\n"
     );
     TimeSection(

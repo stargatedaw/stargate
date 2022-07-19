@@ -112,7 +112,7 @@ def make_msgdict(type_, overrides):
 
     Returns a dictionary representing a message.
 
-    Message values can be overriden.
+    Message values can be overridden.
 
     No type or value checking is done.  The caller is responsible for
     calling check_msgdict().
