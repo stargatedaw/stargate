@@ -339,6 +339,7 @@ void midiDeviceRead(
 ){
     struct timeval tv, evtv, diff;
     long framediff;
+    double dframediff;
 
     gettimeofday(&tv, NULL);
 
@@ -389,11 +390,10 @@ void midiDeviceRead(
             diff.tv_usec = tv.tv_usec - evtv.tv_usec;
         }
 
-        framediff =
-            diff.tv_sec * sample_rate +
-            ((diff.tv_usec / 1000) * sample_rate) / 1000 +
-            ((diff.tv_usec - 1000 * (diff.tv_usec / 1000)) * sample_rate)
-            / 1000000;
+        dframediff = ((double)diff.tv_sec + (
+            (double)diff.tv_usec * 0.000001
+        )) * sample_rate;
+        framediff = (long)dframediff;
 
         if (framediff >= framesPerBuffer){
             framediff = framesPerBuffer - 1;
@@ -404,47 +404,32 @@ void midiDeviceRead(
         ev->tick = framesPerBuffer - framediff - 1;
         int f_max_tick = framesPerBuffer - 1;
 
-        if(ev->tick < 0)
-        {
+        if(ev->tick < 0){
             ev->tick = 0;
-        }
-        else if(ev->tick > f_max_tick)
-        {
+        } else if(ev->tick > f_max_tick){
             ev->tick = f_max_tick;
         }
 
-        if (ev->type == EVENT_CONTROLLER)
-        {
+        if (ev->type == EVENT_CONTROLLER){
             int controller = ev->param;
 
-            if (controller == 0)
-            {
+            if (controller == 0){
                 // bank select MSB
-
-            }
-            else if (controller == 32)
-            {
+            } else if (controller == 32){
                 // bank select LSB
-            }
-            else if (controller > 0 && controller < MIDI_CONTROLLER_COUNT)
-            {
+            } else if (controller > 0 && controller < MIDI_CONTROLLER_COUNT){
                 self->instanceEventBuffers[self->instanceEventCounts] = *ev;
                 ++self->instanceEventCounts;
+            } else {
+                sg_abort("midiDeviceRead: Unknown controller: %i", controller);
             }
-            else
-            {
-                sg_abort("midiDeviceRead: Unknown controller");
-            }
-        }
-        else
-        {
+        } else {
             self->instanceEventBuffers[self->instanceEventCounts] = *ev;
             ++self->instanceEventCounts;
         }
 
         ++self->midiEventReadIndex;
-        if(self->midiEventReadIndex >= MIDI_EVENT_BUFFER_SIZE)
-        {
+        if(self->midiEventReadIndex >= MIDI_EVENT_BUFFER_SIZE){
             self->midiEventReadIndex = 0;
         }
     }
@@ -456,4 +441,5 @@ void midiDeviceRead(
         MIDI_EVENT_BUFFER_SIZE
     );
 }
+
 #endif
