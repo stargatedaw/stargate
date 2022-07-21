@@ -97,6 +97,16 @@ class MidiDevicesDialog:
             )
             self.devices.append(f_device)
             self.devices_dict[f_name] = f_device
+        self.layout.addItem(
+            QSpacerItem(
+                10,
+                10,
+                QSizePolicy.Policy.Expanding,
+                QSizePolicy.Policy.Minimum,
+            ),
+            0,
+            3,
+        )
 
     def get_routings(self):
         return MIDIRoutes([x.get_routing() for x in self.devices])

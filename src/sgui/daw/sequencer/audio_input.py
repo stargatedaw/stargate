@@ -32,7 +32,7 @@ class AudioInput:
         a_layout.addWidget(self.monitor_checkbox, a_num, 2)
 
         self.vol_layout = QHBoxLayout()
-        a_layout.addLayout(self.vol_layout, a_num, 3)
+        a_layout.addLayout(self.vol_layout, a_num, 6)
         self.vol_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
         self.vol_slider.setRange(-240, 240)
         self.vol_slider.setValue(0)
@@ -44,7 +44,7 @@ class AudioInput:
         self.vol_label.setMinimumWidth(64)
         self.vol_layout.addWidget(self.vol_label)
         self.stereo_combobox = QComboBox()
-        a_layout.addWidget(self.stereo_combobox, a_num, 4)
+        a_layout.addWidget(self.stereo_combobox, a_num, 3)
         self.stereo_combobox.setMinimumWidth(75)
         self.stereo_combobox.addItems(
             [_("None")] + [str(x) for x in range(a_count + 1)]
@@ -57,7 +57,7 @@ class AudioInput:
             _("Sidechain"),
             _("Both"),
         ])
-        a_layout.addWidget(self.output_mode_combobox, a_num, 5)
+        a_layout.addWidget(self.output_mode_combobox, a_num, 4)
         self.output_mode_combobox.currentIndexChanged.connect(
             self.update_engine)
         self.output_track_combobox = QComboBox()
@@ -66,7 +66,7 @@ class AudioInput:
         self.output_track_combobox.addItems(shared.TRACK_NAMES)
         self.output_track_combobox.currentIndexChanged.connect(
             self.output_track_changed)
-        a_layout.addWidget(self.output_track_combobox, a_num, 6)
+        a_layout.addWidget(self.output_track_combobox, a_num, 5)
         self.suppress_updates = False
 
     def output_track_changed(self, a_val=None):
@@ -144,10 +144,10 @@ class AudioInputWidget:
             _("Name"),
             _("Rec."),
             _("Mon."),
-            _("Gain"),
             _("Stereo"),
             _("Mode"),
             _("Output"),
+            _("Gain"),
         )
         for f_i, f_label in zip(range(len(f_labels)), f_labels):
             self.layout.addWidget(QLabel(f_label), 0, f_i)
