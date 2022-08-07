@@ -162,6 +162,7 @@ int _main(int argc, char** argv){
         return 9996;
     }
 
+    INSTALL_PREFIX = argv[1];
     int f_huge_pages = atoi(argv[4]);
     sg_assert(
         (int)(f_huge_pages == 0 || f_huge_pages == 1),
