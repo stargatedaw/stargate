@@ -1,4 +1,4 @@
-#include "test_audiodsp.h"
+#include "test_main.h"
 
 #include "audiodsp/lib/test_amp.h"
 #include "audiodsp/lib/test_denormal.h"

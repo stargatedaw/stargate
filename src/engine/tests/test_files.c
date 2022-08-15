@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "test_files.h"
 #include "files.h"
 
 static void TestWriteChownReadDelete(){

@@ -1,4 +1,3 @@
-#include "test_wave_edit.h"
 #include "wave_edit.h"
 #include "worker.h"
 
