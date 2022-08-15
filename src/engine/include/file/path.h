@@ -8,4 +8,10 @@ void path_join(
     char** a_str_list
 );
 
+void vpath_join(
+	char* result,
+    int count,
+	...
+);
+
 #endif

@@ -1,3 +1,6 @@
+#include <stdarg.h>
+#include <string.h>
+
 #include "compiler.h"
 #include "file/path.h"
 
@@ -32,5 +35,45 @@ void path_join(
     }
 
     a_result[f_pos] = '\0';
+}
+
+void vpath_join(
+	char* result,
+    int count,
+	...
+){
+	va_list args;
+	va_start(args, count);
+
+    int i, j, pos = 0;
+    char * str;
+    char chr;
+
+    for(i = 0; i < count; ++i){
+        str = va_arg(args, char*);
+		sg_assert(
+			str != NULL && str[0] != '\0',
+			"vpath_join: '%s' has empty section at %i",
+			result,
+			i
+		);
+
+        if(i){
+            result[pos] = PATH_SEP[0];
+            ++pos;
+        }
+
+        for(j = 0; ; ++j){
+            chr = str[j];
+            if(chr == '\0'){
+                break;
+            }
+            result[pos] = chr;
+            ++pos;
+        }
+    }
+
+    result[pos] = '\0';
+	va_end(args);
 }
 

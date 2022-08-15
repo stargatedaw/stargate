@@ -4,12 +4,14 @@
 #include "test_files.h"
 #include "test_plugins.h"
 #include "test_wave_edit.h"
+#include "test_main.h"
 
 
 int main(){
     TestAudioDSP();
     TestCSV();
     TestDAW();
+    TestFilePath();
     TestFilesAll();
     TestPlugins();
     TestWaveEdit();
