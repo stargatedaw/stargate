@@ -138,7 +138,7 @@ Requires: \
     python3-numpy \
     python3-psutil \
     (python3-pyyaml or python3-PyYAML) \
-    (python3-qt6 or python3-qt5) \
+    (python3-pyqt6 or python3-qt6 or python3-qt5 or python3-pyqt5) \
     (rubberband or rubberband-cli) \
     vorbis-tools \
 
