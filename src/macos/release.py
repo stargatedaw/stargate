@@ -66,6 +66,10 @@ if os.path.exists(DMG):
 
 subprocess.check_call([
     'create-dmg',
+    '--volname', f'{MAJOR_VERSION}',
+    '--icon', f'{MAJOR_VERSION}.app', '50', '120',
+    '--hide-extension', f'{MAJOR_VERSION}.app',
+    '--app-drop-link', '300', '120',
     '--format', 'UDBZ',
     DMG,
     f'{MAJOR_VERSION}.app',
