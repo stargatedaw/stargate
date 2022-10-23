@@ -44,20 +44,18 @@ alongside a Windows portable install and a MacOS app bundle at the same time
  to create a (nearly) universal DAW flash drive.
 
 ## Adding the AppImage to the start menu
-If you wish to add it to the start menu, create a file called
-`~/.local/share/applications/stargate.desktop`
-with this contents:
+If you wish to add the Stargate DAW AppImage to the start menu, there is
+a special command that is only available in the AppImage:
 ```
-[Desktop Entry]
-Type=Application
-Name=StargateDAW
-Comment=Digital Audio Workstation
-Exec=Path/to/AppImage
-Icon=Path/to/stargate.png
+/path/to/Stargate*.AppImage appimage-start-menu
 ```
-Note that you will need to update the file paths, and download the icon
-[from here].  The desktop file will need to be updated when you download
-new versions
+
+This command will extract `stargate.png` next to the AppImage, and create
+a `~/.local/share/applications/stargate.desktop` file to add Stargate DAW
+to your start menu.
+
+Note that this must be done everytime you download a new version, otherwise
+it will be pointing to the old version (which may be deleted).
 
 # deb distros
 Debian, and it's derivatives like Ubuntu, MX Linux, Linux Mint, and many
