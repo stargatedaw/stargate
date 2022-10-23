@@ -58,6 +58,19 @@ elif IS_MAC_OSX:
         )
         IS_PORTABLE_INSTALL = True
         PORTABLE_ROOT = USER_HOME
+elif IS_LINUX and 'APPIMAGE' in os.environ:
+    executable = os.environ['APPIMAGE']
+    dirname = os.path.dirname(executable)
+    if os.path.isfile(
+        os.path.join(dirname, '_stargate_home'),
+    ):
+        USER_HOME = dirname
+        print(
+            f"Using {USER_HOME} for USER_HOME because _stargate_home "
+            "file exists"
+        )
+        IS_PORTABLE_INSTALL = True
+        PORTABLE_ROOT = USER_HOME
 
 HOME = os.path.join(
     USER_HOME,
