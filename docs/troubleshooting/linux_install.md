@@ -26,6 +26,30 @@ something more stable like the latest Ubuntu LTS.  If older distros are not
 an option because you are using newer hardware, then report issues you are
 having to the appropriate upstream project.
 
+# All distros
+The new AppImage is a portable executable that is meant to be used on almost
+any Linux distro, without the need to install.  Simply download, run:
+```
+chmod +x /path/to/download/folder/StargateDAW*.AppImage
+```
+, then either run the AppImage from the command line, or double click from
+a file browser.
+
+If you wish to add it to the start menu, create a file called
+`~/.local/share/applications/stargate.desktop`
+with this contents:
+```
+[Desktop Entry]
+Type=Application
+Name=StargateDAW
+Comment=Digital Audio Workstation
+Exec=Path/to/AppImage
+Icon=Path/to/stargate.png
+```
+Note that you will need to update the file paths, and download the icon
+[from here].  The desktop file will need to be updated when you download
+new versions
+
 # deb distros
 Debian, and it's derivatives like Ubuntu, MX Linux, Linux Mint, and many
 others.
