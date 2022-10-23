@@ -1,0 +1,29 @@
+# Build the image to build the engine for ManyLinux and AppImage
+#FROM quay.io/pypa/manylinux2014_x86_64
+FROM appimagecrafters/appimage-builder
+
+RUN apt update && apt upgrade -y && apt install -y \
+	build-essential \
+	curl \
+	python3-dev \
+	libffi-dev \
+	libssl-dev \
+	less \
+	vim \
+	gcc \
+	g++ \
+	jq \
+	libfftw3-dev \
+	libportmidi-dev \
+	libsndfile1-dev \
+	portaudio19-dev \
+	rubberband-cli
+
+
+# A bug where it never returns an icon path
+RUN sed -i 's/new_path =/return/g' \
+  /usr/local/lib/python3.6/dist-packages/appimage_builder-0.9.1-py3.6.egg/appimagebuilder/modules/setup//icon_bundler.py
+
+RUN cd /root/ && curl -s https://www.python.org/ftp/python/3.10.8/Python-3.10.8.tgz | tar xvz
+RUN cd /root/Python-3.10.8 && ./configure --enable-optimizations && make && make install
+

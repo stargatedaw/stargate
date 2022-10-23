@@ -9,11 +9,32 @@ DESTDIR ?=
 SG_DIR = $(DESTDIR)$(PREFIX)/share/$(MAJOR)
 PIP ?= pip3
 BROWSER ?= firefox
+DOCKER ?= podman
+DOCKER_IMAGE ?= stargate-appimage-builder
 
 # --------------------------------------------------------------
 
+.PHONY: appimage
+
 all: sbsms distro
 	# General purpose build, including dependencies
+
+appimage:
+	sed s/{{VERSION}}/$(MINOR)/g AppImageBuilder.yml.tmpl > AppImageBuilder.yml
+	$(DOCKER) run \
+		--mount type=bind,src=.,dst=/stargate \
+		$(DOCKER_IMAGE) \
+		sh -c 'cd /stargate && appimage-builder'
+
+appimage-debug:
+	sed s/{{VERSION}}/$(MINOR)/g AppImageBuilder.yml.tmpl > AppImageBuilder.yml
+	$(DOCKER) run -it \
+		--mount type=bind,src=.,dst=/stargate \
+		$(DOCKER_IMAGE) \
+		sh
+
+docker-image:
+	$(DOCKER) build -t $(DOCKER_IMAGE)  -f Dockerfile-appimage-builder
 
 clean: clean_pyc
 	rm -rf htmlcov/ .pytest_cache/ .eggs/ .coverage \
