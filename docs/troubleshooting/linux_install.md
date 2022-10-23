@@ -35,6 +35,15 @@ chmod +x /path/to/download/folder/StargateDAW*.AppImage
 , then either run the AppImage from the command line, or double click from
 a file browser.
 
+## Portable install mode
+If you would like to install Stargate DAW for Linux to a flash drive, or you
+just want to store your projects and configurations next to the AppImage,
+simply place the AppImage in the desired folder, and create a file called
+`_stargate_home` next to it.  Note that the Linux AppImage can be installed
+alongside a Windows portable install and a MacOS app bundle at the same time
+ to create a (nearly) universal DAW flash drive.
+
+## Adding the AppImage to the start menu
 If you wish to add it to the start menu, create a file called
 `~/.local/share/applications/stargate.desktop`
 with this contents:
