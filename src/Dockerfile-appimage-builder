@@ -6,6 +6,7 @@ RUN apt update && apt upgrade -y && apt install -y \
 	build-essential \
 	curl \
 	python3-dev \
+	libbz2-dev \
 	libffi-dev \
 	libssl-dev \
 	less \
