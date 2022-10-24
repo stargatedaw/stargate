@@ -16,14 +16,33 @@ RUN apt update && apt upgrade -y && apt install -y \
 	libfftw3-dev \
 	libportmidi-dev \
 	libsndfile1-dev \
-	portaudio19-dev \
 	rubberband-cli
 
 
 # A bug where it never returns an icon path
+# this is patched upstream, remove this line at the next image update
 RUN sed -i 's/new_path =/return/g' \
   /usr/local/lib/python3.6/dist-packages/appimage_builder-0.9.1-py3.6.egg/appimagebuilder/modules/setup//icon_bundler.py
 
-RUN cd /root/ && curl -s https://www.python.org/ftp/python/3.10.8/Python-3.10.8.tgz | tar xvz
-RUN cd /root/Python-3.10.8 && ./configure --enable-optimizations && make && make install
+# Install Python3.10 from source, need a supported Python version to use a
+# recent PyQt
+RUN cd /root/ && \
+	curl -s https://www.python.org/ftp/python/3.10.8/Python-3.10.8.tgz | tar xvz
+RUN cd /root/Python-3.10.8 && \
+	./configure --enable-optimizations && \
+	make && \
+	make install
+
+# Build the latest Portaudio
+# Downloads from github get truncated for some reason, so we store it
+# in our repo
+COPY appimage-assets/portaudio-19.7.0.tar.gz /root/portaudio-19.7.0.tar.gz
+
+RUN cd /root/ && tar xvf portaudio-19.7.0.tar.gz
+
+RUN apt install -y libasound2-dev libjack-jackd2-dev
+RUN cd /root/portaudio-19.7.0/ && \
+	./configure --with-alsa --with-jack --prefix=/usr && \
+	make && \
+	make install
 

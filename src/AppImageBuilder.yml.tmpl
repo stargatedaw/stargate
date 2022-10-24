@@ -7,6 +7,7 @@ script:
   - cd /root/Python-3.10.8
   - './configure --enable-optimizations --prefix=/usr && DESTDIR=/stargate/AppDir make install'
   - cd /stargate
+  - ln -s python3 AppDir/usr/bin/python
   - 'python3.10 -m pip install --ignore-installed --prefix=/usr --root=AppDir -r ./requirements.txt PyQt5 numpy'
   - make clean
   - make
@@ -14,6 +15,7 @@ script:
   - sed -i 's!Icon=stargate!Icon=usr/share/pixmaps/stargate.png!g' AppDir/usr/share/applications/stargate.desktop
   - "mkdir -p AppDir/bin && cp /bin/sh AppDir/bin/sh"
   - cp /usr/bin/env AppDir/usr/bin/
+  - 'cd /root/portaudio-19.7.0/ && DESTDIR=/stargate/AppDir make install'
 AppDir:
   path: /stargate/AppDir
   app_info:
@@ -39,12 +41,15 @@ AppDir:
     - sourceline: deb http://security.ubuntu.com/ubuntu/ bionic-security universe
     - sourceline: deb http://security.ubuntu.com/ubuntu/ bionic-security multiverse
     include:
+      - libasound2
       - libffi6
       - libfftw3-3
+      - libjack-jackd2-0
       - libportmidi0
       - libsndfile1
-      - libportaudio2
       - rubberband-cli
+      #- libportaudio2
+      #- bash
   runtime:
     env:
       PYTHONHOME: '${APPDIR}/usr/lib/python3.10'
