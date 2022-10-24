@@ -16,6 +16,7 @@ script:
   - "mkdir -p AppDir/bin && cp /bin/sh AppDir/bin/sh"
   - cp /usr/bin/env AppDir/usr/bin/
   - 'cd /root/portaudio-19.7.0/ && DESTDIR=/stargate/AppDir make install'
+  - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
 AppDir:
   path: /stargate/AppDir
   app_info:
@@ -48,6 +49,24 @@ AppDir:
       - libportmidi0
       - libsndfile1
       - rubberband-cli
+      - libx11-xcb1
+      - libx11-6
+      - libfontconfig1
+      - libxext6
+      - libxfixes3
+      - libxi6
+      - libxrender1
+      - libxcb1
+      - libxcb-glx0
+      - libxcb-keysyms1
+      - libxcb-image0
+      - libxcb-shm0
+      - libxcb-icccm4
+      - libxcb-xfixes0
+      - libxcb-shape0
+      - libxcb-randr0
+      - libxcb-render-util0
+      - libxkbcommon0
       #- libportaudio2
       #- bash
   runtime:
