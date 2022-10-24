@@ -25,6 +25,9 @@ appimage:
 		--mount type=bind,src=.,dst=/stargate \
 		$(DOCKER_IMAGE) \
 		sh -c 'cd /stargate && appimage-builder'
+	mv \
+		StargateDAW-$(MINOR)-x86_64.AppImage \
+		StargateDAW-$(MINOR)-linux-x86_64.AppImage
 
 appimage-debug:
 	sed s/{{VERSION}}/$(MINOR)/g AppImageBuilder.yml.tmpl > AppImageBuilder.yml
