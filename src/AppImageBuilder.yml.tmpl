@@ -18,8 +18,8 @@ script:
   - 'cd /root/libsndfile-1.1.0/ && DESTDIR=/stargate/AppDir make install'
   - 'cd /root/portaudio-19.7.0/ && DESTDIR=/stargate/AppDir make install'
   - 'cd /root/portmidi-2.0.4/ && DESTDIR=/stargate/AppDir make install'
-  - ln -s libportmidi.so.2 /stargate/AppDir/usr/lib/x86_64-linux-gnu/libportmidi.so.0
   - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
+  #- ln -s libportmidi.so.2 /stargate/AppDir/usr/lib/x86_64-linux-gnu/libportmidi.so.0
 AppDir:
   path: /stargate/AppDir
   app_info:
@@ -50,7 +50,6 @@ AppDir:
       - libffi6
       - libfftw3-3
       - libjack-jackd2-0
-      - libsndfile1
       - rubberband-cli
       - libflac8
       - libogg0
@@ -61,11 +60,15 @@ AppDir:
       - libx11-xcb1
       - libx11-6
       - libfontconfig1
+      - libwayland-client0
+      - libwayland-egl1
       - libxext6
       - libxfixes3
       - libxi6
       - libxrender1
       - libxcb1
+      - libxcb-dri2-0
+      - libxcb-dri3-0
       - libxcb-glx0
       - libxcb-keysyms1
       - libxcb-image0
