@@ -1,0 +1,23 @@
+ARG IMAGE=debian:10
+
+FROM ${IMAGE}
+
+RUN apt update && apt install -y \
+	autoconf \
+	autogen \
+	automake \
+	curl \
+	build-essential \
+	cmake \
+	g++ \
+	gcc \
+	libtool \
+	pkg-config \
+	python3-dev \
+    jq \
+	less \
+	tmux \
+	vim
+
+RUN apt install -y zlib1g-dev libssl-dev
+

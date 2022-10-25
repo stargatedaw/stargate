@@ -1,4 +1,5 @@
-ARG IMAGE=appimagecrafters/appimage-builder
+#ARG IMAGE=appimagecrafters/appimage-builder
+ARG IMAGE=stargate-base
 
 FROM ${IMAGE} as python
 
@@ -99,7 +100,8 @@ RUN apt update && apt upgrade -y && apt install -y \
 	libjack-jackd2-dev \
 	libssl-dev \
 	libfftw3-dev \
-	rubberband-cli
+	rubberband-cli \
+	zsync
 
 COPY --from=portmidi /root/cmake-3.24.2/ /root/cmake-3.24.2
 RUN cd /root/cmake-3.24.2/ && make install

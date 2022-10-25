@@ -37,6 +37,7 @@ appimage-debug:
 		sh
 
 docker-image:
+	$(DOCKER) build -t stargate-base  -f Dockerfile-base
 	$(DOCKER) build -t $(DOCKER_IMAGE)  -f Dockerfile-appimage-builder
 
 clean: clean_pyc
