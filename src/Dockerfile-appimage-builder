@@ -101,11 +101,6 @@ RUN apt update && apt upgrade -y && apt install -y \
 	libfftw3-dev \
 	rubberband-cli
 
-# A bug where it never returns an icon path
-# this is patched upstream, remove this line at the next image update
-RUN sed -i 's/new_path =/return/g' \
-  /usr/local/lib/python3.6/dist-packages/appimage_builder-0.9.1-py3.6.egg/appimagebuilder/modules/setup//icon_bundler.py
-
 COPY --from=portmidi /root/cmake-3.24.2/ /root/cmake-3.24.2
 RUN cd /root/cmake-3.24.2/ && make install
 
