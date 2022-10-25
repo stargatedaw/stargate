@@ -15,6 +15,7 @@ script:
   - sed -i 's!Icon=stargate!Icon=usr/share/pixmaps/stargate.png!g' AppDir/usr/share/applications/stargate.desktop
   - "mkdir -p AppDir/bin && cp /bin/sh AppDir/bin/sh"
   - cp /usr/bin/env AppDir/usr/bin/
+  - 'cd /root/libsndfile-1.1.0/ && DESTDIR=/stargate/AppDir make install'
   - 'cd /root/portaudio-19.7.0/ && DESTDIR=/stargate/AppDir make install'
   - 'cd /root/portmidi-2.0.4/ && DESTDIR=/stargate/AppDir make install'
   - ln -s libportmidi.so.2 /stargate/AppDir/usr/lib/x86_64-linux-gnu/libportmidi.so.0
@@ -51,6 +52,12 @@ AppDir:
       - libjack-jackd2-0
       - libsndfile1
       - rubberband-cli
+      - libflac8
+      - libogg0
+      - libmp3lame0
+      - libmpg123-0
+      - libopus0
+      - libvorbis0a
       - libx11-xcb1
       - libx11-6
       - libfontconfig1

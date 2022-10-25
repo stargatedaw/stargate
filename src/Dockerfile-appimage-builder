@@ -61,6 +61,31 @@ RUN sed -i 's/#XZ_SUPPORT = 1/XZ_SUPPORT = 1/g' \
 RUN apt install -y liblzma-dev
 RUN cd /root/squashfs-tools-4.5.1/squashfs-tools/ && make
 
+FROM ${IMAGE} as libsndfile
+
+RUN apt update && apt install -y \
+	autoconf \
+	autogen \
+	automake \
+	build-essential \
+	libasound2-dev \
+	libflac-dev \
+	libogg-dev \
+	libtool \
+	libvorbis-dev \
+	libopus-dev \
+	libmp3lame-dev \
+	libmpg123-dev \
+	pkg-config
+
+COPY appimage-assets/libsndfile-1.1.0.tar.gz /root/libsndfile-1.1.0.tar.gz
+RUN cd /root && tar xvf libsndfile-1.1.0.tar.gz
+RUN cd /root/libsndfile-1.1.0/ && \
+	autoreconf -vif && \
+	./configure --prefix=/usr --enable-werror && \
+	make && \
+	make install
+
 FROM ${IMAGE}
 
 RUN apt update && apt upgrade -y && apt install -y \
@@ -74,7 +99,6 @@ RUN apt update && apt upgrade -y && apt install -y \
 	libjack-jackd2-dev \
 	libssl-dev \
 	libfftw3-dev \
-	libsndfile1-dev \
 	rubberband-cli
 
 # A bug where it never returns an icon path
@@ -107,4 +131,16 @@ COPY --from=squashfs-tools \
 
 RUN apt install -y liblzma-dev
 RUN cd /root/squashfs-tools-4.5.1/squashfs-tools/ && make install
+
+RUN apt install -y \
+	libflac-dev \
+	libogg-dev \
+	libtool \
+	libvorbis-dev \
+	libopus-dev \
+	libmp3lame-dev \
+	libmpg123-dev
+
+COPY --from=libsndfile /root/libsndfile-1.1.0/ /root/libsndfile-1.1.0
+RUN cd /root/libsndfile-1.1.0/ && make install
 
