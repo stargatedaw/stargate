@@ -1,4 +1,6 @@
-FROM appimagecrafters/appimage-builder as python
+ARG IMAGE=appimagecrafters/appimage-builder
+
+FROM ${IMAGE} as python
 
 RUN apt update && apt install -y \
 	build-essential \
@@ -17,7 +19,7 @@ RUN cd /root/Python-3.10.8 && \
 	make && \
 	make install
 
-FROM appimagecrafters/appimage-builder as portaudio
+FROM ${IMAGE} as portaudio
 # Build the latest Portaudio
 # Downloads from github get truncated for some reason, so we store it
 # in our repo
@@ -32,7 +34,7 @@ RUN cd /root/portaudio-19.7.0/ && \
 	make install
 
 
-FROM appimagecrafters/appimage-builder as portmidi
+FROM ${IMAGE} as portmidi
 
 RUN apt update && apt install -y build-essential libssl-dev
 
@@ -51,7 +53,7 @@ RUN cd /root/portmidi-2.0.4/ && \
 
 # SquashFS Tools, because the latest appimage-builder uses the
 # -reproducible flag, which does not exist in older mksquashfs
-FROM appimagecrafters/appimage-builder as squashfs-tools
+FROM ${IMAGE} as squashfs-tools
 COPY appimage-assets/squashfs-tools-4.5.1.tar.gz  /root/squashfs-tools-4.5.1.tar.gz
 RUN cd /root && tar xvf squashfs-tools-4.5.1.tar.gz
 RUN sed -i 's/#XZ_SUPPORT = 1/XZ_SUPPORT = 1/g' \
@@ -59,7 +61,7 @@ RUN sed -i 's/#XZ_SUPPORT = 1/XZ_SUPPORT = 1/g' \
 RUN apt install -y liblzma-dev
 RUN cd /root/squashfs-tools-4.5.1/squashfs-tools/ && make
 
-FROM appimagecrafters/appimage-builder
+FROM ${IMAGE}
 
 RUN apt update && apt upgrade -y && apt install -y \
 	build-essential \
