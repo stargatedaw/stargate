@@ -1,7 +1,8 @@
-*.AppImage
+*.AppImage*
 AppDir/
 # This is dynamically generated from a template
 AppImageBuilder.yml
+appimage-build/
 appimage-builder-cache/
 .coverage
 .eggs/

@@ -24,7 +24,7 @@ appimage:
 	$(DOCKER) run \
 		--mount type=bind,src=.,dst=/stargate \
 		$(DOCKER_IMAGE) \
-		sh -c 'cd /stargate && appimage-builder'
+		sh -c 'cd /stargate && python3 -m appimagebuilder'
 	mv \
 		StargateDAW-$(MINOR)-x86_64.AppImage \
 		StargateDAW-$(MINOR)-linux-x86_64.AppImage

@@ -1,29 +1,12 @@
-# Build the image to build the engine for ManyLinux and AppImage
-#FROM quay.io/pypa/manylinux2014_x86_64
-FROM appimagecrafters/appimage-builder
+FROM appimagecrafters/appimage-builder as python
 
-RUN apt update && apt upgrade -y && apt install -y \
+RUN apt update && apt install -y \
 	build-essential \
 	curl \
 	python3-dev \
 	libbz2-dev \
 	libffi-dev \
-	libssl-dev \
-	less \
-	vim \
-	gcc \
-	g++ \
-	jq \
-	libfftw3-dev \
-	libportmidi-dev \
-	libsndfile1-dev \
-	rubberband-cli
-
-
-# A bug where it never returns an icon path
-# this is patched upstream, remove this line at the next image update
-RUN sed -i 's/new_path =/return/g' \
-  /usr/local/lib/python3.6/dist-packages/appimage_builder-0.9.1-py3.6.egg/appimagebuilder/modules/setup//icon_bundler.py
+	libssl-dev
 
 # Install Python3.10 from source, need a supported Python version to use a
 # recent PyQt
@@ -34,6 +17,7 @@ RUN cd /root/Python-3.10.8 && \
 	make && \
 	make install
 
+FROM appimagecrafters/appimage-builder as portaudio
 # Build the latest Portaudio
 # Downloads from github get truncated for some reason, so we store it
 # in our repo
@@ -41,9 +25,84 @@ COPY appimage-assets/portaudio-19.7.0.tar.gz /root/portaudio-19.7.0.tar.gz
 
 RUN cd /root/ && tar xvf portaudio-19.7.0.tar.gz
 
-RUN apt install -y libasound2-dev libjack-jackd2-dev
+RUN apt update && apt install -y libasound2-dev libjack-jackd2-dev
 RUN cd /root/portaudio-19.7.0/ && \
 	./configure --with-alsa --with-jack --prefix=/usr && \
 	make && \
 	make install
+
+
+FROM appimagecrafters/appimage-builder as portmidi
+
+RUN apt update && apt install -y build-essential libssl-dev
+
+# Amazingly lame and time consuming, portmidi has a hard dependency on
+# having a very recent cmake, so we roll our own
+COPY appimage-assets/cmake-3.24.2.tar.gz /root/cmake-3.24.2.tar.gz
+RUN cd /root/ && tar xvf cmake-3.24.2.tar.gz
+RUN cd /root/cmake-3.24.2/ && ./bootstrap && make && make install
+
+COPY appimage-assets/portmidi-2.0.4.tar.gz /root/portmidi-2.0.4.tar.gz
+RUN cd /root/ && tar xvf portmidi-2.0.4.tar.gz
+RUN apt install -y libasound2-dev
+RUN cd /root/portmidi-2.0.4/ && \
+	cmake . -DCMAKE_INSTALL_PREFIX:PATH=/usr && \
+	make
+
+# SquashFS Tools, because the latest appimage-builder uses the
+# -reproducible flag, which does not exist in older mksquashfs
+FROM appimagecrafters/appimage-builder as squashfs-tools
+COPY appimage-assets/squashfs-tools-4.5.1.tar.gz  /root/squashfs-tools-4.5.1.tar.gz
+RUN cd /root && tar xvf squashfs-tools-4.5.1.tar.gz
+RUN sed -i 's/#XZ_SUPPORT = 1/XZ_SUPPORT = 1/g' \
+	/root/squashfs-tools-4.5.1/squashfs-tools/Makefile
+RUN apt install -y liblzma-dev
+RUN cd /root/squashfs-tools-4.5.1/squashfs-tools/ && make
+
+FROM appimagecrafters/appimage-builder
+
+RUN apt update && apt upgrade -y && apt install -y \
+	build-essential \
+	less \
+	vim \
+	gcc \
+	g++ \
+	jq \
+	libasound2-dev \
+	libjack-jackd2-dev \
+	libssl-dev \
+	libfftw3-dev \
+	libsndfile1-dev \
+	rubberband-cli
+
+# A bug where it never returns an icon path
+# this is patched upstream, remove this line at the next image update
+RUN sed -i 's/new_path =/return/g' \
+  /usr/local/lib/python3.6/dist-packages/appimage_builder-0.9.1-py3.6.egg/appimagebuilder/modules/setup//icon_bundler.py
+
+COPY --from=portmidi /root/cmake-3.24.2/ /root/cmake-3.24.2
+RUN cd /root/cmake-3.24.2/ && make install
+
+COPY --from=portmidi /root/portmidi-2.0.4/ /root/portmidi-2.0.4
+RUN cd /root/portmidi-2.0.4/ && make install
+
+COPY --from=portaudio /root/portaudio-19.7.0/ /root/portaudio-19.7.0
+RUN cd /root/portaudio-19.7.0/ && \
+	./configure --with-alsa --with-jack --prefix=/usr && \
+	make && \
+	make install
+
+COPY --from=python /root/Python-3.10.8/ /root/Python-3.10.8
+RUN cd /root/Python-3.10.8 && \
+	./configure --enable-optimizations --prefix=/usr && \
+	make && \
+	make install
+RUN python3 -m pip install appimage-builder
+
+COPY --from=squashfs-tools \
+	/root/squashfs-tools-4.5.1/ \
+	/root/squashfs-tools-4.5.1
+
+RUN apt install -y liblzma-dev
+RUN cd /root/squashfs-tools-4.5.1/squashfs-tools/ && make install
 

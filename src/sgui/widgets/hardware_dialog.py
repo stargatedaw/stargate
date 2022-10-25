@@ -126,7 +126,11 @@ class hardware_dialog:
     def open_devices(self):
         if util.IS_LINUX:
             pa_paths = ("libportaudio.so.2", "libportaudio.so")
-            pm_paths = ("libportmidi.so.0", "libportmidi.so")
+            pm_paths = (
+                'libportmidi.so.2',
+                'libportmidi.so.0',
+                'libportmidi.so',
+            )
         elif util.IS_MAC_OSX:
             pa_paths = (
                 os.path.join(util.INSTALL_PREFIX, 'libportaudio.2.dylib'),

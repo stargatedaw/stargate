@@ -10,12 +10,14 @@ script:
   - ln -s python3 AppDir/usr/bin/python
   - 'python3.10 -m pip install --ignore-installed --prefix=/usr --root=AppDir -r ./requirements.txt PyQt5 numpy'
   - make clean
-  - make
+  - PORTMIDI_FLAG='-l:libportmidi.so' make
   - DESTDIR=AppDir make install
   - sed -i 's!Icon=stargate!Icon=usr/share/pixmaps/stargate.png!g' AppDir/usr/share/applications/stargate.desktop
   - "mkdir -p AppDir/bin && cp /bin/sh AppDir/bin/sh"
   - cp /usr/bin/env AppDir/usr/bin/
   - 'cd /root/portaudio-19.7.0/ && DESTDIR=/stargate/AppDir make install'
+  - 'cd /root/portmidi-2.0.4/ && DESTDIR=/stargate/AppDir make install'
+  - ln -s libportmidi.so.2 /stargate/AppDir/usr/lib/x86_64-linux-gnu/libportmidi.so.0
   - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
 AppDir:
   path: /stargate/AppDir
@@ -47,7 +49,6 @@ AppDir:
       - libffi6
       - libfftw3-3
       - libjack-jackd2-0
-      - libportmidi0
       - libsndfile1
       - rubberband-cli
       - libx11-xcb1
@@ -67,9 +68,6 @@ AppDir:
       - libxcb-shape0
       - libxcb-randr0
       - libxcb-render-util0
-      # - libxkbcommon0
-      #- libportaudio2
-      #- bash
   runtime:
     env:
       PYTHONHOME: '${APPDIR}/usr/lib/python3.10'
