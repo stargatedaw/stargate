@@ -1,8 +1,21 @@
 from . import util
 from .pidfile import create_pidfile
 from sglib.log import LOG
+import copy
+import os
 import subprocess
 import threading
+
+if 'APPDIR' in os.environ:
+    LD_LIBRARY_PATH = ':'.join(
+        os.path.join(os.environ['APPDIR'], x) for x in (
+            'lib/x86_64-linux-gnu',
+            'usr/lib',
+            'usr/lib/x86_64-linux-gnu',
+        )
+    )
+else:
+    LD_LIBRARY_PATH = None
 
 def run_process(cmd, pidfile=None):
     exe = "SUBPROCESS" if isinstance(cmd, str) else cmd[0]
@@ -22,6 +35,13 @@ def run_process(cmd, pidfile=None):
         )
         kwargs['stdin'] = subprocess.DEVNULL
     LOG.info(f"Starting subprocess with: {cmd}")
+    env = copy.deepcopy(os.environ)
+    if LD_LIBRARY_PATH:
+        old = env.get('LD_LIBRARY_PATH', None)
+        env['LD_LIBRARY_PATH'] = LD_LIBRARY_PATH
+        LOG.info(
+            f'Replaced LD_LIBRARY_PATH: "{old}" with "{LD_LIBRARY_PATH}"'
+        )
     process = subprocess.Popen(
         cmd,
         **kwargs
