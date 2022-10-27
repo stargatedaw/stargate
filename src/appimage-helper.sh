@@ -7,6 +7,7 @@ cd dist/
 rm -rf squashfs-root
 ./stargate-x86_64.AppImage --appimage-extract
 cd ..
+make -C engine
 DESTDIR=dist/squashfs-root PREFIX=/usr make \
 	install_dirs \
 	install_engine \
