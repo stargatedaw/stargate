@@ -28,6 +28,10 @@ appimage:
 	appimagetool -n \
 		dist/squashfs-root/ \
 		dist/StargateDAW-$(MINOR)-linux-x86_64.AppImage
+	cd dist && tar czf \
+		StargateDAW-$(MINOR)-linux-x86_64.AppImage.tar.gz \
+		StargateDAW-$(MINOR)-linux-x86_64.AppImage
+
 
 appimage-debug:
 	python-appimage/release.py
