@@ -20,16 +20,17 @@ all: sbsms distro
 	# General purpose build, including dependencies
 
 appimage:
-	sed s/{{VERSION}}/$(MINOR)/g AppImageBuilder.yml.tmpl > AppImageBuilder.yml
+	python-appimage/release.py
 	$(DOCKER) run \
 		--mount type=bind,src=.,dst=/stargate \
 		$(DOCKER_IMAGE) \
-		sh -c 'cd /stargate && python3 -m appimagebuilder'
-	mv \
-		StargateDAW-$(MINOR)-x86_64.AppImage \
-		StargateDAW-$(MINOR)-linux-x86_64.AppImage
+		sh -c 'cd /stargate && ./appimage-helper.sh'
+	appimagetool -n \
+		dist/squashfs-root/ \
+		dist/StargateDAW-$(MINOR)-linux-x86_64.AppImage
 
 appimage-debug:
+	python-appimage/release.py
 	sed s/{{VERSION}}/$(MINOR)/g AppImageBuilder.yml.tmpl > AppImageBuilder.yml
 	$(DOCKER) run -it \
 		--mount type=bind,src=.,dst=/stargate \
@@ -71,6 +72,13 @@ install_distro: \
 	install_python \
 	install_files
 	# install without vendored dependencies
+
+install_appimage: \
+	install_dirs \
+	install_engine \
+	install_files \
+	install_sbsms
+	# Install files and engine without the Python bits
 
 install_dirs:
 	install -d $(SG_DIR)
