@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=stargate
+Exec=stargate
+Comment=Digital Audio Workstation (DAW)
+Icon=stargate
+Categories=System;
+#Terminal=true

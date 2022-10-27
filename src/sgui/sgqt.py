@@ -22,6 +22,8 @@ if True:  # PyQt
         "_USE_PYQT5" in os.environ
     ):
         LOG.info("Using PyQt5")
+        if getattr(PyQt5, '__path__', None):
+            LOG.info(PyQt5.__path__)
         qt_event_pos = lambda x: x.pos()
         from PyQt5 import QtGui, QtWidgets, QtCore
         from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
@@ -39,6 +41,8 @@ if True:  # PyQt
             )
     else:
         LOG.info("Using PyQt6")
+        if getattr(PyQt6, '__path__', None):
+            LOG.info(PyQt6.__path__)
         def qt_event_pos(x):
             if hasattr(x, 'pos'):
                 return x.pos()

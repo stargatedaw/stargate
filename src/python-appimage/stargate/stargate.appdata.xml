@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>stargate</id>
+    <metadata_license>GPL3</metadata_license>
+    <project_license>GPL3</project_license>
+    <name>stargate</name>
+    <summary>Stargate DAW</summary>
+    <description>
+		<p> Stargate DAW is a digital audio workstation with a comprehensive
+			set of plugins included
+        </p>
+    </description>
+    <launchable type="desktop-id">stargate.desktop</launchable>
+	<url type="homepage">https://github.com/stargatedaw</url>
+    <provides>
+        <binary>python{{ python-version }}</binary>
+    </provides>
+</component>

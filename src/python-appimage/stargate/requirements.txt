@@ -1,0 +1,4 @@
+${CURRENT_REPO}
+-r ${CURRENT_REPO}/requirements.txt
+numpy
+PyQt6

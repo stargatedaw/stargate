@@ -64,15 +64,28 @@ distro: commit_hash
 install: install_distro install_sbsms install_py_vendor
 	# General purpose install for users
 
-install_distro: clean_pyc
+install_distro: \
+	clean_pyc \
+	install_dirs \
+	install_engine \
+	install_python \
+	install_files
 	# install without vendored dependencies
+
+install_dirs:
 	install -d $(SG_DIR)
 	install -d $(DESTDIR)$(PREFIX)/bin
-	cp scripts/* $(DESTDIR)$(PREFIX)/bin
 	install -d $(SG_DIR)/stargate
+
+install_engine:
 	install -m 755 engine/$(MAJOR)-engine-dbg $(DESTDIR)$(PREFIX)/bin
 	install -s -m 755 engine/$(MAJOR)-engine $(DESTDIR)$(PREFIX)/bin
+
+install_python:
+	cp scripts/* $(DESTDIR)$(PREFIX)/bin
 	cp -r sglib sgui $(SG_DIR)/stargate
+
+install_files:
 	cp -r files/themes files/presets $(SG_DIR)
 	cp -r files/themes files/plugin_assets files/fonts $(SG_DIR)
 	cp -r files/share $(DESTDIR)/$(PREFIX)
