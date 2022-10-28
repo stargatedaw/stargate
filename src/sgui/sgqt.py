@@ -22,8 +22,11 @@ if True:  # PyQt
         "_USE_PYQT5" in os.environ
     ):
         LOG.info("Using PyQt5")
-        if getattr(PyQt5, '__path__', None):
-            LOG.info(PyQt5.__path__)
+        try:
+            from PyQt5 import __path__ as mod_path
+            LOG.info(mod_path)
+        except:
+            pass
         qt_event_pos = lambda x: x.pos()
         from PyQt5 import QtGui, QtWidgets, QtCore
         from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
