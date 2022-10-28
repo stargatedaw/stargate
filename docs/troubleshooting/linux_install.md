@@ -26,7 +26,7 @@ something more stable like the latest Ubuntu LTS.  If older distros are not
 an option because you are using newer hardware, then report issues you are
 having to the appropriate upstream project.
 
-# All distros
+# All distros: AppImage
 The new AppImage is a portable executable that is meant to be used on almost
 any Linux distro, without the need to install.  Simply download, run:
 ```
@@ -42,6 +42,23 @@ simply place the AppImage in the desired folder, and create a file called
 `_stargate_home` next to it.  Note that the Linux AppImage can be installed
 alongside a Windows portable install and a MacOS app bundle at the same time
  to create a (nearly) universal DAW flash drive.
+
+## Fedora/CentOS/RHEL/Rocky/Alma/etc... issues
+### 'Could not display...' 'There is no application installed for appimage...'
+`chmod +x ...` does not seem to fix this reliably.  But you can right-click
+on the binary:
+- properties
+- permissions
+- allow executing file as program
+
+However, if the file is on a file system that does not support POSIX file
+permissions, such as a FAT32 flash drive, this will not work until you copy
+the file to an ext4, xfs, etc... file system.
+
+### Unable to find shared libraries, window does not start
+This has been seen as a result of selinux in RHEL8 and it's clones.  The
+`LD_LIBRARY_PATH` environment variable is being stripped away by SELinux.
+Either disable SELinux or update your policy to not do that.
 
 ## Adding the AppImage to the start menu
 If you wish to add the Stargate DAW AppImage to the start menu, there is
