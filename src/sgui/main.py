@@ -1389,7 +1389,6 @@ def _load_project(project_file):
 
 
 def main(
-    app,
     splash_screen,
     scaler,
     project_file,
@@ -1466,13 +1465,4 @@ def main(
 
     # Workaround for weird stuff happening in Windows during initialization
     constants.IPC_ENABLED = True
-    exit_code = shared.APP.exec()
-    time.sleep(0.3)
-    flush_events()
-    if RESPAWN:
-        respawn()
-    LOG.info("Calling os._exit()")
-    os.remove(constants.UI_PIDFILE)
-    # Work around PyQt SEGFAULT-on-exit issues
-    os._exit(exit_code)
 

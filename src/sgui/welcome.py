@@ -1,3 +1,5 @@
+from sgui.main import main
+from sgui.splash import SplashScreen
 from sgui.sgqt import *
 from sgui.widgets.hardware_dialog import hardware_dialog
 from .project import (
@@ -10,10 +12,13 @@ from .project import (
     set_project,
     StargateProjectVersionError,
 )
+from sgui import project as project_mod
 from .project_recovery import project_recover_dialog
+from sglib.constants import UI_PIDFILE
 from sglib.lib import util
 from sglib.log import LOG
 import os
+import sys
 
 
 class Welcome:
@@ -23,6 +28,7 @@ class Welcome:
         self.loaded = False
 
         self.widget = QWidget()
+        self.widget.closeEvent = self._closeEvent
         self.widget.setObjectName('welcome_screen')
         self.widget.setWindowTitle("Stargate")
         self.widget.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
@@ -73,6 +79,11 @@ class Welcome:
 
         self.widget.show()
 
+    def _closeEvent(self, event):
+        if not self.loaded:
+            os.remove(UI_PIDFILE)
+            sys.exit(0)
+
     def rp_doubleclick(self, index):
         project = str(self.rp_list.item(index.row()).text())
         try:
@@ -95,8 +106,16 @@ class Welcome:
             self.rp_list.addItems(self.history)
 
     def close(self):
-        self.widget.close()
         self.loaded = True
+        splash_screen = SplashScreen(self.scaler.y_res)
+        # Because closing it makes the entire application exit, for some
+        # reason
+        self.widget.hide()
+        main(
+            splash_screen,
+            self.scaler,
+            project_mod.PROJECT_DIR,
+        )
 
     def on_new(self):
         if new_project(self.widget):

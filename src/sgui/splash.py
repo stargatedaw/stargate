@@ -4,9 +4,11 @@ from sgui.util import svg_to_pixmap, ui_scaler_factory
 from sgui.sgqt import QSplashScreen, QtCore
 import os
 
+SPLASHSCREEN = None
 
 class SplashScreen(QSplashScreen):
     def __init__(self, screen_height):
+        global SPLASHSCREEN
         scaled_height = int(screen_height * 0.9)
         self.pixmap = svg_to_pixmap(
             os.path.join(
@@ -25,6 +27,7 @@ class SplashScreen(QSplashScreen):
         )
         self.show()
         shared.APP.processEvents()
+        SPLASHSCREEN = self
 
     def status_update(self, a_text):
         self.showMessage(

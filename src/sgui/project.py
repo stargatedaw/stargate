@@ -25,6 +25,8 @@ __all__ = [
     'get_history',
 ]
 
+PROJECT_DIR = None
+
 def new_project_dialog(parent, last_dir):
     f_file, _filter = QFileDialog.getSaveFileName(
         parent,
@@ -116,7 +118,9 @@ def open_project(a_parent=None):
         return False
 
 def set_project(project):
+    global PROJECT_DIR
     project = pi_path(project)
+    PROJECT_DIR = project
     set_file_setting("last-project", str(project))
     history = [pi_path(x) for x in get_history() if pi_path(x) != project]
     if IS_PORTABLE_INSTALL:

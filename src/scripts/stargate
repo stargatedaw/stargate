@@ -129,34 +129,35 @@ def start_paulstretch():
     ps_main()
 
 def start_stargate():
-    app, scaler = _setup()
+    global QAPP, WELCOME
+    QAPP, scaler = _setup()
     from sglib.constants import UI_PIDFILE
     from sglib.lib.pidfile import check_pidfile, create_pidfile
     args = parse_args()
     pid = check_pidfile(UI_PIDFILE)
     if pid is not None:
         from sgui.sgqt import QMessageBox
-        QMessageBox.warning(
-            None,
-            "Error",
+        msg = (
             f"Detected Stargate is already running with pid {pid}, "
-            "please close the other instance first",
+            "please close the other instance first"
         )
+        QMessageBox.warning(None, "Error", msg)
+        LOG.error(msg)
         sys.exit(0)
     create_pidfile(UI_PIDFILE)
     if not args.project_file:
         from sgui.welcome import Welcome
-        w = Welcome(app, scaler)
-        app.exec()
-        if not w.loaded:
-            os.remove(UI_PIDFILE)
-            sys.exit(0)
-    # Refresh the app we just exec'd
-    app = QApplication(sys.argv)
-    from sgui.splash import SplashScreen
-    splash_screen = SplashScreen(scaler.y_res)
-    from sgui.main import main
-    main(app, splash_screen, scaler, args.project_file)
+        WELCOME = Welcome(QAPP, scaler)
+    exit_code = QAPP.exec()
+    time.sleep(0.3)
+    from sgui import main
+    main.flush_events()
+    if main.RESPAWN:
+        main.respawn()
+    LOG.info("Calling os._exit()")
+    os.remove(UI_PIDFILE)
+    # Work around PyQt SEGFAULT-on-exit issues
+    os._exit(exit_code)
 
 def main():
     # When respawning, give the old process a chance to garbage collect first
