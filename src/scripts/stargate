@@ -36,7 +36,14 @@ def app_image_start_menu():
     appimage = os.environ['APPIMAGE']
     appdir = os.environ['APPDIR']
     parent = os.path.dirname(appimage)
-    icon = os.path.join(appdir, 'usr', 'share', 'pixmaps', 'stargate.png')
+    icon = os.path.join(
+        appdir,
+        'opt',
+        'python3.10',
+        'share',
+        'pixmaps',
+        'stargate.png',
+    )
     icon_copy = os.path.join(parent, 'stargate.png')
     shutil.copy(icon, icon_copy)
     desktop_dir = os.path.join(
