@@ -22,13 +22,13 @@ all: sbsms distro
 appimage:
 	python-appimage/release.py
 	$(DOCKER) run \
-		--mount type=bind,src=.,dst=/stargate \
+		--mount type=bind,src=..,dst=/stargate \
 		$(DOCKER_IMAGE) \
-		sh -c 'cd /stargate && ./appimage-helper.sh'
+		sh -c 'cd /stargate/src && ./appimage-helper.sh'
 	appimagetool -n \
-		dist/squashfs-root/ \
-		dist/StargateDAW-$(MINOR)-linux-x86_64.AppImage
-	cd dist && tar czf \
+		../dist/squashfs-root/ \
+		../dist/StargateDAW-$(MINOR)-linux-x86_64.AppImage
+	cd ../dist && tar czf \
 		StargateDAW-$(MINOR)-linux-x86_64.AppImage.tar.gz \
 		StargateDAW-$(MINOR)-linux-x86_64.AppImage
 
@@ -37,7 +37,7 @@ appimage-debug:
 	python-appimage/release.py
 	sed s/{{VERSION}}/$(MINOR)/g AppImageBuilder.yml.tmpl > AppImageBuilder.yml
 	$(DOCKER) run -it \
-		--mount type=bind,src=.,dst=/stargate \
+		--mount type=bind,src=..,dst=/stargate \
 		$(DOCKER_IMAGE) \
 		sh
 

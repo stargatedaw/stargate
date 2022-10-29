@@ -1,19 +1,19 @@
 #!/bin/sh -xe
 
 cd /stargate
-VERSION=$(jq .version.minor meta.json)
+VERSION=$(jq .version.minor src/meta.json)
 
 cd dist/
 rm -rf squashfs-root
 ./stargate-x86_64.AppImage --appimage-extract
-cd ..
+cd ../src/
 make -C engine
-DESTDIR=dist/squashfs-root PREFIX=/usr make \
+DESTDIR=/stargate/dist/squashfs-root PREFIX=/usr make \
 	install_dirs \
 	install_engine \
 	install_sbsms
 
-DESTDIR=dist/squashfs-root PREFIX=/opt/python3.10 make \
+DESTDIR=/stargate/dist/squashfs-root PREFIX=/opt/python3.10 make \
 	install_dirs \
 	install_files
 

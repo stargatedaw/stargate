@@ -46,18 +46,18 @@ def build(args):
         ],
         env=env,
     )
-    if not os.path.isdir('../dist'):
-        os.mkdir('../dist')
+    if not os.path.isdir('../../dist'):
+        os.mkdir('../../dist')
 
     for appimage in glob('*.AppImage'):
-        dest = os.path.join('..', 'dist', appimage)
+        dest = os.path.join('..', '..', 'dist', appimage)
         if os.path.exists(dest):
             print(f'Deleting old version {dest}')
             os.remove(dest)
         print(f'Moving {appimage} to ../dist/')
-        shutil.move(appimage, '../dist/')
+        shutil.move(appimage, dest)
 
-    print('Finished!  AppImage files are in dist/')
+    print('Finished!  AppImage files are in ../dist/')
 
 def main():
     args = parse_args()
