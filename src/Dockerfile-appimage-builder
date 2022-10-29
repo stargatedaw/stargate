@@ -87,6 +87,33 @@ RUN cd /root/libsndfile-1.1.0/ && \
 	make && \
 	make install
 
+FROM python as rubberband
+
+RUN apt update && apt install -y \
+	autoconf \
+	autogen \
+	automake \
+	build-essential \
+	libasound2-dev \
+	libflac-dev \
+	libogg-dev \
+	libtool \
+	libvorbis-dev \
+	libopus-dev \
+	libmp3lame-dev \
+	libmpg123-dev \
+	pkg-config
+COPY --from=libsndfile /root/libsndfile-1.1.0/ /root/libsndfile-1.1.0
+RUN cd /root/libsndfile-1.1.0/ && make install
+RUN python3 -m pip install meson ninja
+RUN cd /root/ && \
+	curl https://breakfastquay.com/files/releases/rubberband-3.1.1.tar.bz2 \
+	| tar xv --bzip2
+RUN cd /root/rubberband-3.1.1 && \
+	meson setup --prefix=/usr builddir && \
+	cd builddir/ && \
+	meson compile
+
 FROM ${IMAGE}
 
 RUN apt update && apt upgrade -y && apt install -y \
@@ -100,7 +127,6 @@ RUN apt update && apt upgrade -y && apt install -y \
 	libjack-jackd2-dev \
 	libssl-dev \
 	libfftw3-dev \
-	rubberband-cli \
 	zsync
 
 COPY --from=portmidi /root/cmake-3.24.2/ /root/cmake-3.24.2
@@ -120,7 +146,6 @@ RUN cd /root/Python-3.10.8 && \
 	./configure --enable-optimizations --prefix=/usr && \
 	make && \
 	make install
-RUN python3 -m pip install appimage-builder
 
 COPY --from=squashfs-tools \
 	/root/squashfs-tools-4.5.1/ \
@@ -140,4 +165,7 @@ RUN apt install -y \
 
 COPY --from=libsndfile /root/libsndfile-1.1.0/ /root/libsndfile-1.1.0
 RUN cd /root/libsndfile-1.1.0/ && make install
+
+RUN python3 -m pip install meson ninja
+COPY --from=rubberband /root/rubberband-3.1.1/ /root/rubberband-3.1.1
 

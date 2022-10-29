@@ -25,6 +25,8 @@ cd /root/portaudio-19.7.0/
 make install
 cd /root/portmidi-2.0.4/
 make install
+cd /root/rubberband-3.1.1/builddir
+meson install
 
 PACKAGES=$(apt-cache depends --recurse --no-recommends --no-suggests \
 --no-conflicts --no-breaks --no-replaces --no-enhances \
