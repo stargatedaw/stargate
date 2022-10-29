@@ -922,8 +922,7 @@ class SgMainWindow(QMainWindow):
         self.audio_converter_dialog("lame", f_enc, "mp3")
 
     def ogg_converter_dialog(self):
-        if which("oggenc") is None or \
-        which("oggdec") is None:
+        if which("oggenc") is None or which("oggdec") is None:
             QMessageBox.warning(
                 self,
                 _("Error"),
@@ -936,20 +935,40 @@ class SgMainWindow(QMainWindow):
         def get_cmd(f_input_file, f_output_file):
             if f_wav_radiobutton.isChecked():
                 if a_dec == "avconv" or a_dec == "ffmpeg":
-                    f_cmd = [a_dec, "-i", f_input_file, f_output_file]
+                    f_cmd = [
+                        which(a_dec),
+                        "-i",
+                        f_input_file,
+                        f_output_file,
+                    ]
                 elif a_dec == "oggdec":
-                    f_cmd = [a_dec, "--output", f_output_file, f_input_file]
+                    f_cmd = [
+                        which(a_dec),
+                        "--output",
+                        f_output_file,
+                        f_input_file,
+                    ]
             else:
                 if a_enc == "oggenc":
                     f_quality = float(str(f_mp3_br_combobox.currentText()))
                     f_quality = (320.0 / f_quality) * 10.0
-                    f_quality = clip_value(
-                        f_quality, 3.0, 10.0)
-                    f_cmd = [a_enc, "-q", str(f_quality),
-                         "-o", f_output_file, f_input_file]
+                    f_quality = clip_value(f_quality, 3.0, 10.0)
+                    f_cmd = [
+                        which(a_enc),
+                        "-q",
+                        str(f_quality),
+                        "-o",
+                        f_output_file,
+                        f_input_file,
+                    ]
                 elif a_enc == "lame":
-                    f_cmd = [a_enc, "-b", str(f_mp3_br_combobox.currentText()),
-                         f_input_file, f_output_file]
+                    f_cmd = [
+                        which(a_enc),
+                        "-b",
+                        str(f_mp3_br_combobox.currentText()),
+                        f_input_file,
+                        f_output_file,
+                    ]
             LOG.info(f_cmd)
             return f_cmd
 
