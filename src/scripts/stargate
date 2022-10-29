@@ -57,10 +57,17 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description="Launch Stargate DAW",
     )
+    if 'APPDIR' in os.environ:
+        help_msg = (
+            'The project file to open, or use "appimage-start-menu" to '
+            'install to the start menu'
+        )
+    else:
+        help_msg = 'The project file to open'
     parser.add_argument(
         'project_file',
         default=None,
-        help='The project file to open',
+        help=help_msg,
         nargs='?',
     )
     parser.add_argument(
