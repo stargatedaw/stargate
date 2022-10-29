@@ -1,3 +1,4 @@
+*.AppImage*
 dist/
 *.cproject
 *.deb

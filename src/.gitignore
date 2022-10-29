@@ -1,4 +1,3 @@
-*.AppImage*
 AppDir/
 # This is dynamically generated from a template
 AppImageBuilder.yml
