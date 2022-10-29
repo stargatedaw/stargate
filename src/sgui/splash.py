@@ -17,7 +17,7 @@ class SplashScreen(QWidget):
     def __init__(self, screen_height):
         global SPLASHSCREEN
         QWidget.__init__(self)
-        scaled_height = int(screen_height * 0.9)
+        scaled_height = int(screen_height * 0.8)
         self.pixmap = svg_to_pixmap(
             os.path.join(
                 theme.ASSETS_DIR,
@@ -29,7 +29,7 @@ class SplashScreen(QWidget):
         self.pixmap_label =  QLabel()
         self.text_label =  QLabel('Initializing...')
         self.layout.addWidget(self.pixmap_label, 1, 1)
-        self.layout.addWidget(self.pixmap_label, 2, 1)
+        self.layout.addWidget(self.text_label, 2, 1)
         self.pixmap_label.setFixedSize(
             self.pixmap.width(),
             self.pixmap.height(),
