@@ -485,13 +485,13 @@ class SgMainWindow(QMainWindow):
 
     def on_check_updates(self):
         url = QtCore.QUrl(
-            "https://github.com/stargateaudio/stargate/releases",
+            "https://github.com/stargatedaw/stargate/releases",
         )
         QDesktopServices.openUrl(url)
 
     def on_samplepack(self):
         url = QtCore.QUrl(
-            "https://github.com/stargateaudio/stargate-sample-pack",
+            "https://github.com/stargatedaw/stargate-sample-pack",
         )
         QDesktopServices.openUrl(url)
 
@@ -509,7 +509,7 @@ class SgMainWindow(QMainWindow):
 
     def on_manual(self):
         url = QtCore.QUrl(
-            "https://github.com/stargateaudio/stargate/"
+            "https://github.com/stargatedaw/stargate/"
             "tree/main/docs/UserManual",
         )
         QDesktopServices.openUrl(url)
