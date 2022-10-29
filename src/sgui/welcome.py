@@ -12,7 +12,7 @@ from .project import (
     set_project,
     StargateProjectVersionError,
 )
-from sgui import project as project_mod
+from sgui import project as project_mod, shared as glbl_shared
 from .project_recovery import project_recover_dialog
 from sglib.constants import UI_PIDFILE
 from sglib.lib import util
@@ -77,8 +77,6 @@ class Welcome:
         project_recovery_button.pressed.connect(self.on_project_recovery)
         buttons_hlayout2.addWidget(project_recovery_button)
 
-        self.widget.show()
-
     def _closeEvent(self, event):
         if not self.loaded:
             os.remove(UI_PIDFILE)
@@ -108,9 +106,8 @@ class Welcome:
     def close(self):
         self.loaded = True
         splash_screen = SplashScreen(self.scaler.y_res)
-        # Because closing it makes the entire application exit, for some
-        # reason
-        self.widget.hide()
+        glbl_shared.MAIN_STACKED_WIDGET.addWidget(splash_screen)
+        glbl_shared.MAIN_STACKED_WIDGET.setCurrentIndex(1)
         main(
             splash_screen,
             self.scaler,

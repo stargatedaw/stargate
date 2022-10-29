@@ -747,8 +747,6 @@ class SgMainWindow(QMainWindow):
     def prepare_to_quit(self):
         try:
             self.setUpdatesEnabled(False)
-            if SPLASH_SCREEN:
-                SPLASH_SCREEN.close()
             close_engine()
             shared.PLUGIN_UI_DICT.close_all_plugin_windows()
             if self.socket_server is not None:
@@ -780,13 +778,13 @@ class SgMainWindow(QMainWindow):
             LOG.exception(ex)
             exit(999)
 
-    def closeEvent(self, event):
-        if self.ignore_close_event:
+    def _closeEvent(self, event):
+        if MAIN_WINDOW.ignore_close_event:
             event.ignore()
             if shared.IS_PLAYING:
                 LOG.info("User tried to close the window during playback")
                 return
-            self.setEnabled(False)
+            MAIN_WINDOW.setEnabled(False)
             f_reply = QMessageBox.question(
                 MAIN_WINDOW.widget,
                 _('Message'),
@@ -799,10 +797,11 @@ class SgMainWindow(QMainWindow):
                 QMessageBox.StandardButton.Cancel,
             )
             if f_reply == QMessageBox.StandardButton.Cancel:
-                self.setEnabled(True)
+                MAIN_WINDOW.setEnabled(True)
                 return
             else:
-                self.prepare_to_quit()
+                MAIN_WINDOW.prepare_to_quit()
+                event.accept()
         else:
             event.accept()
 
@@ -1454,8 +1453,11 @@ def main(
     if i < 15:
         SPLASH_SCREEN.status_update(_("Showing the main window"))
         time.sleep((20 - i) * 0.1)
-    MAIN_WINDOW.show()
-    SPLASH_SCREEN.finish(MAIN_WINDOW)
+    shared.MAIN_STACKED_WIDGET.addWidget(MAIN_WINDOW)
+    shared.MAIN_STACKED_WIDGET.closeEvent = MAIN_WINDOW._closeEvent
+    shared.MAIN_STACKED_WIDGET.setCurrentIndex(
+        shared.MAIN_STACKED_WIDGET.count() - 1,
+    )
 
     if util.ENGINE_RETCODE is not None:
         handle_engine_error(util.ENGINE_RETCODE)

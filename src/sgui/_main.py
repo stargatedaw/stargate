@@ -2,6 +2,8 @@ import os
 import sys
 import time
 
+from sgui import shared as glbl_shared
+
 
 def qt_message_handler(mode, context, message):
     line = (
@@ -57,9 +59,13 @@ def main(args):
         LOG.error(msg)
         sys.exit(0)
     create_pidfile(UI_PIDFILE)
+    from sgui.sgqt import QStackedWidget
+    glbl_shared.MAIN_STACKED_WIDGET = QStackedWidget()
+    glbl_shared.MAIN_STACKED_WIDGET.showMaximized()
     if args.project_file:
         from sgui.splash import SplashScreen
         splash_screen = SplashScreen(scaler.y_res)
+        glbl_shared.MAIN_STACKED_WIDGET.addWidget(splash_screen)
         from sgui.main import main
         main(
             splash_screen,
@@ -69,11 +75,12 @@ def main(args):
     else:
         from sgui.welcome import Welcome
         WELCOME = Welcome(QAPP, scaler)
+        glbl_shared.MAIN_STACKED_WIDGET.addWidget(WELCOME.widget)
     exit_code = QAPP.exec()
     time.sleep(0.3)
     from sgui import main
     main.flush_events()
-    if main.RESPAWN:
+    if getattr(main, 'RESPAWN', None):
         main.respawn()
     LOG.info("Calling os._exit()")
     os.remove(UI_PIDFILE)
