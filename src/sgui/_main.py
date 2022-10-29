@@ -69,8 +69,8 @@ def main(args):
         from sgui.main import main
         main(
             splash_screen,
-            self.scaler,
-            project_mod.PROJECT_DIR,
+            scaler,
+            args.project_file,
         )
     else:
         from sgui.welcome import Welcome

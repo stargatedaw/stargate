@@ -768,7 +768,7 @@ class SgMainWindow(QMainWindow):
             shared.prepare_to_quit()
             f_quit_timer = QtCore.QTimer(self)
             f_quit_timer.setSingleShot(True)
-            f_quit_timer.timeout.connect(self.close)
+            f_quit_timer.timeout.connect(shared.MAIN_STACKED_WIDGET.close)
             f_quit_timer.start(1000)
         except Exception as ex:
             LOG.error(
