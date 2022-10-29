@@ -46,6 +46,7 @@ def _setup():
 def main(args):
     global QAPP, WELCOME
     QAPP, scaler = _setup()
+    QAPP.restoreOverrideCursor()
     from sglib.constants import UI_PIDFILE
     from sglib.lib.pidfile import check_pidfile, create_pidfile
     pid = check_pidfile(UI_PIDFILE)
