@@ -61,6 +61,7 @@ def main(args):
     create_pidfile(UI_PIDFILE)
     from sgui.sgqt import QStackedWidget
     glbl_shared.MAIN_STACKED_WIDGET = QStackedWidget()
+    glbl_shared.MAIN_STACKED_WIDGET.setMinimumSize(900, 700)
     glbl_shared.MAIN_STACKED_WIDGET.showMaximized()
     if args.project_file:
         from sgui.splash import SplashScreen
