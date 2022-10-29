@@ -149,7 +149,7 @@ def which(a_file):
             for x in (
                 'usr/bin',
                 'usr/local/bin',
-            )
+            ) + f_path_arr
         ]
     for f_path in (pi_path(x) for x in f_path_arr):
         f_file_path = os.path.join(f_path, a_file)
