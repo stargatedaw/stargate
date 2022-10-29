@@ -45,20 +45,29 @@ alongside a Windows portable install and a MacOS app bundle at the same time
 
 ## Fedora/CentOS/RHEL/Rocky/Alma/etc... issues
 ### 'Could not display...' 'There is no application installed for appimage...'
-`chmod +x ...` does not seem to fix this reliably.  But you can right-click
-on the binary:
+If the file is on a file system that does not support POSIX file
+permissions, such as a FAT32 flash drive, this will not work until you copy
+the file to an ext4, xfs, etc... file system.
+
+#### GUI File Browser
+- right-click on the StargateDAW AppImage
 - properties
 - permissions
 - allow executing file as program
 
-However, if the file is on a file system that does not support POSIX file
-permissions, such as a FAT32 flash drive, this will not work until you copy
-the file to an ext4, xfs, etc... file system.
+#### Terminal
+```
+chmod +x StargateDAW*.AppImage
+```
 
-### Unable to find shared libraries, window does not start
+### EL8 variants: Unable to find shared libraries, window does not start
 This has been seen as a result of selinux in RHEL8 and it's clones.  The
 `LD_LIBRARY_PATH` environment variable is being stripped away by SELinux.
-Either disable SELinux or update your policy to not do that.
+Given that AppImage relies on `LD_LIBRARY_PATH` to find it's libraries, it is
+unlikely that any AppImage would work.  Either disable SELinux or update your
+policy to not do that.  Or upgrade to EL9+, where they realized the err of
+their ways and stopped doing that (yet, decided to keep EL8 this way for
+"stability").
 
 ## Adding the AppImage to the start menu
 If you wish to add the Stargate DAW AppImage to the start menu, there is
