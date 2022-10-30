@@ -1,6 +1,6 @@
 from sgui.main import main
 from sgui.sgqt import *
-from sgui.widgets.hardware_dialog import hardware_dialog
+from sgui.widgets.hardware_dialog import HardwareDialog
 from .project import (
     check_project_version,
     clone_project,
@@ -121,7 +121,7 @@ class Welcome:
             self.close()
 
     def on_hardware_settings(self):
-        hardware = hardware_dialog(True)
+        hardware = HardwareDialog(True)
         hardware.show_hardware_dialog(
             notify_of_restart=False,
         )

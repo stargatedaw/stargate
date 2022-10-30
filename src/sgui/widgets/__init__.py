@@ -7,7 +7,7 @@ from .adsr import adsr_widget
 from .adsr_main import ADSRMainWidget
 from .audio_item_viewer import *
 from .control import *
-from .hardware_dialog import hardware_dialog
+from .hardware_dialog import HardwareDialog
 from .distortion import MultiDistWidget
 from .eq import *
 from .file_browser import (

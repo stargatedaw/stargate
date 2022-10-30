@@ -780,7 +780,7 @@ class SgMainWindow(QMainWindow):
 
     @offline_operation
     def on_change_audio_settings(self):
-        f_dialog = widgets.hardware_dialog(True)
+        f_dialog = widgets.HardwareDialog(True)
         if f_dialog.show_hardware_dialog():
             # Doesn't re-send the 'ready' message?
             #open_engine(PROJECT_FILE)
@@ -1224,7 +1224,7 @@ def flush_events():
         time.sleep(0.1)
 
 def global_check_device():
-    f_hardware_dialog = widgets.hardware_dialog(
+    f_hardware_dialog = widgets.HardwareDialog(
         a_is_running=True,
         splash_screen=SPLASH_SCREEN,
     )

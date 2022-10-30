@@ -114,7 +114,7 @@ DEVICE_TOOLTIP = _("""\
 Select your audio interface from this list.
 """)
 
-class hardware_dialog:
+class HardwareDialog:
     def __init__(self, a_is_running=False, splash_screen=None):
         self.splash_screen = splash_screen
         self.devices_open = False
