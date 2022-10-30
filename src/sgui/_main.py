@@ -113,6 +113,10 @@ class MainStackedWidget(QStackedWidget):
                 event.accept()
         else:
             event.accept()
+            #quit_timer = QtCore.QTimer(self)
+            #quit_timer.setSingleShot(True)
+            #quit_timer.timeout.connect(self.close)
+            #quit_timer.start(1000)
 
 def qt_message_handler(mode, context, message):
     line = (
@@ -175,8 +179,6 @@ def main(args):
     time.sleep(0.3)
     from sgui import main
     main.flush_events()
-    if getattr(main, 'RESPAWN', None):
-        main.respawn()
     LOG.info("Calling os._exit()")
     os.remove(UI_PIDFILE)
     # Work around PyQt SEGFAULT-on-exit issues

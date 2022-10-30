@@ -101,45 +101,6 @@ def handle_engine_error(exit_code):
 def engine_lib_callback(a_path, a_msg):
     MAIN_WINDOW.engine_lib_callback(a_path, a_msg)
 
-def offline_operation(func):
-    """ Decorator for operations that require stopping the engine
-        before the operation can proceed, and optionally restarting it after
-
-        @func:
-            function(), returns True to continue, False to leave the engine
-            turned off
-    """
-    def wrapper(*args, **kwargs):
-        # Stop the engine
-        shared.PLUGIN_UI_DICT.save_all_plugin_state()
-        if MAIN_WINDOW.current_module.CLOSE_ENGINE_ON_RENDER:
-            close_engine()
-        # Run the wrapped function
-        LOG.info((args, kwargs))
-        # For some reason this passes in (self, False) for *args, I have
-        # no idea where False comes from
-        # func_result = func(*args, **kwargs)
-        func_result = func(args[0])
-        if not func_result:
-            return
-        # Restart the engine
-        if MAIN_WINDOW.current_module.CLOSE_ENGINE_ON_RENDER:
-            open_engine(PROJECT_FILE, get_fps())
-            constants.IPC_ENABLED = True
-            for i in range(300):
-                time.sleep(0.1)
-                if constants.READY:
-                    break
-            if not constants.READY:
-                LOG.error(
-                    "Engine did not send the ready signal after 3 seconds"
-                )
-        # Kludge to get the correct playlist loaded
-        # Consider making this a file setting the engine can read
-        constants.DAW_IPC.change_sequence(
-            constants.DAW_CURRENT_SEQUENCE_UID,
-        )
-    return wrapper
 
 class SgMainWindow(QMainWindow):
     MIDI_NOTES = {
@@ -691,16 +652,12 @@ class SgMainWindow(QMainWindow):
         if shared.IS_PLAYING:
             return
         if new_project(self.widget):
-            global RESPAWN
-            RESPAWN = True
             self.prepare_to_quit()
 
     def on_open(self):
         if shared.IS_PLAYING:
             return
         if open_project(self):
-            global RESPAWN
-            RESPAWN = True
             self.prepare_to_quit()
 
     def on_save(self):
@@ -766,10 +723,6 @@ class SgMainWindow(QMainWindow):
             if self.subprocess_timer:
                 self.subprocess_timer.stop()
             shared.prepare_to_quit()
-            f_quit_timer = QtCore.QTimer(self)
-            f_quit_timer.setSingleShot(True)
-            f_quit_timer.timeout.connect(shared.MAIN_STACKED_WIDGET.close)
-            f_quit_timer.start(1000)
         except Exception as ex:
             LOG.error(
                 "Exception thrown while attempting to exit, "
@@ -778,17 +731,12 @@ class SgMainWindow(QMainWindow):
             LOG.exception(ex)
             exit(999)
 
-    @offline_operation
     def on_change_audio_settings(self):
-        f_dialog = widgets.HardwareDialog(True)
-        if f_dialog.show_hardware_dialog():
-            # Doesn't re-send the 'ready' message?
-            #open_engine(PROJECT_FILE)
-            global RESPAWN
-            RESPAWN = True
-            self.prepare_to_quit()
-            return False
-        return True
+        def callback():
+            shared.MAIN_STACKED_WIDGET.start()
+
+        self.prepare_to_quit()
+        shared.MAIN_STACKED_WIDGET.show_hardware_dialog(callback, callback)
 
     def on_use_default_theme(self):
         util.clear_file_setting("default-style")
@@ -1278,25 +1226,6 @@ def global_new_project(a_project_file, a_wait=True):
     open_engine(a_project_file, get_fps())
     open_bookmarks()
 
-def respawn():
-    LOG.info("Spawning child UI process")
-    project_file = util.get_file_setting("last-project", str, None)
-    if util.IS_WINDOWS:
-        CHILD_PROC = subprocess.Popen([
-            sys.executable,
-            '--create',
-            project_file,
-        ])
-    else:
-        args = [
-            sys.argv[0],
-            '--delay',
-            '--create',
-            project_file,
-        ]
-        CHILD_PROC = subprocess.Popen(args)
-    LOG.info("Parent UI process exiting")
-
 
 def splash_screen_opening(project_file):
     if len(project_file) > 50:
@@ -1367,7 +1296,7 @@ def main(
     splash_screen,
     project_file,
 ):
-    global MAIN_WINDOW, SPLASH_SCREEN, RESPAWN
+    global MAIN_WINDOW, SPLASH_SCREEN
     scaler = ui_scaler_factory()
     major_version = util.META_DOT_JSON['version']['major']
     minor_version = util.META_DOT_JSON['version']['minor']
@@ -1395,7 +1324,6 @@ def main(
         if f_answer == QMessageBox.StandardButton.Cancel:
             sys.exit(1)
         kill_engine(pid)
-    RESPAWN = False
 
     MAIN_WINDOW.setup(scaler)
     shared.APP.lastWindowClosed.connect(shared.APP.quit)
