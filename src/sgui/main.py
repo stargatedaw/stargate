@@ -1223,22 +1223,6 @@ def flush_events():
         shared.APP.processEvents()
         time.sleep(0.1)
 
-def global_check_device():
-    f_hardware_dialog = widgets.HardwareDialog(
-        a_is_running=True,
-        splash_screen=SPLASH_SCREEN,
-    )
-    f_hardware_dialog.check_device(
-        a_splash_screen=SPLASH_SCREEN,
-    )
-
-    if not util.DEVICE_SETTINGS:
-        LOG.info(
-            "It appears that the user did not select "
-            "an audio device, quitting..."
-        )
-        sys.exit(999)
-
 def global_close_all():
     shared.PLUGIN_UI_DICT.close_all_plugin_windows()
     close_engine()
@@ -1413,7 +1397,6 @@ def main(
         kill_engine(pid)
     RESPAWN = False
 
-    global_check_device()
     MAIN_WINDOW.setup(scaler)
     shared.APP.lastWindowClosed.connect(shared.APP.quit)
 

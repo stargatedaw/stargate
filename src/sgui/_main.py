@@ -4,9 +4,9 @@ import time
 
 from sglib.log import LOG, setup_logging
 from sglib.lib.translate import _
-from sgui import shared as glbl_shared
+from sglib.lib import util
+from sgui import shared as glbl_shared, project as project_mod, widgets
 from sgui.main import main as main_window_open
-from sgui import project as project_mod
 from sgui.sgqt import (
     QApplication,
     QGuiApplication,
@@ -18,12 +18,21 @@ from sgui.splash import SplashScreen
 from sgui.util import setup_theme, ui_scaler_factory
 from sgui.welcome import Welcome
 
+
 class MainStackedWidget(QStackedWidget):
     def __init__(self, *args, **kwargs):
         QStackedWidget.__init__(self, *args, **kwargs)
         self.main_window = None
         self.welcome_window = None
         self.splash_screen = None
+
+    def check_device(self) -> bool:
+        """ Check if the user has a hardware config, show the
+            hardware dialog if not
+        """
+        hardware_dialog = widgets.HardwareDialog()
+        hardware_dialog.check_device()
+        return bool(util.DEVICE_SETTINGS)
 
     def show_main(self):
         assert self.splash_screen, 'No splash screen'
@@ -47,6 +56,8 @@ class MainStackedWidget(QStackedWidget):
         self.setCurrentIndex(idx)
 
     def show_splash(self):
+        if not self.check_device():
+            return
         if not self.splash_screen:
             splash_screen = SplashScreen()
             self.addWidget(splash_screen)

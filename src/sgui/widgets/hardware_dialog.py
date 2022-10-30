@@ -115,10 +115,8 @@ Select your audio interface from this list.
 """)
 
 class HardwareDialog:
-    def __init__(self, a_is_running=False, splash_screen=None):
-        self.splash_screen = splash_screen
+    def __init__(self):
         self.devices_open = False
-        self.is_running = a_is_running
         self.device_name = None
         self.sample_rates = ["44100", "48000", "88200", "96000", "192000"]
         self.buffer_sizes = ["32", "64", "128", "256", "512", "1024", "2048"]
@@ -234,27 +232,17 @@ class HardwareDialog:
             pass
 #            LOG.error("close_devices called, but devices are not open")
 
-    def check_device(self, a_splash_screen=None):
+    def check_device(self):
         if not util.DEVICE_SETTINGS:
-            self.show_hardware_dialog(
-                None,
-                a_exit_on_cancel=True,
-            )
+            self.show_hardware_dialog(None)
             return
         elif [
             x for x in ("hostApi", "name")
             if x not in util.DEVICE_SETTINGS
         ]:
-            if a_splash_screen:
-                LOG.info("Hiding splash screen")
-                a_splash_screen.hide()
             self.show_hardware_dialog(
                 _("Invalid device configuration"),
-                a_exit_on_cancel=True,
             )
-            if a_splash_screen:
-                LOG.info("Showing splash screen")
-                a_splash_screen.show()
             return
 
         f_device_str = util.DEVICE_SETTINGS["name"]
@@ -298,47 +286,30 @@ class HardwareDialog:
                         f_file.write("\\")
                         f_file.close()
                         return
-                if a_splash_screen:
-                    a_splash_screen.hide()
                 self.show_hardware_dialog(
                     _(
                         "Device not found: {}\n\n"
                         "If this is not expected, then another application "
                         "may be using the device"
                     ).format(f_device_str),
-                    a_exit_on_cancel=True,
                 )
-                if a_splash_screen:
-                    a_splash_screen.show()
             else:
-                if a_splash_screen:
-                    a_splash_screen.hide()
                 self.show_hardware_dialog(
                     _("Device not found: {}").format(f_device_str),
-                    a_exit_on_cancel=True,
                 )
-                if a_splash_screen:
-                    a_splash_screen.show()
 
     def show_hardware_dialog(
         self,
         a_msg=None,
-        a_exit_on_cancel=False,
-        notify_of_restart=True,
     ) -> bool:
         self.dialog_result = False
         self.open_devices()
-        if self.is_running:
-            f_window = QDialog()
-        else:
-            f_window = QWidget()
-            f_window.setObjectName("plugin_ui")
+        f_window = QWidget()
+        f_window.setObjectName("plugin_ui")
         LOG.info("Created dialog window, adding widgets")
 
         def f_close_event(a_self=None, a_event=None):
             self.close_devices()
-            if a_exit_on_cancel and not self.dialog_result:
-                sys.exit(9876)
         self.input_name = ""
 
         f_window.closeEvent = f_close_event
@@ -770,26 +741,13 @@ class HardwareDialog:
 
                 time.sleep(1.0)
                 util.read_device_config()
-                notify_restart()
-                f_window.setResult(QDialog.DialogCode.Accepted)
                 f_window.close()
 
             except Exception as ex:
                 LOG.exception(ex)
 
         def on_cancel(a_self=None):
-            # notify_restart()
             f_window.close()
-
-        def notify_restart():
-            if self.splash_screen:
-                self.splash_screen.show()
-            elif notify_of_restart:
-                QMessageBox.warning(
-                    f_window,
-                    _("Info"),
-                    _("Stargate will restart now"),
-                )
 
         f_test_button.pressed.connect(on_test)
         f_ok_button.pressed.connect(on_ok)
@@ -879,18 +837,9 @@ class HardwareDialog:
 
         if a_msg is not None:
             QMessageBox.warning(f_window, _("Error"), a_msg)
-        if self.splash_screen:
-            self.splash_screen.hide()
         latency_changed()
         LOG.info("Showing dialog")
-        if self.is_running:
-            f_window.setResult(QDialog.DialogCode.Rejected)
-            f_window.exec()
-            result =f_window.result()
-            LOG.info(f"hardware dialog returned {result}")
-            return result == QDialog.DialogCode.Accepted
-        else:
-            f_window.show()
+        return f_window.show()
 
 if __name__ == "__main__":
     setup_logging()
