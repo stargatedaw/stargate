@@ -1472,11 +1472,7 @@ def main(
     if i < 15:
         SPLASH_SCREEN.status_update(_("Showing the main window"))
         time.sleep((20 - i) * 0.1)
-    shared.MAIN_STACKED_WIDGET.addWidget(MAIN_WINDOW)
     shared.MAIN_STACKED_WIDGET.closeEvent = MAIN_WINDOW._closeEvent
-    shared.MAIN_STACKED_WIDGET.setCurrentIndex(
-        shared.MAIN_STACKED_WIDGET.count() - 1,
-    )
 
     if util.ENGINE_RETCODE is not None:
         handle_engine_error(util.ENGINE_RETCODE)

@@ -26,7 +26,10 @@ class MainStackedWidget(QStackedWidget):
             splash_screen,
             project_mod.PROJECT_DIR,
         )
-        self.main_window = (self.count() - 1, main_window)
+        self.addWidget(main_window)
+        idx = self.count() - 1
+        self.main_window = (idx, main_window)
+        self.setCurrentIndex(idx)
 
     def show_welcome(self):
         if not self.welcome_window:
