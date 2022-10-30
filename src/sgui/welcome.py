@@ -22,8 +22,7 @@ import sys
 
 
 class Welcome:
-    def __init__(self, app):
-        self.app = app
+    def __init__(self):
         self.scaler = ui_scaler_factory()
         self.loaded = False
 
@@ -121,9 +120,10 @@ class Welcome:
             self.close()
 
     def on_hardware_settings(self):
-        hardware = HardwareDialog(True)
-        hardware.show_hardware_dialog(
-            notify_of_restart=False,
+        _main = glbl_shared.MAIN_STACKED_WIDGET
+        _main.show_hardware_dialog(
+            _main.show_welcome,
+            _main.show_welcome,
         )
 
     def on_project_recovery(self):

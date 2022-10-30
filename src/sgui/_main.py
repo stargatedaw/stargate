@@ -25,43 +25,67 @@ class MainStackedWidget(QStackedWidget):
         self.main_window = None
         self.welcome_window = None
         self.splash_screen = None
-
-    def check_device(self) -> bool:
-        """ Check if the user has a hardware config, show the
-            hardware dialog if not
-        """
-        hardware_dialog = widgets.HardwareDialog()
-        hardware_dialog.check_device()
-        return bool(util.DEVICE_SETTINGS)
+        self.hardware_dialog = None
+        self.next = None
+        self.previous = None
 
     def show_main(self):
         assert self.splash_screen, 'No splash screen'
-        idx, splash_screen = self.splash_screen
-        self.setCurrentIndex(idx)
-        main_window = main_window_open(
-            splash_screen,
+        self.setCurrentWidget(self.splash_screen)
+        self.main_window = main_window_open(
+            self.splash_screen,
             project_mod.PROJECT_DIR,
         )
-        self.addWidget(main_window)
-        idx = self.count() - 1
-        self.main_window = (idx, main_window)
-        self.setCurrentIndex(idx)
+        self.addWidget(self.main_window)
+        self.setCurrentWidget(self.main_window)
 
     def show_welcome(self):
         if not self.welcome_window:
-            welcome = Welcome(QAPP)
-            self.addWidget(welcome.widget)
-            self.welcome_window = (self.count() - 1, welcome)
-        idx, welcome_window = self.welcome_window
-        self.setCurrentIndex(idx)
+            self.welcome_window = Welcome()
+            self.addWidget(self.welcome_window.widget)
+        self.setCurrentWidget(self.welcome_window.widget)
+
+    def start(self):
+        if self.show_splash():
+            self.show_main()
 
     def show_splash(self):
-        if not self.check_device():
-            return
+        hardware_dialog = widgets.HardwareDialog()
+        result = hardware_dialog.check_device()
+        if result:
+            self.show_hardware_dialog(
+                self.start,
+                self.show_welcome,
+                result,
+            )
+            return False
+
         if not self.splash_screen:
-            splash_screen = SplashScreen()
-            self.addWidget(splash_screen)
-            self.splash_screen = (self.count() - 1, splash_screen)
+            self.splash_screen = SplashScreen()
+            self.addWidget(self.splash_screen)
+        self.setCurrentWidget(self.splash_screen)
+        return True
+
+    def show_hardware_dialog(
+        self,
+        _next,
+        previous,
+        msg=None,
+    ):
+        """
+        @_next:
+            The MainStackedWidget.show_*() method to call upon success
+        @_previous:
+            The MainStackedWidget.show_*() method to call if the user cancels
+        """
+        self.next = _next
+        self.previous = previous
+        if self.hardware_dialog:
+            self.removeWidget(self.hardware_dialog)
+        hardware_dialog = widgets.HardwareDialog()
+        self.hardware_dialog = hardware_dialog.hardware_dialog_factory(msg)
+        self.addWidget(self.hardware_dialog)
+        self.setCurrentWidget(self.hardware_dialog)
 
     def closeEvent(self, event):
         if glbl_shared.IGNORE_CLOSE_EVENT:
@@ -144,8 +168,7 @@ def main(args):
     glbl_shared.MAIN_STACKED_WIDGET.setMinimumSize(900, 700)
     glbl_shared.MAIN_STACKED_WIDGET.showMaximized()
     if args.project_file:
-        glbl_shared.MAIN_STACKED_WIDGET.show_splash()
-        glbl_shared.MAIN_STACKED_WIDGET.show_main()
+        glbl_shared.MAIN_STACKED_WIDGET.start()
     else:
         glbl_shared.MAIN_STACKED_WIDGET.show_welcome()
     exit_code = QAPP.exec()

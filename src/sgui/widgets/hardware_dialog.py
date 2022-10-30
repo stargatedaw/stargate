@@ -13,6 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 """
 
+from sgui import shared as glbl_shared
 from sgui.widgets.control import slider_control
 from sglib.lib._ctypes import *
 from sglib.hardware.rpi import is_rpi
@@ -234,16 +235,12 @@ class HardwareDialog:
 
     def check_device(self):
         if not util.DEVICE_SETTINGS:
-            self.show_hardware_dialog(None)
-            return
+            return "No hardware settings detected"
         elif [
             x for x in ("hostApi", "name")
             if x not in util.DEVICE_SETTINGS
         ]:
-            self.show_hardware_dialog(
-                _("Invalid device configuration"),
-            )
-            return
+            return _("Invalid device configuration")
 
         f_device_str = util.DEVICE_SETTINGS["name"]
 
@@ -286,22 +283,18 @@ class HardwareDialog:
                         f_file.write("\\")
                         f_file.close()
                         return
-                self.show_hardware_dialog(
-                    _(
-                        "Device not found: {}\n\n"
-                        "If this is not expected, then another application "
-                        "may be using the device"
-                    ).format(f_device_str),
-                )
+                return _(
+                    "Device not found: {}\n\n"
+                    "If this is not expected, then another application "
+                    "may be using the device"
+                ).format(f_device_str)
             else:
-                self.show_hardware_dialog(
-                    _("Device not found: {}").format(f_device_str),
-                )
+                return _("Device not found: {}").format(f_device_str)
 
-    def show_hardware_dialog(
+    def hardware_dialog_factory(
         self,
         a_msg=None,
-    ) -> bool:
+    ):
         self.dialog_result = False
         self.open_devices()
         f_window = QWidget()
@@ -741,13 +734,12 @@ class HardwareDialog:
 
                 time.sleep(1.0)
                 util.read_device_config()
-                f_window.close()
-
+                glbl_shared.MAIN_STACKED_WIDGET.next()
             except Exception as ex:
                 LOG.exception(ex)
 
         def on_cancel(a_self=None):
-            f_window.close()
+            glbl_shared.MAIN_STACKED_WIDGET.previous()
 
         f_test_button.pressed.connect(on_test)
         f_ok_button.pressed.connect(on_ok)
@@ -838,20 +830,48 @@ class HardwareDialog:
         if a_msg is not None:
             QMessageBox.warning(f_window, _("Error"), a_msg)
         latency_changed()
-        LOG.info("Showing dialog")
-        return f_window.show()
+        container = QWidget()
+        container_layout = QGridLayout(container)
+        container_layout.addWidget(f_window, 1, 1)
+        container_layout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Expanding,
+                QSizePolicy.Policy.Expanding,
+            ),
+            0,
+            1,
+        )
+        container_layout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Expanding,
+                QSizePolicy.Policy.Expanding,
+            ),
+            1,
+            2,
+        )
+        container_layout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Expanding,
+                QSizePolicy.Policy.Expanding,
+            ),
+            2,
+            1,
+        )
+        container_layout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Expanding,
+                QSizePolicy.Policy.Expanding,
+            ),
+            1,
+            0,
+        )
+        return container
 
-if __name__ == "__main__":
-    setup_logging()
-    def _hardware_dialog_standalone():
-        app = QApplication(sys.argv)
-        if len(sys.argv) == 2:
-            f_msg = sys.argv[1]
-        else:
-            f_msg = None
-
-        f_hardware_dialog = hardware_dialog()
-        f_hardware_dialog.show_hardware_dialog(f_msg)
-        sys.exit(app.exec())
-
-    _hardware_dialog_standalone()
