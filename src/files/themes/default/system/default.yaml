@@ -27,12 +27,12 @@ daw:
   item_audio_waveform: "{{ background_color_alt }}"
   # The background of the note editor for the keys that are not part of
   # the current scale
-  note_black_background: "{{ palette.black1 }}"
+  note_black_background: "{{ palette.black }}"
   # The background of the note editor for the root key of the current scale
   note_root_background: "#401e1e"
   # The background of the note editor for the keys that are part of the
   # current scale
-  note_white_background: "#2c2d32"
+  note_white_background: "{{ palette.gray3 }}"
   # The vertical lines drawn between beats according to snap settings
   # ie: 1/16th, 1/8th note, etc...
   note_snap_line: "{{ palette.black }}"
@@ -57,7 +57,7 @@ daw:
   # Sequencer automation lines
   seq_atm_line: '{{ palette.white }}'
   # Sequencer QGraphicsScene background
-  seq_background: "{{ background_color }}"
+  seq_background: "{{ palette.black }}"
   # The background fill color of the sequencer items
   # If seq_item_background_use_track_color == true, the track color will be
   # used, and this value should be set to something with transparency
@@ -65,9 +65,9 @@ daw:
   # Use the track color instead of seq_item_background
   seq_item_background_use_track_color: false
   # Vertical bar lines in the sequencer
-  seq_bar_line: "#787878"
+  seq_bar_line: "#090909"
   # Vertical beat lines in the sequencer
-  seq_beat_line: "#090909"
+  seq_beat_line: "#787878"
   # Sequencer header
   seq_header: "#1d1e22"
   # Sequencer header context menu event position marker
@@ -106,7 +106,7 @@ widgets:
   # The color that audio files are drawn with in the sampler and wave editor
   audio_item_viewer_color: "{{ palette.purple }}"
   # The default QGraphicsScene background color used by the widgets library
-  default_scene_background: "{{ background_color  }}"
+  default_scene_background: "{{ palette.gray4  }}"
   # Used to draw the arc around the knob
   knob_arc_pen: "{{ palette.purple }}"
   # Used to draw the knob background

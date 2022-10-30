@@ -141,13 +141,20 @@ QRadioButton#tool_erase::indicator,
 QRadioButton#tool_split::indicator,
 QRadioButton#play_button::indicator,
 QRadioButton#rec_button::indicator,
-QRadioButton#stop_button::indicator,
-QPushButton#panic,
-QPushButton#menu
+QRadioButton#stop_button::indicator
 {
     height: {{ transport_button_size }}px;
-    outline: none;
+    /* outline: none; */
     width: {{ transport_button_size }}px;
+}
+
+QPushButton#menu,
+QPushButton#panic
+{
+    height: {{ transport_button_size * 0.85 }}px;
+    /* outline: none; */
+    width: {{ transport_button_size * 0.85 }}px;
+    border-radius: 4px;
 }
 
 QCheckBox#button_hide,
@@ -912,7 +919,7 @@ QTabBar::tab:!selected:hover,
 QTabBar::tab:selected
 {
     background-color: {{ tab_selected }};
-    color: {{ text_color_alt }};
+    color: {{ text_color }};
     margin-bottom: 0px;
 }
 
@@ -924,8 +931,8 @@ QTableWidget
 
 QListWidget
 {
-    alternate-background-color: {{ background_color }};
-    background-color: {{ background_color }};
+    alternate-background-color: {{ background_color_alt }};
+    background-color: {{ background_color_alt }};
 }
 
 QCheckBox,
@@ -971,7 +978,5 @@ QLCDNumber#transport_clock
     background: {{ transport_clock_background }};
     border: 2px solid {{ border_color }};
     color: {{ transport_clock_color }};
-    height: 40px;
-    width: 90px;
 }
 
