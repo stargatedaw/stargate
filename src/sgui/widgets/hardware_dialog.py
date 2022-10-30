@@ -315,7 +315,9 @@ class HardwareDialog:
 
         f_audio_out_tab = QWidget()
         f_tab_widget.addTab(f_audio_out_tab, _("Audio"))
-        f_window_layout = QGridLayout(f_audio_out_tab)
+        audio_tab_layout = QVBoxLayout(f_audio_out_tab)
+        f_window_layout = QGridLayout()
+        audio_tab_layout.addLayout(f_window_layout)
 
         f_midi_in_tab = QTabWidget()
         if self.pypm:
@@ -367,7 +369,7 @@ class HardwareDialog:
             f_window_layout.addWidget(f_hugepages_checkbox, 70, 1)
 
         test_layout = QHBoxLayout()
-        f_main_layout.addLayout(test_layout)
+        audio_tab_layout.addLayout(test_layout)
         f_test_button = QPushButton(_("Test"))
         f_test_button.setMinimumWidth(90)
         f_test_button.setToolTip(
