@@ -77,9 +77,6 @@ class MainWindow(QScrollArea):
         self.last_midi_dir = None
 
         self.setObjectName("plugin_ui")
-        self.widget = QWidget()
-        self.widget.setObjectName("plugin_ui")
-        self.setWidget(self.widget)
         self.setWidgetResizable(True)
         self.setHorizontalScrollBarPolicy(
             QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded,
@@ -87,10 +84,6 @@ class MainWindow(QScrollArea):
         self.setVerticalScrollBarPolicy(
             QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded,
         )
-
-        self.main_layout = QVBoxLayout()
-        self.main_layout.setContentsMargins(2, 2, 2, 2)
-        self.widget.setLayout(self.main_layout)
 
         # Transport shortcuts (added here so they will work
         # when the transport is hidden)
@@ -130,7 +123,7 @@ class MainWindow(QScrollArea):
 
         #The tabs
         self.main_tabwidget = QTabWidget()
-        self.main_layout.addWidget(self.main_tabwidget)
+        self.setWidget(self.main_tabwidget)
 
         # TODO: SG MISC: Move this to it's own class
         self.song_sequence_tab = QWidget()
