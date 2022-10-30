@@ -1,5 +1,4 @@
 from sgui.main import main
-from sgui.splash import SplashScreen
 from sgui.sgqt import *
 from sgui.widgets.hardware_dialog import hardware_dialog
 from .project import (
@@ -12,7 +11,8 @@ from .project import (
     set_project,
     StargateProjectVersionError,
 )
-from sgui import project as project_mod, shared as glbl_shared
+from sgui import shared as glbl_shared
+from sgui.util import ui_scaler_factory
 from .project_recovery import project_recover_dialog
 from sglib.constants import UI_PIDFILE
 from sglib.lib import util
@@ -22,9 +22,9 @@ import sys
 
 
 class Welcome:
-    def __init__(self, app, scaler):
+    def __init__(self, app):
         self.app = app
-        self.scaler = scaler
+        self.scaler = ui_scaler_factory()
         self.loaded = False
 
         self.widget = QWidget()
@@ -105,14 +105,8 @@ class Welcome:
 
     def close(self):
         self.loaded = True
-        splash_screen = SplashScreen(self.scaler.y_res)
-        glbl_shared.MAIN_STACKED_WIDGET.addWidget(splash_screen)
-        glbl_shared.MAIN_STACKED_WIDGET.setCurrentIndex(1)
-        main(
-            splash_screen,
-            self.scaler,
-            project_mod.PROJECT_DIR,
-        )
+        glbl_shared.MAIN_STACKED_WIDGET.show_splash()
+        glbl_shared.MAIN_STACKED_WIDGET.show_main()
 
     def on_new(self):
         if new_project(self.widget):

@@ -1408,10 +1408,10 @@ def _load_project(project_file):
 
 def main(
     splash_screen,
-    scaler,
     project_file,
 ):
     global MAIN_WINDOW, SPLASH_SCREEN, RESPAWN
+    scaler = ui_scaler_factory()
     major_version = util.META_DOT_JSON['version']['major']
     minor_version = util.META_DOT_JSON['version']['minor']
     LOG.info(f"Starting {major_version}-{minor_version}:{util.COMMIT_HASH}")
@@ -1486,4 +1486,5 @@ def main(
 
     # Workaround for weird stuff happening in Windows during initialization
     constants.IPC_ENABLED = True
+    return MAIN_WINDOW
 

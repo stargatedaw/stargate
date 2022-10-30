@@ -248,7 +248,6 @@ def setup_theme(app):
             glbl_shared.APP.setWindowIcon(
                 QIcon(theme.ICON_PATH),
             )
-        return scaler
     except Exception as ex:
         LOG.exception(ex)
         f_answer = QMessageBox.warning(

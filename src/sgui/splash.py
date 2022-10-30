@@ -14,10 +14,11 @@ import os
 SPLASHSCREEN = None
 
 class SplashScreen(QWidget):
-    def __init__(self, screen_height):
+    def __init__(self):
         global SPLASHSCREEN
         QWidget.__init__(self)
-        scaled_height = int(screen_height * 0.8)
+        scaler = ui_scaler_factory()
+        scaled_height = int(scaler.y_res * 0.8)
         self.pixmap = svg_to_pixmap(
             os.path.join(
                 theme.ASSETS_DIR,

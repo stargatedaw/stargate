@@ -2,8 +2,45 @@ import os
 import sys
 import time
 
+from sglib.log import LOG, setup_logging
 from sgui import shared as glbl_shared
+from sgui.main import main as main_window_open
+from sgui import project as project_mod
+from sgui.sgqt import QApplication, QGuiApplication, QtCore, QStackedWidget
+from sgui.splash import SplashScreen
+from sgui.util import setup_theme, ui_scaler_factory
+from sgui.welcome import Welcome
 
+class MainStackedWidget(QStackedWidget):
+    def __init__(self, *args, **kwargs):
+        QStackedWidget.__init__(self, *args, **kwargs)
+        self.main_window = None
+        self.welcome_window = None
+        self.splash_screen = None
+
+    def show_main(self):
+        assert self.splash_screen, 'No splash screen'
+        idx, splash_screen = self.splash_screen
+        self.setCurrentIndex(idx)
+        main_window = main_window_open(
+            splash_screen,
+            project_mod.PROJECT_DIR,
+        )
+        self.main_window = (self.count() - 1, main_window)
+
+    def show_welcome(self):
+        if not self.welcome_window:
+            welcome = Welcome(QAPP)
+            self.addWidget(welcome.widget)
+            self.welcome_window = (self.count() - 1, welcome)
+        idx, welcome_window = self.welcome_window
+        self.setCurrentIndex(idx)
+
+    def show_splash(self):
+        if not self.splash_screen:
+            splash_screen = SplashScreen()
+            self.addWidget(splash_screen)
+            self.splash_screen = (self.count() - 1, splash_screen)
 
 def qt_message_handler(mode, context, message):
     line = (
@@ -22,13 +59,9 @@ def qt_message_handler(mode, context, message):
         LOG.info(line)
 
 def _setup():
-    global LOG, QtCore, QApplication
-    from sglib.log import LOG, setup_logging
     setup_logging()
     LOG.info(f"sys.argv == {sys.argv}")
-    from sgui.sgqt import QApplication, QGuiApplication, QtCore
     QtCore.qInstallMessageHandler(qt_message_handler)
-    from sgui.util import setup_theme
     try:
         QGuiApplication.setHighDpiScaleFactorRoundingPolicy(
             QtCore.Qt.HighDpiScaleFactorRoundingPolicy.PassThrough,
@@ -40,12 +73,12 @@ def _setup():
             f" {ex}"
         )
     app = QApplication(sys.argv)
-    scaler = setup_theme(app)
-    return app, scaler
+    setup_theme(app)
+    return app
 
 def main(args):
-    global QAPP, WELCOME
-    QAPP, scaler = _setup()
+    global QAPP
+    QAPP = _setup()
     QAPP.restoreOverrideCursor()
     from sglib.constants import UI_PIDFILE
     from sglib.lib.pidfile import check_pidfile, create_pidfile
@@ -60,24 +93,14 @@ def main(args):
         LOG.error(msg)
         sys.exit(0)
     create_pidfile(UI_PIDFILE)
-    from sgui.sgqt import QStackedWidget
-    glbl_shared.MAIN_STACKED_WIDGET = QStackedWidget()
+    glbl_shared.MAIN_STACKED_WIDGET = MainStackedWidget()
     glbl_shared.MAIN_STACKED_WIDGET.setMinimumSize(900, 700)
     glbl_shared.MAIN_STACKED_WIDGET.showMaximized()
     if args.project_file:
-        from sgui.splash import SplashScreen
-        splash_screen = SplashScreen(scaler.y_res)
-        glbl_shared.MAIN_STACKED_WIDGET.addWidget(splash_screen)
-        from sgui.main import main
-        main(
-            splash_screen,
-            scaler,
-            args.project_file,
-        )
+        glbl_shared.MAIN_STACKED_WIDGET.show_splash()
+        glbl_shared.MAIN_STACKED_WIDGET.show_main()
     else:
-        from sgui.welcome import Welcome
-        WELCOME = Welcome(QAPP, scaler)
-        glbl_shared.MAIN_STACKED_WIDGET.addWidget(WELCOME.widget)
+        glbl_shared.MAIN_STACKED_WIDGET.show_welcome()
     exit_code = QAPP.exec()
     time.sleep(0.3)
     from sgui import main
