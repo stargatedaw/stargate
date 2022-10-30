@@ -224,6 +224,9 @@ class SgMainWindow(QMainWindow):
         self.open_action.triggered.connect(self.on_open)
         self.open_action.setShortcut(QKeySequence.StandardKey.Open)
 
+        self.close_action = self.menu_file.addAction(_("Close Project..."))
+        self.close_action.triggered.connect(self.on_close)
+
         self.save_action = self.menu_file.addAction(
             _("Save (projects are automatically saved, "
             "this creates a timestamped backup)"))
@@ -661,6 +664,25 @@ class SgMainWindow(QMainWindow):
         if open_project(self):
             self.prepare_to_quit()
             shared.MAIN_STACKED_WIDGET.start()
+
+    def on_close(self):
+        if shared.IS_PLAYING:
+            return
+        answer = QMessageBox.question(
+            shared.MAIN_STACKED_WIDGET,
+            _("Warning"),
+            _("Close this project and return to the welcome screen?"),
+            (
+                QMessageBox.StandardButton.Yes
+                |
+                QMessageBox.StandardButton.Cancel
+            ),
+            QMessageBox.StandardButton.Cancel,
+        )
+        if answer == QMessageBox.StandardButton.Cancel:
+            return
+        self.prepare_to_quit()
+        shared.MAIN_STACKED_WIDGET.show_welcome()
 
     def on_save(self):
         shared.PLUGIN_UI_DICT.save_all_plugin_state()

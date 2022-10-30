@@ -27,7 +27,6 @@ class Welcome:
         self.loaded = False
 
         self.widget = QWidget()
-        self.widget.closeEvent = self._closeEvent
         self.widget.setObjectName('welcome_screen')
         self.widget.setWindowTitle("Stargate")
         self.widget.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
@@ -75,11 +74,6 @@ class Welcome:
         project_recovery_button.setObjectName("huge_button")
         project_recovery_button.pressed.connect(self.on_project_recovery)
         buttons_hlayout2.addWidget(project_recovery_button)
-
-    def _closeEvent(self, event):
-        if not self.loaded:
-            os.remove(UI_PIDFILE)
-            sys.exit(0)
 
     def rp_doubleclick(self, index):
         project = str(self.rp_list.item(index.row()).text())
