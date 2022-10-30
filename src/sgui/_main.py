@@ -3,10 +3,17 @@ import sys
 import time
 
 from sglib.log import LOG, setup_logging
+from sglib.lib.translate import _
 from sgui import shared as glbl_shared
 from sgui.main import main as main_window_open
 from sgui import project as project_mod
-from sgui.sgqt import QApplication, QGuiApplication, QtCore, QStackedWidget
+from sgui.sgqt import (
+    QApplication,
+    QGuiApplication,
+    QMessageBox,
+    QStackedWidget,
+    QtCore,
+)
 from sgui.splash import SplashScreen
 from sgui.util import setup_theme, ui_scaler_factory
 from sgui.welcome import Welcome
@@ -44,6 +51,33 @@ class MainStackedWidget(QStackedWidget):
             splash_screen = SplashScreen()
             self.addWidget(splash_screen)
             self.splash_screen = (self.count() - 1, splash_screen)
+
+    def closeEvent(self, event):
+        if glbl_shared.IGNORE_CLOSE_EVENT:
+            event.ignore()
+            if glbl_shared.IS_PLAYING:
+                LOG.info("User tried to close the window during playback")
+                return
+            glbl_shared.MAIN_WINDOW.setEnabled(False)
+            f_reply = QMessageBox.question(
+                self,
+                _('Message'),
+                _("Are you sure you want to quit?"),
+                (
+                    QMessageBox.StandardButton.Yes
+                    |
+                    QMessageBox.StandardButton.Cancel
+                ),
+                QMessageBox.StandardButton.Cancel,
+            )
+            if f_reply == QMessageBox.StandardButton.Cancel:
+                glbl_shared.MAIN_WINDOW.setEnabled(True)
+                return
+            else:
+                glbl_shared.MAIN_WINDOW.prepare_to_quit()
+                event.accept()
+        else:
+            event.accept()
 
 def qt_message_handler(mode, context, message):
     line = (
@@ -87,7 +121,6 @@ def main(args):
     from sglib.lib.pidfile import check_pidfile, create_pidfile
     pid = check_pidfile(UI_PIDFILE)
     if pid is not None:
-        from sgui.sgqt import QMessageBox
         msg = (
             f"Detected Stargate is already running with pid {pid}, "
             "please close the other instance first"

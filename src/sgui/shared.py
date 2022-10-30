@@ -31,7 +31,7 @@ MEMORY_ENTROPY = datetime.timedelta(minutes=0)
 MEMORY_ENTROPY_LIMIT = datetime.timedelta(minutes=30)
 MEMORY_ENTROPY_UIDS = set()
 CC_CLIPBOARD = None
-
+IGNORE_CLOSE_EVENT = False
 
 def on_ready():
     LOG.info("Engine sent 'ready' message")

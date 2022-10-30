@@ -245,7 +245,7 @@ class SgMainWindow(QMainWindow):
         for f_window in self.host_windows:
             self.main_stack.addWidget(f_window)
 
-        self.ignore_close_event = True
+        shared.IGNORE_CLOSE_EVENT = True
 
         shared.TRANSPORT.host_combobox.setCurrentIndex(
             util.get_file_setting("host", int, 0))
@@ -762,7 +762,7 @@ class SgMainWindow(QMainWindow):
                 )
                 f_module.TRANSPORT.group_box.setParent(None)
 
-            self.ignore_close_event = False
+            shared.IGNORE_CLOSE_EVENT = False
             if self.subprocess_timer:
                 self.subprocess_timer.stop()
             shared.prepare_to_quit()
@@ -777,33 +777,6 @@ class SgMainWindow(QMainWindow):
             )
             LOG.exception(ex)
             exit(999)
-
-    def _closeEvent(self, event):
-        if MAIN_WINDOW.ignore_close_event:
-            event.ignore()
-            if shared.IS_PLAYING:
-                LOG.info("User tried to close the window during playback")
-                return
-            MAIN_WINDOW.setEnabled(False)
-            f_reply = QMessageBox.question(
-                MAIN_WINDOW.widget,
-                _('Message'),
-                _("Are you sure you want to quit?"),
-                (
-                    QMessageBox.StandardButton.Yes
-                    |
-                    QMessageBox.StandardButton.Cancel
-                ),
-                QMessageBox.StandardButton.Cancel,
-            )
-            if f_reply == QMessageBox.StandardButton.Cancel:
-                MAIN_WINDOW.setEnabled(True)
-                return
-            else:
-                MAIN_WINDOW.prepare_to_quit()
-                event.accept()
-        else:
-            event.accept()
 
     @offline_operation
     def on_change_audio_settings(self):
@@ -1472,12 +1445,11 @@ def main(
     if i < 15:
         SPLASH_SCREEN.status_update(_("Showing the main window"))
         time.sleep((20 - i) * 0.1)
-    shared.MAIN_STACKED_WIDGET.closeEvent = MAIN_WINDOW._closeEvent
 
     if util.ENGINE_RETCODE is not None:
         handle_engine_error(util.ENGINE_RETCODE)
         if util.ENGINE_RETCODE == 1003:
-            MAIN_WINDOW.ignore_close_event = False
+            shared.IGNORE_CLOSE_EVENT = False
             MAIN_WINDOW.prepare_to_quit()
 
     # Workaround for weird stuff happening in Windows during initialization
