@@ -40,6 +40,7 @@ class TransportWidget:
         self.clock = QLCDNumber()
         self.clock.setObjectName("transport_clock")
         self.clock.setDigitCount(7)
+        self.clock.setFixedHeight(42)
         self.clock.setFixedWidth(180)
         self.clock.display("0:00.0")
         self.hlayout1.addWidget(self.clock)
