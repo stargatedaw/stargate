@@ -653,12 +653,14 @@ class SgMainWindow(QMainWindow):
             return
         if new_project(self.widget):
             self.prepare_to_quit()
+            shared.MAIN_STACKED_WIDGET.start()
 
     def on_open(self):
         if shared.IS_PLAYING:
             return
         if open_project(self):
             self.prepare_to_quit()
+            shared.MAIN_STACKED_WIDGET.start()
 
     def on_save(self):
         shared.PLUGIN_UI_DICT.save_all_plugin_state()
