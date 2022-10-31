@@ -767,7 +767,7 @@ class SgMainWindow(QMainWindow):
         QMessageBox.warning(
             MAIN_WINDOW.widget,
             _("Theme Applied..."),
-            _("Please restart Stargate to update the UI")
+            _("Changed theme.  Please restart the application")
         )
 
     def on_copy_theme(self):
@@ -817,7 +817,7 @@ class SgMainWindow(QMainWindow):
                 QMessageBox.warning(
                     MAIN_WINDOW,
                     _("Theme Applied..."),
-                    _("Please restart Stargate to update the UI")
+                    _("Changed theme.  Please restart the application")
                 )
         except Exception as ex:
             show_generic_exception(ex)

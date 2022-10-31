@@ -33,7 +33,7 @@ QFrame#separator_w {
 
 QMenu::item
 {
-    background-color: {{ background_color_alt }};
+    background-color: {{ background_color_alt2 }};
 }
 
 QMenu::separator
@@ -149,6 +149,7 @@ QRadioButton#play_button::indicator,
 QRadioButton#rec_button::indicator,
 QRadioButton#stop_button::indicator
 {
+    background-color: {{ transport_panel_background }};
     height: {{ transport_button_size }}px;
     /* outline: none; */
     width: {{ transport_button_size }}px;
@@ -157,6 +158,7 @@ QRadioButton#stop_button::indicator
 QPushButton#menu,
 QPushButton#panic
 {
+    background-color: {{ transport_panel_background }};
     height: {{ transport_button_size * 0.85 }}px;
     /* outline: none; */
     width: {{ transport_button_size * 0.85 }}px;
@@ -600,7 +602,7 @@ QLineEdit#track_panel
 
 QWidget#transport_panel
 {
-    background-color: {{ background_color }};
+    background-color: {{ transport_panel_background }};
     border: 2px solid {{ border_color }};
 }
 
@@ -944,7 +946,7 @@ QListWidget
 QCheckBox,
 QRadioButton
 {
-    background-color: {{ background_color }};
+    background-color: none;
     margin: 3px;
     padding: 0px;
 }
