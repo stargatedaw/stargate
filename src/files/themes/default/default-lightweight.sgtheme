@@ -1,5 +1,5 @@
 template: default.qss
-palette: dark.yaml
+palette: default.yaml
 variables:
   path: default.yaml
   overrides: {}
