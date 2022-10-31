@@ -13,7 +13,7 @@ from sglib.lib.translate import _
 
 class TimePitchDialogWidget:
     def __init__(self, a_audio_item):
-        self.widget = QDialog(parent=glbl_shared.MAIN_WINDOW.widget)
+        self.widget = QDialog(parent=glbl_shared.MAIN_WINDOW)
         self.widget.setWindowTitle(_("Time/Pitch..."))
         self.widget.setMaximumWidth(480)
         self.main_vlayout = QVBoxLayout(self.widget)

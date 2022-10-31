@@ -439,7 +439,7 @@ class AbstractFileBrowserWidget:
                     self.folders_tab_widget.setCurrentWidget(self.vsplitter)
                 else:
                     QMessageBox.warning(
-                        glbl_shared.MAIN_WINDOW.widget,
+                        glbl_shared.MAIN_WINDOW,
                         _("Error"),
                         _("This bookmark no longer exists.  You may have "
                         "deleted it in another window."),
@@ -527,7 +527,7 @@ class AbstractFileBrowserWidget:
             f_list = os.listdir(self.last_open_dir)
         except PermissionError:
             QMessageBox.warning(
-                glbl_shared.MAIN_WINDOW.widget,
+                glbl_shared.MAIN_WINDOW,
                 _("Error"),
                 _("Access denied, you do not have "
                 "permission to access {}".format(self.last_open_dir)))
@@ -549,7 +549,7 @@ class AbstractFileBrowserWidget:
                         self.list_file.addItem(f_item)
                     else:
                         QMessageBox.warning(
-                            glbl_shared.MAIN_WINDOW.widget,
+                            glbl_shared.MAIN_WINDOW,
                             _("Error"),
                             _("Not adding '{}' because it contains bad chars, "
                             "you must rename this file path without:\n{}"

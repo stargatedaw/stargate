@@ -419,7 +419,7 @@ def timestretch_items(a_list):
                 constants.PROJECT.timestretch_audio_item(f_item)
             except FileNotFoundError as ex:
                 QMessageBox.warning(
-                    glbl_shared.MAIN_WINDOW.widget,
+                    glbl_shared.MAIN_WINDOW,
                     _("Error"),
                     str(ex),
                 )

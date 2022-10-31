@@ -715,7 +715,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
             f_index = shared.CURRENT_ITEM.get_next_index()
             if f_index == -1:
                 QMessageBox.warning(
-                    glbl_shared.MAIN_WINDOW.widget,
+                    glbl_shared.MAIN_WINDOW,
                     _("Error"),
                     _(
                         "No more available audio item slots, max per sequence "
@@ -1222,7 +1222,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
                         constants.PROJECT.timestretch_audio_item(f_item)
                     except FileNotFoundError as ex:
                         QMessageBox.warning(
-                            glbl_shared.MAIN_WINDOW.widget,
+                            glbl_shared.MAIN_WINDOW,
                             _("Error"),
                             str(ex),
                         )
@@ -1250,7 +1250,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
                     f_index = f_audio_items.get_next_index()
                     if f_index == -1:
                         QMessageBox.warning(
-                            glbl_shared.MAIN_WINDOW.widget,
+                            glbl_shared.MAIN_WINDOW,
                             _("Error"),
                             _("No more available audio item slots, max per "
                             "sequence is {}").format(MAX_AUDIO_ITEM_COUNT)

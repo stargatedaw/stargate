@@ -91,7 +91,7 @@ def handle_engine_error(exit_code):
 
     LOG.error(msg)
     QMessageBox.warning(
-        shared.MAIN_WINDOW.widget,
+        shared.MAIN_WINDOW,
         "Error",
         msg,
     )
@@ -102,7 +102,7 @@ def engine_lib_callback(a_path, a_msg):
     MAIN_WINDOW.engine_lib_callback(a_path, a_msg)
 
 
-class SgMainWindow(QMainWindow):
+class SgMainWindow(QWidget):
     MIDI_NOTES = {
         "q": 0,
         "w": 1,
@@ -121,7 +121,7 @@ class SgMainWindow(QMainWindow):
     wave_edit_callback = Signal(str)
 
     def __init__(self):
-        QMainWindow.__init__(self)
+        QWidget.__init__(self)
 
     def setup(self, scaler):
         self.suppress_resize_events = False
@@ -144,15 +144,8 @@ class SgMainWindow(QMainWindow):
         self.setObjectName("plugin_ui")
         self.setMinimumSize(900, 600)
         self.last_ac_dir = util.HOME
-        self.widget = QMdiArea()
-        self.widget.setBackground(
-            QColor(
-                theme.SYSTEM_COLORS.widgets.default_scene_background,
-            ),
-        )
-        self.widget.setObjectName("plugin_ui")
-        self.setCentralWidget(self.widget)
-        self.main_layout = QVBoxLayout(self.widget)
+        self.setObjectName("plugin_ui")
+        self.main_layout = QVBoxLayout(self)
         self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.transport_splitter = QSplitter(QtCore.Qt.Orientation.Vertical)
         self.main_layout.addWidget(self.transport_splitter)
@@ -654,7 +647,7 @@ class SgMainWindow(QMainWindow):
     def on_new(self):
         if shared.IS_PLAYING:
             return
-        if new_project(self.widget):
+        if new_project(self):
             self.prepare_to_quit()
             shared.MAIN_STACKED_WIDGET.start()
 
@@ -708,7 +701,7 @@ class SgMainWindow(QMainWindow):
                         ),
                     )
 
-        f_window = QDialog(parent=MAIN_WINDOW.widget)
+        f_window = QDialog(parent=MAIN_WINDOW)
         f_window.setWindowTitle(_("Save As..."))
         f_layout = QVBoxLayout(f_window)
         f_lineedit = QLineEdit()
@@ -765,7 +758,7 @@ class SgMainWindow(QMainWindow):
     def on_use_default_theme(self):
         util.clear_file_setting("default-style")
         QMessageBox.warning(
-            MAIN_WINDOW.widget,
+            MAIN_WINDOW,
             _("Theme Applied..."),
             _("Changed theme.  Please restart the application")
         )
@@ -773,7 +766,7 @@ class SgMainWindow(QMainWindow):
     def on_copy_theme(self):
         try:
             path, _filter = QFileDialog.getSaveFileName(
-                MAIN_WINDOW.widget,
+                MAIN_WINDOW,
                 _("Copy a theme directory"),
                 util.THEMES_DIR,
                 options=QFileDialog.Option.DontUseNativeDialog,
@@ -782,7 +775,7 @@ class SgMainWindow(QMainWindow):
                 path = str(path)
                 if os.path.exists(path):
                     QMessageBox.warning(
-                        MAIN_WINDOW.widget,
+                        MAIN_WINDOW,
                         _("Error"),
                         _(f"{path} already exists"),
                     )
@@ -796,7 +789,7 @@ class SgMainWindow(QMainWindow):
     def on_open_theme(self):
         try:
             f_file, f_filter = QFileDialog.getOpenFileName(
-                MAIN_WINDOW.widget,
+                MAIN_WINDOW,
                 _("Open a theme file"),
                 util.THEMES_DIR,
                 "Stargate Theme (*.sgtheme)",
@@ -1277,7 +1270,7 @@ def _load_project(project_file):
         not os.access(os.path.dirname(project_file), os.W_OK)
     ):
         QMessageBox.warning(
-            MAIN_WINDOW.widget,
+            MAIN_WINDOW,
             _("Error"),
             _(
                 "You do not have read+write permissions to {}, please correct "
@@ -1294,7 +1287,7 @@ def _load_project(project_file):
     if os.path.exists(project_file):
         try:
             check_project_version(
-                MAIN_WINDOW.widget,
+                MAIN_WINDOW,
                 project_file,
             )
             global_open_project(project_file)
@@ -1303,7 +1296,7 @@ def _load_project(project_file):
         except Exception as ex:
             LOG.exception(ex)
             QMessageBox.warning(
-                MAIN_WINDOW.widget,
+                MAIN_WINDOW,
                 _("Error"),
                 _(
                     "Error opening project, check the logs for details.  "
@@ -1354,7 +1347,7 @@ def main(
 
     if not os.access(HOME, os.W_OK):
         QMessageBox.warning(
-            MAIN_WINDOW.widget,
+            MAIN_WINDOW,
             _("Error"),
             _(
                 "You do not have read+write permissions to {}, please correct "

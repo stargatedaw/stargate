@@ -32,7 +32,7 @@ def show_generic_exception(
 ):
     LOG.exception(ex)
     QMessageBox.warning(
-        glbl_shared.MAIN_WINDOW.widget,
+        glbl_shared.MAIN_WINDOW,
         _("Error"),
         _(f"The following error happened:\n{ex}\n\n{extra}"),
     )
@@ -43,7 +43,7 @@ def check_for_rw_perms(a_file):
         os.W_OK,
     ):
         QMessageBox.warning(
-            glbl_shared.MAIN_WINDOW.widget,
+            glbl_shared.MAIN_WINDOW,
             "Error",
             f"You do not have read+write permissions to {a_file}",
         )
@@ -57,7 +57,7 @@ def check_for_empty_directory(a_dir):
     """
     if os.listdir(a_dir):
         QMessageBox.warning(
-            glbl_shared.MAIN_WINDOW.widget,
+            glbl_shared.MAIN_WINDOW,
             "Error",
             "You must save the project file to an empty directory, use "
             "the 'Create Folder' button to create a new, empty directory.",
@@ -166,7 +166,7 @@ class FontManager:
     def clear_font(self):
         clear_file_setting('font')
         QMessageBox.warning(
-            glbl_shared.MAIN_WINDOW.widget,
+            glbl_shared.MAIN_WINDOW,
             "Info",
             _("Restart Stargate to update the UI"),
         )
@@ -174,7 +174,7 @@ class FontManager:
     def choose_font(self):
         font, ok = QFontDialog.getFont(
             self.font,
-            glbl_shared.MAIN_WINDOW.widget,
+            glbl_shared.MAIN_WINDOW,
         )
         if ok:
             set_file_setting(
@@ -182,7 +182,7 @@ class FontManager:
                 font.toString(),
             )
             QMessageBox.warning(
-                glbl_shared.MAIN_WINDOW.widget,
+                glbl_shared.MAIN_WINDOW,
                 "Info",
                 _("Restart Stargate to update the UI"),
             )

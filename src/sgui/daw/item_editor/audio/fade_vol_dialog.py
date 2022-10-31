@@ -13,7 +13,7 @@ from sglib.lib.translate import _
 class FadeVolDialogWidget:
     def __init__(self, a_audio_item):
         self.widget = QDialog(
-            parent=glbl_shared.MAIN_WINDOW.widget,
+            parent=glbl_shared.MAIN_WINDOW,
         )
         self.widget.setWindowTitle(_("Fade Volume..."))
         self.widget.setMaximumWidth(480)
