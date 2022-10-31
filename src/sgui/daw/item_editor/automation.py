@@ -76,6 +76,7 @@ class AutomationEditor(AbstractItemEditor):
         shared.AUTOMATION_EDITORS.append(self)
         self.selection_enabled = True
         self.scene.selectionChanged.connect(self.selection_changed)
+        self.set_tooltips(True)
 
     def set_width(self):
         self.automation_width = shared.MIDI_SCALE * (self.width() - 60.0)

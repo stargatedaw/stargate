@@ -199,8 +199,7 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
         self.event_pos_orig = None
         self.width_orig = None
         self.quantize_offset = 0.0
-        if glbl_shared.TOOLTIPS_ENABLED:
-            self.set_tooltips(True)
+        self.set_tooltips(True)
         self.draw()
 
     def itemChange(self, a_change, a_value):

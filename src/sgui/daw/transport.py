@@ -59,6 +59,15 @@ class TransportWidget(AbstractTransportWidget):
         self.hlayout1.addWidget(self.tool_split_rb)
 
         self.suppress_osc = False
+        shared.HARDWARE_WIDGET.overdub_checkbox.setToolTip(
+            _("Checking this box causes recording to "
+            "unlink existing items and append new events to the "
+            "existing events"))
+        self.loop_mode_checkbox.setToolTip(
+            _("Use this to toggle between normal playback "
+            "and looping a sequence.\nYou can toggle between "
+            "settings with CTRL+L"))
+        self.group_box.setToolTip(daw_strings.transport)
 
     def tab_changed(self, index):
         if index == shared.TAB_ITEM_EDITOR:
@@ -325,20 +334,4 @@ class TransportWidget(AbstractTransportWidget):
     def reset(self):
         self.loop_mode_checkbox.setChecked(False)
         shared.HARDWARE_WIDGET.overdub_checkbox.setChecked(False)
-
-    def set_tooltips(self, a_enabled):
-        if a_enabled:
-            shared.HARDWARE_WIDGET.overdub_checkbox.setToolTip(
-                _("Checking this box causes recording to "
-                "unlink existing items and append new events to the "
-                "existing events"))
-            self.loop_mode_checkbox.setToolTip(
-                _("Use this to toggle between normal playback "
-                "and looping a sequence.\nYou can toggle between "
-                "settings with CTRL+L"))
-            self.group_box.setToolTip(daw_strings.transport)
-        else:
-            shared.HARDWARE_WIDGET.overdub_checkbox.setToolTip("")
-            self.loop_mode_checkbox.setToolTip("")
-            self.group_box.setToolTip("")
 

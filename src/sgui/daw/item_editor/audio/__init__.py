@@ -110,6 +110,7 @@ class AudioItemSeq(AbstractItemEditor):
         #Somewhat slow on my AMD 5450 using the FOSS driver
         #self.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.context_menu_enabled = True
+        self.setToolTip(sg_strings.AudioItemSeq)
 
     def reset_line_lists(self):
         self.text_list = []
@@ -220,15 +221,6 @@ class AudioItemSeq(AbstractItemEditor):
             item_lib.save_item(shared.CURRENT_ITEM_NAME, shared.CURRENT_ITEM)
             constants.DAW_PROJECT.commit(_("Crossfade audio items"))
             global_open_audio_items(True)
-
-
-    def set_tooltips(self, a_on):
-        if a_on:
-            self.setToolTip(sg_strings.AudioItemSeq)
-        else:
-            self.setToolTip("")
-        for f_item in self.audio_items:
-            f_item.set_tooltips(a_on)
 
     def resizeEvent(self, a_event):
         QGraphicsView.resizeEvent(self, a_event)
@@ -646,6 +638,15 @@ class AudioItemSeqWidget(FileDragDropper):
         self.disable_on_play = (self.menu_button,)
         self.set_multiselect(False)
         self.paifx_clipboard = None
+        self.folders_widget.setToolTip(
+            sg_strings.audio_viewer_widget_folders,
+        )
+        self.paifx.widget.setToolTip(
+            sg_strings.audio_viewer_widget_paifx,
+        )
+        self.papifx.widget.setToolTip(
+            sg_strings.audio_viewer_widget_papifx,
+        )
 
     def on_play(self):
         for f_item in self.disable_on_play:
@@ -654,22 +655,6 @@ class AudioItemSeqWidget(FileDragDropper):
     def on_stop(self):
         for f_item in self.disable_on_play:
             f_item.setEnabled(True)
-
-    def set_tooltips(self, a_on):
-        if a_on:
-            self.folders_widget.setToolTip(
-                sg_strings.audio_viewer_widget_folders,
-            )
-            self.paifx.widget.setToolTip(
-                sg_strings.audio_viewer_widget_paifx,
-            )
-            self.papifx.widget.setToolTip(
-                sg_strings.audio_viewer_widget_papifx,
-            )
-        else:
-            self.folders_widget.setToolTip("")
-            self.paifx.widget.setToolTip("")
-            self.papifx.widget.setToolTip("")
 
     def on_select_all(self):
         if (

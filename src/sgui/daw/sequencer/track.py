@@ -379,6 +379,7 @@ class TrackPanel:
         self.tracks_widget.setObjectName("track_panel")
         self.tracks_widget.setContentsMargins(0, 0, 0, 0)
         self.tracks_layout = QVBoxLayout(self.tracks_widget)
+        self.tracks_widget.setToolTip(sg_strings.track_panel)
         self.tracks_layout.addItem(
             QSpacerItem(
                 0,
@@ -396,12 +397,6 @@ class TrackPanel:
                 _shared.SEQUENCE_EDITOR_TRACK_COUNT)
             }
         self.set_track_height()
-
-    def set_tooltips(self, a_on):
-        if a_on:
-            self.tracks_widget.setToolTip(sg_strings.track_panel)
-        else:
-            self.tracks_widget.setToolTip("")
 
     def set_track_height(self):
         self.tracks_widget.setUpdatesEnabled(False)

@@ -235,8 +235,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         ap_entry = by_uid[self.audio_item.uid]
         self.vol_linear = db_to_lin(self.audio_item.vol + ap_entry.volume)
         self.quantize_offset = 0.0
-        if glbl_shared.TOOLTIPS_ENABLED:
-            self.set_tooltips(True)
+        self.set_tooltips(True)
         self.draw()
 
     def generic_hoverEnterEvent(self, a_event):

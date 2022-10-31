@@ -63,6 +63,7 @@ class PianoRollEditor(AbstractItemEditor):
         self.vel_rand = 0
         self.vel_emphasis = 0
         self.clipboard = []
+        self.setToolTip(sg_strings.PianoRollEditor)
 
     def update_note_height(self):
         self.note_height = shared.PIANO_ROLL_NOTE_HEIGHT
@@ -76,11 +77,6 @@ class PianoRollEditor(AbstractItemEditor):
     def get_selected_items(self):
         return (x for x in self.note_items if x.isSelected())
 
-    def set_tooltips(self, a_on):
-        if a_on:
-            self.setToolTip(sg_strings.PianoRollEditor)
-        else:
-            self.setToolTip("")
 
     def prepare_to_quit(self):
         self.scene.clearSelection()

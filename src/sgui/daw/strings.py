@@ -14,13 +14,13 @@ GNU General Public License for more details.
 
 from sglib.lib.translate import _
 
-sequencer = _(
-"""Click 'Menu->Show Tooltips' in the transport to disable these tooltips
-
+sequencer = _("""\
 This is sequencer, it consists of items, tracks and automation.
 Click on the timeline at the top of the sequencer to set playback position,
 or right-click the timeline to set various markers.
+""")
 
+"""
 Tracks:
 
 A track can be any/all of: instrument, audio, bus or send.
@@ -49,26 +49,21 @@ the mouse tools in the transport.
 
 See the right-click context menu for additional actions and keyboard shortcuts.
 
-""")
+"""
 
 sequencer_item = _(
 """Right click on an item to see the various tools and actions available.
 Set the mouse tool to "select", and click and drag selected to move.
 CTRL+drag to copy selected items
-
-You can glue together multiple items by selecting items and pressing CTRL+G
 """)
 
-transport = _(
-"""Click 'Menu->Show Tooltips' in the transport to disable these tooltips
+"""
+You can glue together multiple items by selecting items and pressing CTRL+G
+"""
 
+transport = _(
+"""\
 The MIDI controllers and audio inputs used for recording can be
 configured in the dropdown
-
-The 'Loop Mode' combobox can be used to loop a sequence.
-
-There are 4 mouse editing modes {select,draw,erase,split}, click on one or
-press it's hotkey to use it.  The hotkeys can be seen by hovering the mouse
-over the tool button.
 """)
 

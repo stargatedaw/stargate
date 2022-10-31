@@ -75,6 +75,7 @@ class MainWindow(QScrollArea):
         self.last_offline_dir = HOME
         self.copy_to_clipboard_checked = False
         self.last_midi_dir = None
+        shared.ROUTING_GRAPH_WIDGET.setToolTip(sg_strings.routing_graph)
 
         self.setObjectName("plugin_ui")
         self.setWidgetResizable(True)
@@ -534,11 +535,6 @@ class MainWindow(QScrollArea):
         shared.PLUGIN_RACK.tab_selected(f_index == shared.TAB_PLUGIN_RACK)
         QApplication.restoreOverrideCursor()
 
-    def set_tooltips(self, a_on):
-        if a_on:
-            shared.ROUTING_GRAPH_WIDGET.setToolTip(sg_strings.routing_graph)
-        else:
-            shared.ROUTING_GRAPH_WIDGET.setToolTip("")
 
     def midi_scrollContentsBy(self, x, y):
         QScrollArea.scrollContentsBy(self.midi_scroll_area, x, y)
@@ -670,7 +666,4 @@ def init():
     )
 
     shared.ITEM_EDITOR.snap_combobox.setCurrentIndex(4)
-
-    if glbl_shared.TOOLTIPS_ENABLED:
-        set_tooltips_enabled(glbl_shared.TOOLTIPS_ENABLED)
 

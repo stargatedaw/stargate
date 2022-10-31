@@ -50,6 +50,7 @@ class ItemSequencer(QGraphicsView):
     def __init__(self):
         QGraphicsView.__init__(self)
 
+        self.setToolTip(daw_strings.sequencer)
         self.setCacheMode(QGraphicsView.CacheModeFlag.CacheBackground)
         self.setViewportUpdateMode(
             QGraphicsView.ViewportUpdateMode.SmartViewportUpdate,
@@ -547,14 +548,6 @@ class ItemSequencer(QGraphicsView):
 
     def get_selected(self):
         return [x for x in self.audio_items if x.isSelected()]
-
-    def set_tooltips(self, a_on):
-        if a_on:
-            self.setToolTip(daw_strings.sequencer)
-        else:
-            self.setToolTip("")
-        for f_item in self.audio_items:
-            f_item.set_tooltips(a_on)
 
     def resizeEvent(self, a_event):
         QGraphicsView.resizeEvent(self, a_event)

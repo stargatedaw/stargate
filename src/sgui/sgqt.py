@@ -86,9 +86,39 @@ else:  # PySide
     from PySide6.QtWidgets import *
     from PySide6.QtSvg import QSvgRenderer
 
+class _HintBox:
+    """ Converts tooltips to hint box hints using the standard Qt
+        setToolTip() method
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._tooltip = None
+
+    def setToolTip(self, text: str):
+        self._tooltip = text
+
+    def _set_hint_box(self, msg: str):
+        from sgui import shared
+        if hasattr(shared, 'HINT_BOX'):
+            shared.HINT_BOX.setText(msg)
+
+    def event(self, event):
+        if self._tooltip:
+            if event.type() in (
+                QtCore.QEvent.Type.HoverEnter,
+                QtCore.QEvent.Type.Enter,
+            ):
+                self._set_hint_box(self._tooltip)
+            elif event.type() in (
+                QtCore.QEvent.Type.HoverLeave,
+                QtCore.QEvent.Type.Leave,
+            ):
+                self._set_hint_box("")
+        return super().event(event)
+
 orig_QLineEdit = QLineEdit
 
-class _QLineEdit(QLineEdit):
+class _QLineEdit(_HintBox, QLineEdit):
     def event(self, ev):
         if ev.type() == QtCore.QEvent.Type.KeyPress:
             if ev.key() in(
@@ -101,9 +131,9 @@ class _QLineEdit(QLineEdit):
 
 origQComboBox = QComboBox
 
-class _QComboBox(QComboBox):
+class _QComboBox(_HintBox, QComboBox):
     def __init__(self, *args, **kwargs):
-        origQComboBox.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
 
     def wheelEvent(self, event):
@@ -298,4 +328,31 @@ QComboBox = _QComboBox
 QDoubleSpinBox = _QDoubleSpinBox
 QLineEdit = _QLineEdit
 QSpinBox = _QSpinBox
+
+class QPushButton(_HintBox, QPushButton):
+    pass
+
+class QGraphicsView(_HintBox, QGraphicsView):
+    pass
+
+class QDial(_HintBox, QDial):
+    pass
+
+class QSlider(_HintBox, QSlider):
+    pass
+
+class QCheckBox(_HintBox, QCheckBox):
+    pass
+
+class QRadioButton(_HintBox, QRadioButton):
+    pass
+
+#class QGroupBox(_HintBox, QGroupBox):
+#    pass
+
+#class QWidget(_HintBox, QWidget):
+#    pass
+
+#class QGraphicsRectItem(_HintBox, QGraphicsRectItem):
+#    pass
 

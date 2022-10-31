@@ -175,6 +175,11 @@ class SgMainWindow(QWidget):
                 QSizePolicy.Policy.Expanding,
             ),
         )
+        shared.HINT_BOX = QLabel()
+        shared.HINT_BOX.setObjectName('hintbox')
+        shared.HINT_BOX.setMinimumHeight(40)
+        shared.HINT_BOX.setMinimumWidth(360)
+        self.transport_hlayout.addWidget(shared.HINT_BOX)
 
         self.main_stack = QStackedWidget()
         self.transport_splitter.addWidget(self.main_stack)
@@ -347,15 +352,7 @@ class SgMainWindow(QWidget):
             self.copy_valgrind_cmd,
         )
 
-
-        self.menu_bar.addSeparator()
-        self.tooltips_action = self.menu_bar.addAction(_("Show Tooltips"))
-        self.tooltips_action.setCheckable(True)
-        self.tooltips_action.setChecked(shared.TOOLTIPS_ENABLED)
-        self.tooltips_action.triggered.connect(self.set_tooltips_enabled)
-
         self.menu_file.addSeparator()
-
 
         self.spacebar_action = QAction(self)
         self.addAction(self.spacebar_action)
@@ -1148,13 +1145,6 @@ class SgMainWindow(QWidget):
 
     def on_redo(self):
         self.current_window.on_redo()
-
-    def set_tooltips_enabled(self):
-        f_enabled = self.tooltips_action.isChecked()
-        shared.TRANSPORT.set_tooltips(f_enabled)
-        for f_module in shared.HOST_MODULES:
-            f_module.set_tooltips_enabled(f_enabled)
-        util.set_file_setting("tooltips", 1 if f_enabled else 0)
 
 def final_gc(a_print=True):
     """ Brute-force garbage collect all possible objects to

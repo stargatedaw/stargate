@@ -29,17 +29,6 @@ TAB_NOTES = 2
 
 TOTAL_FX_COUNT = 10
 
-def set_tooltips_enabled(a_enabled):
-    """ Set extensive tooltips as an alternative to
-        maintaining a separate user manual
-    """
-    glbl_shared.TOOLTIPS_ENABLED = a_enabled
-
-    f_list = [WAVE_EDITOR, TRANSPORT,]
-    for f_widget in f_list:
-        f_widget.set_tooltips(a_enabled)
-
-
 wave_edit_folder = os.path.join("projects", "wave_edit")
 wave_edit_folder_tracks = os.path.join(wave_edit_folder, "tracks")
 file_wave_editor_bookmarks = os.path.join(
@@ -454,9 +443,6 @@ class TransportWidget(AbstractTransportWidget):
         f_cancel_button.pressed.connect(on_cancel)
         f_window.exec()
 
-    def set_tooltips(self, a_enabled):
-        pass
-
 class audio_item(SgAudioItem):
     def clone(self):
         return audio_item.from_arr(str(self).strip("\n").split("|"))
@@ -775,6 +761,15 @@ class WaveEditorWidget:
             self.fade_in_start,
             self.fade_out_end,
         )
+        self.sample_graph.setToolTip(
+            _("Load samples here by using the browser on the left "
+            "and clicking the  'Load' button"))
+        self.menu_button.setToolTip(
+            _("This menu can export the audio or perform "
+            "various operations."))
+        self.history_button.setToolTip(
+            _("Use this button to view or open files that "
+            "were previously opened during this session."))
 
     def save_callback(self):
         f_result = track_plugins()
@@ -860,22 +855,6 @@ class WaveEditorWidget:
     def normalize(self, a_value):
         f_val = self.graph_object.normalize(a_value)
         self.vol_slider.setValue(int(f_val * 10.0))
-
-    def set_tooltips(self, a_on):
-        if a_on:
-            self.sample_graph.setToolTip(
-                _("Load samples here by using the browser on the left "
-                "and clicking the  'Load' button"))
-            self.menu_button.setToolTip(
-                _("This menu can export the audio or perform "
-                "various operations."))
-            self.history_button.setToolTip(
-                _("Use this button to view or open files that "
-                "were previously opened during this session."))
-        else:
-            self.sample_graph.setToolTip("")
-            self.menu_button.setToolTip("")
-            self.history_button.setToolTip("")
 
     def stretch_shift_dialog(self):
         f_path = self.current_file
@@ -1431,9 +1410,6 @@ ALL_PEAK_METERS = {}
 WAVE_EDITOR = WaveEditorWidget()
 TRANSPORT = TransportWidget()
 MAIN_WINDOW = MainWindow()
-
-if glbl_shared.TOOLTIPS_ENABLED:
-    set_tooltips_enabled(glbl_shared.TOOLTIPS_ENABLED)
 
 CLOSE_ENGINE_ON_RENDER = False
 

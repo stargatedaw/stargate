@@ -684,6 +684,7 @@ class PluginRackTab:
         self.enabled = True
         self.plugin_racks = {}
         self.last_rack_num = None
+        self.widget.setToolTip(sg_strings.PluginRack)
 
     def octave(self):
         return self.octave_spinbox.value() + 2
@@ -693,11 +694,6 @@ class PluginRackTab:
 
     def set_index(self, index: int):
         self.track_combobox.setCurrentIndex(index)
-
-    def set_tooltips(self, a_enabled):
-        self.widget.setToolTip(
-            sg_strings.PluginRack if a_enabled else ""
-        )
 
     def set_plugin_order(self):
         index = self.track_combobox.currentIndex()
@@ -1045,6 +1041,7 @@ class MixerWidget:
                 "Main" if f_i == 0 else "track{}".format(f_i), f_i)
             self.tracks[f_i] = f_channel
             self.grid_layout.addWidget(f_channel.widget, 0, f_i)
+        self.widget.setToolTip(sg_strings.Mixer)
 
     def set_project(self, a_project):
         self.PROJECT = a_project
@@ -1066,9 +1063,6 @@ class MixerWidget:
                 self.tracks[i].set_plugin(graph_dict, a_plugins[i])
         self.widget.setUpdatesEnabled(True)
         self.widget.update()
-
-    def set_tooltips(self, a_enabled):
-        self.widget.setToolTip(sg_strings.Mixer if a_enabled else "")
 
     def update_track_names(self, a_track_names_dict, routing_graph):
         for k, v in a_track_names_dict.items():

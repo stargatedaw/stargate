@@ -17,6 +17,11 @@ QLabel#welcome_screen {
     color: {{ text_color }};
 }
 
+QLabel#hintbox {
+    background-color: {{ background_color_alt2  }};
+    color: {{ text_color }};
+}
+
 QFrame#separator_h {
 	background-color: {{ text_color }};
 	border: none;

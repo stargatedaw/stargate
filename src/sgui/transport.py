@@ -87,6 +87,13 @@ class TransportWidget:
         self.suppress_osc = False
 
         self.controls_to_disable = (self.menu_button, self.host_combobox)
+        self.panic_button.setToolTip(
+            _(
+                "Panic button:   Sends a note-off signal on every "
+                "note to every instrument\nYou can also use CTRL+P"
+            )
+        )
+        self.group_box.setToolTip(sg_strings.transport)
 
     def current_host(self) -> int:
         return self.host_combobox.currentIndex()
@@ -173,17 +180,4 @@ class TransportWidget:
     def on_panic(self):
         LOG.info("Sending panic message to engine")
         shared.MAIN_WINDOW.current_module.TRANSPORT.on_panic()
-
-    def set_tooltips(self, a_enabled):
-        if a_enabled:
-            self.panic_button.setToolTip(
-                _(
-                    "Panic button:   Sends a note-off signal on every "
-                    "note to every instrument\nYou can also use CTRL+P"
-                )
-            )
-            self.group_box.setToolTip(sg_strings.transport)
-        else:
-            self.panic_button.setToolTip("")
-            self.group_box.setToolTip("")
 

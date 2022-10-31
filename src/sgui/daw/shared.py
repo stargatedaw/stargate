@@ -392,25 +392,6 @@ def routing_graph_toggle_callback(a_src, a_dest, conn_type):
         ROUTING_GRAPH_WIDGET.draw_graph(f_graph, TRACK_NAMES)
         constants.DAW_PROJECT.commit(_("Update routing"))
 
-def set_tooltips_enabled(a_enabled):
-    """ Set extensive tooltips as an alternative to
-        maintaining a separate user manual
-    """
-    glbl_shared.TOOLTIPS_ENABLED = a_enabled
-
-    f_list = [
-        AUDIO_SEQ,
-        AUDIO_SEQ_WIDGET,
-        MAIN_WINDOW,
-        MIXER_WIDGET,
-        PIANO_ROLL_EDITOR,
-        PLUGIN_RACK,
-        SEQUENCER,
-        TRACK_PANEL,
-        TRANSPORT,
-    ] + list(AUTOMATION_EDITORS)
-    for f_widget in f_list:
-        f_widget.set_tooltips(a_enabled)
 
 def global_open_mixer():
     """ Update the mixer to reflect the current routing and track names """
@@ -614,5 +595,4 @@ __all__ = [
     'set_audio_snap',
     'set_piano_roll_quantize',
     'routing_graph_toggle_callback',
-    'set_tooltips_enabled',
 ]
