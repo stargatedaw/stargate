@@ -6,9 +6,15 @@ QWidget:focus
 }
 
 QWidget#welcome_screen {
+    background-color: {{ background_color_alt2  }};
     background-image: url({{ ASSETS_DIR }}/icon.svg);
     background-position: top right;
     background-repeat: no-repeat;
+}
+
+QLabel#welcome_screen {
+    background-color: {{ background_color_alt2  }};
+    color: {{ text_color }};
 }
 
 QFrame#separator_h {

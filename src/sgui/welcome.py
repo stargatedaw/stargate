@@ -33,7 +33,9 @@ class Welcome:
         hlayout = QHBoxLayout(self.widget)
         rp_vlayout = QVBoxLayout()
         hlayout.addLayout(rp_vlayout)
-        rp_vlayout.addWidget(QLabel("Recent Projects"))
+        rp_label = QLabel("Recent Projects")
+        rp_label.setObjectName('welcome_screen')
+        rp_vlayout.addWidget(rp_label)
         self.rp_list = QListWidget()
         self.rp_list.doubleClicked.connect(
             self.rp_doubleclick,

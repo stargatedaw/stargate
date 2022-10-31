@@ -3,6 +3,7 @@
 assets_subdir: "light"
 background_color: "#a8aecd"
 background_color_alt: "{{ palette.light_blue1 }}"
+background_color_alt2: "{{ palette.light_blue1 }}"
 background_color_disabled: "{{ palette.purple }}"
 border_color: "#333333"
 button_pressed: "{{ palette.purple }}"
