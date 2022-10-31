@@ -18,8 +18,12 @@ class TransportWidget:
         self.group_box = QWidget()
         self.group_box.setObjectName("transport_panel")
         self.vlayout = QVBoxLayout()
+        self.vlayout.setContentsMargins(1, 1, 1, 1)
+        self.vlayout.setSpacing(1)
         self.group_box.setLayout(self.vlayout)
         self.hlayout1 = QHBoxLayout()
+        self.hlayout1.setContentsMargins(1, 1, 1, 1)
+        self.hlayout1.setSpacing(1)
         self.menu_button = QPushButton()
         self.menu_button.setObjectName("menu")
         self.hlayout1.addWidget(self.menu_button)
@@ -58,12 +62,18 @@ class TransportWidget:
         self.stop_engine_action.triggered.connect(self.on_stop_engine)
         self.hlayout1.addWidget(self.panic_button)
 
-        self.hlayout1.addWidget(
-            QLabel(_("Host:")),
+        self.host_layout = QVBoxLayout()
+        self.host_layout.setContentsMargins(1, 1, 1, 1)
+        self.host_layout.setSpacing(1)
+        self.host_layout.addWidget(
+            QLabel(_("Host")),
+        )
+        self.hlayout1.addLayout(
+            self.host_layout,
         )
         self.host_combobox = QComboBox()
-        self.hlayout1.addWidget(self.host_combobox)
-        self.host_combobox.setMinimumWidth(100)
+        self.host_layout.addWidget(self.host_combobox)
+        self.host_combobox.setMinimumWidth(80)
         self.host_combobox.addItems(["DAW", "Wave Editor"])
         self.host_combobox.currentIndexChanged.connect(
             shared.MAIN_WINDOW.set_host,
