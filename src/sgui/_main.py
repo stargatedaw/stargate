@@ -169,7 +169,7 @@ def main(args):
         sys.exit(0)
     create_pidfile(UI_PIDFILE)
     glbl_shared.MAIN_STACKED_WIDGET = MainStackedWidget()
-    glbl_shared.MAIN_STACKED_WIDGET.setMinimumSize(900, 700)
+    glbl_shared.MAIN_STACKED_WIDGET.setMinimumSize(1280, 700)
     glbl_shared.MAIN_STACKED_WIDGET.showMaximized()
     if args.project_file:
         glbl_shared.MAIN_STACKED_WIDGET.start()
