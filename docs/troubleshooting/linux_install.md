@@ -36,12 +36,16 @@ chmod +x /path/to/download/folder/StargateDAW*.AppImage
 a file browser.
 
 ## Portable install mode
+NOTE: It is recommended to use an exFAT formatted flash drive, as other formats
+such as FAT32 do not support  UNIX permissions to set the executable bit,
+and others are not compatible across all 3 major desktop platforms.
+
 If you would like to install Stargate DAW for Linux to a flash drive, or you
 just want to store your projects and configurations next to the AppImage,
-simply place the AppImage in the desired folder, and create a file called
-`_stargate_home` next to it.  Note that the Linux AppImage can be installed
-alongside a Windows portable install and a MacOS app bundle at the same time
- to create a (nearly) universal DAW flash drive.
+simply place the AppImage in the desired folder, and create an empty text file
+called `_stargate_home` next to it.  Note that the Linux AppImage can be
+installed alongside a Windows portable install and a MacOS app bundle at the
+same time to create a (nearly) universal DAW flash drive.
 
 ## Fedora/CentOS/RHEL/Rocky/Alma/etc... issues
 ### 'Could not display...' 'There is no application installed for appimage...'

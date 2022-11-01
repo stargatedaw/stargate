@@ -32,6 +32,10 @@ If you wish to record using the built-in MacBook microphone,
 [see this](https://support.apple.com/en-us/HT209175)
 
 # Portable install mode
+NOTE: It is recommended to use an exFAT formatted flash drive, as other formats
+such as FAT32 do not support  UNIX permissions to set the executable bit,
+and others are not compatible across all 3 major desktop platforms.
+
 If you would like to install Stargate DAW for MacOS to a flash drive, or you
 just want to store your projects and configurations next to the app bundle,
 simply place the app bundle in the desired folder, and create a file called
