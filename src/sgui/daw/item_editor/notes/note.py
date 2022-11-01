@@ -65,6 +65,11 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
         self.vel_line = QGraphicsLineItem(self)
         self.set_vel_line()
         self.set_brush()
+        self.setToolTip(
+            'A MIDI note to be sent to an instrument in the plugin rack\n'
+            'Select and move with the mouse, click near the end and drag\n'
+            'to change note length'
+        )
 
     def set_vel_line(self):
         if _shared.PARAMETER == 0:
@@ -144,12 +149,14 @@ class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
     def hoverEnterEvent(self, a_event):
         QGraphicsRectItem.hoverEnterEvent(self, a_event)
         shared.PIANO_ROLL_EDITOR.click_enabled = False
+        super().hoverEnterEvent(a_event)
 
     def hoverLeaveEvent(self, a_event):
         QGraphicsRectItem.hoverLeaveEvent(self, a_event)
         shared.PIANO_ROLL_EDITOR.click_enabled = True
         QApplication.restoreOverrideCursor()
         self.showing_resize_cursor = False
+        super().hoverLeaveEvent(a_event)
 
     def mouseDoubleClickEvent(self, a_event):
         QGraphicsRectItem.mouseDoubleClickEvent(self, a_event)

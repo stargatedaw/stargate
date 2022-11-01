@@ -118,6 +118,10 @@ class _HintWidget(_HintBox):
         return super().event(event)
 
 class _HintItem(_HintBox):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setAcceptHoverEvents(True)
+
     def hoverEnterEvent(self, event):
         if self._tooltip:
             self._set_hint_box(self._tooltip)
@@ -367,5 +371,8 @@ class QRadioButton(_HintWidget, QRadioButton):
 #    pass
 
 class QGraphicsRectItem(_HintItem, QGraphicsRectItem):
+    pass
+
+class QGraphicsEllipseItem(_HintItem, QGraphicsEllipseItem):
     pass
 

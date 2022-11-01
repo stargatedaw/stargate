@@ -50,13 +50,8 @@ See the right-click context menu for additional actions and keyboard shortcuts.
 
 """
 
-sequencer_item = _(
-"""Right click on an item to see the various tools and actions available.
+sequencer_item = _("""\
+Right click on an item to see the various tools and actions available.
 Set the mouse tool to "select", and click and drag selected to move.
-CTRL+drag to copy selected items
-""")
-
-"""
-You can glue together multiple items by selecting items and pressing CTRL+G
-"""
+CTRL+drag to copy selected items.  Double-click to edit.""")
 

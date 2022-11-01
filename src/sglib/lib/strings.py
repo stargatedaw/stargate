@@ -120,8 +120,7 @@ other process(es)""")
 routing_graph = _("""\
 The audio, sidechain and MIDI routing of each track.  Click above the track to
 connect/disconnect a track's output to the destination track behind it (higher
-track number).
-""")
+track number).""")
 
 """
 Click below to connect a track to the track in front of it

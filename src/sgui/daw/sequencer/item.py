@@ -199,8 +199,8 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
         self.event_pos_orig = None
         self.width_orig = None
         self.quantize_offset = 0.0
-        self.set_tooltips(True)
         self.draw()
+        self.set_tooltips()
 
     def itemChange(self, a_change, a_value):
         if a_change == QGraphicsItem.GraphicsItemChange.ItemSelectedHasChanged:
@@ -334,23 +334,17 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
 #                (shared.SEQUENCE_EDITOR_TRACK_HEIGHT * 0.5) - \
 #                (shared.AUDIO_ITEM_HANDLE_HEIGHT * 0.5))
 
-    def set_tooltips(self, a_on):
-        if a_on:
-            self.setToolTip(daw_strings.sequencer_item)
-            self.start_handle.setToolTip(
-                _("Use this handle to resize the item by changing "
-                "the start point."))
-            self.length_handle.setToolTip(
-                _("Use this handle to resize the item by "
-                "changing the end point."))
-            self.stretch_handle.setToolTip(
-                _("Use this handle to resize the item by "
-                "time-stretching it."))
-        else:
-            self.setToolTip("")
-            self.start_handle.setToolTip("")
-            self.length_handle.setToolTip("")
-            self.stretch_handle.setToolTip("")
+    def set_tooltips(self):
+        self.setToolTip(daw_strings.sequencer_item)
+        self.start_handle.setToolTip(
+            _("Use this handle to resize the item by changing "
+            "the start point."))
+        self.length_handle.setToolTip(
+            _("Use this handle to resize the item by "
+            "changing the end point."))
+        self.stretch_handle.setToolTip(
+            _("Use this handle to resize the item by "
+            "time-stretching it."))
 
     def clip_at_sequence_end(self):
         f_current_sequence_length = get_current_sequence_length()
@@ -674,6 +668,7 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
     def hoverEnterEvent(self, a_event):
         f_item_pos = self.pos().x()
         self.quantize_offset = f_item_pos - self.quantize_all(f_item_pos)
+        super().hoverEnterEvent(a_event)
 
     def hoverMoveEvent(self, a_event):
         if shared.EDITOR_MODE == shared.EDITOR_MODE_SPLIT:
@@ -693,6 +688,7 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
         if self.split_line_is_shown:
             self.split_line_is_shown = False
             self.split_line.hide()
+        super().hoverLeaveEvent(a_event)
 
     def y_pos_to_lane_number(self, a_y_pos):
         f_lane_num = int(

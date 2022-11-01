@@ -8,6 +8,12 @@ ROUTING_GRAPH_NODE_BRUSH = None
 ROUTING_GRAPH_TO_BRUSH = None
 ROUTING_GRAPH_FROM_BRUSH = None
 
+ROUTE_TYPES = {
+    0: 'Audio',
+    1: 'Sidechain',
+    2: 'MIDI',
+}
+
 class RoutingGraphNode(QGraphicsRectItem):
     def __init__(
         self,
@@ -288,14 +294,19 @@ class RoutingGraphWidget(QGraphicsView):
                     )
                     line.setZValue(2000)
                     # Connection circle
-                    circle = self.scene.addEllipse(
+                    circle = QGraphicsEllipseItem(
                         f_v_wire_x - self.wire_width_div2,
                         f_src_y - self.wire_width_div2,
                         self.wire_width,
                         self.wire_width,
-                        f_pen,
+                    )
+                    circle.setPen(f_pen)
+                    circle.setToolTip(
+                        f'{k} {ROUTE_TYPES[conn_type]} to '
+                        f'{a_track_names[f_dest_pos]}'
                     )
                     circle.setZValue(2000)
+                    self.scene.addItem(circle)
                 else:
                     f_src_x = f_x
                     f_src_y = f_y + f_y_wire_offset
@@ -332,14 +343,19 @@ class RoutingGraphWidget(QGraphicsView):
                     )
                     line.setZValue(2000)
                     # Connection circle
-                    circle = self.scene.addEllipse(
+                    circle = QGraphicsEllipseItem(
                         f_v_wire_x - self.wire_width_div2,
                         f_src_y - self.wire_width_div2,
                         self.wire_width,
                         self.wire_width,
-                        f_pen,
+                    )
+                    circle.setPen(f_pen)
+                    circle.setToolTip(
+                        f'{k} {ROUTE_TYPES[conn_type]} to '
+                        f'{a_track_names[f_dest_pos]}'
                     )
                     circle.setZValue(2000)
+                    self.scene.addItem(circle)
 
         self.setUpdatesEnabled(True)
         self.update()

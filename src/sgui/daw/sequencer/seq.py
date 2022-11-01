@@ -863,6 +863,10 @@ class ItemSequencer(QGraphicsView):
             float(f_size),
             float(_shared.SEQUENCE_EDITOR_HEADER_HEIGHT),
         )
+        self.header.setToolTip(
+            'The project timeline.  Left click to set the playback cursor,\n'
+            'right click to set region, tempo, or text markers'
+        )
         self.header.setZValue(1500.0)
         self.header.setBrush(
             QColor(
