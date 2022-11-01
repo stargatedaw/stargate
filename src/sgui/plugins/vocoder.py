@@ -102,6 +102,9 @@ class sg_vocoder_plugin_ui(AbstractPluginUI):
             KC_TENTH,
             self.port_dict,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'How much wet (vocoded) sound to allow through, in decibels'
+            ),
         )
         self.wet_knob.add_to_grid_layout(self.groupbox_gridlayout, 3)
 
@@ -117,6 +120,10 @@ class sg_vocoder_plugin_ui(AbstractPluginUI):
             KC_TENTH,
             self.port_dict,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'How much of the modulator (sidechain) sound to mix in '
+                'with the vocoded sound, in decibels'
+            )
         )
         self.modulator_knob.add_to_grid_layout(self.groupbox_gridlayout, 9)
 
@@ -132,6 +139,10 @@ class sg_vocoder_plugin_ui(AbstractPluginUI):
             KC_TENTH,
             self.port_dict,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'How much of the dry carrier sound to mix in '
+                'with the vocoded sound, in decibels'
+            )
         )
         self.carrier_knob.add_to_grid_layout(self.groupbox_gridlayout, 6)
 

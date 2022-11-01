@@ -175,6 +175,10 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             self.plugin_val_callback,
             self.port_dict,
             a_preset_mgr=self.preset_manager,
+            tooltip=(
+                'Enable the MIDI triggered gate.  Audio will be muted except '
+                'when the selected note is being played.'
+            ),
         )
         self.gate_on_checkbox.add_to_grid_layout(self.gate_gridlayout, 3)
         self.gate_note_selector = note_selector_widget(
@@ -199,6 +203,10 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Dry/wet control, 1.0 for full wet sound, 0.0 for full '
+                'dry sound'
+            ),
         )
         self.gate_wet_knob.add_to_grid_layout(self.gate_gridlayout, 9)
 
@@ -245,6 +253,10 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             self.plugin_val_callback,
             self.port_dict,
             a_preset_mgr=self.preset_manager,
+            tooltip=(
+                'Enable/disable glitch.  Plays the audio input on short '
+                'repeat when the selected note is played'
+            ),
         )
         self.glitch_on_checkbox.add_to_grid_layout(self.glitch_gridlayout, 3)
         self.glitch_note_selector = note_selector_widget(
@@ -269,6 +281,7 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='The length of the repeat in seconds',
         )
         self.glitch_time_knob.add_to_grid_layout(self.glitch_gridlayout, 9)
         self.glitch_pb_knob = knob_control(
@@ -284,6 +297,7 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='How much pitchbend affects glitch size, in semitones',
         )
         self.glitch_pb_knob.add_to_grid_layout(self.glitch_gridlayout, 12)
         right_screws = get_screws()

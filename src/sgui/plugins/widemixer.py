@@ -38,11 +38,11 @@ WIDEMIXER_PORT_MAP = {
     "Volume": WIDEMIXER_VOL_SLIDER,
     "Pan": WIDEMIXER_PAN,
 }
-BASS_MONO_SOLO_TOOLTIP = "Listen to only the bass frequencies"
 MUTE_TOOLTIP = "Mute all output of this mixer channel"
 DC_OFFSET_TOOLTIP = """\
 DC offset filter.
-Removes extremely low frequencies, improves headroom.
+Removes extremely low frequencies, improves headroom to prevent clipping
+and perceived loudness.
 """
 
 class WideMixerPluginUI(AbstractPluginUI):
@@ -67,6 +67,10 @@ class WideMixerPluginUI(AbstractPluginUI):
             knob_kwargs={
                 'arc_type': ArcType.BIDIRECTIONAL,
             },
+            tooltip=(
+                'Gain, in decibels.  Use this for fine control of volume, '
+                'use the slider for automation'
+            ),
         )
 
         self.pan_law_knob = knob_control(
@@ -81,6 +85,11 @@ class WideMixerPluginUI(AbstractPluginUI):
             KC_DECIMAL,
             self.port_dict,
             None,
+            tooltip=(
+                'Pan law.  This is the volume when panned at center '
+                'Sound loses power when only coming from one speaker, '
+                'pan law compensates by reducing center volume'
+            ),
         )
 
         self.stereo_mode = combobox_control(
@@ -92,6 +101,11 @@ class WideMixerPluginUI(AbstractPluginUI):
             ["Stereo", "Left", "Right", "Swap"],
             self.port_dict,
             a_default_index=0,
+            tooltip=(
+                'Stereo mode. stereo: both channels with no change, '
+                'left: left channel only, right: right channel only, '
+                'swap: swap left and right channels'
+            ),
         )
         self.invert_mode = combobox_control(
             105,
@@ -102,6 +116,11 @@ class WideMixerPluginUI(AbstractPluginUI):
             ["Neither", "Left", "Right", "Both"],
             self.port_dict,
             a_default_index=0,
+            tooltip=(
+                'Phase invert one or more channels.  Note that if a stereo '
+                'sound that is effectively mono is played with an inverted '
+                'channel, the channels will effectively cancel each other out'
+            ),
         )
         self.bass_mono_on = checkbox_control(
             "",
@@ -109,6 +128,7 @@ class WideMixerPluginUI(AbstractPluginUI):
             self.plugin_rel_callback,
             self.plugin_val_callback,
             self.port_dict,
+            tooltip='Enable or disable converting stereo bass to mono',
         )
         self.bass_mono_on.control.setObjectName("button_power_small")
         self.bass_mono_solo = checkbox_control(
@@ -117,9 +137,12 @@ class WideMixerPluginUI(AbstractPluginUI):
             self.plugin_rel_callback,
             self.plugin_val_callback,
             self.port_dict,
+            tooltip=(
+                'Solo the bass frequencies.  Useful for tuning the frequency '
+                'and volume while mixing your project'
+            )
         )
         self.bass_mono_solo.control.setObjectName("solo_checkbox")
-        self.bass_mono_solo.control.setToolTip(BASS_MONO_SOLO_TOOLTIP)
         self.bass_mono_knob = knob_control(
             f_knob_size,
             _("Freq") if self.is_mixer else _("Bass Mono"),
@@ -132,6 +155,9 @@ class WideMixerPluginUI(AbstractPluginUI):
             KC_INTEGER,
             self.port_dict,
             None,
+            tooltip=(
+                'The cutoff frequency to separate bass and higher frequencies'
+            ),
         )
         self.bass_mono_low = knob_control(
             f_knob_size,
@@ -145,6 +171,7 @@ class WideMixerPluginUI(AbstractPluginUI):
             KC_TENTH,
             self.port_dict,
             None,
+            tooltip='The volume gain of the low frequencies in decibels',
         )
         self.bass_mono_high = knob_control(
             f_knob_size,
@@ -158,6 +185,7 @@ class WideMixerPluginUI(AbstractPluginUI):
             KC_TENTH,
             self.port_dict,
             None,
+            tooltip='The volume gain of the high frequencies in decibels',
         )
         self.mid_side_knob = knob_control(
             f_knob_size,
@@ -171,6 +199,11 @@ class WideMixerPluginUI(AbstractPluginUI):
             KC_DECIMAL,
             self.port_dict,
             None,
+            tooltip=(
+                'Mid/side crossfade.  0.0 is normal sound, -1.0 is pure '
+                'mono parts of the sound, 1.0 is pure stereo parts '
+                'of the sound'
+            ),
         )
         self.dc_offset = checkbox_control(
             "",
@@ -178,18 +211,18 @@ class WideMixerPluginUI(AbstractPluginUI):
             self.plugin_rel_callback,
             self.plugin_val_callback,
             self.port_dict,
+            tooltip=DC_OFFSET_TOOLTIP,
         )
         self.dc_offset.control.setObjectName("dc_checkbox")
-        self.dc_offset.control.setToolTip(DC_OFFSET_TOOLTIP)
         self.mute = checkbox_control(
             "",
             WIDEMIXER_MUTE,
             self.plugin_rel_callback,
             self.plugin_val_callback,
             self.port_dict,
+            tooltip=MUTE_TOOLTIP,
         )
         self.mute.control.setObjectName("mute_checkbox")
-        self.mute.control.setToolTip(MUTE_TOOLTIP)
 
         if self.is_mixer:
             self.pan_slider = slider_control(
@@ -204,6 +237,7 @@ class WideMixerPluginUI(AbstractPluginUI):
                 KC_DECIMAL,
                 self.port_dict,
                 None,
+                tooltip='Pan the audio left or right',
             )
             self.pan_slider.control.setObjectName("pan_slider")
             self.volume_slider = slider_control(
@@ -217,6 +251,7 @@ class WideMixerPluginUI(AbstractPluginUI):
                 0,
                 KC_DECIMAL,
                 self.port_dict,
+                tooltip='The volume of the audio',
             )
             self.tab_widget = QTabWidget()
             self.layout.addWidget(self.tab_widget)
@@ -302,6 +337,7 @@ class WideMixerPluginUI(AbstractPluginUI):
                 knob_kwargs={
                     'arc_type': ArcType.BIDIRECTIONAL,
                 },
+                tooltip='Pan the audio left or right',
             )
             self.volume_knob = knob_control(
                 f_knob_size,
@@ -315,6 +351,7 @@ class WideMixerPluginUI(AbstractPluginUI):
                 KC_DECIMAL,
                 self.port_dict,
                 None,
+                tooltip='The volume of the audio',
             )
             self.hlayout = QHBoxLayout()
             self.hlayout.addItem(

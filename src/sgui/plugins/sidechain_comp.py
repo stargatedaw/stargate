@@ -114,6 +114,10 @@ class scc_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The volume threshold of the sidechain input to begin '
+                'compressing the main audio input'
+            )
         )
         self.thresh_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout, 3)
@@ -131,6 +135,10 @@ class scc_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The compression ratio to apply. 2:1 is a 50% reduction '
+                'above the threshold, 10:1 is a 90% reduction'
+            ),
         )
         self.ratio_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout, 7)
@@ -148,6 +156,10 @@ class scc_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The attack time in milliseconds, how long after the '
+                'threshold is reached until full compression is reached'
+            ),
         )
         self.attack_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout, 15)
@@ -165,6 +177,12 @@ class scc_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The release time in milliseconds, how long after the '
+                'volume returns to below the threshold until no '
+                'compression is applied. Higher values result in a smoother '
+                'sound'
+            ),
         )
         self.release_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout, 18)
@@ -182,6 +200,10 @@ class scc_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Dry/wet, use to crossfade between compressed and '
+                'uncompressed, or for parallel compression'
+            ),
         )
         self.wet_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout, 21)

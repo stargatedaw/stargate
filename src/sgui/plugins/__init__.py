@@ -626,7 +626,7 @@ class PluginSettingsMixer(AbstractPluginSettings):
         )
         self.plugin_combobox.setToolTip(
             'Select a mixer plugin.  The mixer channels are simply a type '
-            'of plugin, and there are several to choose from'
+            'of plugin, there are several to choose from'
         )
         self.index += PLUGINS_PER_TRACK
         self.vlayout.setParent(None)

@@ -580,6 +580,10 @@ class VA1PluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The amount of the filter ADSR to apply to the lowpass '
+                'in percent'
+            ),
         )
         self.filter_env_amt.add_to_grid_layout(self.filter.layout, 10)
         self.filter_keytrk = knob_control(
@@ -595,6 +599,10 @@ class VA1PluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Filter keytracking, causes the filter frequency to '
+                'get higher as higher notes are played'
+            ),
         )
         self.filter_keytrk.add_to_grid_layout(self.filter.layout, 11)
         self.filter_velocity = knob_control(
@@ -610,6 +618,10 @@ class VA1PluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'How much lowpass filter frequency is increased with '
+                'note velocity, in percent'
+            ),
         )
         self.filter_velocity.add_to_grid_layout(self.filter.layout, 12)
 
@@ -620,10 +632,13 @@ class VA1PluginUI(AbstractPluginUI):
             self.plugin_val_callback,
             self.port_dict,
             self.preset_manager,
+            tooltip=(
+                "Setting this causes Osc1 to reset it's phase everytime "
+                " Osc2 resets it's phase. Usually you would want to "
+                "pitchbend Osc2 up if this is enabled to create a classic "
+                "sync sound"
+            ),
         )
-        self.hard_sync.control.setToolTip(
-            _("Setting this hard sync's Osc1 to Osc2. Usually you "
-            "would want to pitchbend Osc2 up if this is enabled."))
         self.osc2.grid_layout.addWidget(
             self.hard_sync.control,
             1,
@@ -649,6 +664,7 @@ class VA1PluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip="The volume of the noise oscillator",
         )
         self.noise_amp.add_to_grid_layout(self.noise_layout, 0)
 
@@ -661,6 +677,10 @@ class VA1PluginUI(AbstractPluginUI):
             [_("Off"), _("White"), _("Pink")],
             self.port_dict,
             a_preset_mgr=self.preset_manager,
+            tooltip=(
+                "The type of noise.  White noise sound brighter, pink "
+                "noise sounds more balanced"
+            ),
         )
         self.noise_type.control.setMaximumWidth(87)
         self.noise_type.add_to_grid_layout(self.noise_layout, 1)
@@ -700,6 +720,7 @@ class VA1PluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='Pan the entire instrument left or right',
         )
         self.pan_knob.add_to_grid_layout(self.main.layout, 20)
 
@@ -731,6 +752,9 @@ class VA1PluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The amount of LFO to apply to instrument volume (tremolo)'
+            ),
         )
         self.lfo_amp.add_to_grid_layout(self.lfo.layout, 7)
         self.lfo_pitch = knob_control(
@@ -746,6 +770,9 @@ class VA1PluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The amount of LFO to apply to instrument pitch (vibrato)'
+            ),
         )
         self.lfo_pitch.add_to_grid_layout(self.lfo.layout, 8)
 
@@ -762,6 +789,10 @@ class VA1PluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The amount of LFO to apply to finely controlled '
+                'instrument pitch (vibrato)'
+            ),
         )
         self.lfo_pitch_fine.add_to_grid_layout(self.lfo.layout, 9)
 
@@ -778,6 +809,10 @@ class VA1PluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The amount of LFO to apply to lowpass filter frequency.  '
+                'Creates a "wobble" sound'
+            ),
         )
         self.lfo_cutoff.add_to_grid_layout(self.lfo.layout, 10)
 

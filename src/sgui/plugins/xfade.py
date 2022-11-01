@@ -24,12 +24,6 @@ XFADE_PORT_MAP = {
     "X-Fade": XFADE_SLIDER,
 }
 
-XFADE_TOOLTIP = _("""\
-Connect one or more tracks to the regular input of this track, and one or
-more tracks to the sidechain input of this track, then use the fader to
-crossfade between them.
-""")
-
 STYLESHEET = """
 QWidget#plugin_window {
     background: qlineargradient(
@@ -123,6 +117,10 @@ class xfade_plugin_ui(AbstractPluginUI):
             0,
             KC_DECIMAL,
             self.port_dict,
+            tooltip=(
+                'Crossfade between the regular audio input and the sidechain '
+                'input'
+            ),
         )
         self.volume_slider.control.setSizePolicy(
             QSizePolicy.Policy.Expanding,
@@ -144,6 +142,10 @@ class xfade_plugin_ui(AbstractPluginUI):
             self.port_dict,
             None,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The volume gain at the midpoint of the slider.  Used to '
+                'prevent a spike in volume when both sounds are playing'
+            )
         )
         self.midpoint_knob.add_to_grid_layout(self.volume_gridlayout, 1)
         self.midpoint_knob.value_label.setMinimumWidth(60)
@@ -161,8 +163,6 @@ class xfade_plugin_ui(AbstractPluginUI):
         self.hlayout.addWidget(self.logo_label)
         right_screws = get_screws()
         self.hlayout.addLayout(right_screws)
-
-        # self.hlayout.addWidget(QLabel(XFADE_TOOLTIP))
 
         self.open_plugin_file()
         self.set_midi_learn(XFADE_PORT_MAP)
