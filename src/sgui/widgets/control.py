@@ -554,6 +554,7 @@ class MultiplexedControl(GridLayoutControl):
         controls: Tuple[AbstractUiControl],
         size: Optional[int]=None,
         name_label: Optional[QComboBox]=None,
+        tooltip=None,
     ):
         self.controls = controls
 
@@ -563,6 +564,8 @@ class MultiplexedControl(GridLayoutControl):
             items = [str(x.name_label.text()) for x in controls]
             self.name_label = QComboBox()
             self.name_label.addItems(items)
+            if tooltip:
+                self.name_label.setToolTip(tooltip)
         self.name_label.currentIndexChanged.connect(self.index_changed)
         self.name_label.setObjectName("plugin_name_label")
 

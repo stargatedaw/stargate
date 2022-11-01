@@ -4,6 +4,11 @@ from sglib import math as sg_math
 from sglib.lib.translate import _
 from sgui.sgqt import *
 
+PMN_TOOLTIP = """\
+Default value, "start" is the value at -100 per-note parameter,
+"end" is the value at -100 per-note parameter.  See the piano roll editor
+in the item editor
+"""
 
 class ADSRMainWidget:
     def __init__(
@@ -57,6 +62,7 @@ class ADSRMainWidget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip='How long to wait before beginning the attack phase',
             )
             self.delay_knob.add_to_grid_layout(self.layout, 0)
             self.clipboard_dict["delay"] = self.delay_knob
@@ -79,11 +85,13 @@ class ADSRMainWidget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip='The time to reach full volume'
             )
             self.attack_knobs.append(knob)
         self.attack_knob = MultiplexedControl(
             self.attack_knobs,
             a_size,
+            tooltip=PMN_TOOLTIP,
         )
 
         if a_hold_port is not None:
@@ -100,6 +108,7 @@ class ADSRMainWidget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip='The length of time to hold at full volume',
             )
             self.hold_knob.add_to_grid_layout(self.layout, 3)
             self.clipboard_dict["hold"] = self.hold_knob
@@ -122,11 +131,16 @@ class ADSRMainWidget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'The length of time to decay from full volume to '
+                    'sustain volume'
+                ),
             )
             self.decay_knobs.append(knob)
         self.decay_knob = MultiplexedControl(
             self.decay_knobs,
             a_size,
+            tooltip=PMN_TOOLTIP,
         )
         self.sustain_knobs = []
         for name, port, default_lin, default_db in (
@@ -148,6 +162,10 @@ class ADSRMainWidget:
                     a_port_dict,
                     a_preset_mgr,
                     knob_kwargs=knob_kwargs,
+                    tooltip=(
+                        'The volume to sustain at in decibels, when notes are '
+                        'held for a long time'
+                    ),
                 )
             else:
                 knob = knob_control(
@@ -163,11 +181,16 @@ class ADSRMainWidget:
                     a_port_dict,
                     a_preset_mgr,
                     knob_kwargs=knob_kwargs,
+                    tooltip=(
+                        'The volume to sustain at in linear amplitude, '
+                        'when notes are held for a long time'
+                    ),
                 )
             self.sustain_knobs.append(knob)
         self.sustain_knob = MultiplexedControl(
             self.sustain_knobs,
             a_size,
+            tooltip=PMN_TOOLTIP,
         )
         if a_sustain_in_db:
             self.clipboard_dict["sustain_db"] = self.sustain_knob
@@ -192,11 +215,15 @@ class ADSRMainWidget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'The length of time to decay from sustain volume to zero'
+                ),
             )
             self.release_knobs.append(knob)
         self.release_knob = MultiplexedControl(
             self.release_knobs,
             a_size,
+            tooltip=PMN_TOOLTIP,
         )
         self.attack_knob.add_to_grid_layout(self.layout, 2)
         self.decay_knob.add_to_grid_layout(self.layout, 4)
@@ -213,17 +240,27 @@ class ADSRMainWidget:
                 a_val_callback,
                 a_port_dict,
                 a_preset_mgr,
+                tooltip=(
+                    'Apply the envelope before effect processing.  '
+                    'This can alter the sound depending on the effects'
+                ),
             )
             self.prefx_checkbox.add_to_grid_layout(self.layout, 10)
         if a_lin_port is not None:
             assert a_lin_default in (0, 1)
             self.lin_checkbox = checkbox_control(
-                "Lin.", a_lin_port, a_rel_callback, a_val_callback,
-                a_port_dict, a_preset_mgr, a_lin_default)
-            self.lin_checkbox.control.setToolTip(
-                _("Use a linear curve instead of a logarithmic decibel \n"
-                "curve, use this when there are artifacts in the \n"
-                "release tail")
+                "Lin.",
+                a_lin_port,
+                a_rel_callback,
+                a_val_callback,
+                a_port_dict,
+                a_preset_mgr,
+                a_lin_default,
+                tooltip=(
+                    "Use a linear curve instead of a logarithmic decibel "
+                    "curve, use this when there are artifacts in the "
+                    "release tail"
+                ),
             )
             self.lin_checkbox.add_to_grid_layout(self.layout, 12)
 

@@ -49,6 +49,10 @@ class adsr_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'Delay in seconds.  How long to wait before beginning '
+                    'the attack phase'
+                ),
             )
             self.delay_knob.add_to_grid_layout(self.layout, 0)
             self.clipboard_dict["delay"] = self.delay_knob
@@ -65,6 +69,7 @@ class adsr_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip='How long before the sound reaches full volume',
         )
         if a_hold_port is not None:
             self.hold_knob = knob_control(
@@ -80,6 +85,10 @@ class adsr_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'How long to hold at full volume before beginning '
+                    'the decay phase'
+                ),
             )
             self.hold_knob.add_to_grid_layout(self.layout, 3)
             self.clipboard_dict["hold"] = self.hold_knob
@@ -96,6 +105,10 @@ class adsr_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'How long to decay from peak volume before reaching '
+                'the sustain phase'
+            ),
         )
         if a_sustain_in_db:
             self.sustain_knob = knob_control(
@@ -111,6 +124,10 @@ class adsr_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'Sustain volume in decibels.  The volume to maintain when '
+                    'notes are held for a long time'
+                ),
             )
             self.clipboard_dict["sustain_db"] = self.sustain_knob
         else:
@@ -127,6 +144,10 @@ class adsr_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'Sustain volume in linear amplitude.  The volume to '
+                    'maintain when notes are held for a long time'
+                ),
             )
             self.clipboard_dict["sustain"] = self.sustain_knob
         self.release_knob = knob_control(
@@ -142,6 +163,10 @@ class adsr_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Release time, length of tail as the volume fades '
+                'out from sustain level'
+            ),
         )
         self.attack_knob.add_to_grid_layout(self.layout, 2)
         self.decay_knob.add_to_grid_layout(self.layout, 4)
@@ -158,17 +183,27 @@ class adsr_widget:
                 a_val_callback,
                 a_port_dict,
                 a_preset_mgr,
+                tooltip=(
+                    'Causes modulation to happen before effects processing, '
+                    'may change the sound depending on the effects'
+                ),
             )
             self.prefx_checkbox.add_to_grid_layout(self.layout, 10)
         if a_lin_port is not None:
             assert a_lin_default in (0, 1)
             self.lin_checkbox = checkbox_control(
-                "Lin.", a_lin_port, a_rel_callback, a_val_callback,
-                a_port_dict, a_preset_mgr, a_lin_default)
-            self.lin_checkbox.control.setToolTip(
-                _("Use a linear curve instead of a logarithmic decibel \n"
-                "curve, use this when there are artifacts in the \n"
-                "release tail")
+                "Lin.",
+                a_lin_port,
+                a_rel_callback,
+                a_val_callback,
+                a_port_dict,
+                a_preset_mgr,
+                a_lin_default,
+                tooltip=_(
+                    "Use a linear curve instead of a logarithmic decibel "
+                    "curve, use this when there are artifacts in the "
+                    "release tail"
+                ),
             )
             self.lin_checkbox.add_to_grid_layout(self.layout, 12)
 
