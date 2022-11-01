@@ -779,6 +779,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
                 0.0,
                 KC_NONE,
                 self.port_dict,
+                tooltip='The volume of this sample',
             )
             f_sample_vol.control.setFixedSize(
                 self.sample_table.columnWidth(5),
@@ -800,6 +801,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
                 10,
                 KC_NONE,
                 self.port_dict,
+                tooltip='Velocity sensitivity in decibels'
             )
             f_vel_sens.control.setFixedSize(
                 self.sample_table.columnWidth(6),
@@ -821,6 +823,9 @@ class sampler1_plugin_ui(AbstractPluginUI):
                 1,
                 KC_NONE,
                 self.port_dict,
+                tooltip=(
+                    'Low velocity, the lowest velocity to play this sample'
+                ),
             )
             f_vel_low.control.setFixedSize(
                 self.sample_table.columnWidth(7),
@@ -842,6 +847,9 @@ class sampler1_plugin_ui(AbstractPluginUI):
                 128,
                 KC_NONE,
                 self.port_dict,
+                tooltip=(
+                    'High velocity, the highest velocity to play this sample'
+                ),
             )
             f_vel_high.control.setFixedSize(
                 self.sample_table.columnWidth(8),
@@ -863,6 +871,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
                 0,
                 KC_NONE,
                 self.port_dict,
+                tooltip='The pitch adjustment of this sample',
             )
             f_sample_pitch.control.setFixedSize(
                 self.sample_table.columnWidth(9),
@@ -884,6 +893,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
                 0,
                 KC_NONE,
                 self.port_dict,
+                tooltip='The fine pitch adjustment of this sample',
             )
             f_sample_tune.control.setFixedSize(
                 self.sample_table.columnWidth(10),
@@ -897,9 +907,19 @@ class sampler1_plugin_ui(AbstractPluginUI):
             SAMPLER1_SAMPLE_INTERPOLATION_MODE_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_sample_mode = combobox_control(
-                120, None, f_port_start + f_i,
-                self.plugin_rel_callback, self.plugin_val_callback,
-                self.interpolation_modes_list, self.port_dict, 1)
+                120,
+                None,
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                self.interpolation_modes_list,
+                self.port_dict,
+                1,
+                tooltip=(
+                    'Interpolation mode, affects the quality and CPU usage '
+                    'of playing samples'
+                ),
+            )
             self.sample_table.setCellWidget(f_i, 11, f_sample_mode.control)
             self.sample_modes.append(f_sample_mode)
 
@@ -907,9 +927,19 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_port_start = SAMPLER1_NOISE_TYPE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_noise_type = combobox_control(
-                75, None, f_port_start + f_i,
-                self.plugin_rel_callback, self.plugin_val_callback,
-                self.noise_types_list, self.port_dict, 0)
+                75,
+                None,
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                self.noise_types_list,
+                self.port_dict,
+                0,
+                tooltip=(
+                    'The type of noise to add to the sample.  Gives a fuller '
+                    'sound'
+                ),
+            )
             self.sample_table.setCellWidget(f_i, 12, f_noise_type.control)
             self.noise_types.append(f_noise_type)
 
@@ -926,6 +956,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
                 -30,
                 KC_NONE,
                 self.port_dict,
+                tooltip='The volume of the noise',
             )
             f_noise_amp.control.setFixedSize(
                 self.sample_table.columnWidth(13),
@@ -938,16 +969,24 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_port_start = SAMPLER1_SAMPLE_START_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_sample_start = null_control(
-                f_port_start + f_i, self.plugin_rel_callback,
-                self.plugin_val_callback, 0, self.port_dict)
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                0,
+                self.port_dict,
+            )
             self.sample_starts.append(f_sample_start)
 
         self.sample_ends = []
         f_port_start = SAMPLER1_SAMPLE_END_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_sample_end = null_control(
-                f_port_start + f_i, self.plugin_rel_callback,
-                self.plugin_val_callback, 1000, self.port_dict)
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                1000,
+                self.port_dict,
+            )
             self.sample_ends.append(f_sample_end)
 
         glbl_shared.APP.processEvents()
@@ -956,40 +995,60 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_port_start = SAMPLER1_SAMPLE_LOOP_START_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_loop_start = null_control(
-                f_port_start + f_i, self.plugin_rel_callback,
-                self.plugin_val_callback, 0, self.port_dict)
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                0,
+                self.port_dict,
+            )
             self.loop_starts.append(f_loop_start)
 
         self.loop_modes = []
         f_port_start = SAMPLER1_SAMPLE_LOOP_MODE_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_loop_mode = null_control(
-                f_port_start + f_i, self.plugin_rel_callback,
-                self.plugin_val_callback, 0, self.port_dict)
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                0,
+                self.port_dict,
+            )
             self.loop_modes.append(f_loop_mode)
 
         self.loop_ends = []
         f_port_start = SAMPLER1_SAMPLE_LOOP_END_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_loop_end = null_control(
-                f_port_start + f_i, self.plugin_rel_callback,
-                self.plugin_val_callback, 1000, self.port_dict)
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                1000,
+                self.port_dict,
+            )
             self.loop_ends.append(f_loop_end)
 
         self.fade_in_ends = []
         f_port_start = SAMPLER1_SAMPLE_FADE_IN_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_fade_in = null_control(
-                f_port_start + f_i, self.plugin_rel_callback,
-                self.plugin_val_callback, 0, self.port_dict)
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                0,
+                self.port_dict,
+            )
             self.fade_in_ends.append(f_fade_in)
 
         self.fade_out_starts = []
         f_port_start = SAMPLER1_SAMPLE_FADE_OUT_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_fade_out = null_control(
-                f_port_start + f_i, self.plugin_rel_callback,
-                self.plugin_val_callback, 1000, self.port_dict)
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                1000,
+                self.port_dict,
+            )
             self.fade_out_starts.append(f_fade_out)
 
         glbl_shared.APP.processEvents()
@@ -999,24 +1058,36 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_port_start = SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_ctrl = null_control(
-                f_port_start + f_i, self.plugin_rel_callback,
-                self.plugin_val_callback, 64, self.port_dict)
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                64,
+                self.port_dict,
+            )
             self.monofx0knob0_ctrls.append(f_ctrl)
 
         self.monofx0knob1_ctrls = []
         f_port_start = SAMPLER1_MONO_FX0_KNOB1_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_ctrl = null_control(
-                f_port_start + f_i, self.plugin_rel_callback,
-                self.plugin_val_callback, 64, self.port_dict)
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                64,
+                self.port_dict,
+            )
             self.monofx0knob1_ctrls.append(f_ctrl)
 
         self.monofx0knob2_ctrls = []
         f_port_start = SAMPLER1_MONO_FX0_KNOB2_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
             f_ctrl = null_control(
-                f_port_start + f_i, self.plugin_rel_callback,
-                self.plugin_val_callback, 64, self.port_dict)
+                f_port_start + f_i,
+                self.plugin_rel_callback,
+                self.plugin_val_callback,
+                64,
+                self.port_dict,
+            )
             self.monofx0knob2_ctrls.append(f_ctrl)
 
         self.monofx0comboboxes = []
@@ -1500,6 +1571,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
                         0,
                         KC_NONE,
                         self.port_dict,
+                        tooltip='The amount of modulation to apply',
                     )
                     f_x = (f_i_dst * 3) + f_i_ctrl
                     f_ctrl.control.setFixedSize(
@@ -1525,6 +1597,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
                         0,
                         KC_NONE,
                         self.port_dict,
+                        tooltip='The amount of modulation to apply',
                     )
                     f_x = (f_i_dst * 3) + f_i_ctrl
                     f_ctrl.control.setFixedSize(
@@ -1610,19 +1683,39 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.hlayout2.addWidget(self.lfo.groupbox)
 
         self.lfo_pitch = knob_control(
-            f_knob_size, _("Pitch"), SAMPLER1_LFO_PITCH,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -36, 36, 0, KC_INTEGER, self.port_dict,
+            f_knob_size,
+            _("Pitch"),
+            SAMPLER1_LFO_PITCH,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -36,
+            36,
+            0,
+            KC_INTEGER,
+            self.port_dict,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The amount of LFO to apply to instrument pitch, in semitones'
+            ),
         )
         self.lfo_pitch.add_to_grid_layout(self.lfo.layout, 7)
 
         self.lfo_pitch_fine = knob_control(
-            f_knob_size, _("Fine"),
+            f_knob_size,
+            _("Fine"),
             SAMPLER1_LFO_PITCH_FINE,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -100, 100, 0, KC_DECIMAL, self.port_dict,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -100,
+            100,
+            0,
+            KC_DECIMAL,
+            self.port_dict,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The amount of LFO to apply to instrument pitch, in semitones '
+                'with fine control'
+            ),
         )
         self.lfo_pitch_fine.add_to_grid_layout(self.lfo.layout, 8)
 
@@ -2042,13 +2135,14 @@ class sampler1_plugin_ui(AbstractPluginUI):
 
     def set_all_volumes(self):
         f_widget = spinbox_control(
-            _("Low Velocity"),
+            _("Volume"),
             0,
             None,
             None,
             -60,
             36,
             0,
+            tooltip='The volume of the samples',
         )
         self.set_all_dialog(
             f_widget,
@@ -2058,50 +2152,115 @@ class sampler1_plugin_ui(AbstractPluginUI):
 
     def set_all_vel_sens(self):
         f_widget = spinbox_control(
-            _("Velocity Sensitivity"), 0, None, None, 0, 20, 0)
+            _("Velocity Sensitivity"),
+            0,
+            None,
+            None,
+            0,
+            20,
+            0,
+            tooltip='The velocity sensitivity of the samples',
+        )
         self.set_all_dialog(
             f_widget, self.sample_vel_sens, _("Set all velocity sensitivity"))
 
     def set_all_low_vels(self):
         f_widget = spinbox_control(
-            _("Low Velocity"), 0, None, None, 0, 127, 0)
+            _("Low Velocity"),
+            0,
+            None,
+            None,
+            0,
+            127,
+            0,
+            tooltip='The lowest velocity to play the sample out',
+        )
         self.set_all_dialog(
             f_widget, self.sample_low_vels, _("Set all low velocities"))
 
     def set_all_high_vels(self):
         f_widget = spinbox_control(
-            _("High Velocity"), 0, None, None, 0, 127, 127)
+            _("High Velocity"),
+            0,
+            None,
+            None,
+            0,
+            127,
+            127,
+            tooltip='The highest velocity to play the sample at',
+        )
         self.set_all_dialog(
             f_widget, self.sample_high_vels, _("Set all high velocities"))
 
     def set_all_pitches(self):
-        f_widget = spinbox_control(_("Pitch"), 0, None, None, -36, 36, 0)
+        f_widget = spinbox_control(
+            _("Pitch"),
+            0,
+            None,
+            None,
+            -36,
+            36,
+            0,
+            tooltip='The pitch adjustment of the sample',
+        )
         self.set_all_dialog(
             f_widget, self.sample_pitches, _("Set all sample pitches"))
 
     def set_all_tunes(self):
         f_widget = spinbox_control(
-            _("Tune"), 0, None, None, -100, 100, 0)
+            _("Tune"),
+            0,
+            None,
+            None,
+            -100,
+            100,
+            0,
+            tooltip='The fine pitch adjustment of the sample',
+        )
         self.set_all_dialog(
             f_widget, self.sample_tunes, _("Set all sample tunes"))
 
     def set_all_interpolation_modes(self):
         f_widget = combobox_control(
-            120, _("Mode"), 0, None, None,
-            self.interpolation_modes_list)
+            120,
+            _("Mode"),
+            0,
+            None,
+            None,
+            self.interpolation_modes_list,
+            tooltip=(
+                'The interpolation mode, affects sound quality and CPU usage'
+            ),
+        )
         self.set_all_dialog(
             f_widget, self.sample_modes,
             _("Set all sample interpolation modes"))
 
     def set_all_noise_types(self):
         f_widget = combobox_control(
-            120, _("Noise Type"), 0, None, None, self.noise_types_list)
+            120,
+            _("Noise Type"),
+            0,
+            None,
+            None,
+            self.noise_types_list,
+            tooltip='The type of noise to add',
+        )
         self.set_all_dialog(
             f_widget, self.noise_types,
             _("Set all sample interpolation modes"))
 
     def set_all_noise_amps(self):
-        f_widget = spinbox_control(_("Tune"), 0, None, None, -60, 0, -30)
+        f_widget = spinbox_control(
+            _("Tune"),
+            0,
+            None,
+            None,
+            -60,
+            0,
+            -30,
+            tooltip='The volume of the noise',
+        )
         self.set_all_dialog(f_widget, self.noise_amps, _("Set all noise amps"))
 
     def set_all_dialog(self, a_widget, a_list, a_title):
