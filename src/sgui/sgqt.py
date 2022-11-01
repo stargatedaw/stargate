@@ -1,6 +1,7 @@
 from sglib.log import LOG
 import os
 import sys
+import textwrap
 
 
 if True:  # PyQt
@@ -95,7 +96,11 @@ class _HintBox:
         self._tooltip = None
 
     def setToolTip(self, text: str):
-        self._tooltip = text
+        lines = textwrap.wrap(text)
+        if len(lines) > 3:
+            lines[2] = lines[2][:-3] + '...'
+            LOG.error(f'Truncating hint {lines[0]}')
+        self._tooltip = "\n".join(lines[:3])
 
     def _clear_hint_box(self):
         # Maintain a stack of messages, only clear the text if there are none

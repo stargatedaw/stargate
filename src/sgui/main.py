@@ -184,7 +184,7 @@ class SgMainWindow(QWidget):
         )
         shared.HINT_BOX.setObjectName('hintbox')
         shared.HINT_BOX.setMinimumHeight(40)
-        shared.HINT_BOX.setMinimumWidth(360)
+        shared.HINT_BOX.setMinimumWidth(390)
         self.transport_hlayout.addWidget(shared.HINT_BOX)
 
         self.main_stack = QStackedWidget()
