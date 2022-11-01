@@ -292,9 +292,6 @@ class AbstractPluginSettings:
             self.plugin_combobox.currentIndexChanged_connect(
                 self.on_plugin_combobox_change,
             )
-        self.plugin_combobox.setToolTip(
-            'Select an instrument or effect plugin',
-        )
         self.plugin_combobox.setMinimumWidth(150)
         self.plugin_combobox.wheelEvent = self.wheel_event
 
@@ -519,6 +516,11 @@ class PluginSettingsMain(AbstractPluginSettings):
             a_save_callback,
             a_qcbox=False,
         )
+        self.plugin_combobox.setToolTip(
+            'Select an instrument or effect plugin for this track.  '
+            'Instrument plugins can be layered or inserted after audio '
+            'sources or effects.'
+        )
         self.route_combobox = QComboBox()
         self.route_combobox.addItems(
             [str(x) for x in range(a_index + 2, 11)] + ["Output"]
@@ -622,6 +624,10 @@ class PluginSettingsMixer(AbstractPluginSettings):
             a_qcbox=True,
             a_is_mixer=True,
         )
+        self.plugin_combobox.setToolTip(
+            'Select a mixer plugin.  The mixer channels are simply a type '
+            'of plugin, and there are several to choose from'
+        )
         self.index += PLUGINS_PER_TRACK
         self.vlayout.setParent(None)
         self.plugin_combobox.setMinimumWidth(120)
@@ -644,6 +650,7 @@ class PluginSettingsWaveEditor(AbstractPluginSettings):
             a_save_callback,
             a_qcbox=False,
         )
+        self.plugin_combobox.setToolTip('Select an effect plugin')
         self.layout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )

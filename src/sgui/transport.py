@@ -89,7 +89,11 @@ class TransportWidget:
         self.host_combobox.currentIndexChanged.connect(
             shared.MAIN_WINDOW.set_host,
         )
-        self.host_combobox.setToolTip('The host to use.')
+        self.host_combobox.setToolTip(
+            'The host to use.  DAW is a full digital audio workstation '
+            'optimized for producing electronic music.  Wave Editor '
+            'is a basic wave editor for simple editing tasks'
+        )
         knob_size = 40
         self.main_vol_knob = widgets.PixmapKnob(knob_size, -480, 0)
         self.load_main_vol()
