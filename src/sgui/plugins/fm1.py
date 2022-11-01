@@ -1103,6 +1103,10 @@ class fm1_plugin_ui(AbstractPluginUI):
                 self.port_dict,
                 self.preset_manager,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'Unison spread, in semitones.  How much to detune\n'
+                    'oscillators when unison is more than 1'
+                )
             )
             f_osc1_uni_spread.add_to_grid_layout(f_osc1.grid_layout, 5)
 
@@ -1123,6 +1127,10 @@ class fm1_plugin_ui(AbstractPluginUI):
                 self.port_dict,
                 self.preset_manager,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'Oscillator pan.  Pan individual oscillators between\n'
+                    'the left and right channels'
+                ),
             )
             knob_kwargs.pop('arc_type')
             osc_pan.add_to_grid_layout(f_osc1.grid_layout, 6)
@@ -1161,6 +1169,7 @@ class fm1_plugin_ui(AbstractPluginUI):
                 self.plugin_val_callback,
                 self.port_dict,
                 self.preset_manager,
+                tooltip='Enable the ADSR envelope for this oscillator',
             )
             f_adsr_amp1_checkbox.add_to_grid_layout(f_adsr_amp1.layout, 15)
 
@@ -1211,6 +1220,10 @@ class fm1_plugin_ui(AbstractPluginUI):
                     KC_NONE,
                     self.port_dict,
                     self.preset_manager,
+                    tooltip=(
+                        'The amount of FM to apply to the destination \n'
+                        'oscillator'
+                    ),
                 )
                 f_spinbox.control.setFixedSize(
                     self.fm_matrix.columnWidth(f_i2),
@@ -1286,6 +1299,7 @@ class fm1_plugin_ui(AbstractPluginUI):
                 self.port_dict,
                 self.preset_manager,
                 knob_kwargs=knob_kwargs,
+                tooltip='Macros are used to morph between FM settings',
             )
             f_macro.add_to_grid_layout(
                 self.fm_macro_knobs_gridlayout,
@@ -1357,6 +1371,10 @@ class fm1_plugin_ui(AbstractPluginUI):
                         KC_NONE,
                         self.port_dict,
                         self.preset_manager,
+                        tooltip=(
+                            'The amount of FM to apply to the\n'
+                            'destination oscillator'
+                        ),
                     )
                     f_spinbox.control.setFixedSize(
                         f_fm_macro_matrix.columnWidth(f_i3),
@@ -1377,9 +1395,21 @@ class fm1_plugin_ui(AbstractPluginUI):
                     ),
                 )
                 f_spinbox = spinbox_control(
-                    None, f_port,
-                    self.plugin_rel_callback, self.plugin_val_callback,
-                    -100, 100, 0, KC_NONE, self.port_dict, self.preset_manager)
+                    None,
+                    f_port,
+                    self.plugin_rel_callback,
+                    self.plugin_val_callback,
+                    -100,
+                    100,
+                    0,
+                    KC_NONE,
+                    self.port_dict,
+                    self.preset_manager,
+                    tooltip=(
+                        'The amount of FM to apply to the\n'
+                        'destination oscillator'
+                    ),
+                )
                 f_spinbox.control.setFixedSize(
                     f_fm_macro_matrix.columnWidth(f_i2),
                     f_fm_macro_matrix.rowHeight(6),
@@ -1422,6 +1452,9 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Instrument pan.  Pan the entire plugin output left or right'
+            ),
         )
         knob_kwargs.pop('arc_type')
         self.pan_knob.add_to_grid_layout(self.main.layout, 20)
@@ -1493,9 +1526,14 @@ class fm1_plugin_ui(AbstractPluginUI):
         )
         self.hlayout_main2.addWidget(self.adsr_noise.groupbox)
         self.adsr_noise_on = checkbox_control(
-            "On", FM1_ADSR_NOISE_ON,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, self.preset_manager)
+            "On",
+            FM1_ADSR_NOISE_ON,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            self.preset_manager,
+            tooltip='Enable the ADSR envelope for the noise generator',
+        )
         self.adsr_noise_on.add_to_grid_layout(self.adsr_noise.layout, 21)
 
         self.groupbox_noise = QGroupBox(_("Noise"))
@@ -1515,6 +1553,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='The volume of the noise generator',
         )
         self.noise_amp.add_to_grid_layout(self.groupbox_noise_layout, 0)
 
@@ -1533,6 +1572,10 @@ class fm1_plugin_ui(AbstractPluginUI):
             ],
             self.port_dict,
             a_preset_mgr=self.preset_manager,
+            tooltip=(
+                'Mono and stereo variants of white (flat spectrum), \n'
+                'pink (sounds flat to the human ear) noise'
+            ),
         )
         self.noise_type.control.setMaximumWidth(87)
         self.noise_type.add_to_grid_layout(self.groupbox_noise_layout, 1)
@@ -1545,6 +1588,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.port_dict,
             a_preset_mgr=self.preset_manager,
             a_default=1,
+            tooltip='If checked, noise is added before the effects section',
         )
         self.noise_prefx.add_to_grid_layout(self.groupbox_noise_layout, 6)
 
@@ -1658,6 +1702,10 @@ class fm1_plugin_ui(AbstractPluginUI):
                         KC_NONE,
                         self.port_dict,
                         self.preset_manager,
+                        tooltip=(
+                            'How much the modulation source affects the '
+                            'destination'
+                        ),
                     )
                     f_x = (f_i_dst * 3) + f_i_ctrl
                     f_ctrl.control.setFixedSize(
@@ -1761,6 +1809,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='The strength of LFO modulation',
         )
         self.lfo_amount.add_to_grid_layout(self.lfo.layout, 7)
 
@@ -1777,6 +1826,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='Module the amplitude of the instrument',
         )
         self.lfo_amp.add_to_grid_layout(self.lfo.layout, 8)
 
@@ -1793,6 +1843,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='Modulate the pitch of the instrument',
         )
         self.lfo_pitch.add_to_grid_layout(self.lfo.layout, 9)
 
@@ -1809,6 +1860,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='Modulate the pitch of the instrument with fine control',
         )
         self.lfo_pitch_fine.add_to_grid_layout(self.lfo.layout, 10)
 
@@ -1831,9 +1883,14 @@ class fm1_plugin_ui(AbstractPluginUI):
         )
         self.lfo_hlayout.addWidget(self.adsr_lfo.groupbox)
         self.adsr_lfo_on = checkbox_control(
-            "On", FM1_ADSR_LFO_ON,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            self.port_dict, self.preset_manager)
+            "On",
+            FM1_ADSR_LFO_ON,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            self.port_dict,
+            self.preset_manager,
+            tooltip='Enable or disable the ADSR for the LFO',
+        )
         self.adsr_lfo_on.add_to_grid_layout(self.adsr_lfo.layout, 21)
 
         self.additive_osc = custom_additive_oscillator(

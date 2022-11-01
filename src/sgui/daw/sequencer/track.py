@@ -69,7 +69,9 @@ class SeqTrack:
         self.button_menu.aboutToShow.connect(self.menu_button_pressed)
         self.menu_created = False
         self.solo_checkbox = QCheckBox()
+        self.solo_checkbox.setToolTip('Solo this track')
         self.mute_checkbox = QCheckBox()
+        self.mute_checkbox.setToolTip('Mute this track')
         self.hlayout3.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
@@ -152,6 +154,7 @@ class SeqTrack:
         self.button_menu.addAction(self.action_widget)
 
         self.plugins_button = QPushButton(_("Show Plugins"))
+        self.plugins_button.setToolTip('Open this track in the plugin rack')
         self.menu_gridlayout.addWidget(self.plugins_button, 0, 21)
         self.plugins_button.pressed.connect(self.open_plugins)
 
@@ -161,9 +164,18 @@ class SeqTrack:
         self.menu_gridlayout.addWidget(QLabel(_("Plugin:")), 5, 20)
         self.menu_gridlayout.addWidget(self.automation_combobox, 5, 21)
         self.automation_combobox.currentIndexChanged.connect(
-            self.automation_callback)
+            self.automation_callback,
+        )
+        self.automation_combobox.setToolTip(
+            'Select the plugin for automation edit mode\n'
+            '(CTRL+e to toggle)'
+        )
 
         self.control_combobox = QComboBox()
+        self.control_combobox.setToolTip(
+            'Select the plugin control for automation edit mode\n'
+            '(CTRL+e to toggle)'
+        )
         self.control_combobox.setMaxVisibleItems(30)
         self.control_combobox.setMinimumWidth(240)
         self.menu_gridlayout.addWidget(QLabel(_("Control:")), 9, 20)
@@ -174,7 +186,12 @@ class SeqTrack:
         self.ccs_in_use_combobox.setMinimumWidth(300)
         self.suppress_ccs_in_use = False
         self.ccs_in_use_combobox.currentIndexChanged.connect(
-            self.ccs_in_use_combobox_changed)
+            self.ccs_in_use_combobox_changed,
+        )
+        self.ccs_in_use_combobox.setToolTip(
+            'Select a plugin control already in use for \n'
+            'automation edit mode (CTRL+e to toggle)'
+        )
         self.menu_gridlayout.addWidget(QLabel(_("In Use:")), 10, 20)
         self.menu_gridlayout.addWidget(self.ccs_in_use_combobox, 10, 21)
 
@@ -183,14 +200,24 @@ class SeqTrack:
         self.menu_gridlayout.addLayout(self.color_hlayout, 29, 21)
 
         self.color_button = QPushButton(_("Custom..."))
+        self.color_button.setToolTip(
+            'Select a custom color for sequencer items'
+        )
         self.color_button.clicked.connect(self.on_color_change)
         self.color_hlayout.addWidget(self.color_button)
 
         self.color_copy_button = QPushButton(_("Copy"))
         self.color_copy_button.pressed.connect(self.on_color_copy)
+        self.color_copy_button.setToolTip(
+            'Copy this track\'s item color, to paste to another track'
+        )
         self.color_hlayout.addWidget(self.color_copy_button)
 
         self.color_paste_button = QPushButton(_("Paste"))
+        self.color_paste_button.setToolTip(
+            'Paste another track\'s color to this track.\n'
+            'You must press the copy button on another track first'
+        )
         self.color_paste_button.pressed.connect(self.on_color_paste)
         self.color_hlayout.addWidget(self.color_paste_button)
 
@@ -379,7 +406,6 @@ class TrackPanel:
         self.tracks_widget.setObjectName("track_panel")
         self.tracks_widget.setContentsMargins(0, 0, 0, 0)
         self.tracks_layout = QVBoxLayout(self.tracks_widget)
-        self.tracks_widget.setToolTip(sg_strings.track_panel)
         self.tracks_layout.addItem(
             QSpacerItem(
                 0,

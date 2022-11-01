@@ -102,6 +102,7 @@ class _HintBox:
         if hasattr(shared, 'HINT_BOX'):
             shared.HINT_BOX.setText(msg)
 
+class _HintWidget(_HintBox):
     def event(self, event):
         if self._tooltip:
             if event.type() in (
@@ -116,9 +117,20 @@ class _HintBox:
                 self._set_hint_box("")
         return super().event(event)
 
+class _HintItem(_HintBox):
+    def hoverEnterEvent(self, event):
+        if self._tooltip:
+            self._set_hint_box(self._tooltip)
+        return super().hoverEnterEvent(event)
+
+    def hoverLeaveEvent(self, event):
+        if self._tooltip:
+            self._set_hint_box('')
+        return super().hoverLeaveEvent(event)
+
 orig_QLineEdit = QLineEdit
 
-class _QLineEdit(_HintBox, QLineEdit):
+class _QLineEdit(_HintWidget, QLineEdit):
     def event(self, ev):
         if ev.type() == QtCore.QEvent.Type.KeyPress:
             if ev.key() in(
@@ -127,11 +139,11 @@ class _QLineEdit(_HintBox, QLineEdit):
             ):
                 self.focusNextChild()
                 return True
-        return orig_QLineEdit.event(self, ev)
+        return super().event(ev)
 
 origQComboBox = QComboBox
 
-class _QComboBox(_HintBox, QComboBox):
+class _QComboBox(_HintWidget, QComboBox):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
@@ -285,7 +297,7 @@ class SgSpinBox(_QLineEdit):
             elif ev.key() == QtCore.Qt.Key.Key_Down:
                 self.setValue(self.value() - self.step_size)
                 return True
-        return orig_QLineEdit.event(self, ev)
+        return super().event(ev)
 
 class _QDoubleSpinBox(SgSpinBox):
     valueChanged = Signal(float)
@@ -329,30 +341,31 @@ QDoubleSpinBox = _QDoubleSpinBox
 QLineEdit = _QLineEdit
 QSpinBox = _QSpinBox
 
-class QPushButton(_HintBox, QPushButton):
+class QPushButton(_HintWidget, QPushButton):
     pass
 
-class QGraphicsView(_HintBox, QGraphicsView):
+class QGraphicsView(_HintWidget, QGraphicsView):
     pass
 
-class QDial(_HintBox, QDial):
+class QDial(_HintWidget, QDial):
     pass
 
-class QSlider(_HintBox, QSlider):
+class QSlider(_HintWidget, QSlider):
     pass
 
-class QCheckBox(_HintBox, QCheckBox):
+class QCheckBox(_HintWidget, QCheckBox):
     pass
 
-class QRadioButton(_HintBox, QRadioButton):
+class QRadioButton(_HintWidget, QRadioButton):
     pass
 
-#class QGroupBox(_HintBox, QGroupBox):
+
+#class QGroupBox(_HintWidget, QGroupBox):
 #    pass
 
-#class QWidget(_HintBox, QWidget):
+#class QWidget(_HintWidget, QWidget):
 #    pass
 
-#class QGraphicsRectItem(_HintBox, QGraphicsRectItem):
-#    pass
+class QGraphicsRectItem(_HintItem, QGraphicsRectItem):
+    pass
 

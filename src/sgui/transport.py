@@ -29,15 +29,25 @@ class TransportWidget:
         self.hlayout1.addWidget(self.menu_button)
         self.vlayout.addLayout(self.hlayout1)
         self.play_button = QRadioButton()
+        self.play_button.setToolTip(
+            'Begin playback.  Press spacebar to toggle',
+        )
         self.play_button.setObjectName("play_button")
         self.play_button.toggled.connect(self.on_play)
         self.hlayout1.addWidget(self.play_button)
         self.stop_button = QRadioButton()
+        self.stop_button.setToolTip(
+            'Stop playback.  Press spacebar to toggle',
+        )
         self.stop_button.setChecked(True)
         self.stop_button.setObjectName("stop_button")
         self.stop_button.toggled.connect(self.on_stop)
         self.hlayout1.addWidget(self.stop_button)
         self.rec_button = QRadioButton()
+        self.rec_button.setToolTip(
+            'Begin recording.  You must setup MIDI or audio input in the '
+            'hardware tab first'
+        )
         self.rec_button.setObjectName("rec_button")
         self.rec_button.toggled.connect(self.on_rec)
         self.hlayout1.addWidget(self.rec_button)
@@ -61,6 +71,7 @@ class TransportWidget:
         )
         self.stop_engine_action.triggered.connect(self.on_stop_engine)
         self.hlayout1.addWidget(self.panic_button)
+        self.panic_button.setToolTip(sg_strings.panic)
 
         self.host_layout = QVBoxLayout()
         self.host_layout.setContentsMargins(1, 1, 1, 1)
@@ -78,22 +89,19 @@ class TransportWidget:
         self.host_combobox.currentIndexChanged.connect(
             shared.MAIN_WINDOW.set_host,
         )
+        self.host_combobox.setToolTip('The host to use.')
         knob_size = 40
         self.main_vol_knob = widgets.PixmapKnob(knob_size, -480, 0)
         self.load_main_vol()
         self.hlayout1.addWidget(self.main_vol_knob)
         self.main_vol_knob.valueChanged.connect(self.main_vol_changed)
         self.main_vol_knob.sliderReleased.connect(self.main_vol_released)
+        self.main_vol_knob.setToolTip(
+            'Master volume.  Only affects your monitor speakers, not renders.'
+        )
         self.suppress_osc = False
 
         self.controls_to_disable = (self.menu_button, self.host_combobox)
-        self.panic_button.setToolTip(
-            _(
-                "Panic button:   Sends a note-off signal on every "
-                "note to every instrument\nYou can also use CTRL+P"
-            )
-        )
-        self.group_box.setToolTip(sg_strings.transport)
 
     def current_host(self) -> int:
         return self.host_combobox.currentIndex()

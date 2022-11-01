@@ -664,6 +664,7 @@ class knob_control(AbstractUiControl):
         max_text=None,
         text_lookup=None,
         value_multiplier=None,
+        tooltip=None,
     ):
         """
             a_size: The size of the knob (x or y), in pixels
@@ -707,6 +708,8 @@ class knob_control(AbstractUiControl):
             a_max_val,
             **knob_kwargs
         )
+        if tooltip:
+            self.control.setToolTip(tooltip)
         self.control.valueChanged.connect(self.control_value_changed)
         self.control.sliderReleased.connect(self.control_released)
         self.control.contextMenuEvent = self.contextMenuEvent
@@ -749,12 +752,15 @@ class slider_control(AbstractUiControl):
         min_text=None,
         max_text=None,
         value_multiplier=None,
+        tooltip=None,
     ):
         self.control = QSlider(a_orientation)
         self.control.contextMenuEvent = self.contextMenuEvent
         self.control.setRange(int(a_min_val), int(a_max_val))
         self.control.valueChanged.connect(self.control_value_changed)
         self.control.sliderReleased.connect(self.control_released)
+        if tooltip:
+            self.control.setToolTip(tooltip)
         self.value_label = QLabel("")
         self.value_label.setObjectName("plugin_value_label")
         self.value_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
@@ -789,6 +795,7 @@ class spinbox_control(AbstractUiControl):
         a_val_conversion=_shared.KC_NONE,
         a_port_dict=None,
         a_preset_mgr=None,
+        tooltip=None,
     ):
         AbstractUiControl.__init__(
             self,
@@ -806,6 +813,8 @@ class spinbox_control(AbstractUiControl):
         self.control.setRange(int(a_min_val), int(a_max_val))
         self.control.valueChanged.connect(self.control_value_changed)
         self.control.valueChanged.connect(self.control_released)
+        if tooltip:
+            self.control.setToolTip(tooltip)
         self.value_label = None
         self.set_value(a_default_val)
 
@@ -823,6 +832,7 @@ class doublespinbox_control(AbstractUiControl):
         a_val_conversion=_shared.KC_NONE,
         a_port_dict=None,
         a_preset_mgr=None,
+        tooltip=None,
     ):
         AbstractUiControl.__init__(
             self,
@@ -840,6 +850,8 @@ class doublespinbox_control(AbstractUiControl):
         self.control.setRange(float(a_min_val), float(a_max_val))
         self.control.valueChanged.connect(self.control_value_changed)
         self.control.valueChanged.connect(self.control_released)
+        if tooltip:
+            self.control.setToolTip(tooltip)
         self.value_label = None
         self.set_value(a_default_val)
 
@@ -854,16 +866,25 @@ class checkbox_control(AbstractUiControl):
         a_port_dict=None,
         a_preset_mgr=None,
         a_default=0,
+        tooltip=None,
     ):
         AbstractUiControl.__init__(
-            self, None, a_port_num, a_rel_callback, a_val_callback,
-            a_port_dict=a_port_dict, a_preset_mgr=a_preset_mgr,
-            a_default_value=a_default)
+            self,
+            None,
+            a_port_num,
+            a_rel_callback,
+            a_val_callback,
+            a_port_dict=a_port_dict,
+            a_preset_mgr=a_preset_mgr,
+            a_default_value=a_default,
+        )
         self.control = QCheckBox(a_label)
         if a_default:
             self.control.setChecked(True)
         self.widget = self.control
         self.control.stateChanged.connect(self.control_value_changed)
+        if tooltip:
+            self.control.setToolTip(tooltip)
         #self.control.stateChanged.connect(self.control_released)
         self.value_label = None
         self.suppress_changes = False
@@ -906,6 +927,7 @@ class combobox_control(AbstractUiControl):
         a_port_dict=None,
         a_default_index=None,
         a_preset_mgr=None,
+        tooltip=None,
     ):
         self.suppress_changes = True
         self.name_label = QLabel(str(a_label))
@@ -918,6 +940,8 @@ class combobox_control(AbstractUiControl):
         self.control.addItems(a_items_list)
         self.control.setCurrentIndex(0)
         self.control.currentIndexChanged.connect(self.control_value_changed)
+        if tooltip:
+            self.control.setToolTip(tooltip)
         self.port_num = int(a_port_num)
         self.rel_callback = a_rel_callback
         self.val_callback = a_val_callback
@@ -963,6 +987,7 @@ class NestedComboboxControl(AbstractUiControl):
         a_port_dict=None,
         a_default_index=None,
         a_preset_mgr=None,
+        tooltip=None,
     ):
         self.suppress_changes = True
         self.name_label = QLabel(str(a_label))
@@ -979,6 +1004,8 @@ class NestedComboboxControl(AbstractUiControl):
         self.control.currentIndexChanged_connect(
             self.control_value_changed,
         )
+        if tooltip:
+            self.control.setToolTip(tooltip)
         self.port_num = int(a_port_num)
         self.rel_callback = a_rel_callback
         self.val_callback = a_val_callback

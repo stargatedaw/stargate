@@ -27,6 +27,9 @@ class PianoRollEditorWidget:
 
         self.controls_grid_layout = QGridLayout()
         self.scale_key_combobox = QComboBox()
+        self.scale_key_combobox.setToolTip(
+            'Choose the root key for the musical scale to use'
+        )
         self.scale_key_combobox.setMinimumWidth(60)
         self.scale_key_combobox.addItems(_shared.PIANO_ROLL_NOTE_LABELS)
         self.scale_key_combobox.currentIndexChanged.connect(
@@ -34,6 +37,7 @@ class PianoRollEditorWidget:
         self.controls_grid_layout.addWidget(QLabel("Key:"), 0, 3)
         self.controls_grid_layout.addWidget(self.scale_key_combobox, 0, 4)
         self.scale_combobox = QComboBox()
+        self.scale_combobox.setToolTip('Choose the musical scale to use')
         self.scale_combobox.setMinimumWidth(172)
         self.scale_combobox.addItems(scales.SCALE_NAMES)
         self.scale_combobox.currentIndexChanged.connect(self.reload_handler)
@@ -46,6 +50,7 @@ class PianoRollEditorWidget:
         self.vzoom_slider.setObjectName("zoom_slider")
         self.vzoom_slider.setMaximumWidth(72)
         self.vzoom_slider.setRange(9, 24)
+        self.vzoom_slider.setToolTip('Vertical zoom')
         self.vzoom_slider.setValue(int(shared.PIANO_ROLL_NOTE_HEIGHT))
         self.vzoom_slider.valueChanged.connect(self.set_midi_vzoom)
         self.vzoom_slider.sliderReleased.connect(self.save_vzoom)
@@ -57,6 +62,10 @@ class PianoRollEditorWidget:
         )
 
         self.param_combobox = QComboBox()
+        self.param_combobox.setToolTip(
+            'Per note parameters for instrument plugins.  Use CTRL+ALT+drag\n'
+            'and CTRL+SHIFT+drag selected items to modify these values'
+        )
         self.param_combobox.setMinimumWidth(75)
         self.param_combobox.addItems(
             ['Velocity', 'Pan', 'Attack', 'Decay', 'Sustain', 'Release'],

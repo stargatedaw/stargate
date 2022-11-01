@@ -46,6 +46,7 @@ class SgChnlPluginUI(AbstractPluginUI):
                 KC_DECIMAL,
                 self.port_dict,
                 None,
+                tooltip='Pan the audio between the left and right speaker',
             )
             self.pan_slider.control.setObjectName("pan_slider")
             self.layout.addWidget(self.pan_slider.control)
@@ -67,6 +68,10 @@ class SgChnlPluginUI(AbstractPluginUI):
             knob_kwargs={
                 'arc_type': ArcType.BIDIRECTIONAL,
             },
+            tooltip=(
+                'Adjust the volume, in decibels.  Use the fader for\n'
+                'automation, use the gain knob for fine control'
+            ),
         )
         self.gain_knob.add_to_grid_layout(self.gain_gridlayout, 0)
         self.gain_knob.value_label.setMinimumWidth(55)
@@ -87,9 +92,23 @@ class SgChnlPluginUI(AbstractPluginUI):
             )
             self.pan_knob.add_to_grid_layout(self.gain_gridlayout, 1)
         self.pan_law_knob = knob_control(
-            f_knob_size, _("Law"), SGCHNL_LAW,
-            self.plugin_rel_callback, self.plugin_val_callback,
-            -600, 0, -300, KC_DECIMAL, self.port_dict, None)
+            f_knob_size,
+            _("Law"),
+            SGCHNL_LAW,
+            self.plugin_rel_callback,
+            self.plugin_val_callback,
+            -600,
+            0,
+            -300,
+            KC_DECIMAL,
+            self.port_dict,
+            None,
+            tooltip=(
+                'Pan law.  This is the volume when panned at center\n'
+                'Sound loses power when only coming from one speaker,\n'
+                'pan law compensates by reducing center volume'
+            ),
+        )
         self.pan_law_knob.add_to_grid_layout(self.gain_gridlayout, 2)
 
         self.volume_gridlayout = QGridLayout()
@@ -109,6 +128,7 @@ class SgChnlPluginUI(AbstractPluginUI):
             0,
             KC_DECIMAL,
             self.port_dict,
+            tooltip='The volume of the channel',
         )
         if self.is_mixer:
             self.volume_slider.add_to_grid_layout(self.volume_gridlayout, 0)

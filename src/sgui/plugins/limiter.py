@@ -106,6 +106,7 @@ class LimiterPluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='The threshold to begin limiting the sound',
         )
         self.thresh_knob.add_to_grid_layout(self.groupbox_gridlayout, 3)
 
@@ -122,6 +123,10 @@ class LimiterPluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'This knob will adjust auto-gain to keep the sound at \n'
+                'approximately this level'
+            ),
         )
         self.ceiling_knob.add_to_grid_layout(self.groupbox_gridlayout, 7)
 
@@ -138,6 +143,11 @@ class LimiterPluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Release in milliseconds.  Higher values result in\n'
+                'smoother sounds, lower values are perceived as louder\n'
+                'but may introduce unwanted artifacts to the sound'
+            ),
         )
         self.release_knob.add_to_grid_layout(self.groupbox_gridlayout, 22)
 

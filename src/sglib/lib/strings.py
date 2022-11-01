@@ -52,10 +52,6 @@ Paulstretch:  Mostly for stretching items very long, creates a very smeared,
 atmospheric sound""")
 
 
-transport = _("""\
-This is the transport, use this control to start/stop
-playback or recording.""")
-
 panic = _("""\
 The panic button has 2 options:
 - Send a note-off event on every note to every plugin, fixed stuck notes
@@ -78,23 +74,18 @@ export_format = _(
 interface is running at.
 You can convert the format using the Menu->Tools dialogs""")
 
-pitchbend_dialog = _(
-"""Pitchbend values are in semitones.
-
-Use this dialog to add points with precision,or double-click on
-the editor to add points.""")
+pitchbend_dialog = _("""\
+Pitchbend values are in semitones.  Use this dialog to add points with
+precision,or double-click on the editor to add points.""")
 
 PianoRollEditor = _("""\
-The piano roll editor is used to edit MIDI notes
-The "Parameter" combobox can be used to set various parameters per-note.
-CTRL+ALT+click+drag-up/down to adjust the parameter value of selected notes
-CTRL+SHIFT+click+drag-up/down to create a parameter value curve for the
-  selected notes.
-""")
+The piano roll editor is used to edit MIDI notes.  See the "Parameter"
+combobox, the menu button and the mouse tools in the transport panel.""")
 
 
 AudioItemSeq = _("""\
-Drag audio files from the file browser onto here.""")
+Each item can contain multiple audio items.  Drag audio files from the file
+browser to the right onto here.  Right click on items for editor actions.""")
 
 AudioSeqItem = _("""\
 Right click on an audio item to see the various tools and actions available.\
@@ -148,10 +139,6 @@ which will appear as a blue line.
 Double-click on a track to open it in the plugin rack
 """
 
-track_panel = _("""\
-This is the track panel.  Each track has a name textbox, solo & mute
-buttons, and a dropdown menu.""")
-
 track_panel_dropdown = _("""\
 The dropdown menu contains a shortcut to the track plugins (instrument and
 effects), and controls for selecting parameters for automation.  For a global
@@ -162,13 +149,4 @@ A track can be any or all of audio, MIDI, send or bus, at the same time.
 Instrument plugins can be placed before or after effect plugins, and
 will pass-through any audio from items or sends.
 """
-
-PluginRack = _("""\
-This is the plugin rack.  Select the track you wish to edit from the
-track combobox, and select it's plugins within the rack.""")
-
-Mixer = _("""\
-This is the mixer.  Route tracks between each other and the main track using
-the "Routing" tab.  When you create a route, it will show a channel on the
-mixer, where you can select a mixer plugin to control the channel with.""")
 

@@ -34,7 +34,11 @@ class SequencerWidget:
         self.edit_mode_combobox.setMinimumWidth(132)
         self.edit_mode_combobox.addItems([_("Items"), _("Automation")])
         self.edit_mode_combobox.currentIndexChanged.connect(
-            self.edit_mode_changed)
+            self.edit_mode_changed,
+        )
+        self.edit_mode_combobox.setToolTip(
+            'Change the edit mode.  Edit items or automation'
+        )
 
         self.menu_button = QPushButton(_("Menu"))
         self.hlayout0.addWidget(self.menu_button)
@@ -91,11 +95,15 @@ class SequencerWidget:
         # self.menu_layout.addWidget(self.snap_combobox, 5, 1)
 
         self.follow_checkbox = QCheckBox(_("Follow"))
+        self.follow_checkbox.setToolTip(
+            'Sequencer horizontal scroll follows the playback cursor'
+        )
         self.follow_checkbox.setChecked(True)
         self.hlayout0.addWidget(self.follow_checkbox)
 
         self.hlayout0.addWidget(QLabel("H"))
         self.hzoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
+        self.hzoom_slider.setToolTip('Horizontal zoom')
         self.hlayout0.addWidget(self.hzoom_slider)
         self.hzoom_slider.setObjectName("zoom_slider")
         self.hzoom_slider.setRange(0, 30)
@@ -109,6 +117,7 @@ class SequencerWidget:
 
         self.hlayout0.addWidget(QLabel("V"))
         self.vzoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
+        self.vzoom_slider.setToolTip('Vertical zoom')
         self.hlayout0.addWidget(self.vzoom_slider)
         self.vzoom_slider.setObjectName("zoom_slider")
         self.vzoom_slider.setRange(0, 60)

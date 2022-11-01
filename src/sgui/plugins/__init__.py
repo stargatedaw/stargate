@@ -292,6 +292,9 @@ class AbstractPluginSettings:
             self.plugin_combobox.currentIndexChanged_connect(
                 self.on_plugin_combobox_change,
             )
+        self.plugin_combobox.setToolTip(
+            'Select an instrument or effect plugin',
+        )
         self.plugin_combobox.setMinimumWidth(150)
         self.plugin_combobox.wheelEvent = self.wheel_event
 
@@ -305,6 +308,7 @@ class AbstractPluginSettings:
         self.power_checkbox = QCheckBox()
         self.power_checkbox.setObjectName("button_power")
         self.power_checkbox.setChecked(True)
+        self.power_checkbox.setToolTip('Enable or disable this plugin')
 
         if self.is_mixer:
             self.vlayout.addWidget(self.plugin_combobox)
@@ -521,6 +525,11 @@ class PluginSettingsMain(AbstractPluginSettings):
         )
         self.route_combobox.currentIndexChanged.connect(self._save_and_update)
         self.route_combobox.setMinimumWidth(90)
+        self.route_combobox.setToolTip(
+            'Choose which plugin slot to route to.  Use this for\n'
+            'layering instruments, parallel processing and other \n'
+            'creative uses'
+        )
         self.layout.insertWidget(
             self.layout.count() - 1,
             QLabel(_("Route")),
@@ -544,7 +553,7 @@ class PluginSettingsMain(AbstractPluginSettings):
 
         self.hide_checkbox = QCheckBox()
         self.hide_checkbox.setObjectName("button_hide")
-        self.hide_checkbox.setToolTip(_("Hide"))
+        self.hide_checkbox.setToolTip(_("Hide the plugin"))
         self.layout.addWidget(self.hide_checkbox)
         self.hide_checkbox.setEnabled(False)
         self.hide_checkbox.stateChanged.connect(self.hide_checkbox_changed)
@@ -662,7 +671,7 @@ class PluginRackTab:
         self.octave_spinbox.setRange(-2, 7)
         self.octave_spinbox.setValue(2)
         self.octave_spinbox.setToolTip(_(
-            "Sets the octave for the QWERTY... MIDI keyboard"
+            "Sets the octave when using your QWERTY keyboard for MIDI input"
         ))
         self.menu_layout.addWidget(QLabel(_("Octave")))
         self.menu_layout.addWidget(self.octave_spinbox)
@@ -684,7 +693,6 @@ class PluginRackTab:
         self.enabled = True
         self.plugin_racks = {}
         self.last_rack_num = None
-        self.widget.setToolTip(sg_strings.PluginRack)
 
     def octave(self):
         return self.octave_spinbox.value() + 2
@@ -1041,7 +1049,6 @@ class MixerWidget:
                 "Main" if f_i == 0 else "track{}".format(f_i), f_i)
             self.tracks[f_i] = f_channel
             self.grid_layout.addWidget(f_channel.widget, 0, f_i)
-        self.widget.setToolTip(sg_strings.Mixer)
 
     def set_project(self, a_project):
         self.PROJECT = a_project

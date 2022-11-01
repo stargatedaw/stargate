@@ -15,10 +15,9 @@ GNU General Public License for more details.
 from sglib.lib.translate import _
 
 sequencer = _("""\
-This is sequencer, it consists of items, tracks and automation.
-Click on the timeline at the top of the sequencer to set playback position,
-or right-click the timeline to set various markers.
-""")
+The sequencer contains tracks, items, and automation.  Use the mouse tools in
+the transport to add, edit or delete items.  Right click on items or the
+timeline for actions.  All items/tracks can contain audio and MIDI.""")
 
 """
 Tracks:
@@ -60,10 +59,4 @@ CTRL+drag to copy selected items
 """
 You can glue together multiple items by selecting items and pressing CTRL+G
 """
-
-transport = _(
-"""\
-The MIDI controllers and audio inputs used for recording can be
-configured in the dropdown
-""")
 

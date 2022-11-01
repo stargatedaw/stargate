@@ -24,7 +24,15 @@ AUTOMATION_RULER_WIDTH = 36.0
 AUTOMATION_MIN_HEIGHT = AUTOMATION_RULER_WIDTH - AUTOMATION_POINT_RADIUS
 
 LAST_IPB_VALUE = 18  #For the 'add point' dialog to remember settings
+CC_TOOLTIP = """\
+Select the CC number you wish to automate using the CC combobox. Draw points by
+double-clicking, Click+drag to select points. Press 'delete' to delete selected
+points."""
 
+PB_TOOLTIP = """\
+Draw points by double-clicking, then click the 'smooth' button to draw extra
+points between them.Click+drag to select points. Press 'delete' to delete
+selected points."""
 
 class AutomationEditor(AbstractItemEditor):
     """ This is the class for both the pitchbend and CC
@@ -76,7 +84,7 @@ class AutomationEditor(AbstractItemEditor):
         shared.AUTOMATION_EDITORS.append(self)
         self.selection_enabled = True
         self.scene.selectionChanged.connect(self.selection_changed)
-        self.set_tooltips(True)
+        self.setToolTip(CC_TOOLTIP if a_is_cc else PB_TOOLTIP)
 
     def set_width(self):
         self.automation_width = shared.MIDI_SCALE * (self.width() - 60.0)
@@ -85,23 +93,6 @@ class AutomationEditor(AbstractItemEditor):
         if self.selection_enabled:
             for f_item in self.automation_points:
                 f_item.set_brush()
-
-    def set_tooltips(self, a_enabled=False):
-        if a_enabled:
-            if self.is_cc:
-                f_start = _("Select the CC you wish to "
-                    "automate using the comboboxes below\n")
-            else:
-                f_start = ""
-            self.setToolTip(
-                _("{}Draw points by double-clicking, then click "
-                "the 'smooth' button to "
-                "draw extra points between them.\nClick+drag "
-                "to select points\n"
-                "Press the 'delete' button to delete selected "
-                "points.").format(f_start))
-        else:
-            self.setToolTip("")
 
     def prepare_to_quit(self):
         self.selection_enabled = False
@@ -450,6 +441,9 @@ class AutomationEditorWidget:
         self.hlayout.addWidget(self.edit_button)
         self.edit_menu = QMenu(self.widget)
         self.copy_action = self.edit_menu.addAction(_("Copy"))
+        self.copy_action.setToolTip(
+            'Copy selected automation points to the clipboard'
+        )
         self.copy_action.triggered.connect(
             self.automation_viewer.copy_selected)
         self.copy_action.setShortcut(QKeySequence.StandardKey.Copy)
@@ -457,9 +451,16 @@ class AutomationEditorWidget:
         self.cut_action.triggered.connect(self.automation_viewer.cut)
         self.cut_action.setShortcut(QKeySequence.StandardKey.Cut)
         self.paste_action = self.edit_menu.addAction(_("Paste"))
+        self.paste_action.setToolTip(
+            'Paste automation points that were previously copied\n'
+            'to the clipboard'
+        )
         self.paste_action.triggered.connect(self.automation_viewer.paste)
         self.paste_action.setShortcut(QKeySequence.StandardKey.Paste)
         self.select_all_action = self.edit_menu.addAction(_("Select All"))
+        self.select_all_action.setToolTip(
+            'Select all automation points in this item'
+        )
         self.select_all_action.triggered.connect(self.select_all)
         self.select_all_action.setShortcut(
             QKeySequence.StandardKey.SelectAll,

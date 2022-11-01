@@ -116,6 +116,9 @@ class sgdelay_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Delay time in seconds.  The amount of time between echoes'
+            ),
         )
         self.delay_time_knob.add_to_grid_layout(self.delay_gridlayout, 0)
         self.feedback = knob_control(
@@ -131,6 +134,10 @@ class sgdelay_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Delay feedback in decibels.  How long to echo, how \n'
+                'many echoes'
+            ),
         )
         self.feedback.add_to_grid_layout(self.delay_gridlayout, 1)
         self.dry_knob = knob_control(
@@ -146,6 +153,7 @@ class sgdelay_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='Dry volume in decibels.  The volume of the input',
         )
         self.dry_knob.add_to_grid_layout(self.delay_gridlayout, 2)
         self.wet_knob = knob_control(
@@ -161,6 +169,7 @@ class sgdelay_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='Wet volume in decibels.  The volume of the pure echoes',
         )
         self.wet_knob.add_to_grid_layout(self.delay_gridlayout, 3)
         self.duck_knob = knob_control(
@@ -176,6 +185,11 @@ class sgdelay_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Smaller values cause the echoes to be reduced in volume\n'
+                'when the input signal is louder.  Use to prevent \n'
+                'muddy sound, or only to hear echoes during quiet parts'
+            ),
         )
         self.duck_knob.add_to_grid_layout(self.delay_gridlayout, 4)
         self.cutoff_knob = knob_control(
@@ -191,6 +205,10 @@ class sgdelay_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Lowpass filter cutoff.  Higher values result in brighter\n'
+                'sounding echoes'
+            ),
         )
         self.cutoff_knob.add_to_grid_layout(self.delay_gridlayout, 5)
         self.stereo_knob = knob_control(
@@ -206,6 +224,11 @@ class sgdelay_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Stereo width.  High values result in a left/right \n'
+                '"ping-pong" style delay, low values echo in the\n'
+                'center of the stereo field'
+            ),
         )
         self.stereo_knob.add_to_grid_layout(self.delay_gridlayout, 6)
 

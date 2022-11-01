@@ -176,6 +176,11 @@ class SgMainWindow(QWidget):
             ),
         )
         shared.HINT_BOX = QLabel()
+        shared.HINT_BOX.setAlignment(
+            QtCore.Qt.AlignmentFlag.AlignTop
+            |
+            QtCore.Qt.AlignmentFlag.AlignLeft
+        )
         shared.HINT_BOX.setObjectName('hintbox')
         shared.HINT_BOX.setMinimumHeight(40)
         shared.HINT_BOX.setMinimumWidth(360)
@@ -211,6 +216,10 @@ class SgMainWindow(QWidget):
 
         self.menu_bar = QMenu(self)
 
+        shared.TRANSPORT.menu_button.setToolTip(
+            'The main menu.  Contains various options relating to\n'
+            'opening, closing and creating files'
+        )
         shared.TRANSPORT.menu_button.setMenu(self.menu_bar)
         self.menu_file = self.menu_bar.addMenu(_("File"))
 

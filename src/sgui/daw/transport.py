@@ -35,26 +35,30 @@ class TransportWidget(AbstractTransportWidget):
         # Mouse tools
         self.tool_select_rb = QRadioButton()
         self.tool_select_rb.setObjectName("tool_select")
-        self.tool_select_rb.setToolTip(_("Select (hotkey: a)"))
+        self.tool_select_rb.setToolTip(
+            _("Select items by clicking or dragging (hotkey: a)")
+        )
         self.hlayout1.addWidget(self.tool_select_rb)
         self.tool_select_rb.clicked.connect(self.tool_select_clicked)
         self.tool_select_rb.setChecked(True)
 
         self.tool_draw_rb = QRadioButton()
         self.tool_draw_rb.setObjectName("tool_draw")
-        self.tool_draw_rb.setToolTip(_("Draw (hotkey: s)"))
+        self.tool_draw_rb.setToolTip(_("Draw items by clicking (hotkey: s)"))
         self.tool_draw_rb.clicked.connect(self.tool_draw_clicked)
         self.hlayout1.addWidget(self.tool_draw_rb)
 
         self.tool_erase_rb = QRadioButton()
         self.tool_erase_rb.setObjectName("tool_erase")
-        self.tool_erase_rb.setToolTip(_("Erase (hotkey: d)"))
+        self.tool_erase_rb.setToolTip(_(
+            "Erase items by clicking and dragging (hotkey: d)"
+        ))
         self.tool_erase_rb.clicked.connect(self.tool_erase_clicked)
         self.hlayout1.addWidget(self.tool_erase_rb)
 
         self.tool_split_rb = QRadioButton()
         self.tool_split_rb.setObjectName("tool_split")
-        self.tool_split_rb.setToolTip(_("Split (hotkey: f)"))
+        self.tool_split_rb.setToolTip(_("Split items by clicking (hotkey: f)"))
         self.tool_split_rb.clicked.connect(self.tool_split_clicked)
         self.hlayout1.addWidget(self.tool_split_rb)
 
@@ -67,7 +71,6 @@ class TransportWidget(AbstractTransportWidget):
             _("Use this to toggle between normal playback "
             "and looping a sequence.\nYou can toggle between "
             "settings with CTRL+L"))
-        self.group_box.setToolTip(daw_strings.transport)
 
     def tab_changed(self, index):
         if index == shared.TAB_ITEM_EDITOR:

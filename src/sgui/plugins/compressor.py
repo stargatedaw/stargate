@@ -143,6 +143,10 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Threshold.  The amplitude of input sound that the\n'
+                'compressor will begin to compress the sound'
+            ),
         )
         self.thresh_knob.add_to_grid_layout(self.groupbox_gridlayout, 3)
 
@@ -159,6 +163,11 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'The compression ratio. Above the threshold, the sound\n'
+                'will be compressed this much.  10:1 means a 90% \n'
+                'reduction in volume above the threshold'
+            ),
         )
         self.ratio_knob.add_to_grid_layout(self.groupbox_gridlayout, 7)
 
@@ -175,6 +184,10 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Compressor "knee".  How hard or soft the transition is\n'
+                'from uncompressed to compressed sound'
+            ),
         )
         self.knee_knob.add_to_grid_layout(self.groupbox_gridlayout, 15)
 
@@ -191,6 +204,10 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Attack time, in milliseconds.  How quickly compression\n'
+                'begins after the input exceeds the threshold'
+            ),
         )
         self.attack_knob.add_to_grid_layout(self.groupbox_gridlayout, 21)
 
@@ -207,6 +224,12 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Release time, in milliseconds.  How quickly the \n'
+                'compressor transitions back to uncompressed sound\n'
+                'after the input no longer exceeds the threshold'
+            ),
+
         )
         self.release_knob.add_to_grid_layout(self.groupbox_gridlayout, 22)
 
@@ -223,6 +246,11 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Make up gain.  The compressor will alter the output\n'
+                'volume of the sound, use this knob to adjust the gain\n'
+                'to fit into the mix of your project'
+            ),
         )
         self.gain_knob.add_to_grid_layout(self.groupbox_gridlayout, 30)
 
@@ -236,6 +264,10 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             self.port_dict,
             0,
             self.preset_manager,
+            tooltip=(
+                'Peak: Compress peaks to prevent clipping\n'
+                'RMS: Compress perceived volume to a consistent level'
+            )
         )
         self.mono_combobox.add_to_grid_layout(self.groupbox_gridlayout, 36)
 
@@ -252,6 +284,10 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Higher values result in a smoother, less responsive \n'
+                'compression in RMS mode'
+            ),
         )
         self.rms_time_knob.add_to_grid_layout(self.groupbox_gridlayout, 37)
 

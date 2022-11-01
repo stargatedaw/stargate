@@ -147,6 +147,7 @@ class ReverbPluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='Higher values result in longer reverb tails',
         )
         self.reverb_time_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout,
@@ -166,6 +167,7 @@ class ReverbPluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='Dry volume.  The volume of the input signal',
         )
         self.reverb_dry_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout,
@@ -185,6 +187,7 @@ class ReverbPluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='Wet volume.  The volume of the pure reverb sound',
         )
         self.reverb_wet_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout,
@@ -204,6 +207,10 @@ class ReverbPluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Highpass filter frequency in hertz.  Highe values \n'
+                'reduce muddiness and rumbling in the wet sound.'
+            ),
         )
         self.reverb_hp_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout,
@@ -223,6 +230,10 @@ class ReverbPluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Lowpass filter frequency in hertz.  Lower values result\n'
+                'in a soft reverb, high values result in a bright reverb'
+            ),
         )
         self.reverb_lp_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout,
@@ -242,6 +253,10 @@ class ReverbPluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Pre-delay in milliseconds.  The wet signal will be delayed\n'
+                'by this much time'
+            ),
         )
         self.reverb_predelay_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout,
@@ -261,6 +276,7 @@ class ReverbPluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='Pan the dry signal left or right',
         )
         self.dry_pan_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout,
@@ -279,6 +295,7 @@ class ReverbPluginUI(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip='Pan the wet signal left or right',
         )
         self.wet_pan_knob.add_to_grid_layout(
             self.reverb_groupbox_gridlayout,
