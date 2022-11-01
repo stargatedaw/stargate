@@ -97,10 +97,24 @@ class _HintBox:
     def setToolTip(self, text: str):
         self._tooltip = text
 
+    def _clear_hint_box(self):
+        # Maintain a stack of messages, only clear the text if there are none
+        from sgui import shared
+        if shared.HINT_BOX_STACK:
+            shared.HINT_BOX_STACK.pop()
+        if shared.HINT_BOX_STACK:  # still
+            msg = shared.HINT_BOX_STACK[-1]
+            shared.HINT_BOX.setText(msg)
+        else:
+            shared.HINT_BOX.setText('')
+
     def _set_hint_box(self, msg: str):
         from sgui import shared
         if hasattr(shared, 'HINT_BOX'):
             shared.HINT_BOX.setText(msg)
+            if msg in shared.HINT_BOX_STACK:
+                shared.HINT_BOX_STACK.remove(msg)
+            shared.HINT_BOX_STACK.append(msg)
 
 class _HintWidget(_HintBox):
     def event(self, event):
@@ -114,7 +128,7 @@ class _HintWidget(_HintBox):
                 QtCore.QEvent.Type.HoverLeave,
                 QtCore.QEvent.Type.Leave,
             ):
-                self._set_hint_box("")
+                self._clear_hint_box()
         return super().event(event)
 
 class _HintItem(_HintBox):
@@ -129,7 +143,7 @@ class _HintItem(_HintBox):
 
     def hoverLeaveEvent(self, event):
         if self._tooltip:
-            self._set_hint_box('')
+            self._clear_hint_box()
         return super().hoverLeaveEvent(event)
 
 orig_QLineEdit = QLineEdit

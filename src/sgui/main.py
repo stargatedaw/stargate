@@ -176,6 +176,7 @@ class SgMainWindow(QWidget):
             ),
         )
         shared.HINT_BOX = QLabel()
+        shared.HINT_BOX_STACK = []
         shared.HINT_BOX.setAlignment(
             QtCore.Qt.AlignmentFlag.AlignTop
             |
