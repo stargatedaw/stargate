@@ -44,6 +44,10 @@ class osc_widget:
             a_port_dict=a_port_dict,
             a_preset_mgr=a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Pitch offset for this oscillator from the incoming MIDI note '
+                'in semitones'
+            ),
         )
         self.fine_knob = knob_control(
             a_size,
@@ -58,6 +62,10 @@ class osc_widget:
             a_port_dict=a_port_dict,
             a_preset_mgr=a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Finely adjusted pitch offset for this oscillator from the '
+                'incoming MIDI note in semitones'
+            ),
         )
 
         self.pitch_knob.ratio_callback = self.fine_knob.set_value
@@ -76,6 +84,7 @@ class osc_widget:
             a_preset_mgr=a_preset_mgr,
             knob_kwargs=knob_kwargs,
             min_text=vol_min_text,
+            tooltip='Oscillator volume in decibels',
         )
         if nested_lookup:
             self.osc_type_combobox = NestedComboboxControl(
@@ -89,6 +98,7 @@ class osc_widget:
                 a_port_dict,
                 a_preset_mgr=a_preset_mgr,
                 a_default_index=a_default_type,
+                tooltip='The waveform of the oscillator',
             )
         else:
             self.osc_type_combobox = combobox_control(
@@ -101,6 +111,7 @@ class osc_widget:
                 a_port_dict,
                 a_preset_mgr=a_preset_mgr,
                 a_default_index=a_default_type,
+                tooltip='The waveform of the oscillator',
             )
         if a_uni_voices_port is not None and a_uni_spread_port is not None:
             self.uni_voices_knob = knob_control(
@@ -116,6 +127,10 @@ class osc_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'The number of unison voices for the oscillator.  More '
+                    'unison voices results in a thicker sound'
+                )
             )
             self.uni_voices_knob.add_to_grid_layout(self.grid_layout, 10)
             self.uni_spread_knob = knob_control(
@@ -131,6 +146,11 @@ class osc_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'The spread of the unison oscillators, in semitones.  '
+                    'Smaller values sound thinner, larger values sound '
+                    'thicker and more discordant'
+                ),
             )
             self.uni_spread_knob.add_to_grid_layout(self.grid_layout, 11)
         if a_pb_port is not None:
@@ -147,6 +167,10 @@ class osc_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'The amount of pitchbend for this oscillator when the '
+                    'pitchbend wheel is fully up or down, in semitones'
+                ),
             )
             self.pb_knob.add_to_grid_layout(self.grid_layout, 15)
         self.pitch_knob.add_to_grid_layout(self.grid_layout, 0)

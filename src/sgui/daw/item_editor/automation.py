@@ -413,6 +413,10 @@ class AutomationEditorWidget:
 
         if a_is_cc:
             self.control_combobox = QComboBox()
+            self.control_combobox.setToolTip(
+                "The MIDI CC number to edit.  To assign to a plugin, right "
+                "click on a plugin knob or slider and assign to this CC number"
+            )
             self.control_combobox.addItems([str(x) for x in range(1, 128)])
             self.control_combobox.setMinimumWidth(90)
             self.hlayout.addWidget(QLabel(_("CC")))

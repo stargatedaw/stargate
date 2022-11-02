@@ -302,8 +302,8 @@ class RoutingGraphWidget(QGraphicsView):
                     )
                     circle.setPen(f_pen)
                     circle.setToolTip(
-                        f'{k} {ROUTE_TYPES[conn_type]} to '
-                        f'{a_track_names[f_dest_pos]}'
+                        f'from: "{k}" to: "{a_track_names[f_dest_pos]}" '
+                        f'type: {ROUTE_TYPES[conn_type]} '
                     )
                     circle.setZValue(2000)
                     self.scene.addItem(circle)
@@ -351,8 +351,8 @@ class RoutingGraphWidget(QGraphicsView):
                     )
                     circle.setPen(f_pen)
                     circle.setToolTip(
-                        f'{k} {ROUTE_TYPES[conn_type]} to '
-                        f'{a_track_names[f_dest_pos]}'
+                        f'from: "{k}" to: "{a_track_names[f_dest_pos]}" '
+                        f'type: {ROUTE_TYPES[conn_type]} '
                     )
                     circle.setZValue(2000)
                     self.scene.addItem(circle)

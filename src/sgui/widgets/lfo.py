@@ -36,6 +36,7 @@ class lfo_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip='LFO frequency in hertz, how quickly the LFO oscillates',
         )
         self.freq_knob.add_to_grid_layout(self.layout, 0)
         self.type_combobox = combobox_control(
@@ -48,6 +49,7 @@ class lfo_widget:
             a_port_dict,
             0,
             a_preset_mgr=a_preset_mgr,
+            tooltip='The LFO oscillator shape',
         )
         self.layout.addWidget(self.type_combobox.name_label, 0, 1)
         self.layout.addWidget(self.type_combobox.control, 1, 1)
@@ -65,6 +67,11 @@ class lfo_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'LFO oscillator phase.  The LFO resets to this value '
+                    'when a MIDI note is pressed, 0.0 is the beginning of '
+                    'the waveform, 0.5 is in the middle'
+                ),
             )
             self.phase_knob.add_to_grid_layout(self.layout, 2)
 

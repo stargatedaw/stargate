@@ -18,16 +18,20 @@ class file_select_widget:
         self.clear_button = QPushButton(_("Clear"))
         self.clear_button.setMaximumWidth(60)
         self.copy_to_clipboard = QPushButton(_("Copy"))
-        self.copy_to_clipboard.setToolTip(_("Copy file path to clipboard"))
+        self.copy_to_clipboard.setToolTip(
+            "Copy file path to the system clipboard"
+        )
         self.copy_to_clipboard.pressed.connect(self.copy_to_clipboard_pressed)
         self.copy_to_clipboard.setMaximumWidth(60)
         self.paste_from_clipboard = QPushButton(_("Paste"))
         self.paste_from_clipboard.setToolTip(
-            _("Paste file path from clipboard"))
+            "Paste file path from the system clipboard"
+        )
         self.paste_from_clipboard.pressed.connect(
             self.paste_from_clipboard_pressed)
         self.paste_from_clipboard.setMaximumWidth(60)
         self.reload_button = QPushButton(_("Reload"))
+        self.reload_button.setToolTip('Reload the current directory')
         self.reload_button.setMaximumWidth(60)
         self.file_path = QLineEdit()
         self.file_path.setSizePolicy(

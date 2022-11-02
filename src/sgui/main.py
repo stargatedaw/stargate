@@ -185,6 +185,10 @@ class SgMainWindow(QWidget):
         shared.HINT_BOX.setObjectName('hintbox')
         shared.HINT_BOX.setMinimumHeight(40)
         shared.HINT_BOX.setMinimumWidth(390)
+        shared.HINT_BOX.setToolTip(
+            'The hint box, provides information about almost anything '
+            'you hover the mouse over'
+        )
         self.transport_hlayout.addWidget(shared.HINT_BOX)
 
         self.main_stack = QStackedWidget()

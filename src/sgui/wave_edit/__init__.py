@@ -146,6 +146,7 @@ def normalize_dialog():
     f_layout.addLayout(f_hlayout)
     f_hlayout.addWidget(QLabel("dB"))
     f_db_spinbox = QDoubleSpinBox()
+    f_db.setToolTip('The volume to normalize to, in decibels')
     f_hlayout.addWidget(f_db_spinbox)
     f_db_spinbox.setRange(-18.0, 0.0)
     f_db_spinbox.setDecimals(1)
@@ -167,20 +168,28 @@ class AudioInput:
         self.callback = a_callback
         a_layout.addWidget(QLabel(str(a_num)), a_num + 1, 21)
         self.name_lineedit = QLineEdit(str(a_num))
+        self.name_lineedit.setToolTip('A friendly name to give this input')
         self.name_lineedit.editingFinished.connect(self.name_update)
         a_num += 1
         a_layout.addWidget(self.name_lineedit, a_num, 0)
         self.rec_checkbox = QCheckBox("")
+        self.rec_checkbox.setToolTip(
+            'Enable or disable recording of this input'
+        )
         self.rec_checkbox.clicked.connect(self.update_engine)
         a_layout.addWidget(self.rec_checkbox, a_num, 1)
 
         self.monitor_checkbox = QCheckBox(_(""))
+        self.monitor_checkbox.setToolTip(
+            'Monitor ths input, play it through the monitor speakers'
+        )
         self.monitor_checkbox.clicked.connect(self.update_engine)
         a_layout.addWidget(self.monitor_checkbox, a_num, 2)
 
         self.vol_layout = QHBoxLayout()
         a_layout.addLayout(self.vol_layout, a_num, 3)
         self.vol_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
+        self.vol_slider.setToolTip('Volume gain for this input in decibels')
         self.vol_slider.setRange(-240, 240)
         self.vol_slider.setValue(0)
         self.vol_slider.setMinimumWidth(240)
@@ -762,14 +771,17 @@ class WaveEditorWidget:
             self.fade_out_end,
         )
         self.sample_graph.setToolTip(
-            _("Load samples here by using the browser on the left "
-            "and clicking the  'Load' button"))
+            "Load samples here by using the browser on the left "
+            "and clicking the  'Load' button"
+        )
         self.menu_button.setToolTip(
-            _("This menu can export the audio or perform "
-            "various operations."))
+            "This menu can export the audio or perform "
+            "various operations."
+        )
         self.history_button.setToolTip(
-            _("Use this button to view or open files that "
-            "were previously opened during this session."))
+            "Use this button to view or open files that "
+            "were previously opened during this session."
+        )
 
     def save_callback(self):
         f_result = track_plugins()

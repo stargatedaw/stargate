@@ -18,11 +18,21 @@ class MidiDevice:
         self.index = int(a_index)
         self.save_callback = a_save_callback
         self.record_checkbox = QCheckBox()
+        self.record_checkbox.setToolTip(
+            "Record arm this MIDI device, it will be recorded to the selected "
+            "output track when the record button is pressed.  The MIDI note "
+            "events from this device will be sent to all plugins on this track"
+        )
         self.record_checkbox.toggled.connect(self.device_changed)
         f_index = int(a_index) + 1
         a_layout.addWidget(self.record_checkbox, f_index, 0)
         a_layout.addWidget(QLabel(a_name), f_index, 1)
         self.track_combobox = QComboBox()
+        self.track_combobox.setToolTip(
+            "The track to output this MIDI device to.  All MIDI events from "
+            "tjos MIDI device will be recorded to this track, and sent to "
+            "all plugins in this track's plugin rack"
+        )
         self.track_combobox.setMinimumWidth(180)
         self.track_combobox.addItems(shared.TRACK_NAMES)
         shared.TRACK_NAME_COMBOBOXES.append(self.track_combobox)

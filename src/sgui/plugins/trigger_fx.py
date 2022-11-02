@@ -188,6 +188,7 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             self.port_dict,
             120,
             self.preset_manager,
+            name_label="Trigger Note",
         )
         self.gate_note_selector.add_to_grid_layout(self.gate_gridlayout, 6)
         self.gate_wet_knob = knob_control(
@@ -266,6 +267,7 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             self.port_dict,
             119,
             self.preset_manager,
+            name_label="Trigger Note",
         )
         self.glitch_note_selector.add_to_grid_layout(self.glitch_gridlayout, 6)
         self.glitch_time_knob = knob_control(

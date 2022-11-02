@@ -786,7 +786,10 @@ class AudioItemSeqWidget(FileDragDropper):
                  f_per_item_fx_dict.get_row(f_item.track_num, True)))
         if not f_count:
             QMessageBox.warning(
-                self.widget, _("Error"), _("Nothing selected."))
+                self.widget,
+                _("Error"),
+                _("Nothing selected."),
+            )
         return f_count
 
     def on_cut(self):
@@ -798,8 +801,10 @@ class AudioItemSeqWidget(FileDragDropper):
             return
         if not self.audio_items_clipboard:
             QMessageBox.warning(
-                self.widget, _("Error"),
-                _("Nothing copied to the clipboard."))
+                self.widget,
+                _("Error"),
+                _("Nothing copied to the clipboard."),
+            )
         shared.AUDIO_SEQ.reselect_on_stop = []
         f_per_item_fx_dict = shared.CURRENT_ITEM
 #        f_global_tempo = float(TRANSPORT.tempo_spinbox.value())

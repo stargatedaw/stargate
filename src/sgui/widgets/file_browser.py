@@ -32,30 +32,43 @@ class AbstractFileBrowserWidget:
         self.folders_tab_widget.setMaximumWidth(660)
         self.folders_tab_widget.addTab(self.vsplitter, _("Files"))
         self.folder_path_lineedit = QLineEdit()
+        self.folder_path_lineedit.setToolTip('The current directory')
         self.folder_path_lineedit.setReadOnly(True)
         self.folders_widget_layout.addWidget(self.folder_path_lineedit)
 
         self.folder_filter_hlayout = QHBoxLayout()
         self.folder_filter_hlayout.addWidget(QLabel(_("Filter:")))
         self.folder_filter_lineedit = QLineEdit()
+        self.folder_filter_lineedit.setToolTip(
+            'Search for folders in this directory containing specific text '
+            'in their file name.  Searches are not case-sensitive.'
+        )
         self.folder_filter_lineedit.textChanged.connect(self.on_filter_folders)
         self.folder_filter_hlayout.addWidget(self.folder_filter_lineedit)
         self.folder_filter_clear_button = QPushButton(_("Clear"))
+        self.folder_filter_clear_button.setToolTip(
+            'Clear the filter, show all folders'
+        )
         self.folder_filter_clear_button.pressed.connect(
             self.on_folder_filter_clear)
         self.folder_filter_hlayout.addWidget(self.folder_filter_clear_button)
         self.folders_widget_layout.addLayout(self.folder_filter_hlayout)
 
         self.list_folder = QListWidget()
+        self.list_folder.setToolTip('The folders in the current directory')
         self.list_folder.itemClicked.connect(self.folder_item_clicked)
         self.folders_widget_layout.addWidget(self.list_folder)
         self.folder_buttons_hlayout = QHBoxLayout()
         self.folders_widget_layout.addLayout(self.folder_buttons_hlayout)
         self.up_button = QPushButton(_("Up"))
+        self.up_button.setToolTip(
+            "Go up one folder to this folder's parent folder"
+        )
         self.up_button.pressed.connect(self.on_up_button)
         self.up_button.contextMenuEvent = self.up_contextMenuEvent
         self.folder_buttons_hlayout.addWidget(self.up_button)
         self.back_button = QPushButton(_("Back"))
+        self.back_button.setToolTip("Go back to the previous folder")
         self.folder_buttons_hlayout.addWidget(self.back_button)
         self.back_button.contextMenuEvent = self.back_contextMenuEvent
         self.back_button.pressed.connect(self.on_back)
@@ -85,12 +98,21 @@ class AbstractFileBrowserWidget:
         self.bookmarks_tab_vlayout = QVBoxLayout()
         self.bookmarks_tab.setLayout(self.bookmarks_tab_vlayout)
         self.list_bookmarks = QTreeWidget()
+        self.list_bookmarks.setToolTip(
+            'Bookmark folders from the file browser menu to keep here for '
+            'easy access.  Some project folders are automatically kept as '
+            'bookmarks'
+        )
         self.list_bookmarks.setHeaderHidden(True)
         self.list_bookmarks.itemClicked.connect(self.bookmark_clicked)
         self.list_bookmarks.contextMenuEvent = self.bookmark_context_menu_event
         self.bookmarks_tab_vlayout.addWidget(self.list_bookmarks)
         self.bookmark_button_hlayout = QHBoxLayout()
         self.bookmarks_reload_button = QPushButton(_("Reload"))
+        self.bookmarks_reload_button.setToolTip(
+            'Reload bookmarks.  Use this when you have added bookmarks '
+            'in another file browser'
+        )
         self.bookmarks_tab_vlayout.addLayout(self.bookmark_button_hlayout)
         self.bookmark_button_hlayout.addWidget(self.bookmarks_reload_button)
         self.bookmarks_reload_button.pressed.connect(self.open_bookmarks)
@@ -112,22 +134,40 @@ class AbstractFileBrowserWidget:
         self.filter_hlayout.addWidget(QLabel(_("Filter:")))
         self.filter_lineedit = QLineEdit()
         self.filter_lineedit.textChanged.connect(self.on_filter_files)
+        self.filter_lineedit.setToolTip(
+            'Search for files in this directory containing specific text '
+            'in their file name.  Searches are not case-sensitive.'
+        )
         self.filter_hlayout.addWidget(self.filter_lineedit)
         self.filter_clear_button = QPushButton(_("Clear"))
+        self.filter_clear_button.setToolTip(
+            'Clear the filter, show all files'
+        )
         self.filter_clear_button.pressed.connect(self.on_filter_clear)
         self.filter_hlayout.addWidget(self.filter_clear_button)
         self.file_vlayout.addLayout(self.filter_hlayout)
         self.list_file = QListWidget()
+        self.list_file.setToolTip('The files in the current directory')
         self.list_file.setSelectionMode(
             QAbstractItemView.SelectionMode.SingleSelection,
         )
         self.file_vlayout.addWidget(self.list_file)
         self.file_hlayout = QHBoxLayout()
         self.preview_button = QPushButton(_("Preview"))
+        self.preview_button.setToolTip(
+            'Preview an audio file.  Up to 30 seconds will be played'
+        )
         self.file_hlayout.addWidget(self.preview_button)
         self.stop_preview_button = QPushButton(_("Stop"))
+        self.stop_preview_button.setToolTip(
+            'Stop playing audio after "Preview" has been pressed'
+        )
         self.file_hlayout.addWidget(self.stop_preview_button)
         self.refresh_button = QPushButton(_("Refresh"))
+        self.refresh_button.setToolTip(
+            'Refresh the folder, show any new files, remove any files '
+            'that were deleted'
+        )
         self.file_hlayout.addWidget(self.refresh_button)
         self.refresh_button.pressed.connect(self.on_refresh)
         self.file_vlayout.addLayout(self.file_hlayout)

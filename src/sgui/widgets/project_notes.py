@@ -1,4 +1,4 @@
-from sgui.sgqt import QtWidgets
+from sgui.sgqt import QTextEdit
 
 
 class ProjectNotes:
@@ -14,7 +14,11 @@ class ProjectNotes:
         """
         self._save = _save
         self._load = _load
-        self.widget = QtWidgets.QTextEdit(parent)
+        self.widget = QTextEdit(parent)
+        self.widget.setToolTip(
+            'Project notes.  Keep notes about your project here, anything '
+            'that is useful, for example: lyrics, scales, ideas'
+        )
         self.widget.setAcceptRichText(False)
         self.widget.leaveEvent = self.on_edit_notes
 
@@ -24,7 +28,7 @@ class ProjectNotes:
         )
 
     def on_edit_notes(self, a_event=None):
-        QtWidgets.QTextEdit.leaveEvent(self.widget, a_event)
+        QTextEdit.leaveEvent(self.widget, a_event)
         self._save(
             self.widget.toPlainText(),
         )

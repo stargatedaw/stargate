@@ -34,6 +34,10 @@ class filter_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Filter cutoff frequency, the frequency to begin '
+                'reducing volume at'
+            ),
         )
         self.cutoff_knob.add_to_grid_layout(self.layout, 0)
         self.res_knob = knob_control(
@@ -49,6 +53,11 @@ class filter_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Filter resonance.  Low values result in a smooth cutoff '
+                'after the filter frequency, high values result in a sharp '
+                'cutoff and a peak at the cutoff frequency'
+            ),
         )
         self.res_knob.add_to_grid_layout(self.layout, 1)
         if a_type_port is not None:
@@ -71,6 +80,10 @@ class filter_widget:
                 ],
                 a_port_dict,
                 a_preset_mgr=a_preset_mgr,
+                tooltip=(
+                    'Filter type.  LP = Lowpass, HP = Highpass, '
+                    'BP = Bandpass, 2 = 2 pole, 4 = 4 pole'
+                ),
             )
             self.layout.addWidget(self.type_combobox.name_label, 0, 2)
             self.layout.addWidget(self.type_combobox.control, 1, 2)

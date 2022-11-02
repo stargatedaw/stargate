@@ -235,7 +235,7 @@ class eq_viewer(QGraphicsView):
     def resizeEvent(self, a_resize_event):
         QGraphicsView.resizeEvent(self, a_resize_event)
         self.scale(
-            1.0 / self.last_x_scale if self.last_x_scale else 1.0, 
+            1.0 / self.last_x_scale if self.last_x_scale else 1.0,
             1.0 / self.last_y_scale if self.last_y_scale else 1.0,
         )
         f_rect = self.rect()
@@ -281,6 +281,7 @@ class eq_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip='The frequency to adjust gain at',
         )
         self.freq_knob.add_to_grid_layout(self.layout, 0)
 
@@ -297,6 +298,11 @@ class eq_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Resonance, bandwidth or "Q". Higher values result in a wider '
+                'frequency band, lower values result i a narrower frequency '
+                'band'
+            ),
         )
         self.res_knob.add_to_grid_layout(self.layout, 1)
 
@@ -313,6 +319,11 @@ class eq_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'EQ gain, in decibels.  0 means no change, values greater '
+                'than 0 increase volume at this frequency, values less than '
+                '0 decrease volume at this frequency'
+            ),
         )
         self.gain_knob.add_to_grid_layout(self.layout, 2)
 

@@ -67,9 +67,9 @@ class additive_osc_amp_bar(QGraphicsRectItem):
         self.x_pos = a_x_pos
         self.setPos(a_x_pos, ADDITIVE_OSC_HEIGHT - ADDITIVE_OSC_INC)
         self.setRect(
-            0.0, 
-            0.0, 
-            float(ADDITIVE_OSC_BAR_WIDTH), 
+            0.0,
+            0.0,
+            float(ADDITIVE_OSC_BAR_WIDTH),
             float(ADDITIVE_OSC_INC),
         )
         self.value = ADDITIVE_OSC_MIN_AMP
@@ -105,6 +105,7 @@ class additive_osc_amp_bar(QGraphicsRectItem):
 class additive_wav_viewer(QGraphicsView):
     def __init__(self):
         QGraphicsView.__init__(self)
+        self.setToolTip("The resulting waveform of the harmonics")
         self.setMaximumWidth(600)
         self.last_x_scale = 1.0
         self.last_y_scale = 1.0
@@ -112,9 +113,9 @@ class additive_wav_viewer(QGraphicsView):
         self.setScene(self.scene)
         self.scene.setBackgroundBrush(ADD_OSC_BACKGROUND)
         self.setSceneRect(
-            0.0, 
-            0.0, 
-            float(ADDITIVE_WAVETABLE_SIZE), 
+            0.0,
+            0.0,
+            float(ADDITIVE_WAVETABLE_SIZE),
             float(ADDITIVE_OSC_HEIGHT),
         )
         self.setHorizontalScrollBarPolicy(
@@ -129,7 +130,7 @@ class additive_wav_viewer(QGraphicsView):
         self.setUpdatesEnabled(False)
         f_path = QPainterPath(
             QtCore.QPointF(
-                0.0, 
+                0.0,
                 ADDITIVE_OSC_HEIGHT * 0.5,
             )
         )
@@ -155,8 +156,15 @@ class additive_wav_viewer(QGraphicsView):
 
 
 class additive_osc_viewer(QGraphicsView):
-    def __init__(self, a_draw_callback, a_configure_callback, a_get_wav):
+    def __init__(
+        self,
+        a_draw_callback,
+        a_configure_callback,
+        a_get_wav,
+        tooltip,
+    ):
         QGraphicsView.__init__(self)
+        self.setToolTip(tooltip)
         self.setMaximumWidth(600)
         self.configure_callback = a_configure_callback
         self.get_wav = a_get_wav
@@ -180,9 +188,9 @@ class additive_osc_viewer(QGraphicsView):
         self.scene.mouseMoveEvent = self.scene_mouseMoveEvent
         self.scene.setBackgroundBrush(ADD_OSC_BACKGROUND)
         self.setSceneRect(
-            0.0, 
-            0.0, 
-            float(ADDITIVE_OSC_WIDTH), 
+            0.0,
+            0.0,
+            float(ADDITIVE_OSC_WIDTH),
             float(ADDITIVE_OSC_HEIGHT),
         )
         self.bars = []
@@ -284,20 +292,32 @@ class custom_additive_oscillator(abstract_custom_oscillator):
         self.wav_viewer = additive_wav_viewer()
         self.draw_callback = self.wav_viewer.draw_array
         self.viewer = additive_osc_viewer(
-            self.wav_viewer.draw_array, self.configure_wrapper, self.get_wav)
+            self.wav_viewer.draw_array,
+            self.configure_wrapper,
+            self.get_wav,
+            tooltip=(
+                "The amplitudes of the harmonics.  Harmonics are frequency "
+                "multiples of the MIDI note.  If the note is 300hz, the 10th "
+                "harmonic is 3000hz"
+            )
+        )
         self.phase_viewer = additive_osc_viewer(
-            self.wav_viewer.draw_array, self.configure_wrapper, self.get_wav)
+            self.wav_viewer.draw_array,
+            self.configure_wrapper,
+            self.get_wav,
+            tooltip=(
+                "The phases of the harmonics.  Harmonics are frequency "
+                "multiples of the MIDI note.  If the note is 300hz, the 10th "
+                "harmonic is 3000hz"
+            )
+        )
         self.view_widget = QWidget()
         self.view_widget.setMaximumSize(900, 540)
         self.vlayout2 = QVBoxLayout()
         self.hlayout2 = QHBoxLayout(self.view_widget)
         self.layout.addWidget(self.view_widget)
         self.hlayout2.addLayout(self.vlayout2)
-        #self.vlayout2.addWidget(QLabel(_("Harmonics")))
-        self.viewer.setToolTip(_("Harmonics"))
         self.vlayout2.addWidget(self.viewer)
-        #self.vlayout2.addWidget(QLabel(_("Phases")))
-        self.phase_viewer.setToolTip(_("Phases"))
         self.vlayout2.addWidget(self.phase_viewer)
         self.hlayout2.addWidget(self.wav_viewer)
 

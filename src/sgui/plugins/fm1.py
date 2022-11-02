@@ -1085,6 +1085,11 @@ class fm1_plugin_ui(AbstractPluginUI):
                 self.port_dict,
                 self.preset_manager,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    "The number of unison voices for this oscillator.  "
+                    "lower values have a thinner sound and work better "
+                    "with FM synthesis, higher values have a thicker sound"
+                )
             )
             f_osc1_uni_voices.add_to_grid_layout(f_osc1.grid_layout, 4)
             f_osc1_uni_spread = knob_control(

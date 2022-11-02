@@ -36,6 +36,9 @@ class FreqSplitter:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs,
+            tooltip=(
+                'The number of splits in the frequency spectrum'
+            )
         )
         self.split_count_knob.control.valueChanged.connect(self.show_splitters)
         port += 1
@@ -49,6 +52,7 @@ class FreqSplitter:
             ["SVF2", ],
             a_port_dict,
             a_preset_mgr=a_preset_mgr,
+            tooltip='The frequency splitting algorithm',
         )
         port += 1
         # self.type_combobox.add_to_grid_layout(self.layout, 5)
@@ -65,6 +69,9 @@ class FreqSplitter:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs,
+            tooltip=(
+                'Filter resonance, how sharply the frequency bands are split'
+            ),
         )
         port += 1
         self.res_knob.add_to_grid_layout(self.layout, 10)
@@ -79,6 +86,7 @@ class FreqSplitter:
                 combobox_items,
                 a_port_dict,
                 a_preset_mgr=a_preset_mgr,
+                tooltip='The output for this frequency band',
             )
             self.outputs.append(combobox)
             combobox.add_to_grid_layout(self.layout, x)
@@ -98,6 +106,7 @@ class FreqSplitter:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs,
+                tooltip='The cutoff frequency for this frequency band',
             )
             self.freqs.append(knob)
             knob.add_to_grid_layout(self.layout,x)
@@ -113,6 +122,7 @@ class FreqSplitter:
                     combobox_items,
                     a_port_dict,
                     a_preset_mgr=a_preset_mgr,
+                    tooltip='The output for this frequency band',
                 )
                 self.outputs.append(combobox)
                 combobox.add_to_grid_layout(self.layout, x)

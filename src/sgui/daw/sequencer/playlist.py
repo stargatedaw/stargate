@@ -4,41 +4,60 @@ from sglib.api.daw import api_playlist
 from sgui.daw.lib import sequence as sequence_lib
 from sgui.sgqt import (
     QtCore,
-    QtWidgets,
+    QAbstractItemView,
+    QWidget,
+    QHBoxLayout,
+    QLineEdit,
+    QPushButton,
+    QMessageBox,
+    QVBoxLayout,
+    QListWidget,
+    QListWidgetItem,
 )
 
 
 class PlaylistWidget:
     def __init__(self):
         self.suppress_changes = True
-        self.parent = QtWidgets.QWidget()
-        layout = QtWidgets.QVBoxLayout(self.parent)
+        self.parent = QWidget()
+        layout = QVBoxLayout(self.parent)
 
         # Sequence list
-        sequence_widget = QtWidgets.QWidget()
+        sequence_widget = QWidget()
         layout.addWidget(sequence_widget)
-        sequence_vlayout = QtWidgets.QVBoxLayout(
+        sequence_vlayout = QVBoxLayout(
             sequence_widget,
         )
-        self.sequence_widget = QtWidgets.QListWidget()
+        self.sequence_widget = QListWidget()
+        self.sequence_widget.setToolTip(
+            'Select the song to show in the sequencer and play with the '
+            'transport.  You can keep multiple songs to experiment, use '
+            'as scratchpads, or re-use the tracks and plugins'
+        )
         sequence_vlayout.addWidget(self.sequence_widget)
         self.sequence_widget.setAlternatingRowColors(True)
         self.sequence_widget.setDragDropMode(
-            QtWidgets.QAbstractItemView.DragDropMode.DragOnly,
+            QAbstractItemView.DragDropMode.DragOnly,
         )
         self.sequence_widget.setSelectionMode(
-            QtWidgets.QAbstractItemView.SelectionMode.ExtendedSelection,
+            QAbstractItemView.SelectionMode.ExtendedSelection,
         )
         self.sequence_widget.itemChanged.connect(self.sequence_changed)
         self.sequence_widget.itemClicked.connect(self.sequence_item_clicked)
 
         # Add new sequence
-        add_seq_layout = QtWidgets.QHBoxLayout()
+        add_seq_layout = QHBoxLayout()
         layout.addLayout(add_seq_layout)
-        self.add_seq_text = QtWidgets.QLineEdit()
+        self.add_seq_text = QLineEdit()
+        self.add_seq_text.setToolTip(
+            'The name of a new song to add to the song list'
+        )
         self.add_seq_text.returnPressed.connect(self.add_seq)
         add_seq_layout.addWidget(self.add_seq_text)
-        self.add_seq_button = QtWidgets.QPushButton("Add")
+        self.add_seq_button = QPushButton("Add")
+        self.add_seq_button.setToolTip(
+            'Add a new song by entering a name and pressing this button'
+        )
         add_seq_layout.addWidget(self.add_seq_button)
         self.add_seq_button.pressed.connect(self.add_seq)
         self.suppress_changes = False
@@ -55,7 +74,7 @@ class PlaylistWidget:
         """
         name = self.add_seq_text.text().strip()
         if not name:
-            QtWidgets.QMessageBox.warning(
+            QMessageBox.warning(
                 self.parent,
                 "Error",
                 "Must have a name",
@@ -64,7 +83,7 @@ class PlaylistWidget:
         try:
             api_playlist.new_seq(name)
         except FileExistsError:
-            QtWidgets.QMessageBox.warning(
+            QMessageBox.warning(
                 self.parent,
                 "Error",
                 "Sequence '{}' already exists".format(name),
@@ -96,14 +115,14 @@ class PlaylistWidget:
             try:
                 api_playlist.change_name(item.orig_name, new_name)
             except FileExistsError:
-                QtWidgets.QMessageBox.warning(
+                QMessageBox.warning(
                     self.parent,
                     "Error",
                     "Sequence '{}' already exists".format(new_name),
                 )
             except FileNotFoundError:
                 LOG.exception("orig_name not found, likely a bug")
-                QtWidgets.QMessageBox.warning(
+                QMessageBox.warning(
                     self.parent,
                     "Error",
                     "Original Sequence name '{}' not found".format(
@@ -142,7 +161,7 @@ class PlaylistWidget:
             @flags:  int, The item flags
         """
         self.suppress_changes = True
-        item = QtWidgets.QListWidgetItem(
+        item = QListWidgetItem(
             str(name),
             parent,
         )

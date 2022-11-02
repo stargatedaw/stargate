@@ -44,6 +44,7 @@ class main_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip='Master volume for the entire plugin',
         )
         self.vol_knob.add_to_grid_layout(self.layout, 0)
         if a_uni_voices_port is not None and a_uni_spread_port is not None:
@@ -60,6 +61,10 @@ class main_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'Unison voices for the entire plugin.  Gives a thicker '
+                    'sound'
+                ),
             )
             self.uni_voices_knob.add_to_grid_layout(self.layout, 1)
             self.uni_spread_knob = knob_control(
@@ -75,6 +80,10 @@ class main_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'Unison detune.  Lower values sound thinner, larger '
+                    'values sound bigger but more discordant'
+                ),
             )
             self.uni_spread_knob.add_to_grid_layout(self.layout, 2)
         if a_pitch_port is not None:
@@ -91,6 +100,10 @@ class main_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'Instrument pitch offset in semitones.  Adjust the '
+                    'pitch of all incoming MIDI notes'
+                ),
             )
             self.pitch_knob.add_to_grid_layout(self.layout, 4)
         self.glide_knob = knob_control(
@@ -106,6 +119,11 @@ class main_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Glide time.  Values greater than 0.0 causes consecutive '
+                'MIDI notes to take that much time to glide to the next '
+                'pitch'
+            ),
         )
         self.glide_knob.add_to_grid_layout(self.layout, 5)
         self.pb_knob = knob_control(
@@ -121,6 +139,10 @@ class main_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                'Pitchbend in semitones.  The amount that pitch should bend '
+                'when the pitchbend wheel is fully up or down'
+            ),
         )
         self.pb_knob.add_to_grid_layout(self.layout, 6)
         if a_poly_port is not None:
@@ -134,6 +156,12 @@ class main_widget:
                 a_port_dict,
                 0,
                 a_preset_mgr,
+                tooltip=(
+                    'Polyphony mode. Retrig: Oscillators retrigger their '
+                    'phase on a new note. Free: Oscillators do not retrigger'
+                    'on a new note. Mono/2: For instruments that only play '
+                    'one note at a time'
+                )
             )
             self.mono_combobox.add_to_grid_layout(self.layout, 7)
         if a_min_note_port or a_max_note_port:

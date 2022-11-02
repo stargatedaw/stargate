@@ -39,6 +39,10 @@ class preset_manager_widget:
         self.bank_label = QLabel(_("Bank"))
         self.layout.addWidget(self.bank_label)
         self.bank_combobox = QComboBox()
+        self.bank_combobox.setToolTip(
+            'Presets are divided into "banks".  This selects the preset '
+            'bank to browse'
+        )
         self.bank_combobox.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.bank_combobox.setMinimumWidth(210)
         self.layout.addWidget(self.bank_combobox)
@@ -46,6 +50,7 @@ class preset_manager_widget:
         self.layout.addWidget(self.presets_label)
         self.layout.setContentsMargins(3, 3, 3, 3)
         self.program_combobox = QComboBox()
+        self.program_combobox.setToolTip('Select the preset to use')
         self.program_combobox.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.program_combobox.setMinimumWidth(300)
         self.layout.addWidget(self.program_combobox)
@@ -93,10 +98,8 @@ class preset_manager_widget:
         self.load_default_preset_path()
         self.load_banks()
         self.load_presets()
-        self.program_combobox.currentIndexChanged.connect(
-            self.program_changed)
-        self.bank_combobox.currentIndexChanged.connect(
-            self.bank_changed)
+        self.program_combobox.currentIndexChanged.connect(self.program_changed)
+        self.bank_combobox.currentIndexChanged.connect(self.bank_changed)
 
     def delete_preset(self):
         f_name = self.program_combobox.currentText()

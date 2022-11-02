@@ -118,9 +118,10 @@ terminate from another session.  If so, click 'OK' to kill the
 other process(es)""")
 
 routing_graph = _("""\
-The audio, sidechain and MIDI routing of each track.  Click above the track to
-connect/disconnect a track's output to the destination track behind it (higher
-track number).""")
+Audio (click), sidechain(CTRL+click) and MIDI(SHIFT+click) routing between
+tracks.  Click below the destination to route to lower numbered tracks,
+above for higher numbered tracks.
+""")
 
 """
 Click below to connect a track to the track in front of it

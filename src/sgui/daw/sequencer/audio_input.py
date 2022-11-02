@@ -18,22 +18,37 @@ class AudioInput:
         self.callback = a_callback
         a_layout.addWidget(QLabel(str(a_num)), a_num + 1, 21)
         self.name_lineedit = QLineEdit(str(a_num))
+        self.name_lineedit.setToolTip(
+            'A friendly, human-readable name for this audio input channel.  '
+            'Set this to something that describes your recording setup.'
+        )
         self.name_lineedit.setMaxLength(64)
         self.name_lineedit.setMaximumWidth(240)
         self.name_lineedit.editingFinished.connect(self.name_update)
         a_num += 1
         a_layout.addWidget(self.name_lineedit, a_num, 0)
-        self.rec_checkbox = QCheckBox("")
+        self.rec_checkbox = QCheckBox()
+        self.rec_checkbox.setToolTip(
+            "Record arm this track.  It's audio will be recorded to the "
+            "selected track when the record button is pressed"
+        )
         self.rec_checkbox.clicked.connect(self.update_engine)
         a_layout.addWidget(self.rec_checkbox, a_num, 1)
 
-        self.monitor_checkbox = QCheckBox(_(""))
+        self.monitor_checkbox = QCheckBox()
+        self.monitor_checkbox.setToolTip(
+            "Monitor this input.  It's audio will be sent through the "
+            "selected track at all times"
+        )
         self.monitor_checkbox.clicked.connect(self.update_engine)
         a_layout.addWidget(self.monitor_checkbox, a_num, 2)
 
         self.vol_layout = QHBoxLayout()
         a_layout.addLayout(self.vol_layout, a_num, 6)
         self.vol_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
+        self.vol_slider.setToolTip(
+            "The volume gain of this input channel"
+        )
         self.vol_slider.setRange(-240, 240)
         self.vol_slider.setValue(0)
         self.vol_slider.setMinimumWidth(240)
@@ -44,6 +59,10 @@ class AudioInput:
         self.vol_label.setMinimumWidth(64)
         self.vol_layout.addWidget(self.vol_label)
         self.stereo_combobox = QComboBox()
+        self.stereo_combobox.setToolTip(
+            "Select another input channel to pair as a stereo channel "
+            "to this channel"
+        )
         a_layout.addWidget(self.stereo_combobox, a_num, 3)
         self.stereo_combobox.setMinimumWidth(75)
         self.stereo_combobox.addItems(
@@ -51,6 +70,11 @@ class AudioInput:
         )
         self.stereo_combobox.currentIndexChanged.connect(self.update_engine)
         self.output_mode_combobox = QComboBox()
+        self.output_mode_combobox.setToolTip(
+            "The track input to send this input to.  Normal: The normal audio "
+            "input, Sidechain: the sidechain input only, Both: The normal and "
+            "sidechain inputs of the track"
+        )
         self.output_mode_combobox.setMinimumWidth(100)
         self.output_mode_combobox.addItems([
             _("Normal"),
@@ -61,6 +85,9 @@ class AudioInput:
         self.output_mode_combobox.currentIndexChanged.connect(
             self.update_engine)
         self.output_track_combobox = QComboBox()
+        self.output_track_combobox.setToolTip(
+            "The track to send this input to"
+        )
         self.output_track_combobox.setMinimumWidth(140)
         shared.TRACK_NAME_COMBOBOXES.append(self.output_track_combobox)
         self.output_track_combobox.addItems(shared.TRACK_NAMES)

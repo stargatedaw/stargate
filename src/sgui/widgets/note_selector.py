@@ -12,12 +12,14 @@ class note_selector_widget:
         a_port_dict=None,
         a_default_value=None,
         a_preset_mgr=None,
+        name_label=None,
     ):
         self.control = self
         self.port_num = a_port_num
         self.rel_callback = a_rel_callback
         self.val_callback = a_val_callback
         self.note_combobox = QComboBox()
+        self.note_combobox.setToolTip('The western musical note')
         self.note_combobox.wheelEvent = self.wheel_event
         self.note_combobox.setMinimumWidth(60)
         self.note_combobox.addItems(
@@ -25,6 +27,7 @@ class note_selector_widget:
         )
         self.note_combobox.contextMenuEvent = self.context_menu_event
         self.octave_spinbox = QSpinBox()
+        self.octave_spinbox.setToolTip('The octave of the note')
         self.octave_spinbox.setRange(-2, 8)
         self.octave_spinbox.setValue(3)
         self.octave_spinbox.contextMenuEvent = self.context_menu_event
@@ -41,7 +44,11 @@ class note_selector_widget:
         self.suppress_changes = False
         if a_port_dict is not None:
             a_port_dict[self.port_num] = self
-        self.name_label = None
+        if name_label:
+            self.name_label = QLabel(name_label)
+            self.name_label.setObjectName('plugin_name_label')
+        else:
+            self.name_label = None
         self.value_label = None
         self.default_value = a_default_value
         if a_default_value is not None:

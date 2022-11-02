@@ -382,7 +382,20 @@ class QCheckBox(_HintWidget, QCheckBox):
 class QRadioButton(_HintWidget, QRadioButton):
     pass
 
+class QListWidget(_HintWidget, QListWidget):
+    pass
 
+class QTextEdit(_HintWidget, QTextEdit):
+    pass
+
+class QTreeWidget(_HintWidget, QTreeWidget):
+    pass
+
+class QLabel(_HintWidget, QLabel):
+    pass
+
+# These caused unknown theming problems.
+# TODO: Try QGroupBox, it may have only been QWidget
 #class QGroupBox(_HintWidget, QGroupBox):
 #    pass
 

@@ -37,6 +37,10 @@ class ramp_env_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip=(
+                    'The amount of modulation this envelope has on '
+                    'the destination control'
+                ),
             )
             self.amt_knob.add_to_grid_layout(self.layout, 0)
         self.time_knob = knob_control(
@@ -52,6 +56,7 @@ class ramp_env_widget:
             a_port_dict,
             a_preset_mgr,
             knob_kwargs=knob_kwargs,
+            tooltip='How long this envelope takes to run',
         )
         self.time_knob.add_to_grid_layout(self.layout, 1)
         if a_curve_port is not None:
@@ -68,6 +73,7 @@ class ramp_env_widget:
                 a_port_dict,
                 a_preset_mgr,
                 knob_kwargs=knob_kwargs,
+                tooltip='The curve of the envelope',
             )
             self.curve_knob.add_to_grid_layout(self.layout, 2)
 

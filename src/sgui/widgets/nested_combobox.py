@@ -5,6 +5,7 @@ class NestedComboBox(QPushButton):
     def __init__(
         self,
         lookup: dict,
+        tooltip=None,
     ):
         """
             lookup:   A dictionary of str: int that maps names to UIDs
@@ -24,6 +25,8 @@ class NestedComboBox(QPushButton):
         self.setMenu(self.menu)
         self._index = 0
         self.menu.triggered.connect(self.action_triggered)
+        if tooltip:
+            self.setToolTip(tooltip)
 
     def currentIndex(self):
         return self._index
