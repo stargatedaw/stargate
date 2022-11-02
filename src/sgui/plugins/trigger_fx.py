@@ -177,7 +177,7 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             a_preset_mgr=self.preset_manager,
             tooltip=(
                 'Enable the MIDI triggered gate.  Audio will be muted except '
-                'when the selected note is being played.'
+                'when the trigger note is being played.'
             ),
         )
         self.gate_on_checkbox.add_to_grid_layout(self.gate_gridlayout, 3)
@@ -256,7 +256,7 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             a_preset_mgr=self.preset_manager,
             tooltip=(
                 'Enable/disable glitch.  Plays the audio input on short '
-                'repeat when the selected note is played'
+                'repeat when the trigger note is played'
             ),
         )
         self.glitch_on_checkbox.add_to_grid_layout(self.glitch_gridlayout, 3)

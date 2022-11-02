@@ -15,8 +15,8 @@ GNU General Public License for more details.
 from sglib.lib.translate import _
 
 sequencer = _("""\
-The sequencer contains tracks, items, and automation.  Use the mouse tools in
-the transport to add, edit or delete items.  Right click on items or the
+Sequencer contains tracks, items, and automation. Use the mouse tools in
+the transport to edit sequencer items. Right click on items or the
 timeline for actions.  All items/tracks can contain audio and MIDI.""")
 
 sequencer_item = _("""\

@@ -39,7 +39,8 @@ class note_selector_widget:
         self.layout.addWidget(self.note_combobox)
         self.layout.addWidget(self.octave_spinbox)
         self.note_combobox.currentIndexChanged.connect(
-            self.control_value_changed)
+            self.control_value_changed,
+        )
         self.octave_spinbox.valueChanged.connect(self.control_value_changed)
         self.suppress_changes = False
         if a_port_dict is not None:
@@ -79,9 +80,17 @@ class note_selector_widget:
         pass
 
     def control_value_changed(self, a_val=None):
-        self.selected_note = (
-            self.note_combobox.currentIndex()
-        ) + ((self.octave_spinbox.value() + 2) * 12)
+        note = self.note_combobox.currentIndex()
+        octave = self.octave_spinbox.value()
+        if note == 0:
+            self.octave_spinbox.setMaximum(8)
+        else:
+            self.octave_spinbox.setMaximum(7)
+            if octave > 7:
+                octave = 7
+                self.octave_spinbox.setValue(7)
+
+        self.selected_note = note + ((octave + 2) * 12)
         if not self.suppress_changes:
             if self.val_callback is not None:
                 self.val_callback(self.port_num, self.selected_note)
