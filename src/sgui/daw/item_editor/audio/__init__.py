@@ -25,6 +25,20 @@ from sglib.models.stargate.audio_pool import PerFileFX
 from sgui.util import get_font
 
 
+PAIFX_TEXT = """\
+Select exactly one item to use
+
+This allows you to set effects per audio item.
+Setting effects on one will not affect another,
+but you can copy and paste effects between items.
+"""
+
+PAFFX_TEXT = """\
+Select exactly one item to use
+
+This allows you to set effects for every
+instance of a file in an entire project.
+"""
 
 def papifx_val_callback(a_port, a_val):
     if _shared.CURRENT_ITEM is not None:
@@ -545,10 +559,9 @@ class AudioItemSeqWidget(FileDragDropper):
         self.papifx_widget = QWidget()
         self.papifx_widget.setObjectName("plugin_ui")
         self.papifx_vlayout = QVBoxLayout(self.papifx_widget)
-        fx_text = "Select exactly one item to use"
         self.papifx_stack = QStackedWidget(self.folders_tab_widget)
         self.papifx_stack.addWidget(self.papifx_widget)
-        self.papifx_stack.addWidget(QLabel(fx_text))
+        self.papifx_stack.addWidget(QLabel(PAFFX_TEXT))
         self.papifx_stack.setCurrentIndex(1)
         self.folders_tab_widget.addTab(self.papifx_stack, _("File FX"))
         self.papifx.widget.setDisabled(True)
@@ -563,7 +576,7 @@ class AudioItemSeqWidget(FileDragDropper):
         self.paifx_vlayout = QVBoxLayout(self.paifx_widget)
         self.paifx_stack = QStackedWidget(self.folders_tab_widget)
         self.paifx_stack.addWidget(self.paifx_widget)
-        self.paifx_stack.addWidget(QLabel(fx_text))
+        self.paifx_stack.addWidget(QLabel(PAIFX_TEXT))
         self.paifx_stack.setCurrentIndex(1)
         self.folders_tab_widget.addTab(self.paifx_stack, _("Item FX"))
         self.paifx.widget.setDisabled(True)
@@ -640,12 +653,6 @@ class AudioItemSeqWidget(FileDragDropper):
         self.paifx_clipboard = None
         self.folders_widget.setToolTip(
             sg_strings.audio_viewer_widget_folders,
-        )
-        self.paifx.widget.setToolTip(
-            sg_strings.audio_viewer_widget_paifx,
-        )
-        self.papifx.widget.setToolTip(
-            sg_strings.audio_viewer_widget_papifx,
         )
 
     def on_play(self):
