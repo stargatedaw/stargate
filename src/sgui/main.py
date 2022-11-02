@@ -187,7 +187,8 @@ class SgMainWindow(QWidget):
         shared.HINT_BOX.setMinimumWidth(390)
         shared.HINT_BOX.setToolTip(
             'The hint box, provides information about almost anything '
-            'you hover the mouse over'
+            'you hover the mouse over.  To hide the hint box, click the '
+            '"Hide Hint Box" action in the main menu on the upper left'
         )
         if shared.HIDE_HINT_BOX:
             shared.HINT_BOX.hide()

@@ -421,7 +421,14 @@ class QLabel(_HintWidget, QLabel):
 #    pass
 
 class QGraphicsRectItem(_HintItem, QGraphicsRectItem):
-    pass
+    def paint(
+        self,
+        painter,
+        option,
+        arg4=None,
+    ):
+        option.state &= ~QStyle.StateFlag.State_Selected
+        QtWidgets.QGraphicsRectItem.paint(self, painter, option)
 
 class QGraphicsEllipseItem(_HintItem, QGraphicsEllipseItem):
     pass

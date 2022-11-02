@@ -33,7 +33,6 @@ from .preset_manager import preset_manager_widget
 from .project_notes import ProjectNotes
 from .pysound import *
 from .ramp_env import ramp_env_widget
-from .rect_item import QGraphicsRectItemNDL
 from .routing_matrix import *
 from .sample_viewer import *
 from .spectrum import spectrum

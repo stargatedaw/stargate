@@ -84,11 +84,15 @@ combobox, the menu button and the mouse tools in the transport panel.""")
 
 
 AudioItemSeq = _("""\
-Each item can contain multiple audio items.  Drag audio files from the file
-browser to the right onto here.  Right click on items for editor actions.""")
+Item editor for audio.  Each sequencer item can contain multiple
+audio items in addition to MIDI.  Drag audio files from the file browser
+onto here.
+""")
 
-AudioSeqItem = _("""\
-Right click on an audio item to see the various tools and actions available.\
+AudioSeqItem = _("""
+A single instance of an audio file.  Right click on an audio item to see the
+various tools and actions available.  Select a single item and add effects
+using "File FX" and "Item FX" tabs on the right.
 """
 )
 

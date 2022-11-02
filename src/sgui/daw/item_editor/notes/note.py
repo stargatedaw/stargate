@@ -4,7 +4,6 @@ from sglib.math import (
     clip_value,
     linear_interpolate,
 )
-from sgui import widgets
 from sgui.daw import shared
 from sglib.models.daw import *
 from sgui.daw.shared import *
@@ -17,7 +16,7 @@ from sgui.sgqt import *
 from sgui.util import get_font
 
 
-class PianoRollNoteItem(widgets.QGraphicsRectItemNDL):
+class PianoRollNoteItem(QGraphicsRectItem):
     """ An individual note in the PianoRollEditor """
     def __init__(
         self,

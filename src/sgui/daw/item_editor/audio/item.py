@@ -16,7 +16,7 @@ from sglib.lib import strings as sg_strings
 from sglib.lib import util
 from sglib.lib.translate import _
 from sglib.models import theme
-from sgui import shared as glbl_shared, widgets
+from sgui import shared as glbl_shared
 from sgui.daw.lib import item as item_lib
 from sgui.daw import painter_path as daw_painter_path, shared
 from sgui.shared import AUDIO_ITEM_SCENE_RECT
@@ -30,7 +30,32 @@ from sgui.util import get_font
 
 PAINTER_PATH_CACHE = {}
 
-class AudioSeqItem(widgets.QGraphicsRectItemNDL):
+class AudioSeqItemHandle(QGraphicsRectItem):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setAcceptHoverEvents(True)
+        self.setRect(
+            QtCore.QRectF(
+                0.0,
+                0.0,
+                float(shared.AUDIO_ITEM_HANDLE_SIZE),
+                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
+            ),
+        )
+
+
+    def hoverEnterEvent(self, a_event):
+        QApplication.setOverrideCursor(
+            QtCore.Qt.CursorShape.SizeHorCursor,
+        )
+        super().hoverEnterEvent(a_event)
+
+    def hoverLeaveEvent(self, a_event):
+        QApplication.restoreOverrideCursor()
+        super().hoverLeaveEvent(a_event)
+
+
+class AudioSeqItem(QGraphicsRectItem):
     """ This is an individual audio item within the AudioItemSeq """
     def __init__(
         self,
@@ -89,18 +114,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
             QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
         )
 
-        self.start_handle = QGraphicsRectItem(parent=self)
-        self.start_handle.setAcceptHoverEvents(True)
-        self.start_handle.hoverEnterEvent = self.generic_hoverEnterEvent
-        self.start_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
-        self.start_handle.setRect(
-            QtCore.QRectF(
-                0.0,
-                0.0,
-                float(shared.AUDIO_ITEM_HANDLE_SIZE),
-                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
-            ),
-        )
+        self.start_handle = AudioSeqItemHandle(parent=self)
         self.start_handle.mousePressEvent = self.start_handle_mouseClickEvent
         self.start_handle_line = QGraphicsLineItem(
             0.0,
@@ -114,18 +128,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
 
         self.start_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
 
-        self.length_handle = QGraphicsRectItem(parent=self)
-        self.length_handle.setAcceptHoverEvents(True)
-        self.length_handle.hoverEnterEvent = self.generic_hoverEnterEvent
-        self.length_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
-        self.length_handle.setRect(
-            QtCore.QRectF(
-                0.0,
-                0.0,
-                float(shared.AUDIO_ITEM_HANDLE_SIZE),
-                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
-            ),
-        )
+        self.length_handle = AudioSeqItemHandle(parent=self)
         self.length_handle.mousePressEvent = self.length_handle_mouseClickEvent
         self.length_handle_line = QGraphicsLineItem(
             shared.AUDIO_ITEM_HANDLE_SIZE, shared.AUDIO_ITEM_HANDLE_HEIGHT,
@@ -133,18 +136,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
             (shared.AUDIO_ITEM_HEIGHT * -1.0) + shared.AUDIO_ITEM_HANDLE_HEIGHT,
             self.length_handle)
 
-        self.fade_in_handle = QGraphicsRectItem(parent=self)
-        self.fade_in_handle.setAcceptHoverEvents(True)
-        self.fade_in_handle.hoverEnterEvent = self.generic_hoverEnterEvent
-        self.fade_in_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
-        self.fade_in_handle.setRect(
-            QtCore.QRectF(
-                0.0,
-                0.0,
-                shared.AUDIO_ITEM_HANDLE_SIZE,
-                shared.AUDIO_ITEM_HANDLE_HEIGHT,
-            ),
-        )
+        self.fade_in_handle = AudioSeqItemHandle(parent=self)
         self.fade_in_handle.mousePressEvent = \
             self.fade_in_handle_mouseClickEvent
         self.fade_in_handle_line = QGraphicsLineItem(
@@ -155,18 +147,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
             self,
         )
 
-        self.fade_out_handle = QGraphicsRectItem(parent=self)
-        self.fade_out_handle.setAcceptHoverEvents(True)
-        self.fade_out_handle.hoverEnterEvent = self.generic_hoverEnterEvent
-        self.fade_out_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
-        self.fade_out_handle.setRect(
-            QtCore.QRectF(
-                0.0,
-                0.0,
-                float(shared.AUDIO_ITEM_HANDLE_SIZE),
-                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
-            ),
-        )
+        self.fade_out_handle = AudioSeqItemHandle(parent=self)
         self.fade_out_handle.mousePressEvent = \
             self.fade_out_handle_mouseClickEvent
         self.fade_out_handle_line = QGraphicsLineItem(
@@ -177,18 +158,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
             self,
         )
 
-        self.stretch_handle = QGraphicsRectItem(parent=self)
-        self.stretch_handle.setAcceptHoverEvents(True)
-        self.stretch_handle.hoverEnterEvent = self.generic_hoverEnterEvent
-        self.stretch_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
-        self.stretch_handle.setRect(
-            QtCore.QRectF(
-                0.0,
-                0.0,
-                float(shared.AUDIO_ITEM_HANDLE_SIZE),
-                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
-            ),
-        )
+        self.stretch_handle = AudioSeqItemHandle(parent=self)
         self.stretch_handle.mousePressEvent = \
             self.stretch_handle_mouseClickEvent
         self.stretch_handle_line = QGraphicsLineItem(
@@ -235,16 +205,8 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         ap_entry = by_uid[self.audio_item.uid]
         self.vol_linear = db_to_lin(self.audio_item.vol + ap_entry.volume)
         self.quantize_offset = 0.0
-        self.set_tooltips(True)
         self.draw()
-
-    def generic_hoverEnterEvent(self, a_event):
-        QApplication.setOverrideCursor(
-            QtCore.Qt.CursorShape.SizeHorCursor,
-        )
-
-    def generic_hoverLeaveEvent(self, a_event):
-        QApplication.restoreOverrideCursor()
+        self.set_tooltips()
 
     def draw(self):
         f_temp_seconds = self.sample_length
@@ -385,29 +347,21 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
                 ) - (shared.AUDIO_ITEM_HANDLE_HEIGHT * 0.5),
             )
 
-    def set_tooltips(self, a_on):
-        if a_on:
-            self.setToolTip(sg_strings.AudioSeqItem)
-            self.start_handle.setToolTip(
-                _("Use this handle to resize the item by changing "
-                "the start point."))
-            self.length_handle.setToolTip(
-                _("Use this handle to resize the item by "
-                "changing the end point."))
-            self.fade_in_handle.setToolTip(
-                _("Use this handle to change the fade in."))
-            self.fade_out_handle.setToolTip(
-                _("Use this handle to change the fade out."))
-            self.stretch_handle.setToolTip(
-                _("Use this handle to resize the item by "
-                "time-stretching it."))
-        else:
-            self.setToolTip("")
-            self.start_handle.setToolTip("")
-            self.length_handle.setToolTip("")
-            self.fade_in_handle.setToolTip("")
-            self.fade_out_handle.setToolTip("")
-            self.stretch_handle.setToolTip("")
+    def set_tooltips(self):
+        self.start_handle.setToolTip(
+            _("Use this handle to resize the item by changing "
+            "the start point."))
+        self.length_handle.setToolTip(
+            _("Use this handle to resize the item by "
+            "changing the end point."))
+        self.fade_in_handle.setToolTip(
+            _("Use this handle to change the fade in."))
+        self.fade_out_handle.setToolTip(
+            _("Use this handle to change the fade out."))
+        self.stretch_handle.setToolTip(
+            _("Use this handle to resize the item by "
+            "time-stretching it."))
+        self.setToolTip(sg_strings.AudioSeqItem)
 
     def clip_at_sequence_end(self):
         f_max_x = shared.CURRENT_ITEM_LEN * shared.AUDIO_PX_PER_BEAT
@@ -828,6 +782,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
     def hoverEnterEvent(self, a_event):
         f_item_pos = self.pos().x()
         self.quantize_offset = f_item_pos - self.quantize_all(f_item_pos)
+        super().hoverEnterEvent(a_event)
 
     def hoverMoveEvent(self, a_event):
         if shared.EDITOR_MODE == shared.EDITOR_MODE_SPLIT:
@@ -847,6 +802,7 @@ class AudioSeqItem(widgets.QGraphicsRectItemNDL):
         if self.split_line_is_shown:
             self.split_line_is_shown = False
             self.split_line.hide()
+        super().hoverLeaveEvent(a_event)
 
     def y_pos_to_lane_number(self, a_y_pos):
         f_lane_num = int((a_y_pos - shared.AUDIO_RULER_HEIGHT) / shared.AUDIO_ITEM_HEIGHT)

@@ -6,7 +6,6 @@ from sglib.math import (
 )
 from sglib import constants
 from sgui import shared as glbl_shared
-from sgui import widgets
 from sgui.daw import painter_path, shared
 from sglib.log import LOG
 from sglib.models.daw import *
@@ -19,8 +18,33 @@ from sglib.lib.translate import _
 from sgui.sgqt import *
 from sgui.util import get_font
 
+class SequencerItemHandle(QGraphicsRectItem):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setZValue(2200.0)
+        self.setAcceptHoverEvents(True)
+        self.setRect(
+            QtCore.QRectF(
+                0.0,
+                0.0,
+                float(shared.AUDIO_ITEM_HANDLE_SIZE),
+                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
+            ),
+        )
 
-class SequencerItem(widgets.QGraphicsRectItemNDL):
+    def hoverEnterEvent(self, event):
+        if not glbl_shared.IS_PLAYING:
+            QApplication.setOverrideCursor(
+                QtCore.Qt.CursorShape.SizeHorCursor,
+            )
+        super().hoverEnterEvent(event)
+
+    def hoverLeaveEvent(self, event):
+        QApplication.restoreOverrideCursor()
+        super().hoverLeaveEvent(event)
+
+
+class SequencerItem(QGraphicsRectItem):
     """ This is an individual sequencer item within the ItemSequencer
     """
     def __init__(self, a_name, a_audio_item, draw_handle):
@@ -95,19 +119,7 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
         )
         self.label.setZValue(2100.00)
 
-        self.start_handle = QGraphicsRectItem(parent=self)
-        self.start_handle.setZValue(2200.0)
-        self.start_handle.setAcceptHoverEvents(True)
-        self.start_handle.hoverEnterEvent = self.generic_hoverEnterEvent
-        self.start_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
-        self.start_handle.setRect(
-            QtCore.QRectF(
-                0.0,
-                0.0,
-                float(shared.AUDIO_ITEM_HANDLE_SIZE),
-                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
-            ),
-        )
+        self.start_handle = SequencerItemHandle(parent=self)
         self.start_handle.mousePressEvent = self.start_handle_mouseClickEvent
         self.start_handle_line = QGraphicsLineItem(
             0.0,
@@ -121,19 +133,7 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
 
         self.start_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
 
-        self.length_handle = QGraphicsRectItem(parent=self)
-        self.length_handle.setZValue(2200.0)
-        self.length_handle.setAcceptHoverEvents(True)
-        self.length_handle.hoverEnterEvent = self.generic_hoverEnterEvent
-        self.length_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
-        self.length_handle.setRect(
-            QtCore.QRectF(
-                0.0,
-                0.0,
-                float(shared.AUDIO_ITEM_HANDLE_SIZE),
-                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
-            ),
-        )
+        self.length_handle = SequencerItemHandle(parent=self)
         self.length_handle.mousePressEvent = self.length_handle_mouseClickEvent
         self.length_handle_line = QGraphicsLineItem(
             shared.AUDIO_ITEM_HANDLE_SIZE,
@@ -145,18 +145,7 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
             self.length_handle,
         )
 
-        self.stretch_handle = QGraphicsRectItem(parent=self)
-        self.stretch_handle.setAcceptHoverEvents(True)
-        self.stretch_handle.hoverEnterEvent = self.generic_hoverEnterEvent
-        self.stretch_handle.hoverLeaveEvent = self.generic_hoverLeaveEvent
-        self.stretch_handle.setRect(
-            QtCore.QRectF(
-                0.0,
-                0.0,
-                float(shared.AUDIO_ITEM_HANDLE_SIZE),
-                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
-            ),
-        )
+        self.stretch_handle = SequencerItemHandle(parent=self)
         self.stretch_handle.mousePressEvent = \
             self.stretch_handle_mouseClickEvent
         self.stretch_handle_line = QGraphicsLineItem(
@@ -245,15 +234,6 @@ class SequencerItem(widgets.QGraphicsRectItemNDL):
             ) / len(shared.PIANO_ROLL_EDITOR.note_items)
             val = int(average - (height * 0.5))
             shared.PIANO_ROLL_EDITOR.verticalScrollBar().setValue(val)
-
-    def generic_hoverEnterEvent(self, a_event):
-        if not glbl_shared.IS_PLAYING:
-            QApplication.setOverrideCursor(
-                QtCore.Qt.CursorShape.SizeHorCursor,
-            )
-
-    def generic_hoverLeaveEvent(self, a_event):
-        QApplication.restoreOverrideCursor()
 
     def draw(self):
         f_start = self.audio_item.start_beat * _shared.SEQUENCER_PX_PER_BEAT
