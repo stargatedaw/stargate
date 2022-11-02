@@ -25,8 +25,7 @@ class NestedComboBox(QPushButton):
         self.setMenu(self.menu)
         self._index = 0
         self.menu.triggered.connect(self.action_triggered)
-        if tooltip:
-            self.setToolTip(tooltip)
+        self.setToolTip(tooltip)
 
     def currentIndex(self):
         return self._index

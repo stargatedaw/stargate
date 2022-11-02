@@ -2,6 +2,7 @@ from sglib.log import LOG
 import os
 import sys
 import textwrap
+from typing import Optional
 
 
 if True:  # PyQt
@@ -87,6 +88,8 @@ else:  # PySide
     from PySide6.QtWidgets import *
     from PySide6.QtSvg import QSvgRenderer
 
+HINT_CACHE = {}
+
 class _HintBox:
     """ Converts tooltips to hint box hints using the standard Qt
         setToolTip() method
@@ -95,12 +98,27 @@ class _HintBox:
         super().__init__(*args, **kwargs)
         self._tooltip = None
 
-    def setToolTip(self, text: str):
-        lines = textwrap.wrap(text)
-        if len(lines) > 3:
-            lines[2] = lines[2][:-3] + '...'
-            LOG.error(f'Truncating hint {lines[0]}')
-        self._tooltip = "\n".join(lines[:3])
+    def setToolTip(
+        self,
+        text: Optional[str],
+        reformat: bool=True,
+    ):
+        if text is None:
+            self._tooltip = None
+            return
+        if reformat:
+            cached = HINT_CACHE.get(text, None)
+            if cached is not None:
+                self._tooltip = cached
+                return
+            lines = textwrap.wrap(text)
+            if len(lines) > 3:
+                lines[2] = lines[2][:-3] + '...'
+                LOG.error(f'Truncating hint {lines[0]}')
+            self._tooltip = "\n".join(lines[:3])
+            HINT_CACHE[text] = self._tooltip
+        else:
+            self._tooltip = text
 
     def _clear_hint_box(self):
         # Maintain a stack of messages, only clear the text if there are none
