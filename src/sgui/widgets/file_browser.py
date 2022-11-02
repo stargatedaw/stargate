@@ -384,6 +384,7 @@ class AbstractFileBrowserWidget:
             f_dict = {'default':None}
         f_grid_layout.addWidget(QLabel(_("Category:")), 0, 0)
         f_category = QComboBox()
+        f_category.setToolTip('Bookmarks are grouped by category names')
         f_category.setEditable(True)
         f_category.addItems(sorted(f_dict.keys(), key=lambda s: s.lower()))
         f_grid_layout.addWidget(f_category, 0, 1)
@@ -394,6 +395,7 @@ class AbstractFileBrowserWidget:
             filter_lineedit.textChanged.connect(filter_changed)
         else:
             f_lineedit = QLineEdit()
+            f_lineedit.setToolTip('The name of this bookmark')
             f_lineedit.setText(os.path.basename(self.last_open_dir))
             f_grid_layout.addWidget(QLabel(_("Name:")), 1, 0)
             f_grid_layout.addWidget(f_lineedit, 1, 1)
