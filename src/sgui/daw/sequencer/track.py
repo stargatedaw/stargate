@@ -141,6 +141,7 @@ class SeqTrack:
         shared.PLUGIN_RACK.track_combobox.setCurrentIndex(self.track_number)
         shared.MAIN_WINDOW.main_tabwidget.setCurrentIndex(shared.TAB_PLUGIN_RACK)
         self.button_menu.close()
+        self.plugins_button._clear_hint_box(_all=True)
 
     def create_menu(self):
         if self.action_widget:

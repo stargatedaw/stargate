@@ -120,16 +120,20 @@ class _HintBox:
         else:
             self._tooltip = text
 
-    def _clear_hint_box(self):
+    def _clear_hint_box(self, _all=False):
         # Maintain a stack of messages, only clear the text if there are none
         from sgui import shared
-        if shared.HINT_BOX_STACK:
-            shared.HINT_BOX_STACK.pop()
-        if shared.HINT_BOX_STACK:  # still
-            msg = shared.HINT_BOX_STACK[-1]
-            shared.HINT_BOX.setText(msg)
-        else:
+        if _all:
+            shared.HINT_BOX_STACK.clear()
             shared.HINT_BOX.setText('')
+        else:
+            if shared.HINT_BOX_STACK:
+                shared.HINT_BOX_STACK.pop()
+            if shared.HINT_BOX_STACK:  # still
+                msg = shared.HINT_BOX_STACK[-1]
+                shared.HINT_BOX.setText(msg)
+            else:
+                shared.HINT_BOX.setText('')
 
     def _set_hint_box(self, msg: str):
         from sgui import shared
@@ -427,6 +431,8 @@ class QGraphicsRectItem(_HintItem, QGraphicsRectItem):
         option,
         arg4=None,
     ):
+        """ Override to avoid the dotted line around selected items
+        """
         option.state &= ~QStyle.StateFlag.State_Selected
         QtWidgets.QGraphicsRectItem.paint(self, painter, option)
 
