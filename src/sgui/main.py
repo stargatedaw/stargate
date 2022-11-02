@@ -189,6 +189,8 @@ class SgMainWindow(QWidget):
             'The hint box, provides information about almost anything '
             'you hover the mouse over'
         )
+        if shared.HIDE_HINT_BOX:
+            shared.HINT_BOX.hide()
         self.transport_hlayout.addWidget(shared.HINT_BOX)
 
         self.main_stack = QStackedWidget()
@@ -366,6 +368,12 @@ class SgMainWindow(QWidget):
             self.copy_valgrind_cmd,
         )
 
+        self.menu_bar.addSeparator()
+        self.tooltips_action = self.menu_bar.addAction(_("Hide Hint Box"))
+        self.tooltips_action.setCheckable(True)
+        self.tooltips_action.setChecked(shared.HIDE_HINT_BOX)
+        self.tooltips_action.triggered.connect(self.set_tooltips_enabled)
+
         self.menu_file.addSeparator()
 
         self.spacebar_action = QAction(self)
@@ -392,6 +400,14 @@ class SgMainWindow(QWidget):
 
         self.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
         self.on_collapse_splitters(a_restore=True)
+
+    def set_tooltips_enabled(self):
+        hidden = self.tooltips_action.isChecked()
+        if hidden:
+            shared.HINT_BOX.hide()
+        else:
+            shared.HINT_BOX.show()
+        util.set_file_setting("hide-hint-box", 1 if hidden else 0)
 
     def _key_event(self, ev, press):
         QMainWindow.keyPressEvent(self, ev)

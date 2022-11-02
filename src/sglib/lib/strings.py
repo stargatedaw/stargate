@@ -54,7 +54,7 @@ atmospheric sound""")
 
 panic = _("""\
 The panic button has 2 options:
-- Send a note-off event on every note to every plugin, fixed stuck notes
+- Send a note-off event on every note to every plugin, fixes stuck notes
 - Stop the audio engine, you will need to restart the application after""")
 
 
@@ -92,7 +92,7 @@ Right click on an audio item to see the various tools and actions available.\
 """
 )
 
-"""
+AUDIO_SEQ_HELP = """\
 Select 1+ items, CTRL+click+drag up/down/left/right to copy selected items
 Select 1+ items, ALT+SHIFT+Click and drag up/down:
     Modify the volume of the file.  This is useful for mixing, as it modifies
@@ -119,25 +119,9 @@ other process(es)""")
 
 routing_graph = _("""\
 Audio (click), sidechain(CTRL+click) and MIDI(SHIFT+click) routing between
-tracks.  Click below the destination to route to lower numbered tracks,
-above for higher numbered tracks.
+tracks. Click below the dest. to route to lower numbered tracks,
+above for higher. Double click a track to open plugins
 """)
-
-"""
-Click below to connect a track to the track in front of it
-(lower track number).
-
-Click to route audio to the input of a track, which will appear as
-a white line.
-
-CTRL+click to connect/disconnect to the sidechain input of the track,
-which will appear as a red line.
-
-SHIFT+click to connect/disconnect to the MIDI input of the track,
-which will appear as a blue line.
-
-Double-click on a track to open it in the plugin rack
-"""
 
 track_panel_dropdown = _("""\
 The dropdown menu contains a shortcut to the track plugins (instrument and

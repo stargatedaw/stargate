@@ -26,7 +26,7 @@ IS_PLAYING = False
 IS_RECORDING = False
 PLUGIN_UI_DICT = None
 CURRENT_HOST = 0
-TOOLTIPS_ENABLED = util.get_file_setting("tooltips", int, 1)
+HIDE_HINT_BOX = util.get_file_setting("hide-hint-box", int, 0)
 MEMORY_ENTROPY = datetime.timedelta(minutes=0)
 MEMORY_ENTROPY_LIMIT = datetime.timedelta(minutes=30)
 MEMORY_ENTROPY_UIDS = set()

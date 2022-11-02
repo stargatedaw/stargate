@@ -71,7 +71,7 @@ class TransportWidget:
         )
         self.stop_engine_action.triggered.connect(self.on_stop_engine)
         self.hlayout1.addWidget(self.panic_button)
-        self.panic_button.setToolTip(sg_strings.panic)
+        self.panic_button.setToolTip(sg_strings.panic, reformat=False)
 
         self.host_layout = QVBoxLayout()
         self.host_layout.setContentsMargins(1, 1, 1, 1)
