@@ -224,6 +224,10 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
+            tooltip=(
+                "High values cause the gate to open and close very quickly, "
+                "low values cause it to open and close more slowly"
+            ),
         )
         self.gate_pitch_knob.add_to_grid_layout(self.gate_gridlayout, 12)
 
