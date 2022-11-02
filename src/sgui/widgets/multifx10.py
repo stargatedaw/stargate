@@ -1,6 +1,7 @@
 from . import _shared
 from .control import *
 from .knob import ArcType
+from .multifx_tooltips import mfx_set_tooltip
 from sglib.lib.translate import _
 from sgui.sgqt import *
 
@@ -682,6 +683,8 @@ class MultiFX10:
             self.knobs[5].set_min_max(-36.0, 36.0)
         else:
             raise NotImplementedError(f"Unknown FX uid: {a_val}")
+
+        mfx_set_tooltip(self.knobs, a_val)
 
         for knob in self.knobs:
             knob.set_value(knob.control.value())

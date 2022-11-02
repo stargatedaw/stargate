@@ -1,4 +1,5 @@
 from . import _shared
+from .multifx_tooltips import mfx_set_tooltip
 from .control import *
 from sglib.models.multifx_settings import multifx_settings
 from sglib.lib.translate import _
@@ -710,4 +711,5 @@ class MultiFXSingle:
         self.knobs[0].set_value(self.knobs[0].control.value())
         self.knobs[1].set_value(self.knobs[1].control.value())
         self.knobs[2].set_value(self.knobs[2].control.value())
+        mfx_set_tooltip(self.knobs, a_val)
 
