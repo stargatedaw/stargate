@@ -76,6 +76,10 @@ class ItemEditorWidget:
         #self.zoom_hlayout.setSpacing(0)
 
         self.snap_combobox = QComboBox()
+        self.snap_combobox.setToolTip(
+            'Snap to grid for audio items and MIDI notes.  Adding or moving '
+            'items will be quantized to this length'
+        )
         self.snap_combobox.setMinimumWidth(90)
         self.snap_combobox.addItems([
             _("None"),
@@ -92,6 +96,11 @@ class ItemEditorWidget:
         self.snap_combobox.currentIndexChanged.connect(self.set_snap)
 
         self.item_name_lineedit = QLineEdit()
+        self.item_name_lineedit.setToolTip(
+            'The name of the sequencer item being edited, double click an '
+            'item in the sequencer to open.  You can edit item names here '
+            'or by right clicking in the sequencer'
+        )
         self.item_name_lineedit.setReadOnly(True)
         self.item_name_lineedit.editingFinished.connect(self.on_item_rename)
         self.item_name_lineedit.setMinimumWidth(150)
@@ -99,6 +108,9 @@ class ItemEditorWidget:
 
         self.zoom_hlayout.addWidget(QLabel("H"))
         self.zoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
+        self.zoom_slider.setToolTip(
+            'Horizontal zoom for all of the item editors'
+        )
         self.zoom_hlayout.addWidget(self.zoom_slider)
         self.zoom_slider.setObjectName("zoom_slider")
         self.zoom_slider.setRange(10, 100)

@@ -419,17 +419,17 @@ class AutomationEditorWidget:
             )
             self.control_combobox.addItems([str(x) for x in range(1, 128)])
             self.control_combobox.setMinimumWidth(90)
-            self.hlayout.addWidget(QLabel(_("CC")))
-            self.hlayout.addWidget(self.control_combobox)
             self.control_combobox.currentIndexChanged.connect(
                 self.control_changed)
             self.ccs_in_use_combobox = QComboBox()
+            self.ccs_in_use_combobox.setToolTip(
+                'The MIDI CCs alraedy in use for this sequencer item.  '
+                'Use this to quickly see and select CCs already in use.'
+            )
             self.ccs_in_use_combobox.setMinimumWidth(90)
             self.suppress_ccs_in_use = False
             self.ccs_in_use_combobox.currentIndexChanged.connect(
                 self.ccs_in_use_combobox_changed)
-            self.hlayout.addWidget(QLabel(_("In Use:")))
-            self.hlayout.addWidget(self.ccs_in_use_combobox)
 
         self.vlayout.addLayout(self.hlayout)
         self.vlayout.addWidget(self.automation_viewer)
@@ -439,10 +439,15 @@ class AutomationEditorWidget:
             _("By default, the control points are steppy, "
             "this button draws extra points between the existing points."))
         self.smooth_button.pressed.connect(self.smooth_pressed)
-        self.hlayout.addWidget(self.smooth_button)
         self.hlayout.addItem(QSpacerItem(10, 10))
         self.edit_button = QPushButton(_("Menu"))
         self.hlayout.addWidget(self.edit_button)
+        self.hlayout.addWidget(self.smooth_button)
+        if a_is_cc:
+            self.hlayout.addWidget(QLabel(_("CC")))
+            self.hlayout.addWidget(self.control_combobox)
+            self.hlayout.addWidget(QLabel(_("In Use:")))
+            self.hlayout.addWidget(self.ccs_in_use_combobox)
         self.edit_menu = QMenu(self.widget)
         self.copy_action = self.edit_menu.addAction(_("Copy"))
         self.copy_action.setToolTip(
