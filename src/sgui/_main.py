@@ -153,6 +153,9 @@ def _setup():
     return app
 
 def main(args):
+    if 'APPDIR' in os.environ:
+        LD_LIBRARY_PATH = os.environ.get('LD_LIBRARY_PATH', None)
+        LOG.info(f'LD_LIBRARY_PATH={LD_LIBRARY_PATH}')
     global QAPP
     QAPP = _setup()
     QAPP.restoreOverrideCursor()
