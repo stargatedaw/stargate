@@ -62,7 +62,6 @@ class SeqTrack:
         )
 
         self.menu_button = QPushButton()
-        self.menu_button.setToolTip('Show menu for actions on this track')
         self.menu_button.setFixedWidth(42)
         self.button_menu = QMenu()
         self.menu_button.setMenu(self.button_menu)
