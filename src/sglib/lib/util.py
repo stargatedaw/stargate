@@ -142,7 +142,6 @@ def which(a_file):
     if IS_WINDOWS and BIN_DIR not in f_path_arr:
         f_path_arr.insert(0, BIN_DIR)
     appdir = os.environ.get('APPDIR', None)
-    LOG.info('IS_LINUX: {IS_LINUX}, APPDIR: {appdir}')
     if IS_LINUX and appdir:
         f_path_arr = [
             os.path.join(appdir, x)
@@ -162,8 +161,6 @@ def which(a_file):
                 return f_file_path
     LOG.warning(f'which(): failed to find {a_file} in {f_path_arr}')
     return None
-
-
 
 
 if IS_WINDOWS:
