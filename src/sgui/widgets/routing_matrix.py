@@ -293,6 +293,23 @@ class RoutingGraphWidget(QGraphicsView):
                         f_pen,
                     )
                     line.setZValue(2000)
+                    # Arrow
+                    line = self.scene.addLine(
+                        f_v_wire_x,
+                        f_dest_y,
+                        f_v_wire_x - 4,
+                        f_dest_y - 4,
+                        f_pen,
+                    )
+                    line.setZValue(2000)
+                    line = self.scene.addLine(
+                        f_v_wire_x,
+                        f_dest_y,
+                        f_v_wire_x + 4,
+                        f_dest_y - 4,
+                        f_pen,
+                    )
+                    line.setZValue(2000)
                     # Connection circle
                     circle = QGraphicsEllipseItem(
                         f_v_wire_x - self.wire_width_div2,
@@ -346,6 +363,24 @@ class RoutingGraphWidget(QGraphicsView):
                         f_pen,
                     )
                     line.setZValue(2000)
+                    # Arrow
+                    line = self.scene.addLine(
+                        f_v_wire_x,
+                        f_dest_y,
+                        f_v_wire_x - 4,
+                        f_dest_y + 4,
+                        f_pen,
+                    )
+                    line.setZValue(2000)
+                    line = self.scene.addLine(
+                        f_v_wire_x,
+                        f_dest_y,
+                        f_v_wire_x + 4,
+                        f_dest_y + 4,
+                        f_pen,
+                    )
+                    line.setZValue(2000)
+
                     # Connection circle
                     circle = QGraphicsEllipseItem(
                         f_v_wire_x - self.wire_width_div2,
