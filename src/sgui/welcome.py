@@ -21,8 +21,9 @@ import os
 import sys
 
 
-class Welcome:
+class Welcome(QtCore.QObject):
     def __init__(self):
+        super().__init__()
         self.scaler = ui_scaler_factory()
         self.loaded = False
 
@@ -38,9 +39,10 @@ class Welcome:
         rp_vlayout.addWidget(rp_label)
         self.rp_list = QListWidget()
         self.rp_list.doubleClicked.connect(
-            self.rp_doubleclick,
+            lambda x: self.rp_doubleclick(x.row()),
         )
         rp_vlayout.addWidget(self.rp_list)
+        self.rp_list.installEventFilter(self)
         self.load_rp()
         buttons_vlayout = QVBoxLayout()
         hlayout.addLayout(buttons_vlayout)
@@ -78,13 +80,24 @@ class Welcome:
         buttons_hlayout2.addWidget(project_recovery_button)
 
     def rp_doubleclick(self, index):
-        project = str(self.rp_list.item(index.row()).text())
+        project = str(self.rp_list.item(index).text())
         try:
             check_project_version(self.widget, project)
         except StargateProjectVersionError:
             return
         set_project(project)
         self.close()
+
+    def eventFilter(self, watched, event):
+        if (
+            event.type() == QtCore.QEvent.Type.KeyPress
+            and
+            event.matches(QKeySequence.StandardKey.InsertParagraphSeparator)
+        ):
+            i = self.rp_list.currentRow()
+            self.rp_doubleclick(i)
+            return True
+        return False
 
     def load_rp(self):
         """ Load a list of recent projects """
@@ -97,6 +110,7 @@ class Welcome:
         LOG.info(f"Project history: {self.history}")
         if self.history:
             self.rp_list.addItems(self.history)
+            self.rp_list.setCurrentRow(0)
 
     def close(self):
         self.loaded = True
