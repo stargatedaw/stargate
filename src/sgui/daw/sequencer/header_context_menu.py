@@ -27,29 +27,87 @@ def show(event):
         qt_event_pos(event).x() / _shared.SEQUENCER_PX_PER_BEAT
     )
     menu = QMenu(shared.MAIN_WINDOW)
-    marker_action = menu.addAction(_("Text Marker..."))
+    marker_action = QAction(_("Text Marker..."), menu)
+    menu.addAction(marker_action)
+    marker_action.setToolTip(
+        'Set a text marker.  Text markers display arbitrary text at a '
+        'specific position on the timeline.  Use for noting events in '
+        'the song'
+    )
     marker_action.triggered.connect(header_marker_modify)
-    time_modify_action = menu.addAction(_("Time/Tempo Marker..."))
+
+    time_modify_action = QAction(_("Time/Tempo Marker..."), menu)
+    menu.addAction(time_modify_action)
+    time_modify_action.setToolTip(
+        'Set a time signature and tempo marker.  This is how tempo is '
+        'controlled in Stargate, and will affect how beat numbers are '
+        'displayed'
+    )
     time_modify_action.triggered.connect(header_time_modify)
-    time_range_action = menu.addAction(_("Tempo Range..."))
+
+    time_range_action = QAction(_("Tempo Range..."), menu)
+    menu.addAction(time_range_action)
+    time_range_action.setToolTip(
+        'Open a dialog to set a tempo range.  This will create a smooth '
+        'change in tempo from the start region marker to the end region '
+        'marker'
+    )
     time_range_action.triggered.connect(header_time_range)
+
     menu.addSeparator()
-    clear_tempo_range_action = menu.addAction(
-        _("Clear Time/Tempo Markers in Region")
+
+    clear_tempo_range_action = QAction(
+        _("Clear Time/Tempo Markers in Region"),
+        menu,
+    )
+    menu.addAction(clear_tempo_range_action)
+    clear_tempo_range_action.setToolTip(
+        'Delete all tempo markers in the current region.  The tempo marker '
+        'on the first beat of the song cannot be deleted, only edited'
     )
     clear_tempo_range_action.triggered.connect(header_tempo_clear)
+
     menu.addSeparator()
-    loop_start_action = menu.addAction(_("Set Region Start"))
+
+    loop_start_action = QAction(_("Set Region Start"), menu)
+    menu.addAction(loop_start_action)
+    loop_start_action.setToolTip(
+        'Set the region start.  This is used for looping, offline rendering '
+        'to an audio file, and many editing actions'
+    )
     loop_start_action.triggered.connect(header_loop_start)
+
     if shared.CURRENT_SEQUENCE.loop_marker:
-        loop_end_action = menu.addAction(_("Set Region End"))
+        loop_end_action = QAction(_("Set Region End"), menu)
+        menu.addAction(loop_end_action)
+        loop_end_action.setToolTip(
+            'Set the region end.  This is used for looping, offline '
+            'rendering to an audio file, and many editing actions'
+        )
         loop_end_action.triggered.connect(header_loop_end)
-        select_sequence = menu.addAction(_("Select Items in Region"))
+
+        select_sequence = QAction(_("Select Items in Region"), menu)
+        menu.addAction(select_sequence)
+        select_sequence.setToolTip(
+            'Select all items in the current region'
+        )
         select_sequence.triggered.connect(select_sequence_items)
-        copy_sequence_action = menu.addAction(_("Copy Region"))
+
+        copy_sequence_action = QAction(_("Copy Region"), menu)
+        menu.addAction(copy_sequence_action)
+        copy_sequence_action.setToolTip(
+            'Copy all items and automation in this region.  To be used with '
+            'the "Insert Region" action'
+        )
         copy_sequence_action.triggered.connect(copy_sequence)
+
         if shared.SEQUENCER.sequence_clipboard:
-            insert_region_action = menu.addAction(_("Insert Region"))
+            insert_region_action = QAction(_("Insert Region"), menu)
+            menu.addAction(insert_region_action)
+            insert_region_action.setToolTip(
+                'Insert a region copied with "Copy Region", moving any items '
+                'after the selected beat'
+            )
             insert_region_action.triggered.connect(insert_region)
 
     x = shared.SEQUENCER.header_event_pos * _shared.SEQUENCER_PX_PER_BEAT

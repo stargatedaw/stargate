@@ -356,46 +356,94 @@ def init():
     MENU = QMenu(shared.SEQUENCER)
     MENU.addAction(_shared.copy_action)
 
-    paste_action = MENU.addAction(_("Paste"))
+    paste_action = QAction(_("Paste"), MENU)
+    MENU.addAction(paste_action)
+    paste_action.setToolTip(
+        'Paste previously copied automation points to the track they came from'
+    )
     paste_action.triggered.connect(_shared._paste)
 
-    paste_ctrl_action = MENU.addAction(_("Paste Plugin Control"))
+    paste_ctrl_action = QAction(_("Paste Plugin Control"))
+    MENU.addAction(paste_ctrl_action)
+    paste_ctrl_action.setToolTip(
+        'Paste a single automation point from a control value copied by '
+        'right-clicking on a plugin knob and choosing "copy value"'
+    )
     paste_ctrl_action.triggered.connect(paste_atm_point)
 
     track_atm_menu = MENU.addMenu(_("All Plugins for Track"))
 
-    copy_track_sequence_action = track_atm_menu.addAction(_("Copy Region"))
+    copy_track_sequence_action = QAction(_("Copy Region"), track_atm_menu)
+    track_atm_menu.addAction(copy_track_sequence_action)
+    copy_track_sequence_action.setToolTip(
+        'Copy automation points from the region set by right clicking on the '
+        'sequencer timeline and setting the region start and end'
+    )
     copy_track_sequence_action.triggered.connect(copy_track_sequence)
-    paste_track_sequence_action = track_atm_menu.addAction(_("Paste Region"))
+
+    paste_track_sequence_action = QAction(_("Paste Region"), track_atm_menu)
+    track_atm_menu.addAction(paste_track_sequence_action)
+    paste_track_sequence_action.setToolTip(
+        'Paste a previously copied region to the current track'
+    )
     paste_track_sequence_action.triggered.connect(paste_track_sequence)
+
     track_atm_menu.addSeparator()
-    clear_track_sequence_action = track_atm_menu.addAction(_("Clear Region"))
+
+    clear_track_sequence_action = QAction(_("Clear Region"), track_atm_menu)
+    track_atm_menu.addAction(clear_track_sequence_action)
+    clear_track_sequence_action.setToolTip(
+        'Clear all automation points in a region for a track.  Set the region '
+        'start and end by right-clicking on the sequencer timeline'
+    )
     clear_track_sequence_action.triggered.connect(clear_track_sequence)
 
     atm_clear_menu = MENU.addMenu(_("Clear All"))
 
     atm_clear_menu.addSeparator()
-    clear_plugin_action = atm_clear_menu.addAction(_("Current Plugin"))
+
+    clear_plugin_action = QAction(_("Current Plugin"), atm_clear_menu)
+    atm_clear_menu.addAction(clear_plugin_action)
+    clear_plugin_action.setToolTip(
+        'Clear all automation points for the currently selected plugin on '
+        'this track'
+    )
     clear_plugin_action.triggered.connect(clear_plugin)
 
     atm_clear_menu.addSeparator()
-    clear_track_action = atm_clear_menu.addAction(_("Track"))
+
+    clear_track_action = QAction(_("Track"), atm_clear_menu)
+    atm_clear_menu.addAction(clear_track_action)
+    clear_track_action.setToolTip(
+        'Clear all automation points on all plugins on this track'
+    )
     clear_track_action.triggered.connect(clear_track)
 
-    transform_atm_action = MENU.addAction(_("Transform..."))
+    transform_atm_action = QAction(_("Transform..."), MENU)
+    MENU.addAction(transform_atm_action)
+    transform_atm_action.setToolTip(
+        'Open a dialog to allow transforming the automation point values '
+        'in various ways'
+    )
     transform_atm_action.triggered.connect(transform_atm)
 
-    lfo_atm_action = MENU.addAction(_("LFO Tool..."))
+    lfo_atm_action = QAction(_("LFO Tool..."), MENU)
+    MENU.addAction(lfo_atm_action)
+    lfo_atm_action.setToolTip(
+        'Open a dialog to allow creating LFO shaped automation curves'
+    )
     lfo_atm_action.triggered.connect(lfo_atm)
 
     MENU.addSeparator()
 
+    # TODO:  What is this?
     break_atm_action = MENU.addAction(
         _("Break after selected automation point(s)"),
     )
     break_atm_action.triggered.connect(break_atm)
     break_atm_action.setShortcut(QKeySequence.fromString("CTRL+B"))
 
+    # TODO:  What is this?
     unbreak_atm_action = MENU.addAction(
         _("Un-break after selected automation point(s)"))
     unbreak_atm_action.triggered.connect(unbreak_atm)
@@ -404,3 +452,4 @@ def init():
     )
     MENU.addSeparator()
     MENU.addAction(_shared.delete_action)
+

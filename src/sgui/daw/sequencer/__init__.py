@@ -30,6 +30,16 @@ class SequencerWidget:
         )
         self.hlayout0 = QHBoxLayout(self.widget)
         self.hlayout0.setContentsMargins(1, 1, 1, 1)
+
+        self.menu_button = QPushButton(_("Menu"))
+        self.hlayout0.addWidget(self.menu_button)
+        self.menu = QMenu(self.menu_button)
+        self.menu_button.setMenu(self.menu)
+
+        self.action_widget = QWidgetAction(self.menu)
+        self.menu_widget = QWidget(self.menu)
+        self.menu_layout = QGridLayout(self.menu_widget)
+        self.menu_layout.addWidget(QLabel(_("Edit Mode:")), 0, 0)
         self.edit_mode_combobox = QComboBox()
         self.edit_mode_combobox.setMinimumWidth(132)
         self.edit_mode_combobox.addItems([_("Items"), _("Automation")])
@@ -39,35 +49,38 @@ class SequencerWidget:
         self.edit_mode_combobox.setToolTip(
             'Change the edit mode.  Edit items or automation'
         )
-
-        self.menu_button = QPushButton(_("Menu"))
-        self.hlayout0.addWidget(self.menu_button)
-        self.menu = QMenu(self.menu_button)
-        self.menu_button.setMenu(self.menu)
-
-        self.menu_widget = QWidget()
-        self.menu_layout = QGridLayout(self.menu_widget)
-        self.action_widget = QWidgetAction(self.menu)
+        self.menu_layout.addWidget(self.edit_mode_combobox, 0, 1)
         self.action_widget.setDefaultWidget(self.menu_widget)
         self.menu.addAction(self.action_widget)
 
         self.toggle_edit_mode_action = QAction(
-            _("Toggle Edit Mode"), self.menu_button)
-        self.menu_button.addAction(self.toggle_edit_mode_action)
+            _("Toggle Edit Mode"),
+            self.menu,
+        )
+        self.toggle_edit_mode_action.setToolTip(
+            'Toggle between item and automation editing mode in the sequencer'
+        )
         self.toggle_edit_mode_action.setShortcut(
-            QKeySequence.fromString("CTRL+E"))
+            QKeySequence.fromString("CTRL+E"),
+        )
+        #self.menu_button.addAction(self.toggle_edit_mode_action)
         self.menu.addAction(self.toggle_edit_mode_action)
         self.toggle_edit_mode_action.triggered.connect(self.toggle_edit_mode)
 
         self.menu.addSeparator()
 
-        self.menu_layout.addWidget(QLabel(_("Edit Mode:")), 0, 0)
-        self.menu_layout.addWidget(self.edit_mode_combobox, 0, 1)
-
-        self.reorder_tracks_action = self.menu.addAction(
-            _("Reorder Tracks..."))
+        self.reorder_tracks_action = QAction(
+            _("Reorder Tracks..."),
+            self.menu,
+        )
+        self.menu.addAction(self.reorder_tracks_action)
+        self.reorder_tracks_action.setToolTip(
+            'Re-order the sequencer tracks / plugin racks'
+        )
         self.reorder_tracks_action.triggered.connect(self.set_track_order)
-        self.menu.addSeparator()
+
+        #self.menu.addSeparator()
+
         self.hide_inactive = False
 #        self.toggle_hide_action = self.menu.addAction(
 #            _("Hide Inactive Instruments"))
@@ -76,10 +89,20 @@ class SequencerWidget:
 #        self.toggle_hide_action.setShortcut(
 #            QKeySequence.fromString("CTRL+H"))
         self.menu.addSeparator()
-        self.unsolo_action = self.menu.addAction(_("Un-Solo All"))
+
+        self.unsolo_action = QAction(_("Un-Solo All"), self.menu)
+        self.menu.addAction(self.unsolo_action)
+        self.unsolo_action.setToolTip(
+            'Disable solo for any tracks that have been soloed'
+        )
         self.unsolo_action.triggered.connect(self.unsolo_all)
         self.unsolo_action.setShortcut(QKeySequence.fromString("CTRL+J"))
-        self.unmute_action = self.menu.addAction(_("Un-Mute All"))
+
+        self.unmute_action = QAction(_("Un-Mute All"), self.menu)
+        self.menu.addAction(self.unmute_action)
+        self.unmute_action.setToolTip(
+            'Disable mute for any tracks that have been muted'
+        )
         self.unmute_action.triggered.connect(self.unmute_all)
         self.unmute_action.setShortcut(QKeySequence.fromString("CTRL+M"))
 

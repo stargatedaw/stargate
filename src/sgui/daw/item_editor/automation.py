@@ -448,25 +448,39 @@ class AutomationEditorWidget:
             self.hlayout.addWidget(self.control_combobox)
             self.hlayout.addWidget(QLabel(_("In Use:")))
             self.hlayout.addWidget(self.ccs_in_use_combobox)
+
         self.edit_menu = QMenu(self.widget)
-        self.copy_action = self.edit_menu.addAction(_("Copy"))
+
+        self.copy_action = QAction(_("Copy"), self.edit_menu)
+        self.edit_menu.addAction(self.copy_action)
         self.copy_action.setToolTip(
             'Copy selected automation points to the clipboard'
         )
         self.copy_action.triggered.connect(
-            self.automation_viewer.copy_selected)
+            self.automation_viewer.copy_selected,
+        )
         self.copy_action.setShortcut(QKeySequence.StandardKey.Copy)
-        self.cut_action = self.edit_menu.addAction(_("Cut"))
+
+        self.cut_action = QAction(_("Cut"), self.edit_menu)
+        self.edit_menu.addAction(self.cut_action)
+        self.cut_action.setToolTip(
+            'Copy selected automation points to the clipboard and delete them '
+            'from the item'
+        )
         self.cut_action.triggered.connect(self.automation_viewer.cut)
         self.cut_action.setShortcut(QKeySequence.StandardKey.Cut)
-        self.paste_action = self.edit_menu.addAction(_("Paste"))
+
+        self.paste_action = QAction(_("Paste"), self.edit_menu)
+        self.edit_menu.addAction(self.paste_action)
         self.paste_action.setToolTip(
-            'Paste automation points that were previously copied\n'
+            'Paste automation points that were previously copied '
             'to the clipboard'
         )
         self.paste_action.triggered.connect(self.automation_viewer.paste)
         self.paste_action.setShortcut(QKeySequence.StandardKey.Paste)
-        self.select_all_action = self.edit_menu.addAction(_("Select All"))
+
+        self.select_all_action = QAction(_("Select All"), self.edit_menu)
+        self.edit_menu.addAction(self.select_all_action)
         self.select_all_action.setToolTip(
             'Select all automation points in this item'
         )
@@ -474,23 +488,48 @@ class AutomationEditorWidget:
         self.select_all_action.setShortcut(
             QKeySequence.StandardKey.SelectAll,
         )
-        self.delete_action = self.edit_menu.addAction(_("Delete"))
+        self.delete_action = QAction(_("Delete"), self.edit_menu)
+        self.edit_menu.addAction(self.delete_action)
+        self.delete_action.setToolTip(
+            'Delete selected automation points'
+        )
         self.delete_action.triggered.connect(
-            self.automation_viewer.delete_selected)
+            self.automation_viewer.delete_selected,
+        )
         self.delete_action.setShortcut(QKeySequence.StandardKey.Delete)
 
         self.edit_menu.addSeparator()
-        self.add_point_action = self.edit_menu.addAction(_("Add Point..."))
+
+        self.add_point_action = QAction(_("Add Point..."), self.edit_menu)
+        self.edit_menu.addAction(self.add_point_action)
+        self.add_point_action.setToolTip(
+            'Open a dialog to add a new automation point'
+        )
         if self.is_cc:
             self.add_point_action.triggered.connect(self.add_cc_point)
-            self.paste_point_action = self.edit_menu.addAction(
-                _("Paste Point from Plugin..."))
+
+            self.paste_point_action = QAction(
+                _("Paste Point from Plugin..."),
+                self.edit_menu,
+            )
+            self.edit_menu.addAction(self.paste_point_action)
+            self.paste_point_action.setToolTip(
+                'Paste a point from a plugin control.  Right-click on a '
+                'plugin knob and select "copy to clipboard"'
+            )
             self.paste_point_action.triggered.connect(self.paste_cc_point)
         else:
             self.add_point_action.triggered.connect(self.add_pb_point)
+
         self.edit_menu.addSeparator()
-        self.clear_action = self.edit_menu.addAction(_("Clear"))
+
+        self.clear_action = QAction(_("Clear"), self.edit_menu)
+        self.edit_menu.addAction(self.clear_action)
+        self.clear_action.setToolTip(
+            'Clear all visible automation points'
+        )
         self.clear_action.triggered.connect(self.clear)
+
         self.edit_button.setMenu(self.edit_menu)
         self.hlayout.addItem(
             QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),

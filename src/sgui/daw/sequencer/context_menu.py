@@ -408,14 +408,26 @@ def init():
     MENU = QMenu(shared.SEQUENCER)
     MENU.addAction(_shared.copy_action)
 
-    cut_action = MENU.addAction(_("Cut"))
+    cut_action = QAction(_("Cut"), MENU)
+    MENU.addAction(cut_action)
+    cut_action.setToolTip(
+        'Copy selected items to the clipboard and delete from the sequencer'
+    )
     cut_action.triggered.connect(cut_selected)
     cut_action.setShortcut(QKeySequence.StandardKey.Cut)
 
-    paste_orig_action = MENU.addAction(_("Paste to Original Track"))
+    paste_orig_action = QAction(_("Paste to Original Track"), MENU)
+    MENU.addAction(paste_orig_action)
+    paste_orig_action.setToolTip(
+        'Paste previously copied items to the same track they were copied from'
+    )
     paste_orig_action.triggered.connect(_shared.paste_orig)
 
-    paste_selected_action = MENU.addAction(_("Paste to Selected Track"))
+    paste_selected_action = QAction(_("Paste to Selected Track"), MENU)
+    MENU.addAction(paste_selected_action)
+    paste_selected_action.setToolTip(
+        'Paste previously copied items to the track under the mouse cursor'
+    )
     paste_selected_action.triggered.connect(_shared.paste_selected)
 
     MENU.addSeparator()
@@ -425,31 +437,66 @@ def init():
     takes_menu = MENU.addMenu(_("Takes"))
     takes_menu.triggered.connect(takes_menu_triggered)
 
-    unlink_selected_action = MENU.addAction(
-        _("Create New Take for Item(s)"),
+    unlink_selected_action = QAction("Create New Take for Item(s)", MENU)
+    MENU.addAction(unlink_selected_action)
+    unlink_selected_action.setToolTip(
+        'By default, all copied items are linked, and editing one will edit '
+        'all.  This unlinks selected items so that they can be edited '
+        'individually'
     )
     unlink_selected_action.setShortcut(
         QKeySequence.fromString("CTRL+U"),
     )
     unlink_selected_action.triggered.connect(on_auto_unlink_selected)
-    unlink_unique_action = MENU.addAction(
+
+    unlink_unique_action = QAction(
         _("Create New Take for Unique Item(s)"),
+        MENU,
+    )
+    MENU.addAction(unlink_unique_action)
+    unlink_unique_action.setToolTip(
+        'By default, all copied items are linked, and editing one will edit '
+        'all.  This unlinks selected items so that they can be edited '
+        'individually, but duplicate items will only get one new take'
     )
     unlink_unique_action.setShortcut(
         QKeySequence.fromString("ALT+U"),
     )
     unlink_unique_action.triggered.connect(on_auto_unlink_unique)
-    unlink_action = MENU.addAction(
+
+    unlink_action = QAction(
         _("Create Named Take for Single Item..."),
+        MENU,
+    )
+    MENU.addAction(unlink_action)
+    unlink_action.setToolTip(
+        'Opens a dialog to create a new take of this item with a new name'
     )
     unlink_action.triggered.connect(on_unlink_item)
+
     MENU.addSeparator()
-    rename_action = MENU.addAction(_("Rename Selected Item(s)..."))
+
+    rename_action = QAction(_("Rename Selected Item(s)..."), MENU)
+    MENU.addAction(rename_action)
+    rename_action.setToolTip('Open a dialog to rename selected items')
     rename_action.triggered.connect(on_rename_items)
-    transpose_action = MENU.addAction(_("Transpose..."))
+
+    transpose_action = QAction(_("Transpose..."), MENU)
+    MENU.addAction(transpose_action)
+    transpose_action.setToolTip(
+        'Tranpose MIDI notes in the selected items.  '
+        'This does not affect audio'
+    )
     transpose_action.triggered.connect(transpose_dialog)
-    glue_action = MENU.addAction(_("Glue Selected"))
+
+    glue_action = QAction(_("Glue Selected"), MENU)
+    MENU.addAction(glue_action)
+    glue_action.setToolTip(
+        'Glue together multiple selected items on the same track into a new, '
+        'single item'
+    )
     glue_action.triggered.connect(glue_selected)
     glue_action.setShortcut(
         QKeySequence.fromString("CTRL+G"),
     )
+

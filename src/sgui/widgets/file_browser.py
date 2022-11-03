@@ -78,19 +78,39 @@ class AbstractFileBrowserWidget:
         self.menu_button.setMenu(self.menu_button_menu)
         self.folder_buttons_hlayout.addWidget(self.menu_button)
 
-        self.copy_action = self.menu_button_menu.addAction(_("Copy"))
+        self.copy_action = QAction(_("Copy"), self.menu_button_menu)
+        self.menu_button_menu.addAction(self.copy_action)
+        self.copy_action.setToolTip(
+            'Copy the current folder to the system clipboard'
+        )
         self.copy_action.triggered.connect(self.copy_button_pressed)
 
-        self.paste_action = self.menu_button_menu.addAction(_("Paste"))
+        self.paste_action = QAction(_("Paste"), self.menu_button_menu)
+        self.menu_button_menu.addAction(self.paste_action)
+        self.paste_action.setToolTip(
+            'Open a folder path in the system clipboard'
+        )
         self.paste_action.triggered.connect(self.paste_button_pressed)
 
         self.menu_button_menu.addSeparator()
 
-        self.bookmark_action = self.menu_button_menu.addAction(_("Bookmark"))
+        self.bookmark_action = QAction(_("Bookmark"), self.menu_button_menu)
+        self.menu_button_menu.addAction(self.bookmark_action)
+        self.bookmark_action.setToolTip(
+            'Open a dialog to add the current folder as a bookmark in '
+            'the bookmarks tab'
+        )
         self.bookmark_action.triggered.connect(self.bookmark_button_pressed)
 
-        self.bookmark_subfolders_action = self.menu_button_menu.addAction(
-            _("Bookmark Subfolders..."))
+        self.bookmark_subfolders_action = QAction(
+            _("Bookmark Subfolders..."),
+            self.menu_button_menu,
+        )
+        self.menu_button_menu.addAction(self.bookmark_subfolders_action)
+        self.bookmark_subfolders_action.setToolTip(
+            'Open a dialog to bookmark selected subfolders of the current '
+            'folder'
+        )
         self.bookmark_subfolders_action.triggered.connect(
             self.bookmark_subfolders)
 

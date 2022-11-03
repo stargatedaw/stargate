@@ -3,7 +3,7 @@ from sgui.daw.shared import *
 from sglib.lib.util import *
 from sgui.sgqt import *
 
-from sglib.lib import util
+from sglib.lib import strings as sg_strings, util
 from sglib.lib.translate import _
 from . import _shared
 from .fade_vol_dialog import FadeVolDialogWidget
@@ -28,25 +28,59 @@ def show(current_item):
     shared.AUDIO_SEQ.context_menu_enabled = False
 
     f_file_menu = f_menu.addMenu(_("File"))
-    f_save_a_copy_action = f_file_menu.addAction(_("Save a Copy..."))
+    f_save_a_copy_action = QAction("Save a Copy...", f_file_menu)
+    f_file_menu.addAction(f_save_a_copy_action)
+    f_save_a_copy_action.setToolTip('Save a new copy of this audio file')
     f_save_a_copy_action.triggered.connect(save_a_copy)
-    f_open_folder_action = f_file_menu.addAction(_("Open File in Browser"))
-    f_open_folder_action.triggered.connect(open_item_folder)
-    f_wave_editor_action = f_file_menu.addAction(_("Open in Wave Editor"))
-    f_wave_editor_action.triggered.connect(open_in_wave_editor)
-    f_copy_file_path_action = f_file_menu.addAction(
-        _("Copy File Path to Clipboard"),
+
+    f_open_folder_action = QAction(_("Open File in Browser"), f_file_menu)
+    f_file_menu.addAction(f_open_folder_action)
+    f_open_folder_action.setToolTip(
+        'Open in the file browser the folder that this audio file is in'
     )
+    f_open_folder_action.triggered.connect(open_item_folder)
+
+    f_wave_editor_action = QAction(_("Open in Wave Editor"), f_file_menu)
+    f_wave_editor_action.setToolTip(
+        'Open this audio file in the Stargate built-in Wave Editor'
+    )
+    f_file_menu.addAction(f_wave_editor_action)
+    f_wave_editor_action.triggered.connect(open_in_wave_editor)
+
+    f_copy_file_path_action = QAction(
+        _("Copy File Path to Clipboard"),
+        f_file_menu,
+    )
+    f_copy_file_path_action.setToolTip(
+        'Copy the full path to this audio file to the system clipboard'
+    )
+    f_file_menu.addAction(f_copy_file_path_action)
     f_copy_file_path_action.triggered.connect(
         copy_file_path_to_clipboard,
     )
-    f_select_instance_action = f_file_menu.addAction(
+
+    f_select_instance_action = QAction(
         _("Select All Instances of This File"),
+        f_file_menu,
+    )
+    f_file_menu.addAction(f_select_instance_action)
+    f_select_instance_action.setToolTip(
+        'Select all instances of this audio file in this item.  '
+        'Useful for performing actions on every instance of this file'
     )
     f_select_instance_action.triggered.connect(select_file_instance)
+
     f_file_menu.addSeparator()
-    f_replace_action = f_file_menu.addAction(
+
+    f_replace_action = QAction(
         _("Replace with Path in Clipboard"),
+        f_file_menu,
+    )
+    f_file_menu.addAction(f_replace_action)
+    f_replace_action.setToolTip(
+        'Replace this file with the file path in the system clipboard.  '
+        'You must copy the full path to a valid audio file of a supported '
+        'type before using this'
     )
     f_replace_action.triggered.connect(replace_with_path_in_clipboard)
 
@@ -62,7 +96,9 @@ def show(current_item):
 
     for f_ts_mode in TIMESTRETCH_MODES:
         f_index = util.TIMESTRETCH_INDEXES[f_ts_mode]
-        f_action = f_ts_mode_menu.addAction(f_ts_mode)
+        f_action = QAction(f_ts_mode, f_ts_mode_menu)
+        f_action.setToolTip(sg_strings.timestretch_modes[f_index])
+        f_ts_mode_menu.addAction(f_action)
         f_action.algo_name = f_ts_mode
         if len(f_ts_modes) == 1 and f_index in f_ts_modes:
             f_action.setCheckable(True)
@@ -71,79 +107,199 @@ def show(current_item):
     if len(f_ts_modes) == 1 and [x for x in (3, 4) if x in f_ts_modes]:
         f_crisp_menu = f_properties_menu.addMenu("Crispness")
         f_crisp_menu.triggered.connect(crisp_menu_triggered)
-        f_crisp_settings = {x.audio_item.crispness
-            for x in shared.AUDIO_SEQ.get_selected()}
+        f_crisp_settings = {
+            x.audio_item.crispness
+            for x in shared.AUDIO_SEQ.get_selected()
+        }
         for f_crisp_mode, f_index in zip(
-        CRISPNESS_SETTINGS, range(len(CRISPNESS_SETTINGS))):
-            f_action = f_crisp_menu.addAction(f_crisp_mode)
+            CRISPNESS_SETTINGS,
+            range(len(CRISPNESS_SETTINGS))
+        ):
+            f_action = QAction(f_crisp_mode, f_crisp_menu)
+            f_action.setToolTip(
+                'Crispness parameters for the Rubberband time stretching '
+                'library.  See the Rubberband documentation for more info'
+            )
+            f_crisp_menu.addAction(f_action)
             f_action.crisp_mode = f_crisp_mode
-            if len(f_crisp_settings) == 1 and \
-            f_index in f_crisp_settings:
+            if (
+                len(f_crisp_settings) == 1
+                and
+                f_index in f_crisp_settings
+            ):
                 f_action.setCheckable(True)
                 f_action.setChecked(True)
 
-    f_output_modes = {x.audio_item.output_track
-        for x in shared.AUDIO_SEQ.get_selected()}
+    f_output_modes = {
+        x.audio_item.output_track
+        for x in shared.AUDIO_SEQ.get_selected()
+    }
 
     f_output_menu = f_properties_menu.addMenu(_("Output"))
     f_output_menu.triggered.connect(output_mode_triggered)
-    for f_i, f_name in zip(
-    range(3), [_("Normal"), _("Sidechain"), _("Both")]):
-        f_action = f_output_menu.addAction(f_name)
+    for f_i, f_name, tooltip in zip(
+        range(3),
+        [_("Normal"), _("Sidechain"), _("Both")],
+        (
+            'Output to the normal audio channel',
+            'Output to the sidechain audio channel',
+            (
+                'Output to normal and sidechain channels at the same time.  '
+                'Note that this will cause a sound to mute itself when '
+                'using a sidechain compressor'
+            ),
+        ),
+    ):
+        f_action = QAction(f_name, f_output_menu)
+        f_output_menu.addAction(f_action)
+        f_action.setToolTip(tooltip)
         f_action.output_val = f_i
         if len(f_output_modes) == 1 and f_i in f_output_modes:
             f_action.setCheckable(True)
             f_action.setChecked(True)
 
-    f_volume_action = f_properties_menu.addAction(_("Volume..."))
+    f_volume_action = QAction(_("Volume..."), f_properties_menu)
+    f_properties_menu.addAction(f_volume_action)
+    f_volume_action.setToolTip(
+        'Change the volume of the audio item.  You can also use CTRL+ALT+drag '
+        'up and down to change volume of one or more audio items, and '
+        'CTRL+SHIFT+drag to change for all instances of the file'
+    )
     f_volume_action.triggered.connect(volume_dialog)
-    f_normalize_action = f_properties_menu.addAction(_("Normalize..."))
+
+    f_normalize_action = QAction(_("Normalize..."), f_properties_menu)
+    f_properties_menu.addAction(f_normalize_action)
+    f_normalize_action.setToolTip(
+        'Normalize audio items to a given level.  Note that this is '
+        'pre-effects, using per-audio-item or per-file effects may '
+        'change the volume level'
+    )
     f_normalize_action.triggered.connect(normalize_dialog)
-    f_reset_fades_action = f_properties_menu.addAction(_("Reset Fades"))
+
+    f_reset_fades_action = QAction(_("Reset Fades"), f_properties_menu)
+    f_properties_menu.addAction(f_reset_fades_action)
+    f_reset_fades_action.setToolTip(
+        'Reset the fade in and fade out handles to their default position '
+        'of no fade in or out'
+    )
     f_reset_fades_action.triggered.connect(reset_fades)
-    f_reset_end_action = f_properties_menu.addAction(_("Reset Ends"))
+
+    f_reset_end_action = QAction(_("Reset Ends"), f_properties_menu)
+    f_properties_menu.addAction(f_reset_end_action)
+    f_reset_end_action.setToolTip(
+        'Reset the end of the audio item to be the full length of the audio '
+        'file.  Note that it will still be clipped by the length of the item.'
+    )
     f_reset_end_action.triggered.connect(reset_end)
-    f_move_to_end_action = f_properties_menu.addAction(
-        _("Move to Item End"),
+
+    f_move_to_end_action = QAction(_("Move to Item End"), f_properties_menu)
+    f_properties_menu.addAction(f_move_to_end_action)
+    f_move_to_end_action.setToolTip(
+        'Move this audio item to the end of the sequencer item'
     )
     f_move_to_end_action.triggered.connect(move_to_item_end)
-    f_reverse_action = f_properties_menu.addAction(_("Reverse/Unreverse"))
+
+    f_reverse_action = QAction(_("Reverse/Unreverse"), f_properties_menu)
+    f_properties_menu.addAction(f_reverse_action)
+    f_reverse_action.setToolTip(
+        'Toggle normal playback with playing the item backwards, For example '
+        'turning a cymbal crash into a rising sound'
+    )
     f_reverse_action.triggered.connect(_reverse)
-    f_time_pitch_action = f_properties_menu.addAction(_("Time/Pitch..."))
+
+    f_time_pitch_action = QAction(_("Time/Pitch..."), f_properties_menu)
+    f_properties_menu.addAction(f_time_pitch_action)
+    f_time_pitch_action.setToolTip(
+        'Open the time stretching and pitchshifting dialog'
+    )
     f_time_pitch_action.triggered.connect(time_pitch_dialog)
-    f_fade_vol_action = f_properties_menu.addAction(_("Fade Volume..."))
+
+    f_fade_vol_action = QAction(_("Fade Volume..."), f_properties_menu)
+    f_properties_menu.addAction(f_fade_vol_action)
+    f_fade_vol_action.setToolTip(
+        'Set the volume levels of the fade-in and fade-out handles.  This '
+        'will affect how quickly a sound fades in or out'
+    )
     f_fade_vol_action.triggered.connect(fade_vol_dialog)
 
     f_paif_menu = f_menu.addMenu(_("Effects"))
 
     f_paif_file_menu = f_paif_menu.addMenu(_("Per-File"))
-    f_edit_papifx_action = f_paif_file_menu.addAction(_("Edit"))
+
+    f_edit_papifx_action = QAction(_("Edit"), f_paif_file_menu)
+    f_paif_file_menu.addAction(f_edit_papifx_action)
+    f_edit_papifx_action.setToolTip(
+        'Edit the per-file effects for this audio file.  This will affect '
+        'all instances of this file in all sequencer items'
+    )
     f_edit_papifx_action.triggered.connect(edit_papifx)
-    f_paif_copy = f_paif_file_menu.addAction(_("Copy"))
+
+    f_paif_copy = QAction(_("Copy"), f_paif_file_menu)
+    f_paif_file_menu.addAction(f_paif_copy)
+    f_paif_copy.setToolTip(
+        'Copy the per-file effects for this audio file to the clipboard, '
+        'use this for duplicating one file\'s effects to another'
+    )
     f_paif_copy.triggered.connect(
         shared.AUDIO_SEQ_WIDGET.on_papifx_copy,
     )
-    f_paif_paste = f_paif_file_menu.addAction(_("Paste"))
+
+    f_paif_paste = QAction(_("Paste"), f_paif_file_menu)
+    f_paif_file_menu.addAction(f_paif_paste)
+    f_paif_paste.setToolTip(
+        'Paste per-file effects to this audio file.  You must already have '
+        'copied effects to the clipboard before doing this.'
+    )
     f_paif_paste.triggered.connect(
         shared.AUDIO_SEQ_WIDGET.on_papifx_paste,
     )
-    f_paif_clear = f_paif_file_menu.addAction(_("Clear"))
+
+    f_paif_clear = QAction(_("Clear"), f_paif_file_menu)
+    f_paif_file_menu.addAction(f_paif_clear)
+    f_paif_clear.setToolTip(
+        'Clear all per-file effects from this audio file, there will be no '
+        'effects after running this action'
+    )
     f_paif_clear.triggered.connect(
         shared.AUDIO_SEQ_WIDGET.on_papifx_clear,
     )
 
     f_paif_item_menu = f_paif_menu.addMenu(_("Per-Item"))
-    f_edit_paif_action = f_paif_item_menu.addAction(_("Edit"))
+
+    f_edit_paif_action = QAction(_("Edit"), f_paif_item_menu)
+    f_paif_item_menu.addAction(f_edit_paif_action)
+    f_edit_paif_action.setToolTip(
+        'Edit the per-audio-item effects for this audio item.  This will '
+        'only affect this instance of this file in this sequencer items'
+    )
     f_edit_paif_action.triggered.connect(edit_paif)
-    f_paif_copy = f_paif_item_menu.addAction(_("Copy"))
+
+    f_paif_copy = QAction(_("Copy"), f_paif_item_menu)
+    f_paif_item_menu.addAction(f_paif_copy)
+    f_paif_copy.setToolTip(
+        'Copy the per-audio-item effects for this audio item to the '
+        'clipboard, use this for duplicating one item\'s effects to another'
+    )
     f_paif_copy.triggered.connect(
         shared.AUDIO_SEQ_WIDGET.on_paifx_copy,
     )
-    f_paif_paste = f_paif_item_menu.addAction(_("Paste"))
+
+    f_paif_paste = QAction(_("Paste"), f_paif_item_menu)
+    f_paif_item_menu.addAction(f_paif_paste)
+    f_paif_paste.setToolTip(
+        'Paste per-audio-item effects to this audio item.  You must already '
+        'have copied effects to the clipboard before doing this.'
+    )
     f_paif_paste.triggered.connect(
         shared.AUDIO_SEQ_WIDGET.on_paifx_paste,
     )
-    f_paif_clear = f_paif_item_menu.addAction(_("Clear"))
+
+    f_paif_clear = QAction(_("Clear"), f_paif_item_menu)
+    f_paif_item_menu.addAction(f_paif_clear)
+    f_paif_clear.setToolTip(
+        'Clear all per-audio-item effects from this audio item, there will '
+        'be no effects after running this action'
+    )
     f_paif_clear.triggered.connect(
         shared.AUDIO_SEQ_WIDGET.on_paifx_clear,
     )

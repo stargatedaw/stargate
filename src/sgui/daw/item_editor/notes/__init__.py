@@ -96,15 +96,21 @@ class PianoRollEditorWidget:
         #self.paste_action.triggered.connect(shared.PIANO_ROLL_EDITOR.paste)
         #self.paste_action.setShortcut(QKeySequence.Paste)
 
-        self.select_all_action = self.edit_actions_menu.addAction(
+        self.select_all_action = QAction(
             _("Select All"),
+            self.edit_actions_menu,
         )
+        self.edit_actions_menu.addAction(self.select_all_action)
+        self.select_all_action.setToolTip('Select all MIDI notes')
         self.select_all_action.triggered.connect(self.select_all)
         self.select_all_action.setShortcut(QKeySequence.StandardKey.SelectAll)
 
-        self.clear_selection_action = self.edit_actions_menu.addAction(
-            _("Clear Selection")
+        self.clear_selection_action = QAction(
+            _("Clear Selection"),
+            self.edit_actions_menu,
         )
+        self.edit_actions_menu.addAction(self.clear_selection_action)
+        self.clear_selection_action.setToolTip('Unselect all MIDI notes')
         self.clear_selection_action.triggered.connect(
             shared.PIANO_ROLL_EDITOR.scene.clearSelection,
         )
@@ -114,34 +120,57 @@ class PianoRollEditorWidget:
 
         self.edit_actions_menu.addSeparator()
 
-        self.delete_selected_action = self.edit_actions_menu.addAction(
+        self.delete_selected_action = QAction(
             _("Delete"),
+            self.edit_actions_menu,
+        )
+        self.edit_actions_menu.addAction(self.delete_selected_action)
+        self.delete_selected_action.setToolTip(
+            'Delete selected MIDI notes'
         )
         self.delete_selected_action.triggered.connect(self.on_delete_selected)
         self.delete_selected_action.setShortcut(
             QKeySequence.StandardKey.Delete,
         )
 
-        self.quantize_action = self.edit_menu.addAction(_("Quantize..."))
+        self.quantize_action = QAction(_("Quantize..."), self.edit_menu)
+        self.edit_menu.addAction(self.quantize_action)
+        self.quantize_action.setToolTip(
+            'Open a dialog to quantize selected notes'
+        )
         self.quantize_action.triggered.connect(self.quantize_dialog)
 
         self.transpose_menu = self.edit_menu.addMenu(_("Transpose"))
 
-        self.transpose_action = self.transpose_menu.addAction(_("Dialog..."))
+        self.transpose_action = QAction(_("Dialog..."), self.transpose_menu)
+        self.transpose_menu.addAction(self.transpose_action)
+        self.transpose_action.setToolTip(
+            'Open a dialog to transpose selected notes'
+        )
         self.transpose_action.triggered.connect(self.transpose_dialog)
 
         self.transpose_menu.addSeparator()
 
-        self.up_semitone_action = self.transpose_menu.addAction(
+        self.up_semitone_action = QAction(
             _("Up Semitone"),
+            self.transpose_menu,
+        )
+        self.transpose_menu.addAction(self.up_semitone_action)
+        self.up_semitone_action.setToolTip(
+            'Transpose selected notes up one semitone'
         )
         self.up_semitone_action.triggered.connect(self.transpose_up_semitone)
         self.up_semitone_action.setShortcut(
             QKeySequence.fromString("SHIFT+UP"),
         )
 
-        self.down_semitone_action = self.transpose_menu.addAction(
+        self.down_semitone_action = QAction(
             _("Down Semitone"),
+            self.transpose_menu,
+        )
+        self.transpose_menu.addAction(self.down_semitone_action)
+        self.down_semitone_action.setToolTip(
+            'Transpose selected notes down one semitone'
         )
         self.down_semitone_action.triggered.connect(
             self.transpose_down_semitone,
@@ -150,18 +179,28 @@ class PianoRollEditorWidget:
             QKeySequence.fromString("SHIFT+DOWN"),
         )
 
-        self.up_octave_action = self.transpose_menu.addAction(_("Up Octave"))
+        self.up_octave_action = QAction(_("Up Octave"), self.transpose_menu)
+        self.transpose_menu.addAction(self.up_octave_action)
+        self.up_octave_action.setToolTip(
+            'Transpose selected notes up one octave'
+        )
         self.up_octave_action.triggered.connect(self.transpose_up_octave)
         self.up_octave_action.setShortcut(
             QKeySequence.fromString("ALT+UP"),
         )
 
-        self.down_octave_action = self.transpose_menu.addAction(
+        self.down_octave_action = QAction(
             _("Down Octave"),
+            self.transpose_menu,
+        )
+        self.transpose_menu.addAction(self.down_octave_action)
+        self.down_octave_action.setToolTip(
+            'Transpose selected notes up one octave'
         )
         self.down_octave_action.triggered.connect(self.transpose_down_octave)
         self.down_octave_action.setShortcut(
-            QKeySequence.fromString("ALT+DOWN"))
+            QKeySequence.fromString("ALT+DOWN"),
+        )
 
         self.velocity_menu = self.edit_menu.addMenu(_("Velocity"))
 
@@ -175,11 +214,21 @@ class PianoRollEditorWidget:
         )
         self.velocity_random_menu.triggered.connect(self.vel_rand_triggered)
 
-        for f_i, f_type in zip(
+        for f_i, f_type, tooltip in zip(
             range(len(self.random_types)),
-            self.random_types
+            self.random_types,
+            (
+                'No randomness, initial velocity is always 100',
+                (
+                    'Slight randomness, every note drawn will have a value '
+                    'near 100'
+                ),
+                'More extreme randomness',
+            ),
         ):
-            f_action = self.velocity_random_menu.addAction(f_type)
+            f_action = QAction(f_type, self.velocity_random_menu)
+            self.velocity_random_menu.addAction(f_action)
+            f_action.setToolTip(tooltip)
             f_action.setActionGroup(self.vel_rand_action_group)
             f_action.setCheckable(True)
             f_action.my_index = f_i
@@ -194,9 +243,18 @@ class PianoRollEditorWidget:
         self.velocity_emphasis_menu.triggered.connect(
             self.vel_emphasis_triggered)
 
-        for f_i, f_type in zip(
-        range(len(self.emphasis_types)), self.emphasis_types):
-            f_action = self.velocity_emphasis_menu.addAction(f_type)
+        for f_i, f_type, tooltip in zip(
+            range(len(self.emphasis_types)),
+            self.emphasis_types,
+            (
+                'No emphasis, velocity is consistent',
+                'Higher velocity near a beat, lower velocity off beat',
+                'Lower velocity near a beat, higher velocity off beat',
+            ),
+        ):
+            f_action = QAction(f_type, self.velocity_emphasis_menu)
+            self.velocity_emphasis_menu.addAction(f_action)
+            f_action.setToolTip(tooltip)
             f_action.setActionGroup(self.vel_emphasis_action_group)
             f_action.setCheckable(True)
             f_action.my_index = f_i
@@ -204,61 +262,128 @@ class PianoRollEditorWidget:
                 f_action.setChecked(True)
 
         self.expression_menu = self.edit_menu.addMenu(_("Expression"))
-        self.reset_velocity_action = self.expression_menu.addAction(
+
+        self.reset_velocity_action = QAction(
             _("Reset Velocity"),
+            self.expression_menu,
+        )
+        self.expression_menu.addAction(self.reset_velocity_action)
+        self.reset_velocity_action.setToolTip(
+            'Reset velocity of selected notes to 100'
         )
         self.reset_velocity_action.triggered.connect(self.reset_velocity)
-        self.reset_pan_action = self.expression_menu.addAction(_("Reset Pan"))
+
+        self.reset_pan_action = QAction(_("Reset Pan"), self.expression_menu)
+        self.expression_menu.addAction(self.reset_pan_action)
+        self.reset_pan_action.setToolTip(
+            'Reset the per-note pan of selected notes to center'
+        )
         self.reset_pan_action.triggered.connect(self.reset_pan)
-        self.reset_attack_action = self.expression_menu.addAction(
+
+        self.reset_attack_action = QAction(
             _("Reset Attack"),
+            self.expression_menu,
+        )
+        self.expression_menu.addAction(self.reset_attack_action)
+        self.reset_attack_action.setToolTip(
+            'Reset the per-note attack modification to zero'
         )
         self.reset_attack_action.triggered.connect(self.reset_attack)
-        self.reset_decay_action = self.expression_menu.addAction(
+
+        self.reset_decay_action = QAction(
             _("Reset Decay"),
+            self.expression_menu,
+        )
+        self.expression_menu.addAction(self.reset_decay_action)
+        self.reset_decay_action.setToolTip(
+            'Reset the per-note decay modification to zero'
         )
         self.reset_decay_action.triggered.connect(self.reset_decay)
-        self.reset_sustain_action = self.expression_menu.addAction(
+
+        self.reset_sustain_action = QAction(
             _("Reset Sustain"),
+            self.expression_menu,
+        )
+        self.expression_menu.addAction(self.reset_sustain_action)
+        self.reset_sustain_action.setToolTip(
+            'Reset the per-note sustain modification to zero'
         )
         self.reset_sustain_action.triggered.connect(self.reset_sustain)
-        self.reset_release_action = self.expression_menu.addAction(
+
+        self.reset_release_action = QAction(
             _("Reset Release"),
+            self.expression_menu,
+        )
+        self.expression_menu.addAction(self.reset_release_action)
+        self.reset_release_action.setToolTip(
+            'Reset the per-note release modification to zero'
         )
         self.reset_release_action.triggered.connect(self.reset_release)
 
-
         self.edit_menu.addSeparator()
 
-        self.glue_selected_action = self.edit_menu.addAction(
-            _("Glue Selected"))
+        self.glue_selected_action = QAction(
+            _("Glue Selected"),
+            self.edit_menu,
+        )
+        self.edit_menu.addAction(self.glue_selected_action)
+        self.glue_selected_action.setToolTip(
+            'Glue together selected notes of the same MIDI note number into '
+            'new, larger notes'
+        )
         self.glue_selected_action.triggered.connect(
-            shared.PIANO_ROLL_EDITOR.glue_selected)
+            shared.PIANO_ROLL_EDITOR.glue_selected,
+        )
         self.glue_selected_action.setShortcut(
-            QKeySequence.fromString("CTRL+G"))
+            QKeySequence.fromString("CTRL+G"),
+        )
 
-        self.half_selected_action = self.edit_menu.addAction(
-            _("Split Selected in Half"))
+        self.half_selected_action = QAction(
+            _("Split Selected in Half"),
+            self.edit_menu,
+        )
+        self.edit_menu.addAction(self.half_selected_action)
+        self.half_selected_action.setToolTip(
+            'Cut selected notes in half'
+        )
         self.half_selected_action.triggered.connect(
-            shared.PIANO_ROLL_EDITOR.half_selected)
+            shared.PIANO_ROLL_EDITOR.half_selected,
+        )
         self.half_selected_action.setShortcut(
-            QKeySequence.fromString("CTRL+H"))
-
+            QKeySequence.fromString("CTRL+H"),
+        )
 
         self.edit_menu.addSeparator()
 
-        self.draw_last_action = self.edit_menu.addAction(
-            _("Draw Last Item(s)"))
+        self.draw_last_action = QAction(
+            _("Draw Last Item(s)"),
+            self.edit_menu,
+        )
+        self.edit_menu.addAction(self.draw_last_action)
+        self.draw_last_action.setToolTip(
+            'Draw the last item opened before the current as semi-transparent '
+            '"ghost notes".  Use this for comparison to ensure that 2 parts '
+            'are musically harmonious'
+        )
         self.draw_last_action.triggered.connect(self.draw_last)
         self.draw_last_action.setCheckable(True)
         self.draw_last_action.setShortcut(
-            QKeySequence.fromString("CTRL+F"))
+            QKeySequence.fromString("CTRL+F"),
+        )
 
-        self.open_last_action = self.edit_menu.addAction(
-            _("Open Last Item(s)"))
+        self.open_last_action = QAction(
+            _("Open Last Item(s)"),
+            self.edit_menu,
+        )
+        self.edit_menu.addAction(self.open_last_action)
+        self.open_last_action.setToolTip(
+            'Open the previously opened item.  Use this to rapidly switch '
+            'between 2 items you are editing'
+        )
         self.open_last_action.triggered.connect(self.open_last)
         self.open_last_action.setShortcut(
-            QKeySequence.fromString("ALT+F"))
+            QKeySequence.fromString("ALT+F"),
+        )
 
         self.controls_grid_layout.addItem(
             QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),

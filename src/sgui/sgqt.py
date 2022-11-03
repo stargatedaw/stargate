@@ -135,11 +135,13 @@ class _HintBox:
             else:
                 shared.HINT_BOX.setText('')
 
-    def _set_hint_box(self, msg: str):
+    def _set_hint_box(self, msg: str, clear=False):
         from sgui import shared
         if hasattr(shared, 'HINT_BOX'):
             shared.HINT_BOX.setText(msg)
-            if msg in shared.HINT_BOX_STACK:
+            if clear:
+                shared.HINT_BOX_STACK.clear()
+            elif msg in shared.HINT_BOX_STACK:
                 shared.HINT_BOX_STACK.remove(msg)
             shared.HINT_BOX_STACK.append(msg)
 
@@ -147,6 +149,10 @@ class _HintWidget(_HintBox):
     def event(self, event):
         if self._tooltip:
             if event.type() in (
+                QtCore.QEvent.Type.StatusTip,
+            ):
+                self._set_hint_box(self._tooltip, clear=True)
+            elif event.type() in (
                 QtCore.QEvent.Type.HoverEnter,
                 QtCore.QEvent.Type.Enter,
             ):
@@ -415,6 +421,19 @@ class QTreeWidget(_HintWidget, QTreeWidget):
 
 class QLabel(_HintWidget, QLabel):
     pass
+
+class QAction(_HintBox, QAction):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._tooltip = None
+        self.activate(QAction.ActionEvent.Trigger)
+        self.activate(QAction.ActionEvent.Hover)
+        self.hovered.connect(
+            lambda: self._set_hint_box(self._tooltip, clear=True)
+        )
+        self.triggered.connect(
+            lambda x: self._clear_hint_box(_all=True)
+        )
 
 # These caused unknown theming problems.
 # TODO: Try QGroupBox, it may have only been QWidget

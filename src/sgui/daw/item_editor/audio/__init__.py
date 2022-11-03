@@ -598,46 +598,106 @@ class AudioItemSeqWidget(FileDragDropper):
         self.controls_grid_layout.addWidget(self.menu_button, 0, 3)
         self.action_menu = QMenu(self.widget)
         self.menu_button.setMenu(self.action_menu)
-        self.copy_action = self.action_menu.addAction(_("Copy"))
+
+        self.copy_action = QAction(_("Copy"), self.action_menu)
+        self.action_menu.addAction(self.copy_action)
+        self.copy_action.setToolTip(
+            'Copy selected audio items to the clipboard to be pasted into '
+            'other sequencer items.  To copy items within the same item, '
+            'CTRL+click and drag'
+        )
         self.copy_action.triggered.connect(self.on_copy)
         self.copy_action.setShortcut(QKeySequence.StandardKey.Copy)
-        self.cut_action = self.action_menu.addAction(_("Cut"))
+
+        self.cut_action = QAction(_("Cut"), self.action_menu)
+        self.action_menu.addAction(self.cut_action)
+        self.cut_action.setToolTip(
+            'Copy selected audio items to the clipboard and delete from '
+            'the sequencer item'
+        )
         self.cut_action.triggered.connect(self.on_cut)
         self.cut_action.setShortcut(QKeySequence.StandardKey.Cut)
-        self.paste_action = self.action_menu.addAction(_("Paste"))
+
+        self.paste_action = QAction(_("Paste"), self.action_menu)
+        self.action_menu.addAction(self.paste_action)
+        self.paste_action.setToolTip(
+            'Paste previously copied items into this item at the same '
+            'position.  To copy items within the same item, CTRL+click and '
+            'drag'
+        )
         self.paste_action.triggered.connect(self.on_paste)
         self.paste_action.setShortcut(QKeySequence.StandardKey.Paste)
-        self.select_all_action = self.action_menu.addAction(_("Select All"))
+
+        self.select_all_action = QAction(_("Select All"), self.action_menu)
+        self.action_menu.addAction(self.select_all_action)
+        self.select_all_action.setToolTip(
+            'Select all audio items in this sequencer item'
+        )
         self.select_all_action.triggered.connect(self.on_select_all)
         self.select_all_action.setShortcut(QKeySequence.StandardKey.SelectAll)
-        self.clear_selection_action = self.action_menu.addAction(
-            _("Clear Selection"))
+
+        self.clear_selection_action = QAction(
+            _("Clear Selection"),
+            self.action_menu,
+        )
+        self.action_menu.addAction(self.clear_selection_action)
+        self.clear_selection_action.setToolTip(
+            'Unselect all selected audio items'
+        )
         self.clear_selection_action.triggered.connect(
-            shared.AUDIO_SEQ.scene.clearSelection)
+            shared.AUDIO_SEQ.scene.clearSelection,
+        )
         self.clear_selection_action.setShortcut(
-            QKeySequence.fromString("Esc"))
+            QKeySequence.fromString("Esc"),
+        )
+
         self.action_menu.addSeparator()
-        self.delete_selected_action = self.action_menu.addAction(_("Delete"))
+
+        self.delete_selected_action = QAction(_("Delete"), self.action_menu)
+        self.action_menu.addAction(self.delete_selected_action)
+        self.delete_selected_action.setToolTip(
+            'Delete selected audio items from this sequencer item'
+        )
         self.delete_selected_action.triggered.connect(self.on_delete_selected)
         self.delete_selected_action.setShortcut(
             QKeySequence.StandardKey.Delete,
         )
+
         self.action_menu.addSeparator()
-        self.crossfade_action = self.action_menu.addAction(
-            _("Crossfade Selected"))
+
+        self.crossfade_action = QAction(
+            _("Crossfade Selected"),
+            self.action_menu,
+        )
+        self.action_menu.addAction(self.crossfade_action)
+        self.crossfade_action.setToolTip(
+            'Select multiple audio items in different lanes that partially '
+            'overlap each other, and use this action to update their '
+            'fade-in/out handles to create a cross-fade effect'
+        )
         self.crossfade_action.triggered.connect(
             shared.AUDIO_SEQ.crossfade_selected,
         )
         self.crossfade_action.setShortcut(
-            QKeySequence.fromString("CTRL+F"))
+            QKeySequence.fromString("CTRL+F"),
+        )
 
         self.action_menu.addSeparator()
-        self.open_last_action = self.action_menu.addAction(
-            _("Open Last Item(s)"))
+
+        self.open_last_action = QAction(
+            _("Open Last Item(s)"),
+            self.action_menu,
+        )
+        self.action_menu.addAction(self.open_last_action)
+        self.open_last_action.setToolTip(
+            'Open the previously opened sequencer item.  Use this to rapidly '
+            'switch between 2 related sequencer items that you are editing'
+        )
         self.open_last_action.triggered.connect(open_last)
         self.open_last_action.setShortcut(QKeySequence.fromString("ALT+F"))
 
         self.v_zoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
+        self.v_zoom_slider.setToolTip('Vertical zoom')
         self.v_zoom_slider.setObjectName("zoom_slider")
         self.v_zoom_slider.setRange(10, 100)
         self.v_zoom_slider.setValue(10)

@@ -222,50 +222,81 @@ class SgMainWindow(QWidget):
         shared.TRANSPORT.host_combobox.setCurrentIndex(
             util.get_file_setting("host", int, 0))
 
-        self.menu_bar = QMenu(self)
+        self.menu_bar = QMenu(shared.TRANSPORT.menu_button)
 
-        shared.TRANSPORT.menu_button.setToolTip(
-            'The main menu.  Contains various options relating to\n'
-            'opening, closing and creating files'
-        )
         shared.TRANSPORT.menu_button.setMenu(self.menu_bar)
         self.menu_file = self.menu_bar.addMenu(_("File"))
 
-        self.new_action = self.menu_file.addAction(_("New..."))
+        self.new_action = QAction(_("New..."), self.menu_file)
+        self.menu_file.addAction(self.new_action)
+        self.new_action.setToolTip(
+            'Create a new project and open it'
+        )
         self.new_action.triggered.connect(self.on_new)
         self.new_action.setShortcut(QKeySequence.StandardKey.New)
 
-        self.open_action = self.menu_file.addAction(_("Open..."))
+        self.open_action = QAction(_("Open..."), self.menu_file)
+        self.menu_file.addAction(self.open_action)
+        self.open_action.setToolTip(
+            'Open another project, closing this project'
+        )
         self.open_action.triggered.connect(self.on_open)
         self.open_action.setShortcut(QKeySequence.StandardKey.Open)
 
-        self.close_action = self.menu_file.addAction(_("Close Project..."))
+        self.close_action = QAction(_("Close Project..."), self.menu_file)
+        self.menu_file.addAction(self.close_action)
+        self.close_action.setToolTip(
+            'Close this project, return to the welcome screen to configure '
+            'hardware settings, recover projects or create/open another '
+            'project'
+        )
         self.close_action.triggered.connect(self.on_close)
 
-        self.save_action = self.menu_file.addAction(
-            _("Save (projects are automatically saved, "
-            "this creates a timestamped backup)"))
+        self.save_action = QAction("Save", self.menu_file)
+        self.menu_file.addAction(self.save_action)
+        self.save_action.setToolTip(
+            "Projects are automatically saved everytime you change anything, "
+            "this creates a timestamped backup that you can revert to later"
+        )
         self.save_action.triggered.connect(self.on_save)
         self.save_action.setShortcut(QKeySequence.StandardKey.Save)
 
-        self.save_as_action = self.menu_file.addAction(
-            _("Save As...(this creates a named backup)"))
+        self.save_as_action = QAction("Save As...", self.menu_file)
+        self.menu_file.addAction(self.save_as_action)
+        self.save_as_action.setToolTip(
+            "Projects are automatically saved everytime you change anything, "
+            "this creates a named backup that you can revert to later"
+        )
         self.save_as_action.triggered.connect(self.on_save_as)
         self.save_as_action.setShortcut(QKeySequence.StandardKey.SaveAs)
 
         self.menu_file.addSeparator()
 
-        self.offline_render_action = self.menu_file.addAction(
-            _("Render..."))
+        self.offline_render_action = QAction("Render...", self.menu_file)
+        self.menu_file.addAction(self.offline_render_action)
+        self.offline_render_action.setToolTip(
+            'Convert this project to an audio file.  Set the region markers '
+            'by right clicking on the sequencer timeline, or set the '
+            'start/end markers in the wave editor'
+        )
         self.offline_render_action.triggered.connect(self.on_offline_render)
 
-        self.audio_device_action = self.menu_file.addAction(
-            _("Hardware Settings..."))
+        self.audio_device_action = QAction(
+            "Hardware Settings...",
+            self.menu_file,
+        )
+        self.menu_file.addAction(self.audio_device_action)
+        self.audio_device_action.setToolTip(
+            'Open the hardware settings dialog to change audio or MIDI '
+            'device settings'
+        )
         self.audio_device_action.triggered.connect(
             self.on_change_audio_settings)
         self.menu_file.addSeparator()
 
-        self.quit_action = self.menu_file.addAction(_("Quit"))
+        self.quit_action = QAction("Quit", self.menu_file)
+        self.menu_file.addAction(self.quit_action)
+        self.quit_action.setToolTip('Exit the application')
         self.quit_action.triggered.connect(self.close)
         self.quit_action.setShortcut(QKeySequence.StandardKey.Quit)
 
@@ -281,37 +312,72 @@ class SgMainWindow(QWidget):
 
         self.menu_appearance = self.menu_bar.addMenu(_("Appearance"))
 
-        self.collapse_splitters_action = self.menu_appearance.addAction(
-            _("Toggle Collapse Transport"))
+        self.collapse_splitters_action = QAction(
+            _("Toggle Collapse Transport"),
+            self.menu_appearance,
+        )
+        self.menu_appearance.addAction(self.collapse_splitters_action)
+        self.collapse_splitters_action.setToolTip(
+            'Toggle collapsing the transport, create more room for the '
+            'sequencer or wave editor'
+        )
         self.collapse_splitters_action.triggered.connect(
-            self.on_collapse_splitters)
-        self.collapse_splitters_action.setShortcut(
-            QKeySequence("CTRL+Up"))
+            self.on_collapse_splitters,
+        )
+        self.collapse_splitters_action.setShortcut(QKeySequence("CTRL+Up"))
 
         self.menu_appearance.addSeparator()
 
-        self.open_theme_action = self.menu_appearance.addAction(
-            _("Open Theme..."),
+        self.open_theme_action = QAction("Open Theme...", self.menu_appearance)
+        self.menu_appearance.addAction(self.open_theme_action)
+        self.open_theme_action.setToolTip(
+            'Open a new sgtheme file to change the appearance of Stargate.  '
+            'There are several factory themes, or create your own'
         )
         self.open_theme_action.triggered.connect(self.on_open_theme)
-        self.default_theme_action = self.menu_appearance.addAction(
-            _("Use Default Theme"),
+
+        self.default_theme_action = QAction(
+            "Use Default Theme",
+            self.menu_appearance,
+        )
+        self.menu_appearance.addAction(self.default_theme_action)
+        self.default_theme_action.setToolTip(
+            'Use the default theme, replacing any other theme you have used'
         )
         self.default_theme_action.triggered.connect(
             self.on_use_default_theme,
         )
-        self.copy_theme_action = self.menu_appearance.addAction(
+
+        self.copy_theme_action = QAction(
             _("Copy Theme to New Theme..."),
+            self.menu_appearance,
+        )
+        self.menu_appearance.addAction(self.copy_theme_action)
+        self.copy_theme_action.setToolTip(
+            'Create a copy of the current theme that you can customize and '
+            'create your own theme from'
         )
         self.copy_theme_action.triggered.connect(self.on_copy_theme)
 
         self.menu_appearance.addSeparator()
-        self.custom_font_action = self.menu_appearance.addAction(
+
+        self.custom_font_action = QAction(
             _("Choose custom font..."),
+            self.menu_appearance,
+        )
+        self.menu_appearance.addAction(self.custom_font_action)
+        self.custom_font_action.setToolTip(
+            'Choose a custom font for Stargate'
         )
         self.custom_font_action.triggered.connect(self.on_custom_font)
-        self.clear_custom_font_action = self.menu_appearance.addAction(
+
+        self.clear_custom_font_action = QAction(
             _("Use default font"),
+            self.menu_appearance,
+        )
+        self.menu_appearance.addAction(self.clear_custom_font_action)
+        self.clear_custom_font_action.setToolTip(
+            'Use the default font included with Stargate'
         )
         self.clear_custom_font_action.triggered.connect(
             self.on_clear_custom_font,
@@ -320,11 +386,19 @@ class SgMainWindow(QWidget):
         if not util.IS_WINDOWS:
             self.menu_tools = self.menu_bar.addMenu(_("Tools"))
 
-            self.ac_action = self.menu_tools.addAction(_("MP3 Converter..."))
-            self.ac_action.triggered.connect(self.mp3_converter_dialog)
+            self.mp3_action = QAction(_("MP3 Converter..."), self.menu_tools)
+            self.menu_tools.addAction(self.mp3_action)
+            self.mp3_action.setToolTip(
+                'Open a dialog to convert MP3 files to and from .wav files'
+            )
+            self.mp3_action.triggered.connect(self.mp3_converter_dialog)
 
-            self.ac_action = self.menu_tools.addAction(_("Ogg Converter..."))
-            self.ac_action.triggered.connect(self.ogg_converter_dialog)
+            self.ogg_action = QAction(_("Ogg Converter..."), self.menu_tools)
+            self.menu_tools.addAction(self.ogg_action)
+            self.ogg_action.setToolTip(
+                'Open a dialog to convert OGG files to and from .wav files'
+            )
+            self.ogg_action.triggered.connect(self.ogg_converter_dialog)
 
         self.menu_help = self.menu_bar.addMenu(_("Help"))
 

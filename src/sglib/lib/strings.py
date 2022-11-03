@@ -31,25 +31,31 @@ audio_viewer_widget_paifx = _("""\
 This tab allows you to set effects per-audio-item.  The effects will be unique
 per instance of an audio file, and not share between instances.""")
 
-timestretch_modes = _(
-"""Modes:
-None:  No stretching or pitch adjustment
-
-Pitch affecting time:  Repitch the item, it will become
-shorter at higher pitches, and longer at lower pitches
-
-Time affecting pitch:  Stretch the item to the desired length, it will have
-lower pitch at longer lengths, and higher pitch at shorter lengths
-
-Rubberband:  Adjust pitch and time independently
-
-Rubberband (formants): Same as Rubberband, but preserves formants
-
-SBSMS:  Adjust pitch and time independently, also with the ability to
-set start/end pitch/time differently
-
-Paulstretch:  Mostly for stretching items very long, creates a very smeared,
-atmospheric sound""")
+timestretch_modes = {
+    0:  'No stretching or pitch adjustment',
+    1:  (
+        'Repitch the item, it will become shorter at higher pitches, and '
+        'longer at lower pitches'
+    ),
+    2:  (
+        'Stretch the item to the desired length, it will have lower pitch '
+        'at longer lengths, and higher pitch at shorter lengths'
+    ),
+    3:  'Adjust pitch and time independently',
+    4: (
+        'Same as Rubberband, but preserves formants when pitch shifting.  '
+        'Useful on vocal materials, an auto-tune type of pitch shifting'
+    ),
+    5: (
+        'Adjust pitch and time independently, also with the ability to '
+        'set start/end pitch/time differently'
+    ),
+    6:  (
+        'Mostly for stretching items very long, creates a very smeared, '
+        'atmospheric sound.  Useful for creative reverb-like effects and '
+        'soundscapes'
+    ),
+}
 
 
 panic = _("""\

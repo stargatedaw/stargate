@@ -184,9 +184,11 @@ def init():
         parent=shared.SEQUENCER,
         text=_("Copy"),
     )
+    copy_action.setToolTip('Copy selected items to the clipboard')
     copy_action.triggered.connect(copy_selected)
     copy_action.setShortcut(QKeySequence.StandardKey.Copy)
 
     delete_action = QAction(text=_("Delete"))
+    delete_action.setToolTip('Delete selected items')
     delete_action.triggered.connect(delete_selected)
     delete_action.setShortcut(QKeySequence.StandardKey.Delete)
