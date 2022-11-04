@@ -933,6 +933,12 @@ class ItemSequencer(QGraphicsView):
                     f_text,
                     self.header,
                 )
+                tooltip = "Tempo: {} BPM\nTime Signature: {}/{}".format(
+                    f_marker.tempo,
+                    f_marker.tsig_num,
+                    f_marker.tsig_den,
+                )
+                item.setToolTip(tooltip, reformat=False)
                 text_item.setZValue(1.0)
                 text_item.setBrush(
                     QColor(
@@ -943,7 +949,6 @@ class ItemSequencer(QGraphicsView):
                     (f_marker.beat * _shared.SEQUENCER_PX_PER_BEAT) + 12.,
                     _shared.SEQUENCE_EDITOR_HEADER_ROW_HEIGHT,
                 )
-                item.setToolTip(f_text)
                 item.mousePressEvent = header_context_menu.TempoMarkerEvent(
                     f_marker.beat,
                 ).mouse_press

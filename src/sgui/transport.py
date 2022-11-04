@@ -52,6 +52,10 @@ class TransportWidget:
         self.rec_button.toggled.connect(self.on_rec)
         self.hlayout1.addWidget(self.rec_button)
         self.clock = QLCDNumber()
+        self.clock.setToolTip(
+            'The real time of the project, in minutes:seconds.1/10s.  '
+            'For musical time, see the sequencer timeline'
+        )
         self.clock.setObjectName("transport_clock")
         self.clock.setDigitCount(7)
         self.clock.setFixedHeight(42)

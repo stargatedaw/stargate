@@ -317,14 +317,18 @@ class SequencerItem(QGraphicsRectItem):
     def set_tooltips(self):
         self.setToolTip(daw_strings.sequencer_item)
         self.start_handle.setToolTip(
-            _("Use this handle to resize the item by changing "
-            "the start point."))
+            "Use this handle to resize the item by changing the start point.  "
+            "You cannot make an item longer by dragging the start handle, "
+            "only move the start to the middle of the item."
+        )
         self.length_handle.setToolTip(
-            _("Use this handle to resize the item by "
-            "changing the end point."))
+            "Use this handle to resize the item by changing the end point.  "
+            'To edit an item after increasing the length, double click to '
+            'open in the item editor again'
+        )
         self.stretch_handle.setToolTip(
-            _("Use this handle to resize the item by "
-            "time-stretching it."))
+            "Use this handle to resize the item by time-stretching it."
+        )
 
     def clip_at_sequence_end(self):
         f_current_sequence_length = get_current_sequence_length()

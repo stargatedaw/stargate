@@ -452,6 +452,8 @@ class QAction(_HintBox, QAction):
         self.triggered.connect(
             lambda x: self._clear_hint_box(_all=True)
         )
+class QLCDNumber(_HintWidget, QLCDNumber):
+    pass
 
 # These caused unknown theming problems.
 # TODO: Try QGroupBox, it may have only been QWidget
