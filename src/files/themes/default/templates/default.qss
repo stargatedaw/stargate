@@ -84,14 +84,7 @@ QWidget
 {
     background-color: {{ background_color }};
     color: {{ text_color }};
-    selection-background-color: QLinearGradient(
-        x1: 0,
-        y1: 0,
-        x2: 0,
-        y2: 1,
-        stop: 0 #ffffff,
-        stop: 1 #dddddd
-    );
+    selection-background-color: {{ background_color_alt3 }};
     selection-color: #111111;
 }
 
@@ -626,7 +619,7 @@ QGroupBox:focus, QTextEdit::focus
 QWidget:item:hover,
 QWidget:item:selected
 {
-    background-color:{{ highlight }};
+    background-color:{{ background_color_alt3 }};
     color: {{ text_color_alt }};
 }
 
@@ -713,12 +706,9 @@ QComboBox:on
 
 QAbstractItemView
 {
-    background-color: {{ background_color_alt }};
+    background-color: {{ background_color_alt2 }};
     border: 2px solid {{ border_color }};
-    selection-background-color: QLinearGradient(
-        x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #ffffff, stop: 1 #dddddd
-    );
+    selection-background-color: {{ background_color_alt3 }};
 }
 
 QComboBox::drop-down
@@ -944,8 +934,8 @@ QTableWidget
 
 QListWidget
 {
-    alternate-background-color: {{ background_color_alt }};
-    background-color: {{ background_color_alt }};
+    alternate-background-color: {{ background_color_alt2 }};
+    background-color: {{ background_color_alt2 }};
 }
 
 QCheckBox,
