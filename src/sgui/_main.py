@@ -8,6 +8,7 @@ from sglib.lib import util
 from sgui import shared as glbl_shared, project as project_mod, widgets
 from sgui.main import main as main_window_open
 from sgui.sgqt import (
+    create_hintbox,
     QApplication,
     QGuiApplication,
     QMessageBox,
@@ -150,6 +151,7 @@ def _setup():
         )
     app = QApplication(sys.argv)
     setup_theme(app)
+    create_hintbox()
     return app
 
 def main(args):

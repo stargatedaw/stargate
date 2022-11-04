@@ -89,6 +89,26 @@ else:  # PySide
     from PySide6.QtSvg import QSvgRenderer
 
 HINT_CACHE = {}
+HINT_BOX_STACK = []
+HINT_BOX = None
+
+def create_hintbox():
+    global HINT_BOX
+    HINT_BOX = QLabel()
+    HINT_BOX.setAlignment(
+        QtCore.Qt.AlignmentFlag.AlignTop
+        |
+        QtCore.Qt.AlignmentFlag.AlignLeft
+    )
+    HINT_BOX.setObjectName('hintbox')
+    HINT_BOX.setMinimumHeight(40)
+    HINT_BOX.setMinimumWidth(390)
+    HINT_BOX.setToolTip(
+        'The hint box, provides information about almost anything '
+        'you hover the mouse over.  To hide the hint box, click the '
+        '"Hide Hint Box" action in the main menu on the upper left'
+    )
+
 
 class _HintBox:
     """ Converts tooltips to hint box hints using the standard Qt
@@ -122,28 +142,26 @@ class _HintBox:
 
     def _clear_hint_box(self, _all=False):
         # Maintain a stack of messages, only clear the text if there are none
-        from sgui import shared
         if _all:
-            shared.HINT_BOX_STACK.clear()
-            shared.HINT_BOX.setText('')
+            HINT_BOX_STACK.clear()
+            HINT_BOX.setText('')
         else:
-            if shared.HINT_BOX_STACK:
-                shared.HINT_BOX_STACK.pop()
-            if shared.HINT_BOX_STACK:  # still
-                msg = shared.HINT_BOX_STACK[-1]
-                shared.HINT_BOX.setText(msg)
+            if HINT_BOX_STACK:
+                HINT_BOX_STACK.pop()
+            if HINT_BOX_STACK:  # still
+                msg = HINT_BOX_STACK[-1]
+                HINT_BOX.setText(msg)
             else:
-                shared.HINT_BOX.setText('')
+                HINT_BOX.setText('')
 
     def _set_hint_box(self, msg: str, clear=False):
-        from sgui import shared
-        if hasattr(shared, 'HINT_BOX'):
-            shared.HINT_BOX.setText(msg)
+        if HINT_BOX:
+            HINT_BOX.setText(msg)
             if clear:
-                shared.HINT_BOX_STACK.clear()
-            elif msg in shared.HINT_BOX_STACK:
-                shared.HINT_BOX_STACK.remove(msg)
-            shared.HINT_BOX_STACK.append(msg)
+                HINT_BOX_STACK.clear()
+            elif msg in HINT_BOX_STACK:
+                HINT_BOX_STACK.remove(msg)
+            HINT_BOX_STACK.append(msg)
 
 class _HintWidget(_HintBox):
     def event(self, event):

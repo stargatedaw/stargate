@@ -51,6 +51,7 @@ from sgui.util import (
     svg_to_pixmap,
     ui_scaler_factory,
 )
+from sgui import sgqt
 from sgui.sgqt import *
 from sgui.widgets.file_browser import open_bookmarks
 import gc
@@ -175,24 +176,9 @@ class SgMainWindow(QWidget):
                 QSizePolicy.Policy.Expanding,
             ),
         )
-        shared.HINT_BOX = QLabel()
-        shared.HINT_BOX_STACK = []
-        shared.HINT_BOX.setAlignment(
-            QtCore.Qt.AlignmentFlag.AlignTop
-            |
-            QtCore.Qt.AlignmentFlag.AlignLeft
-        )
-        shared.HINT_BOX.setObjectName('hintbox')
-        shared.HINT_BOX.setMinimumHeight(40)
-        shared.HINT_BOX.setMinimumWidth(390)
-        shared.HINT_BOX.setToolTip(
-            'The hint box, provides information about almost anything '
-            'you hover the mouse over.  To hide the hint box, click the '
-            '"Hide Hint Box" action in the main menu on the upper left'
-        )
         if shared.HIDE_HINT_BOX:
-            shared.HINT_BOX.hide()
-        self.transport_hlayout.addWidget(shared.HINT_BOX)
+            sgqt.HINT_BOX.hide()
+        self.transport_hlayout.addWidget(sgqt.HINT_BOX)
 
         self.main_stack = QStackedWidget()
         self.transport_splitter.addWidget(self.main_stack)
@@ -479,9 +465,9 @@ class SgMainWindow(QWidget):
     def set_tooltips_enabled(self):
         hidden = self.tooltips_action.isChecked()
         if hidden:
-            shared.HINT_BOX.hide()
+            sgqt.HINT_BOX.hide()
         else:
-            shared.HINT_BOX.show()
+            sgqt.HINT_BOX.show()
         util.set_file_setting("hide-hint-box", 1 if hidden else 0)
 
     def _key_event(self, ev, press):
