@@ -7,14 +7,19 @@ request to update this document.
 # Important Notes
 ## Pipewire
 Pipewire is a new technology with many bugs.  Note that DAWs do not directly
-interface with Pipepwire, and by extension have no way to directly influence
-the behavior or Pipewire.  Issues with Pipewire must be reported to the
+interface with Pipewire, and by extension have no way to directly influence
+the behavior of Pipewire.  Issues with Pipewire must be reported to the
 Pipewire developers.
 
 If you experience issues, try testing on a distro that does not use Pipewire.
 If it works in the non-Pipewire distro, file bugs with Pipewire and your
 distro (and if your priority is to actually make music, keep using the
 non-Pipewire distro until Pipewire actually works for you).
+
+Known issues:
+- Pipewire resampling does not actually work, you will usually get
+  sputtering sounds unless you use the same sample rate as the system,
+  which is probably 48khz
 
 ## "bleeding edge" distros
 Recent major releases of compilers, kernels, libc, lib\*, and other core system
@@ -36,9 +41,15 @@ chmod +x /path/to/download/folder/StargateDAW*.AppImage
 a file browser.
 
 ## Portable install mode
-NOTE: It is recommended to use an exFAT formatted flash drive, as other formats
-such as FAT32 do not support  UNIX permissions to set the executable bit,
-and others are not compatible across all 3 major desktop platforms.
+NOTE:
+- It is recommended to use an exFAT formatted flash drive, as other formats
+  such as FAT32 do not support  UNIX permissions to set the executable bit,
+  and others are not compatible across all 3 major desktop platforms.
+- Having said that, this is very unlikely to work for you, because distro
+  security engineers don't like this kind of thing.  If the engine crashes
+  during start up, try copying the AppImage from your flash drive to your
+  hard drive and running it.  If it now works, then it is security settings
+  (which probably cannot be changed easily, if at all).
 
 If you would like to install Stargate DAW for Linux to a flash drive, or you
 just want to store your projects and configurations next to the AppImage,
