@@ -95,6 +95,7 @@ class SocketIPCTransport(AbstractIPCTransport):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.connect((self.host, self.port))
         self.socket.setblocking(0)
+        self.failures = 0
 
     def send(
         self,
@@ -105,7 +106,7 @@ class SocketIPCTransport(AbstractIPCTransport):
         message = "\n".join([path, key, value])
         assert len(message) < 60000, (len(message), message)
         message = message.encode('ascii')
-        for wait in (0.1, 0.3, 0.6):
+        for wait in (0.1, 0.2, 0.3) if self.failures < 10 else (0,):
             try:
                 self.socket.sendall(message)
                 ready = select.select(
@@ -118,9 +119,11 @@ class SocketIPCTransport(AbstractIPCTransport):
                     self.socket.recv(4096)
                 else:
                     LOG.warning("Did not receive a reply from the engine")
+                self.failures = 0
                 return
             except Exception as ex:
                 LOG.warning(f"Error: {ex}, waiting {wait}s to retry")
+                self.failures += 1
                 time.sleep(wait)
         global SOCKET_ERROR_SHOWN
         if (
