@@ -163,11 +163,7 @@ class TransportWidget(AbstractTransportWidget):
             f_widget.setEnabled(a_enabled)
 
     def on_play(self):
-        if (
-            shared.MAIN_WINDOW.main_tabwidget.currentIndex()
-            ==
-            shared.TAB_ITEM_EDITOR
-        ):
+        if shared.MAIN_WINDOW.currentIndex() == shared.TAB_ITEM_EDITOR:
             shared.SEQUENCER.open_sequence()
         shared.PLAYLIST_EDITOR.on_play()
         shared.SEQ_WIDGET.on_play()

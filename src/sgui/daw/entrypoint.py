@@ -65,12 +65,12 @@ import traceback
 
 CLOSE_ENGINE_ON_RENDER = True
 
-class MainWindow(QScrollArea):
+class MainWindow(QTabWidget):
     """ The main window for DAW-Next that contains all widgets
         except TransportWidget
     """
     def __init__(self):
-        QScrollArea.__init__(self)
+        super().__init__()
         self.first_offline_render = True
         self.last_offline_dir = HOME
         self.copy_to_clipboard_checked = False
@@ -78,13 +78,6 @@ class MainWindow(QScrollArea):
         shared.ROUTING_GRAPH_WIDGET.setToolTip(sg_strings.routing_graph)
 
         self.setObjectName("plugin_ui")
-        self.setWidgetResizable(True)
-        self.setHorizontalScrollBarPolicy(
-            QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded,
-        )
-        self.setVerticalScrollBarPolicy(
-            QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded,
-        )
 
         # Transport shortcuts (added here so they will work
         # when the transport is hidden)
@@ -122,10 +115,6 @@ class MainWindow(QScrollArea):
         self.split_mode_action.triggered.connect(
             shared.TRANSPORT.tool_split_clicked)
 
-        #The tabs
-        self.main_tabwidget = QTabWidget()
-        self.setWidget(self.main_tabwidget)
-
         # TODO: SG MISC: Move this to it's own class
         self.song_sequence_tab = QWidget()
         self.song_sequence_vlayout = QVBoxLayout()
@@ -135,7 +124,7 @@ class MainWindow(QScrollArea):
         self.sequencer_vlayout = QVBoxLayout(self.sequencer_widget)
         self.sequencer_vlayout.setContentsMargins(1, 1, 1, 1)
         self.sequencer_vlayout.addWidget(self.song_sequence_tab)
-        self.main_tabwidget.addTab(self.sequencer_widget, _("Sequencer"))
+        self.addTab(self.sequencer_widget, _("Sequencer"))
 
         self.song_sequence_vlayout.addWidget(shared.SEQ_WIDGET.widget)
 
@@ -174,11 +163,11 @@ class MainWindow(QScrollArea):
         self.vscrollbar.sliderReleased.connect(self.vscrollbar_released)
         self.vscrollbar.setSingleStep(shared.SEQUENCE_EDITOR_TRACK_HEIGHT)
 
-        self.main_tabwidget.addTab(
+        self.addTab(
             shared.PLUGIN_RACK.widget,
             _("Plugin Rack"),
         )
-        self.main_tabwidget.addTab(
+        self.addTab(
             shared.ITEM_EDITOR.widget,
             _("Item Editor"),
         )
@@ -186,15 +175,15 @@ class MainWindow(QScrollArea):
         self.automation_tab = QWidget()
         self.automation_tab.setObjectName("plugin_ui")
 
-        self.main_tabwidget.addTab(
+        self.addTab(
             shared.ROUTING_GRAPH_WIDGET,
             _("Routing"),
         )
-        self.main_tabwidget.addTab(
+        self.addTab(
             shared.MIXER_WIDGET.widget,
             _("Mixer"),
         )
-        self.main_tabwidget.addTab(
+        self.addTab(
             shared.HARDWARE_WIDGET,
             _("Hardware"),
         )
@@ -204,12 +193,12 @@ class MainWindow(QScrollArea):
             api_project_notes.load,
             api_project_notes.save,
         )
-        self.main_tabwidget.addTab(
+        self.addTab(
             self.notes_tab.widget,
             _("Project Notes"),
         )
 
-        self.main_tabwidget.currentChanged.connect(self.tab_changed)
+        self.currentChanged.connect(self.tab_changed)
         shared.DAW = self
 
     def open_project(self):
@@ -499,7 +488,7 @@ class MainWindow(QScrollArea):
             )
 
     def check_tab_for_undo(self):
-        index = self.main_tabwidget.currentIndex()
+        index = self.currentIndex()
         if index in (
             shared.TAB_ITEM_EDITOR,
             shared.TAB_ROUTING,
@@ -515,7 +504,7 @@ class MainWindow(QScrollArea):
             return False
 
     def tab_changed(self):
-        f_index = self.main_tabwidget.currentIndex()
+        f_index = self.currentIndex()
 
         shared.TRANSPORT.tab_changed(f_index)
 

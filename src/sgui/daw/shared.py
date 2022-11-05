@@ -569,7 +569,7 @@ def open_rack(track_index: int):
     """ Open a particular track in the plugin rack
     """
     PLUGIN_RACK.set_index(track_index)
-    MAIN_WINDOW.main_tabwidget.setCurrentIndex(TAB_PLUGIN_RACK)
+    MAIN_WINDOW.setCurrentIndex(TAB_PLUGIN_RACK)
 
 # Only functions, globals must accessed through the module
 __all__ = [

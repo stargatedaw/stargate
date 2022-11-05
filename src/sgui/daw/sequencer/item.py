@@ -222,9 +222,7 @@ class SequencerItem(QGraphicsRectItem):
                         current_index,
                     )
                     break
-        shared.MAIN_WINDOW.main_tabwidget.setCurrentIndex(
-            shared.TAB_ITEM_EDITOR,
-        )
+        shared.MAIN_WINDOW.setCurrentIndex(shared.TAB_ITEM_EDITOR)
         #Ensure that notes are visible
         if current_index == 1 and shared.CURRENT_ITEM.notes:
             height = shared.PIANO_ROLL_EDITOR.geometry().height()

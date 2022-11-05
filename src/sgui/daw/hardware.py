@@ -131,10 +131,21 @@ class MidiDevicesDialog:
                 self.devices_dict[f_routing.device_name].set_routing(f_routing)
 
 
-class HardwareWidget(QWidget):
+class HardwareWidget(QScrollArea):
     def __init__(self):
-        QWidget.__init__(self)
-        self.vlayout = QVBoxLayout(self)
+        super().__init__()
+        self.widget = QWidget()
+        self.setWidget(self.widget)
+        self.vlayout = QVBoxLayout(self.widget)
+        self.widget.setLayout(self.vlayout)
+
+        self.setWidgetResizable(True)
+        self.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
+        )
+        self.setVerticalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded,
+        )
 
         self.overdub_checkbox = QCheckBox(_("Overdub"))
         self.overdub_checkbox.clicked.connect(self.on_overdub_changed)
