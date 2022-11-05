@@ -11,7 +11,8 @@ be /Applications for Stargate DAW)
 Don’t use Launchpad to do this. Launchpad doesn’t allow you to access the
 shortcut menu.
 
-Control-click the app icon, then choose Open from the shortcut menu.
+Control-click (or 2-finger/right-click) the app icon, then choose Open
+from the context menu.
 
 Click Open.
 
