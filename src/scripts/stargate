@@ -110,11 +110,6 @@ def start_stargate():
     sg_main(args)
 
 def main():
-    # When respawning, give the old process a chance to garbage collect first
-    if "--delay" in sys.argv:
-        sys.argv.remove("--delay")
-        time.sleep(1)
-
     is_paulstretch = False
     if len(sys.argv) >= 2 and sys.argv[1] == 'paulstretch':
         is_paulstretch = True
