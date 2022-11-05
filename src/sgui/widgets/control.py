@@ -498,9 +498,9 @@ class AbstractUiControl(GridLayoutControl):
         if self.midi_learn_callback:
             f_ml_action = QAction(_("MIDI Learn"), f_menu)
             f_ml_action.setToolTip(
-                'MIDI Learn: Select this action, then move a control on your '
-                'MIDI controller to assign this plugin control to the '
-                'hardware control'
+                'MIDI Learn: Go to the Hardware tab, enable your device and '
+                'route it to this track. Use this action, move a control on '
+                'your device to pair the plugin and hardware controls'
             )
             f_menu.addAction(f_ml_action)
             f_ml_action.triggered.connect(self.midi_learn)
