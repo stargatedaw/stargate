@@ -479,7 +479,7 @@ class AbstractPluginSettings:
         self.on_plugin_change(a_val)
         glbl_shared.APP.restoreOverrideCursor()
 
-    def on_plugin_change(self, a_val=None, a_save=True):
+    def on_plugin_change(self, a_val=None, a_save=True, ipc=True):
         if self.suppress_osc:
             return
         f_index = get_plugin_uid_by_name(self.plugin_combobox.currentText())
@@ -496,26 +496,15 @@ class AbstractPluginSettings:
             self.plugin_index = f_index
         if a_save:
             self.save_callback()
-        self.set_plugin_func(
-            self.track_num,
-            self.index,
-            f_index,
-            self.plugin_uid,
-            self.power_checkbox.isChecked(),
-        )
+        if ipc:
+            self.set_plugin_func(self.track_num)
         self.on_show_ui()
 
     def on_power_changed(self, a_val=None):
         f_index = get_plugin_uid_by_name(self.plugin_combobox.currentText())
         if f_index:
             self.save_callback()
-            self.set_plugin_func(
-                self.track_num,
-                self.index,
-                f_index,
-                self.plugin_uid,
-                self.power_checkbox.isChecked(),
-            )
+            self.set_plugin_func(self.track_num)
 
     def wheel_event(self, a_event=None):
         pass
@@ -550,13 +539,7 @@ class AbstractPluginSettings:
         if self.suppress_osc:
             return
         self.save_callback()
-        self.set_plugin_func(
-            self.track_num,
-            self.index,
-            get_plugin_uid_by_name(self.plugin_combobox.currentText()),
-            self.plugin_uid,
-            self.power_checkbox.isChecked(),
-        )
+        self.set_plugin_func(self.track_num)
 
 AUDIO_INPUT_TOOLTIP = """\
 If enabled, this plugin can receive audio input.  Note that it will only
@@ -637,11 +620,14 @@ class PluginSettingsMain(AbstractPluginSettings):
     def reset_routing(self, index):
         self.plugin_label.setText(f"Plugin {index + 1: <2}")
         self.audio_input_checkbox.setChecked(True)
+        suppress_osc = self.suppress_osc
+        self.suppress_osc = True
         self.route_combobox.clear()
         self.route_combobox.addItems(
             [str(x) for x in range(index + 2, 11)] + ["Output"]
         )
         self.route_combobox.setCurrentIndex(0)
+        self.suppress_osc = suppress_osc
 
     def set_value(self, value: track_plugin):
         AbstractPluginSettings.set_value(self, value)
@@ -766,6 +752,7 @@ class PluginRackTab:
             'Open a dialog to reorder the plugins in the selected track'
         )
         self.plugins_order_action.triggered.connect(self.set_plugin_order)
+
         self.menu_layout.addItem(QSpacerItem(20, 1))
         self.menu_layout.addWidget(self.plugins_button)
 
@@ -953,11 +940,12 @@ class PluginRack:
             for f_i, f_plugin in zip(range(len(f_result)), f_result):
                 f_plugin.index = f_i
                 f_plugin.reset_routing(f_i)
-                f_plugin.on_plugin_change(a_save=False)
+                f_plugin.on_plugin_change(a_save=False, ipc=False)
             LOG.info(f"{self.plugins} {f_result}")
             self.plugins[0:len(f_result)] = f_result
             LOG.info(f"{self.plugins} {f_result}")
             self.save_callback()
+            f_plugin.set_plugin_func(self.track_number)
             self.widget.setUpdatesEnabled(False)
             for plugin in self.plugins:
                 self.scroll_vlayout.removeItem(plugin.vlayout)

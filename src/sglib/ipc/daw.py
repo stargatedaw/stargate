@@ -84,15 +84,20 @@ class DawIPC(AbstractIPC):
 
     def set_mute(self, a_track_num, a_bool):
         self.send_configure(
-            "mute", "|".join(str(x) for x in
-            (a_track_num, bool_to_int(a_bool))))
+            "mute",
+            "|".join(
+                str(x) for x in (a_track_num, bool_to_int(a_bool))
+            )
+        )
 
     def set_plugin(
-    self, a_track_num, a_index, a_plugin_index, a_uid, a_on):
-        self.send_configure(
-            "pi", "|".join(str(x) for x in
-            (a_track_num, a_index, a_plugin_index,
-             a_uid, bool_to_int(a_on))))
+        self,
+        a_track_num,
+    ):
+        """ This now involves a reload of the entire track because of
+            plugin routing
+        """
+        self.send_configure("pi", str(a_track_num))
 
     def update_track_send(self):
         self.send_configure("ts", "")

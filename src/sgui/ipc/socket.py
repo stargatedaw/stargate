@@ -113,7 +113,7 @@ class SocketIPCTransport(AbstractIPCTransport):
                     [self.socket],
                     [],
                     [],
-                    0.2,
+                    1.0,
                 )
                 if ready[0]:
                     self.socket.recv(4096)

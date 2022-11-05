@@ -237,30 +237,8 @@ void v_daw_configure(const char* a_key, const char* a_value){
 
         pthread_spin_unlock(&STARGATE->main_lock);
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_PLUGIN_INDEX)){
-        a_value = str_split(a_value, buf, '|');
-        int f_track_num = atoi(buf);
-        /*
-        a_value = str_split(a_value, buf, '|');
-        int f_index = atoi(buf);
-        a_value = str_split(a_value, buf, '|');
-        int f_plugin_index = atoi(buf);
-        a_value = str_split(a_value, buf, '|');
-        int f_plugin_uid = atoi(buf);
-        a_value = str_split(a_value, buf, '|');
-        int f_power = atoi(buf);
-        */
-
+        int f_track_num = atoi(a_value);
         daw_track_reload(f_track_num);
-        /*
-        v_set_plugin_index(
-            f_track,
-            f_index,
-            f_plugin_index,
-            f_plugin_uid,
-            f_power,
-            1
-        );
-        */
     }
     else if(!strcmp(a_key, DN_CONFIGURE_KEY_UPDATE_SEND))
     {
