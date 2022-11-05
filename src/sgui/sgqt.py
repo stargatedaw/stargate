@@ -2,6 +2,7 @@ from sglib.log import LOG
 import os
 import sys
 import textwrap
+import time
 from typing import Optional
 
 
@@ -404,11 +405,92 @@ class _QSpinBox(SgSpinBox):
         value = self._str_to_value(str(self.text()))
         self.valueChanged.emit(value)
 
+class QDialog(QDialog):
+    def _center(self):
+        parent = self.parentWidget()
+        self.move(parent.rect().center() - self.rect().center() )
+
+    def closeEvent(self, event):
+        widget = self.parentWidget().currentWidget()
+        widget.setEnabled(True)
+        self._waiting = False
+        super().closeEvent(event)
+
+    def exec(self):
+        # Avoid circular dependency
+        from sgui import shared
+        parent = shared.MAIN_STACKED_WIDGET
+        self.setParent(parent)
+        self._center()
+        #self.setModal(True)
+        current_widget = parent.currentWidget()
+        current_widget.setDisabled(True)
+        self.setMinimumHeight(
+            int(current_widget.height() * 0.2),
+        )
+        self.setMinimumWidth(
+            int(current_widget.width() * 0.2),
+        )
+        self.adjustSize()
+
+        self.show()
+        self._waiting = True
+        wait = 1. / 60.
+        while self._waiting:
+            time.sleep(wait)
+            QApplication.processEvents()
+
+orig_QMessageBox = QMessageBox
+
+class _QMessageBox:
+    StandardButton = orig_QMessageBox.StandardButton
+
+    @staticmethod
+    def question(parent, title, message, buttons, default=None):
+        answer = []
+        def close(_answer):
+            answer.append(_answer)
+            dialog.close()
+        def add_button(_enum):
+            # Needs to be a separate function so that the value of
+            # _enum is in the stack frame
+            button = QPushButton(_enum.name)
+            button.pressed.connect(lambda: close(_enum))
+            buttons_layout.addWidget(button)
+        dialog = QDialog()
+        layout = QVBoxLayout(dialog)
+        #layout.addWidget(QLabel(title))
+        layout.addWidget(QLabel(message))
+        buttons_layout = QHBoxLayout()
+        layout.addLayout(buttons_layout)
+        for _enum in QMessageBox.StandardButton:
+            if _enum not in (
+                QMessageBox.StandardButton.ButtonMask,
+                QMessageBox.StandardButton.FlagMask,
+            ) and buttons & _enum.value:
+                add_button(_enum)
+        dialog.exec()
+        answer = answer.pop()
+        return answer
+
+    @staticmethod
+    def warning(parent, title, message):
+        dialog = QDialog()
+        layout = QVBoxLayout(dialog)
+        layout.addWidget(QLabel(title))
+        layout.addWidget(QLabel(message))
+        buttons_layout = QHBoxLayout()
+        layout.addLayout(buttons_layout)
+        button = QPushButton("OK")
+        button.pressed.connect(dialog.close)
+        buttons_layout.addWidget(button)
+        dialog.exec()
 
 QComboBox = _QComboBox
 QDoubleSpinBox = _QDoubleSpinBox
 QLineEdit = _QLineEdit
 QSpinBox = _QSpinBox
+QMessageBox = _QMessageBox
 
 class QPushButton(_HintWidget, QPushButton):
     pass

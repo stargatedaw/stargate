@@ -16,8 +16,9 @@ AUDIO_ITEM_SCENE_RECT = QtCore.QRectF(
     AUDIO_ITEM_SCENE_HEIGHT,
 )
 
-# These are dynamically assigned by stargate.py so that
+# These are dynamically assigned by other submodules so that
 # hosts can access them from this module
+MAIN_STACKED_WIDGET = None
 MAIN_WINDOW = None
 HOST_MODULES = None
 APP = None
