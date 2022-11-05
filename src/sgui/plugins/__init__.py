@@ -74,24 +74,103 @@ PLUGIN_NAMES = [
 ]
 
 PLUGIN_UIDS = {
-    "None": 0,
-    "Sampler1": 1,
-    "VA1":  2,
-    "FM1": 3,
-    "MultiFX": 4,
-    "SG Delay": 5,
-    "SG EQ": 6,
-    "Simple Fader": 7,
-    "SG Reverb": 8,
-    "TriggerFX": 9,
-    "Sidechain Comp.": 10,
-    "SG Channel": 11,
-    "X-Fade": 12,
-    "SG Compressor": 13,
-    "SG Vocoder": 14,
-    "SG Limiter": 15,
-    'Wide Mixer': 16,
-    'Nabu': 17,
+    "None": (0, 'No plugin, remove any existing plugin from this slot'),
+    "Sampler1": (
+        1,
+        (
+            'A full-featured sampler suitable for sampled instruments or '
+            'drums.  Can load SFZ format instruments'
+        ),
+    ),
+    "VA1":  (
+        2,
+        'A classic virtual analog synthesizer using subtractive synthesis',
+    ),
+    "FM1": (
+        3,
+        'An FM, wavetable and additive synthesizer with modular effects and '
+        'other advanced features',
+    ),
+    "MultiFX": (
+        4,
+        'A modular effects processor with over 30 different types of effects',
+    ),
+    "SG Delay": (
+        5,
+        'A stereo delay effect, capable of normal or "ping-pong" delay',
+    ),
+    "SG EQ": (
+        6,
+        'A 6 band EQ with pre-effects, post-effects and a spectrum analyzer',
+    ),
+    "Simple Fader": (
+        7,
+        'A simple volume fader',
+    ),
+    "SG Reverb": (
+        8,
+        'A classic digital reverb effect',
+    ),
+    "TriggerFX": (
+        9,
+        (
+            'MIDI triggered gate and glitch effect.  Set a trigger note for '
+            'each effect, then set your synthesizer plugin to not respond to '
+            'that note, then use those notes to trigger the effect'
+        ),
+    ),
+    "Sidechain Comp.": (
+        10,
+        (
+            'A sidechain compressor.  Use the routing matrix or audio item '
+            'editor to send a kick drum to the sidechain channel, then play '
+            'a pad or bass sound through the main channel for the classic '
+            'offbeat pumping sound'
+        ),
+    ),
+    "SG Channel": (
+        11,
+        'Classic mixer channel plugin with volume fader, gain and pan',
+    ),
+    "X-Fade": (
+        12,
+        (
+            'Cross-fader plugin.  Crossfade between the main channel and '
+            'sidechain channel of a track using a slider'
+        ),
+    ),
+    "SG Compressor": (
+        13,
+        'Classic compressor plugin',
+    ),
+    "SG Vocoder": (
+        14,
+        'Analog style vocoder plugin.  Send vocals to the sidechain channel '
+        'using the routing matrix or audio item editor, and synthesizer '
+        'sounds to the main channel for classic vocoder sounds'
+    ),
+    "SG Limiter": (
+        15,
+        (
+            'A classic hard-limiter plugin to keep audio from exceeding '
+            'a given volume level'
+        ),
+    ),
+    'Wide Mixer': (
+        16,
+        (
+            'An advanced stereo mixer plugin that includes mid/side '
+            'processing, mono-bass, panning and more'
+        ),
+    ),
+    'Nabu': (
+        17,
+        (
+            'Advanced modular effects processor with over 30 effects '
+            'that includes multi-band processing and effect routing for '
+            'parallel processing of effect chains'
+        ),
+    ),
 }
 
 PLUGINS_SYNTH = ["VA1", "FM1"]
@@ -124,7 +203,7 @@ MIXER_PLUGIN_NAMES = [
     "None",
     ("Mixer", PLUGINS_MIXER),
 ]
-PLUGIN_UIDS_REVERSE = {v:k for k, v in PLUGIN_UIDS.items()}
+PLUGIN_UIDS_REVERSE = {v[0]:k for k, v in PLUGIN_UIDS.items()}
 CC_NAMES = {x:[] for x in PLUGIN_NAMES}
 CONTROLLER_PORT_NAME_DICT = {x:{} for x in PLUGIN_NAMES}
 CONTROLLER_PORT_NUM_DICT = {x:{} for x in PLUGIN_NAMES}
@@ -170,7 +249,7 @@ PORTMAP_DICT = {
 }
 
 def get_plugin_uid_by_name(a_name):
-    return PLUGIN_UIDS[str(a_name)]
+    return PLUGIN_UIDS[str(a_name)][0]
 
 class controller_map_item:
     def __init__(self, a_name, a_port):
@@ -516,11 +595,6 @@ class PluginSettingsMain(AbstractPluginSettings):
             a_save_callback,
             a_qcbox=False,
         )
-        self.plugin_combobox.setToolTip(
-            'Select an instrument or effect plugin for this track.  '
-            'Instrument plugins can be layered or inserted after audio '
-            'sources or effects.'
-        )
         self.route_combobox = QComboBox()
         self.route_combobox.addItems(
             [str(x) for x in range(a_index + 2, 11)] + ["Output"]
@@ -528,8 +602,8 @@ class PluginSettingsMain(AbstractPluginSettings):
         self.route_combobox.currentIndexChanged.connect(self._save_and_update)
         self.route_combobox.setMinimumWidth(90)
         self.route_combobox.setToolTip(
-            'Choose which plugin slot to route to.  Use this for\n'
-            'layering instruments, parallel processing and other \n'
+            'Choose which plugin slot to route to.  Use this for '
+            'layering instruments, parallel processing and other '
             'creative uses'
         )
         self.layout.insertWidget(
@@ -686,7 +760,11 @@ class PluginRackTab:
         self.plugins_button = QPushButton(_("Menu"))
         self.plugins_menu = QMenu(self.widget)
         self.plugins_button.setMenu(self.plugins_menu)
-        self.plugins_order_action = self.plugins_menu.addAction(_("Order..."))
+        self.plugins_order_action = QAction(_("Order..."))
+        self.plugins_menu.addAction(self.plugins_order_action)
+        self.plugins_order_action.setToolTip(
+            'Open a dialog to reorder the plugins in the selected track'
+        )
         self.plugins_order_action.triggered.connect(self.set_plugin_order)
         self.menu_layout.addItem(QSpacerItem(20, 1))
         self.menu_layout.addWidget(self.plugins_button)

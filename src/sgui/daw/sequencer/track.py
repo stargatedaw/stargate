@@ -168,14 +168,14 @@ class SeqTrack:
             self.automation_callback,
         )
         self.automation_combobox.setToolTip(
-            'Select the plugin for automation edit mode\n'
-            '(CTRL+e to toggle)'
+            'Select the plugin for automation edit mode.  The first 10 '
+            'options are from the plugin rack, the last 16 are the mixer '
+            'channels for each send'
         )
 
         self.control_combobox = QComboBox()
         self.control_combobox.setToolTip(
-            'Select the plugin control for automation edit mode\n'
-            '(CTRL+e to toggle)'
+            'Select the plugin control for automation edit mode'
         )
         self.control_combobox.setMaxVisibleItems(30)
         self.control_combobox.setMinimumWidth(240)
@@ -190,8 +190,9 @@ class SeqTrack:
             self.ccs_in_use_combobox_changed,
         )
         self.ccs_in_use_combobox.setToolTip(
-            'Select a plugin control already in use for \n'
-            'automation edit mode (CTRL+e to toggle)'
+            'Select a plugin control already in use from the selected '
+            'plugin.  Use this for easy access to controls that have '
+            'already been edited'
         )
         self.menu_gridlayout.addWidget(QLabel(_("In Use:")), 10, 20)
         self.menu_gridlayout.addWidget(self.ccs_in_use_combobox, 10, 21)

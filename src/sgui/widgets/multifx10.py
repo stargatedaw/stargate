@@ -1,60 +1,23 @@
+import copy
 from . import _shared
 from .control import *
 from .knob import ArcType
-from .multifx_tooltips import mfx_set_tooltip
+from .multifx_tooltips import mfx_set_tooltip, MULTIFX_INFO, MultiFXInfo
 from sglib.lib.translate import _
 from sgui.sgqt import *
 
 
 MULTIFX10_CLIPBOARD = None
 
-class MultiFX10Info:
-    def __init__(
-        self,
-        index: int,
-    ):
-        self.index = index
+MULTIFX10_INFO = copy.deepcopy(MULTIFX_INFO)
+MULTIFX10_INFO.update({
+    "Compressor": MultiFXInfo(36, 'A classic analog style compressor'),
+})
 
-MULTIFX10_INFO = {
-    "Off": MultiFX10Info(0),
-    "LP2": MultiFX10Info(1),
-    "LP4": MultiFX10Info(2),
-    "HP2": MultiFX10Info(3),
-    "HP4": MultiFX10Info(4),
-    "BP2": MultiFX10Info(5),
-    "BP4": MultiFX10Info(6),
-    "Notch2": MultiFX10Info(7),
-    "Notch4": MultiFX10Info(8),
-    "EQ": MultiFX10Info(9),
-    "Distortion": MultiFX10Info(10),
-    "Comb Filter": MultiFX10Info(11),
-    "Amp/Pan": MultiFX10Info(12),
-    "Limiter": MultiFX10Info(13),
-    "Saturator": MultiFX10Info(14),
-    "Formant": MultiFX10Info(15),
-    "Stereo Chorus": MultiFX10Info(16),
-    "Glitch": MultiFX10Info(17),
-    "RingMod": MultiFX10Info(18),
-    "LoFi": MultiFX10Info(19),
-    "S/H": MultiFX10Info(20),
-    "LP D/W": MultiFX10Info(21),
-    "HP D/W": MultiFX10Info(22),
-    "Monofier": MultiFX10Info(23),
-    "LP<-->HP": MultiFX10Info(24),
-    "Growl Filter": MultiFX10Info(25),
-    "LP Screech": MultiFX10Info(26),
-    "Metal Comb": MultiFX10Info(27),
-    "Notch D/W": MultiFX10Info(28),
-    "Foldback": MultiFX10Info(29),
-    "Notch Spread": MultiFX10Info(30),
-    "DC Offset": MultiFX10Info(31),
-    "BP Spread": MultiFX10Info(32),
-    "Phaser Static": MultiFX10Info(33),
-    "Flanger Static": MultiFX10Info(34),
-    "Soft Clipper": MultiFX10Info(35),
-    "Compressor": MultiFX10Info(36),
+MULTIFX10_EFFECTS_LOOKUP = {
+    k: (v.index, v.tooltip)
+    for k, v in MULTIFX10_INFO.items()
 }
-MULTIFX10_EFFECTS_LOOKUP = {k: v.index for k, v in MULTIFX10_INFO.items()}
 
 MULTIFX10_FILTERS = [
     "BP2",

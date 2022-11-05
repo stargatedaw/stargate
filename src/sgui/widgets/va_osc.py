@@ -98,7 +98,6 @@ class osc_widget:
                 a_port_dict,
                 a_preset_mgr=a_preset_mgr,
                 a_default_index=a_default_type,
-                tooltip='The waveform of the oscillator',
             )
         else:
             self.osc_type_combobox = combobox_control(

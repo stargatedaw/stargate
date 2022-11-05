@@ -7,6 +7,7 @@ from sglib.math import (
 )
 from .knob import PixmapKnob
 from .nested_combobox import NestedComboBox
+from .note_selector import note_selector_widget
 from sgui import shared as glbl_shared
 from sglib.lib import util
 from sglib.lib.translate import _
@@ -314,8 +315,11 @@ class AbstractUiControl(GridLayoutControl):
         def ok_button_pressed():
             f_value = f_note_selector.get_value()
             f_value = clip_value(
-                f_value, self.control.minimum(), self.control.maximum())
-            self.set_value(f_value)
+                f_value,
+                self.control.minimum(),
+                self.control.maximum(),
+            )
+            self.set_value(f_value, a_changed=True)
             f_dialog.close()
         f_dialog = QDialog(self.control)
         f_dialog.setMinimumWidth(210)
@@ -407,7 +411,7 @@ class AbstractUiControl(GridLayoutControl):
         f_min = self.control.minimum()
         f_max = self.control.maximum()
         f_value = round(((f_max - f_min) * f_frac) + f_min)
-        self.set_value(f_value)
+        self.set_value(f_value, True)
 
     def midi_learn(self):
         self.midi_learn_callback(self)
@@ -475,7 +479,7 @@ class AbstractUiControl(GridLayoutControl):
 
     def undo_action_callback(self, a_action):
         value = a_action.control_value
-        self.set_value(value)
+        self.set_value(value, True)
         self.add_undo_history(value)
 
     def contextMenuEvent(self, a_event):
@@ -492,7 +496,13 @@ class AbstractUiControl(GridLayoutControl):
                         action.control_value = x
 
         if self.midi_learn_callback:
-            f_ml_action = f_menu.addAction(_("MIDI Learn"))
+            f_ml_action = QAction(_("MIDI Learn"), f_menu)
+            f_ml_action.setToolTip(
+                'MIDI Learn: Select this action, then move a control on your '
+                'MIDI controller to assign this plugin control to the '
+                'hardware control'
+            )
+            f_menu.addAction(f_ml_action)
             f_ml_action.triggered.connect(self.midi_learn)
             f_cc_menu = QMenu(_("CCs"), f_menu)
             f_menu.addMenu(f_cc_menu)
@@ -511,16 +521,43 @@ class AbstractUiControl(GridLayoutControl):
                     f_action = f_range_menu.addAction(str(f_i))
                     f_action.cc_num = f_i
             f_menu.addSeparator()
-        f_reset_action = f_menu.addAction(_("Reset to Default Value"))
+
+        f_reset_action = QAction(_("Reset to Default Value"), f_menu)
+        f_reset_action.setToolTip(
+            'Reset this control to the default value that it has when you '
+            'first open the plugin without selecting a preset'
+        )
+        f_menu.addAction(f_reset_action)
         f_reset_action.triggered.connect(self.reset_default_value)
-        f_set_value_action = f_menu.addAction(_("Set Raw Controller Value..."))
+
+        f_set_value_action = QAction(_("Set Raw Controller Value..."), f_menu)
+        f_menu.addAction(f_set_value_action)
+        f_set_value_action.setToolTip(
+            'Open a dialog to set the raw value of the control by typing it'
+        )
         f_set_value_action.triggered.connect(self.set_value_dialog)
+
         f_menu.addSeparator()
-        f_copy_automation_action = f_menu.addAction(_("Copy"))
+
+        f_copy_automation_action = QAction(_("Copy"), f_menu)
+        f_menu.addAction(f_copy_automation_action)
+        f_copy_automation_action.setToolTip(
+            'Copy the control value to the clipboard. Can be pasted to other '
+            'controls, sequencer automation, or MIDI CCs. Use this to listen '
+            'to controller positions and convert to automation'
+        )
         f_copy_automation_action.triggered.connect(self.copy_automation)
+
         if glbl_shared.CC_CLIPBOARD:
-            f_paste_automation_action = f_menu.addAction(_("Paste"))
+            f_paste_automation_action = QAction(_("Paste"), f_menu)
+            f_menu.addAction(f_paste_automation_action)
+            f_paste_automation_action.setToolTip(
+                'Paste a control value previously copied using the copy '
+                'action. You can also paste these values into the CCs item '
+                'editor and sequencer automation'
+            )
             f_paste_automation_action.triggered.connect(self.paste_automation)
+
         f_menu.addSeparator()
 
         if self.val_conversion in (
@@ -529,10 +566,20 @@ class AbstractUiControl(GridLayoutControl):
             _shared.KC_LOG_TIME,
             _shared.KC_MILLISECOND,
         ):
-            f_tempo_sync_action = f_menu.addAction(_("Tempo Sync..."))
+            f_tempo_sync_action = QAction(_("Tempo Sync..."), f_menu)
+            f_menu.addAction(f_tempo_sync_action)
+            f_tempo_sync_action.setToolTip(
+                'Open a dialog to sync the control value to an arbirary '
+                'tempo'
+            )
             f_tempo_sync_action.triggered.connect(self.tempo_sync_dialog)
         if self.val_conversion == _shared.KC_PITCH:
-            f_set_note_action = f_menu.addAction(_("Set to Note..."))
+            f_set_note_action = QAction(_("Set to Note..."), f_menu)
+            f_menu.addAction(f_set_note_action)
+            f_set_note_action.setToolTip(
+                'Open a dialog to set the control value to an arbitrary '
+                'western musical note'
+            )
             f_set_note_action.triggered.connect(self.set_note_dialog)
         if self.val_conversion == _shared.KC_INT_PITCH:
             f_set_ratio_action = f_menu.addAction(_("Set to Ratio..."))

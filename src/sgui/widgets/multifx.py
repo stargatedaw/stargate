@@ -1,5 +1,5 @@
 from . import _shared
-from .multifx_tooltips import mfx_set_tooltip
+from .multifx_tooltips import mfx_set_tooltip, MULTIFX_INFO
 from .control import *
 from sglib.models.multifx_settings import multifx_settings
 from sglib.lib.translate import _
@@ -8,42 +8,8 @@ from sgui.sgqt import *
 
 MULTIFX_CLIPBOARD = None
 MULTIFX_EFFECTS_LOOKUP = {
-    "Off": 0,
-    "LP2": 1,
-    "LP4": 2,
-    "HP2": 3,
-    "HP4": 4,
-    "BP2": 5,
-    "BP4": 6,
-    "Notch2": 7,
-    "Notch4": 8,
-    "EQ": 9,
-    "Distortion": 10,
-    "Comb Filter": 11,
-    "Amp/Pan": 12,
-    "Limiter": 13,
-    "Saturator": 14,
-    "Formant": 15,
-    "Chorus": 16,
-    "Glitch": 17,
-    "RingMod": 18,
-    "LoFi": 19,
-    "S/H": 20,
-    "LP D/W": 21,
-    "HP D/W": 22,
-    "Monofier": 23,
-    "LP<-->HP": 24,
-    "Growl Filter": 25,
-    "LP Screech": 26,
-    "Metal Comb": 27,
-    "Notch D/W": 28,
-    "Foldback": 29,
-    "Notch Spread": 30,
-    "DC Offset": 31,
-    "BP Spread": 32,
-    "Phaser Static": 33,
-    "Flanger Static": 34,
-    "Soft Clipper": 35,
+    k: (v.index, v.tooltip)
+    for k, v in MULTIFX_INFO.items()
 }
 
 MULTIFX_FILTERS = [
@@ -79,7 +45,7 @@ MULTIFX_DISTORTION = [
 ]
 
 MULTIFX_DELAY = [
-    "Chorus",
+    "Stereo Chorus",
     "Comb Filter",
     "Flanger Static",
     "Metal Comb",

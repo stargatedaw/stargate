@@ -424,15 +424,33 @@ class eq6_widget:
         self.menu_button = QPushButton(_("Menu"))
         self.menu = QMenu(self.menu_button)
         self.menu_button.setMenu(self.menu)
-        self.copy_action = self.menu.addAction(_("Copy"))
+
+        self.copy_action = QAction("Copy", self.menu)
+        self.copy_action.setToolTip(
+            'Copy all of the EQ settings to the clipboard.  You can then '
+            'paste the settings to another instance of the EQ plugin'
+        )
+        self.menu.addAction(self.copy_action)
         self.copy_action.triggered.connect(self.on_copy)
-        self.paste_action = self.menu.addAction(_("Paste"))
+
+        self.paste_action = QAction('Paste', self.menu)
+        self.paste_action.setToolTip(
+            'Paste EQ settings previously copied using the Copy action'
+        )
+        self.menu.addAction(self.paste_action)
         self.paste_action.triggered.connect(self.on_paste)
+
         self.menu.addSeparator()
+
         self.formant_menu = self.menu.addMenu(_("Set Formant"))
         self.formant_menu.triggered.connect(self.set_formant)
         for k in sorted(EQ6_FORMANTS):
-            f_action = self.formant_menu.addAction(k)
+            f_action = QAction(k, self.formant_menu)
+            f_action.setToolTip(
+                'Set the EQ parameters to resemble common vowel sounds, '
+                'use for vocal-like effects'
+            )
+            self.formant_menu.addAction(f_action)
             f_action.formant_name = k
         self.menu.addSeparator()
         self.reset_action = self.menu.addAction(_("Reset"))

@@ -1,18 +1,22 @@
+from typing import Dict, Optional, Tuple
 from sglib.lib.translate import _
-from sgui.sgqt import QMenu, QPushButton
+from sgui.sgqt import QAction, QMenu, QPushButton
 
 class NestedComboBox(QPushButton):
     def __init__(
         self,
-        lookup: dict,
+        lookup: Dict[str, Tuple[int, Optional[str]]],
         tooltip=None,
     ):
         """
-            lookup:   A dictionary of str: int that maps names to UIDs
+            lookup:
+                A dictionary of str: (int, str) that maps names to UIDs
+                and tooltips
+            tooltip:  A tooltip for the button.
         """
         self._callbacks = []
         self.lookup = lookup
-        self.reverse_lookup = {v: k for k, v in lookup.items()}
+        self.reverse_lookup = {v[0]: k for k, v in lookup.items()}
         assert len(lookup) == len(self.reverse_lookup), (
             len(lookup),
             len(self.reverse_lookup),
@@ -48,7 +52,7 @@ class NestedComboBox(QPushButton):
 
     def action_triggered(self, a_val):
         a_val = a_val.plugin_name
-        self._index = self.lookup[a_val]
+        self._index = self.lookup[a_val][0]
         self.setText(a_val)
         self._emit_currentIndexChanged(self._index)
 
@@ -59,12 +63,18 @@ class NestedComboBox(QPushButton):
         """
         for v in items:
             if isinstance(v, str):
-                action = self.menu.addAction(v)
+                action = QAction(v, self.menu)
+                self.menu.addAction(action)
+                tooltip = self.lookup[v][1]
+                action.setToolTip(tooltip)
                 action.plugin_name = v
             else:
                 k, v = v
                 menu = self.menu.addMenu(k)
                 for name in v:
-                    action = menu.addAction(name)
+                    action = QAction(name, menu)
+                    menu.addAction(action)
+                    tooltip = self.lookup[name][1]
+                    action.setToolTip(tooltip)
                     action.plugin_name = name
 
