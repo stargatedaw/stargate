@@ -33,12 +33,21 @@ having to the appropriate upstream project.
 
 # All distros: AppImage
 The new AppImage is a portable executable that is meant to be used on almost
-any Linux distro, without the need to install.  Simply download, run:
+any Linux distro, without the need to install.  Simply download, extract the
+`.tar.gz` file, then either run the AppImage from the command line, or double
+click from a file browser.  Some distro security features may cause issues,
+you can also run the AppImage from the command line with:
 ```
-chmod +x /path/to/download/folder/StargateDAW*.AppImage
+# Only do this once per release
+./StargateDAW*.AppImage --appimage-extract
+mv squashfs-root/ stargatedaw/
+# Each time you want to run
+./stargatedaw/AppRun
 ```
-, then either run the AppImage from the command line, or double click from
-a file browser.
+
+If the engine is crashing, it probably means that the version of portaudio
+and portmidi that are packaged are not compatible with your distro.  You
+can try installing those packages from your distro.
 
 ## Portable install mode
 NOTE:
@@ -58,11 +67,11 @@ called `_stargate_home` next to it.  Note that the Linux AppImage can be
 installed alongside a Windows portable install and a MacOS app bundle at the
 same time to create a (nearly) universal DAW flash drive.
 
-## Fedora/CentOS/RHEL/Rocky/Alma/etc... issues
+## Fedora/CentOS/RHEL/Rocky/Alma/etc... AppImage issues
 ### 'Could not display...' 'There is no application installed for appimage...'
 If the file is on a file system that does not support POSIX file
 permissions, such as a FAT32 flash drive, this will not work until you copy
-the file to an ext4, xfs, etc... file system.
+the file to an exFAT, ext4, xfs, etc... file system.
 
 #### GUI File Browser
 - right-click on the StargateDAW AppImage
@@ -75,7 +84,7 @@ the file to an ext4, xfs, etc... file system.
 chmod +x StargateDAW*.AppImage
 ```
 
-### EL8 variants: Unable to find shared libraries, window does not start
+### EL8 variants: AppImage Unable to find shared libraries, window does not start
 This has been seen as a result of selinux in RHEL8 and it's clones.  The
 `LD_LIBRARY_PATH` environment variable is being stripped away by SELinux.
 Given that AppImage relies on `LD_LIBRARY_PATH` to find it's libraries, it is
