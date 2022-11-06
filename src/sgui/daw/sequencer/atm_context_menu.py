@@ -437,15 +437,29 @@ def init():
     MENU.addSeparator()
 
     # TODO:  What is this?
-    break_atm_action = MENU.addAction(
+    break_atm_action = QAction(
         _("Break after selected automation point(s)"),
+        MENU,
     )
+    break_atm_action.setToolTip(
+        'Break the automation line after each selected point.  This causes '
+        'automation to only move when there is an automation point, and not '
+        'smoothly move between the points'
+    )
+    MENU.addAction(break_atm_action)
     break_atm_action.triggered.connect(break_atm)
     break_atm_action.setShortcut(QKeySequence.fromString("CTRL+B"))
 
     # TODO:  What is this?
-    unbreak_atm_action = MENU.addAction(
-        _("Un-break after selected automation point(s)"))
+    unbreak_atm_action = QAction(
+        _("Un-break after selected automation point(s)"),
+        MENU,
+    )
+    unbreak_atm_action.setToolTip(
+        'Unbreak a previously broken automation line, cause automation after '
+        'each selected point to be smooth again'
+    )
+    MENU.addAction(unbreak_atm_action)
     unbreak_atm_action.triggered.connect(unbreak_atm)
     unbreak_atm_action.setShortcut(
         QKeySequence.fromString("CTRL+SHIFT+B"),
