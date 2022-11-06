@@ -37,7 +37,7 @@ class TransportWidget:
         self.hlayout1.addWidget(self.play_button)
         self.stop_button = QRadioButton()
         self.stop_button.setToolTip(
-            'Stop playback.  Press spacebar to toggle',
+            'Stop playback or recording.  Press spacebar to toggle',
         )
         self.stop_button.setChecked(True)
         self.stop_button.setObjectName("stop_button")
