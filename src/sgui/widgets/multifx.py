@@ -150,17 +150,47 @@ class MultiFXSingle:
 
     def contextMenuEvent(self, a_event):
         f_menu = QMenu(self.group_box)
-        f_copy_action = f_menu.addAction(_("Copy"))
+
+        f_copy_action = QAction(_("Copy"))
+        f_copy_action.setToolTip(
+            'Copy this effect and control settings to the clipboard, to '
+            'paste to another effect'
+        )
+        f_menu.addAction(f_copy_action)
         f_copy_action.triggered.connect(self.copy_settings)
-        f_cut_action = f_menu.addAction(_("Cut"))
+
+        f_cut_action = QAction(_("Cut"))
+        f_cut_action.setToolTip(
+            'Copy this effect and controls to the clipboard, and reset this '
+            'effect to the default (off) value'
+        )
+        f_menu.addAction(f_cut_action)
         f_cut_action.triggered.connect(self.cut_settings)
-        f_paste_action = f_menu.addAction(_("Paste"))
+
+        f_paste_action = QAction(_('Paste'))
+        f_menu.addAction(f_paste_action)
+        f_paste_action.setToolTip(
+            'Paste a previously copied effect to this effect, replacing the '
+            'current effect and controls'
+        )
         f_paste_action.triggered.connect(self.paste_settings)
-        f_paste_and_copy_action = f_menu.addAction(_("Paste and Copy"))
-        f_paste_and_copy_action.triggered.connect(self.paste_and_copy)
+
+        f_paste_and_copy_action = QAction(_("Paste and Copy"))
+        f_paste_and_copy_action.setToolTip(
+            'Paste the effect setting previously copied to the clipboard, '
+            'while replacing the clipboard contents with the current settings '
+            'of this effect.  Use this to swap effects'
+        )
         f_menu.addAction(f_paste_and_copy_action)
-        f_reset_action = f_menu.addAction(_("Reset"))
+        f_paste_and_copy_action.triggered.connect(self.paste_and_copy)
+
+        f_reset_action = QAction(_("Reset"))
+        f_reset_action.setToolTip(
+            'Reset this effect to the default (off) settings'
+        )
+        f_menu.addAction(f_reset_action)
         f_reset_action.triggered.connect(self.reset_settings)
+
         f_menu.exec(QCursor.pos())
 
     def copy_settings(self):

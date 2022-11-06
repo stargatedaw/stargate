@@ -379,6 +379,7 @@ class MainWindow(QTabWidget):
         f_window.setLayout(vlayout)
 
         f_name = QLineEdit()
+        f_name.setToolTip('The full path to the rendered file to be created')
         f_name.setReadOnly(True)
         f_name.setMinimumWidth(360)
         f_layout.addWidget(QLabel(_("File Name:")), 0, 0)
@@ -391,6 +392,11 @@ class MainWindow(QTabWidget):
         f_layout.addLayout(f_sample_rate_hlayout, 3, 1)
         f_sample_rate_hlayout.addWidget(QLabel(_("Sample Rate")))
         f_sample_rate = QComboBox()
+        f_sample_rate.setToolTip(
+            'The sample rate of the rendered file.  Note that setting to a '
+            'different rate than what the project was produced at can change '
+            'the sound and throw off the mix'
+        )
         f_sample_rate.setMinimumWidth(105)
         f_sample_rate.addItems([
             "44100",
@@ -413,6 +419,9 @@ class MainWindow(QTabWidget):
         f_sample_rate_hlayout.addWidget(f_sample_rate)
 
         f_stem_render_checkbox = QCheckBox(_("Stem Render"))
+        f_stem_render_checkbox.setToolTip(
+            'Render each track as an individual audio file'
+        )
         f_sample_rate_hlayout.addWidget(f_stem_render_checkbox)
         f_stem_render_checkbox.stateChanged.connect(stem_check_changed)
 
@@ -435,7 +444,8 @@ class MainWindow(QTabWidget):
         if util.IS_LINUX:
             f_debug_button = QPushButton(_("Copy cmd args"))
             f_debug_button.setToolTip(
-                _("For developer use only")
+                "For developer use only, copy the render command to the "
+                "system clipboard"
             )
             f_ok_layout.addWidget(f_debug_button)
             f_debug_button.pressed.connect(copy_cmd_args)

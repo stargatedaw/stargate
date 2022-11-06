@@ -169,6 +169,7 @@ def header_time_modify():
     )
 
     tempo = QSpinBox()
+    tempo.setToolTip('The tempo in BPM (beats per minute)')
     tempo.setRange(30, 240)
     layout.addWidget(QLabel(_("Tempo")), 0, 0)
     layout.addWidget(tempo, 0, 1)
@@ -288,10 +289,18 @@ def header_time_range():
     )
 
     start_tempo = QSpinBox()
+    start_tempo.setToolTip(
+        'The tempo to set on the first beat of the selected region.  The '
+        'tempo will gradually change to the end value'
+    )
     start_tempo.setRange(30, 240)
     layout.addWidget(QLabel(_("Start Tempo")), 0, 0)
     layout.addWidget(start_tempo, 0, 1)
     end_tempo = QSpinBox()
+    end_tempo.setToolTip(
+        'This tempo will be set at the end of the region, the first beat '
+        'after the region ends will have this tempo'
+    )
     end_tempo.setRange(30, 240)
     layout.addWidget(QLabel(_("End Tempo")), 1, 0)
     layout.addWidget(end_tempo, 1, 1)
@@ -356,7 +365,7 @@ def header_marker_modify():
         window.close()
 
     window = QDialog(shared.MAIN_WINDOW)
-    window.setWindowTitle(_("Marker"))
+    window.setWindowTitle(_("Text Marker"))
     vlayout = QVBoxLayout()
     layout = QGridLayout()
     vlayout.addLayout(layout)
@@ -368,6 +377,7 @@ def header_marker_modify():
     )
 
     text = QLineEdit()
+    text.setToolTip('Display this text on the sequencer timeline')
     text.setMaxLength(21)
 
     if marker:

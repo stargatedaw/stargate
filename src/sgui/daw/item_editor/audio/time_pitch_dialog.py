@@ -41,12 +41,17 @@ class TimePitchDialogWidget:
             self.timestretch_mode_changed)
         self.time_pitch_gridlayout.addWidget(QLabel(_("Pitch:")), 0, 0)
         self.pitch_shift = QDoubleSpinBox()
+        self.pitch_shift.setToolTip('The pitch adjustment, in semitones')
         self.pitch_shift.setRange(-36, 36)
         self.pitch_shift.setValue(float(a_audio_item.pitch_shift))
         self.pitch_shift.setDecimals(6)
         self.time_pitch_gridlayout.addWidget(self.pitch_shift, 0, 1)
 
         self.pitch_shift_end_checkbox = QCheckBox(_("End:"))
+        self.pitch_shift_end_checkbox.setToolTip(
+            'SBSMS only.  Check this box to use a pitch bend from the '
+            'start of the item to the end'
+        )
         self.pitch_shift_end_checkbox.setChecked(
             a_audio_item.pitch_shift != a_audio_item.pitch_shift_end)
         self.pitch_shift_end_checkbox.toggled.connect(
@@ -54,6 +59,11 @@ class TimePitchDialogWidget:
         self.time_pitch_gridlayout.addWidget(
             self.pitch_shift_end_checkbox, 0, 2)
         self.pitch_shift_end = QDoubleSpinBox()
+        self.pitch_shift_end.setToolTip(
+            'SBSMS only.  The pitch adjustment at the end of the audio item, '
+            'the pitch will gradually shift from the starting pitch '
+            'adjustment to the end value'
+        )
         self.pitch_shift_end.setRange(-36, 36)
         self.pitch_shift_end.setValue(float(a_audio_item.pitch_shift_end))
         self.pitch_shift_end.setDecimals(6)
@@ -61,6 +71,11 @@ class TimePitchDialogWidget:
 
         self.time_pitch_gridlayout.addWidget(QLabel(_("Time:")), 1, 0)
         self.timestretch_amt = QDoubleSpinBox()
+        self.timestretch_amt.setToolTip(
+            'The time stretch amount.  2.0 doubles the length of the item, '
+            '0.5 halfs the length of the item,  Note that the algorithms are '
+            'not precise, and actual length may vary'
+        )
         self.timestretch_amt.setRange(0.1, 200.0)
         self.timestretch_amt.setDecimals(6)
         self.timestretch_amt.setSingleStep(0.1)
@@ -71,16 +86,27 @@ class TimePitchDialogWidget:
         self.vlayout2.addLayout(self.crispness_layout)
         self.crispness_layout.addWidget(QLabel(_("Crispness")))
         self.crispness_combobox = QComboBox()
+        self.crispness_combobox.setToolTip(
+            'Rubberband crispness settings, see the Rubberband documentation'
+        )
         self.crispness_combobox.addItems(CRISPNESS_SETTINGS)
         self.crispness_combobox.setCurrentIndex(a_audio_item.crispness)
         self.crispness_layout.addWidget(self.crispness_combobox)
 
         self.timestretch_amt_end_checkbox = QCheckBox(_("End:"))
+        self.timestretch_amt_end_checkbox.setToolTip(
+            'SBSMS-only.  Check this box to gradually shift the rate of '
+            'stretching from the start of the audio item to the end'
+        )
         self.timestretch_amt_end_checkbox.toggled.connect(
             self.timestretch_end_mode_changed)
         self.time_pitch_gridlayout.addWidget(
             self.timestretch_amt_end_checkbox, 1, 2)
         self.timestretch_amt_end = QDoubleSpinBox()
+        self.timestretch_amt_end.setToolTip(
+            'SBSMS only.  The end time stretch amount.  Time stretch amount '
+            'will be gradually bent from the start value to the end value'
+        )
         self.timestretch_amt_end.setRange(0.2, 4.0)
         self.timestretch_amt_end.setDecimals(6)
         self.timestretch_amt_end.setSingleStep(0.1)

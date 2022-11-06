@@ -625,6 +625,9 @@ class AutomationEditorWidget:
 
         f_layout.addWidget(QLabel(_("Position (beats)")), 5, 0)
         f_pos_spinbox = QDoubleSpinBox()
+        f_pos_spinbox.setToolTip(
+            'The position of the new point within this item, in beats'
+        )
         f_pos_spinbox.setRange(1.0, shared.CURRENT_ITEM_LEN + 0.98)
         f_pos_spinbox.setDecimals(2)
         f_pos_spinbox.setSingleStep(0.25)
@@ -633,17 +636,22 @@ class AutomationEditorWidget:
         f_begin_end_layout = QHBoxLayout()
         f_layout.addLayout(f_begin_end_layout, 6, 1)
         f_start_button = QPushButton("<<")
+        f_start_button.setToolTip('Go to the beginning of the item')
         f_start_button.pressed.connect(goto_start)
         f_begin_end_layout.addWidget(f_start_button)
         f_begin_end_layout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
         f_end_button = QPushButton(">>")
+        f_end_button.setToolTip('Go to the end of the item')
         f_end_button.pressed.connect(goto_end)
         f_begin_end_layout.addWidget(f_end_button)
 
         f_layout.addWidget(QLabel(_("Value")), 10, 0)
         f_value_spinbox = QDoubleSpinBox()
+        f_value_spinbox.setToolTip(
+            'The MIDI CC value of this point, range 0-127'
+        )
         f_value_spinbox.setRange(0.0, 127.0)
         f_value_spinbox.setDecimals(4)
         if a_value is not None:
@@ -651,6 +659,10 @@ class AutomationEditorWidget:
         f_layout.addWidget(f_value_spinbox, 10, 1)
 
         f_ok = QPushButton(_("Add"))
+        f_ok.setToolTip(
+            'Add a point.  This does not close the dialog, you can add '
+            'multiple points and then click the Close button'
+        )
         f_ok.pressed.connect(ok_handler)
         f_ok_cancel_layout = QHBoxLayout()
         f_ok_cancel_layout.addWidget(f_ok)
@@ -714,6 +726,9 @@ class AutomationEditorWidget:
 
         f_layout.addWidget(QLabel(_("Position (beats)")), 5, 0)
         f_pos_spinbox = QDoubleSpinBox()
+        f_pos_spinbox.setToolTip(
+            'The position of the pitcbhend event within this item, in beats'
+        )
         f_pos_spinbox.setRange(1.0, shared.CURRENT_ITEM_LEN + 0.98)
         f_pos_spinbox.setDecimals(2)
         f_pos_spinbox.setSingleStep(0.25)
@@ -743,7 +758,11 @@ class AutomationEditorWidget:
 
         f_layout.addWidget(QLabel(_("Effective Pitchbend")), 20, 0)
         f_epb_spinbox = QSpinBox()
-        f_epb_spinbox.setToolTip("")
+        f_epb_spinbox.setToolTip(
+            "If instrument pitchbend is set correctly, this will be "
+            "effectively the number of semitones the pitch is bent when "
+            "the pitchbend wheel is fully up or down"
+        )
         f_epb_spinbox.setRange(-18, 18)
         f_layout.addWidget(f_epb_spinbox, 20, 1)
 

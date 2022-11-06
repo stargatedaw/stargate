@@ -796,6 +796,10 @@ class SgMainWindow(QWidget):
         f_window.setWindowTitle(_("Save As..."))
         f_layout = QVBoxLayout(f_window)
         f_lineedit = QLineEdit()
+        f_lineedit.setToolTip(
+            'A descriptive name for this backup, you will be able to select '
+            'it from the project recovery window in the welcome screen'
+        )
         f_lineedit.setMinimumWidth(240)
         f_lineedit.setMaxLength(48)
         f_layout.addWidget(f_lineedit)
@@ -1151,6 +1155,16 @@ class SgMainWindow(QWidget):
                     f_output_name.setText(f_arr[0] + self.ac_ext)
 
         def batch_changed(a_val=None):
+            if a_val:
+                f_name.setToolTip(
+                    'The folder containing files to be converted'
+                )
+                f_output_name.setToolTip(
+                    'The folder to place converted files in'
+                )
+            else:
+                f_name.setToolTip('The file to be converted')
+                f_output_name.setToolTip('The name of the converted file')
             f_name.setText("")
             f_output_name.setText("")
 
@@ -1205,6 +1219,7 @@ class SgMainWindow(QWidget):
 
         f_batch_checkbox = QCheckBox(_("Batch convert entire folder?"))
         f_batch_checkbox.stateChanged.connect(batch_changed)
+        batch_changed(0)
         f_layout.addWidget(f_batch_checkbox, 6, 1)
 
         f_close_checkbox = QCheckBox("Close on finish?")

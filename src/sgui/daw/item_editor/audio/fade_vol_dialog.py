@@ -24,9 +24,16 @@ class FadeVolDialogWidget:
 
         self.fadein_vol_layout = QHBoxLayout()
         self.fadein_vol_checkbox = QCheckBox(_("Fade-In:"))
+        self.fadein_vol_checkbox.setToolTip(
+            'Check this box to modify the fade in volume'
+        )
         self.fadein_vol_layout.addWidget(self.fadein_vol_checkbox)
         self.fadein_vol_spinbox = QSpinBox()
         self.fadein_vol_spinbox.setRange(-50, -6)
+        self.fadein_vol_spinbox.setToolTip(
+            'The fade in volume at the beginning, the volume that you will '
+            'initially hear the item at'
+        )
         self.fadein_vol_spinbox.setValue(int(a_audio_item.fadein_vol))
         self.fadein_vol_spinbox.valueChanged.connect(self.fadein_vol_changed)
         self.fadein_vol_layout.addWidget(self.fadein_vol_spinbox)
@@ -36,8 +43,15 @@ class FadeVolDialogWidget:
         self.main_vlayout.addLayout(self.fadein_vol_layout)
 
         self.fadeout_vol_checkbox = QCheckBox(_("Fade-Out:"))
+        self.fadeout_vol_checkbox.setToolTip(
+            'Check this box to modify the fade-out volume'
+        )
         self.fadein_vol_layout.addWidget(self.fadeout_vol_checkbox)
         self.fadeout_vol_spinbox = QSpinBox()
+        self.fadeout_vol_spinbox.setToolTip(
+            'Set the fade-out volume at the end of the audio item.  This is '
+            'the final volume before the audio item stops playing'
+        )
         self.fadeout_vol_spinbox.setRange(-50, -6)
         self.fadeout_vol_spinbox.setValue(int(a_audio_item.fadeout_vol))
         self.fadeout_vol_spinbox.valueChanged.connect(self.fadeout_vol_changed)

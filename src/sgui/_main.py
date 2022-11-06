@@ -7,6 +7,7 @@ from sglib.lib.translate import _
 from sglib.lib import util
 from sgui import shared as glbl_shared, project as project_mod, widgets
 from sgui.main import main as main_window_open
+from sgui import sgqt
 from sgui.sgqt import (
     create_hintbox,
     QApplication,
@@ -89,6 +90,10 @@ class MainStackedWidget(QStackedWidget):
         self.setCurrentWidget(self.hardware_dialog)
 
     def closeEvent(self, event):
+        if sgqt.DIALOG_SHOWING:
+            event.ignore()
+            LOG.info("User tried to close the window while a dialog is open")
+            return
         if glbl_shared.IGNORE_CLOSE_EVENT:
             event.ignore()
             if glbl_shared.IS_PLAYING:

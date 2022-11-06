@@ -401,6 +401,7 @@ def volume_dialog():
     f_layout.addLayout(f_hlayout)
     f_hlayout.addWidget(QLabel("dB"))
     f_db_spinbox = QDoubleSpinBox()
+    f_db_spinbox.setToolTip('The volume of the audio items, in decibels')
     f_hlayout.addWidget(f_db_spinbox)
     f_db_spinbox.setDecimals(1)
     f_db_spinbox.setRange(-24, 24)
@@ -463,6 +464,11 @@ def _normalize_dialog():
     f_layout.addLayout(f_hlayout)
     f_hlayout.addWidget(QLabel("dB"))
     f_db_spinbox = QDoubleSpinBox()
+    f_db_spinbox.setToolTip(
+        'The volume of all audio items will be adjusted so that the output '
+        'level is this level.  Note that effects processing after this may '
+        'change the output volume'
+    )
     f_db_spinbox.setDecimals(1)
     f_hlayout.addWidget(f_db_spinbox)
     f_db_spinbox.setRange(-18, 0)

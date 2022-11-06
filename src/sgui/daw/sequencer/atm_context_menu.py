@@ -182,7 +182,7 @@ def transform_atm():
     ]
 
     f_result = widgets.add_mul_dialog(
-        shared.SEQUENCER.transform_atm_callback,
+        transform_atm_callback,
         lambda: shared.SEQUENCER.automation_save_callback(a_open=False)
     )
 

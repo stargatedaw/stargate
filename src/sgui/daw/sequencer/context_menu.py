@@ -180,11 +180,11 @@ def on_unlink_item():
         f_window.close()
 
     def on_name_changed():
-        f_new_lineedit.setText(
-            util.remove_bad_chars(
-                f_new_lineedit.text()
-            )
+        text = util.remove_bad_chars(
+            f_new_lineedit.text(),
         )
+        if text != f_new_lineedit.text():
+            f_new_lineedit.setText(text)
 
     f_window = QDialog(shared.MAIN_WINDOW)
     f_window.setWindowTitle(_("Copy and unlink item..."))
@@ -193,6 +193,7 @@ def on_unlink_item():
     vlayout.addLayout(f_layout)
     f_window.setLayout(vlayout)
     f_new_lineedit = QLineEdit(f_current_item_text)
+    f_new_lineedit.setToolTip('The name of the new item copy')
     f_new_lineedit.editingFinished.connect(on_name_changed)
     f_new_lineedit.setMaxLength(24)
     f_layout.addWidget(QLabel(_("New name:")), 0, 0)
@@ -246,11 +247,11 @@ def on_rename_items():
         f_window.close()
 
     def on_name_changed():
-        f_new_lineedit.setText(
-            util.remove_bad_chars(
-                f_new_lineedit.text()
-            )
+        text = util.remove_bad_chars(
+            f_new_lineedit.text(),
         )
+        if text != f_new_lineedit.text():
+            f_new_lineedit.setText(text)
 
     f_window = QDialog(shared.MAIN_WINDOW)
     f_window.setWindowTitle(_("Rename selected items..."))
@@ -259,6 +260,7 @@ def on_rename_items():
     vlayout.addLayout(f_layout)
     f_window.setLayout(vlayout)
     f_new_lineedit = QLineEdit()
+    f_new_lineedit.setToolTip('The new name of the item(s)')
     f_new_lineedit.editingFinished.connect(on_name_changed)
     f_new_lineedit.setMaxLength(24)
     f_layout.addWidget(QLabel(_("New name:")), 0, 0)

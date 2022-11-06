@@ -41,18 +41,52 @@ def lfo_dialog(a_update_callback, a_save_callback):
     f_knob_size = 48
 
     f_phase_knob = knob_control(
-        f_knob_size, _("Phase"), 0, save, update,
-        0, 100, 0, _shared.KC_DECIMAL)
+        f_knob_size,
+        _("Phase"),
+        0,
+        save,
+        update,
+        0,
+        100,
+        0,
+        _shared.KC_DECIMAL,
+        tooltip=(
+            'The oscillator phase for the LFO.  0.0 starts at the '
+            'beginning, 1.0 at the end'
+        ),
+    )
     f_phase_knob.add_to_grid_layout(f_layout, 0)
 
     f_start_freq_knob = knob_control(
-        f_knob_size, _("Start Freq"), 0, save, update,
-        10, 400, 100, _shared.KC_DECIMAL)
+        f_knob_size,
+        _("Start Freq"),
+        0,
+        save,
+        update,
+        10,
+        400,
+        100,
+        _shared.KC_DECIMAL,
+        tooltip=(
+            'The frequency of the LFO at the start of the region, in hertz'
+        ),
+    )
     f_start_freq_knob.add_to_grid_layout(f_layout, 5)
 
     f_end_freq_knob = knob_control(
-        f_knob_size, _("End Freq"), 0, save, update,
-        10, 400, 100, _shared.KC_DECIMAL)
+        f_knob_size,
+        _("End Freq"),
+        0,
+        save,
+        update,
+        10,
+        400,
+        100,
+        _shared.KC_DECIMAL,
+        tooltip=(
+            'The frequency of the LFO at the end of the region, in hertz'
+        ),
+    )
     f_end_freq_knob.add_to_grid_layout(f_layout, 10)
 
     f_end_freq_cbox = QCheckBox()
@@ -60,13 +94,35 @@ def lfo_dialog(a_update_callback, a_save_callback):
     f_layout.addWidget(f_end_freq_cbox, 5, 10)
 
     f_start_amp_knob = knob_control(
-        f_knob_size, _("Start Amp"), 0, save, update,
-        0, 127, 64, _shared.KC_INTEGER)
+        f_knob_size,
+        _("Start Amp"),
+        0,
+        save,
+        update,
+        0,
+        127,
+        64,
+        _shared.KC_INTEGER,
+        tooltip=(
+            'The amplitude of the LFO at the start of the region'
+        )
+    )
     f_start_amp_knob.add_to_grid_layout(f_layout, 11)
 
     f_end_amp_knob = knob_control(
-        f_knob_size, _("End Amp"), 0, save, update,
-        0, 127, 64, _shared.KC_INTEGER)
+        f_knob_size,
+        _("End Amp"),
+        0,
+        save,
+        update,
+        0,
+        127,
+        64,
+        _shared.KC_INTEGER,
+        tooltip=(
+            'The amplitude of the LFO at the end of the region'
+        ),
+    )
     f_end_amp_knob.add_to_grid_layout(f_layout, 12)
 
     f_end_amp_cbox = QCheckBox()
@@ -74,13 +130,29 @@ def lfo_dialog(a_update_callback, a_save_callback):
     f_layout.addWidget(f_end_amp_cbox, 5, 12)
 
     f_start_center_knob = knob_control(
-        f_knob_size, _("Start Center"), 0, save, update,
-        0, 127, 64, _shared.KC_INTEGER)
+        f_knob_size,
+        _("Start Center"),
+        0,
+        save,
+        update,
+        0,
+        127,
+        64,
+        _shared.KC_INTEGER,
+    )
     f_start_center_knob.add_to_grid_layout(f_layout, 15)
 
     f_end_center_knob = knob_control(
-        f_knob_size, _("End Center"), 0, save, update,
-        0, 127, 64, _shared.KC_INTEGER)
+        f_knob_size,
+        _("End Center"),
+        0,
+        save,
+        update,
+        0,
+        127,
+        64,
+        _shared.KC_INTEGER,
+    )
     f_end_center_knob.add_to_grid_layout(f_layout, 16)
 
     f_end_center_cbox = QCheckBox()
@@ -98,8 +170,17 @@ def lfo_dialog(a_update_callback, a_save_callback):
             update()
 
     f_start_fade_knob = knob_control(
-        f_knob_size, _("Start Fade"), 0, save, start_fade_changed,
-        0, 99, 0, _shared.KC_INTEGER)
+        f_knob_size,
+        _("Start Fade"),
+        0,
+        save,
+        start_fade_changed,
+        0,
+        99,
+        0,
+        _shared.KC_INTEGER,
+        tooltip='Fade in the start of the LFO',
+    )
     f_start_fade_knob.add_to_grid_layout(f_layout, 20)
 
     def end_fade_changed(*args):
@@ -113,8 +194,17 @@ def lfo_dialog(a_update_callback, a_save_callback):
             update()
 
     f_end_fade_knob = knob_control(
-        f_knob_size, _("End Fade"), 0, save, end_fade_changed,
-        1, 100, 100, _shared.KC_INTEGER)
+        f_knob_size,
+        _("End Fade"),
+        0,
+        save,
+        end_fade_changed,
+        1,
+        100,
+        100,
+        _shared.KC_INTEGER,
+        tooltip='Fade out the end of the LFO',
+    )
     f_end_fade_knob.add_to_grid_layout(f_layout, 25)
 
     f_playback_widget = playback_widget()

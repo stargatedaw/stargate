@@ -240,11 +240,11 @@ class TransportWidget(AbstractTransportWidget):
             f_window.close()
 
         def text_edit_handler(a_val=None):
-            f_file.setText(
-                util.remove_bad_chars(
-                    f_file.text()
-                )
+            text = util.remove_bad_chars(
+                f_file.text()
             )
+            if text != f_file.text():
+                f_file.setText(text)
 
         def cancel_handler():
             constants.PROJECT.clear_audio_tmp_folder()
@@ -260,6 +260,10 @@ class TransportWidget(AbstractTransportWidget):
         f_layout.addWidget(QLabel(_("Save recorded items")), 0, 2)
         f_layout.addWidget(QLabel(_("Item Name:")), 3, 1)
         f_file = QLineEdit()
+        f_file.setToolTip(
+            'The name to assign to this recording.  You must choose a unique '
+            'name each time'
+        )
         f_file.setMaxLength(24)
         f_file.textEdited.connect(text_edit_handler)
         f_layout.addWidget(f_file, 3, 2)

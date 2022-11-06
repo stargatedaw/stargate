@@ -194,6 +194,7 @@ class ItemEditorWidget:
 
         f_layout.addWidget(QLabel(_("Quantize")), 0, 0)
         f_quantize_combobox = QComboBox()
+        f_quantize_combobox.setToolTip('The note length to quantize items to')
         f_quantize_combobox.addItems(BAR_FRACS)
         f_layout.addWidget(f_quantize_combobox, 0, 1)
         f_events_follow_notes = QCheckBox(
@@ -252,9 +253,15 @@ class ItemEditorWidget:
 
         f_semitone = QSpinBox()
         f_semitone.setRange(-12, 12)
+        f_semitone.setToolTip(
+            'The number of semitones to transpose the notes by'
+        )
         f_layout.addWidget(QLabel(_("Semitones")), 0, 0)
         f_layout.addWidget(f_semitone, 0, 1)
         f_octave = QSpinBox()
+        f_octave.setToolTip(
+            'The number of octaves to transpose the notes by'
+        )
         f_octave.setRange(-5, 5)
         f_layout.addWidget(QLabel(_("Octaves")), 1, 0)
         f_layout.addWidget(f_octave, 1, 1)

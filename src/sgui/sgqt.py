@@ -342,10 +342,14 @@ class SgSpinBox(_QLineEdit):
             self.step_size = step_size
 
     def value(self):
+        text = self.text()
+        if text == '':
+            text = str(self.min)
+            self.setText(text)
         if self.spinbox_type == SgSpinBox.TYPE_INT:
-            return int(self.text())
+            return int(text)
         else:
-            return float(self.text())
+            return float(text)
 
     def setValue(self, value):
         if self.min is not None:
@@ -368,10 +372,16 @@ class SgSpinBox(_QLineEdit):
                 self.focusNextChild()
                 return True
             elif ev.key() == QtCore.Qt.Key.Key_Up:
-                self.setValue(self.value() + self.step_size)
+                value = self.value() + self.step_size
+                if hasattr(self, 'decimals'):
+                    value = round(value, self.decimals)
+                self.setValue(value)
                 return True
             elif ev.key() == QtCore.Qt.Key.Key_Down:
-                self.setValue(self.value() - self.step_size)
+                value = self.value() - self.step_size
+                if hasattr(self, 'decimals'):
+                    value = round(value, self.decimals)
+                self.setValue(value)
                 return True
         return super().event(ev)
 
@@ -388,7 +398,11 @@ class _QDoubleSpinBox(SgSpinBox):
         self.editingFinished.connect(self._editingFinished)
 
     def _editingFinished(self):
-        value = self._str_to_value(str(self.text()))
+        value = str(self.text())
+        if value == '':
+            value = str(self.min)
+            self.setText(value)
+        value = self._str_to_value(value)
         self.valueChanged.emit(value)
 
     def setDecimals(self, decimals):
@@ -411,8 +425,12 @@ class _QSpinBox(SgSpinBox):
         value = self._str_to_value(str(self.text()))
         self.valueChanged.emit(value)
 
+DIALOG_SHOWING = None
+
 class QDialog(QDialog):
     def closeEvent(self, event):
+        global DIALOG_SHOWING
+        DIALOG_SHOWING = None
         widget = self.parentWidget().currentWidget()
         widget.setEnabled(True)
         self._waiting = False
@@ -422,6 +440,8 @@ class QDialog(QDialog):
         self._waiting = False
 
     def exec(self):
+        global DIALOG_SHOWING
+        DIALOG_SHOWING = self
         # Avoid circular dependency
         from sgui import shared
         parent = shared.MAIN_STACKED_WIDGET

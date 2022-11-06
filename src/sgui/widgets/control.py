@@ -249,6 +249,10 @@ class AbstractUiControl(GridLayoutControl):
         f_layout = QGridLayout(f_dialog)
         f_layout.addWidget(QLabel(_("Value:")), 3, 0)
         f_spinbox = QSpinBox()
+        f_spinbox.setToolTip(
+            'The raw value of the controller.  This is the underlying value, '
+            'not the display value'
+        )
         f_spinbox.setMinimum(self.control.minimum())
         f_spinbox.setMaximum(self.control.maximum())
         f_spinbox.setValue(self.control.value())
@@ -290,6 +294,7 @@ class AbstractUiControl(GridLayoutControl):
         f_groupbox_layout = QGridLayout()
         vlayout.addLayout(f_groupbox_layout)
         f_spinbox = QDoubleSpinBox()
+        f_spinbox.setToolTip('The tempo to sync to in BPM')
         f_spinbox.setDecimals(1)
         f_spinbox.setRange(60., 200.)
         f_spinbox.setSingleStep(0.1)
@@ -297,6 +302,9 @@ class AbstractUiControl(GridLayoutControl):
         f_beat_fracs = ["1/16", "1/12", "1/8", "2/12", "3/16",
                         "1/4", "2/4", "4/4"]
         f_beat_frac_combobox = QComboBox()
+        f_beat_frac_combobox.setToolTip(
+            'The fraction of a beat, at the set tempo, to sync this control to'
+        )
         f_beat_frac_combobox.setMinimumWidth(75)
         f_beat_frac_combobox.addItems(f_beat_fracs)
         f_beat_frac_combobox.setCurrentIndex(LAST_TEMPO_COMBOBOX_INDEX)
@@ -470,11 +478,19 @@ class AbstractUiControl(GridLayoutControl):
         f_layout.addLayout(f_spinbox_layout)
         f_spinbox_layout.addWidget(QLabel(_("Low")))
         f_low_spinbox = QSpinBox()
+        f_low_spinbox.setToolTip(
+            'This is the control value that will be set when a CC event with '
+            'value 0 is sent to this plugin'
+        )
         f_low_spinbox.setRange(self.control.minimum(), self.control.maximum())
         f_low_spinbox.setValue(f_default_low)
         f_spinbox_layout.addWidget(f_low_spinbox)
         f_spinbox_layout.addWidget(QLabel(_("High")))
         f_high_spinbox = QSpinBox()
+        f_high_spinbox.setToolTip(
+            'This is the control value that will be set when a CC event with '
+            'value 127 is sent to this plugin'
+        )
         f_high_spinbox.setRange(self.control.minimum(), self.control.maximum())
         f_high_spinbox.setValue(f_default_high)
         f_spinbox_layout.addWidget(f_high_spinbox)

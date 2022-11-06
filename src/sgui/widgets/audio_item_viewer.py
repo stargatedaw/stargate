@@ -375,17 +375,33 @@ class AudioItemViewerWidget(QGraphicsView):
         self.scene.mouseMoveEvent = self.scene_mouseMoveEvent
         self.scene.mouseReleaseEvent = self.scene_mouseReleaseEvent
         self.scene_context_menu = QMenu(self)
-        self.reset_markers_action = self.scene_context_menu.addAction(
-            _("Reset Markers"))
+        self.reset_markers_action = QAction(_("Reset Markers"))
+        self.reset_markers_action.setToolTip(
+            'Reset the start, end and loop markers to their default positions'
+        )
+        self.scene_context_menu.addAction(self.reset_markers_action)
         self.reset_markers_action.triggered.connect(self.reset_markers)
-        self.copy_markers_action = self.scene_context_menu.addAction(
-            _("Copy Markers"))
+
+        self.copy_markers_action = QAction(_("Copy Markers"))
+        self.copy_markers_action.setToolTip(
+            'Copy the marker settings from this file, to paste to another'
+        )
+        self.scene_context_menu.addAction(self.copy_markers_action)
         self.copy_markers_action.triggered.connect(self.copy_markers)
-        self.paste_markers_action = self.scene_context_menu.addAction(
-            _("Paste Markers"))
+
+        self.paste_markers_action = QAction(_("Paste Markers"))
+        self.paste_markers_action.setToolTip(
+            'Paste marker settings to this file that were previously copied '
+            'using the Copy Markers action'
+        )
+        self.scene_context_menu.addAction(self.paste_markers_action)
         self.paste_markers_action.triggered.connect(self.paste_markers)
-        self.tempo_sync_action = self.scene_context_menu.addAction(
-            _("Tempo Sync Length"))
+
+        self.tempo_sync_action = QAction(_("Tempo Sync Length"))
+        self.tempo_sync_action.setToolTip(
+            'Tempo sync the length of this file to a musical time length'
+        )
+        self.scene_context_menu.addAction(self.tempo_sync_action)
         self.tempo_sync_action.triggered.connect(self.tempo_sync_dialog)
 
         self.setHorizontalScrollBarPolicy(
