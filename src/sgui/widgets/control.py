@@ -246,7 +246,9 @@ class AbstractUiControl(GridLayoutControl):
             f_dialog.close()
         f_dialog = QDialog(self.control)
         f_dialog.setWindowTitle(_("Set Value"))
-        f_layout = QGridLayout(f_dialog)
+        vlayout = QVBoxLayout(f_dialog)
+        f_layout = QGridLayout()
+        vlayout.addLayout(f_layout)
         f_layout.addWidget(QLabel(_("Value:")), 3, 0)
         f_spinbox = QSpinBox()
         f_spinbox.setToolTip(
@@ -257,12 +259,15 @@ class AbstractUiControl(GridLayoutControl):
         f_spinbox.setMaximum(self.control.maximum())
         f_spinbox.setValue(self.control.value())
         f_layout.addWidget(f_spinbox, 3, 1)
+
+        ok_cancel_layout = QHBoxLayout()
+        vlayout.addLayout(ok_cancel_layout)
         f_cancel_button = QPushButton(_("Cancel"))
         f_cancel_button.pressed.connect(f_dialog.close)
-        f_layout.addWidget(f_cancel_button, 6, 0)
         f_ok_button = QPushButton(_("OK"))
         f_ok_button.pressed.connect(ok_handler)
-        f_layout.addWidget(f_ok_button, 6, 1)
+        ok_cancel_layout.addWidget(f_ok_button)
+        ok_cancel_layout.addWidget(f_cancel_button)
         f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
