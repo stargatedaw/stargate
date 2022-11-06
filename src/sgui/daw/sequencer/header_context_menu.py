@@ -195,7 +195,7 @@ def header_time_modify():
         tsig_num.setValue(4)
         tsig_den.setCurrentIndex(1)
 
-    ok_cancel_hlayout = QHBoxLayout()
+    ok_cancel_layout = QHBoxLayout()
     vlayout.addLayout(ok_cancel_layout)
     ok = QPushButton(_("Save"))
     ok.pressed.connect(ok_handler)
