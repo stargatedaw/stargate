@@ -77,6 +77,7 @@ class OrderedTableItem(QGraphicsRectItem):
     ):
         QGraphicsRectItem.__init__(self)
         self.text = str(a_text)
+        self.setToolTip('Click and drag this item up or down to reorder it')
         self.text_item = QGraphicsTextItem(a_text, self)
         self.text_item.setDefaultTextColor(QtCore.Qt.GlobalColor.black)
         self.setRect(0., 0., float(a_width), float(a_height))
@@ -111,7 +112,15 @@ def ordered_table_dialog(
     f_dialog.setWindowTitle(_("Order"))
     f_layout = QVBoxLayout(f_dialog)
     f_table = OrderedTable(a_labels, a_item_height, a_item_width)
-    f_layout.addWidget(f_table)
+    hlayout = QHBoxLayout()
+    f_layout.addLayout(hlayout)
+    hlayout.addItem(
+        QSpacerItem(0, 0, QSizePolicy.Policy.Expanding),
+    )
+    hlayout.addWidget(f_table)
+    hlayout.addItem(
+        QSpacerItem(0, 0, QSizePolicy.Policy.Expanding),
+    )
     f_ok_cancel_layout = QHBoxLayout()
     f_layout.addLayout(f_ok_cancel_layout)
     f_ok_button = QPushButton(_("OK"))
