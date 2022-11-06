@@ -324,6 +324,12 @@ class SgSpinBox(_QLineEdit):
     def setMaximum(self, value):
         self.max = value
 
+    def minimum(self):
+        return self.min
+
+    def maximum(self):
+        return self.max
+
     def setRange(self, _min, _max):
         self.min = _min
         self.max = _max
