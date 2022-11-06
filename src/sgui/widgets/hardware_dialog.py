@@ -278,10 +278,19 @@ class HardwareDialog:
         f_window_layout = QGridLayout()
         audio_tab_layout.addLayout(f_window_layout)
 
-        f_midi_in_tab = QTabWidget()
+        f_midi_in_tab = QScrollArea()
+        midi_in_tab_widget = QWidget()
         if self.pypm:
             f_tab_widget.addTab(f_midi_in_tab, _("MIDI In"))
-        f_midi_in_layout = QVBoxLayout(f_midi_in_tab)
+        f_midi_in_layout = QVBoxLayout(midi_in_tab_widget)
+        f_midi_in_tab.setWidgetResizable(True)
+        f_midi_in_tab.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded,
+        )
+        f_midi_in_tab.setVerticalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded,
+        )
+        f_midi_in_tab.setWidget(midi_in_tab_widget)
 
         f_window_layout.addWidget(QLabel(_("Host API")), 2, 0)
         f_subsystem_combobox = QComboBox()
@@ -505,7 +514,9 @@ class HardwareDialog:
                     self.midi_in_checkboxes[f_midi_device_name] = f_checkbox
 
                 for f_cbox in sorted(
-                self.midi_in_checkboxes, key=lambda x: x.lower()):
+                    self.midi_in_checkboxes,
+                    key=lambda x: x.lower(),
+                ):
                     f_midi_in_layout.addWidget(self.midi_in_checkboxes[f_cbox])
             LOG.info("Finished enumerating MIDI devices")
 
