@@ -64,7 +64,13 @@ class RoutingGraphNode(QGraphicsRectItem):
 
 class RoutingGraphWidget(QGraphicsView):
     def __init__(self, a_toggle_callback=None):
-        QGraphicsView.__init__(self)
+        super().__init__()
+        self.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
+        )
+        self.setVerticalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
+        )
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.scene = QGraphicsScene(self)
         self.setScene(self.scene)
