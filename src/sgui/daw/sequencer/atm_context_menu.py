@@ -363,7 +363,7 @@ def init():
     )
     paste_action.triggered.connect(_shared._paste)
 
-    paste_ctrl_action = QAction(_("Paste Plugin Control"))
+    paste_ctrl_action = QAction(_("Paste Plugin Control"), MENU)
     MENU.addAction(paste_ctrl_action)
     paste_ctrl_action.setToolTip(
         'Paste a single automation point from a control value copied by '

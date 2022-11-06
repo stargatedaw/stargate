@@ -746,7 +746,11 @@ class PluginRackTab:
         self.plugins_button = QPushButton(_("Menu"))
         self.plugins_menu = QMenu(self.widget)
         self.plugins_button.setMenu(self.plugins_menu)
-        self.plugins_order_action = QAction(_("Order..."))
+
+        self.plugins_order_action = QAction(
+            _("Plugin Order..."),
+            self.plugins_menu,
+        )
         self.plugins_menu.addAction(self.plugins_order_action)
         self.plugins_order_action.setToolTip(
             'Open a dialog to reorder the plugins in the selected track'
