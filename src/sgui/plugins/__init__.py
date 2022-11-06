@@ -990,8 +990,12 @@ class MixerChannel:
         self.output_labels = {}
         self.name_label = QPushButton(a_name)
         self.menu = QMenu()
-        action = self.menu.addAction("Open in plugin rack")
+
+        action = QAction("Open in plugin rack", self.menu)
+        action.setToolTip('Open this track in the plugin rack')
+        self.menu.addAction(action)
         action.triggered.connect(self.open_rack)
+
         self.name_label.setMenu(self.menu)
         self.vlayout.addWidget(
             self.name_label,
