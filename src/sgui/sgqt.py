@@ -406,10 +406,6 @@ class _QSpinBox(SgSpinBox):
         self.valueChanged.emit(value)
 
 class QDialog(QDialog):
-    def _center(self):
-        parent = self.parentWidget()
-        self.move(parent.rect().center() - self.rect().center() )
-
     def closeEvent(self, event):
         widget = self.parentWidget().currentWidget()
         widget.setEnabled(True)
@@ -421,7 +417,6 @@ class QDialog(QDialog):
         from sgui import shared
         parent = shared.MAIN_STACKED_WIDGET
         self.setParent(parent)
-        self._center()
         #self.setModal(True)
         current_widget = parent.currentWidget()
         current_widget.setDisabled(True)
