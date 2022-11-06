@@ -179,7 +179,7 @@ class SgMainWindow(QWidget):
         if shared.HIDE_HINT_BOX:
             sgqt.HINT_BOX.hide()
         self.transport_hlayout.addWidget(sgqt.HINT_BOX)
-        sgqt.HINT_BOX.setMaximumHeight(70)
+        sgqt.HINT_BOX.setFixedHeight(70)
         sgqt.HINT_BOX.setFixedWidth(390)
 
         self.main_stack = QStackedWidget()
