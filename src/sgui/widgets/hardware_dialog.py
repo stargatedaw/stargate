@@ -19,6 +19,7 @@ from sglib.lib._ctypes import *
 from sglib.hardware.rpi import is_rpi
 from sglib.lib.process import run_process
 from sglib.math import clip_value
+from sgui import sgqt
 import ctypes
 import os
 import sys
@@ -44,75 +45,33 @@ from sglib.log import (
 )
 
 THREADS_TOOLTIP = _("""\
-This sets the number of worker threads for processing
-plugins and effects.
-
-Setting to 1 can result in the best latency, but
-may (or may not) provide enough CPU power depending
-on your CPU's single-threaded performance.  Also,
-projects with complex audio routing may perform
-better with fewer threads.
-
-It is recommended that you not more than one thread
-per CPU core. (Intel hyperthreading should NOT be
-considered additional cores).
-
-Auto attempts to pick a sane number of worker threads
-automatically based on your CPU.
-
-If you're not sure how to use this setting, you should
-leave it on 'Auto'.
-
-It is also recommended that you leave one or more
-cores unused to power the UI and operating system,
-for example:
-
-dual-core:  1 worker thread
-quad-core:  1 - 3 worker threads
+Number of worker threads for processing plugins and effects.  Setting to 1 can
+result in the best latency, but may not provide enough CPU power.  Should be
+set to less than the number of cores, not threads.
 """)
 
 HUGEPAGES_TOOLTIP = _("""\
 HugePages can improve memory/cache performance (sometimes significantly),
 but you must allocate system memory for it that can only be used for HugePages.
-
-It is recommended that you allocate at least 1GB of HugePages, and that you
-leave AT LEAST 2GB of non-HugePage memory for other processes.  (if you use
-other memory intensive applications that are not HugePage-enabled, you may
-need to leave more than 2GB)
-
-To allocate HugePages, run this command to see your HugePage size:
-
-grep -i hugepage /proc/meminfo
-
-Then add a line like this to the end of /etc/sysctl.conf and reboot:
-
-# 1024 * 2MB HugePages = 2GB of HugePages
-vm.nr_hugepages=1024
-
-Some older CPUs and kernels don't support or have buggy support for HugePages,
-disable this if it causes performance problems on your configuration.
 """
 )
 
 HOST_API_TOOLTIP = _("""\
-Select the host API to list devices for in the
-"Audio Device" dropdown.
+Select the host API to list devices for in the "Audio Device" dropdown.  Not
+all host APIs are ideal for audio, research the host APIs available for your
+operating system.
 """)
 
 if util.IS_LINUX:
-    HOST_API_TOOLTIP += _("""\
+    HOST_API_TOOLTIP = """\
 Unless you are using Firewire (for which JACK is the only choice on Linux),
 it is recommended that you stop the JACK server and use your
 device directly using ALSA for best performance, stability and latency.
-""")
-elif util.IS_WINDOWS:
-    HOST_API_TOOLTIP += _("""\
-If possible, you should use an API capable of low latency
-such as ASIO or WDM-KS.
-""")
+"""
 
 DEVICE_TOOLTIP = _("""\
-Select your audio interface from this list.
+Select your audio interface from this list.  If you are unsure, use the Test
+button until you hear audio come out of the correct speakers.
 """)
 
 class HardwareDialog:
@@ -344,9 +303,19 @@ class HardwareDialog:
             f_input_name_combobox = None
         f_window_layout.addWidget(QLabel(_("Sample Rate")), 10, 0)
         f_samplerate_combobox = QComboBox()
+        f_samplerate_combobox.setToolTip(
+            'The sample rate to request from this audio device.  Be sure to '
+            'click the test button, as not all devices support all sample '
+            'rates'
+        )
         f_samplerate_combobox.addItems(self.sample_rates)
         f_window_layout.addWidget(f_samplerate_combobox, 10, 1)
         f_buffer_size_combobox = QComboBox()
+        f_buffer_size_combobox.setToolTip(
+            'The buffer size to request from the audio device, this will '
+            'affect latency.  Note that not all audio devices support all '
+            'buffer sizes, some will use a default value if this is too low'
+        )
         f_buffer_size_combobox.addItems(self.buffer_sizes)
         f_buffer_size_combobox.setCurrentIndex(4)
         f_window_layout.addWidget(QLabel(_("Buffer Size")), 20, 0)
@@ -373,7 +342,7 @@ class HardwareDialog:
         f_test_button = QPushButton(_("Test"))
         f_test_button.setMinimumWidth(90)
         f_test_button.setToolTip(
-            _("Send a test sound to your soundcard using this configuration"),
+            "Send a test sound to your soundcard using this configuration.  "
         )
         test_layout.addWidget(f_test_button)
         test_volume_slider = slider_control(
@@ -385,6 +354,10 @@ class HardwareDialog:
             -36,
             -6,
             -15,
+            tooltip=(
+                'Adjust the volume of the sound played when the Test button '
+                'is pressed'
+            ),
         )
         test_layout.addWidget(test_volume_slider.control)
 
@@ -394,7 +367,11 @@ class HardwareDialog:
         f_ok_cancel_layout.addWidget(f_ok_button)
         f_cancel_button = QPushButton(_("Cancel"))
         f_ok_cancel_layout.addWidget(f_cancel_button)
-
+        f_main_layout.addWidget(sgqt.HINT_BOX)
+        sgqt.HINT_BOX.setMinimumHeight(120)
+        sgqt.HINT_BOX.setMinimumWidth(100)
+        sgqt.HINT_BOX.setMaximumHeight(100000)
+        sgqt.HINT_BOX.setMaximumWidth(100000)
 
         f_count = self.pyaudio.Pa_GetHostApiCount()
 
@@ -455,6 +432,11 @@ class HardwareDialog:
 
         f_io_layout.addWidget(QLabel(_("Input Count")))
         f_audio_in_spinbox = QSpinBox()
+        f_audio_in_spinbox.setToolTip(
+            'Configure the number of audio inputs, up to the maximum '
+            'supported by this audio device.  If not using the inputs, '
+            'setting to zero can improve latency and performance'
+        )
         f_audio_in_spinbox.setRange(0, 0)
         f_io_layout.addWidget(f_audio_in_spinbox)
 
@@ -464,6 +446,11 @@ class HardwareDialog:
 
         f_io_layout.addWidget(QLabel(_("Output Count")))
         f_audio_out_spinbox = QSpinBox()
+        f_audio_out_spinbox.setToolTip(
+            'The output count, up to the maximum supported by this audio '
+            'device.  Currently, Stargate only supports using 2 outputs as '
+            'a stereo pair, this affects which outputs can be selected below'
+        )
         f_audio_out_spinbox.setRange(2, 2)
         f_io_layout.addWidget(f_audio_out_spinbox)
         f_audio_out_spinbox.valueChanged.connect(out_count_changed)
@@ -474,11 +461,21 @@ class HardwareDialog:
 
         f_default_outs_layout.addWidget(QLabel("L"))
         f_default_L = QSpinBox()
+        f_default_L.setToolTip(
+            'The output channel to use on this audio device for the left '
+            'channel.  If you soundcard has more than 2 output channels, '
+            'and you are not using the first pair, you may need to change this'
+        )
         f_default_L.setRange(0, 1)
         f_default_outs_layout.addWidget(f_default_L)
         f_default_outs_layout.addWidget(QLabel("R"))
         f_default_R = QSpinBox()
         f_default_R.setRange(0, 1)
+        f_default_R.setToolTip(
+            'The output channel to use on this audio device for the right '
+            'channel.  If you soundcard has more than 2 output channels, '
+            'and you are not using the first pair, you may need to change this'
+        )
         f_default_R.setValue(1)
         f_default_outs_layout.addWidget(f_default_R)
 
@@ -499,6 +496,10 @@ class HardwareDialog:
     #                    f_midi_device.contents.opened))
                 if f_midi_device.contents.input == 1:
                     f_checkbox = QCheckBox(f_midi_device_name)
+                    f_checkbox.setToolTip(
+                        'Check this box to enable the use of this MIDI device '
+                        'in Stargate DAW'
+                    )
                     if f_midi_device_name in util.MIDI_IN_DEVICES:
                         f_checkbox.setChecked(True)
                     self.midi_in_checkboxes[f_midi_device_name] = f_checkbox

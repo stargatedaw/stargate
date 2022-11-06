@@ -102,8 +102,6 @@ def create_hintbox():
         QtCore.Qt.AlignmentFlag.AlignLeft
     )
     HINT_BOX.setObjectName('hintbox')
-    HINT_BOX.setMaximumHeight(70)
-    HINT_BOX.setFixedWidth(390)
     HINT_BOX.setToolTip(
         'The hint box, provides information about almost anything '
         'you hover the mouse over.  To hide the hint box, click the '
