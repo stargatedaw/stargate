@@ -418,6 +418,9 @@ class QDialog(QDialog):
         self._waiting = False
         super().closeEvent(event)
 
+    def _end_wait(self):
+        self._waiting = False
+
     def exec(self):
         # Avoid circular dependency
         from sgui import shared
@@ -436,6 +439,7 @@ class QDialog(QDialog):
 
         self.show()
         self._waiting = True
+        self.destroyed.connect(self._end_wait)
         wait = 1. / 60.
         while self._waiting:
             time.sleep(wait)
