@@ -462,7 +462,9 @@ class AudioItemViewerWidget(QGraphicsView):
 
         f_dialog = QDialog(self)
         f_dialog.setWindowTitle(_("Tempo Sync"))
-        f_groupbox_layout = QGridLayout(f_dialog)
+        vlayout = QVBoxLayout(f_dialog)
+        f_groupbox_layout = QGridLayout()
+        vlayout.addLayout(f_groupbox_layout)
         bpm_spinbox = QDoubleSpinBox()
         bpm_spinbox.setDecimals(1)
         bpm_spinbox.setRange(60, 200)
@@ -489,8 +491,10 @@ class AudioItemViewerWidget(QGraphicsView):
         f_groupbox_layout.addWidget(f_beat_frac_combobox, 1, 1)
         f_groupbox_layout.addWidget(QLabel("Count"), 0, 2)
         f_groupbox_layout.addWidget(count_spinbox, 1, 2)
-        f_groupbox_layout.addWidget(f_cancel_button, 2, 1)
-        f_groupbox_layout.addWidget(f_sync_button, 2, 2)
+        ok_cancel_layout = QHBoxLayout()
+        vlayout.addLayout(ok_cancel_layout)
+        ok_cancel_layout.addWidget(f_sync_button)
+        ok_cancel_layout.addWidget(f_cancel_button)
         f_dialog.exec()
 
     def scene_contextMenuEvent(self):

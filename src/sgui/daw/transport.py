@@ -253,8 +253,10 @@ class TransportWidget(AbstractTransportWidget):
         f_window = QDialog(shared.MAIN_WINDOW)
         f_window.setWindowTitle(_("Save Recorded Files"))
         f_window.setMinimumWidth(330)
+        vlayout = QVBoxLayout()
         f_layout = QGridLayout()
-        f_window.setLayout(f_layout)
+        vlayout.addLayout(f_layout)
+        f_window.setLayout(vlayout)
         f_layout.addWidget(QLabel(_("Save recorded items")), 0, 2)
         f_layout.addWidget(QLabel(_("Item Name:")), 3, 1)
         f_file = QLineEdit()
@@ -268,7 +270,7 @@ class TransportWidget(AbstractTransportWidget):
         f_ok_cancel_layout = QHBoxLayout()
         f_ok_cancel_layout.addWidget(f_ok_button)
         f_ok_cancel_layout.addWidget(f_cancel_button)
-        f_layout.addLayout(f_ok_cancel_layout, 8, 2)
+        vlayout.addLayout(f_ok_cancel_layout)
         f_window.exec()
 
     def on_rec(self):

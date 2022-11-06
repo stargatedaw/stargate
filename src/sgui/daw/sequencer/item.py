@@ -520,19 +520,31 @@ class SequencerItem(QGraphicsRectItem):
 
         f_dialog = QDialog(shared.MAIN_WINDOW)
         f_dialog.setWindowTitle(_("Set Volume for all Instance of File"))
-        f_layout = QGridLayout(f_dialog)
+        vlayout = QVBoxLayout(f_dialog)
+        f_layout = QGridLayout()
+        vlayout.addLayout(f_layout)
         f_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         f_track_cboxes = []
         f_sc_checkboxes = []
         f_track_vols = []
         f_vol_labels = []
         f_current_vals = [
-            (self.audio_item.output_track, self.audio_item.vol,
-             self.audio_item.s0_sc),
-            (self.audio_item.send1, self.audio_item.s1_vol,
-             self.audio_item.s1_sc),
-            (self.audio_item.send2, self.audio_item.s2_vol,
-             self.audio_item.s2_sc)]
+            (
+                self.audio_item.output_track,
+                self.audio_item.vol,
+                self.audio_item.s0_sc,
+            ),
+            (
+                self.audio_item.send1,
+                self.audio_item.s1_vol,
+                self.audio_item.s1_sc,
+            ),
+            (
+                self.audio_item.send2,
+                self.audio_item.s2_vol,
+                self.audio_item.s2_sc,
+            ),
+        ]
         for f_i in range(3):
             f_out, f_vol, f_sc = f_current_vals[f_i]
             f_tracks_combobox = QComboBox()
@@ -569,7 +581,7 @@ class SequencerItem(QGraphicsRectItem):
             f_vol_slider.setValue(int(f_vol * 10.0))
 
         f_ok_cancel_layout = QHBoxLayout()
-        f_layout.addLayout(f_ok_cancel_layout, 10, 2)
+        vlayout.addLayout(f_ok_cancel_layout)
         f_ok_button = QPushButton(_("OK"))
         f_ok_button.pressed.connect(ok_handler)
         f_ok_cancel_layout.addWidget(f_ok_button)

@@ -132,11 +132,13 @@ def lfo_dialog(a_update_callback, a_save_callback):
         (f_end_center_knob, f_end_center_cbox, f_start_center_knob),
         )
 
+    ok_cancel_layout = QHBoxLayout()
+    f_vlayout.addLayout(ok_cancel_layout)
     f_ok_button = QPushButton(_("OK"))
-    f_layout.addWidget(f_ok_button, 5, 30)
+    ok_cancel_layout.addWidget(f_ok_button)
     f_ok_button.pressed.connect(ok_handler)
     f_cancel_button = QPushButton("Cancel")
-    f_layout.addWidget(f_cancel_button, 5, 31)
+    ok_cancel_layout.addWidget(f_cancel_button)
     f_cancel_button.pressed.connect(f_dialog.close)
     update()
     save()

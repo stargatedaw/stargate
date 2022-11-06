@@ -158,8 +158,10 @@ def header_time_modify():
 
     window = QDialog(shared.MAIN_WINDOW)
     window.setWindowTitle(_("Tempo / Time Signature"))
+    vlayout = QVBoxLayout()
     layout = QGridLayout()
-    window.setLayout(layout)
+    vlayout.addLayout(layout)
+    window.setLayout(vlayout)
 
     marker = shared.CURRENT_SEQUENCE.has_marker(
         shared.SEQUENCER.header_event_pos,
@@ -193,16 +195,18 @@ def header_time_modify():
         tsig_num.setValue(4)
         tsig_den.setCurrentIndex(1)
 
+    ok_cancel_hlayout = QHBoxLayout()
+    vlayout.addLayout(ok_cancel_layout)
     ok = QPushButton(_("Save"))
     ok.pressed.connect(ok_handler)
-    layout.addWidget(ok, 6, 0)
+    ok_cancel_layout.addWidget(ok)
     if shared.SEQUENCER.header_event_pos:
         cancel = QPushButton(_("Delete"))
         cancel.pressed.connect(delete_handler)
     else:
         cancel = QPushButton(_("Cancel"))
         cancel.pressed.connect(window.close)
-    layout.addWidget(cancel, 6, 1)
+    ok_cancel_layout.addWidget(cancel)
     window.exec()
 
 def header_tempo_clear():
@@ -273,8 +277,10 @@ def header_time_range():
 
     window = QDialog(shared.MAIN_WINDOW)
     window.setWindowTitle(_("Tempo Range"))
+    vlayout = QVBoxLayout()
     layout = QGridLayout()
-    window.setLayout(layout)
+    vlayout.addLayout(layout)
+    window.setLayout(vlayout)
 
     marker = shared.CURRENT_SEQUENCE.has_marker(
         shared.SEQUENCER.header_event_pos,
@@ -315,12 +321,14 @@ def header_time_range():
         tsig_num.setValue(4)
         tsig_den.setCurrentIndex(1)
 
+    ok_cancel_layout = QHBoxLayout()
+    vlayout.addLayout(ok_cancel_layout)
     ok = QPushButton(_("Create"))
     ok.pressed.connect(ok_handler)
-    layout.addWidget(ok, 6, 0)
+    ok_cancel_layout.addWidget(ok)
     cancel = QPushButton(_("Cancel"))
     cancel.pressed.connect(cancel_handler)
-    layout.addWidget(cancel, 6, 1)
+    ok_cancel_layout.addWidget(cancel)
     window.exec()
 
 def header_marker_modify():
@@ -349,8 +357,10 @@ def header_marker_modify():
 
     window = QDialog(shared.MAIN_WINDOW)
     window.setWindowTitle(_("Marker"))
+    vlayout = QVBoxLayout()
     layout = QGridLayout()
-    window.setLayout(layout)
+    vlayout.addLayout(layout)
+    window.setLayout(vlayout)
 
     marker = shared.CURRENT_SEQUENCE.has_marker(
         shared.SEQUENCER.header_event_pos,
@@ -366,7 +376,7 @@ def header_marker_modify():
     layout.addWidget(QLabel(_("Text")), 0, 0)
     layout.addWidget(text, 0, 1)
     ok_cancel_layout = QHBoxLayout()
-    layout.addLayout(ok_cancel_layout, 6, 1)
+    vlayout.addLayout(ok_cancel_layout)
     ok = QPushButton(_("Save"))
     ok.pressed.connect(ok_handler)
     ok_cancel_layout.addWidget(ok)

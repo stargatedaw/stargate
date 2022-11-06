@@ -618,8 +618,10 @@ class AutomationEditorWidget:
 
         f_window = QDialog(shared.MAIN_WINDOW)
         f_window.setWindowTitle(_("Add automation point"))
+        vlayout = QVBoxLayout()
         f_layout = QGridLayout()
-        f_window.setLayout(f_layout)
+        vlayout.addLayout(f_layout)
+        f_window.setLayout(vlayout)
 
         f_layout.addWidget(QLabel(_("Position (beats)")), 5, 0)
         f_pos_spinbox = QDoubleSpinBox()
@@ -653,7 +655,7 @@ class AutomationEditorWidget:
         f_ok_cancel_layout = QHBoxLayout()
         f_ok_cancel_layout.addWidget(f_ok)
 
-        f_layout.addLayout(f_ok_cancel_layout, 40, 1)
+        vlayout.addLayout(f_ok_cancel_layout)
         f_cancel = QPushButton(_("Close"))
         f_cancel.pressed.connect(cancel_handler)
         f_ok_cancel_layout.addWidget(f_cancel)
@@ -705,8 +707,10 @@ class AutomationEditorWidget:
 
         f_window = QDialog(shared.MAIN_WINDOW)
         f_window.setWindowTitle(_("Add automation point"))
+        vlayout = QVBoxLayout()
         f_layout = QGridLayout()
-        f_window.setLayout(f_layout)
+        vlayout.addLayout(f_layout)
+        f_window.setLayout(vlayout)
 
         f_layout.addWidget(QLabel(_("Position (beats)")), 5, 0)
         f_pos_spinbox = QDoubleSpinBox()
@@ -754,7 +758,7 @@ class AutomationEditorWidget:
         f_ok_cancel_layout = QHBoxLayout()
         f_ok_cancel_layout.addWidget(f_ok)
 
-        f_layout.addLayout(f_ok_cancel_layout, 40, 1)
+        vlayout.addLayout(f_ok_cancel_layout)
         f_cancel = QPushButton(_("Close"))
         f_cancel.pressed.connect(cancel_handler)
         f_ok_cancel_layout.addWidget(f_cancel)

@@ -373,8 +373,10 @@ class MainWindow(QTabWidget):
 
         f_window = QDialog(MAIN_WINDOW)
         f_window.setWindowTitle(_("Render"))
+        vlayout = QVBoxLayout()
         f_layout = QGridLayout()
-        f_window.setLayout(f_layout)
+        vlayout.addLayout(f_layout)
+        f_window.setLayout(vlayout)
 
         f_name = QLineEdit()
         f_name.setReadOnly(True)
@@ -450,7 +452,7 @@ class MainWindow(QTabWidget):
         f_ok.setMinimumWidth(75)
         f_ok.pressed.connect(ok_handler)
         f_ok_layout.addWidget(f_ok)
-        f_layout.addLayout(f_ok_layout, 9, 1)
+        vlayout.addLayout(f_ok_layout)
         f_cancel = QPushButton(_("Cancel"))
         f_cancel.setMinimumWidth(75)
         f_cancel.pressed.connect(cancel_handler)

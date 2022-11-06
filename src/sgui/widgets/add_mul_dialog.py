@@ -39,7 +39,9 @@ def add_mul_dialog(a_update_callback, a_save_callback):
     f_dialog.setMinimumWidth(720)
     f_dialog.retval = False
     f_dialog.setWindowTitle(_("Transform Events"))
-    f_layout = QGridLayout(f_dialog)
+    vlayout = QVBoxLayout(f_dialog)
+    f_layout = QGridLayout()
+    vlayout.addLayout(f_layout)
 
     f_layout.addWidget(QLabel(_("Add")), 0, 0)
     f_add_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
@@ -67,11 +69,13 @@ def add_mul_dialog(a_update_callback, a_save_callback):
     f_layout.addWidget(f_playback_widget.play_button, 0, 30, 2, 1)
     f_layout.addWidget(f_playback_widget.stop_button, 0, 31, 2, 1)
 
+    ok_cancel_layout = QHBoxLayout()
+    vlayout.addLayout(ok_cancel_layout)
     f_ok_button = QPushButton(_("OK"))
-    f_layout.addWidget(f_ok_button, 2, 30)
+    ok_cancel_layout.addWidget(f_ok_button)
     f_ok_button.pressed.connect(ok_handler)
     f_cancel_button = QPushButton(_("Cancel"))
-    f_layout.addWidget(f_cancel_button, 2, 31)
+    ok_cancel_layout.addWidget(f_cancel_button)
     f_cancel_button.pressed.connect(f_dialog.close)
     f_dialog.move(0, 0)
     f_dialog.exec()

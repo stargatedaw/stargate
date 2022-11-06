@@ -187,8 +187,10 @@ class ItemEditorWidget:
 
         f_window = QDialog(shared.MAIN_WINDOW)
         f_window.setWindowTitle(_("Quantize"))
+        vlayout = QVBoxLayout()
+        f_window.setLayout(vlayout)
         f_layout = QGridLayout()
-        f_window.setLayout(f_layout)
+        vlayout.addLayout(f_layout)
 
         f_layout.addWidget(QLabel(_("Quantize")), 0, 0)
         f_quantize_combobox = QComboBox()
@@ -207,7 +209,7 @@ class ItemEditorWidget:
         f_selected_only.setChecked(a_selected_only)
         f_layout.addWidget(f_selected_only, 2, 1)
 
-        f_layout.addLayout(f_ok_cancel_layout, 3, 1)
+        vlayout.addLayout(f_ok_cancel_layout)
         f_cancel = QPushButton(_("Cancel"))
         f_cancel.pressed.connect(quantize_cancel_handler)
         f_ok_cancel_layout.addWidget(f_cancel)
@@ -243,8 +245,10 @@ class ItemEditorWidget:
 
         f_window = QDialog(shared.MAIN_WINDOW)
         f_window.setWindowTitle(_("Transpose"))
+        vlayout = QVBoxLayout()
         f_layout = QGridLayout()
-        f_window.setLayout(f_layout)
+        vlayout.addLayout(f_layout)
+        f_window.setLayout(vlayout)
 
         f_semitone = QSpinBox()
         f_semitone.setRange(-12, 12)
@@ -264,7 +268,7 @@ class ItemEditorWidget:
         f_selected_only.setChecked(a_selected_only)
         f_layout.addWidget(f_selected_only, 4, 1)
         f_ok_cancel_layout = QHBoxLayout()
-        f_layout.addLayout(f_ok_cancel_layout, 6, 1)
+        vlayout.addLayout(f_ok_cancel_layout)
         f_ok = QPushButton(_("OK"))
         f_ok.pressed.connect(transpose_ok_handler)
         f_ok_cancel_layout.addWidget(f_ok)

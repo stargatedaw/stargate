@@ -224,7 +224,9 @@ class preset_manager_widget:
 
         f_dialog = QDialog(self.group_box)
         f_dialog.setWindowTitle(_("Save Bank"))
-        f_groupbox_layout = QGridLayout(f_dialog)
+        vlayout = QVBoxLayout(f_dialog)
+        f_groupbox_layout = QGridLayout()
+        vlayout.addLayout(f_groupbox_layout)
         f_groupbox_layout.addWidget(QLabel(_("Name")), 0, 0)
         f_lineedit = QLineEdit()
         f_groupbox_layout.addWidget(f_lineedit, 0, 1)
@@ -232,8 +234,10 @@ class preset_manager_widget:
         f_sync_button.pressed.connect(ok_handler)
         f_cancel_button = QPushButton(_("Cancel"))
         f_cancel_button.pressed.connect(f_dialog.close)
-        f_groupbox_layout.addWidget(f_cancel_button, 2, 0)
-        f_groupbox_layout.addWidget(f_sync_button, 2, 1)
+        ok_cancel_layout = QHBoxLayout()
+        vlayout.addLayout(ok_cancel_layout)
+        ok_cancel_layout.addWidget(f_sync_button)
+        ok_cancel_layout.addWidget(f_cancel_button)
         f_dialog.exec()
 
     def on_open_bank(self):
@@ -341,7 +345,9 @@ class preset_manager_widget:
 
         f_dialog = QDialog(self.group_box)
         f_dialog.setWindowTitle(_("Save Preset"))
-        f_groupbox_layout = QGridLayout(f_dialog)
+        vlayout = QVBoxLayout(f_dialog)
+        f_groupbox_layout = QGridLayout()
+        vlayout.addLayout(f_groupbox_layout)
         f_groupbox_layout.addWidget(QLabel(_("Name")), 0, 0)
         f_lineedit = QLineEdit()
         f_groupbox_layout.addWidget(f_lineedit, 0, 1, 1, 2)
@@ -349,8 +355,10 @@ class preset_manager_widget:
         f_sync_button.pressed.connect(ok_handler)
         f_cancel_button = QPushButton(_("Cancel"))
         f_cancel_button.pressed.connect(f_dialog.close)
-        f_groupbox_layout.addWidget(f_cancel_button, 2, 1)
-        f_groupbox_layout.addWidget(f_sync_button, 2, 2)
+        ok_cancel_layout = QHBoxLayout()
+        vlayout.addLayout(ok_cancel_layout)
+        ok_cancel_layout.addWidget(f_sync_button)
+        ok_cancel_layout.addWidget(f_cancel_button)
         f_dialog.exec()
 
     def save_preset(self):

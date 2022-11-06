@@ -573,65 +573,6 @@ class AudioSeqItem(QGraphicsRectItem):
         constants.DAW_PROJECT.set_fades_for_all_audio_items(self.audio_item)
         global_open_audio_items()
 
-    def set_vol_for_all_instances(self):
-        def ok_handler():
-            f_index = f_reverse_combobox.currentIndex()
-            f_reverse_val = None
-            if f_index == 1:
-                f_reverse_val = False
-            elif f_index == 2:
-                f_reverse_val = True
-            constants.DAW_PROJECT.set_vol_for_all_audio_items(
-                self.audio_item.uid, get_vol(), f_reverse_val,
-                f_same_vol_checkbox.isChecked(), self.audio_item.vol)
-            f_dialog.close()
-            global_open_audio_items()
-
-        def cancel_handler():
-            f_dialog.close()
-
-        def vol_changed(a_val=None):
-            f_vol_label.setText("{}dB".format(get_vol()))
-
-        def get_vol():
-            return round(f_vol_slider.value() * 0.1, 1)
-
-        f_dialog = QDialog(shared.MAIN_WINDOW)
-        f_dialog.setWindowTitle(_("Set Volume for all Instance of File"))
-        f_layout = QGridLayout(f_dialog)
-        f_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        f_vol_slider = QSlider(QtCore.Qt.Orientation.Vertical)
-        f_vol_slider.setRange(-240, 240)
-        f_vol_slider.setMinimumHeight(360)
-        f_vol_slider.valueChanged.connect(vol_changed)
-        f_layout.addWidget(
-            f_vol_slider,
-            0,
-            1,
-            QtCore.Qt.AlignmentFlag.AlignCenter,
-        )
-        f_vol_label = QLabel("0dB")
-        f_layout.addWidget(f_vol_label, 1, 1)
-        f_vol_slider.setValue(int(self.audio_item.vol))
-        f_reverse_combobox = QComboBox()
-        f_reverse_combobox.addItems(
-            [_("Either"), _("Not-Reversed"), _("Reversed")])
-        f_reverse_combobox.setMinimumWidth(105)
-        f_layout.addWidget(QLabel(_("Reversed Items?")), 2, 0)
-        f_layout.addWidget(f_reverse_combobox, 2, 1)
-        f_same_vol_checkbox = QCheckBox(
-            _("Only items with same volume?"))
-        f_layout.addWidget(f_same_vol_checkbox, 3, 1)
-        f_ok_cancel_layout = QHBoxLayout()
-        f_layout.addLayout(f_ok_cancel_layout, 10, 1)
-        f_ok_button = QPushButton(_("OK"))
-        f_ok_button.pressed.connect(ok_handler)
-        f_ok_cancel_layout.addWidget(f_ok_button)
-        f_cancel_button = QPushButton(_("Cancel"))
-        f_cancel_button.pressed.connect(cancel_handler)
-        f_ok_cancel_layout.addWidget(f_cancel_button)
-        f_dialog.exec()
-
     def normalize(self, a_value, audio_pool_by_uid):
         f_val = self.graph_object.normalize(a_value)
         entry = audio_pool_by_uid[self.audio_item.uid]
