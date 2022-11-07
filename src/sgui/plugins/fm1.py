@@ -926,7 +926,7 @@ QCheckBox::indicator:hover
 QWidget#left_logo {
     background-color: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #151416, stop: 1 #232027
+        stop: 0 #4b372a, stop: 1 #463123
     );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/fm1/logo-left.svg);
     background-position: center;
@@ -937,7 +937,7 @@ QWidget#left_logo {
 QWidget#right_logo {
     background-color: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #151416, stop: 1 #232027
+        stop: 0 #4b372a, stop: 1 #463123
     );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/logo-right.svg);
     background-position: center;
