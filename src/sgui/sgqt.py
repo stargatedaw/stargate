@@ -437,7 +437,7 @@ class QDialog(QDialog):
     def _end_wait(self):
         self._waiting = False
 
-    def exec(self):
+    def exec(self, block=True):
         global DIALOG_SHOWING
         DIALOG_SHOWING = self
         # Avoid circular dependency
@@ -456,12 +456,14 @@ class QDialog(QDialog):
         self.adjustSize()
 
         self.show()
-        self._waiting = True
-        self.destroyed.connect(self._end_wait)
-        wait = 1. / 60.
-        while self._waiting:
-            time.sleep(wait)
-            QApplication.processEvents()
+
+        if block:
+            self._waiting = True
+            self.destroyed.connect(self._end_wait)
+            wait = 1. / 60.
+            while self._waiting:
+                time.sleep(wait)
+                QApplication.processEvents()
 
 orig_QMessageBox = QMessageBox
 
@@ -469,10 +471,21 @@ class _QMessageBox:
     StandardButton = orig_QMessageBox.StandardButton
 
     @staticmethod
-    def question(parent, title, message, buttons, default=None):
+    def question(
+        parent,
+        title,
+        message,
+        buttons,
+        default=None,
+        callbacks=None,
+    ):
         answer = []
         def close(_answer):
-            answer.append(_answer)
+            if callbacks:
+                if _answer in callbacks:
+                    callbacks[_answer]()
+            else:
+               answer.append(_answer)
             dialog.close()
         def add_button(_enum):
             # Needs to be a separate function so that the value of
@@ -492,9 +505,10 @@ class _QMessageBox:
                 QMessageBox.StandardButton.FlagMask,
             ) and buttons & _enum.value:
                 add_button(_enum)
-        dialog.exec()
-        answer = answer.pop()
-        return answer
+        dialog.exec(block=not callbacks)
+        if not callbacks:
+            answer = answer.pop()
+            return answer
 
     @staticmethod
     def warning(parent, title, message):

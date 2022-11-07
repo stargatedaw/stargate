@@ -90,16 +90,24 @@ class MainStackedWidget(QStackedWidget):
         self.setCurrentWidget(self.hardware_dialog)
 
     def closeEvent(self, event):
-        if sgqt.DIALOG_SHOWING:
-            event.ignore()
-            LOG.info("User tried to close the window while a dialog is open")
-            return
         if glbl_shared.IGNORE_CLOSE_EVENT:
+            if sgqt.DIALOG_SHOWING:
+                event.ignore()
+                LOG.info(
+                    "User tried to close the window while a dialog is open"
+                )
+                return
             event.ignore()
             if glbl_shared.IS_PLAYING:
                 LOG.info("User tried to close the window during playback")
                 return
             glbl_shared.MAIN_WINDOW.setEnabled(False)
+            def _cancel():
+                glbl_shared.MAIN_WINDOW.setEnabled(True)
+            def _yes():
+                glbl_shared.MAIN_WINDOW.prepare_to_quit()
+                glbl_shared.IGNORE_CLOSE_EVENT = False
+                self.close()
             f_reply = QMessageBox.question(
                 self,
                 _('Message'),
@@ -110,19 +118,13 @@ class MainStackedWidget(QStackedWidget):
                     QMessageBox.StandardButton.Cancel
                 ),
                 QMessageBox.StandardButton.Cancel,
+                callbacks={
+                    QMessageBox.StandardButton.Yes: _yes,
+                    QMessageBox.StandardButton.Cancel: _cancel,
+                },
             )
-            if f_reply == QMessageBox.StandardButton.Cancel:
-                glbl_shared.MAIN_WINDOW.setEnabled(True)
-                return
-            else:
-                glbl_shared.MAIN_WINDOW.prepare_to_quit()
-                event.accept()
         else:
             event.accept()
-            #quit_timer = QtCore.QTimer(self)
-            #quit_timer.setSingleShot(True)
-            #quit_timer.timeout.connect(self.close)
-            #quit_timer.start(1000)
 
 def qt_message_handler(mode, context, message):
     line = (
@@ -186,6 +188,10 @@ def main(args):
     else:
         glbl_shared.MAIN_STACKED_WIDGET.show_welcome()
     exit_code = QAPP.exec()
+    #quit_timer = QtCore.QTimer(self)
+    #quit_timer.setSingleShot(True)
+    #quit_timer.timeout.connect(self.close)
+    #quit_timer.start(1000)
     time.sleep(0.3)
     from sgui import main
     main.flush_events()
