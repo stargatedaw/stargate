@@ -83,26 +83,21 @@ class ProjectRecoveryWidget(QListWidget):
         shutil.move(f_project_dir, f_tmp_dir)
         with tarfile.open(f_tar_path, "r:bz2") as f_tar:
             def is_within_directory(directory, target):
-                
                 abs_directory = os.path.abspath(directory)
                 abs_target = os.path.abspath(target)
-            
                 prefix = os.path.commonprefix([abs_directory, abs_target])
-                
                 return prefix == abs_directory
-            
+
             def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
-            
                 for member in tar.getmembers():
                     member_path = os.path.join(path, member.name)
                     if not is_within_directory(path, member_path):
                         raise Exception("Attempted Path Traversal in Tar File")
-            
-                tar.extractall(path, members, numeric_owner=numeric_owner) 
-                
-            
+                tar.extractall(path, members, numeric_owner=numeric_owner)
             safe_extract(f_tar, self.project_dir)
+
         shutil.rmtree(f_tmp_dir)
+        DIALOG_WINDOW.close()
         QMessageBox.warning(
             self,
             _("Complete"),
@@ -110,9 +105,12 @@ class ProjectRecoveryWidget(QListWidget):
         )
 
 def project_recover_dialog(a_file):
-    f_window = QDialog()
-    f_window.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
-    f_window.setWindowTitle("Project History")
+    global DIALOG_WINDOW
+    DIALOG_WINDOW = QDialog()
+    DIALOG_WINDOW.setMinimumHeight(600)
+    DIALOG_WINDOW.setMinimumWidth(600)
+    DIALOG_WINDOW.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
+    DIALOG_WINDOW.setWindowTitle("Project History")
     f_project_dir = os.path.dirname(str(a_file))
     f_backup_dir = os.path.join(
         f_project_dir,
@@ -126,7 +124,7 @@ def project_recover_dialog(a_file):
     )
     if not _files:
         QMessageBox.warning(
-            f_window,
+            DIALOG_WINDOW,
             _("Error"),
             _(
                 "No backups exist for this project, recovery is not "
@@ -134,7 +132,7 @@ def project_recover_dialog(a_file):
             ),
         )
         return
-    f_layout = QVBoxLayout(f_window)
+    f_layout = QVBoxLayout(DIALOG_WINDOW)
     f_widget = ProjectRecoveryWidget(
         f_backup_dir,
         f_project_dir,
@@ -146,13 +144,14 @@ def project_recover_dialog(a_file):
     f_set_project_button = QPushButton(
         _("Revert Project to Selected"))
     f_set_project_button.pressed.connect(
-        f_widget.set_selected_as_project)
-    f_hlayout.addWidget(f_set_project_button)
-    f_hlayout.addItem(
-        QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        f_widget.set_selected_as_project,
     )
+    f_hlayout.addWidget(f_set_project_button)
+    cancel_button = QPushButton(_('Cancel'))
+    cancel_button.pressed.connect(DIALOG_WINDOW.close)
+    f_hlayout.addWidget(cancel_button)
     print("showing")
-    f_window.exec()
+    DIALOG_WINDOW.exec(block=False)
 
 def parse_args():
     parser = argparse.ArgumentParser(
