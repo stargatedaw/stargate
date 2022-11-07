@@ -303,7 +303,10 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             self.port_dict,
             self.preset_manager,
             knob_kwargs=knob_kwargs,
-            tooltip='How much pitchbend affects glitch size, in semitones',
+            tooltip=(
+                'How much pitchbend affects pitch, in semitones, while the '
+                'trigger note is pressed',
+            ),
         )
         self.glitch_pb_knob.add_to_grid_layout(self.glitch_gridlayout, 12)
         right_screws = get_screws()
