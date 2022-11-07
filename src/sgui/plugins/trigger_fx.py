@@ -312,13 +312,6 @@ class triggerfx_plugin_ui(AbstractPluginUI):
         right_screws = get_screws()
         self.main_hlayout.addLayout(right_screws)
 
-        f_note_triggered_label = QLabel(_(
-            _("The effects are triggered when you play their \n"
-            "selected note.  Usually you will want to change the note\n"
-            "range on any instrument plugins on the same track to not\n"
-            "include the selected note for these effects.")))
-        # self.main_hlayout.addWidget(f_note_triggered_label)
-
         self.open_plugin_file()
         self.set_midi_learn(TRIGGERFX_PORT_MAP)
 
