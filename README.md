@@ -40,7 +40,9 @@ and why, read the
 
 ![Note Item](assets/note_item.png?raw=true "Note Item")
 
-![Plugins](assets/plugins.png?raw=true "Plugins")
+![Effect Plugins](assets/plugins.png?raw=true "Effect Plugins")
+
+![Instrument Plugins](assets/va1.png?raw=true "Instrument Plugins")
 
 ![Routing](assets/routing.png?raw=true "Routing")
 
