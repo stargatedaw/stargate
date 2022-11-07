@@ -250,7 +250,7 @@ def setup_theme(app):
             )
     except Exception as ex:
         LOG.exception(ex)
-        f_answer = QMessageBox.warning(
+        f_answer = QMessageBox.question(
             None,
             _("Warning"),
             _(

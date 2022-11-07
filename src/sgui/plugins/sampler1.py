@@ -2843,16 +2843,20 @@ class sampler1_plugin_ui(AbstractPluginUI):
                     f_selected_path += util.SAMPLER_FILE_TYPE_EXT
                 f_dir = os.path.dirname(f_selected_path)
                 if len(os.listdir(f_dir)) > 0:
-                    f_answer = QMessageBox.warning(
-                        self.widget, _("Warning"),
-                        _("{} is not an empty directory, are you "
-                        "sure you want to save here?").format(f_dir),
+                    f_answer = QMessageBox.question(
+                        self.widget,
+                        _("Warning"),
+                        (
+                            f"{f_dir} is not an empty directory, are you "
+                            "sure you want to save here?"
+                        ),
                         (
                             QMessageBox.StandardButton.Yes
                             |
                             QMessageBox.StandardButton.No
                         ),
-                        QMessageBox.StandardButton.No)
+                        QMessageBox.StandardButton.No,
+                    )
                     if f_answer == QMessageBox.StandardButton.No:
                         continue
                 f_sample_str = self.copySamplesToSingleDirectory(f_dir)
