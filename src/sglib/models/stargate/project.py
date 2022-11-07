@@ -161,17 +161,19 @@ class SgProject(AbstractProject):
             os.remove(path)
 
     def create_backup(self, a_name=None):
-        f_backup_name = a_name if a_name else \
-            datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S.tar.bz2")
-        f_file_path = os.path.join(self.backups_folder, f_backup_name)
-        if os.path.exists(f_file_path):
-            LOG.info("create_backup:  '{}' exists".format(f_file_path))
+        name = datetime.datetime.now().strftime(
+            f"%Y-%m-%d_%H-%M-%S-{a_name}.tar.bz2"
+        )
+        path = os.path.join(self.backups_folder, name)
+        if os.path.exists(path):
+            LOG.error(f"create_backup: '{path}' exists, not creating")
             return False
-        with tarfile.open(f_file_path, "w:bz2") as f_tar:
+        with tarfile.open(path, "w:bz2") as f_tar:
             f_tar.add(
                 self.projects_folder,
                 arcname=os.path.basename(self.projects_folder),
             )
+        LOG.info(f'Created backup at {path}')
         return True
 
     def get_next_glued_file_name(self):
