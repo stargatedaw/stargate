@@ -102,6 +102,7 @@ def create_hintbox():
         QtCore.Qt.AlignmentFlag.AlignLeft
     )
     HINT_BOX.setObjectName('hintbox')
+    HINT_BOX.setWordWrap(True)
     HINT_BOX.setToolTip(
         'The hint box, provides information about almost anything '
         'you hover the mouse over.  To hide the hint box, click the '
@@ -134,7 +135,7 @@ class _HintBox:
             if len(lines) > 3:
                 lines[2] = lines[2][:-3] + '...'
                 LOG.error(f'Truncating hint {lines[0]}')
-            self._tooltip = "\n".join(lines[:3])
+            self._tooltip = " ".join(lines[:3])
             HINT_CACHE[text] = self._tooltip
         else:
             self._tooltip = text
