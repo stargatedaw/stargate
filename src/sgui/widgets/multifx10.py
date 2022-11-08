@@ -221,9 +221,9 @@ class MultiFX10:
             knob_kwargs=knob_kwargs,
             a_val_conversion=_shared.KC_DECIMAL,
             tooltip=(
-                'Adjust the panning of the dry/wet knobs, cause the wet and '
-                'dry signals to be applied differently to each stereo '
-                'channel. Use for interesting stereo effects'
+                'The panning of the dry and wet knobs, apply dry and wet '
+                'differently to each stereo channel. Dry and wet levels '
+                'should both be raised if panning. Use for stereo effects'
             ),
         )
         knob_kwargs.pop('arc_type')

@@ -36,15 +36,15 @@ void dry_wet_pan_set(
             self->wet_left = self->wet_right = wet_linear;
             self->dry_left = self->dry_right = dry_linear;
         } else if(pan < 0.0){  // left
-            self->wet_left = wet_linear;
-            self->dry_left = dry_linear;
-            self->wet_right = (1.0 - (pan * -1.0)) * wet_linear;
-            self->dry_right = (pan * -1.0) * wet_linear;
-        } else {  // right
-            self->wet_left = (1.0 - pan) * wet_linear;
-            self->dry_left = pan * wet_linear;
-            self->wet_right = wet_linear;
+            self->dry_left = (1.0 - (pan * -1.0)) * dry_linear;
             self->dry_right = dry_linear;
+            self->wet_left = wet_linear;
+            self->wet_right = (1.0 - (pan * -1.0)) * wet_linear;
+        } else {  // right
+            self->dry_left = dry_linear;
+            self->dry_right = (1.0 - pan) * dry_linear;
+            self->wet_left = (1.0 - pan) * wet_linear;
+            self->wet_right = wet_linear;
         }
     }
 }
