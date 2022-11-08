@@ -50,6 +50,17 @@ def rotator(source, dest):
             df.write(compressed)
     os.remove(source)
 
+class FailProofEmitter:
+    def emit(self, record):
+        record = record.encode('cp850', errors='replace')
+        super().emit(record)
+
+class StreamHandler(logging.StreamHandler, FailProofEmitter):
+    pass
+
+class _RotatingFileHandler(RotatingFileHandler, FailProofEmitter):
+    pass
+
 def setup_logging(
     format=FORMAT,
     level=logging.INFO,
@@ -58,7 +69,7 @@ def setup_logging(
     maxBytes=1024*1024*10,
 ):
     fmt = logging.Formatter(format)
-    handler = logging.StreamHandler(
+    handler = StreamHandler(
         stream=stream,
     )
     handler.setFormatter(fmt)
@@ -70,7 +81,7 @@ def setup_logging(
     )
     log.addHandler(handler)
 
-    handler = RotatingFileHandler(
+    handler = _RotatingFileHandler(
         os.path.join(LOG_DIR, 'stargate.log'),
         maxBytes=maxBytes,
         backupCount=3,
