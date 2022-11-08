@@ -176,6 +176,11 @@ class MultiFX10:
             knob_kwargs=knob_kwargs,
             min_text='-inf',
             a_val_conversion=_shared.KC_TENTH,
+            tooltip=(
+                'The level of the dry, unprocessed signal from this '
+                "effect's input, in decibels.  Use this to mix in some "
+                'of the unprocessed sound with the processed sound'
+            ),
         )
         self.dry_knob.hide()
         self.dry_knob.add_to_grid_layout(self.layout, 2)
@@ -193,6 +198,11 @@ class MultiFX10:
             knob_kwargs=knob_kwargs,
             min_text='-inf',
             a_val_conversion=_shared.KC_TENTH,
+            tooltip=(
+                'The level, in decibels, of the processed sound from this '
+                'effect.  Use this to adjust output level, or adjust the '
+                'mix with the dry signal'
+            )
         )
         self.wet_knob.hide()
         self.wet_knob.add_to_grid_layout(self.layout, 3)
@@ -210,6 +220,11 @@ class MultiFX10:
             a_preset_mgr=a_preset_mgr,
             knob_kwargs=knob_kwargs,
             a_val_conversion=_shared.KC_DECIMAL,
+            tooltip=(
+                'Adjust the panning of the dry/wet knobs, cause the wet and '
+                'dry signals to be applied differently to each stereo '
+                'channel. Use for interesting stereo effects'
+            ),
         )
         knob_kwargs.pop('arc_type')
         self.pan_knob.hide()
