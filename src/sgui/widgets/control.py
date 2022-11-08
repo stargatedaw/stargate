@@ -268,7 +268,6 @@ class AbstractUiControl(GridLayoutControl):
         f_ok_button.pressed.connect(ok_handler)
         ok_cancel_layout.addWidget(f_ok_button)
         ok_cancel_layout.addWidget(f_cancel_button)
-        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
     def tempo_sync_dialog(self):
@@ -325,7 +324,6 @@ class AbstractUiControl(GridLayoutControl):
         vlayout.addLayout(ok_cancel_layout)
         ok_cancel_layout.addWidget(f_sync_button)
         ok_cancel_layout.addWidget(f_cancel_button)
-        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
     def set_note_dialog(self):
@@ -353,7 +351,6 @@ class AbstractUiControl(GridLayoutControl):
         f_ok_cancel_layout.addWidget(f_cancel_button)
         f_ok_cancel_layout.addWidget(f_ok_button)
         f_vlayout.addLayout(f_ok_cancel_layout)
-        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
     def set_ratio_dialog(self):
@@ -393,7 +390,6 @@ class AbstractUiControl(GridLayoutControl):
         f_cancel_button.pressed.connect(f_dialog.close)
         ok_cancel_layout.addWidget(f_ok_button)
         ok_cancel_layout.addWidget(f_cancel_button)
-        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
     def set_octave_dialog(self):
@@ -422,7 +418,6 @@ class AbstractUiControl(GridLayoutControl):
         vlayout.addLayout(ok_cancel_layout)
         ok_cancel_layout.addWidget(f_ok_button)
         ok_cancel_layout.addWidget(f_cancel_button)
-        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
     def copy_automation(self):
@@ -507,7 +502,6 @@ class AbstractUiControl(GridLayoutControl):
         f_cancel_button = QPushButton(_("Cancel"))
         f_cancel_button.pressed.connect(f_dialog.close)
         f_ok_cancel_layout.addWidget(f_cancel_button)
-        f_dialog.move(self.control.mapToGlobal(QtCore.QPoint(0, 0)))
         f_dialog.exec()
 
     def undo_action_callback(self, a_action):
