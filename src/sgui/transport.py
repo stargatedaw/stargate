@@ -67,15 +67,26 @@ class TransportWidget:
         self.panic_button.setObjectName("panic")
         self.panic_menu = QMenu()
         self.panic_button.setMenu(self.panic_menu)
-        self.all_notes_off_action = self.panic_menu.addAction("All notes off")
-        self.all_notes_off_action.triggered.connect(self.on_panic)
-        self.panic_menu.addSeparator()
-        self.stop_engine_action = self.panic_menu.addAction(
-            _("Stop Audio Engine"),
+        self.all_notes_off_action = QAction("All notes off")
+        self.all_notes_off_action.setToolTip(
+            'Send a note off MIDI event on every note, to every plugin.  '
+            'Use this if you have hung notes'
         )
+        self.panic_menu.addAction(self.all_notes_off_action)
+        self.all_notes_off_action.triggered.connect(self.on_panic)
+
+        self.panic_menu.addSeparator()
+
+        self.stop_engine_action = QAction(_("Stop Audio Engine"))
+        self.stop_engine_action.setToolTip(
+            'Stop the audio engine.  You will need to restart the '
+            'application.  Use this in the event of loud unexpected noises '
+            'coming out of the audio engine'
+        )
+        self.panic_menu.addAction(self.stop_engine_action)
         self.stop_engine_action.triggered.connect(self.on_stop_engine)
+
         self.hlayout1.addWidget(self.panic_button)
-        self.panic_button.setToolTip(sg_strings.panic, reformat=False)
 
         self.host_layout = QVBoxLayout()
         self.host_layout.setContentsMargins(1, 1, 1, 1)

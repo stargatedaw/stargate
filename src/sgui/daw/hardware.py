@@ -30,7 +30,7 @@ class MidiDevice:
         self.track_combobox = QComboBox()
         self.track_combobox.setToolTip(
             "The track to output this MIDI device to.  All MIDI events from "
-            "tjos MIDI device will be recorded to this track, and sent to "
+            "this MIDI device will be recorded to this track, and sent to "
             "all plugins in this track's plugin rack"
         )
         self.track_combobox.setMinimumWidth(180)

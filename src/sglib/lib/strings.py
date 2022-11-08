@@ -57,13 +57,6 @@ timestretch_modes = {
     ),
 }
 
-
-panic = _("""\
-The panic button has 2 options:
-- Send a note-off event on every note to every plugin, fixes stuck notes
-- Stop the audio engine, you will need to restart the application after""")
-
-
 avconv_error = _(
 """\
 Please ensure that ffmpeg (or avconv) and lame are installed.
