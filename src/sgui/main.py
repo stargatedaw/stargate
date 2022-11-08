@@ -1432,7 +1432,7 @@ def main(
     # audio hardware
     pid = check_engine()
     if pid:
-        f_answer = QMessageBox.warning(
+        f_answer = QMessageBox.question(
             None,
             _("Warning"),
             sg_strings.multiple_instances_warning,
