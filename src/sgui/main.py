@@ -122,7 +122,7 @@ class SgMainWindow(QWidget):
     wave_edit_callback = Signal(str)
 
     def __init__(self):
-        QWidget.__init__(self)
+        super().__init__()
 
     def setup(self, scaler):
         self.suppress_resize_events = False
@@ -473,7 +473,7 @@ class SgMainWindow(QWidget):
         util.set_file_setting("hide-hint-box", 1 if hidden else 0)
 
     def _key_event(self, ev, press):
-        QWidget.keyPressEvent(self, ev)
+        super().keyPressEvent(ev)
         if shared.IS_PLAYING or shared.IS_RECORDING:
             return
         try:
@@ -569,7 +569,7 @@ class SgMainWindow(QWidget):
     def resizeEvent(self, a_event):
         if self.suppress_resize_events:
             return
-        QWidget.resizeEvent(self, a_event)
+        super().resizeEvent(a_event)
 
     def open_in_wave_editor(self, a_file):
         shared.TRANSPORT.host_combobox.setCurrentIndex(HOST_INDEX_WAVE_EDIT)
