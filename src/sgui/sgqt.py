@@ -426,6 +426,14 @@ class _QSpinBox(SgSpinBox):
 DIALOG_SHOWING = None
 
 class QDialog(QDialog):
+    def _center(self):
+        parent = self.parentWidget()
+        geometry = parent.geometry()
+        self.move(
+            int(geometry.center().x() - (self.width() / 2) - geometry.left()),
+            int(geometry.center().y() - (self.height() / 2) - geometry.top()),
+        )
+
     def closeEvent(self, event):
         global DIALOG_SHOWING
         DIALOG_SHOWING = None
@@ -437,7 +445,7 @@ class QDialog(QDialog):
     def _end_wait(self):
         self._waiting = False
 
-    def exec(self, block=True):
+    def exec(self, block=True, center=True):
         global DIALOG_SHOWING
         DIALOG_SHOWING = self
         # Avoid circular dependency
@@ -454,6 +462,8 @@ class QDialog(QDialog):
             int(current_widget.width() * 0.2),
         )
         self.adjustSize()
+        if center:
+            self._center()
 
         self.show()
 
