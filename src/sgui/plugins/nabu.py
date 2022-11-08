@@ -22,11 +22,9 @@ NABU_FIRST_FREQ_SPLITTER_PORT = NABU_FIRST_CONTROL_PORT + (NABU_FX_COUNT * 15)
 NABU_UI_MSG_ENABLED_PORT = 194
 
 ROUTE_TOOLTIP = """\
-If an effect in on, but is not routed to by a splitter or another effect that
-is on, it will process the plugin input.  Use this for parallel processing.
-
-If an effect is routed to an effect that is off, the effect will be routed to
-"output" instead.
+If effect is on, but not routed to by splitter or another active effect, it
+will use audio input.  Use for parallel processing.  If routed to an effect
+that is off, will be routed to output
 """
 
 def _port_map():
@@ -48,21 +46,28 @@ STYLESHEET = """
 QWidget {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #000000, stop: 0.5 #111111, stop: 1 #000000
+        stop: 0 #151412, stop: 0.5 #141614, stop: 1 #151515
     );
     border: none;
 }
 
 QGroupBox#plugin_groupbox {
-    border: 2px solid #cccccc;
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #222222, stop: 0.5 #272727, stop: 1 #242523
+    );
+    border: none;
+    border-radius: 6px;
     color: #cccccc;
 }
 
 QGroupBox::title {
+    background: #333333;
     subcontrol-origin: margin;
     subcontrol-position: top center; /* position at the top center */
     padding: 0 3px;
-    border: 2px solid #cccccc;
+    border: none;
+    border-radius: 2px;
 }
 
 QLabel#plugin_name_label,
@@ -76,10 +81,10 @@ QPushButton#nested_combobox
 {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+        stop: 0 #6a6a6a, stop: 0.5 #727273, stop: 1 #6a6a6a
     );
     border: 1px solid #222222;
-    border-radius: 6px;
+    border-radius: 2px;
     color: #222222;
 }
 
