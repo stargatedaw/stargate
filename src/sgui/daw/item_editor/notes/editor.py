@@ -170,6 +170,10 @@ class PianoRollEditor(AbstractItemEditor):
                 f_note_num,
                 f_velocity,
                 pan,
+                f_note.note_item.attack,
+                f_note.note_item.decay,
+                f_note.note_item.sustain,
+                f_note.note_item.release,
             )
             shared.CURRENT_ITEM.add_note(f_new_note_item, False)
             self.selected_note_strings.append(str(f_new_note_item))
@@ -215,6 +219,18 @@ class PianoRollEditor(AbstractItemEditor):
                 pans = [x.note_item.pan for x in f_dict[k]]
                 pan = round(sum(pans) / len(pans), 2)
 
+                attacks = [x.note_item.attack for x in f_dict[k]]
+                attack = round(sum(attacks) / len(attacks), 2)
+
+                decays = [x.note_item.decay for x in f_dict[k]]
+                decay = round(sum(decays) / len(decays), 2)
+
+                sustains = [x.note_item.sustain for x in f_dict[k]]
+                sustain = round(sum(sustains) / len(sustains), 2)
+
+                releases = [x.note_item.release for x in f_dict[k]]
+                release = round(sum(releases) / len(releases), 2)
+
                 LOG.info(str(f_max))
                 LOG.info(str(f_min))
                 f_length = f_max - f_min
@@ -227,6 +243,10 @@ class PianoRollEditor(AbstractItemEditor):
                     k,
                     f_vel,
                     pan,
+                    attack,
+                    decay,
+                    sustain,
+                    release,
                 )
                 LOG.info(str(f_new_note))
                 f_result.append(f_new_note)
