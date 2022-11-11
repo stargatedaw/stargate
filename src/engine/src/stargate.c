@@ -721,7 +721,8 @@ t_track * g_track_get(int a_track_num, SGFLT a_sr){
     }
 
     for(f_i = 0; f_i < MIDI_NOTE_COUNT; ++f_i){
-        f_result->note_offs[f_i] = -1;
+        f_result->note_offs[f_i].channel = 0;
+        f_result->note_offs[f_i].sample = -1;
     }
 
     f_result->period_event_index = 0;

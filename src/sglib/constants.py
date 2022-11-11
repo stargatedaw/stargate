@@ -18,6 +18,8 @@ __all__ = [
 
 MAJOR_VERSION = 'stargate'
 
+MIDI_CHANNELS = [str(x) for x in range(1, 17)] + ['All']
+
 ARCH = platform.machine()
 assert "cygwin" not in sys.platform, "Cygwin is unsupported"
 IS_WINDOWS = "win32" in sys.platform or "msys" in sys.platform

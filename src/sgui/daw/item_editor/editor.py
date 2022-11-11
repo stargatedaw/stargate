@@ -4,6 +4,7 @@ from sglib import constants
 from sgui.daw import shared
 from sgui.daw.lib import item as item_lib
 from sgui.daw.shared import *
+from sglib.constants import MIDI_CHANNELS
 from sglib.lib import util
 from sglib.lib.util import *
 from sglib.lib.translate import _
@@ -82,9 +83,7 @@ class ItemEditorWidget:
             'for.  Use multiple MIDI channels to send different MIDI events '
             'to different plugins in the same rack'
         )
-        self.midi_channel_combobox.addItems(
-            [str(x) for x in range(1, 17)] + ['All']
-        )
+        self.midi_channel_combobox.addItems(MIDI_CHANNELS)
         self.zoom_hlayout.addWidget(QLabel('MIDI Channel'))
         self.zoom_hlayout.addWidget(self.midi_channel_combobox)
 

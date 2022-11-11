@@ -361,30 +361,30 @@ void v_daw_process_note_offs(
     long f_next_current_sample = a_ts->f_next_current_sample;
 
     int f_i2 = 0;
-    long f_note_off;
+    struct MIDINoteOff* f_note_off;
     long sample_count = f_next_current_sample - f_current_sample;
 
     for(f_i2 = 0; f_i2 < MIDI_NOTE_COUNT; ++f_i2){
-        f_note_off = f_track->note_offs[f_i2];
+        f_note_off = &f_track->note_offs[f_i2];
         if(
             // f_note_off >= f_current_sample
-            f_note_off != -1
+            f_note_off->sample != -1
             &&
-            f_note_off < f_next_current_sample
+            f_note_off->sample < f_next_current_sample
         ){
             t_seq_event * f_event =
                 &f_track->event_buffer[f_track->period_event_index];
             v_ev_clear(f_event);
 
-            v_ev_set_noteoff(f_event, 0, f_i2, 0);
-            f_event->tick = f_note_off - f_current_sample;
+            v_ev_set_noteoff(f_event, f_note_off->channel, f_i2, 0);
+            f_event->tick = f_note_off->sample - f_current_sample;
             if(f_event->tick < 0){
                 f_event->tick = 0;
             } else if(f_event->tick >= sample_count){
                 f_event->tick = sample_count - 1;
             }
             ++f_track->period_event_index;
-            f_track->note_offs[f_i2] = -1;
+            f_track->note_offs[f_i2].sample = -1;
 
             shds_list_append(f_track->event_list, f_event);
         }
@@ -454,7 +454,11 @@ void v_daw_process_midi(
                     f_note_sample_offset =  (int)(f_note_start_frac *
                         ((SGFLT)sample_count));
 
-                    if(f_track->note_offs[f_event->note] >= a_current_sample){
+                    if(
+                        f_track->note_offs[f_event->note].sample
+                        >=
+                        a_current_sample
+                    ){
                         t_seq_event * f_buff_ev;
 
                         /*There's already a note_off scheduled ahead of
@@ -466,7 +470,7 @@ void v_daw_process_midi(
                         v_ev_clear(f_buff_ev);
                         v_ev_set_noteoff(
                             f_buff_ev,
-                            0,
+                            f_event->channel,
                             f_event->note,
                             0
                         );
@@ -481,7 +485,7 @@ void v_daw_process_midi(
 
                     v_ev_set_noteon(
                         f_buff_ev,
-                        0,
+                        f_event->channel,
                         f_event->note,
                         f_event->velocity,
                         f_event->pan,
@@ -495,9 +499,12 @@ void v_daw_process_midi(
 
                     ++f_track->period_event_index;
 
-                    f_track->note_offs[(f_event->note)] =
-                        a_current_sample + ((int)(f_event->length *
-                        a_ts->samples_per_beat));
+                    long sample = a_current_sample + (
+                        (int)(f_event->length * a_ts->samples_per_beat)
+                    );
+                    f_track->note_offs[f_event->note].sample = sample;
+                    f_track->note_offs[f_event->note].channel =
+                        f_event->channel;
                 } else if(f_event->type == EVENT_CONTROLLER){
                     int controller = f_event->param;
 
@@ -517,7 +524,11 @@ void v_daw_process_midi(
                     v_ev_clear(f_buff_ev);
 
                     v_ev_set_controller(
-                        f_buff_ev, 0, controller, f_event->value);
+                        f_buff_ev,
+                        f_event->channel,
+                        controller,
+                        f_event->value
+                    );
 
                     v_set_control_from_cc(f_buff_ev, f_track);
 
@@ -537,7 +548,11 @@ void v_daw_process_midi(
                         &f_track->event_buffer[f_track->period_event_index];
 
                     v_ev_clear(f_buff_ev);
-                    v_ev_set_pitchbend(f_buff_ev, 0, f_event->value);
+                    v_ev_set_pitchbend(
+                        f_buff_ev,
+                        f_event->channel,
+                        f_event->value
+                    );
                     f_buff_ev->tick = f_note_sample_offset;
 
                     ++f_track->period_event_index;

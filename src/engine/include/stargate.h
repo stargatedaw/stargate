@@ -3,6 +3,7 @@
 
 #include <pthread.h>
 
+#include "audiodsp/lib/midi.h"
 #include "audiodsp/lib/peak_meter.h"
 #include "audiodsp/modules/modulation/ramp_env.h"
 #include "plugin.h"
@@ -210,7 +211,7 @@ typedef struct {
     int fade_state;
     /*When a note_on event is fired,
      * a sample number of when to release it is stored here*/
-    long note_offs[MIDI_NOTE_COUNT];
+    struct MIDINoteOff note_offs[MIDI_NOTE_COUNT];
     int item_event_index;
     char osc_cursor_message[1024];
     int * extern_midi_count;

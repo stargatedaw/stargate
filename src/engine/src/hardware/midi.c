@@ -167,7 +167,9 @@ void midiReceive(
             int f_pb_val = ((value << 7) | control) - 8192;
             v_ev_set_pitchbend(
                 &self->midiEventBuffer[self->midiEventWriteIndex],
-                channel, f_pb_val);
+                channel,
+                f_pb_val
+            );
             ++self->midiEventWriteIndex;
             //log_info("MIDI PITCHBEND status %i ch %i, value %i",
             //      status, channel+1, f_pb_val);
@@ -176,7 +178,10 @@ void midiReceive(
         case MIDI_NOTE_OFF:
             v_ev_set_noteoff(
                 &self->midiEventBuffer[self->midiEventWriteIndex],
-                channel, control, value);
+                channel,
+                control,
+                value
+            );
             ++self->midiEventWriteIndex;
             /*log_info(
              * "MIDI NOTE_OFF status %i (ch %i, opcode %i), ctrl %i, val %i",
@@ -212,7 +217,10 @@ void midiReceive(
         case MIDI_CC:
             v_ev_set_controller(
                 &self->midiEventBuffer[self->midiEventWriteIndex],
-                channel, control, value);
+                channel,
+                control,
+                value
+            );
             ++self->midiEventWriteIndex;
             /*log_info("MIDI CC status %i (ch %i, opcode %i), ctrl %i, "
                     "val %i\n", status, channel+1, (status & 255)>>4, control,
