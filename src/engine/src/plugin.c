@@ -531,15 +531,24 @@ void effect_translate_midi_events(
     struct ShdsList* source_events,
     struct MIDIEvents* dest_events,
     t_plugin_event_queue* atm_queue,
-    struct ShdsList* atm_events
+    struct ShdsList* atm_events,
+    int midi_channel
 ){
     dest_events->count = 0;
     int f_i;
     t_seq_event* source_event;
     t_seq_event* ev_tmp;
     struct MIDIEvent* dest_event;
+    int is_in_channel;
     for(f_i = 0; f_i < source_events->len; ++f_i){
         source_event = (t_seq_event*)source_events->data[f_i];
+        is_in_channel = midi_event_is_in_channel(
+            source_event->channel,
+            midi_channel
+        );
+        if(!is_in_channel){
+            continue;
+        }
         if (source_event->type == EVENT_CONTROLLER){
             sg_assert(
                 source_event->param >= 1 && source_event->param < 128,

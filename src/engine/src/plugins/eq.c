@@ -228,7 +228,8 @@ void v_sgeq_run(
     struct SamplePair* output_buffer,
     struct ShdsList * midi_events,
     struct ShdsList * atm_events,
-    t_pkm_peak_meter* peak_meter
+    t_pkm_peak_meter* peak_meter,
+    int midi_channel
 ){
     t_sgeq *plugin_data = (t_sgeq*)instance;
     t_mf3_multi * f_fx;
@@ -244,7 +245,8 @@ void v_sgeq_run(
         midi_events,
         &plugin_data->midi_events,
         &plugin_data->atm_queue,
-        atm_events
+        atm_events,
+        midi_channel
     );
     struct SamplePair sample;
 

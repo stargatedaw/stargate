@@ -164,8 +164,17 @@ void v_nabu_set_port_value(
 
 void v_nabu_process_midi_event(
     struct NabuPlugin* plugin_data,
-    t_seq_event * a_event
+    t_seq_event * a_event,
+    int midi_channel
 ){
+    int is_in_channel = midi_event_is_in_channel(
+        a_event->channel,
+        midi_channel
+    );
+    if(!is_in_channel){
+        return;
+    }
+
     struct MIDIEvent* midi_event;
     if (a_event->type == EVENT_CONTROLLER){
         sg_assert(
@@ -207,7 +216,8 @@ void v_nabu_run(
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList* atm_events,
-    t_pkm_peak_meter* peak_meter
+    t_pkm_peak_meter* peak_meter,
+    int midi_channel
 ){
     int i, j;
     int i_mono_out;
@@ -228,7 +238,11 @@ void v_nabu_run(
     plugin_data->midi_event_count = 0;
 
     for(event_pos = 0; event_pos < event_count; ++event_pos){
-        v_nabu_process_midi_event(plugin_data, events[event_pos]);
+        v_nabu_process_midi_event(
+            plugin_data,
+            events[event_pos],
+            midi_channel
+        );
     }
 
     v_plugin_event_queue_reset(&plugin_data->atm_queue);

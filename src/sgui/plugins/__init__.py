@@ -14,6 +14,7 @@ GNU General Public License for more details.
 
 import sys
 
+from sglib.constants import MIDI_CHANNELS
 from sglib.math import clip_value
 from sgui import shared, widgets
 from sgui.daw import shared as daw_shared
@@ -578,6 +579,26 @@ class PluginSettingsMain(AbstractPluginSettings):
             a_save_callback,
             a_qcbox=False,
         )
+
+        self.midi_channel_combobox = QComboBox()
+        self.midi_channel_combobox.setMinimumWidth(48)
+        self.midi_channel_combobox.addItems(MIDI_CHANNELS)
+        self.midi_channel_combobox.currentIndexChanged.connect(
+            self._save_and_update,
+        )
+        self.midi_channel_combobox.setToolTip(
+            'Select the MIDI channel that this plugin will listen for '
+            'note, CC and pitchbend events on.'
+        )
+        self.layout.insertWidget(
+            self.layout.count() - 1,
+            QLabel('MIDI Channel'),
+        )
+        self.layout.insertWidget(
+            self.layout.count() - 1,
+            self.midi_channel_combobox,
+        )
+
         self.route_combobox = QComboBox()
         self.route_combobox.addItems(
             [str(x) for x in range(a_index + 2, 11)] + ["Output"]
@@ -597,6 +618,7 @@ class PluginSettingsMain(AbstractPluginSettings):
             self.layout.count() - 1,
             self.route_combobox,
         )
+
         self.audio_input_checkbox = QCheckBox(_("Audio Input"))
         self.audio_input_checkbox.setChecked(True)
         self.audio_input_checkbox.stateChanged.connect(self._save_and_update)
@@ -605,6 +627,7 @@ class PluginSettingsMain(AbstractPluginSettings):
             self.layout.count() - 1,
             self.audio_input_checkbox,
         )
+
         self.layout.insertSpacerItem(
             self.layout.count() - 1,
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
@@ -633,6 +656,7 @@ class PluginSettingsMain(AbstractPluginSettings):
         AbstractPluginSettings.set_value(self, value)
         self.suppress_osc = True
         self.route_combobox.setCurrentIndex(value.route)
+        self.midi_channel_combobox.setCurrentIndex(value.midi_channel)
         self.audio_input_checkbox.setChecked(bool(value.audio_input))
         self.suppress_osc = False
 
@@ -662,7 +686,8 @@ class PluginSettingsMain(AbstractPluginSettings):
             self.plugin_uid,
             a_power=1 if self.power_checkbox.isChecked() else 0,
             route=self.route_combobox.currentIndex(),
-            audio_input=1 if self.audio_input_checkbox.isChecked() else 0
+            audio_input=1 if self.audio_input_checkbox.isChecked() else 0,
+            midi_channel=self.midi_channel_combobox.currentIndex(),
         )
 
 

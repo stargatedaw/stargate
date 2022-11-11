@@ -97,7 +97,8 @@ void v_sgchnl_run(
     struct SamplePair* output_buffers,
     struct ShdsList* midi_events,
     struct ShdsList * atm_events,
-    t_pkm_peak_meter* peak_meter
+    t_pkm_peak_meter* peak_meter,
+    int midi_channel
 ){
     t_sgchnl *plugin_data = (t_sgchnl*)instance;
     float left, right;
@@ -106,7 +107,8 @@ void v_sgchnl_run(
         midi_events,
         &plugin_data->midi_events,
         &plugin_data->atm_queue,
-        atm_events
+        atm_events,
+        midi_channel
     );
 
     SGFLT f_vol_linear;

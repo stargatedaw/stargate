@@ -107,8 +107,16 @@ void v_sg_vocoder_set_port_value(
 
 void v_sg_vocoder_process_midi_event(
     t_sg_vocoder* plugin_data,
-    t_seq_event* a_event
+    t_seq_event* a_event,
+    int midi_channel
 ){
+    int is_in_channel = midi_event_is_in_channel(
+        a_event->channel,
+        midi_channel
+    );
+    if(!is_in_channel){
+        return;
+    }
     if (a_event->type == EVENT_CONTROLLER){
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
@@ -130,7 +138,8 @@ void v_sg_vocoder_process_midi_event(
 void v_sg_vocoder_process_midi(
     PluginHandle instance,
     struct ShdsList * events,
-    struct ShdsList * atm_events
+    struct ShdsList * atm_events,
+    int midi_channel
 ){
     t_sg_vocoder *plugin_data = (t_sg_vocoder*)instance;
     int f_i = 0;
@@ -138,7 +147,10 @@ void v_sg_vocoder_process_midi(
 
     for(f_i = 0; f_i < events->len; ++f_i){
         v_sg_vocoder_process_midi_event(
-            plugin_data, (t_seq_event*)events->data[f_i]);
+            plugin_data,
+            (t_seq_event*)events->data[f_i],
+            midi_channel
+        );
     }
 
     v_plugin_event_queue_reset(&plugin_data->atm_queue);
@@ -165,13 +177,14 @@ void v_sg_vocoder_run(
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList * atm_events,
-    t_pkm_peak_meter* peak_meter
+    t_pkm_peak_meter* peak_meter,
+    int midi_channel
 ){
     t_sg_vocoder *plugin_data = (t_sg_vocoder*)instance;
     struct SamplePair sample;
 
     t_plugin_event_queue_item * f_midi_item;
-    v_sg_vocoder_process_midi(instance, midi_events, atm_events);
+    v_sg_vocoder_process_midi(instance, midi_events, atm_events, midi_channel);
 
     int midi_event_pos = 0;
     int f_i = 0;

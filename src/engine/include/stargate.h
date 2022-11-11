@@ -313,7 +313,7 @@ double v_print_benchmark(
 );
 void * v_audio_recording_thread(void* a_arg);
 void v_queue_osc_message(char*, char*);
-void v_set_plugin_index(t_track*, int, int, int, int, int);
+void v_set_plugin_index(t_track*, int, int, int, int, int, int);
 
 t_track_routing * g_track_routing_get();
 void v_set_host(int);

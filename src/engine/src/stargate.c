@@ -511,6 +511,8 @@ NO_OPTIMIZATION void v_open_track(
                 int f_power = atoi(f_2d_array->current_str);
                 int route = 0;
                 int audio_input = 1;
+                int midi_channel = 0;
+                // TODO: Stargate v2: Remove if statements
                 if(!f_2d_array->eol){
                     v_iterate_2d_char_array(f_2d_array);
                     route = atoi(f_2d_array->current_str);
@@ -518,6 +520,10 @@ NO_OPTIMIZATION void v_open_track(
                 if(!f_2d_array->eol){
                     v_iterate_2d_char_array(f_2d_array);
                     audio_input = atoi(f_2d_array->current_str);
+                }
+                if(!f_2d_array->eol){
+                    v_iterate_2d_char_array(f_2d_array);
+                    midi_channel = atoi(f_2d_array->current_str);
                 }
                 if(f_index < MAX_PLUGIN_COUNT){
                     route += + 1 + f_index;
@@ -540,6 +546,7 @@ NO_OPTIMIZATION void v_open_track(
                     f_plugin_index,
                     f_plugin_uid,
                     f_power,
+                    midi_channel,
                     0
                 );
             } else {
@@ -671,7 +678,7 @@ NO_OPTIMIZATION void v_open_track(
         log_info("%s does not exist, resetting track", f_file_name);
         int f_i;
         for(f_i = 0; f_i < MAX_PLUGIN_COUNT; ++f_i){
-            v_set_plugin_index(a_track, f_i, 0, -1, 0, 0);
+            v_set_plugin_index(a_track, f_i, 0, -1, 0, 0, 0);
         }
 
         a_track->plugin_plan.copy_count = 0;
@@ -1579,7 +1586,8 @@ void plugin_init(
                 buffer,
                 &midi_list,
                 &atm_list,
-                NULL
+                NULL,
+                0
             );
         }
     }
@@ -1591,6 +1599,7 @@ NO_OPTIMIZATION void v_set_plugin_index(
     int a_plugin_index,
     int a_plugin_uid,
     int a_power,
+    int midi_channel,
     int a_lock
 ){
     t_plugin * f_plugin = NULL;
@@ -1611,6 +1620,7 @@ NO_OPTIMIZATION void v_set_plugin_index(
 
     if(f_plugin){
         f_plugin->power = a_power;
+        f_plugin->midi_channel = midi_channel;
     }
 
     f_track->plugins[a_index] = f_plugin;

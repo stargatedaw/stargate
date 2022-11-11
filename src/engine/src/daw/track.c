@@ -298,7 +298,8 @@ void v_daw_process_track(
                 step->output,
                 f_track->event_list,
                 step->plugin->atm_list,
-                NULL
+                NULL,
+                step->plugin->midi_channel
             );
         }
     }
@@ -514,7 +515,8 @@ void v_daw_sum_track_outputs(
                     f_buff,
                     a_track->event_list,
                     f_plugin->atm_list,
-                    a_track->peak_meter
+                    a_track->peak_meter,
+                    f_plugin->midi_channel
                 );
             } else {
                 pthread_spin_lock(&f_bus->lock);

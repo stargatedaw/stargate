@@ -101,7 +101,8 @@ void v_sgdelay_run(
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList* atm_events,
-    t_pkm_peak_meter* peak_meter
+    t_pkm_peak_meter* peak_meter,
+    int midi_channel
 ){
     t_sgdelay *plugin_data = (t_sgdelay*)instance;
     int f_i;
@@ -110,7 +111,8 @@ void v_sgdelay_run(
         midi_events,
         &plugin_data->midi_events,
         &plugin_data->atm_queue,
-        atm_events
+        atm_events,
+        midi_channel
     );
 
     for(f_i = 0; f_i < sample_count; ++f_i){

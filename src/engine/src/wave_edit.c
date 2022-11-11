@@ -418,7 +418,8 @@ void v_run_wave_editor(
                 f_track->audio[0],
                 f_track->event_list,
                 f_plugin->atm_list,
-                NULL
+                NULL,
+                0
             );
         }
     }
@@ -563,7 +564,14 @@ void v_we_configure(const char* a_key, const char* a_value){
         t_track * f_track = wave_edit->track_pool[f_track_num];
 
         v_set_plugin_index(
-            f_track, f_index, f_plugin_index, f_plugin_uid, f_power, 1);
+            f_track,
+            f_index,
+            f_plugin_index,
+            f_plugin_uid,
+            f_power,
+            0,
+            1
+        );
 
         g_free_1d_char_array(f_val_arr);
     } else {

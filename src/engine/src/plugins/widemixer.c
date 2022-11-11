@@ -344,8 +344,16 @@ void v_widemixer_set_port_value(
 
 void v_widemixer_process_midi_event(
     t_widemixer * plugin_data,
-    t_seq_event * a_event
+    t_seq_event * a_event,
+    int midi_channel
 ){
+    int is_in_channel = midi_event_is_in_channel(
+        a_event->channel,
+        midi_channel
+    );
+    if(!is_in_channel){
+        return;
+    }
     if (a_event->type == EVENT_CONTROLLER){
         sg_assert(
             a_event->param >= 1 && a_event->param < 128,
@@ -370,7 +378,8 @@ void v_widemixer_process_midi_event(
 void v_widemixer_process_midi(
     PluginHandle instance,
     struct ShdsList * events,
-    struct ShdsList * atm_events
+    struct ShdsList * atm_events,
+    int midi_channel
 ){
     t_widemixer *plugin_data = (t_widemixer*)instance;
     int f_i = 0;
@@ -379,7 +388,8 @@ void v_widemixer_process_midi(
     for(f_i = 0; f_i < events->len; ++f_i){
         v_widemixer_process_midi_event(
             plugin_data,
-            (t_seq_event*)events->data[f_i]
+            (t_seq_event*)events->data[f_i],
+            midi_channel
         );
     }
 
@@ -408,7 +418,8 @@ void v_widemixer_run(
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList * atm_events,
-    t_pkm_peak_meter* peak_meter
+    t_pkm_peak_meter* peak_meter,
+    int midi_channel
 ){
     t_widemixer *plugin_data = (t_widemixer*)instance;
     float left, right;
@@ -416,7 +427,7 @@ void v_widemixer_run(
     struct WMRunVars runvars;
     init_run_vars(&runvars, plugin_data);
 
-    v_widemixer_process_midi(instance, midi_events, atm_events);
+    v_widemixer_process_midi(instance, midi_events, atm_events, midi_channel);
 
     SGFLT f_vol_linear;
 

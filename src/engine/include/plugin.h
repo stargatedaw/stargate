@@ -2,6 +2,7 @@
 #define SG_PLUGIN_H
 
 #include "audio/paifx.h"
+#include "audiodsp/lib/midi.h"
 #include "audiodsp/lib/peak_meter.h"
 #include "compiler.h"
 #include "ds/list.h"
@@ -153,7 +154,8 @@ typedef struct _PluginDescriptor {
         struct SamplePair* output_buffer,
         struct ShdsList* midi_events,
         struct ShdsList* atm_events,
-        t_pkm_peak_meter* peak_meter
+        t_pkm_peak_meter* peak_meter,
+        int midi_channel
     );
 
     /* Do anything like warming up oscillators, etc...  in preparation
@@ -211,6 +213,7 @@ typedef struct {
     int mute;
     int solo;
     int route;
+    int midi_channel;
     char pad2[CACHE_LINE_SIZE];
 } t_plugin;
 
@@ -308,7 +311,8 @@ void effect_translate_midi_events(
     struct ShdsList* source_events,
     struct MIDIEvents* dest_events,
     t_plugin_event_queue* atm_queue,
-    struct ShdsList* atm_events
+    struct ShdsList* atm_events,
+    int midi_channel
 );
 
 // Called once per sample, does not process MIDI notes

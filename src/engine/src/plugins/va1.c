@@ -516,8 +516,16 @@ void va1_note_on(
 void v_va1_process_midi_event(
     t_va1 * plugin_data,
     t_seq_event * a_event,
-    int f_poly_mode
+    int f_poly_mode,
+    int midi_channel
 ){
+    int is_in_channel = midi_event_is_in_channel(
+        a_event->channel,
+        midi_channel
+    );
+    if(!is_in_channel){
+        return;
+    }
     if (a_event->type == EVENT_NOTEON){
         if (a_event->velocity > 0){
             va1_note_on(plugin_data, a_event, f_poly_mode);
@@ -571,7 +579,8 @@ void v_run_va1(
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList* atm_events,
-    t_pkm_peak_meter* peak_meter
+    t_pkm_peak_meter* peak_meter,
+    int midi_channel
 ){
     t_va1* plugin_data = (t_va1*) instance;
     struct SamplePair sample;
@@ -598,7 +607,12 @@ void v_run_va1(
     int f_i;
 
     for(f_i = 0; f_i < event_count; ++f_i){
-        v_va1_process_midi_event(plugin_data, events[f_i], f_poly_mode);
+        v_va1_process_midi_event(
+            plugin_data,
+            events[f_i],
+            f_poly_mode,
+            midi_channel
+        );
     }
 
     v_plugin_event_queue_reset(&plugin_data->atm_queue);

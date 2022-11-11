@@ -758,8 +758,16 @@ void v_fm1_set_port_value(
 void v_fm1_process_midi_event(
     t_fm1 *plugin_data,
     t_seq_event * a_event,
-    int f_poly_mode
+    int f_poly_mode,
+    int midi_channel
 ){
+    int is_in_channel = midi_event_is_in_channel(
+        a_event->channel,
+        midi_channel
+    );
+    if(!is_in_channel){
+        return;
+    }
     int f_min_note = (int)*plugin_data->min_note;
     int f_max_note = (int)*plugin_data->max_note;
 
@@ -1228,7 +1236,8 @@ void v_run_fm1(
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList* atm_events,
-    t_pkm_peak_meter* peak_meter
+    t_pkm_peak_meter* peak_meter,
+    int midi_channel
 ){
     t_fm1 *plugin_data = (t_fm1*) instance;
     t_fm1_poly_voice* pvoice;
@@ -1257,7 +1266,12 @@ void v_run_fm1(
     int f_i;
 
     for(f_i = 0; f_i < event_count; ++f_i){
-        v_fm1_process_midi_event(plugin_data, events[f_i], f_poly_mode);
+        v_fm1_process_midi_event(
+            plugin_data,
+            events[f_i],
+            f_poly_mode,
+            midi_channel
+        );
     }
 
     f_i = 0;

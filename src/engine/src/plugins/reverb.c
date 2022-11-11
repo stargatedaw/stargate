@@ -104,7 +104,8 @@ void v_sreverb_run(
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList * atm_events,
-    t_pkm_peak_meter* peak_meter
+    t_pkm_peak_meter* peak_meter,
+    int midi_channel
 ){
     t_sreverb* plugin_data = (t_sreverb*)instance;
     t_sreverb_mono_modules* mm = &plugin_data->mono_modules;
@@ -115,7 +116,8 @@ void v_sreverb_run(
         midi_events,
         &plugin_data->midi_events,
         &plugin_data->atm_queue,
-        atm_events
+        atm_events,
+        midi_channel
     );
 
     SGFLT f_dry_vol;

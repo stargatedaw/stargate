@@ -169,8 +169,16 @@ void v_triggerfx_run_glitch(
 
 void v_triggerfx_process_midi_event(
     t_triggerfx * plugin_data,
-    t_seq_event * a_event
+    t_seq_event * a_event,
+    int midi_channel
 ){
+    int is_in_channel = midi_event_is_in_channel(
+        a_event->channel,
+        midi_channel
+    );
+    if(!is_in_channel){
+        return;
+    }
     int f_gate_note = (int)*plugin_data->gate_note;
     int f_glitch_note = (int)*plugin_data->glitch_note;
 
@@ -266,7 +274,8 @@ void v_triggerfx_run(
     struct SamplePair* output_buffer,
     struct ShdsList* midi_events,
     struct ShdsList* atm_events,
-    t_pkm_peak_meter* peak_meter
+    t_pkm_peak_meter* peak_meter,
+    int midi_channel
 ){
     t_triggerfx *plugin_data = (t_triggerfx*)instance;
 
@@ -280,9 +289,8 @@ void v_triggerfx_run(
     int f_gate_on = (int)*plugin_data->gate_mode;
     int f_glitch_on = (int)*plugin_data->glitch_on;
 
-    for(f_i = 0; f_i < event_count; ++f_i)
-    {
-        v_triggerfx_process_midi_event(plugin_data, events[f_i]);
+    for(f_i = 0; f_i < event_count; ++f_i){
+        v_triggerfx_process_midi_event(plugin_data, events[f_i], midi_channel);
     }
 
     v_plugin_event_queue_reset(&plugin_data->atm_queue);
