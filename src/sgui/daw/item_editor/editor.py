@@ -185,9 +185,12 @@ class ItemEditorWidget:
         def quantize_ok_handler():
             f_quantize_text = f_quantize_combobox.currentText()
             self.events_follow_default = f_events_follow_notes.isChecked()
-            f_clip = shared.CURRENT_ITEM.quantize(f_quantize_text,
+            f_clip = shared.CURRENT_ITEM.quantize(
+                f_quantize_text,
+                self.get_midi_channel(),
                 f_events_follow_notes.isChecked(),
-                a_selected_only=f_selected_only.isChecked())
+                a_selected_only=f_selected_only.isChecked(),
+            )
             item_lib.save_item(
                 shared.CURRENT_ITEM_NAME,
                 shared.CURRENT_ITEM,

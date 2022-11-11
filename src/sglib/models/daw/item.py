@@ -253,6 +253,7 @@ class item:
     def quantize(
         self,
         a_beat_frac,
+        midi_channel,
         a_events_move_with_item=False,
         a_notes=None,
         a_selected_only=False,
@@ -264,9 +265,9 @@ class item:
         f_result = []
 
         if a_notes is None:
-            f_notes = self.notes
-            f_ccs = self.ccs
-            f_pbs = self.pitchbends
+            f_notes = [x for x in self.notes if x.channel == midi_channel]
+            f_ccs = [x for x in self.ccs if x.channel == midi_channel]
+            f_pbs = [x for x in self.pitchbends if x.channel == midi_channel]
         else:
             for i in range(len(a_notes)):
                 for f_note in self.notes:
@@ -275,12 +276,22 @@ class item:
                             f_start = f_note.start
                             f_end = f_note.start + f_note.length
                             for f_cc in self.ccs:
-                                if f_cc.start >= f_start and \
-                                f_cc.start <= f_end:
+                                if (
+                                    f_cc.start >= f_start
+                                    and
+                                    f_cc.start <= f_end
+                                    and
+                                    f_cc.channel == midi_channel
+                                ):
                                     f_ccs.append(f_cc)
                             for f_pb in self.pitchbends:
-                                if f_pb.start >= f_start and \
-                                f_pb.start <= f_end:
+                                if (
+                                    f_pb.start >= f_start
+                                    and
+                                    f_pb.start <= f_end
+                                    and
+                                    f_pb.channel == midi_channel
+                                ):
                                     f_pbs.append(f_pb)
                         f_notes.append(f_note)
                         break
@@ -487,15 +498,27 @@ class item:
     def remove_cc(self, a_cc):
         self.ccs.remove(a_cc)
 
-    def remove_cc_range(self, a_cc_num, a_start_beat=0.0, a_end_beat=4.0):
+    def remove_cc_range(
+        self,
+        a_cc_num,
+        midi_channel,
+        a_start_beat=0.0,
+        a_end_beat=4.0,
+    ):
         """ Delete all pitchbends greater than a_start_beat
             and less than a_end_beat
         """
         f_ccs_to_delete = []
         for cc in self.ccs:
-            if cc.cc_num == a_cc_num and \
-            cc.start >= a_start_beat and \
-            cc.start <= a_end_beat:
+            if (
+                cc.cc_num == a_cc_num
+                and
+                cc.start >= a_start_beat
+                and
+                cc.start <= a_end_beat
+                and
+                cc.channel == midi_channel
+            ):
                 f_ccs_to_delete.append(cc)
         for cc in f_ccs_to_delete:
             self.remove_cc(cc)
@@ -508,6 +531,7 @@ class item:
         a_start_val,
         a_end,
         a_end_val,
+        midi_channel,
         a_curve=0,
     ):
         f_cc = int(a_cc)
@@ -516,7 +540,7 @@ class item:
         f_end = float(a_end)
         f_end_val = int(a_end_val)
         #Remove any events that would overlap
-        self.remove_cc_range(f_cc, f_start, f_end)
+        self.remove_cc_range(f_cc, midi_channel, f_start, f_end)
 
         f_start_diff = f_end - f_start
         f_val_diff = abs(f_end_val - f_start_val)
@@ -526,7 +550,7 @@ class item:
             f_inc = 1
         f_time_inc = abs(f_start_diff / float(f_val_diff))
         for i in range(0, (f_val_diff + 1)):
-            self.ccs.append(cc(f_start, f_cc, f_start_val))
+            self.ccs.append(cc(f_start, f_cc, f_start_val, midi_channel))
             f_start_val += f_inc
             f_start += f_time_inc
         self.ccs.sort()
@@ -553,7 +577,15 @@ class item:
         for pb in f_pbs_to_delete:
             self.remove_pb(pb)
 
-    def draw_pb_line(self, a_start, a_start_val, a_end, a_end_val, a_curve=0):
+    def draw_pb_line(
+        self,
+        a_start,
+        a_start_val,
+        a_end,
+        a_end_val,
+        midi_channel,
+        a_curve=0,
+    ):
         f_start = float(a_start)
         f_start_val = float(a_start_val)
         f_end = float(a_end)
@@ -569,7 +601,9 @@ class item:
             f_inc = 0.025
         f_time_inc = abs(f_start_diff/(float(f_val_diff) * 40.0))
         for i in range(0, int((f_val_diff * 40) + 1)):
-            self.pitchbends.append(pitchbend(f_start, f_start_val))
+            self.pitchbends.append(
+                pitchbend(f_start, f_start_val, midi_channel),
+            )
             f_start_val += f_inc
             f_start += f_time_inc
         #Ensure that the last value is what the user wanted it to be
