@@ -347,14 +347,19 @@ class item:
             self.notes.sort()
         return f_result
 
-    def smooth_automation_points(self, a_is_cc, a_cc_num=-1):
+    def smooth_automation_points(self, a_is_cc, midi_channel, a_cc_num=-1):
         if a_is_cc:
             f_this_cc_arr = []
             f_result_arr = []
             f_cc_num = int(a_cc_num)
-            for f_cc in self.ccs:
+            for f_cc in (x for x in self.ccs if x.channel == midi_channel):
                 if f_cc.cc_num == f_cc_num:
-                    f_new_cc = cc(f_cc.start, f_cc_num, f_cc.cc_val)
+                    f_new_cc = cc(
+                        f_cc.start,
+                        f_cc_num,
+                        f_cc.cc_val,
+                        midi_channel,
+                    )
                     f_this_cc_arr.append(f_new_cc)
             f_this_cc_arr.sort()
             for f_cc1, f_cc2 in zip(f_this_cc_arr, f_this_cc_arr[1:]):
@@ -377,7 +382,12 @@ class item:
                     127.,
                 )
                 while True:
-                    f_interpolated_cc = cc(f_start, f_cc_num, f_new_val)
+                    f_interpolated_cc = cc(
+                        f_start,
+                        f_cc_num,
+                        f_new_val,
+                        midi_channel,
+                    )
                     f_new_val = clip_value(
                         f_new_val + f_inc,
                         0.,
@@ -394,8 +404,11 @@ class item:
             f_this_pb_arr = []
             f_result_arr = []
 
-            for f_pb in self.pitchbends:
-                f_new_pb = pitchbend(f_pb.start, f_pb.pb_val)
+            for f_pb in (
+                x for x in self.pitchbends
+                if x.channel == midi_channel
+            ):
+                f_new_pb = pitchbend(f_pb.start, f_pb.pb_val, midi_channel)
                 f_this_pb_arr.append(f_new_pb)
 
             for f_pb1, f_pb2 in zip(f_this_pb_arr, f_this_pb_arr[1:]):
@@ -414,7 +427,11 @@ class item:
                 f_new_val = f_pb1.pb_val + f_val_inc
 
                 while True:
-                    f_interpolated_pb = pitchbend(f_start, f_new_val)
+                    f_interpolated_pb = pitchbend(
+                        f_start,
+                        f_new_val,
+                        midi_channel,
+                    )
                     f_new_val += f_val_inc
                     f_result_arr.append(f_interpolated_pb)
                     f_start += f_time_inc

@@ -353,15 +353,19 @@ class AutomationEditor(AbstractItemEditor):
 
         f_note_height = (self.viewer_height / 120.0)
         f_note_pen = QPen(QtCore.Qt.GlobalColor.white, f_note_height)
+        channel = shared.ITEM_EDITOR.get_midi_channel()
 
         if self.is_cc:
             for f_cc in shared.CURRENT_ITEM.ccs:
-                if f_cc.cc_num == self.cc_num:
+                if f_cc.cc_num == self.cc_num and f_cc.channel == channel:
                     self.draw_point(f_cc)
         else:
             for f_pb in shared.CURRENT_ITEM.pitchbends:
-                self.draw_point(f_pb)
+                if f_pb.channel == channel:
+                    self.draw_point(f_pb)
         for f_note in shared.CURRENT_ITEM.notes:
+            if f_note.channel != channel:
+                continue
             f_note_start = (f_note.start *
                 self.px_per_beat) + AUTOMATION_RULER_WIDTH
             f_note_end = f_note_start + (f_note.length * self.px_per_beat)
@@ -561,11 +565,19 @@ class AutomationEditorWidget:
         self.suppress_ccs_in_use = False
 
     def smooth_pressed(self):
+        channel = shared.ITEM_EDITOR.get_midi_channel()
         if self.is_cc:
             f_cc_num = int(str(self.control_combobox.currentText()))
-            shared.CURRENT_ITEM.smooth_automation_points(self.is_cc, f_cc_num)
+            shared.CURRENT_ITEM.smooth_automation_points(
+                self.is_cc,
+                channel,
+                f_cc_num,
+            )
         else:
-            shared.CURRENT_ITEM.smooth_automation_points(self.is_cc)
+            shared.CURRENT_ITEM.smooth_automation_points(
+                self.is_cc,
+                channel,
+            )
         self.automation_viewer.selected_str = []
         global_save_and_reload_items()
 

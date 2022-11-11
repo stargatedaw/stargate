@@ -248,12 +248,13 @@ def global_open_items(
     PB_EDITOR.clear_drawn_items()
     ITEM_EDITOR.items = []
     f_cc_set = set()
+    channel = ITEM_EDITOR.get_midi_channel()
 
     if CURRENT_ITEM:
-        for cc in CURRENT_ITEM.ccs:
+        for cc in (x for x in CURRENT_ITEM.ccs if x.channel == channel):
             f_cc_set.add(cc.cc_num)
 
-        CC_EDITOR_WIDGET.update_ccs_in_use(list(f_cc_set))
+        CC_EDITOR_WIDGET.update_ccs_in_use(list(sorted(f_cc_set)))
 
         if a_items is not None and f_cc_set:
             CC_EDITOR_WIDGET.set_cc_num(sorted(f_cc_set)[0])
