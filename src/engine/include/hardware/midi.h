@@ -21,6 +21,13 @@
 #define MIDI_PITCH_BEND     0xE0
 #define MIDI_EOX            0xF7
 
+typedef struct {
+    int output_track;
+    int channel;
+    int on;
+} t_midi_routing;
+
+
 #ifdef NO_MIDI
     #define t_midi_device void
     #define t_midi_device_list void
@@ -30,6 +37,7 @@
         PmStream *f_midi_stream;
         PmError f_midi_err;
         PmDeviceID f_device_id;
+        t_midi_routing* route;
         int instanceEventCounts;
         t_seq_event instanceEventBuffers[MIDI_EVENT_BUFFER_SIZE];
         PmEvent portMidiBuffer[MIDI_EVENT_BUFFER_SIZE];
@@ -57,7 +65,8 @@ void midiReceive(
     t_midi_device * self,
     unsigned char status,
     unsigned char control,
-    char value
+    char value,
+    int channel
 );
 void midiDeviceRead(
     t_midi_device* self,

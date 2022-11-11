@@ -141,9 +141,15 @@ void midiReceive(
     t_midi_device * self,
     unsigned char status,
     unsigned char control,
-    char value
+    char value,
+    int _channel
 ){
-    unsigned char channel = status & 0x0F;
+    unsigned char channel;
+    if(_channel == 17){
+        channel = status & 0x0F;
+    } else {
+        channel = _channel;
+    }
     unsigned char opCode = status & 0xF0;
     if (opCode >= 0xF0)
     {
@@ -255,6 +261,12 @@ void midiPoll(t_midi_device * self){
     unsigned char status;
     //int f_cReceiveMsg_index = 0;
     int i;
+    int channel;
+    if(!self->route){
+        channel = 0;
+    } else {
+        channel = self->route->channel;
+    }
 
     f_poll_result = Pm_Poll(self->f_midi_stream);
     if(f_poll_result < 0){
@@ -274,7 +286,7 @@ void midiPoll(t_midi_device * self){
 
                 if ((status & 0xF8) == 0xF8) {
                     // Handle real-time MIDI messages at any time
-                    midiReceive(self, status, 0, 0);
+                    midiReceive(self, status, 0, 0, channel);
                 }
 
                 reprocessMessage:
@@ -291,7 +303,7 @@ void midiPoll(t_midi_device * self){
                         unsigned char velocity = Pm_MessageData2(
                             self->portMidiBuffer[i].message
                         );
-                        midiReceive(self, status, note, velocity);
+                        midiReceive(self, status, note, velocity, channel);
                     }
                 }
 
@@ -315,7 +327,7 @@ void midiPoll(t_midi_device * self){
                     ){
                         if ((data & 0xF8) == 0xF8){
                             // Handle real-time messages at any time
-                            midiReceive(self, data, 0, 0);
+                            midiReceive(self, data, 0, 0, channel);
                         } else {
                             //m_cReceiveMsg[m_cReceiveMsg_index++] = data =
                             //    (portMidiBuffer[i].message >> shift) & 0xFF;

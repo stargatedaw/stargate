@@ -56,7 +56,7 @@ GNU General Public License for more details.
 #endif
 
 #ifndef NO_MIDI
-    t_midi_device_list MIDI_DEVICES;
+    t_midi_device_list MIDI_DEVICES = {};
     PmError f_midi_err;
 #endif
 

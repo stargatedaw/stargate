@@ -19,9 +19,9 @@ class MidiDevice:
         self.save_callback = a_save_callback
         self.record_checkbox = QCheckBox()
         self.record_checkbox.setToolTip(
-            "Record arm this MIDI device, it will be recorded to the selected "
-            "output track when the record button is pressed.  The MIDI note "
-            "events from this device will be sent to all plugins on this track"
+            "Enable this MIDI device.  MIDI events events from this device "
+            "will be sent to all plugins on the selected track, on the "
+            "selected channel."
         )
         self.record_checkbox.toggled.connect(self.device_changed)
         f_index = int(a_index) + 1
@@ -38,6 +38,20 @@ class MidiDevice:
         shared.TRACK_NAME_COMBOBOXES.append(self.track_combobox)
         self.track_combobox.currentIndexChanged.connect(self.device_changed)
         a_layout.addWidget(self.track_combobox, f_index, 2)
+
+        self.channel_combobox = QComboBox()
+        self.channel_combobox.setMinimumWidth(48)
+        self.channel_combobox.addItems(
+            constants.MIDI_CHANNELS + ['Any'],
+        )
+        self.channel_combobox.setToolTip(
+            'The MIDI channel on the output track to send MIDI events to.  '
+            'Choose "All" to send to all channels, or "Any" to preserve the '
+            'original channel(s) the MIDI device sent the events on.'
+        )
+        self.channel_combobox.currentIndexChanged.connect(self.device_changed)
+        a_layout.addWidget(self.channel_combobox, f_index, 3)
+
         self.suppress_updates = False
 
     def device_changed(self, a_val=None):
@@ -47,11 +61,13 @@ class MidiDevice:
             self.suppress_updates
         ):
             return
+        channel = self.channel_combobox.currentIndex()
         track_index = self.track_combobox.currentIndex()
         constants.DAW_PROJECT.ipc().midi_device(
             self.record_checkbox.isChecked(),
             self.index,
             track_index,
+            channel,
         )
         if track_index:  # not main
             constants.DAW_PROJECT.check_output(track_index)
@@ -62,6 +78,7 @@ class MidiDevice:
             1 if self.record_checkbox.isChecked() else 0,
             self.track_combobox.currentIndex(),
             self.name,
+            self.channel_combobox.currentIndex(),
         )
 
     def set_routing(self, a_routing):
@@ -91,9 +108,14 @@ class MidiDevicesDialog:
             1,
         )
         self.layout.addWidget(
-            QLabel(_("Output")),
+            QLabel(_("Output Track")),
             0,
             2,
+        )
+        self.layout.addWidget(
+            QLabel(_("Output Channel")),
+            0,
+            3,
         )
         for f_name, f_i in zip(
             util.MIDI_IN_DEVICES,
@@ -115,7 +137,7 @@ class MidiDevicesDialog:
                 QSizePolicy.Policy.Minimum,
             ),
             0,
-            3,
+            10,
         )
 
     def get_routings(self):

@@ -1,13 +1,20 @@
 
 class MIDIRoute:
-    def __init__(self, a_on, a_track_num, a_device_name):
+    def __init__(self, a_on, a_track_num, a_device_name, channel=0):
         self.on = int(a_on)
         self.track_num = int(a_track_num)
         self.device_name = str(a_device_name)
+        self.channel = int(channel)
 
     def __str__(self):
         return "|".join(
-            str(x) for x in (self.on, self.track_num, self.device_name))
+            str(x) for x in (
+                self.on,
+                self.track_num,
+                self.device_name,
+                self.channel,
+            )
+        )
 
 
 class MIDIRoutes:

@@ -202,10 +202,18 @@ class DawIPC(AbstractIPC):
             f_wait_file = get_wait_file_path(a_file_name)
             wait_for_finished_file(f_wait_file)
 
-    def midi_device(self, a_is_on, a_device_num, a_track_num):
+    def midi_device(self, a_is_on, a_device_num, a_track_num, channel):
         self.send_configure(
-            "md", "|".join(str(x) for x in
-            (bool_to_int(a_is_on), a_device_num, a_track_num)))
+            "md",
+            "|".join(
+                str(x) for x in (
+                    bool_to_int(a_is_on),
+                    a_device_num,
+                    a_track_num,
+                    channel,
+                )
+            ),
+        )
 
     def set_pos(self, a_beat):
         self.send_configure("pos", str(a_beat))

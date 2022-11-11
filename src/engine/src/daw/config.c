@@ -292,15 +292,18 @@ void v_daw_configure(const char* a_key, const char* a_value){
     else if(!strcmp(a_key, DN_CONFIGURE_KEY_MIDI_DEVICE))
     {
 #ifndef NO_MIDI
-        t_line_split * f_val_arr = g_split_line('|', a_value);
-        int f_on = atoi(f_val_arr->str_arr[0]);
-        int f_device = atoi(f_val_arr->str_arr[1]);
-        int f_output = atoi(f_val_arr->str_arr[2]);
-        v_free_split_line(f_val_arr);
+        a_value = str_split(a_value, buf, '|');
+        int f_on = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int f_device = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int f_output = atoi(buf);
+        a_value = str_split(a_value, buf, '|');
+        int channel = atoi(buf);
 
         pthread_spin_lock(&STARGATE->main_lock);
 
-        v_daw_set_midi_device(f_on, f_device, f_output);
+        v_daw_set_midi_device(f_on, f_device, f_output, channel);
 
         pthread_spin_unlock(&STARGATE->main_lock);
 #endif

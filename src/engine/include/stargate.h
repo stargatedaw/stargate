@@ -289,11 +289,6 @@ typedef struct {
 } t_stargate;
 
 typedef struct {
-    int output_track;
-    int on;
-} t_midi_routing;
-
-typedef struct {
     char pad1[CACHE_LINE_SIZE];
     // index of the track to send to
     int output;

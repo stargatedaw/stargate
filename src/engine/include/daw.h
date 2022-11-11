@@ -220,7 +220,7 @@ void v_daw_process_atm(
     t_daw_thread_storage * a_ts
 );
 
-void v_daw_set_midi_device(int, int, int);
+void v_daw_set_midi_device(int, int, int, int);
 void v_daw_set_midi_devices();
 
 void g_daw_midi_routing_list_init(t_daw_midi_routing_list*);

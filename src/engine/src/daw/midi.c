@@ -52,13 +52,22 @@ void v_daw_set_midi_devices(){
         v_iterate_2d_char_array(f_current_string);
         int f_track_num = atoi(f_current_string->current_str);
 
-        v_iterate_2d_char_array_to_next_line(f_current_string);
+        v_iterate_2d_char_array(f_current_string);  // name
+
+        int channel = 0;
+        // TODO Stargate v2: Remove if statement
+        if(!f_current_string->eol){
+            v_iterate_2d_char_array(f_current_string);
+            channel = atoi(f_current_string->current_str);
+        }
+
+        //v_iterate_2d_char_array_to_next_line(f_current_string);
 
         found_device = 0;
         for(f_i2 = 0; f_i2 < STARGATE->midi_devices->count; ++f_i2){
             f_device = &STARGATE->midi_devices->devices[f_i2];
             if(!strcmp(f_current_string->current_str, f_device->name)){
-                v_daw_set_midi_device(f_on, f_i2, f_track_num);
+                v_daw_set_midi_device(f_on, f_i2, f_track_num, channel);
                 found_device = 1;
                 break;
             }
@@ -84,7 +93,8 @@ void v_daw_set_midi_devices(){
 void v_daw_set_midi_device(
     int a_on,
     int a_device,
-    int a_output
+    int a_output,
+    int channel
 ){
     t_daw * self = DAW;
     /* Interim logic to get a minimum viable product working
@@ -114,11 +124,13 @@ void v_daw_set_midi_device(
 
     f_route->on = a_on;
     f_route->output_track = a_output;
+    f_route->channel = channel;
 
     if(f_route->on && STARGATE->midi_devices->devices[a_device].loaded){
         f_track_new->midi_device = &STARGATE->midi_devices->devices[a_device];
         f_track_new->extern_midi =
             STARGATE->midi_devices->devices[a_device].instanceEventBuffers;
+        f_track_new->midi_device->route = f_route;
 
         midiPoll(f_track_new->midi_device);
         midiDeviceRead(
