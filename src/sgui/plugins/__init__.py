@@ -764,12 +764,25 @@ class PluginRackTab:
         self.menu_layout.addWidget(QLabel(_("Track")))
         self.menu_layout.addWidget(self.track_combobox)
 
+        self.channel_combobox = QComboBox()
+        self.channel_combobox.setMinimumWidth(48)
+        self.channel_combobox.addItems(MIDI_CHANNELS)
+        self.channel_combobox.setToolTip(
+            'The MIDI channel when using your QWERTY keyboard for MIDI input. '
+            "The top row of letters, q through ], will play notes on this "
+            "rack on this MIDI channel"
+        )
+        self.menu_layout.addWidget(QLabel(_("MIDI Channel")))
+        self.menu_layout.addWidget(self.channel_combobox)
+
         self.octave_spinbox = QSpinBox()
         self.octave_spinbox.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.octave_spinbox.setRange(-2, 7)
         self.octave_spinbox.setValue(2)
         self.octave_spinbox.setToolTip(_(
-            "Sets the octave when using your QWERTY keyboard for MIDI input"
+            "Sets the octave when using your QWERTY keyboard for MIDI input. "
+            "The top row of letters, q through ], will play notes on this "
+            "rack at this octave"
         ))
         self.menu_layout.addWidget(QLabel(_("Octave")))
         self.menu_layout.addWidget(self.octave_spinbox)
@@ -800,6 +813,9 @@ class PluginRackTab:
         self.enabled = True
         self.plugin_racks = {}
         self.last_rack_num = None
+
+    def midi_channel(self):
+        return self.channel_combobox.currentIndex()
 
     def octave(self):
         return self.octave_spinbox.value() + 2

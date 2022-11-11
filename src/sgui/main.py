@@ -482,12 +482,13 @@ class SgMainWindow(QWidget):
             if host == HOST_INDEX_DAW and key in self.MIDI_NOTES:
                 rack = daw.shared.PLUGIN_RACK.rack_index()
                 note_offset = daw.shared.PLUGIN_RACK.octave() * 12
+                channel = daw.shared.PLUGIN_RACK.midi_channel()
                 note = self.MIDI_NOTES[key] + note_offset
                 assert note >= 0 and note <= 120, note
                 if press:
-                    constants.DAW_IPC.note_on(rack, note)
+                    constants.DAW_IPC.note_on(rack, note, channel)
                 else:
-                    constants.DAW_IPC.note_off(rack, note)
+                    constants.DAW_IPC.note_off(rack, note, channel)
         except Exception as ex:
             LOG.exception(ex)
 

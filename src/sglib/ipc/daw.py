@@ -34,19 +34,19 @@ class DawIPC(AbstractIPC):
             a_configure_path,
         )
 
-    def note_on(self, rack_index, note):
+    def note_on(self, rack_index, note, channel):
         self.send_configure(
             "non",
             "|".join(
-                str(x) for x in (rack_index, note)
+                str(x) for x in (rack_index, note, channel)
             )
         )
 
-    def note_off(self, rack_index, note):
+    def note_off(self, rack_index, note, channel):
         self.send_configure(
             "noff",
             "|".join(
-                str(x) for x in (rack_index, note)
+                str(x) for x in (rack_index, note, channel)
             )
         )
 

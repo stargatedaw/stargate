@@ -152,15 +152,16 @@ void daw_process_qwerty_midi(
     if(a_track->track_num == QWERTY_MIDI.rack_num){
         int i;
         for(i = 0; i < 128; ++i){
-            if(QWERTY_MIDI.note_offs[i]){
-                --QWERTY_MIDI.note_offs[i];
-                if(!QWERTY_MIDI.note_offs[i]){
+            if(QWERTY_MIDI.note_offs[i].sample){
+                --QWERTY_MIDI.note_offs[i].sample;
+                if(!QWERTY_MIDI.note_offs[i].sample){
                     t_seq_event* ev =
                         &QWERTY_MIDI.events[QWERTY_MIDI.event_count];
                     ev->note = i;
                     ev->tick = 0;
                     ev->type = EVENT_NOTEOFF;
                     ev->velocity = 0;
+                    ev->channel = QWERTY_MIDI.note_offs[i].channel;
                     ++QWERTY_MIDI.event_count;
                 }
             }
