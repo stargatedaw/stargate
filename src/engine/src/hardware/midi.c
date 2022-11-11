@@ -137,6 +137,28 @@ NO_OPTIMIZATION void midiDeviceClose(t_midi_device * self){
     Pm_Close(self->f_midi_stream);
 }
 
+void midi_device_inc_writer(
+    t_midi_device * self
+){
+    /* At this point we change the event timestamp so that its
+   real-time field contains the actual time at which it was
+   received and processed (i.e. now).  Then in the audio
+   callback we use that to calculate frame offset. */
+
+    struct timeval tv;
+    t_seq_event* event = &self->midiEventBuffer[self->midiEventWriteIndex];
+
+    gettimeofday(&tv, NULL);
+    event->tv_sec = tv.tv_sec;
+    event->tv_nsec = tv.tv_usec * 1000L;
+
+    ++self->midiEventWriteIndex;
+
+    if(self->midiEventWriteIndex >= MIDI_EVENT_BUFFER_SIZE){
+        self->midiEventWriteIndex = 0;
+    }
+}
+
 void midiReceive(
     t_midi_device * self,
     unsigned char status,
@@ -157,7 +179,6 @@ void midiReceive(
     }
 
     //int twoBytes = 1;
-    struct timeval tv;
 
     if(self->midiEventReadIndex == self->midiEventWriteIndex + 1)
     {
@@ -176,7 +197,7 @@ void midiReceive(
                 channel,
                 f_pb_val
             );
-            ++self->midiEventWriteIndex;
+            midi_device_inc_writer(self);
             //log_info("MIDI PITCHBEND status %i ch %i, value %i",
             //      status, channel+1, f_pb_val);
         }
@@ -188,7 +209,7 @@ void midiReceive(
                 control,
                 value
             );
-            ++self->midiEventWriteIndex;
+            midi_device_inc_writer(self);
             /*log_info(
              * "MIDI NOTE_OFF status %i (ch %i, opcode %i), ctrl %i, val %i",
              * status, channel+1, (status & 255)>>4, control, value);*/
@@ -214,7 +235,7 @@ void midiReceive(
                     0.0
                 );
             }
-            ++self->midiEventWriteIndex;
+            midi_device_inc_writer(self);
             /*log_info("MIDI NOTE_ON status %i (ch %i, opcode %i), ctrl %i, "
                     "val %i\n", status, channel+1, (status & 255)>>4, control,
                     value);*/
@@ -227,7 +248,7 @@ void midiReceive(
                 control,
                 value
             );
-            ++self->midiEventWriteIndex;
+            midi_device_inc_writer(self);
             /*log_info("MIDI CC status %i (ch %i, opcode %i), ctrl %i, "
                     "val %i\n", status, channel+1, (status & 255)>>4, control,
                     value);*/
@@ -239,20 +260,6 @@ void midiReceive(
             break;
     }
 
-    /* At this point we change the event timestamp so that its
-   real-time field contains the actual time at which it was
-   received and processed (i.e. now).  Then in the audio
-   callback we use that to calculate frame offset. */
-
-    gettimeofday(&tv, NULL);
-    self->midiEventBuffer[self->midiEventWriteIndex].tv_sec = tv.tv_sec;
-    self->midiEventBuffer[self->midiEventWriteIndex].tv_nsec =
-        tv.tv_usec * 1000L;
-
-    if(self->midiEventWriteIndex >= MIDI_EVENT_BUFFER_SIZE)
-    {
-        self->midiEventWriteIndex = 0;
-    }
 }
 
 void midiPoll(t_midi_device * self){
