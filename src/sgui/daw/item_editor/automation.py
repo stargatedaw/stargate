@@ -186,6 +186,7 @@ class AutomationEditor(AbstractItemEditor):
                         f_cc_start,
                         self.cc_num,
                         f_cc_val,
+                        shared.ITEM_EDITOR.get_midi_channel(),
                     )
                 )
             else:
@@ -196,6 +197,7 @@ class AutomationEditor(AbstractItemEditor):
                     sg_project.pitchbend(
                         f_cc_start,
                         f_cc_val,
+                        shared.ITEM_EDITOR.get_midi_channel(),
                     )
                 )
             self.selected_str = []
@@ -596,6 +598,7 @@ class AutomationEditorWidget:
                 f_pos_spinbox.value() - 1.0,
                 self.automation_viewer.cc_num,
                 f_value_spinbox.value(),
+                shared.ITEM_EDITOR.get_midi_channel(),
             )
             shared.CURRENT_ITEM.add_cc(f_cc)
 
@@ -688,6 +691,7 @@ class AutomationEditorWidget:
             f_pb = sg_project.pitchbend(
                 f_pos_spinbox.value() - 1.0,
                 f_value,
+                shared.ITEM_EDITOR.get_midi_channel(),
             )
             shared.CURRENT_ITEM.add_pb(f_pb)
 

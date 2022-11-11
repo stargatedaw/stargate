@@ -19,6 +19,7 @@ class note(abstract_midi_event):
         decay=0.,
         sustain=0.,
         release=0.,
+        channel=0,
     ):
         self.start = round(float(a_start), 6)
         self.length = round(float(a_length), 6)
@@ -29,6 +30,7 @@ class note(abstract_midi_event):
         self.sustain = round(float(sustain), 2)
         self.release = round(float(release), 2)
         self.note_num = int(a_note_number)
+        self.channel = int(channel)
         self.is_selected = False
         self.set_end()
 
@@ -130,6 +132,7 @@ class note(abstract_midi_event):
                 self.decay,
                 self.sustain,
                 self.release,
+                self.channel,
             )
         )
 
@@ -146,10 +149,11 @@ class note(abstract_midi_event):
 
 
 class cc(abstract_midi_event):
-    def __init__(self, a_start, a_cc_num, a_cc_val):
+    def __init__(self, a_start, a_cc_num, a_cc_val, channel):
         self.start = round(float(a_start), 6)
         self.cc_num = int(a_cc_num)
         self.cc_val = round(float(a_cc_val), 6)
+        self.channel = int(channel)
 
     def __eq__(self, other):
         return (
@@ -170,6 +174,7 @@ class cc(abstract_midi_event):
                 round(self.start, 6),
                 self.cc_num,
                 round(self.cc_val, 6),
+                self.channel,
             )
         )
 
@@ -188,9 +193,10 @@ class cc(abstract_midi_event):
 
 
 class pitchbend(abstract_midi_event):
-    def __init__(self, a_start, a_pb_val):
+    def __init__(self, a_start, a_pb_val, channel):
         self.start = round(float(a_start), 6)
         self.pb_val = round(float(a_pb_val), 6)
+        self.channel = int(channel)
 
     def __eq__(self, other):
         #TODO:  get rid of the pb_val comparison?
@@ -209,6 +215,7 @@ class pitchbend(abstract_midi_event):
                 "p",
                 self.start,
                 round(self.pb_val, 6),
+                self.channel,
             )
         )
 

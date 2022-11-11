@@ -851,7 +851,8 @@ void g_note_init(
     SGFLT attack,
     SGFLT decay,
     SGFLT sustain,
-    SGFLT release
+    SGFLT release,
+    int channel
 ){
     f_result->type = EVENT_NOTEON;
     f_result->length = a_length;
@@ -863,39 +864,49 @@ void g_note_init(
     f_result->decay = decay;
     f_result->sustain = sustain;
     f_result->release = release;
+    f_result->channel = channel;
 }
 
 void g_cc_init(
     t_seq_event * f_result,
     int a_cc_num,
     SGFLT a_cc_val,
-    SGFLT a_start
+    SGFLT a_start,
+    int channel
 ){
     f_result->type = EVENT_CONTROLLER;
     f_result->param = a_cc_num;
     f_result->value = a_cc_val;
     f_result->start = a_start;
+    f_result->channel = channel;
 }
 
-t_seq_event * g_cc_get(int a_cc_num, SGFLT a_cc_val, SGFLT a_start){
+t_seq_event * g_cc_get(
+    int a_cc_num,
+    SGFLT a_cc_val,
+    SGFLT a_start,
+    int channel
+){
     t_seq_event * f_result = (t_seq_event*)malloc(sizeof(t_seq_event));
-    g_cc_init(f_result, a_cc_num, a_cc_val, a_start);
+    g_cc_init(f_result, a_cc_num, a_cc_val, a_start, channel);
     return f_result;
 }
 
 void g_pitchbend_init(
     t_seq_event * f_result,
     SGFLT a_start,
-    SGFLT a_value
+    SGFLT a_value,
+    int channel
 ){
     f_result->type = EVENT_PITCHBEND;
     f_result->start = a_start;
     f_result->value = a_value;
+    f_result->channel = channel;
 }
 
-t_seq_event * g_pitchbend_get(SGFLT a_start, SGFLT a_value){
+t_seq_event * g_pitchbend_get(SGFLT a_start, SGFLT a_value, int channel){
     t_seq_event * f_result = (t_seq_event*)malloc(sizeof(t_seq_event));
-    g_pitchbend_init(f_result, a_start, a_value);
+    g_pitchbend_init(f_result, a_start, a_value, channel);
     return f_result;
 }
 

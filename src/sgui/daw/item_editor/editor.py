@@ -75,6 +75,25 @@ class ItemEditorWidget:
         self.zoom_hlayout.setContentsMargins(2, 0, 2, 0)
         #self.zoom_hlayout.setSpacing(0)
 
+        self.midi_channel_combobox = QComboBox()
+        self.midi_channel_combobox.setMinimumWidth(48)
+        self.midi_channel_combobox.setToolTip(
+            'The MIDI channel to view and edit note, CC and pitchbend events '
+            'for.  Use multiple MIDI channels to send different MIDI events '
+            'to different plugins in the same rack'
+        )
+        self.midi_channel_combobox.addItems(
+            [str(x) for x in range(1, 17)] + ['All']
+        )
+        self.zoom_hlayout.addWidget(QLabel('MIDI Channel'))
+        self.zoom_hlayout.addWidget(self.midi_channel_combobox)
+
+        def channel_changed(idx=None):
+            shared.global_open_items()
+            shared.ITEM_EDITOR.tab_changed()
+
+        self.midi_channel_combobox.currentIndexChanged.connect(channel_changed)
+
         self.snap_combobox = QComboBox()
         self.snap_combobox.setToolTip(
             'Snap to grid for audio items and MIDI notes.  Adding or moving '
@@ -130,6 +149,9 @@ class ItemEditorWidget:
         self.default_pb_start = 0
         self.default_pb_val = 0
         self.default_pb_quantize = 0
+
+    def get_midi_channel(self):
+        return self.midi_channel_combobox.currentIndex()
 
     def on_item_rename(self, a_val=None):
         name = str(self.item_name_lineedit.text()).strip()

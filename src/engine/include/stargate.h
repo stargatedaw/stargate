@@ -329,13 +329,15 @@ void v_sg_set_playback_pos(
 void g_pitchbend_init(
     t_seq_event * f_result,
     SGFLT a_start,
-    SGFLT a_value
+    SGFLT a_value,
+    int channel
 );
 void g_cc_init(
     t_seq_event * f_result,
     int a_cc_num,
     SGFLT a_cc_val,
-    SGFLT a_start
+    SGFLT a_start,
+    int channel
 );
 void g_note_init(
     t_seq_event* f_result,
@@ -347,7 +349,8 @@ void g_note_init(
     SGFLT attack,
     SGFLT decay,
     SGFLT sustain,
-    SGFLT release
+    SGFLT release,
+    int channel
 );
 void v_set_control_from_atm(
     t_seq_event *event,

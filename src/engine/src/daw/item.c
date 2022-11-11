@@ -81,21 +81,25 @@ void g_daw_item_get(t_daw* self, int a_uid){
             SGFLT decay = 0.0;
             SGFLT sustain = 0.0;
             SGFLT release = 0.0;
+            int channel = 0;
             // TODO: Stargate v2: Remove if statement
             if(!f_current_string->eol){
                 v_iterate_2d_char_array(f_current_string);
                 pan = atof(f_current_string->current_str);
-            }
-            // TODO: Stargate v2: Remove if statement
-            if(!f_current_string->eol){
-                v_iterate_2d_char_array(f_current_string);
-                attack = atof(f_current_string->current_str);
-                v_iterate_2d_char_array(f_current_string);
-                decay = atof(f_current_string->current_str);
-                v_iterate_2d_char_array(f_current_string);
-                sustain = atof(f_current_string->current_str);
-                v_iterate_2d_char_array(f_current_string);
-                release = atof(f_current_string->current_str);
+                if(!f_current_string->eol){
+                    v_iterate_2d_char_array(f_current_string);
+                    attack = atof(f_current_string->current_str);
+                    v_iterate_2d_char_array(f_current_string);
+                    decay = atof(f_current_string->current_str);
+                    v_iterate_2d_char_array(f_current_string);
+                    sustain = atof(f_current_string->current_str);
+                    v_iterate_2d_char_array(f_current_string);
+                    release = atof(f_current_string->current_str);
+                }
+                if(!f_current_string->eol){
+                    v_iterate_2d_char_array(f_current_string);
+                    channel = atoi(f_current_string->current_str);
+                }
             }
             g_note_init(
                 &f_result->events[f_event_pos],
@@ -107,7 +111,8 @@ void g_daw_item_get(t_daw* self, int a_uid){
                 attack,
                 decay,
                 sustain,
-                release
+                release,
+                channel
             );
             ++f_event_pos;
         }
@@ -119,12 +124,18 @@ void g_daw_item_get(t_daw* self, int a_uid){
             int f_cc_num = atoi(f_current_string->current_str);
             v_iterate_2d_char_array(f_current_string);
             SGFLT f_cc_val = atof(f_current_string->current_str);
+            int channel = 0;
+            if(!f_current_string->eol){
+                v_iterate_2d_char_array(f_current_string);
+                channel = atoi(f_current_string->current_str);
+            }
 
             g_cc_init(
                 &f_result->events[f_event_pos],
                 f_cc_num,
                 f_cc_val,
-                f_start
+                f_start,
+                channel
             );
             ++f_event_pos;
         }
@@ -134,11 +145,17 @@ void g_daw_item_get(t_daw* self, int a_uid){
             SGFLT f_start = atof(f_current_string->current_str);
             v_iterate_2d_char_array(f_current_string);
             SGFLT f_pb_val = atof(f_current_string->current_str) * 8192.0f;
+            int channel = 0;
+            if(!f_current_string->eol){
+                v_iterate_2d_char_array(f_current_string);
+                channel = atoi(f_current_string->current_str);
+            }
 
             g_pitchbend_init(
                 &f_result->events[f_event_pos],
                 f_start,
-                f_pb_val
+                f_pb_val,
+                channel
             );
             ++f_event_pos;
         }

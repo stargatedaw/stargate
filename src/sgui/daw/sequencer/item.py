@@ -224,7 +224,11 @@ class SequencerItem(QGraphicsRectItem):
                     break
         shared.MAIN_WINDOW.setCurrentIndex(shared.TAB_ITEM_EDITOR)
         #Ensure that notes are visible
-        if current_index == 1 and shared.CURRENT_ITEM.notes:
+        if (
+            current_index == 1
+            and
+            shared.PIANO_ROLL_EDITOR.note_items
+        ):
             height = shared.PIANO_ROLL_EDITOR.geometry().height()
             average = sum(
                 x.pos().y()

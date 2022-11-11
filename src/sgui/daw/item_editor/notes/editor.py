@@ -174,6 +174,7 @@ class PianoRollEditor(AbstractItemEditor):
                 f_note.note_item.decay,
                 f_note.note_item.sustain,
                 f_note.note_item.release,
+                f_note.note_item.channel,
             )
             shared.CURRENT_ITEM.add_note(f_new_note_item, False)
             self.selected_note_strings.append(str(f_new_note_item))
@@ -231,6 +232,8 @@ class PianoRollEditor(AbstractItemEditor):
                 releases = [x.note_item.release for x in f_dict[k]]
                 release = round(sum(releases) / len(releases), 2)
 
+                channel = f_dict[k][0].channel
+
                 LOG.info(str(f_max))
                 LOG.info(str(f_min))
                 f_length = f_max - f_min
@@ -247,6 +250,7 @@ class PianoRollEditor(AbstractItemEditor):
                     decay,
                     sustain,
                     release,
+                    channel,
                 )
                 LOG.info(str(f_new_note))
                 f_result.append(f_new_note)
@@ -381,6 +385,7 @@ class PianoRollEditor(AbstractItemEditor):
                 f_note = int(
                     shared.PIANO_ROLL_NOTE_COUNT - ((f_pos_y -
                     _shared.PIANO_ROLL_HEADER_HEIGHT) / self.note_height)) + 1
+                channel = shared.ITEM_EDITOR.get_midi_channel()
                 if shared.PIANO_ROLL_SNAP:
                     f_beat = (
                         int(
@@ -393,6 +398,7 @@ class PianoRollEditor(AbstractItemEditor):
                         shared.LAST_NOTE_RESIZE,
                         f_note,
                         self.get_vel(f_beat),
+                        channel=channel,
                     )
                 else:
                     f_beat = (
@@ -403,6 +409,7 @@ class PianoRollEditor(AbstractItemEditor):
                         0.25,
                         f_note,
                         self.get_vel(f_beat),
+                        channel=channel,
                     )
                 shared.ITEM_EDITOR.add_note(f_note_item)
                 _shared.SELECTED_PIANO_NOTE = f_note_item
@@ -514,9 +521,12 @@ class PianoRollEditor(AbstractItemEditor):
                 f_key.setPos(
                     0, (self.note_height * j) + (self.octave_height * (i - 1)))
 
-                f_key.setToolTip("{} - {}hz - MIDI note #{}".format(
+                tooltip = "{} - {}hz - MIDI note #{}".format(
                     util.note_num_to_string(f_note_num),
-                    round(pitch_to_hz(f_note_num)), f_note_num))
+                    round(pitch_to_hz(f_note_num)),
+                    f_note_num,
+                )
+                f_key.setToolTip(tooltip)
                 f_note_num += 1
                 if j == 12:
                     f_label = get_font().QGraphicsSimpleTextItem("C{}".format(
@@ -695,8 +705,11 @@ class PianoRollEditor(AbstractItemEditor):
             1.0) + shared.PIANO_KEYS_WIDTH
         self.setUpdatesEnabled(False)
         self.clear_drawn_items()
+        channel = shared.ITEM_EDITOR.get_midi_channel()
         if shared.CURRENT_ITEM:
             for f_note in shared.CURRENT_ITEM.notes:
+                if f_note.channel != channel:
+                    continue
                 f_note_item = self.draw_note(f_note)
                 f_note_item.resize_last_mouse_pos = \
                     f_note_item.scenePos().x()
@@ -714,6 +727,8 @@ class PianoRollEditor(AbstractItemEditor):
                     shared.ITEM_REF_POS[0]
                 )
                 for f_note in shared.LAST_ITEM.notes:
+                    if f_note.channel != channel:
+                        continue
                     f_note_item = self.draw_note(
                         f_note,
                         False,
