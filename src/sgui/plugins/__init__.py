@@ -413,6 +413,9 @@ class AbstractPluginSettings:
             self.power_checkbox.clicked.connect(self.on_power_changed)
             self.layout.addWidget(self.power_checkbox)
 
+    def get_midi_channel(self):
+        return 0
+
     def reset_routing(self, index):
         pass
 
@@ -639,6 +642,9 @@ class PluginSettingsMain(AbstractPluginSettings):
         self.layout.addWidget(self.hide_checkbox)
         self.hide_checkbox.setEnabled(False)
         self.hide_checkbox.stateChanged.connect(self.hide_checkbox_changed)
+
+    def get_midi_channel(self):
+        return self.midi_channel_combobox.currentIndex()
 
     def reset_routing(self, index):
         self.plugin_label.setText(f"Plugin {index + 1: <2}")
@@ -950,8 +956,16 @@ class PluginRack:
             ),
         )
 
-    def get_plugin_uids(self):
-        return [x.plugin_uid for x in self.plugins if x.plugin_uid != -1]
+    def get_plugin_uids(self, channel=None):
+        return [
+            (x.plugin_uid, x.get_midi_channel())
+            for x in self.plugins
+            if (
+                channel is None
+                or
+                x.get_midi_channel() == channel
+            ) and x.plugin_uid != -1
+        ]
 
     def set_plugin_order(self):
         f_labels = [
@@ -1074,8 +1088,11 @@ class MixerChannel:
                     name += ": SC"
                 self.output_labels[k].setText(name)
 
-    def get_plugin_uids(self):
-        return [x.plugin_uid for x in self.sends.values()]
+    def get_plugin_uids(self, channel=None):
+        return [
+            (x.plugin_uid, x.get_midi_channel())
+            for x in self.sends.values()
+        ]
 
     def add_plugin(self, a_index):
         plugin = PluginSettingsMixer(

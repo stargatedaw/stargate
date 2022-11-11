@@ -560,8 +560,10 @@ class MainWindow(QTabWidget):
             elif a_key == "peak":
                 global_update_peak_meters(a_val)
             elif a_key == "cc":
-                f_track_num, f_cc, f_val = a_val.split("|")
-                f_cc_dict[(f_track_num, f_cc)] = f_val
+                f_track_num, f_cc, f_val, channel = (
+                    int(x) for x in a_val.split("|")
+                )
+                f_cc_dict[(f_track_num, f_cc, channel)] = f_val
             elif a_key == "ui":
                 f_plugin_uid, f_name, f_val = a_val.split("|", 2)
                 f_ui_dict[(f_plugin_uid, f_name)] = f_val
@@ -592,7 +594,7 @@ class MainWindow(QTabWidget):
                     float(f_val),
                 )
         for k, f_val in f_cc_dict.items():
-            f_track_num, f_cc = (int(x) for x in k)
+            f_track_num, f_cc, channel = (int(x) for x in k)
             uids = []
             if f_track_num in shared.PLUGIN_RACK.plugin_racks:
                 rack = shared.PLUGIN_RACK.plugin_racks[f_track_num]
@@ -600,10 +602,14 @@ class MainWindow(QTabWidget):
             if f_track_num in shared.MIXER_WIDGET.tracks:
                 track = shared.MIXER_WIDGET.tracks[f_track_num]
                 uids.extend(track.get_plugin_uids())
-            for f_plugin_uid in uids:
-                if f_plugin_uid in glbl_shared.PLUGIN_UI_DICT:
-                    glbl_shared.PLUGIN_UI_DICT[
-                        f_plugin_uid].set_cc_val(f_cc, f_val)
+            for f_plugin_uid, plugin_channel in uids:
+                if (
+                    f_plugin_uid in glbl_shared.PLUGIN_UI_DICT
+                    and
+                    plugin_channel == channel
+                ):
+                    plugin =  glbl_shared.PLUGIN_UI_DICT[f_plugin_uid]
+                    plugin.set_cc_val(f_cc, f_val)
 
     def prepare_to_quit(self):
         try:

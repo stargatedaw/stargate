@@ -378,10 +378,11 @@ void v_set_control_from_cc(
         sg_snprintf(
             f_track->osc_cursor_message,
             128,
-            "%i|%i|%i",
+            "%i|%i|%i|%i",
             f_track->track_num,
             event->param,
-            (int)event->value
+            (int)event->value,
+            event->channel
         );
         v_queue_osc_message("cc", f_track->osc_cursor_message);
     }

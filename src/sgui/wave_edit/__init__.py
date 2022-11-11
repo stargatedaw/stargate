@@ -545,8 +545,8 @@ class MainWindow(QScrollArea):
             elif a_key == "peak":
                 global_update_peak_meters(a_val)
             elif a_key == "cc":
-                f_track_num, f_cc, f_val = a_val.split("|")
-                f_cc_dict[(f_track_num, f_cc)] = f_val
+                f_track_num, f_cc, f_val, channel = a_val.split("|")
+                f_cc_dict[(f_track_num, f_cc, channel)] = f_val
             elif a_key == "ui":
                 f_plugin_uid, f_name, f_val = a_val.split("|", 2)
                 f_ui_dict[(f_plugin_uid, f_name)] = f_val
@@ -583,14 +583,12 @@ class MainWindow(QScrollArea):
                 glbl_shared.PLUGIN_UI_DICT[f_plugin_uid].set_control_val(
                     f_port, float(f_val))
         for k, f_val in f_cc_dict.items():
-            f_track_num, f_cc = (int(x) for x in k)
-            for f_plugin_uid in \
-            TRACK_PANEL.tracks[f_track_num].get_plugin_uids():
+            f_track_num, f_cc, channel = (int(x) for x in k)
+            plugin_uids = TRACK_PANEL.tracks[f_track_num].get_plugin_uids()
+            for f_plugin_uid, plugin_channel in plugin_uids:
                 if f_plugin_uid in glbl_shared.PLUGIN_UI_DICT:
-                    glbl_shared.PLUGIN_UI_DICT[f_plugin_uid].set_cc_val(
-                        f_cc,
-                        f_val,
-                    )
+                    plugin = glbl_shared.PLUGIN_UI_DICT[f_plugin_uid]
+                    plugin.set_cc_val(f_cc, f_val)
 
     def prepare_to_quit(self):
         WAVE_EDITOR.sample_graph.scene.clear()
