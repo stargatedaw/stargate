@@ -49,4 +49,5 @@ void v_we_open_project();
 void v_we_osc_send(t_osc_send_data * a_buffers);
 void v_we_update_audio_inputs();
 void v_we_configure(const char* a_key, const char* a_value);
+void we_track_reload();
 #endif /* WAVE_EDIT_H */

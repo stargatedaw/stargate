@@ -240,13 +240,23 @@ void v_set_we_file(t_wave_edit * self, const char * a_uid){
     }
 }
 
-void v_we_open_tracks(){
-    v_open_track(
-        wave_edit->track_pool[0],
-        wave_edit->tracks_folder,
-        0
+void we_track_reload(){
+    t_track* old = wave_edit->track_pool[0];
+    t_track* new = g_track_get(
+        0,
+        STARGATE->thread_storage[0].sample_rate
     );
+    v_open_track(new, wave_edit->tracks_folder, 0);
+
+    pthread_spin_lock(&STARGATE->main_lock);
+    wave_edit->track_pool[0] = new;
+    pthread_spin_unlock(&STARGATE->main_lock);
+
+    if(old){
+        track_free(old);
+    }
 }
+
 
 void v_we_open_project(){
     sg_snprintf(
@@ -265,7 +275,7 @@ void v_we_open_project(){
         wave_edit->project_folder,
         PATH_SEP
     );
-    v_we_open_tracks();
+    we_track_reload();
 }
 
 void v_set_wave_editor_item(
@@ -549,7 +559,7 @@ void v_we_configure(const char* a_key, const char* a_value){
         );
         v_we_set_playback_mode(wave_edit, f_mode, 1);
     } else if(!strcmp(a_key, WN_CONFIGURE_KEY_PLUGIN_INDEX)){
-        v_we_open_tracks();
+        we_track_reload();
     } else {
         log_info(
             "Unknown configure message key: %s, value %s",

@@ -6,10 +6,6 @@
 #include "wave_edit.h"
 
 
-void v_open_tracks(){
-    v_we_open_tracks();
-}
-
 void v_open_project(const char* a_project_folder, int a_first_load){
 #if SG_OS == _OS_LINUX
     struct timespec f_start, f_finish;
