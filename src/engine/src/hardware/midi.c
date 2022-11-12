@@ -95,17 +95,33 @@ NO_OPTIMIZATION int midiDeviceInit(
     self->f_device_id = pmNoDevice;
     self->name[0] = '\0';
     sg_snprintf(self->name, 256, "%s", f_midi_device_name);
+    char device_name[1024] = {};
+    int j;
+    char* pm_name;
 
     if(strcmp(f_midi_device_name, "None"))
     {
         int f_i;
         int f_count = Pm_CountDevices();
 
-        for(f_i = 0; f_i < f_count; ++f_i)
-        {
+        for(f_i = 0; f_i < f_count; ++f_i){
             const PmDeviceInfo * f_device = Pm_GetDeviceInfo(f_i);
-            if(f_device->input && !strcmp(f_device->name, f_midi_device_name))
-            {
+            j = 0;
+            pm_name = (char*)f_device->name;
+            // Replace pipe characters, which would cause issues parsing
+            // the config file.  The UI also replaces pipe characters when
+            // creating the file
+            while(1){
+                if(*pm_name != '|'){
+                    device_name[j] = *pm_name;
+                    ++j;
+                }
+                if(*pm_name == '\0' || j >= 1000){
+                    break;
+                }
+                ++pm_name;
+            }
+            if(f_device->input && !strcmp(device_name, f_midi_device_name)){
                 self->f_device_id = f_i;
                 break;
             }

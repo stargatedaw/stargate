@@ -503,6 +503,7 @@ class HardwareDialog:
     #                    loop, f_midi_device_name, f_midi_device.contents.input,
     #                    f_midi_device.contents.output,
     #                    f_midi_device.contents.opened))
+                f_midi_device_name = f_midi_device_name.replace('|', '')
                 if f_midi_device.contents.input == 1:
                     f_checkbox = QCheckBox(f_midi_device_name)
                     f_checkbox.setToolTip(
