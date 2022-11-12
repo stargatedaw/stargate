@@ -270,12 +270,13 @@ void v_daw_process_external_midi(
                 sg_snprintf(
                     f_osc_msg,
                     1024,
-                    "on|%f|%i|%i|%i|%ld",
+                    "on|%f|%i|%i|%i|%ld|%i",
                     f_beat,
                     a_track->track_num,
                     events[f_i2].note,
                     events[f_i2].velocity,
-                    a_ts->current_sample + events[f_i2].tick
+                    a_ts->current_sample + events[f_i2].tick,
+                    events[f_i2].channel
                 );
                 v_queue_osc_message("mrec", f_osc_msg);
             }
@@ -300,11 +301,12 @@ void v_daw_process_external_midi(
                 sg_snprintf(
                     f_osc_msg,
                     1024,
-                    "off|%f|%i|%i|%ld",
+                    "off|%f|%i|%i|%ld|%i",
                     f_beat,
                     a_track->track_num,
                     events[f_i2].note,
-                    a_ts->current_sample + events[f_i2].tick
+                    a_ts->current_sample + events[f_i2].tick,
+                    events[f_i2].channel
                 );
                 v_queue_osc_message("mrec", f_osc_msg);
             }
@@ -328,11 +330,12 @@ void v_daw_process_external_midi(
                 sg_snprintf(
                     f_osc_msg,
                     1024,
-                    "pb|%f|%i|%f|%ld",
+                    "pb|%f|%i|%f|%ld|%i",
                     f_beat,
                     a_track->track_num,
                     events[f_i2].value,
-                    a_ts->current_sample + events[f_i2].tick
+                    a_ts->current_sample + events[f_i2].tick,
+                    events[f_i2].channel
                 );
                 v_queue_osc_message("mrec", f_osc_msg);
             }
@@ -363,12 +366,13 @@ void v_daw_process_external_midi(
                 sg_snprintf(
                     f_osc_msg,
                     1024,
-                    "cc|%f|%i|%i|%f|%ld",
+                    "cc|%f|%i|%i|%f|%ld|%i",
                     f_beat,
                     a_track->track_num,
                     controller,
                     events[f_i2].value,
-                    a_ts->current_sample + events[f_i2].tick
+                    a_ts->current_sample + events[f_i2].tick,
+                    events[f_i2].channel
                 );
                 v_queue_osc_message("mrec", f_osc_msg);
             }

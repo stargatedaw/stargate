@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from sglib import constants
 from sglib.log import LOG
 from sglib.math import clip_value
@@ -81,7 +83,7 @@ def save_recorded_items(
     LOG.info("\n".join(str(x) for x in f_mrec_items))
     f_item_length = a_end_beat - a_start_beat
     f_sequencer = project.get_sequence()
-    f_note_tracker = {}
+    f_note_tracker = defaultdict(lambda: {})
     f_items_to_save = {}
     project.rec_item = None
     f_item_name = str(a_item_name)
@@ -159,8 +161,14 @@ def save_recorded_items(
         else:
             new_item(a_track_num)
 
-    def set_note_length(a_track_num, f_note_num, f_end_beat, f_tick):
-        f_note = f_note_tracker[a_track_num][f_note_num]
+    def set_note_length(
+        a_track_num,
+        channel,
+        f_note_num,
+        f_end_beat,
+        f_tick,
+    ):
+        f_note = f_note_tracker[(a_track_num, channel)][f_note_num]
         f_length = f_end_beat - f_note.start
         if f_length > 0.0:
             f_note.set_length(f_length)
@@ -170,7 +178,8 @@ def save_recorded_items(
             f_sample_count = f_tick - f_note.start_sample
             f_seconds = float(f_sample_count) / float(a_sr)
             f_note.set_length(f_seconds * f_beats_per_second)
-        LOG.info(f_note_tracker[a_track_num].pop(f_note_num))
+        old_note = f_note_tracker[(a_track_num, channel)].pop(f_note_num)
+        LOG.info(f'Note off: {old_note}')
 
     new_take()
 
@@ -179,8 +188,6 @@ def save_recorded_items(
         f_track = int(f_track)
         f_beat = float(f_beat)
         f_beat -= a_start_beat
-        if not f_track in f_note_tracker:
-            f_note_tracker[f_track] = {}
 
         f_is_looping = f_type == "loop"
 
@@ -195,34 +202,54 @@ def save_recorded_items(
         project.rec_item = project.rec_take[f_track]
 
         if f_type == "on":
-            f_note_num, f_velocity, f_tick = (int(x) for x in f_event[3:])
+            (
+                f_note_num,
+                f_velocity,
+                f_tick,
+                channel,
+            ) = (int(x) for x in f_event[3:])
             LOG.info("New note: {} {}".format(f_beat, f_note_num))
-            f_note = note(f_beat, 1.0, f_note_num, f_velocity)
+            f_note = note(f_beat, 1.0, f_note_num, f_velocity, channel=channel)
             f_note.start_sample = f_tick
             if f_note_num in f_note_tracker[f_track]:
                 LOG.info("Terminating note early: {}".format(
                     (f_track, f_note_num, f_tick)))
                 set_note_length(
-                    f_track, f_note_num, f_beat, f_tick)
-            f_note_tracker[f_track][f_note_num] = f_note
+                    f_track,
+                    channel,
+                    f_note_num,
+                    f_beat,
+                    f_tick,
+                )
+            f_note_tracker[(f_track, channel)][f_note_num] = f_note
+            LOG.info(f'Note on: {f_note}')
             project.rec_item.add_note(f_note, a_check=False)
         elif f_type == "off":
-            f_note_num, f_tick = (int(x) for x in f_event[3:])
-            if f_note_num in f_note_tracker[f_track]:
+            f_note_num, f_tick, channel = (int(x) for x in f_event[3:])
+            if f_note_num in f_note_tracker[(f_track, channel)]:
                 set_note_length(
-                    f_track, f_note_num, f_beat, f_tick)
+                    f_track,
+                    channel,
+                    f_note_num,
+                    f_beat,
+                    f_tick,
+                )
             else:
                 LOG.error("Error:  note event not in note tracker")
         elif f_type == "cc":
-            f_port, f_val, f_tick = f_event[3:]
+            f_port, f_val, f_tick, channel = f_event[3:]
             f_port = int(f_port)
             f_val = float(f_val)
-            f_cc = cc(f_beat, f_port, f_val)
+            channel = int(channel)
+            f_cc = cc(f_beat, f_port, f_val, channel)
+            LOG.info(f'New CC: {f_cc}')
             project.rec_item.add_cc(f_cc)
         elif f_type == "pb":
             f_val = float(f_event[3]) / 8192.0
             f_val = clip_value(f_val, -1.0, 1.0)
-            f_pb = pitchbend(f_beat, f_val)
+            channel = int(f_event[5])
+            f_pb = pitchbend(f_beat, f_val, channel)
+            LOG.info(f'New pitchbend: {f_pb}')
             project.rec_item.add_pb(f_pb)
         else:
             LOG.error("Invalid mrec event type {}".format(f_type))
