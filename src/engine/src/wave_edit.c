@@ -549,33 +549,13 @@ void v_we_configure(const char* a_key, const char* a_value){
         );
         v_we_set_playback_mode(wave_edit, f_mode, 1);
     } else if(!strcmp(a_key, WN_CONFIGURE_KEY_PLUGIN_INDEX)){
-        t_1d_char_array * f_val_arr = c_split_str(
-            a_value,
-            '|',
-            5,
-            TINY_STRING
-        );
-        int f_track_num = atoi(f_val_arr->array[0]);
-        int f_index = atoi(f_val_arr->array[1]);
-        int f_plugin_index = atoi(f_val_arr->array[2]);
-        int f_plugin_uid = atoi(f_val_arr->array[3]);
-        int f_power = atoi(f_val_arr->array[4]);
-
-        t_track * f_track = wave_edit->track_pool[f_track_num];
-
-        v_set_plugin_index(
-            f_track,
-            f_index,
-            f_plugin_index,
-            f_plugin_uid,
-            f_power,
-            0,
-            1
-        );
-
-        g_free_1d_char_array(f_val_arr);
+        v_we_open_tracks();
     } else {
-        log_info("Unknown configure message key: %s, value %s", a_key, a_value);
+        log_info(
+            "Unknown configure message key: %s, value %s",
+            a_key,
+            a_value
+        );
     }
     pthread_mutex_unlock(&CONFIG_LOCK);
 }
