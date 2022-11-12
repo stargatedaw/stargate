@@ -35,7 +35,7 @@ class MIDIRoutes:
         for f_line in a_str.split("\n"):
             if f_line == "\\":
                 break
-            f_routings.append(MIDIRoute(*f_line.split("|", 2)))
+            f_routings.append(MIDIRoute(*f_line.split("|")))
         return MIDIRoutes(f_routings)
 
 

@@ -41,8 +41,10 @@ NO_OPTIMIZATION void open_midi_devices(
 
         if(f_device_result == 0){
             log_info(
-                "Initialized MIDI device '%s'",
-                f_midi_device_name
+                "Initialized MIDI device %i '%s' as device %i",
+                i,
+                f_midi_device_name,
+                MIDI_DEVICES.count
             );
         } else if(f_device_result == 1){
             log_error(

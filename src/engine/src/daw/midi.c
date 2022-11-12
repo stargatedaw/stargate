@@ -12,6 +12,7 @@ void v_daw_set_midi_devices(){
     int f_i, f_i2;
     int found_device;
     t_midi_device * f_device;
+    char name[1024];
 
     if(!STARGATE->midi_devices){
         return;
@@ -53,6 +54,8 @@ void v_daw_set_midi_devices(){
         int f_track_num = atoi(f_current_string->current_str);
 
         v_iterate_2d_char_array(f_current_string);  // name
+        strncpy(name, f_current_string->current_str, 1023);
+        name[1023] = '\0';
 
         int channel = 0;
         // TODO Stargate v2: Remove if statement
@@ -66,7 +69,7 @@ void v_daw_set_midi_devices(){
         found_device = 0;
         for(f_i2 = 0; f_i2 < STARGATE->midi_devices->count; ++f_i2){
             f_device = &STARGATE->midi_devices->devices[f_i2];
-            if(!strcmp(f_current_string->current_str, f_device->name)){
+            if(!strcmp(name, f_device->name)){
                 v_daw_set_midi_device(f_on, f_i2, f_track_num, channel);
                 found_device = 1;
                 break;
@@ -96,6 +99,13 @@ void v_daw_set_midi_device(
     int a_output,
     int channel
 ){
+    log_info(
+        "v_daw_set_midi_device: %i %i %i %i",
+        a_on,
+        a_device,
+        a_output,
+        channel
+    );
     t_daw * self = DAW;
     /* Interim logic to get a minimum viable product working
      * TODO:  Make it modular and able to support multiple devices
@@ -117,6 +127,10 @@ void v_daw_set_midi_device(
             f_route->output_track != a_output
         )
     ){
+        log_info(
+            "v_daw_set_midi_device: Disabling midi device on track %i",
+            f_track_old->track_num
+        );
         f_track_old->extern_midi = 0;
         f_track_old->extern_midi_count = &ZERO;
         f_track_old->midi_device = 0;
@@ -127,6 +141,10 @@ void v_daw_set_midi_device(
     f_route->channel = channel;
 
     if(f_route->on && STARGATE->midi_devices->devices[a_device].loaded){
+        log_info(
+            "v_daw_set_midi_device: Enabling midi device on track %i",
+            f_track_new->track_num
+        );
         f_track_new->midi_device = &STARGATE->midi_devices->devices[a_device];
         f_track_new->extern_midi =
             STARGATE->midi_devices->devices[a_device].instanceEventBuffers;
@@ -146,6 +164,10 @@ void v_daw_set_midi_device(
         f_track_new->extern_midi_count =
             &STARGATE->midi_devices->devices[a_device].instanceEventCounts;
     } else {
+        log_info(
+            "v_daw_set_midi_device: Disabling midi device on track %i",
+            f_track_new->track_num
+        );
         f_track_new->extern_midi = 0;
         f_track_new->extern_midi_count = &ZERO;
         f_track_new->midi_device = 0;

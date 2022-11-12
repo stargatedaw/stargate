@@ -148,6 +148,12 @@ class MidiDevicesDialog:
 
     def set_routings(self):
         f_routings = constants.DAW_PROJECT.get_midi_routing()
+        LOG.info('set_routings: routings {}'.format(
+            [x.__dict__ for x in f_routings.routings]
+        ))
+        LOG.info('set_routings: device dict {}'.format(
+            {k:v.__dict__ for k, v in self.devices_dict.items()}
+        ))
         for f_routing in f_routings.routings:
             if f_routing.device_name in self.devices_dict:
                 self.devices_dict[f_routing.device_name].set_routing(f_routing)
