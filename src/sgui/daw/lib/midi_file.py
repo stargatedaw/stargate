@@ -16,23 +16,53 @@ class DawMidiFile:
         a_file,
         a_project,
     ):
-        f_item_list = load_midi_file(a_file)
+        self.item_list = load_midi_file(a_file)
+        self.project = a_project
         self.result_dict = {}
 
-        for f_event in f_item_list:
+    def single_item(self):
+        uid = self.project.create_empty_item()
+        item = self.project.get_item_by_uid(uid)
+        for f_event in self.item_list:
             if f_event.length >= _shared.min_note_length:
-                f_velocity = f_event.ev.velocity
-                f_beat = f_event.start_beat
-                LOG.info("f_beat : {}".format(f_beat))
-                f_pitch = f_event.ev.note
-                f_length = f_event.length
-                f_channel = f_event.ev.channel
-                f_key = int(f_channel)
+                velocity = f_event.ev.velocity
+                beat = f_event.start_beat
+                LOG.info(f"beat : {beat}")
+                pitch = f_event.ev.note
+                length = f_event.length
+                channel = f_event.ev.channel
+                midi_note = note(
+                    beat,
+                    length,
+                    pitch,
+                    velocity,
+                    channel=channel,
+                )
+                item.add_note(midi_note) #, a_check=False)
+            else:
+                LOG.warning(
+                    "Ignoring note event with <= {} length".format(
+                        _shared.min_note_length,
+                    )
+                )
+        self.project.save_item_by_uid(uid, item)
+        self.result_dict[0] = item
+
+    def multi_item(self):
+        for f_event in self.item_list:
+            if f_event.length >= _shared.min_note_length:
+                velocity = f_event.ev.velocity
+                beat = f_event.start_beat
+                LOG.info(f"beat : {beat}")
+                pitch = f_event.ev.note
+                length = f_event.length
+                channel = f_event.ev.channel
+                key = int(channel)
                 if not f_key in self.result_dict:
-                    f_uid = a_project.create_empty_item()
-                    self.result_dict[f_key] = a_project.get_item_by_uid(f_uid)
-                f_note = note(f_beat, f_length, f_pitch, f_velocity)
-                self.result_dict[f_key].add_note(f_note) #, a_check=False)
+                    uid = self.project.create_empty_item()
+                    self.result_dict[key] = self.project.get_item_by_uid(uid)
+                f_note = note(beat, length, pitch, velocity)
+                self.result_dict[key].add_note(f_note) #, a_check=False)
             else:
                 LOG.warning(
                     "Ignoring note event with <= {} length".format(
@@ -40,10 +70,6 @@ class DawMidiFile:
                     )
                 )
         for f_item in self.result_dict.values():
-            a_project.save_item_by_uid(f_item.uid, f_item)
-        self.channel_count = self.get_channel_count()
-
-    def get_channel_count(self):
-        return max(self.result_dict) if self.result_dict else 0
+            self.project.save_item_by_uid(f_item.uid, f_item)
 
 

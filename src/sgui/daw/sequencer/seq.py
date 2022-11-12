@@ -584,16 +584,51 @@ class ItemSequencer(QGraphicsView):
         return False
 
     def sceneDropEvent(self, a_event):
+        LOG.info(
+            f'sceneDropEvent: {shared.AUDIO_ITEMS_TO_DROP} '
+            f'{shared.MIDI_FILES_TO_DROP}'
+        )
         f_pos = a_event.scenePos()
         if shared.AUDIO_ITEMS_TO_DROP:
             self.add_items(f_pos, shared.AUDIO_ITEMS_TO_DROP)
         elif shared.MIDI_FILES_TO_DROP:
-            f_midi_path = shared.MIDI_FILES_TO_DROP[0]
-            f_beat, f_lane_num = self.pos_to_beat_and_track(f_pos)
-            f_midi = DawMidiFile(f_midi_path, constants.DAW_PROJECT)
-            constants.DAW_PROJECT.import_midi_file(f_midi, f_beat, f_lane_num)
-            constants.DAW_PROJECT.commit("Import MIDI file")
-            shared.SEQ_WIDGET.open_sequence()
+            def _finish(multi):
+                f_midi_path = shared.MIDI_FILES_TO_DROP[0]
+                f_beat, f_lane_num = self.pos_to_beat_and_track(f_pos)
+                f_midi = DawMidiFile(f_midi_path, constants.DAW_PROJECT)
+                if multi:
+                    f_midi.multi_item()
+                else:
+                    f_midi.single_item()
+                constants.DAW_PROJECT.import_midi_file(
+                    f_midi,
+                    f_beat,
+                    f_lane_num,
+                )
+                constants.DAW_PROJECT.commit("Import MIDI file")
+                shared.SEQ_WIDGET.open_sequence()
+
+            menu = QMenu()
+
+            action = QAction('Import all channels to one item', menu)
+            menu.addAction(action)
+            action.setToolTip(
+                'If more than one MIDI channel, import as a single item '
+                'containing multiple MIDI channels'
+            )
+            action.triggered.connect(_finish)
+
+            action = QAction('Import each channel to one track', menu)
+            menu.addAction(action)
+            action.setToolTip(
+                'If more than one MIDI channel, import each channel as '
+                'a different item on a different track with one MIDI channel '
+                'per item, remapped to channel 1'
+            )
+            action.triggered.connect(_finish)
+            menu.exec(QCursor.pos())
+            LOG.info('menu.exec()')
+
 
     def quantize(self, a_beat):
         if _shared.SEQ_QUANTIZE:
