@@ -88,6 +88,7 @@ class ItemEditorWidget:
         self.zoom_hlayout.addWidget(self.midi_channel_combobox)
 
         def channel_changed(idx=None):
+            shared.PIANO_ROLL_EDITOR.selected_note_strings = []
             shared.global_open_items()
             shared.ITEM_EDITOR.tab_changed()
 
