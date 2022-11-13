@@ -478,6 +478,16 @@ class QDialog(QDialog):
 
 orig_QMessageBox = QMessageBox
 
+# Required to support older versions of PyQt5.  Only added the ones that
+# are used.  Previously the entire StandardButton enum was iterated, but
+# that is not possible on the sip.enumtype old versions used
+_QMESSAGEBOX_STANDARDBUTTON_NAMES = {
+    QMessageBox.StandardButton.Ok: "OK",
+    QMessageBox.StandardButton.Cancel: "Cancel",
+    QMessageBox.StandardButton.Yes: "Yes",
+    QMessageBox.StandardButton.No: "No",
+}
+
 class _QMessageBox:
     StandardButton = orig_QMessageBox.StandardButton
 
@@ -498,11 +508,11 @@ class _QMessageBox:
             else:
                answer.append(_answer)
             dialog.close()
-        def add_button(_enum):
+        def add_button(_int, name):
             # Needs to be a separate function so that the value of
             # _enum is in the stack frame
-            button = QPushButton(_enum.name)
-            button.pressed.connect(lambda: close(_enum))
+            button = QPushButton(name)
+            button.pressed.connect(lambda: close(_int))
             buttons_layout.addWidget(button)
         dialog = QDialog()
         layout = QVBoxLayout(dialog)
@@ -510,12 +520,9 @@ class _QMessageBox:
         layout.addWidget(QLabel(message))
         buttons_layout = QHBoxLayout()
         layout.addLayout(buttons_layout)
-        for _enum in QMessageBox.StandardButton:
-            if _enum not in (
-                QMessageBox.StandardButton.ButtonMask,
-                QMessageBox.StandardButton.FlagMask,
-            ) and buttons & _enum.value:
-                add_button(_enum)
+        for _int, name in _QMESSAGEBOX_STANDARDBUTTON_NAMES.items():
+            if buttons & _int:
+                add_button(_int, name)
         dialog.exec(block=not callbacks)
         if not callbacks:
             answer = answer.pop()
