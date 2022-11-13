@@ -653,6 +653,9 @@ class FileBrowserWidget(AbstractFileBrowserWidget):
     def __init__(self):
         AbstractFileBrowserWidget.__init__(self)
         self.load_button = QPushButton(_("Load"))
+        self.load_button.setToolTip(
+            'Load the selected file into the editor'
+        )
         self.file_hlayout.addWidget(self.load_button)
         self.list_file.setSelectionMode(
             QAbstractItemView.SelectionMode.ExtendedSelection,

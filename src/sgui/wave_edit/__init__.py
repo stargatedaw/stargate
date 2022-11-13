@@ -146,7 +146,10 @@ def normalize_dialog():
     f_layout.addLayout(f_hlayout)
     f_hlayout.addWidget(QLabel("dB"))
     f_db_spinbox = QDoubleSpinBox()
-    f_db.setToolTip('The volume to normalize to, in decibels')
+    f_db_spinbox.setToolTip(
+        'The volume to normalize to, in decibels.  This will move the volume '
+        'fader so that the audio peaks at almost exactly this volume'
+    )
     f_hlayout.addWidget(f_db_spinbox)
     f_db_spinbox.setRange(-18.0, 0.0)
     f_db_spinbox.setDecimals(1)
@@ -636,52 +639,112 @@ class WaveEditorWidget:
         self.menu_button = QPushButton(_("Menu"))
         self.menu_button.setMenu(self.menu)
         self.file_hlayout.addWidget(self.menu_button)
-        self.export_action = self.menu.addAction(_("Export..."))
+
+        self.export_action = QAction(_("Export..."), self.menu)
+        self.export_action.setToolTip(
+            'Open a dialog to export the file with edits and effects'
+        )
+        self.menu.addAction(self.export_action)
         self.export_action.triggered.connect(self.on_export)
+
         self.menu.addSeparator()
-        self.copy_action = self.menu.addAction(_("Copy File to Clipboard"))
+
+        self.copy_action = QAction(_("Copy File to Clipboard"), self.menu)
+        self.menu.addAction(self.copy_action)
+        self.copy_action.setToolTip(
+            'Copy the full path to the file to the system clipboard'
+        )
         self.copy_action.triggered.connect(self.copy_file_to_clipboard)
         self.copy_action.setShortcut(QKeySequence.StandardKey.Copy)
+
 #        self.copy_item_action = self.menu.addAction(_("Copy as Audio Item"))
 #        self.copy_item_action.triggered.connect(self.copy_audio_item)
 #        self.copy_item_action.setShortcut(
 #            QKeySequence.fromString("ALT+C"))
-        self.paste_action = self.menu.addAction(
-            _("Paste File from Clipboard"))
+
+        self.paste_action = QAction(_("Paste File from Clipboard"), self.menu)
+        self.menu.addAction(self.paste_action)
+        self.paste_action.setToolTip(
+            'First, you must copy the full path to an audio file to the '
+            'system clipboard.  Open an audio file in the wave editor from '
+            'the system clipboard'
+        )
         self.paste_action.triggered.connect(self.open_file_from_clipboard)
         self.paste_action.setShortcut(QKeySequence.StandardKey.Paste)
-        self.open_folder_action = self.menu.addAction(
-            _("Open parent folder in browser"))
+
+        self.open_folder_action = QAction(
+            _("Open parent folder in browser"),
+            self.menu,
+        )
+        self.open_folder_action.setToolTip(
+            'Open the parent folder of the currently loaded audio file in '
+            'the file browser'
+        )
+        self.menu.addAction(self.open_folder_action)
         self.open_folder_action.triggered.connect(self.open_item_folder)
+
         self.menu.addSeparator()
-        self.bookmark_action = self.menu.addAction(_("Bookmark File"))
+
+        self.bookmark_action = QAction(_("Bookmark File"), self.menu)
+        self.menu.addAction(self.bookmark_action)
+        self.bookmark_action.setToolTip(
+            'Bookmark this file in the project.  This will add the file to '
+            'the Bookmarks button menu, so that it can be quickly opened '
+            'again later, even after closing and reopening Stargate DAW'
+        )
         self.bookmark_action.triggered.connect(self.bookmark_file)
         self.bookmark_action.setShortcut(
-            QKeySequence.fromString("CTRL+D"))
-        self.delete_bookmark_action = self.menu.addAction(
-            _("Delete Bookmark"),
+            QKeySequence.fromString("CTRL+D"),
+        )
+
+        self.delete_bookmark_action = QAction(_("Delete Bookmark"), self.menu)
+        self.menu.addAction(self.delete_bookmark_action)
+        self.delete_bookmark_action.setToolTip(
+            'Delete this file from the project bookmarks.  It will no longer '
+            'appear in the Bookmarks button menu'
         )
         self.delete_bookmark_action.triggered.connect(self.delete_bookmark)
         self.delete_bookmark_action.setShortcut(
             QKeySequence.fromString("ALT+D"),
         )
+
         self.menu.addSeparator()
+
         _action = self.menu.addMenu(self.sample_graph.scene_context_menu)
         _action.setText(_("Markers"))
+
         self.menu.addSeparator()
-        self.normalize_action = self.menu.addAction(
-            _("Normalize (non-destructive)..."),
+
+        self.normalize_action = QAction(_("Normalize"), self.menu)
+        self.menu.addAction(self.normalize_action)
+        self.normalize_action.setToolTip(
+            'Normalize the volume of this sample (non-destructive).  The '
+            'volume slider will be set to peak at a specified volume'
         )
         self.normalize_action.triggered.connect(self.normalize_dialog)
-        self.stretch_shift_action = self.menu.addAction(
+
+        self.stretch_shift_action = QAction(
             _("Time-Stretch/Pitch-Shift..."),
+            self.menu,
+        )
+        self.menu.addAction(self.stretch_shift_action)
+        self.stretch_shift_action.setToolTip(
+            'Open a dialog to time stretch and/or pitch shift the audio file'
         )
         self.stretch_shift_action.triggered.connect(self.stretch_shift_dialog)
 
         self.bookmark_button = QPushButton(_("Bookmarks"))
+        self.bookmark_button.setToolTip(
+            'This button will show a menu of any project bookmarks you have '
+            'created.  See the menu button for the bookmark action'
+        )
         self.file_hlayout.addWidget(self.bookmark_button)
 
         self.history_button = QPushButton(_("History"))
+        self.history_button.setToolTip(
+            'Shows a history of files opened during this session.  To save '
+            'the files permanently, bookmark them using the menu button'
+        )
         self.file_hlayout.addWidget(self.history_button)
 
         ###############################
@@ -692,16 +755,20 @@ class WaveEditorWidget:
         self.file_hlayout.addWidget(self.menu_info_button)
 
         self.file_lineedit = QLineEdit()
+        self.file_lineedit.setToolTip('The currently opened audio file')
         self.file_lineedit.setReadOnly(True)
         self.file_hlayout.addWidget(self.file_lineedit)
         self.vlayout.addLayout(self.file_hlayout)
         self.edit_tab = QWidget()
         self.file_browser.folders_tab_widget.addTab(
-            self.edit_tab, _("Channel"))
+            self.edit_tab,
+            _("Channel"),
+        )
         self.edit_hlayout = QHBoxLayout(self.edit_tab)
         self.vol_layout = QVBoxLayout()
         self.edit_hlayout.addLayout(self.vol_layout)
         self.vol_slider = QSlider(QtCore.Qt.Orientation.Vertical)
+        self.vol_slider.setToolTip('The volume slider for the audio file')
         self.vol_slider.setEnabled(False)
         self.vol_slider.setRange(-240, 120)
         self.vol_slider.setValue(0)
@@ -715,12 +782,21 @@ class WaveEditorWidget:
         self.ctrl_vlayout = QVBoxLayout()
         self.edit_hlayout.addLayout(self.ctrl_vlayout)
         self.fade_in_start = QSpinBox()
+        self.fade_in_start.setToolTip(
+            'The fade-in start volume.  This is the initial volume you will '
+            'hear at the beginning of the fade-in, as it fades up to 0dB'
+        )
         self.fade_in_start.setRange(-50, -6)
         self.fade_in_start.setValue(-24)
         self.fade_in_start.valueChanged.connect(self.marker_callback)
         self.ctrl_vlayout.addWidget(QLabel(_("Fade-In")))
         self.ctrl_vlayout.addWidget(self.fade_in_start)
         self.fade_out_end = QSpinBox()
+        self.fade_out_end.setToolTip(
+            'The fade-out end volume.  This will be the final volume you hear '
+            'before the audio stops playing.  At the beginning of the fade '
+            'out, volume will begin to decrease from 0dB to this value'
+        )
         self.fade_out_end.setRange(-50, -6)
         self.fade_out_end.setValue(-24)
         self.fade_out_end.valueChanged.connect(self.marker_callback)
@@ -770,15 +846,8 @@ class WaveEditorWidget:
         )
         self.sample_graph.setToolTip(
             "Load samples here by using the browser on the left "
-            "and clicking the  'Load' button"
-        )
-        self.menu_button.setToolTip(
-            "This menu can export the audio or perform "
-            "various operations."
-        )
-        self.history_button.setToolTip(
-            "Use this button to view or open files that "
-            "were previously opened during this session."
+            "and clicking the  'Load' button.  Move the markers to set "
+            'sample start/end and fade in/out'
         )
 
     def save_callback(self):
@@ -1128,26 +1197,39 @@ class WaveEditorWidget:
         f_window.setLayout(vlayout)
 
         f_name = QLineEdit()
+        f_name.setToolTip('The path to the new file to create')
         f_name.setReadOnly(True)
         f_name.setMinimumWidth(360)
         f_layout.addWidget(QLabel(_("File Name:")), 0, 0)
         f_layout.addWidget(f_name, 0, 1)
         f_select_file = QPushButton(_("Select"))
+        f_select_file.setToolTip(
+            'Open a file browser dialog to select the new file to create'
+        )
         f_select_file.pressed.connect(file_name_select)
         f_layout.addWidget(f_select_file, 0, 2)
 
         f_overwrite_button = QPushButton("Overwrite\nFile")
+        f_overwrite_button.setToolTip(
+            'Overwrite the existing file.  This button populates the current '
+            'file name into the File Name field'
+        )
         f_layout.addWidget(f_overwrite_button, 3, 0)
         f_overwrite_button.pressed.connect(on_overwrite)
 
-        f_layout.addWidget(QLabel(
-            sg_strings.export_format), 3, 1)
+        f_layout.addWidget(QLabel(sg_strings.export_format), 3, 1)
         f_copy_to_clipboard_checkbox = QCheckBox(
-        _("Copy export path to clipboard? (useful for right-click pasting "
-        "back into the audio sequencer)"))
+            _("Copy export path to clipboard?"),
+        )
+        f_copy_to_clipboard_checkbox.setToolTip(
+            'Useful for right-click pasting back into the audio sequencer'
+        )
         f_copy_to_clipboard_checkbox.setChecked(self.copy_to_clipboard_checked)
         f_layout.addWidget(f_copy_to_clipboard_checkbox, 4, 1)
         f_open_exported = QCheckBox("Open exported item?")
+        f_open_exported.setToolTip(
+            'Open the exported audio file into the wave editor when finished'
+        )
         f_open_exported.setChecked(self.open_exported)
         f_layout.addWidget(f_open_exported, 6, 1)
         f_ok_layout = QHBoxLayout()
