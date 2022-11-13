@@ -13,6 +13,12 @@ void daw_track_reload(int index){
     );
     v_open_track(new, DAW->tracks_folder, index);
 
+    // Required, otherwise would need to call v_daw_open_tracks(),
+    // which would recreate all of the tracks.  These are the only 2 fields
+    // that are lost.  Potentially this entire setup should be refactored
+    new->solo = old->solo;
+    new->mute = old->mute;
+
     pthread_spin_lock(&STARGATE->main_lock);
     DAW->track_pool[index] = new;
     pthread_spin_unlock(&STARGATE->main_lock);
