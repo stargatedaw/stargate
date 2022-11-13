@@ -152,7 +152,7 @@ class MIDINote(AbstractMIDIEvent):
 
 
 class MIDIControl(AbstractMIDIEvent):
-    def __init__(self, a_start, a_cc_num, a_cc_val, channel):
+    def __init__(self, a_start, a_cc_num, a_cc_val, channel=0):
         self.start = round(float(a_start), 6)
         self.cc_num = int(a_cc_num)
         self.cc_val = round(float(a_cc_val), 6)
@@ -198,7 +198,7 @@ class MIDIControl(AbstractMIDIEvent):
 
 
 class MIDIPitchbend(AbstractMIDIEvent):
-    def __init__(self, a_start, a_pb_val, channel):
+    def __init__(self, a_start, a_pb_val, channel=0):
         self.start = round(float(a_start), 6)
         self.pb_val = round(float(a_pb_val), 6)
         self.channel = int(channel)

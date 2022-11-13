@@ -439,6 +439,7 @@ class PianoRollEditor(AbstractItemEditor):
         QApplication.restoreOverrideCursor()
 
     def draw_header(self):
+        self.px_per_beat = self.viewer_width / shared.CURRENT_ITEM_LEN
         AbstractItemEditor.draw_header(
             self,
             self.viewer_width,
@@ -447,7 +448,6 @@ class PianoRollEditor(AbstractItemEditor):
         self.header.hoverEnterEvent = self.hover_restore_cursor_event
         self.scene.addItem(self.header)
         #self.header.mapToScene(self.piano_width + self.padding, 0.0)
-        self.px_per_beat = self.viewer_width / shared.CURRENT_ITEM_LEN
         self.value_width = self.px_per_beat / self.grid_div
         self.header.setZValue(1003.0)
         if shared.ITEM_REF_POS:

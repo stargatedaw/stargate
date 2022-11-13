@@ -47,7 +47,10 @@ class AbstractItemEditor(QGraphicsView):
             shared.CURRENT_ITEM_REF.start_offset
         )
         self.playback_pos = clip_value(
-            shared.PLAYBACK_POS - start, 0.0, length)
+            shared.PLAYBACK_POS - start,
+            0.0,
+            length,
+        )
         f_pos = (self.playback_pos * self.px_per_beat) + self.cursor_offset
         self.playback_cursor.setPos(f_pos, 0.0)
 
