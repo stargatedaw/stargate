@@ -18,6 +18,7 @@
 
 #define MAX_EVENT_BUFFER_SIZE 512
 
+#define MIDI_CHANNEL_COUNT 17  // 16 + 1 for "All"
 #define MIDI_NOTE_COUNT 128
 
 #define MAX_PLUGIN_COUNT 10
@@ -211,7 +212,7 @@ typedef struct {
     int fade_state;
     /*When a note_on event is fired,
      * a sample number of when to release it is stored here*/
-    struct MIDINoteOff note_offs[MIDI_NOTE_COUNT];
+    long note_offs[MIDI_CHANNEL_COUNT][MIDI_NOTE_COUNT];
     int item_event_index;
     char osc_cursor_message[1024];
     int * extern_midi_count;

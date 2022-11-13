@@ -182,7 +182,11 @@ class item:
     def add_note(self, a_note, a_check=True):
         if a_check:
             for note in self.notes:
-                if note.overlaps(a_note):
+                if (
+                    note.channel == a_note.channel
+                    and
+                    note.overlaps(a_note)
+                ):
                     # TODO:  return -1 instead of True, and the
                     # offending editor_index when False
                     return False
@@ -201,6 +205,7 @@ class item:
     def velocity_mod(
         self,
         a_amt,
+        channel,
         a_start_beat=0.0,
         a_end_beat=4.0,
         a_line=False,
@@ -224,7 +229,7 @@ class item:
         f_notes = []
 
         if a_notes is None:
-            f_notes = self.notes
+            f_notes = [x for x in self.notes if x.channel == channel]
         else:
             for f_note in a_notes:
                 for f_note2 in self.notes:
@@ -330,13 +335,17 @@ class item:
         a_notes=None,
         a_selected_only=False,
         a_duplicate=False,
+        channel=None,
     ):
         f_total = a_semitones + (a_octave * 12)
         f_notes = []
         f_result = []
 
         if a_notes is None:
-            f_notes = self.notes
+            f_notes = [
+                x for x in self.notes
+                if channel is None or channel == x.channel
+            ]
         else:
             for i in range(len(a_notes)):
                 for f_note in self.notes:
@@ -455,30 +464,34 @@ class item:
         """ Truncate the lengths of any notes that overlap
             the start of another note
         """
+        channels = {x.channel for x in self.notes}
         f_to_delete = []
-        for f_note in self.notes:
-            if f_note not in f_to_delete:
-                for f_note2 in self.notes:
-                    if f_note != f_note2 and f_note2 not in f_to_delete:
-                        if f_note.note_num == f_note2.note_num:
-                            if f_note2.start == f_note.start:
-                                if f_note2.length == f_note.length:
-                                    f_to_delete.append(f_note2)
-                                elif f_note2.length > f_note.length:
-                                    f_note2.length = \
-                                        f_note2.length - f_note.length
-                                    f_note2.start = f_note.end
-                                    f_note2.set_end()
-                                else:
-                                    f_note.length = \
-                                        f_note.length - f_note2.length
-                                    f_note.start = f_note2.end
-                                    f_note.set_end()
-                            elif f_note2.start > f_note.start:
-                                if f_note.end > f_note2.start:
-                                    f_note.length = \
-                                        f_note2.start - f_note.start
-                                    f_note.set_end()
+        for channel in channels:
+            for f_note in (x for x in self.notes if x.channel == channel):
+                if f_note not in f_to_delete:
+                    for f_note2 in (
+                        x for x in self.notes if x.channel == channel
+                    ):
+                        if f_note != f_note2 and f_note2 not in f_to_delete:
+                            if f_note.note_num == f_note2.note_num:
+                                if f_note2.start == f_note.start:
+                                    if f_note2.length == f_note.length:
+                                        f_to_delete.append(f_note2)
+                                    elif f_note2.length > f_note.length:
+                                        f_note2.length = \
+                                            f_note2.length - f_note.length
+                                        f_note2.start = f_note.end
+                                        f_note2.set_end()
+                                    else:
+                                        f_note.length = \
+                                            f_note.length - f_note2.length
+                                        f_note.start = f_note2.end
+                                        f_note.set_end()
+                                elif f_note2.start > f_note.start:
+                                    if f_note.end > f_note2.start:
+                                        f_note.length = \
+                                            f_note2.start - f_note.start
+                                        f_note.set_end()
         for f_note in self.notes:
             if f_note.length < _shared.min_note_length:
                 f_to_delete.append(f_note)
@@ -565,14 +578,19 @@ class item:
     def remove_pb(self, a_pb):
         self.pitchbends.remove(a_pb)
 
-    def remove_pb_range(self, a_start_beat=0.0, a_end_beat=4.0):
+    def remove_pb_range(self, a_start_beat, a_end_beat, midi_channel):
         """ Delete all pitchbends greater than
             a_start_beat and less than a_end_beat
         """
         f_pbs_to_delete = []
         for pb in self.pitchbends:
-            if pb.start >= a_start_beat and \
-            pb.start <= a_end_beat:
+            if (
+                pb.channel == midi_channel
+                and
+                pb.start >= a_start_beat
+                and
+                pb.start <= a_end_beat
+            ):
                 f_pbs_to_delete.append(pb)
         for pb in f_pbs_to_delete:
             self.remove_pb(pb)
@@ -591,7 +609,7 @@ class item:
         f_end = float(a_end)
         f_end_val = float(a_end_val)
         #Remove any events that would overlap
-        self.remove_pb_range(f_start, f_end)
+        self.remove_pb_range(f_start, f_end, midi_channel)
 
         f_start_diff = f_end - f_start
         f_val_diff = abs(f_end_val - f_start_val)

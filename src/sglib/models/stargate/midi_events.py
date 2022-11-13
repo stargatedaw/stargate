@@ -45,6 +45,8 @@ class MIDINote(AbstractMIDIEvent):
             self.length == other.length
             and
             self.velocity == other.velocity
+            and
+            self.channel == other.channel
         )
 
     def get_pmn_param(self, param):
@@ -141,6 +143,7 @@ class MIDINote(AbstractMIDIEvent):
             str(x) for x in (
                 round(self.start, 6),
                 self.note_num,
+                self.channel,
             )
         )
 
@@ -162,6 +165,8 @@ class MIDIControl(AbstractMIDIEvent):
             self.cc_num == other.cc_num
             and
             self.cc_val == other.cc_val
+            and
+            self.channel == other.channel
         )
 
     def set_val(self, a_val):
@@ -204,6 +209,8 @@ class MIDIPitchbend(AbstractMIDIEvent):
             self.start == other.start
             and
             self.pb_val == other.pb_val
+            and
+            self.channel == other.channel
         )
 
     def set_val(self, a_val):

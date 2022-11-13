@@ -240,16 +240,19 @@ class ItemEditorWidget:
         f_ok_cancel_layout.addWidget(f_cancel)
         f_window.exec()
 
-    def transpose_dialog(self, a_selected_only=False):
+    def transpose_dialog(self, a_selected_only=False, channel=None):
         if not self.enabled:
             self.show_not_enabled_warning()
             return
 
         def transpose_ok_handler():
             f_clip = shared.CURRENT_ITEM.transpose(
-                f_semitone.value(), f_octave.value(),
+                f_semitone.value(),
+                f_octave.value(),
                 a_selected_only=f_selected_only.isChecked(),
-                a_duplicate=f_duplicate_notes.isChecked())
+                a_duplicate=f_duplicate_notes.isChecked(),
+                channel=channel,
+            )
             item_lib.save_item(
                 shared.CURRENT_ITEM_NAME,
                 shared.CURRENT_ITEM,

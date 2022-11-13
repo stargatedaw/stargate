@@ -191,6 +191,8 @@ class PianoRollEditor(AbstractItemEditor):
             QMessageBox.warning(self, _("Error"), _("Nothing selected"))
             return
 
+        channel = shared.ITEM_EDITOR.get_midi_channel()
+
         f_dict = {}
         for f_note in f_selected:
             f_note_num = f_note.note_item.note_num
@@ -231,8 +233,6 @@ class PianoRollEditor(AbstractItemEditor):
 
                 releases = [x.note_item.release for x in f_dict[k]]
                 release = round(sum(releases) / len(releases), 2)
-
-                channel = f_dict[k][0].channel
 
                 LOG.info(str(f_max))
                 LOG.info(str(f_min))

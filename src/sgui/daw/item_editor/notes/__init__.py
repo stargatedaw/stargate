@@ -419,6 +419,7 @@ class PianoRollEditorWidget:
             return
         shared.ITEM_EDITOR.transpose_dialog(
             shared.PIANO_ROLL_EDITOR.has_selected,
+            channel=shared.ITEM_EDITOR.get_midi_channel(),
         )
 
     def select_all(self):
@@ -488,12 +489,14 @@ class PianoRollEditorWidget:
             shared.PIANO_ROLL_EDITOR.clear_drawn_items()
 
     def set_expression_param(self, param: int, value=0.0):
+        channel = shared.ITEM_EDITOR.get_midi_channel()
         if shared.PIANO_ROLL_EDITOR.has_selected:
             for note in shared.PIANO_ROLL_EDITOR.get_selected_items():
                 note.note_item.set_pmn_param(param, value)
         else:
             for note in shared.CURRENT_ITEM.notes:
-                note.set_pmn_param(param, value)
+                if note.channel == channel:
+                    note.set_pmn_param(param, value)
         shared.global_save_and_reload_items()
 
     def reset_velocity(self):
