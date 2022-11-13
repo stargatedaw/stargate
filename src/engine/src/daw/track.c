@@ -20,6 +20,7 @@ void daw_track_reload(int index){
     new->mute = old->mute;
 
     pthread_spin_lock(&STARGATE->main_lock);
+    memcpy(new->note_offs, old->note_offs, sizeof(new->note_offs));
     DAW->track_pool[index] = new;
     pthread_spin_unlock(&STARGATE->main_lock);
 
