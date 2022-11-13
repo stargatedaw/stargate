@@ -372,6 +372,10 @@ NO_OPTIMIZATION void v_daw_open_tracks(){
             v_iterate_2d_char_array(f_2d_array);  //ignored
             v_iterate_2d_char_array(f_2d_array); //ignored
 
+            // Important: If adding new field here, they will need to be
+            // copied within daw_track_reload(), as the new tracks will
+            // not automatically pick up the values
+
             sg_assert(
                 f_track_index >= 0 && f_track_index < DN_TRACK_COUNT,
                 "v_daw_open_tracks: track index %i out of range 0 to %i",
