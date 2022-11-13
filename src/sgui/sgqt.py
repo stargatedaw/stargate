@@ -481,12 +481,12 @@ orig_QMessageBox = QMessageBox
 # Required to support older versions of PyQt5.  Only added the ones that
 # are used.  Previously the entire StandardButton enum was iterated, but
 # that is not possible on the sip.enumtype old versions used
-_QMESSAGEBOX_STANDARDBUTTON_NAMES = {
-    QMessageBox.StandardButton.Ok: "OK",
-    QMessageBox.StandardButton.Cancel: "Cancel",
-    QMessageBox.StandardButton.Yes: "Yes",
-    QMessageBox.StandardButton.No: "No",
-}
+_QMESSAGEBOX_STANDARDBUTTON_NAMES = (
+    (QMessageBox.StandardButton.Yes, "Yes"),
+    (QMessageBox.StandardButton.No, "No"),
+    (QMessageBox.StandardButton.Ok, "OK"),
+    (QMessageBox.StandardButton.Cancel, "Cancel"),
+)
 
 class _QMessageBox:
     StandardButton = orig_QMessageBox.StandardButton
@@ -520,7 +520,7 @@ class _QMessageBox:
         layout.addWidget(QLabel(message))
         buttons_layout = QHBoxLayout()
         layout.addLayout(buttons_layout)
-        for _int, name in _QMESSAGEBOX_STANDARDBUTTON_NAMES.items():
+        for _int, name in _QMESSAGEBOX_STANDARDBUTTON_NAMES:
             if buttons & _int:
                 add_button(_int, name)
         dialog.exec(block=not callbacks)
