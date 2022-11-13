@@ -207,9 +207,6 @@ class SgMainWindow(QWidget):
 
         shared.IGNORE_CLOSE_EVENT = True
 
-        shared.TRANSPORT.host_combobox.setCurrentIndex(
-            util.get_file_setting("host", int, 0))
-
         self.menu_bar = QMenu(shared.TRANSPORT.menu_button)
 
         shared.TRANSPORT.menu_button.setMenu(self.menu_bar)
@@ -579,7 +576,6 @@ class SgMainWindow(QWidget):
         #self.wave_editor_module.WAVE_EDITOR.sample_graph.repaint()
 
     def set_host(self, a_index):
-        util.set_file_setting("host", a_index)
         self.transport_stack.setCurrentIndex(a_index)
         self.main_stack.setCurrentIndex(a_index)
         self.current_module = shared.HOST_MODULES[a_index]

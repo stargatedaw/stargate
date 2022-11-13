@@ -189,13 +189,7 @@ NO_OPTIMIZATION void v_activate(
     log_info("Opening project");
     v_open_project(a_project_path, 1);
 
-    char * f_host_str = (char*)malloc(sizeof(char) * TINY_STRING);
-    get_file_setting(f_host_str, "host", "0");
-    int f_host = atoi(f_host_str);
-    log_info("Last host:  %i", f_host);
-    free(f_host_str);
-
-    v_set_host(f_host);
+    v_set_host(SG_HOST_DAW);
 
     log_info("Initializing worker threads");
     v_init_worker_threads(
