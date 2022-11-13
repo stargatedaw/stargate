@@ -349,7 +349,7 @@ class item:
             if a_selected_only and not note.is_selected:
                 continue
             if a_duplicate:
-                f_duplicates.append(note.from_str(str(note)))
+                f_duplicates.append(MIDINote.from_str(str(note)))
             note.note_num += f_total
             note.note_num = clip_value(note.note_num, 0, 120)
             f_result.append(str(note))
@@ -365,7 +365,7 @@ class item:
             f_cc_num = int(a_cc_num)
             for f_cc in (x for x in self.ccs if x.channel == midi_channel):
                 if f_cc.cc_num == f_cc_num:
-                    f_new_cc = cc(
+                    f_new_cc = MIDIControl(
                         f_cc.start,
                         f_cc_num,
                         f_cc.cc_val,
@@ -393,7 +393,7 @@ class item:
                     127.,
                 )
                 while True:
-                    f_interpolated_cc = cc(
+                    f_interpolated_cc = MIDIControl(
                         f_start,
                         f_cc_num,
                         f_new_val,
@@ -419,7 +419,7 @@ class item:
                 x for x in self.pitchbends
                 if x.channel == midi_channel
             ):
-                f_new_pb = pitchbend(f_pb.start, f_pb.pb_val, midi_channel)
+                f_new_pb = MIDIPitchbend(f_pb.start, f_pb.pb_val, midi_channel)
                 f_this_pb_arr.append(f_new_pb)
 
             for f_pb1, f_pb2 in zip(f_this_pb_arr, f_this_pb_arr[1:]):
@@ -438,7 +438,7 @@ class item:
                 f_new_val = f_pb1.pb_val + f_val_inc
 
                 while True:
-                    f_interpolated_pb = pitchbend(
+                    f_interpolated_pb = MIDIPitchbend(
                         f_start,
                         f_new_val,
                         midi_channel,
@@ -550,7 +550,7 @@ class item:
             f_inc = 1
         f_time_inc = abs(f_start_diff / float(f_val_diff))
         for i in range(0, (f_val_diff + 1)):
-            self.ccs.append(cc(f_start, f_cc, f_start_val, midi_channel))
+            self.ccs.append(MIDIControl(f_start, f_cc, f_start_val, midi_channel))
             f_start_val += f_inc
             f_start += f_time_inc
         self.ccs.sort()
@@ -602,7 +602,7 @@ class item:
         f_time_inc = abs(f_start_diff/(float(f_val_diff) * 40.0))
         for i in range(0, int((f_val_diff * 40) + 1)):
             self.pitchbends.append(
-                pitchbend(f_start, f_start_val, midi_channel),
+                MIDIPitchbend(f_start, f_start_val, midi_channel),
             )
             f_start_val += f_inc
             f_start += f_time_inc
@@ -623,11 +623,11 @@ class item:
             else:
                 f_event_arr = f_event_str.split("|")
                 if f_event_arr[0] == "n":
-                    f_result.add_note(note.from_arr(f_event_arr[1:]))
+                    f_result.add_note(MIDINote.from_arr(f_event_arr[1:]))
                 elif f_event_arr[0] == "c":
-                    f_result.add_cc(cc.from_arr(f_event_arr[1:]))
+                    f_result.add_cc(MIDIControl.from_arr(f_event_arr[1:]))
                 elif f_event_arr[0] == "p":
-                    f_result.add_pb(pitchbend.from_arr(f_event_arr[1:]))
+                    f_result.add_pb(MIDIPitchbend.from_arr(f_event_arr[1:]))
                 elif f_event_arr[0] == "a":
                     f_result.add_item(
                         int(f_event_arr[1]),
@@ -661,7 +661,7 @@ class item:
         note_diff = len_orig - len(f_note_set)
         if note_diff:
             LOG.info("Deduplicated {} notes".format(note_diff))
-            self.notes = [note.from_str(x) for x in f_note_set]
+            self.notes = [MIDINote.from_str(x) for x in f_note_set]
             self.notes.sort()
         # TODO:  Others
 

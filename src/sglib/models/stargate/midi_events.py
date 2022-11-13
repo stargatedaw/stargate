@@ -3,11 +3,11 @@ from sglib.lib import *
 from sglib.lib.util import *
 
 
-class abstract_midi_event:
+class AbstractMIDIEvent:
     def __lt__(self, other):
         return self.start < other.start
 
-class note(abstract_midi_event):
+class MIDINote(AbstractMIDIEvent):
     def __init__(
         self,
         a_start,
@@ -111,13 +111,13 @@ class note(abstract_midi_event):
 
     @staticmethod
     def from_arr(a_arr):
-        f_result = note(*a_arr)
+        f_result = MIDINote(*a_arr)
         return f_result
 
     @staticmethod
     def from_str(a_str):
         f_arr = a_str.split("|")
-        return note.from_arr(f_arr[1:])
+        return MIDINote.from_arr(f_arr[1:])
 
     def __str__(self):
         return "|".join(
@@ -145,10 +145,10 @@ class note(abstract_midi_event):
         )
 
     def clone(self):
-        return note.from_str(str(self))
+        return MIDINote.from_str(str(self))
 
 
-class cc(abstract_midi_event):
+class MIDIControl(AbstractMIDIEvent):
     def __init__(self, a_start, a_cc_num, a_cc_val, channel):
         self.start = round(float(a_start), 6)
         self.cc_num = int(a_cc_num)
@@ -180,19 +180,19 @@ class cc(abstract_midi_event):
 
     @staticmethod
     def from_arr(a_arr):
-        f_result = cc(*a_arr)
+        f_result = MIDIControl(*a_arr)
         return f_result
 
     @staticmethod
     def from_str(a_str):
         f_arr = a_str.split("|")
-        return cc.from_arr(f_arr[1:])
+        return MIDIControl.from_arr(f_arr[1:])
 
     def clone(self):
-        return cc.from_str(str(self))
+        return MIDIControl.from_str(str(self))
 
 
-class pitchbend(abstract_midi_event):
+class MIDIPitchbend(AbstractMIDIEvent):
     def __init__(self, a_start, a_pb_val, channel):
         self.start = round(float(a_start), 6)
         self.pb_val = round(float(a_pb_val), 6)
@@ -221,14 +221,14 @@ class pitchbend(abstract_midi_event):
 
     @staticmethod
     def from_arr(a_arr):
-        f_result = pitchbend(*a_arr)
+        f_result = MIDIPitchbend(*a_arr)
         return f_result
 
     @staticmethod
     def from_str(a_str):
         f_arr = a_str.split("|")
-        return pitchbend.from_arr(f_arr[1:])
+        return MIDIPitchbend.from_arr(f_arr[1:])
 
     def clone(self):
-        return pitchbend.from_str(str(self))
+        return MIDIPitchbend.from_str(str(self))
 

@@ -164,7 +164,7 @@ class PianoRollEditor(AbstractItemEditor):
             f_velocity = f_note.note_item.velocity
             pan = f_note.note_item.pan
             self.selected_note_strings.append(str(f_note.note_item))
-            f_new_note_item = sg_project.note(
+            f_new_note_item = sg_project.MIDINote(
                 f_new_start,
                 f_half,
                 f_note_num,
@@ -240,7 +240,7 @@ class PianoRollEditor(AbstractItemEditor):
                 LOG.info(str(f_length))
                 f_start = f_min
                 LOG.info(str(f_start))
-                f_new_note = sg_project.note(
+                f_new_note = sg_project.MIDINote(
                     f_start,
                     f_length,
                     k,
@@ -281,7 +281,7 @@ class PianoRollEditor(AbstractItemEditor):
             )
             return
         for f_item in self.clipboard:
-            shared.CURRENT_ITEM.add_note(sg_project.note.from_str(f_item))
+            shared.CURRENT_ITEM.add_note(sg_project.MIDINote.from_str(f_item))
         global_save_and_reload_items()
         self.scene.clearSelection()
         for f_item in self.note_items:
@@ -393,7 +393,7 @@ class PianoRollEditor(AbstractItemEditor):
                             shared.PIANO_ROLL_SNAP_VALUE
                         ) * shared.PIANO_ROLL_SNAP_VALUE
                     ) * f_recip * shared.CURRENT_ITEM_LEN
-                    f_note_item = sg_project.note(
+                    f_note_item = sg_project.MIDINote(
                         f_beat,
                         shared.LAST_NOTE_RESIZE,
                         f_note,
@@ -404,7 +404,7 @@ class PianoRollEditor(AbstractItemEditor):
                     f_beat = (
                         f_pos_x - shared.PIANO_KEYS_WIDTH
                     ) * f_recip * shared.CURRENT_ITEM_LEN
-                    f_note_item = sg_project.note(
+                    f_note_item = sg_project.MIDINote(
                         f_beat,
                         0.25,
                         f_note,
@@ -743,7 +743,7 @@ class PianoRollEditor(AbstractItemEditor):
         self.update()
 
     def draw_note(self, a_note, a_enabled=True, a_offset=0.0):
-        """ a_note is an instance of the sg_project.note class"""
+        """ a_note is an instance of the sg_project.MIDINote class"""
         f_start = (self.piano_width + self.padding +
             self.px_per_beat * (a_note.start - a_offset))
         f_length = self.px_per_beat * a_note.length

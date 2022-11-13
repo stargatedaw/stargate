@@ -31,7 +31,7 @@ class DawMidiFile:
                 pitch = f_event.ev.note
                 length = f_event.length
                 channel = f_event.ev.channel
-                midi_note = note(
+                midi_note = MIDINote(
                     beat,
                     length,
                     pitch,
@@ -61,7 +61,7 @@ class DawMidiFile:
                 if not f_key in self.result_dict:
                     uid = self.project.create_empty_item()
                     self.result_dict[key] = self.project.get_item_by_uid(uid)
-                f_note = note(beat, length, pitch, velocity)
+                f_note = MIDINote(beat, length, pitch, velocity)
                 self.result_dict[key].add_note(f_note) #, a_check=False)
             else:
                 LOG.warning(

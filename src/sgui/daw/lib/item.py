@@ -4,7 +4,11 @@ from sglib import constants
 from sglib.log import LOG
 from sglib.math import clip_value
 from sglib.models.daw.audio_item import DawAudioItem
-from sglib.models.stargate.midi_events import cc, note, pitchbend
+from sglib.models.stargate.midi_events import (
+    MIDIControl,
+    MIDINote,
+    MIDIPitchbend,
+)
 from sglib.models.daw.seq_item import sequencer_item
 from sgui.daw import painter_path
 import os
@@ -209,7 +213,7 @@ def save_recorded_items(
                 channel,
             ) = (int(x) for x in f_event[3:])
             LOG.info("New note: {} {}".format(f_beat, f_note_num))
-            f_note = note(f_beat, 1.0, f_note_num, f_velocity, channel=channel)
+            f_note = MIDINote(f_beat, 1.0, f_note_num, f_velocity, channel=channel)
             f_note.start_sample = f_tick
             if f_note_num in f_note_tracker[f_track]:
                 LOG.info("Terminating note early: {}".format(
@@ -241,14 +245,14 @@ def save_recorded_items(
             f_port = int(f_port)
             f_val = float(f_val)
             channel = int(channel)
-            f_cc = cc(f_beat, f_port, f_val, channel)
+            f_cc = MIDIControl(f_beat, f_port, f_val, channel)
             LOG.info(f'New CC: {f_cc}')
             project.rec_item.add_cc(f_cc)
         elif f_type == "pb":
             f_val = float(f_event[3]) / 8192.0
             f_val = clip_value(f_val, -1.0, 1.0)
             channel = int(f_event[5])
-            f_pb = pitchbend(f_beat, f_val, channel)
+            f_pb = MIDIPitchbend(f_beat, f_val, channel)
             LOG.info(f'New pitchbend: {f_pb}')
             project.rec_item.add_pb(f_pb)
         else:

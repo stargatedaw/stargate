@@ -404,7 +404,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
                 ) * shared.CURRENT_ITEM_LEN * f_recip
                 f_new_note_num = self.y_pos_to_note(f_pos_y)
                 if self.is_copying:
-                    f_new_note = sg_project.note(
+                    f_new_note = sg_project.MIDINote(
                         f_new_note_start,
                         f_item.note_item.length,
                         f_new_note_num,

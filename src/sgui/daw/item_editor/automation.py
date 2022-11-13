@@ -182,7 +182,7 @@ class AutomationEditor(AbstractItemEditor):
                     self.viewer_height) * 127.0))
                 f_cc_val = clip_value(f_cc_val, 0, 127)
                 shared.ITEM_EDITOR.add_cc(
-                    sg_project.cc(
+                    sg_project.MIDIControl(
                         f_cc_start,
                         self.cc_num,
                         f_cc_val,
@@ -194,7 +194,7 @@ class AutomationEditor(AbstractItemEditor):
                     self.viewer_height) * 2.0)
                 f_cc_val = clip_value(f_cc_val, -1.0, 1.0)
                 shared.ITEM_EDITOR.add_pb(
-                    sg_project.pitchbend(
+                    sg_project.MIDIPitchbend(
                         f_cc_start,
                         f_cc_val,
                         shared.ITEM_EDITOR.get_midi_channel(),
@@ -386,7 +386,7 @@ class AutomationEditor(AbstractItemEditor):
         self.update()
 
     def draw_point(self, a_cc, a_select=True):
-        """ a_cc is an instance of the sg_project.cc class"""
+        """ a_cc is an instance of the sg_project.MIDIControl class"""
         f_time = self.axis_size + (a_cc.start * self.px_per_beat)
         if self.is_cc:
             f_value = self.axis_size +  self.viewer_height / 127.0 * (127.0 -
@@ -606,7 +606,7 @@ class AutomationEditorWidget:
             return
 
         def ok_handler():
-            f_cc = sg_project.cc(
+            f_cc = sg_project.MIDIControl(
                 f_pos_spinbox.value() - 1.0,
                 self.automation_viewer.cc_num,
                 f_value_spinbox.value(),
@@ -700,7 +700,7 @@ class AutomationEditorWidget:
                 1.0,
                 _round=True,
             )
-            f_pb = sg_project.pitchbend(
+            f_pb = sg_project.MIDIPitchbend(
                 f_pos_spinbox.value() - 1.0,
                 f_value,
                 shared.ITEM_EDITOR.get_midi_channel(),
