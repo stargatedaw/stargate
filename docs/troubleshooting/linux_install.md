@@ -99,11 +99,7 @@ recognize, which we do not have.  So when `zypper` warns you about unsigned
 code and asks you what to do, enter `i` for "ignore"
 
 # Arch / PKGBUILD
-Arch, Manjaro, EndeavourOS and many others.
-
-Stargate DAW is available in [AUR](
-  https://aur.archlinux.org/packages/stargate/)
-To build it yourself, [see this document](../src/linux/arch_linux.md)
+[see this document](./arch_linux.md)
 
 # Building from source code
 
