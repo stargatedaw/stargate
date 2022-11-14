@@ -8,6 +8,9 @@ Note that Stargate DAW is available in [AUR](
   of Stargate DAW
 - Vote to add to the main repos
 
+Also, if you are using an `x86_64` CPU, you may wish to use the AppImage
+executable, [see this](./appimage.md)
+
 # Build Procedure
 ```
 git clone https://github.com/stargatedaw/stargate.git
