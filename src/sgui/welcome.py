@@ -114,8 +114,8 @@ class Welcome(QtCore.QObject):
 
     def close(self):
         self.loaded = True
-        glbl_shared.MAIN_STACKED_WIDGET.show_splash()
-        glbl_shared.MAIN_STACKED_WIDGET.show_main()
+        if glbl_shared.MAIN_STACKED_WIDGET.show_splash():
+            glbl_shared.MAIN_STACKED_WIDGET.show_main()
 
     def on_new(self):
         if new_project(self.widget):

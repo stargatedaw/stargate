@@ -194,7 +194,10 @@ class HardwareDialog:
 
     def check_device(self):
         if not util.DEVICE_SETTINGS:
-            return "No hardware settings detected"
+            return (
+                "No hardware settings detected, please configure your "
+                "sound card and MIDI hardware now"
+            )
         elif [
             x for x in ("hostApi", "name")
             if x not in util.DEVICE_SETTINGS
@@ -843,7 +846,7 @@ class HardwareDialog:
                 f_hugepages_checkbox.setChecked(True)
 
         if a_msg is not None:
-            QMessageBox.warning(f_window, _("Error"), a_msg)
+            QMessageBox.warning(f_window, _("Information"), a_msg)
         latency_changed()
         container = QWidget()
         container_layout = QGridLayout(container)

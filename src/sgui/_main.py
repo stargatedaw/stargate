@@ -32,8 +32,8 @@ class MainStackedWidget(QStackedWidget):
         self.previous = None
 
     def show_main(self):
-        assert self.splash_screen, 'No splash screen'
-        self.setCurrentWidget(self.splash_screen)
+        if not self.show_splash():
+            return
         self.main_window = main_window_open(
             self.splash_screen,
             project_mod.PROJECT_DIR,
