@@ -67,6 +67,30 @@ called `_stargate_home` next to it.  Note that the Linux AppImage can be
 installed alongside a Windows portable install and a MacOS app bundle at the
 same time to create a (nearly) universal DAW flash drive.
 
+## Ubuntu 22.04 AppImage issues
+### Desktop crashes
+The fix, in my experience, is to use `Gnome on X.Org` as the desktop
+environment instead of Wayland (or use a different desktop other than Gnome).
+At the login screen, click on your user name, click on the gear icon that
+appears on the bottom right, and select `Gnome on X.Org`, or literally anything
+but `Gnome on Wayland`.
+
+### AppImage will not launch
+Ubuntu does not come with `libfuse2` already installed.  To run any AppImage,
+you will need to run:
+```
+sudo apt update && sudo apt install libfuse2
+
+# Or alternately, extract the AppImage and run
+./StargateDaw-*.AppImage --appimage-extract
+mv squashfs-root StargateDAW
+./StargateDAW/AppRun
+```
+
+However, double-clicking still will not open it.  You will need to right-click
+and choose `Run as program` to launch Stargate DAW.  Or install to the start
+menu using the `Adding the AppImage to the start menu` instructions below.
+
 ## Fedora/CentOS/RHEL/Rocky/Alma/etc... AppImage issues
 ### 'Could not display...' 'There is no application installed for appimage...'
 If the file is on a file system that does not support POSIX file
