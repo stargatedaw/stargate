@@ -74,6 +74,12 @@ Fedora, and it's derivatives like CentOS, RHEL, Rocky, also OpenSUSE.
 You will need to install the [RPM Fusion repos](https://rpmfusion.org/)
 to get all of the recommended dependency packages.
 
+Note that the `rpm` command is not a viable way to install packages, as it
+cannot install dependencies.  Most distros use `dnf`:
+```
+sudo dnf install /path/to/stargate-*.rpm
+```
+
 ## CentOS 8, including Stream
 You will need to install `epel-release` and enable the `Power Tools` repo.
 ```
