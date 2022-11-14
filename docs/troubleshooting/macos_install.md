@@ -2,7 +2,13 @@
 This document describes how to deal with various MacOS issues regarding
 the installation of Stargate DAW.
 
-# "Unverified Developer"
+# Basic installation
+Double-click on the .dmg file, drag and drop it into the Applications folder.
+If you see a pop-up warning that there is already a Stargate DAW app bundle
+installed, answer `Replace` to the dialog.
+
+# Issues
+## "Unverified Developer"
 If your Mac will not open apps from unverified developers:
 ```
 In the Finder on your Mac, locate the app you want to open.  (NOTE: This will
@@ -28,11 +34,11 @@ our legal name(s) publicly listed for all to see.  You can verify that the
 downloads have not been modified by comparing the sha256 sums we provide, or
 else build the source code yourself using the instructions provided.
 
-# Unable to record the built-in microphone
+## Unable to record the built-in microphone
 If you wish to record using the built-in MacBook microphone,
 [see this](https://support.apple.com/en-us/HT209175)
 
-# Portable install mode
+## Portable install mode
 NOTE: It is recommended to use an exFAT formatted flash drive, as other formats
 such as FAT32 do not support  UNIX permissions to set the executable bit,
 and others are not compatible across all 3 major desktop platforms.
