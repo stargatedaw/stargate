@@ -1,8 +1,11 @@
 # Linux Installation Troubleshooting
 This document describes all of the ways that Linux distros and package managers
-make themselves user-unfriendly, and what you can do about it.  If you discover
-additional steps required for your distro of choice, please submit a pull
-request to update this document.
+make themselves user-unfriendly, and what you can do about it.  It is
+unfortunate that releasing a desktop application that works on any Linux distro
+requires such a long troubleshooting document, if you would like to see these
+user experience issues fixed, submit bug reports to your Linux distro.  If you
+discover additional steps required for your distro of choice, please submit a
+pull request to update this document.
 
 # Important Notes
 ## Pipewire
@@ -17,9 +20,21 @@ distro (and if your priority is to actually make music, keep using the
 non-Pipewire distro until Pipewire actually works for you).
 
 Known issues:
-- Pipewire resampling does not actually work, you will usually get
-  sputtering sounds unless you use the same sample rate as the system,
+- Pipewire resampling does not actually work most of the time, you will usually
+  get sputtering sounds unless you use the same sample rate as the system,
   which is probably 48khz
+- Too many audio inputs.  Pipewire defaults to 16 inputs, with no clear way to
+  receive audio from them.  Recommend reducing input count to something much
+  smaller, unless you actually intend to use them
+
+## Wayland
+Stargate DAW has had a tremendous amount of work put into it to remove the
+window manager from the equation (the single window unification), and by
+extension mitigate Wayland problems to the greatest extent possible.  However,
+at the time of this writing, Wayland still has stability issues on every
+desktop environment I have tested on.  If you are having desktop environment
+stability issues, please try running your desktop environment on good old
+reliable X.Org Server.
 
 ## "bleeding edge" distros
 Recent major releases of compilers, kernels, libc, lib\*, and other core system
@@ -27,9 +42,10 @@ software have bugs when they are new, just like any other software.  It's only
 logical to expect problems when building on a shaky foundation that can add
 bugs to the software that relies on it.  If you are using a bleeding edge
 distro like Arch, Fedora and many others, and experience problems, try
-something more stable like the latest Ubuntu LTS.  If older distros are not
-an option because you are using newer hardware, then report issues you are
-having to the appropriate upstream project.
+something more stable like the latest Ubuntu LTS, using an old and stable
+desktop environment.  If older distros are not an option because you are using
+newer hardware, then report issues you are having to the appropriate upstream
+project.
 
 # All distros: AppImage
 The new AppImage is a portable executable that is meant to be used on almost
