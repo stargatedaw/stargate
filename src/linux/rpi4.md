@@ -1,4 +1,11 @@
 # Raspberry Pi4
+## UPDATE:
+Manjaro KDE, the one rpi4 distro that worked decently well late 2021 to early
+2022, no longer works very well as of late 2022.  Leaving this document here
+for historical reference, but know that you will likely need to do some serious
+tweaking to run a DAW on an rpi4
+
+...
 
 Stargate UI runs adequately on an rpi4, with some necessary tweaks.
 The engine is very optimized and runs adequately without tweaks, but the
