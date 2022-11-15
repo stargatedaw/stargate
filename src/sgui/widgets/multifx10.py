@@ -261,17 +261,46 @@ class MultiFX10:
 
     def contextMenuEvent(self, a_event):
         f_menu = QMenu(self.group_box)
-        f_copy_action = f_menu.addAction(_("Copy"))
+        f_copy_action = QAction('Copy', f_menu)
+        f_menu.addAction(f_copy_action)
+        f_copy_action.setToolTip(
+            'Copy this effect slot settings to the clipboard, so that it '
+            'can be pasted to another effect slot'
+        )
         f_copy_action.triggered.connect(self.copy_settings)
-        f_cut_action = f_menu.addAction(_("Cut"))
+
+        f_cut_action = QAction('Cut', f_menu)
+        f_menu.addAction(f_cut_action)
+        f_cut_action.setToolTip(
+            'Copy this effect slot settings to the clipboard, and then reset  '
+            'the effect slot to the default (empty) state'
+        )
         f_cut_action.triggered.connect(self.cut_settings)
-        f_paste_action = f_menu.addAction(_("Paste"))
+
+        f_paste_action = QAction('Paste', f_menu)
+        f_menu.addAction(f_paste_action)
+        f_paste_action.setToolTip(
+            'Paste an effect slot settings that was previously copied to the '
+            'clipboard into this effect slot'
+        )
         f_paste_action.triggered.connect(self.paste_settings)
-        f_paste_and_copy_action = f_menu.addAction(_("Paste and Copy"))
-        f_paste_and_copy_action.triggered.connect(self.paste_and_copy)
+
+        f_paste_and_copy_action = QAction('Paste and Copy', f_menu)
         f_menu.addAction(f_paste_and_copy_action)
-        f_reset_action = f_menu.addAction(_("Reset"))
+        f_paste_and_copy_action.setToolTip(
+            'Paste an effect slot settings that was previously copied to the '
+            'clipboard, then copy the previous settings of this slot to the '
+            'clipboard.  Useful for rearranging and swapping effects'
+        )
+        f_paste_and_copy_action.triggered.connect(self.paste_and_copy)
+
+        f_reset_action = QAction('Reset', f_menu)
+        f_menu.addAction(f_reset_action)
+        f_reset_action.setToolTip(
+            'Reset this effect slot to the default (empty) settings'
+        )
         f_reset_action.triggered.connect(self.reset_settings)
+
         f_menu.exec(QCursor.pos())
 
     def copy_settings(self):
