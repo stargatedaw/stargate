@@ -27,11 +27,9 @@ void g_wave_edit_get(){
     wave_edit->ab_audio_item = g_audio_item_get(f_sample_rate);
     wave_edit->tracks_folder = (char*)malloc(sizeof(char) * 1024);
     wave_edit->project_folder = (char*)malloc(sizeof(char) * 1024);
-    int f_i = 0;
-    while(f_i < 1)
-    {
-        wave_edit->track_pool[f_i] = g_track_get(f_i, f_sample_rate);
-        ++f_i;
+    int i;
+    for(i = 0; i < 1; ++i){
+        wave_edit->track_pool[i] = g_track_get(i, f_sample_rate);
     }
 }
 
@@ -121,6 +119,8 @@ void v_we_set_playback_mode(
 }
 
 void v_we_export(t_wave_edit * self, const char * a_file_out){
+    int f_i;
+
     pthread_spin_lock(&STARGATE->main_lock);
     STARGATE->is_offline_rendering = 1;
     pthread_spin_unlock(&STARGATE->main_lock);
@@ -130,11 +130,8 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
     long f_size = 0;
     long f_block_size = (STARGATE->sample_count);
 
-    SGFLT * f_output = NULL;
-    lmalloc((void**)&f_output, sizeof(SGFLT) * (f_block_size * 2));
-
-    struct SamplePair* f_buffer = NULL;
-    lmalloc((void**)&f_buffer, sizeof(struct SamplePair) * f_block_size);
+    SGFLT f_output[f_block_size * 2];
+    struct SamplePair f_buffer[f_block_size];
 
     v_we_set_playback_mode(self, PLAYBACK_MODE_PLAY, 0);
 
@@ -154,33 +151,68 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
     clock_gettime(CLOCK_REALTIME, &f_start);
 #endif
 
-    while((self->ab_audio_item->sample_read_heads[0].whole_number) <
-            (self->ab_audio_item->sample_end_offset))
-    {
-        int f_i = 0;
+    while(
+        self->ab_audio_item->sample_read_heads[0].whole_number
+        <
+        self->ab_audio_item->sample_end_offset
+    ){
         f_size = 0;
 
-        while(f_i < f_block_size)
-        {
+        for(f_i = 0; f_i < f_block_size; ++f_i){
             f_buffer[f_i].left = 0.0f;
             f_buffer[f_i].right = 0.0f;
-            ++f_i;
         }
 
         v_run_wave_editor(f_block_size, f_buffer, NULL);
 
-        f_i = 0;
         /*Interleave the samples...*/
-        while(f_i < f_block_size)
-        {
+        for(f_i = 0; f_i < f_block_size; ++f_i){
             f_output[f_size] = f_buffer[f_i].left;
             ++f_size;
             f_output[f_size] = f_buffer[f_i].right;
             ++f_size;
-            ++f_i;
         }
 
         sg_write_audio(f_sndfile, f_output, f_block_size);
+    }
+
+    SGFLT max_peak = 0.;
+    int tail_inc = 0;
+    int tail_count = (int)(f_sample_rate / 20);
+    // Capture effect tail, if any
+    while(1){
+        f_size = 0;
+        for(f_i = 0; f_i < f_block_size; ++f_i){
+            f_buffer[f_i].left = 0.0f;
+            f_buffer[f_i].right = 0.0f;
+        }
+
+        v_run_wave_editor(f_block_size, f_buffer, NULL);
+
+        /*Interleave the samples...*/
+        for(f_i = 0; f_i < f_block_size; ++f_i){
+            f_output[f_size] = f_buffer[f_i].left;
+            ++f_size;
+            f_output[f_size] = f_buffer[f_i].right;
+            ++f_size;
+            if(f_sg_abs(f_buffer[f_i].left) > max_peak){
+                max_peak = f_sg_abs(f_buffer[f_i].left);
+            }
+            if(f_sg_abs(f_buffer[f_i].right) > max_peak){
+                max_peak = f_sg_abs(f_buffer[f_i].right);
+            }
+        }
+
+        sg_write_audio(f_sndfile, f_output, f_block_size);
+
+        tail_inc += f_block_size;
+        if(tail_inc >= tail_count){
+            tail_inc -= tail_count;
+            if(f_linear_to_db(max_peak) < -70){
+                break;
+            }
+            max_peak = 0.;
+        }
     }
 
 #if SG_OS == _OS_LINUX
@@ -195,8 +227,6 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
     v_we_set_playback_mode(self, PLAYBACK_MODE_OFF, 0);
 
     sf_close(f_sndfile);
-
-    free(f_output);
 
     char f_tmp_finished[1024];
 
