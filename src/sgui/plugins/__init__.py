@@ -741,7 +741,6 @@ class PluginSettingsWaveEditor(AbstractPluginSettings):
             a_save_callback,
             a_qcbox=False,
         )
-        self.plugin_combobox.setToolTip('Select an effect plugin')
         self.layout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
