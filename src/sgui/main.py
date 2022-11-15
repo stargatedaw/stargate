@@ -14,6 +14,7 @@ GNU General Public License for more details.
 """
 from . import shared
 from .preflight import preflight
+from .updates import ui_check_updates
 from sglib.models import stargate as sg_project
 from sglib.models import theme
 from sglib.ipc import *
@@ -391,10 +392,6 @@ class SgMainWindow(QWidget):
             _("Watch Tutorial Videos on Youtube..."),
         )
         self.youtube_action.triggered.connect(self.on_youtube)
-        self.check_updates_action = self.menu_help.addAction(
-            _("Check for Updates..."),
-        )
-        self.check_updates_action.triggered.connect(self.on_check_updates)
         self.manual_action = self.menu_help.addAction(
             _("View User Manual on Github..."),
         )
@@ -429,7 +426,24 @@ class SgMainWindow(QWidget):
         )
 
         self.menu_bar.addSeparator()
-        self.tooltips_action = self.menu_bar.addAction(_("Hide Hint Box"))
+
+        self.check_updates_action = QAction(
+            'Check for updates...',
+            self.menu_bar,
+        )
+        self.menu_bar.addAction(self.check_updates_action)
+        self.check_updates_action.setToolTip(
+            'Check to see if you are running the latest version of '
+            'Stargate DAW'
+        )
+        self.check_updates_action.triggered.connect(ui_check_updates)
+
+        self.tooltips_action = QAction(_("Hide Hint Box"), self.menu_bar)
+        self.tooltips_action.setToolTip(
+            'Toggle hiding the hint box in the upper right corner of the '
+            'screen'
+        )
+        self.menu_bar.addAction(self.tooltips_action)
         self.tooltips_action.setCheckable(True)
         self.tooltips_action.setChecked(shared.HIDE_HINT_BOX)
         self.tooltips_action.triggered.connect(self.set_tooltips_enabled)
@@ -527,12 +541,6 @@ class SgMainWindow(QWidget):
             os.getpid(),
         )
         self._copy_to_clipboard(text)
-
-    def on_check_updates(self):
-        url = QtCore.QUrl(
-            "https://github.com/stargatedaw/stargate/releases",
-        )
-        QDesktopServices.openUrl(url)
 
     def on_samplepack(self):
         url = QtCore.QUrl(

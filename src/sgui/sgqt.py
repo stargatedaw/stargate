@@ -529,6 +529,10 @@ class _QMessageBox:
             return answer
 
     @staticmethod
+    def information(parent, title, message):
+        QMessageBox.warning(parent, title, message)
+
+    @staticmethod
     def warning(parent, title, message):
         dialog = QDialog()
         layout = QVBoxLayout(dialog)

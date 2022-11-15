@@ -1,3 +1,4 @@
+from .updates import ui_check_updates
 from sgui.main import main
 from sgui.sgqt import *
 from sgui.widgets.hardware_dialog import HardwareDialog
@@ -78,6 +79,11 @@ class Welcome(QtCore.QObject):
         project_recovery_button.setObjectName("huge_button")
         project_recovery_button.pressed.connect(self.on_project_recovery)
         buttons_hlayout2.addWidget(project_recovery_button)
+
+        updates_button = QPushButton('Check for updates')
+        updates_button.setObjectName("huge_button")
+        updates_button.pressed.connect(ui_check_updates)
+        buttons_vlayout.addWidget(updates_button)
 
     def rp_doubleclick(self, index):
         project = str(self.rp_list.item(index).text())
