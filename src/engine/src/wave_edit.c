@@ -542,8 +542,7 @@ void v_we_osc_send(t_osc_send_data * a_buffers){
 
         a_buffers->f_tmp1[0] = '\0';
 
-        for(f_i = 0; f_i < f_index; ++f_i)
-        {
+        for(f_i = 0; f_i < f_index; ++f_i){
             sg_snprintf(
                 a_buffers->f_tmp2,
                 OSC_MAX_MESSAGE_SIZE,
@@ -551,16 +550,11 @@ void v_we_osc_send(t_osc_send_data * a_buffers){
                 a_buffers->osc_queue_keys[f_i],
                 a_buffers->osc_queue_vals[f_i]
             );
-            strcat(
-                a_buffers->f_tmp1,
-                a_buffers->f_tmp2
-            );
+            if(!STARGATE->is_offline_rendering){
+                v_ui_send("stargate/wave_edit", a_buffers->f_tmp2);
+            }
         }
 
-        if(!STARGATE->is_offline_rendering)
-        {
-            v_ui_send("stargate/wave_edit", a_buffers->f_tmp1);
-        }
     }
 }
 

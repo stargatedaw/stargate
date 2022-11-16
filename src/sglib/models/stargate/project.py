@@ -508,6 +508,48 @@ class SgProject(AbstractProject):
             return path.replace(audio_dir, '!', 1)
         return path
 
+    def reload_audio_file(self, path):
+        """ Reload a audio file that (may have) changed into the audio pool
+        """
+        LOG.info(f'Attempting to reload {path}')
+        path = util.pi_path(path)
+        audio_pool = self.get_audio_pool()
+        by_path = audio_pool.by_path()
+        if path not in by_path:
+            LOG.info(f'{path} is not in {by_path}, not reloading')
+            return
+        uid = by_path[path].uid
+
+        cache_path, cache_dir = self.audio_file_cache_path(path)
+        # Only copy files that were previously copied to project cache
+        if os.path.isfile(cache_path):
+            shutil.copy(path, cache_path)
+
+        self.delete_sample_graph_by_name(path)
+        constants.IPC.reload_audio_pool_item(uid)
+
+    def audio_file_cache_path(self, path):
+        """ Return the full file path and it's parent directory for an audio
+            file in the project cache folder
+
+            @path:
+                The path to the file as it already exists on the user's
+                hard drive
+        """
+        if path[0] != "/" and path[1] == ":":  # Windows path
+            path = path.replace(":", "", 1)
+            cache_path = os.path.join(self.samples_folder, path)
+        else:  # UNIX path
+            # Work around some baffling Python behaviour where
+            # os.path.join('/lala/la', '/ha/haha') returns '/ha/haha'
+            if path[0] == '/':
+                cache_path = "".join([self.samples_folder, path])
+            else:
+                cache_path = os.path.join(self.samples_folder, path)
+        cache_path = pi_path(cache_path)
+        cache_dir = os.path.dirname(cache_path)
+        return (cache_path, cache_dir)
+
     def cp_audio_file_to_cache(self, a_file):
         if (
             a_file in self.cached_audio_files
@@ -515,18 +557,7 @@ class SgProject(AbstractProject):
             a_file.startswith(self.audio_root_folder)
         ):
             return
-        if a_file[0] != "/" and a_file[1] == ":":
-            f_file = a_file.replace(":", "", 1)
-            f_cp_path = os.path.join(self.samples_folder, f_file)
-        else:
-            # Work around some baffling Python behaviour where
-            # os.path.join('/lala/la', '/ha/haha') returns '/ha/haha'
-            if a_file[0] == '/':
-                f_cp_path = "".join([self.samples_folder, a_file])
-            else:
-                f_cp_path = os.path.join(self.samples_folder, a_file)
-        f_cp_path = os.path.normpath(f_cp_path)
-        f_cp_dir = os.path.dirname(f_cp_path)
+        f_cp_path, f_cp_dir = self.audio_file_cache_path(a_file)
         if not os.path.isdir(f_cp_dir):
             os.makedirs(f_cp_dir)
         if not os.path.isfile(f_cp_path):

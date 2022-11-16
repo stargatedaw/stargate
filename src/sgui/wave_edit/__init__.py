@@ -4,6 +4,10 @@ from sgui.plugins import *
 from sgui.sgqt import *
 from sgui.widgets import *
 
+from sgui.daw.item_editor.audio._shared import (
+    remove_path_from_painter_path_cache,
+)
+
 from sglib import constants
 from sglib.api.wave_edit import api_project_notes
 from sglib.ipc.abstract import AbstractIPC
@@ -1123,6 +1127,54 @@ class WaveEditorWidget:
     def open_file_from_action(self, a_action):
         self.open_file(a_action.file_name)
 
+    def show_offline_rendering_wait_window(self, a_file_name):
+        f_file_name = "{}.finished".format(a_file_name)
+        def ok_handler():
+            constants.PROJECT.reload_audio_file(a_file_name)
+            remove_path_from_painter_path_cache(a_file_name)
+            if self.open_exported:
+                self.open_file(a_file_name)
+            f_window.close()
+
+        def cancel_handler():
+            f_window.close()
+
+        def timeout_handler():
+            if os.path.isfile(f_file_name):
+                f_ok.setEnabled(True)
+                f_timer.stop()
+                f_time_label.setText(
+                    _("Finished in {}").format(f_time_label.text()))
+                os.remove(f_file_name)
+            else:
+                f_elapsed_time = time.time() - f_start_time
+                f_time_label.setText(str(round(f_elapsed_time, 1)))
+
+        f_start_time = time.time()
+        f_window = QDialog(MAIN_WINDOW)
+        f_window.setWindowTitle(_("Rendering to .wav, please wait"))
+        vlayout = QVBoxLayout()
+        f_layout = QGridLayout()
+        vlayout.addLayout(f_layout)
+        f_window.setLayout(vlayout)
+        f_time_label = QLabel("")
+        f_time_label.setMinimumWidth(360)
+        f_layout.addWidget(f_time_label, 1, 1)
+        f_timer = QtCore.QTimer()
+        f_timer.timeout.connect(timeout_handler)
+
+        ok_cancel_layout = QHBoxLayout()
+        vlayout.addLayout(ok_cancel_layout)
+        f_ok = QPushButton(_("OK"))
+        f_ok.pressed.connect(ok_handler)
+        f_ok.setEnabled(False)
+        ok_cancel_layout.addWidget(f_ok)
+        #f_cancel = QPushButton("Cancel")
+        #f_cancel.pressed.connect(cancel_handler)
+        #f_layout.addWidget(f_cancel, 9, 2)
+        f_timer.start(100)
+        f_window.exec()
+
     def on_export(self):
         if not self.history:
             QMessageBox.warning(self.widget, _("Error"), _("No file loaded"))
@@ -1149,12 +1201,9 @@ class WaveEditorWidget:
             self.last_offline_dir = os.path.dirname(f_file_name)
             self.open_exported = f_open_exported.isChecked()
             f_window.close()
-            glbl_shared.MAIN_WINDOW.show_offline_rendering_wait_window(
+            self.show_offline_rendering_wait_window(
                 f_file_name,
             )
-            if self.open_exported:
-                self.open_file(f_file_name)
-
 
         def cancel_handler():
             f_window.close()
@@ -1247,7 +1296,7 @@ class WaveEditorWidget:
         vlayout.addLayout(f_ok_layout)
         f_cancel = QPushButton(_("Cancel"))
         f_cancel.pressed.connect(cancel_handler)
-        f_layout.addWidget(f_cancel, 9, 2)
+        f_ok_layout.addWidget(f_cancel)
         f_window.exec()
 
 

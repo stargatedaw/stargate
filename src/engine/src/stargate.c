@@ -1465,15 +1465,12 @@ void v_sg_configure(const char* a_key, const char* a_value){
 
         f_arr->array = 0;
         g_free_2d_char_array(f_arr);
-    }
-    else if(!strcmp(a_key, SG_CONFIGURE_KEY_CLEAN_AUDIO_POOL))
-    {
+    } else if(!strcmp(a_key, SG_CONFIGURE_KEY_CLEAN_AUDIO_POOL)){
         t_2d_char_array * f_arr = g_get_2d_array(LARGE_STRING);
         int f_uid;
         strcpy(f_arr->array, a_value);
 
-        while(!f_arr->eof)
-        {
+        while(!f_arr->eof){
             v_iterate_2d_char_array(f_arr);
             f_uid = atoi(f_arr->current_str);
             v_audio_pool_remove_item(STARGATE->audio_pool, f_uid);
@@ -1481,15 +1478,19 @@ void v_sg_configure(const char* a_key, const char* a_value){
 
         f_arr->array = 0;
         g_free_2d_char_array(f_arr);
-    }
-    else if(!strcmp(a_key, SG_CONFIGURE_KEY_AUDIO_POOL_ITEM_RELOAD))
-    {
+    } else if(!strcmp(a_key, SG_CONFIGURE_KEY_AUDIO_POOL_ITEM_RELOAD)){
         int f_uid = atoi(a_value);
-        t_audio_pool_item * f_old =
-                g_audio_pool_get_item_by_uid(STARGATE->audio_pool, f_uid);
-        t_audio_pool_item * f_new =
-                g_audio_pool_item_get(f_uid, f_old->path,
-                STARGATE->audio_pool->sample_rate);
+        t_audio_pool_item * f_old = g_audio_pool_get_item_by_uid(
+            STARGATE->audio_pool,
+            f_uid
+        );
+        t_audio_pool_item f_new = {
+            .uid = f_uid,
+            .host_sr = STARGATE->audio_pool->sample_rate,
+        };
+        strncpy(f_new.path, f_old->path, 2040);
+
+        i_audio_pool_item_load(&f_new, 0);
 
         SGFLT * f_old_samples[2];
         f_old_samples[0] = f_old->samples[0];
@@ -1497,29 +1498,26 @@ void v_sg_configure(const char* a_key, const char* a_value){
 
         pthread_spin_lock(&STARGATE->main_lock);
 
-        f_old->channels = f_new->channels;
-        f_old->length = f_new->length;
-        f_old->ratio_orig = f_new->ratio_orig;
-        f_old->sample_rate = f_new->sample_rate;
-        f_old->samples[0] = f_new->samples[0];
-        f_old->samples[1] = f_new->samples[1];
+        // memcpy(f_old, &f_new, sizeof(t_audio_pool_item));
+        f_old->channels = f_new.channels;
+        f_old->length = f_new.length;
+        f_old->ratio_orig = f_new.ratio_orig;
+        f_old->sample_rate = f_new.sample_rate;
+        f_old->samples[0] = f_new.samples[0];
+        f_old->samples[1] = f_new.samples[1];
 
         pthread_spin_unlock(&STARGATE->main_lock);
 
-        if(f_old_samples[0])
-        {
-            free(f_old_samples[0]);
+        // TODO: This will crash if using hugepages, find a way to free the
+        // memory only if hugepages are not being used, maybe add as a field
+        // to the audio pool item
+        if(f_old_samples[0]){
+            //free(f_old_samples[0]);
         }
-
-        if(f_old_samples[1])
-        {
-            free(f_old_samples[1]);
+        if(f_old_samples[1]){
+            //free(f_old_samples[1]);
         }
-
-        free(f_new);
-    }
-    else
-    {
+    } else {
         log_info(
             "Unknown configure message key: %s, value %s",
             a_key,

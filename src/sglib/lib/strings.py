@@ -15,13 +15,6 @@ GNU General Public License for more details.
 from sglib.lib.translate import _
 
 
-audio_viewer_widget_folders = _(
-"""\
-Use this tab to browse your folders and files.  Drag and drop one file at a
-time onto the sequencer.  .wav and .aiff files are the only supported audio
-file format.""")
-
-
 audio_viewer_widget_papifx = _("""\
 This tab allows you to set effects per-audio file.  There will be exactly one
 instance of these effects per audio file.  Use this as a mixing aid for EQ,

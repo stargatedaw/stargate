@@ -28,6 +28,9 @@ from sglib import constants
 from sglib.math import clip_value, db_to_lin
 from sgui import widgets
 from sgui.daw import entrypoint as daw
+from sgui.daw.item_editor.audio._shared import (
+    remove_path_from_painter_path_cache,
+)
 from sgui.ipc.socket import SocketIPCServer, SocketIPCTransport
 from sgui.plugins import SgPluginUiDict
 from sgui.transport import TransportWidget
@@ -644,7 +647,11 @@ class SgMainWindow(QWidget):
     ):
         if not f_file_name:
             f_file_name = "{}.finished".format(a_file_name)
+
         def ok_handler():
+            if os.path.isfile(a_file_name):
+                constants.PROJECT.reload_audio_file(a_file_name)
+                remove_path_from_painter_path_cache(a_file_name)
             f_window.close()
 
         def cancel_handler():
@@ -670,7 +677,9 @@ class SgMainWindow(QWidget):
                 f_time_label.setText(
                     _("Finished in:"),
                 )
-                os.remove(f_file_name)
+                if os.path.isfile(f_file_name):
+                    # Some times this does not exist, not sure why
+                    os.remove(f_file_name)
                 f_proc.communicate()[0]
                 #f_output = f_proc.communicate()[0]
                 #LOG.info(f_output)

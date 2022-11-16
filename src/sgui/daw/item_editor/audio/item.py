@@ -28,8 +28,6 @@ from . import (
 from sgui.util import get_font
 
 
-PAINTER_PATH_CACHE = {}
-
 class AudioSeqItemHandle(QGraphicsRectItem):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -78,14 +76,14 @@ class AudioSeqItem(QGraphicsRectItem):
         self.track_num = a_track_num
 
         f_uid = self.audio_item.uid
-        if f_uid in PAINTER_PATH_CACHE:
-            self.painter_paths = PAINTER_PATH_CACHE[f_uid]
+        if f_uid in _shared.PAINTER_PATH_CACHE:
+            self.painter_paths = _shared.PAINTER_PATH_CACHE[f_uid]
         else:
             self.painter_paths = create_sample_graph(
                 a_graph,
                 True,
             )
-            PAINTER_PATH_CACHE[f_uid] = self.painter_paths
+            _shared.PAINTER_PATH_CACHE[f_uid] = self.painter_paths
 
         self.y_inc = shared.AUDIO_ITEM_HEIGHT / len(self.painter_paths)
         f_y_pos = 0.0
