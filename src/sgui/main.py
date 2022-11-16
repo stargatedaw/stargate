@@ -595,50 +595,6 @@ class SgMainWindow(QWidget):
         constants.IPC.set_host(a_index)
         self.current_module.TRANSPORT.set_time()
 
-    def show_offline_rendering_wait_window(self, a_file_name):
-        f_file_name = "{}.finished".format(a_file_name)
-        def ok_handler():
-            f_window.close()
-
-        def cancel_handler():
-            f_window.close()
-
-        def timeout_handler():
-            if os.path.isfile(f_file_name):
-                f_ok.setEnabled(True)
-                f_timer.stop()
-                f_time_label.setText(
-                    _("Finished in {}").format(f_time_label.text()))
-                os.remove(f_file_name)
-            else:
-                f_elapsed_time = time.time() - f_start_time
-                f_time_label.setText(str(round(f_elapsed_time, 1)))
-
-        f_start_time = time.time()
-        f_window = QDialog(MAIN_WINDOW)
-        f_window.setWindowTitle(_("Rendering to .wav, please wait"))
-        vlayout = QVBoxLayout()
-        f_layout = QGridLayout()
-        vlayout.addLayout(f_layout)
-        f_window.setLayout(vlayout)
-        f_time_label = QLabel("")
-        f_time_label.setMinimumWidth(360)
-        f_layout.addWidget(f_time_label, 1, 1)
-        f_timer = QtCore.QTimer()
-        f_timer.timeout.connect(timeout_handler)
-
-        ok_cancel_layout = QHBoxLayout()
-        vlayout.addLayout(ok_cancel_layout)
-        f_ok = QPushButton(_("OK"))
-        f_ok.pressed.connect(ok_handler)
-        f_ok.setEnabled(False)
-        ok_cancel_layout.addWidget(f_ok)
-        #f_cancel = QPushButton("Cancel")
-        #f_cancel.pressed.connect(cancel_handler)
-        #f_layout.addWidget(f_cancel, 9, 2)
-        f_timer.start(100)
-        f_window.exec()
-
     def show_offline_rendering_wait_window_v2(
         self,
         a_cmd_list,
