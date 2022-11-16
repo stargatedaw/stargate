@@ -1,4 +1,5 @@
 from sglib.models.daw import *
+from sgui.daw.painter_path import clear_caches as daw_painter_clear_cache
 from sgui.daw.shared import *
 from sglib.lib.util import *
 from sgui.sgqt import *
@@ -73,7 +74,7 @@ def show(current_item):
     f_file_menu.addSeparator()
 
     f_replace_item_action = QAction(
-        _("Replace Audio Item with Path in Clipboard"),
+        "Replace Audio Item with Path in Clipboard",
         f_file_menu,
     )
     f_file_menu.addAction(f_replace_item_action)
@@ -85,7 +86,7 @@ def show(current_item):
     f_replace_item_action.triggered.connect(replace_with_clipboard_item)
 
     f_replace_seq_action = QAction(
-        _("Replace All Instances in this Seq. Item with Path in Clipboard"),
+        "Replace All Instances in this Seq. Item with Path in Clipboard",
         f_file_menu,
     )
     f_file_menu.addAction(f_replace_seq_action)
@@ -95,6 +96,18 @@ def show(current_item):
         'a valid audio file of a supported type before using this'
     )
     f_replace_seq_action.triggered.connect(replace_with_clipboard_seq)
+
+    f_replace_all_action = QAction(
+        "Replace All Instances in this Project with Path in Clipboard",
+        f_file_menu,
+    )
+    f_file_menu.addAction(f_replace_all_action)
+    f_replace_all_action.setToolTip(
+        'Replace all instances of this file in the entire project with the '
+        'file path in the system clipboard.  You must copy the full path to '
+        'a valid audio file of a supported type before using this'
+    )
+    f_replace_all_action.triggered.connect(replace_with_clipboard_all)
 
     f_properties_menu = f_menu.addMenu(_("Properties"))
 
@@ -319,6 +332,7 @@ def show(current_item):
     f_menu.exec(QCursor.pos())
     _shared.CURRENT_AUDIO_ITEM_INDEX = f_CURRENT_AUDIO_ITEM_INDEX
 
+
 def save_a_copy():
     global LAST_AUDIO_ITEM_DIR
     f_file, f_filter = QFileDialog.getSaveFileName(
@@ -375,19 +389,29 @@ def replace_with_clipboard_item():
 def replace_with_clipboard_seq():
     f_path = _shared.global_get_audio_file_from_clipboard()
     if f_path is not None:
-        uid = constants.PROJECT.get_wav_uid_by_name(f_path)
+        new_uid = constants.PROJECT.get_wav_uid_by_name(f_path)
         old_uid = CURRENT_ITEM.audio_item.uid
-        for item in (
-            x for x in shared.CURRENT_ITEM.items.values()
-            if x.uid == old_uid
-        ):
-            item.uid = uid
+        shared.CURRENT_ITEM.replace_all_audio_file(old_uid, new_uid)
         item_lib.save_item(
             shared.CURRENT_ITEM_NAME,
             shared.CURRENT_ITEM,
         )
         constants.DAW_PROJECT.commit(_("Replace audio item"))
         global_open_audio_items(True)
+
+def replace_with_clipboard_all():
+    f_path = _shared.global_get_audio_file_from_clipboard()
+    if f_path is not None:
+        new_uid = constants.PROJECT.get_wav_uid_by_name(f_path)
+        old_uid = CURRENT_ITEM.audio_item.uid
+        constants.DAW_PROJECT.replace_all_audio_file(old_uid, new_uid)
+        constants.DAW_PROJECT.commit(_("Replace audio item"))
+        shared.CURRENT_ITEM = constants.DAW_PROJECT.get_item_by_uid(
+            shared.CURRENT_ITEM.uid,
+        )
+        global_open_audio_items(True)
+        daw_painter_clear_cache()
+        global_open_items()
 
 def ts_mode_menu_triggered(a_action):
     f_index = TIMESTRETCH_INDEXES[a_action.algo_name]

@@ -101,6 +101,13 @@ class item:
         for k in f_to_delete:
             self.items.pop(k)
 
+    def replace_all_audio_file(self, old_uid, new_uid):
+        for audio_item in (
+            x for x in self.items.values()
+            if x.uid == old_uid
+        ):
+            audio_item.uid = new_uid
+
     def extend(self, a_new_ref, a_ref, a_item2, a_tempo):
         """ Glue 2 items together, adding f_offset to the
             event positions of a_item2

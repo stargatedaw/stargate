@@ -1,5 +1,6 @@
 from sglib.models.daw import *
 from sgui.daw.shared import *
+from sgui.daw.painter_path import clear_caches as daw_painter_clear_cache
 from sglib.lib.util import *
 from sgui.sgqt import *
 
@@ -62,6 +63,7 @@ class AudioSeqItem(QGraphicsRectItem):
         a_graph,
     ):
         QGraphicsRectItem.__init__(self)
+        self.setAcceptDrops(True)
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
         self.setFlag(
             QGraphicsItem.GraphicsItemFlag.ItemSendsScenePositionChanges,
@@ -205,6 +207,79 @@ class AudioSeqItem(QGraphicsRectItem):
         self.quantize_offset = 0.0
         self.draw()
         self.set_tooltips()
+
+    def handleDropEvent(self, path):
+        menu = QMenu()
+
+        f_replace_item_action = QAction("Replace This Audio Item Only", menu)
+        menu.addAction(f_replace_item_action)
+        f_replace_item_action.setToolTip(
+            'Replace this audio item only with a new audio file.'
+        )
+        f_replace_item_action.triggered.connect(
+            lambda: self.replace_file(path)
+        )
+
+        f_replace_seq_action = QAction(
+            "Replace All Instances in this Sequencer Item",
+            menu,
+        )
+        menu.addAction(f_replace_seq_action)
+        f_replace_seq_action.setToolTip(
+            'Replace all instances of this audio file in this sequencer '
+            'item with the new audio file.  Other references to this '
+            'sequencer item will also be updated'
+        )
+        f_replace_seq_action.triggered.connect(
+            lambda: self.replace_seq_item(path)
+        )
+
+        f_replace_all_action = QAction(
+            "Replace All Instances in the Entire Project",
+            menu,
+        )
+        menu.addAction(f_replace_all_action)
+        f_replace_all_action.setToolTip(
+            'Replace all instances of this audio file in all sequencer '
+            'items in the entire project with the new audio file'
+        )
+        f_replace_all_action.triggered.connect(
+            lambda: self.replace_project(path)
+        )
+
+        menu.exec(QCursor.pos())
+
+    def replace_file(self, path):
+        self.audio_item.uid = constants.PROJECT.get_wav_uid_by_name(path)
+        item_lib.save_item(
+            shared.CURRENT_ITEM_NAME,
+            shared.CURRENT_ITEM,
+        )
+        constants.DAW_PROJECT.commit(_("Replace audio item"))
+        global_open_audio_items(True)
+
+    def replace_seq_item(self, path):
+        new_uid = constants.PROJECT.get_wav_uid_by_name(path)
+        old_uid = self.audio_item.uid
+        shared.CURRENT_ITEM.replace_all_audio_file(old_uid, new_uid)
+        item_lib.save_item(
+            shared.CURRENT_ITEM_NAME,
+            shared.CURRENT_ITEM,
+        )
+        constants.DAW_PROJECT.commit(_("Replace audio item"))
+        global_open_audio_items(True)
+
+    def replace_project(self, path):
+        new_uid = constants.PROJECT.get_wav_uid_by_name(path)
+        old_uid = self.audio_item.uid
+        constants.DAW_PROJECT.replace_all_audio_file(old_uid, new_uid)
+        constants.DAW_PROJECT.commit(_("Replace audio item"))
+        shared.CURRENT_ITEM = constants.DAW_PROJECT.get_item_by_uid(
+            shared.CURRENT_ITEM.uid,
+        )
+        global_open_audio_items(True)
+        daw_painter_clear_cache()
+        global_open_items()
 
     def draw(self):
         f_temp_seconds = self.sample_length

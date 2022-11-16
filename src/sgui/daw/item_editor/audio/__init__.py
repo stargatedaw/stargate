@@ -302,9 +302,17 @@ class AudioItemSeq(AbstractItemEditor):
             shared.ITEM_EDITOR.show_not_enabled_warning()
             return
         if shared.AUDIO_ITEMS_TO_DROP:
-            f_x = a_event.scenePos().x()
-            f_y = a_event.scenePos().y()
-            self.add_items(f_x, f_y, shared.AUDIO_ITEMS_TO_DROP)
+            items = [
+                x for x in self.scene.items(a_event.scenePos())
+                if isinstance(x, AudioSeqItem)
+            ]
+            if len(items) == 1 and len(shared.AUDIO_ITEMS_TO_DROP) == 1:
+                item = items[0]
+                item.handleDropEvent(shared.AUDIO_ITEMS_TO_DROP[0])
+            else:
+                f_x = a_event.scenePos().x()
+                f_y = a_event.scenePos().y()
+                self.add_items(f_x, f_y, shared.AUDIO_ITEMS_TO_DROP)
 
     def add_items(self, f_x, f_y, a_item_list):
         if self.check_running():

@@ -440,6 +440,24 @@ class DawProject(AbstractProject):
         self.commit("Update automation")
         constants.DAW_IPC.save_atm_sequence()
 
+    def all_items(self):
+        """ Generator function to open, modify and save all items
+        """
+        for name in self.get_item_list():
+            item = self.get_item_by_name(name)
+            yield item
+            self.save_item_by_uid(item.uid, item)
+
+    def replace_all_audio_file(self, old_uid, new_uid):
+        """ Replace all instances of an audio file with another in all
+            sequencer items in the project
+
+            @old_uid: The UID of the old audio file in the audio pool
+            @new_uid: The UID of the new audio file in the audio pool
+        """
+        for item in self.all_items():
+            item.replace_all_audio_file(old_uid, new_uid)
+
     def rename_items(self, a_item_names, a_new_item_name):
         """ @a_item_names:  A list of str
         """
