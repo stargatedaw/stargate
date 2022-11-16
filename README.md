@@ -9,10 +9,10 @@ and why, read the
 - [Learn Stargate by watching Youtube Videos](
     https://www.youtube.com/c/StargateAudio)
 - [Download Stargate demo projects](
-    https://github.com/stargateaudio/stargate-v1-demo-projects)
+    https://github.com/stargatedaw/stargate-v1-demo-projects)
 - [Download instruments for Sampler1](https://github.com/sfzinstruments)
 - [Download or contribute to our public domain sample pack](
-    https://github.com/stargateaudio/stargate/blob/main/docs/troubleshooting/macos_install.md#portable-install-mode)
+    https://github.com/stargatedaw/stargate-sample-pack)
 
 # Features
 - A digital audio workstation (DAW) with a powerful pattern-based workflow
