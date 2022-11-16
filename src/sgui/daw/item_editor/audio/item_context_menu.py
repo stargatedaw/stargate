@@ -72,17 +72,29 @@ def show(current_item):
 
     f_file_menu.addSeparator()
 
-    f_replace_action = QAction(
-        _("Replace with Path in Clipboard"),
+    f_replace_item_action = QAction(
+        _("Replace Audio Item with Path in Clipboard"),
         f_file_menu,
     )
-    f_file_menu.addAction(f_replace_action)
-    f_replace_action.setToolTip(
-        'Replace this file with the file path in the system clipboard.  '
+    f_file_menu.addAction(f_replace_item_action)
+    f_replace_item_action.setToolTip(
+        'Replace this audio item with the file path in the system clipboard.  '
         'You must copy the full path to a valid audio file of a supported '
         'type before using this'
     )
-    f_replace_action.triggered.connect(replace_with_path_in_clipboard)
+    f_replace_item_action.triggered.connect(replace_with_clipboard_item)
+
+    f_replace_seq_action = QAction(
+        _("Replace All Instances in this Seq. Item with Path in Clipboard"),
+        f_file_menu,
+    )
+    f_file_menu.addAction(f_replace_seq_action)
+    f_replace_seq_action.setToolTip(
+        'Replace all instances of this file in this sequencer item with the '
+        'file path in the system clipboard.  You must copy the full path to '
+        'a valid audio file of a supported type before using this'
+    )
+    f_replace_seq_action.triggered.connect(replace_with_clipboard_seq)
 
     f_properties_menu = f_menu.addMenu(_("Properties"))
 
@@ -348,11 +360,28 @@ def select_file_instance():
         if f_item.audio_item.uid == f_uid:
             f_item.setSelected(True)
 
-def replace_with_path_in_clipboard():
+def replace_with_clipboard_item():
     f_path = _shared.global_get_audio_file_from_clipboard()
     if f_path is not None:
         CURRENT_ITEM.audio_item.uid = \
             constants.PROJECT.get_wav_uid_by_name(f_path)
+        item_lib.save_item(
+            shared.CURRENT_ITEM_NAME,
+            shared.CURRENT_ITEM,
+        )
+        constants.DAW_PROJECT.commit(_("Replace audio item"))
+        global_open_audio_items(True)
+
+def replace_with_clipboard_seq():
+    f_path = _shared.global_get_audio_file_from_clipboard()
+    if f_path is not None:
+        uid = constants.PROJECT.get_wav_uid_by_name(f_path)
+        old_uid = CURRENT_ITEM.audio_item.uid
+        for item in (
+            x for x in shared.CURRENT_ITEM.items.values()
+            if x.uid == old_uid
+        ):
+            item.uid = uid
         item_lib.save_item(
             shared.CURRENT_ITEM_NAME,
             shared.CURRENT_ITEM,
