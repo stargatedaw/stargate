@@ -5,6 +5,12 @@ from sglib.lib import util
 from sgui.sgqt import *
 import os
 
+class FileDragDropListWidget(QListWidget):
+    def startDrag(self, *args, **kwargs):
+        drag = QtGui.QDrag(self)
+        drag.setMimeData(self.model().mimeData(self.selectedIndexes()))
+        drag.setHotSpot(self.viewport().mapFromGlobal(QCursor.pos()))
+        drag.exec(QtCore.Qt.DropAction.MoveAction)
 
 class FileDragDropper(widgets.AbstractFileBrowserWidget):
     def __init__(
@@ -14,6 +20,7 @@ class FileDragDropper(widgets.AbstractFileBrowserWidget):
         widgets.AbstractFileBrowserWidget.__init__(
             self,
             a_filter_func=a_filter_func,
+            file_list_widget=FileDragDropListWidget,
         )
         self.list_file.setDragEnabled(True)
         self.list_file.mousePressEvent = self.file_mouse_press_event

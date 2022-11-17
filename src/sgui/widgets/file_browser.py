@@ -18,7 +18,11 @@ def open_bookmarks():
         widget.open_bookmarks()
 
 class AbstractFileBrowserWidget:
-    def __init__(self, a_filter_func=util.is_audio_file):
+    def __init__(
+        self,
+        a_filter_func=util.is_audio_file,
+        file_list_widget=QListWidget,
+    ):
         self.scroll_dict = {}
         self.filter_func = a_filter_func
         self.hsplitter = QSplitter(QtCore.Qt.Orientation.Horizontal)
@@ -166,7 +170,7 @@ class AbstractFileBrowserWidget:
         self.filter_clear_button.pressed.connect(self.on_filter_clear)
         self.filter_hlayout.addWidget(self.filter_clear_button)
         self.file_vlayout.addLayout(self.filter_hlayout)
-        self.list_file = QListWidget()
+        self.list_file = file_list_widget()
         self.list_file.setToolTip('The files in the current directory')
         self.list_file.setSelectionMode(
             QAbstractItemView.SelectionMode.SingleSelection,
