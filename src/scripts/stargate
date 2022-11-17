@@ -22,43 +22,6 @@ if os.path.islink(REAL_PATH):
 
 VERSION = "stargate"
 
-DESKTOP_FILE = """\
-[Desktop Entry]
-Type=Application
-Name=StargateDAW
-Comment=Digital Audio Workstation
-Exec={EXEC}
-Icon={ICON}
-"""
-
-def app_image_start_menu():
-    import shutil
-    appimage = os.environ['APPIMAGE']
-    appdir = os.environ['APPDIR']
-    parent = os.path.dirname(appimage)
-    icon = os.path.join(
-        appdir,
-        'opt',
-        'python3.10',
-        'share',
-        'pixmaps',
-        'stargate.png',
-    )
-    icon_copy = os.path.join(parent, 'stargate.png')
-    shutil.copy(icon, icon_copy)
-    desktop_dir = os.path.join(
-        os.path.expanduser('~'),
-        '.local',
-        'share',
-        'applications',
-    )
-    os.makedirs(desktop_dir, exist_ok=True)
-    desktop_file = DESKTOP_FILE.format(EXEC=appimage, ICON=icon_copy)
-    desktop_path = os.path.join(desktop_dir, 'stargate.desktop')
-    with open(desktop_path, 'w') as f:
-        f.write(desktop_file)
-    exit(0)
-
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -91,7 +54,9 @@ def parse_args():
             and
             args.project_file == 'appimage-start-menu'
         ):
-            app_image_start_menu()
+            from sglib.lib.appimage import appimage_start_menu_install
+            appimage_start_menu_install()
+            exit(0)
         assert os.path.basename(args.project_file) == f'{VERSION}.project', (
             f"File must be in the format '/path/to/{VERSION}.project', "
             f"got '{args.project_file}'"

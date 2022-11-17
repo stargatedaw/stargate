@@ -22,6 +22,7 @@ from sglib.lib import util
 from sglib.lib.process import run_process
 from sglib.lib.util import *
 from sglib.lib.translate import _
+from sglib.lib.appimage import *
 from sglib.log import LOG
 from sglib.lib.pidfile import create_pidfile
 from sglib import constants
@@ -451,7 +452,38 @@ class SgMainWindow(QWidget):
         self.tooltips_action.setChecked(shared.HIDE_HINT_BOX)
         self.tooltips_action.triggered.connect(self.set_tooltips_enabled)
 
-        self.menu_file.addSeparator()
+        if all(x in os.environ for x in ('APPIMAGE', 'APPDIR')):
+            self.appimage_install_action = QAction(
+                "Install AppImage to start menu",
+                self.menu_bar,
+            )
+            self.appimage_install_action.setToolTip(
+                'Install a start menu shortcut for your user account. You '
+                'must run this again if you move the AppImage, and again '
+                'every time you download a new version of the AppImage'
+            )
+            self.appimage_install_action.triggered.connect(
+                self.appimage_install,
+            )
+
+            self.appimage_uninstall_action = QAction(
+                "Uninstall AppImage from the start menu",
+                self.menu_bar,
+            )
+            self.appimage_uninstall_action.setToolTip(
+                'Uninstall Stargate DAW AppImage from the start menu.  '
+                'This will not uninstall a start menu shortcut installed '
+                'by other packages'
+            )
+            self.appimage_uninstall_action.triggered.connect(
+                self.appimage_uninstall,
+            )
+
+            desktop_dir, desktop_path = appimage_start_menu_path()
+            if os.path.exists(desktop_path):
+                self.menu_bar.addAction(self.appimage_uninstall_action)
+            else:
+                self.menu_bar.addAction(self.appimage_install_action)
 
         self.spacebar_action = QAction(self)
         self.addAction(self.spacebar_action)
@@ -477,6 +509,31 @@ class SgMainWindow(QWidget):
 
         self.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
         self.on_collapse_splitters(a_restore=True)
+
+    def appimage_install(self):
+        appimage_start_menu_install()
+        self.menu_bar.removeAction(
+            self.appimage_install_action,
+        )
+        self.menu_bar.addAction(
+            self.appimage_uninstall_action,
+        )
+        QMessageBox.information(None, 'Success!', 'Added start menu shortcut')
+
+    def appimage_uninstall(self):
+        desktop_dir, desktop_path = appimage_start_menu_path()
+        os.remove(desktop_path)
+        self.menu_bar.removeAction(
+            self.appimage_uninstall_action,
+        )
+        self.menu_bar.addAction(
+            self.appimage_install_action,
+        )
+        QMessageBox.information(
+            None,
+            'Success!',
+            'Removed start menu shortcut',
+        )
 
     def set_tooltips_enabled(self):
         hidden = self.tooltips_action.isChecked()
