@@ -305,7 +305,7 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             knob_kwargs=knob_kwargs,
             tooltip=(
                 'How much pitchbend affects pitch, in semitones, while the '
-                'trigger note is pressed',
+                'trigger note is pressed'
             ),
         )
         self.glitch_pb_knob.add_to_grid_layout(self.glitch_gridlayout, 12)
