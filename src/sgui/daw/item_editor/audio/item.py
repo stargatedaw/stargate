@@ -247,6 +247,9 @@ class AudioSeqItem(QGraphicsRectItem):
             lambda: self.replace_project(path)
         )
 
+        # Restore the drag-drop highlighting to normal, avoid item appearing
+        # to be selected when it is not
+        menu.aboutToHide.connect(lambda: self.set_brush())
         menu.exec(QCursor.pos())
 
     def replace_file(self, path):
@@ -458,8 +461,8 @@ class AudioSeqItem(QGraphicsRectItem):
         else:
             return False
 
-    def set_brush(self, a_index=None):
-        if self.isSelected():
+    def set_brush(self, a_index=None, override=False):
+        if override or self.isSelected():
             self.setBrush(
                 QColor(
                     theme.SYSTEM_COLORS.daw.seq_selected_item,

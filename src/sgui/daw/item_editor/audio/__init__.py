@@ -101,6 +101,7 @@ class AudioItemSeq(AbstractItemEditor):
         self.scene.dropEvent = self.sceneDropEvent
         self.scene.dragEnterEvent = self.sceneDragEnterEvent
         self.scene.dragMoveEvent = self.sceneDragMoveEvent
+        self.scene.dragLeaveEvent = self.sceneDragLeaveEvent
         self.scene.setBackgroundBrush(
             QColor(
                 theme.SYSTEM_COLORS.widgets.default_scene_background,
@@ -284,9 +285,23 @@ class AudioItemSeq(AbstractItemEditor):
 
     def sceneDragEnterEvent(self, a_event):
         a_event.setAccepted(True)
+        self.last_drag_item = None
 
     def sceneDragMoveEvent(self, a_event):
         a_event.setDropAction(QtCore.Qt.DropAction.CopyAction)
+        item = self.get_item_at_scene_pos(a_event.scenePos())
+        if item and item != self.last_drag_item:
+            item.set_brush(override=True)
+            if self.last_drag_item:
+                self.last_drag_item.set_brush()
+            self.last_drag_item = item
+        elif not item and self.last_drag_item:
+            self.last_drag_item.set_brush()
+
+    def sceneDragLeaveEvent(self, a_event):
+        if self.last_drag_item:
+            self.last_drag_item.set_brush()
+        QGraphicsScene.dragLeaveEvent(self.scene, a_event)
 
     def check_running(self):
         if (
@@ -302,17 +317,21 @@ class AudioItemSeq(AbstractItemEditor):
             shared.ITEM_EDITOR.show_not_enabled_warning()
             return
         if shared.AUDIO_ITEMS_TO_DROP:
-            items = [
-                x for x in self.scene.items(a_event.scenePos())
-                if isinstance(x, AudioSeqItem)
-            ]
-            if len(items) == 1 and len(shared.AUDIO_ITEMS_TO_DROP) == 1:
-                item = items[0]
+            item = self.get_item_at_scene_pos(a_event.scenePos())
+            if item and len(shared.AUDIO_ITEMS_TO_DROP) == 1:
                 item.handleDropEvent(shared.AUDIO_ITEMS_TO_DROP[0])
             else:
                 f_x = a_event.scenePos().x()
                 f_y = a_event.scenePos().y()
                 self.add_items(f_x, f_y, shared.AUDIO_ITEMS_TO_DROP)
+
+    def get_item_at_scene_pos(self, pos):
+        items = [
+            x for x in self.scene.items(pos)
+            if isinstance(x, AudioSeqItem)
+        ]
+        if len(items) == 1:
+            return items[0]
 
     def add_items(self, f_x, f_y, a_item_list):
         if self.check_running():
