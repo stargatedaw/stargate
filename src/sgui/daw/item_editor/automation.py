@@ -116,9 +116,13 @@ class AutomationEditor(AbstractItemEditor):
         self.selected_str = []
         if self.clipboard:
             self.clear_range(
-                self.clipboard[0].start, self.clipboard[-1].start)
+                self.clipboard[0].start,
+                self.clipboard[-1].start,
+            )
+            channel = shared.ITEM_EDITOR.get_midi_channel()
             for f_item in self.clipboard:
                 f_item2 = f_item.clone()
+                f_item2.channel = channel
                 if self.is_cc:
                     f_item2.cc_num = self.cc_num
                     shared.CURRENT_ITEM.add_cc(f_item2)

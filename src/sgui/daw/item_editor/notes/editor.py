@@ -280,8 +280,11 @@ class PianoRollEditor(AbstractItemEditor):
                 _("Nothing copied to the clipboard"),
             )
             return
+        channel = shared.ITEM_EDITOR.get_midi_channel()
         for f_item in self.clipboard:
-            shared.CURRENT_ITEM.add_note(sg_project.MIDINote.from_str(f_item))
+            note = sg_project.MIDINote.from_str(f_item)
+            note.channel = channel
+            shared.CURRENT_ITEM.add_note(note)
         global_save_and_reload_items()
         self.scene.clearSelection()
         for f_item in self.note_items:

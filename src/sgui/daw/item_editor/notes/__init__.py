@@ -82,19 +82,36 @@ class PianoRollEditorWidget:
 
         self.edit_actions_menu = self.edit_menu.addMenu(_("Edit"))
 
-        #self.copy_action = self.edit_actions_menu.addAction(_("Copy"))
-        #self.copy_action.triggered.connect(
-        #    shared.PIANO_ROLL_EDITOR.copy_selected,
-        #)
-        #self.copy_action.setShortcut(QKeySequence.Copy)
+        self.copy_action = QAction(_("Copy"), self.edit_actions_menu)
+        self.edit_actions_menu.addAction(self.copy_action)
+        self.copy_action.setToolTip(
+            'Copy selected note items to the clipboard.  Useful for copying '
+            'notes between MIDI channels or items.  Select+CTRL+drag can be '
+            'used to copy notes within this item/channel to new positions'
+        )
+        self.copy_action.triggered.connect(
+            shared.PIANO_ROLL_EDITOR.copy_selected,
+        )
+        self.copy_action.setShortcut(QKeySequence.StandardKey.Copy)
 
-        #self.cut_action = self.edit_actions_menu.addAction(_("Cut"))
-        #self.cut_action.triggered.connect(self.on_cut)
-        #self.cut_action.setShortcut(QKeySequence.Cut)
+        self.cut_action = QAction(_("Cut"), self.edit_actions_menu)
+        self.edit_actions_menu.addAction(self.cut_action)
+        self.cut_action.setToolTip(
+            'Copy selected note items to the clipboard, then remove them '
+            'from this item/channel.  Useful for moving notes between MIDI '
+            'channels or items'
+        )
+        self.cut_action.triggered.connect(self.on_cut)
+        self.cut_action.setShortcut(QKeySequence.StandardKey.Cut)
 
-        #self.paste_action = self.edit_actions_menu.addAction(_("Paste"))
-        #self.paste_action.triggered.connect(shared.PIANO_ROLL_EDITOR.paste)
-        #self.paste_action.setShortcut(QKeySequence.Paste)
+        self.paste_action = QAction(_("Paste"))
+        self.edit_actions_menu.addAction(self.paste_action)
+        self.paste_action.setToolTip(
+            'Paste previously copied notes into this item/channel, at the '
+            'original position they were copied/cut from'
+        )
+        self.paste_action.triggered.connect(shared.PIANO_ROLL_EDITOR.paste)
+        self.paste_action.setShortcut(QKeySequence.StandardKey.Paste)
 
         self.select_all_action = QAction(
             _("Select All"),
