@@ -1275,6 +1275,7 @@ void v_sg_seq_event_list_set(
 void v_sg_configure(const char* a_key, const char* a_value){
     char buf[1024];
     log_info("v_sg_configure:  key: \"%s\", value: \"%s\"", a_key, a_value);
+    int has_error = 0;
 
     if(!strcmp(a_key, SG_CONFIGURE_KEY_UPDATE_PLUGIN_CONTROL)){
         a_value = str_split(a_value, buf, '|');
@@ -1289,19 +1290,22 @@ void v_sg_configure(const char* a_key, const char* a_value){
 
         f_instance = &STARGATE->plugin_pool[f_plugin_uid];
 
-        if(f_instance)
-        {
+        if(f_instance){
             f_instance->descriptor->set_port_value(
-                f_instance->plugin_handle, f_port, f_value);
+                f_instance->plugin_handle,
+                f_port,
+                f_value
+            );
+        } else {
+            has_error = 1;
         }
-        else
-        {
+        pthread_spin_unlock(&STARGATE->main_lock);
+        if(has_error){
             log_error(
                 "pc: no valid plugin instance: %i",
                 f_plugin_uid
             );
         }
-        pthread_spin_unlock(&STARGATE->main_lock);
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_CONFIGURE_PLUGIN)){
         t_1d_char_array * f_val_arr = c_split_str_remainder(
             a_value,
@@ -1342,8 +1346,8 @@ void v_sg_configure(const char* a_key, const char* a_value){
         f_input->vol = f_vol;
         f_input->vol_linear = f_vol_linear;
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_KILL_ENGINE)){
-        pthread_spin_lock(&STARGATE->main_lock);
         log_warn("v_sg_configure: SG_CONFIGURE_KEY_KILL_ENGINE");
+        pthread_spin_lock(&STARGATE->main_lock);
         exit(0);
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_EXIT)){
         pthread_mutex_lock(&STARGATE->exit_mutex);
