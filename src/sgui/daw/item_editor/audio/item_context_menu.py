@@ -247,6 +247,14 @@ def show(current_item):
     )
     f_fade_vol_action.triggered.connect(fade_vol_dialog)
 
+    clone_sef_action = QAction("Clone Start, End Fade", f_properties_menu)
+    f_properties_menu.addAction(clone_sef_action)
+    clone_sef_action.setToolTip(
+        'Clone start, end and fade settings from this audio item to all '
+        'other instances of this file in the entire project'
+    )
+    clone_sef_action.triggered.connect(clone_sef)
+
     f_paif_menu = f_menu.addMenu(_("Effects"))
 
     f_paif_file_menu = f_paif_menu.addMenu(_("Per-File"))
@@ -412,6 +420,16 @@ def replace_with_clipboard_all():
         global_open_audio_items(True)
         daw_painter_clear_cache()
         global_open_items()
+
+def clone_sef():
+    constants.DAW_PROJECT.clone_sef(CURRENT_ITEM.audio_item)
+    constants.DAW_PROJECT.commit(_("Replace audio item"))
+    shared.CURRENT_ITEM = constants.DAW_PROJECT.get_item_by_uid(
+        shared.CURRENT_ITEM.uid,
+    )
+    global_open_audio_items(True)
+    daw_painter_clear_cache()
+    global_open_items()
 
 def ts_mode_menu_triggered(a_action):
     f_index = TIMESTRETCH_INDEXES[a_action.algo_name]

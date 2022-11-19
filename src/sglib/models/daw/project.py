@@ -458,6 +458,12 @@ class DawProject(AbstractProject):
         for item in self.all_items():
             item.replace_all_audio_file(old_uid, new_uid)
 
+    def clone_sef(self, audio_item):
+        """ Clone start/end/fade for all instances of a file in the project
+        """
+        for item in self.all_items():
+            item.clone_sef(audio_item)
+
     def rename_items(self, a_item_names, a_new_item_name):
         """ @a_item_names:  A list of str
         """

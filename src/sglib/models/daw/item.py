@@ -108,6 +108,18 @@ class item:
         ):
             audio_item.uid = new_uid
 
+    def clone_sef(self, audio_item):
+        """ Clone start/end/fade for all instances of a file in the seq. item
+        """
+        for clone in (
+            x for x in self.items.values()
+            if x.uid == audio_item.uid
+        ):
+            clone.sample_start = audio_item.sample_start
+            clone.sample_end = audio_item.sample_end
+            clone.fade_in = audio_item.fade_in
+            clone.fade_out = audio_item.fade_out
+
     def extend(self, a_new_ref, a_ref, a_item2, a_tempo):
         """ Glue 2 items together, adding f_offset to the
             event positions of a_item2
