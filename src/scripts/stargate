@@ -27,13 +27,7 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description="Launch Stargate DAW",
     )
-    if 'APPDIR' in os.environ:
-        help_msg = (
-            'The project file to open, or use "appimage-start-menu" to '
-            'install to the start menu'
-        )
-    else:
-        help_msg = 'The project file to open'
+    help_msg = 'The project file to open'
     parser.add_argument(
         'project_file',
         default=None,
@@ -49,14 +43,14 @@ def parse_args():
     )
     args = parser.parse_args()
     if args.project_file is not None:
-        if (
-            'APPIMAGE' in os.environ
-            and
-            args.project_file == 'appimage-start-menu'
-        ):
-            from sglib.lib.appimage import appimage_start_menu_install
-            appimage_start_menu_install()
-            exit(0)
+        if args.project_file == 'appimage-start-menu':
+            parser.error(
+                'appimage-start-menu is deprecated, this functionality has '
+                'been replaced by an action in the main menu.  See: '
+                'https://github.com/stargatedaw/stargate/blob/main/docs/'
+                'troubleshooting/appimage.md#adding-the-appimage-to-'
+                'the-start-menu'
+            )
         assert os.path.basename(args.project_file) == f'{VERSION}.project', (
             f"File must be in the format '/path/to/{VERSION}.project', "
             f"got '{args.project_file}'"
