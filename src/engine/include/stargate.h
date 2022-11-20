@@ -277,8 +277,7 @@ typedef struct {
     enum PlaybackMode playback_mode;
     char osc_cursor_message[1024];
     int osc_queue_index;
-    char osc_queue_keys[OSC_SEND_QUEUE_SIZE][12];
-    char osc_queue_vals[OSC_SEND_QUEUE_SIZE][OSC_MAX_MESSAGE_SIZE];
+    struct OscKeyPair osc_messages[OSC_SEND_QUEUE_SIZE];
     pthread_t osc_queue_thread;
     //Threads must hold this to write OSC messages
     pthread_spinlock_t ui_spinlock;

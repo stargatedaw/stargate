@@ -375,12 +375,12 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
     if(STARGATE->osc_queue_index > 0){
         for(f_i = 0; f_i < STARGATE->osc_queue_index; ++f_i){
             strcpy(
-                a_buffers->osc_queue_keys[f_i],
-                STARGATE->osc_queue_keys[f_i]
+                a_buffers->messages[f_i].key,
+                STARGATE->osc_messages[f_i].key
             );
             strcpy(
-                a_buffers->osc_queue_vals[f_i],
-                STARGATE->osc_queue_vals[f_i]
+                a_buffers->messages[f_i].value,
+                STARGATE->osc_messages[f_i].value
             );
         }
 
@@ -390,12 +390,12 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
 
         for(;f_i < STARGATE->osc_queue_index; ++f_i){
             strcpy(
-                a_buffers->osc_queue_keys[f_i],
-                STARGATE->osc_queue_keys[f_i]
+                a_buffers->messages[f_i].key,
+                STARGATE->osc_messages[f_i].key
             );
             strcpy(
-                a_buffers->osc_queue_vals[f_i],
-                STARGATE->osc_queue_vals[f_i]
+                a_buffers->messages[f_i].value,
+                STARGATE->osc_messages[f_i].value
             );
         }
 
@@ -410,8 +410,8 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
                     a_buffers->f_tmp1,
                     OSC_MAX_MESSAGE_SIZE,
                     "%s|%s\n",
-                    a_buffers->osc_queue_keys[f_i],
-                    a_buffers->osc_queue_vals[f_i]
+                    a_buffers->messages[f_i].key,
+                    a_buffers->messages[f_i].value
                 );
                 v_ui_send("stargate/daw", a_buffers->f_tmp1);
             }

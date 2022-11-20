@@ -4,12 +4,16 @@
 #define OSC_SEND_QUEUE_SIZE 256
 #define OSC_MAX_MESSAGE_SIZE 65536
 
+struct OscKeyPair {
+    char key[32];
+    char value[OSC_MAX_MESSAGE_SIZE];
+};
+
 typedef struct{
-    char * f_tmp1;
-    char * f_tmp2;
-    char * f_msg;
-    char osc_queue_keys[OSC_SEND_QUEUE_SIZE][12];
-    char * osc_queue_vals[OSC_SEND_QUEUE_SIZE];
+    char f_tmp1[OSC_MAX_MESSAGE_SIZE];
+    char f_tmp2[OSC_MAX_MESSAGE_SIZE];
+    char f_msg[OSC_MAX_MESSAGE_SIZE];
+    struct OscKeyPair messages[OSC_SEND_QUEUE_SIZE];
 }t_osc_send_data;
 
 void* v_osc_send_thread(void* a_arg);

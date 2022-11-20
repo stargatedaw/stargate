@@ -11,35 +11,24 @@
 
 
 void* v_osc_send_thread(void* a_arg){
-    t_osc_send_data f_send_data;
+    t_osc_send_data* f_send_data;
     int f_i;
+    hpalloc(
+        (void**)&f_send_data,
+        sizeof(t_osc_send_data)
+    );
 
     for(f_i = 0; f_i < OSC_SEND_QUEUE_SIZE; ++f_i){
-        hpalloc(
-            (void**)&f_send_data.osc_queue_vals[f_i],
-            sizeof(char) * OSC_MAX_MESSAGE_SIZE
-        );
+        f_send_data->messages[f_i].key[0] = '\0';
+        f_send_data->messages[f_i].value[0] = '\0';
     }
 
-    hpalloc(
-        (void**)&f_send_data.f_tmp1,
-        sizeof(char) * OSC_MAX_MESSAGE_SIZE
-    );
-    hpalloc(
-        (void**)&f_send_data.f_tmp2,
-        sizeof(char) * OSC_MAX_MESSAGE_SIZE
-    );
-    hpalloc(
-        (void**)&f_send_data.f_msg,
-        sizeof(char) * OSC_MAX_MESSAGE_SIZE
-    );
-
-    f_send_data.f_tmp1[0] = '\0';
-    f_send_data.f_tmp2[0] = '\0';
-    f_send_data.f_msg[0] = '\0';
+    f_send_data->f_tmp1[0] = '\0';
+    f_send_data->f_tmp2[0] = '\0';
+    f_send_data->f_msg[0] = '\0';
 
     while(!STARGATE->audio_recording_quit_notifier){
-        STARGATE->current_host->osc_send(&f_send_data);
+        STARGATE->current_host->osc_send(f_send_data);
         usleep(UI_SEND_USLEEP);
     }
 
@@ -68,14 +57,14 @@ void v_queue_osc_message(
     } else {
         pthread_spin_lock(&STARGATE->ui_spinlock);
         sg_snprintf(
-            STARGATE->osc_queue_keys[STARGATE->osc_queue_index],
-            12,
+            STARGATE->osc_messages[STARGATE->osc_queue_index].key,
+            32,
             "%s",
             a_key
         );
         sg_snprintf(
-            STARGATE->osc_queue_vals[STARGATE->osc_queue_index],
-            65536,
+            STARGATE->osc_messages[STARGATE->osc_queue_index].value,
+            OSC_MAX_MESSAGE_SIZE,
             "%s",
             a_val
         );

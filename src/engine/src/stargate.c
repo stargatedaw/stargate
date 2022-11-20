@@ -835,11 +835,11 @@ void v_buffer_mix(
 }
 
 void v_wait_for_threads(){
-    int f_i;
+    int i;
 
-    for(f_i = 1; f_i < (STARGATE->worker_thread_count); ++f_i){
-        pthread_spin_lock(&STARGATE->worker_threads[f_i].lock);
-        pthread_spin_unlock(&STARGATE->worker_threads[f_i].lock);
+    for(i = 1; i < (STARGATE->worker_thread_count); ++i){
+        pthread_spin_lock(&STARGATE->worker_threads[i].lock);
+        pthread_spin_unlock(&STARGATE->worker_threads[i].lock);
     }
 }
 
