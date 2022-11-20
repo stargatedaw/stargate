@@ -105,7 +105,7 @@ void v_init_worker_threads(
         pthread_mutex_init(&_thread->track_block_mutex, NULL);
 #if SG_OS == _OS_MACOS
         pthread_setschedparam(
-            &STARGATE->worker_threads[f_i].thread,
+            STARGATE->worker_threads[f_i].thread,
             RT_SCHED,
             &rt_sched_param
         );
