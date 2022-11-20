@@ -32,7 +32,7 @@ DEFINES ?= \
 
 BASE_FLAGS ?= $(OPTIMIZE_FLAGS) $(DEFINES)
 
-BUILD_FLAGS ?= -std=gnu99 $(PLAT_FLAGS) $(BASE_FLAGS) $(CFLAGS) $(INC) $(SRC)
+BUILD_FLAGS ?= -std=gnu11 $(PLAT_FLAGS) $(BASE_FLAGS) $(CFLAGS) $(INC) $(SRC)
 
 MATH_LIB_FLAG ?= -lm
 ALSA_FLAG ?= $(shell pkg-config --libs alsa)
