@@ -91,7 +91,7 @@ bench:
 	    $(LINK_FLAGS) -o $(NAME).benchmark
 	./$(NAME).benchmark
 
-bench-test:
+bench-test: clean-gcov
 	# Run the benchmark through valgrind and gcov
 	$(CC) \
 	    -fpie $(CC_ARGS) $(DEBUG_FLAGS) $(PLAT_FLAGS) $(GCOVARGS) \
@@ -110,11 +110,13 @@ bench-test:
 	# NOTE: You do not need to cover all lines, this is simply for
 	# 	debugging purposes
 
-clean:
+clean-gcov:
+	rm -f *.gcda *.gcno
+
+clean: clean-gcov
 	# Remove all temporary files
-	rm -rf $(NAME)* \
-		html/* *.gcda *.gcno *.out *.out.* pahole.txt \
-		profile.txt bench.out vgcore* test.wav*
+	rm -rf $(NAME)* html/* *.out *.out.* pahole.txt profile.txt vgcore* \
+		test.wav*
 
 debug:
 	# Compile the binary with the appropriate flags to debug in GDB
@@ -196,7 +198,7 @@ perf:
 	    $(LINK_FLAGS) -o $(NAME).perf
 	perf stat -e $(PERF_COUNTERS) ./$(NAME).perf
 
-test:
+test: clean-gcov
 	# Compile and run the test suite through Valgrind to check for
 	# memory errors, then generate an HTML code coverage report
 	# using gcovr
@@ -209,12 +211,13 @@ test:
 	mkdir -p tmp
 	# If Valgrind exits non-zero, try running 'gdb ./engine.tests'
 	# to debug the test suite
-	valgrind $(VALGRIND_ARGS) ./$(NAME).tests
+	valgrind $(VALGRIND_ARGS) ./$(NAME).tests || true
 	mkdir html || rm -rf html/*
-	gcovr -r . --html --html-details \
+	gcovr --html --html-details \
 		--exclude=benchmark \
 		--exclude=libcds \
 		-o html/coverage.html
 	rm -rf *.gcda *.gcno
 	$(BROWSER) html/coverage.html &
+	make clean-gcov
 
