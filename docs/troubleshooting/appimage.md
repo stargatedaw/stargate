@@ -13,11 +13,10 @@ mv squashfs-root/ stargatedaw/
 ```
 
 # Adding the AppImage to the start menu
-If you wish to add the Stargate DAW AppImage to the start menu, there is
-a special command that is only available in the AppImage:
-```
-/path/to/Stargate*.AppImage appimage-start-menu
-```
+If you wish to add the Stargate DAW AppImage to the start menu, when running
+the AppImage there is an action in the main menu (the "hamburger" icon in the
+upper left corner of the window after opening a project) to install (or
+uninstall) a start menu shortcut.
 
 This command will extract `stargate.png` next to the AppImage, and create
 a `~/.local/share/applications/stargate.desktop` file to add Stargate DAW
