@@ -77,7 +77,6 @@ void* ipc_server_thread(void* _arg){
     struct IpcServerThreadArgs* args = (struct IpcServerThreadArgs*)_arg;
     struct EngineMessage engine_message;
 
-    int _exiting;
     int sockfd;
     int n;
     socklen_t len;
@@ -135,14 +134,7 @@ void* ipc_server_thread(void* _arg){
 
     len = (socklen_t)sizeof(cliaddr); //len is value/resuslt
 
-    while(1){
-        pthread_mutex_lock(&EXIT_MUTEX);
-        _exiting = exiting;
-        pthread_mutex_unlock(&EXIT_MUTEX);
-        if(_exiting){
-            break;
-        }
-
+    while(!is_exiting()){
         n = recvfrom(
             sockfd,
             (char*)buffer,

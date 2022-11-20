@@ -12,4 +12,11 @@ extern int UI_SEND_USLEEP;
 extern pthread_mutex_t CONFIG_LOCK;
 extern pthread_mutex_t EXIT_MUTEX;
 
+// Return 0 if the application is running, 1 if preparing to exit
+int is_exiting();
+
+// Initiate an orderly shutdown, this causes various thread loops to
+// exit so that various threads may finish
+void sg_exit();
+
 #endif

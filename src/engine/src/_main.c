@@ -67,9 +67,7 @@ static int NO_HARDWARE_USLEEP = 0;
 
 void signalHandler(int sig){
     log_info("signal %d caught, trying to clean up and exit", sig);
-    pthread_mutex_lock(&EXIT_MUTEX);
-    exiting = 1;
-    pthread_mutex_unlock(&EXIT_MUTEX);
+    sg_exit();
 }
 
 typedef struct{
@@ -82,25 +80,15 @@ NO_OPTIMIZATION void* ui_process_monitor_thread(
 ){
     ui_thread_args * f_thread_args = (ui_thread_args*)(a_thread_args);
     int f_exited = 0;
-    int _exiting;
 
-    while(1){
-        pthread_mutex_lock(&EXIT_MUTEX);
-        _exiting = exiting;
-        pthread_mutex_unlock(&EXIT_MUTEX);
-        if(_exiting){
-            break;
-        }
-
+    while(!is_exiting()){
         sleep(1);
         if(kill(f_thread_args->pid, 0)){
             log_info(
                 "UI process %i doesn't exist, exiting.",
                 f_thread_args->pid
             );
-            pthread_mutex_lock(&EXIT_MUTEX);
-            exiting = 1;
-            pthread_mutex_unlock(&EXIT_MUTEX);
+            sg_exit();
             f_exited = 1;
             break;
         }
@@ -558,14 +546,7 @@ NO_OPTIMIZATION int main_loop(){
     }
     READY = 1;
     log_info("Entering main loop");
-    while(1){
-        pthread_mutex_lock(&EXIT_MUTEX);
-        if(exiting){
-            pthread_mutex_unlock(&EXIT_MUTEX);
-            break;
-        }
-        pthread_mutex_unlock(&EXIT_MUTEX);
-
+    while(!is_exiting()){
         if(NO_HARDWARE){
             portaudioCallback(
                 f_portaudio_input_buffer,

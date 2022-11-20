@@ -308,17 +308,10 @@ void * v_audio_recording_thread(void* a_arg){
     int f_count;
     int f_i;
     int f_frames;
-    int _exiting;
 
     sleep(3);
 
-    while(1){
-        pthread_mutex_lock(&EXIT_MUTEX);
-        _exiting = exiting;
-        pthread_mutex_unlock(&EXIT_MUTEX);
-        if(_exiting){
-            break;
-        }
+    while(!is_exiting()){
         int f_did_something = 0;
 
         pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
