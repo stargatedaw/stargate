@@ -6,8 +6,6 @@ and why, read the
 [project design principles](docs/project_design_principles.md).
 
 # Links
-- [Learn Stargate by watching Youtube Videos](
-    https://www.youtube.com/c/StargateAudio)
 - [Download Stargate demo projects](
     https://github.com/stargatedaw/stargate-v1-demo-projects)
 - [Download instruments for Sampler1](https://github.com/sfzinstruments)
