@@ -13,6 +13,8 @@ LIBEXT ?= so
 INC = -Iinclude -Ilibcds/include
 SRC = $(shell find src/ libcds/src -type f -name '*.c')
 
+VALGRIND_ARGS ?= --tool=memcheck --track-origins=yes
+
 CACHE_LINE_SIZE = $(shell getconf LEVEL1_DCACHE_LINESIZE || echo 64)
 
 OPTIMIZE_FLAGS ?= \
@@ -98,7 +100,7 @@ bench-test:
 	    $(LINK_FLAGS) -o $(NAME).benchmark
 	# If Valgrind exits non-zero, try running 'gdb ./engine.tests'
 	# to debug the test suite
-	valgrind ./$(NAME).benchmark --track-origins=yes
+	valgrind $(VALGRIND_ARGS) ./$(NAME).benchmark
 	mkdir html || rm -rf html/*
 	gcovr -r . --html --html-details \
 		--exclude=tests \
@@ -207,7 +209,7 @@ test:
 	mkdir -p tmp
 	# If Valgrind exits non-zero, try running 'gdb ./engine.tests'
 	# to debug the test suite
-	valgrind ./$(NAME).tests --track-origins=yes
+	valgrind $(VALGRIND_ARGS) ./$(NAME).tests
 	mkdir html || rm -rf html/*
 	gcovr -r . --html --html-details \
 		--exclude=benchmark \
