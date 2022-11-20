@@ -67,9 +67,9 @@ static int NO_HARDWARE_USLEEP = 0;
 
 void signalHandler(int sig){
     log_info("signal %d caught, trying to clean up and exit", sig);
-    pthread_mutex_lock(&STARGATE->exit_mutex);
+    pthread_mutex_lock(&EXIT_MUTEX);
     exiting = 1;
-    pthread_mutex_unlock(&STARGATE->exit_mutex);
+    pthread_mutex_unlock(&EXIT_MUTEX);
 }
 
 typedef struct{
@@ -82,17 +82,25 @@ NO_OPTIMIZATION void* ui_process_monitor_thread(
 ){
     ui_thread_args * f_thread_args = (ui_thread_args*)(a_thread_args);
     int f_exited = 0;
+    int _exiting;
 
-    while(!exiting){
+    while(1){
+        pthread_mutex_lock(&EXIT_MUTEX);
+        _exiting = exiting;
+        pthread_mutex_unlock(&EXIT_MUTEX);
+        if(_exiting){
+            break;
+        }
+
         sleep(1);
         if(kill(f_thread_args->pid, 0)){
             log_info(
                 "UI process %i doesn't exist, exiting.",
                 f_thread_args->pid
             );
-            pthread_mutex_lock(&STARGATE->exit_mutex);
+            pthread_mutex_lock(&EXIT_MUTEX);
             exiting = 1;
-            pthread_mutex_unlock(&STARGATE->exit_mutex);
+            pthread_mutex_unlock(&EXIT_MUTEX);
             f_exited = 1;
             break;
         }
@@ -143,6 +151,7 @@ int _main(int argc, char** argv){
     setup_signal_handling();
     pthread_mutex_init(&FFTW_LOCK, NULL);
     pthread_mutex_init(&CONFIG_LOCK, NULL);
+    pthread_mutex_init(&EXIT_MUTEX, NULL);
     int j;
 
     for(j = 0; j < argc; ++j){
@@ -215,13 +224,13 @@ int _main(int argc, char** argv){
     }
 
     set_thread_params();
+    start_socket_thread();
+
+    start_engine(argv[2], thread_count);
 #if SG_OS != _OS_WINDOWS
     int ui_pid = atoi(argv[3]);
     start_ui_thread(ui_pid);
 #endif
-    start_socket_thread();
-
-    start_engine(argv[2], thread_count);
 #if SG_OS == _OS_LINUX
     clock_gettime(CLOCK_REALTIME, &load_finish);
     v_print_benchmark(
@@ -550,12 +559,12 @@ NO_OPTIMIZATION int main_loop(){
     READY = 1;
     log_info("Entering main loop");
     while(1){
-        pthread_mutex_lock(&STARGATE->exit_mutex);
+        pthread_mutex_lock(&EXIT_MUTEX);
         if(exiting){
-            pthread_mutex_unlock(&STARGATE->exit_mutex);
+            pthread_mutex_unlock(&EXIT_MUTEX);
             break;
         }
-        pthread_mutex_unlock(&STARGATE->exit_mutex);
+        pthread_mutex_unlock(&EXIT_MUTEX);
 
         if(NO_HARDWARE){
             portaudioCallback(

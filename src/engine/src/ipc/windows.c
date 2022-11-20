@@ -141,6 +141,7 @@ void* ipc_server_thread(void* _arg){
     char buffer[IPC_MAX_MESSAGE_SIZE];
     char *response = "Message processed";
     int response_len = strlen(response);
+    int _exiting;
 
     fd_set fds;
     int n;
@@ -240,7 +241,14 @@ void* ipc_server_thread(void* _arg){
     }
     log_info("UDP server bind finished");
 
-    while(!exiting){
+    while(1){
+        pthread_mutex_lock(&EXIT_MUTEX);
+        _exiting = exiting;
+        pthread_mutex_unlock(&EXIT_MUTEX);
+        if(_exiting){
+            break;
+        }
+
         memset(buffer,'\0', IPC_MAX_MESSAGE_SIZE);
 
         FD_ZERO(&fds);

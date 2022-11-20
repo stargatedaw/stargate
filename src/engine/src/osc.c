@@ -13,6 +13,8 @@
 void* v_osc_send_thread(void* a_arg){
     t_osc_send_data* f_send_data;
     int f_i;
+    int quit_notifier;
+
     hpalloc(
         (void**)&f_send_data,
         sizeof(t_osc_send_data)
@@ -27,7 +29,14 @@ void* v_osc_send_thread(void* a_arg){
     f_send_data->f_tmp2[0] = '\0';
     f_send_data->f_msg[0] = '\0';
 
-    while(!STARGATE->audio_recording_quit_notifier){
+    while(1){
+        pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
+        quit_notifier = STARGATE->audio_recording_quit_notifier;
+        pthread_mutex_unlock(&STARGATE->audio_inputs_mutex);
+        if(quit_notifier){
+            break;
+        }
+
         STARGATE->current_host->osc_send(f_send_data);
         usleep(UI_SEND_USLEEP);
     }
@@ -44,10 +53,8 @@ void* v_osc_send_thread(void* a_arg){
  * a_key:   A key that the UI host will recognize
  * a_value: The value, or an empty string if not value is required
  */
-void v_queue_osc_message(
-    char* a_key,
-    char * a_val
-){
+void v_queue_osc_message(char* a_key, char* a_val){
+    pthread_spin_lock(&STARGATE->ui_spinlock);
     if(STARGATE->osc_queue_index >= OSC_SEND_QUEUE_SIZE){
         log_info(
             "Dropping OSC event to prevent buffer overrun: %s|%s",
@@ -55,7 +62,6 @@ void v_queue_osc_message(
             a_val
         );
     } else {
-        pthread_spin_lock(&STARGATE->ui_spinlock);
         sg_snprintf(
             STARGATE->osc_messages[STARGATE->osc_queue_index].key,
             32,
@@ -69,7 +75,7 @@ void v_queue_osc_message(
             a_val
         );
         ++STARGATE->osc_queue_index;
-        pthread_spin_unlock(&STARGATE->ui_spinlock);
     }
+    pthread_spin_unlock(&STARGATE->ui_spinlock);
 }
 

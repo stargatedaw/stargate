@@ -292,6 +292,7 @@ void g_stargate_get(
     t_midi_device_list* a_midi_devices
 ){
     clalloc((void**)&STARGATE, sizeof(t_stargate));
+    pthread_mutex_init(&STARGATE->audio_inputs_mutex, NULL);
     STARGATE->audio_pool = g_audio_pool_get(a_sr);
     STARGATE->midi_devices = a_midi_devices;
     STARGATE->current_host = NULL;
@@ -307,9 +308,6 @@ void g_stargate_get(
     STARGATE->is_previewing = 0;
     STARGATE->preview_max_sample_count = ((int)(a_sr)) * 30;
     STARGATE->playback_mode = 0;
-
-    pthread_mutex_init(&STARGATE->audio_inputs_mutex, NULL);
-    pthread_mutex_init(&STARGATE->exit_mutex, NULL);
 
     int f_i;
 
@@ -834,12 +832,14 @@ void v_buffer_mix(
     }
 }
 
-void v_wait_for_threads(){
+NO_OPTIMIZATION void v_wait_for_threads(){
     int i;
+    pthread_spinlock_t* lock;
 
     for(i = 1; i < (STARGATE->worker_thread_count); ++i){
-        pthread_spin_lock(&STARGATE->worker_threads[i].lock);
-        pthread_spin_unlock(&STARGATE->worker_threads[i].lock);
+        lock = &STARGATE->worker_threads[i].lock;
+        pthread_spin_lock(lock);
+        pthread_spin_unlock(lock);
     }
 }
 
@@ -1341,9 +1341,9 @@ void v_sg_configure(const char* a_key, const char* a_value){
         pthread_spin_lock(&STARGATE->main_lock);
         exit(0);
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_EXIT)){
-        pthread_mutex_lock(&STARGATE->exit_mutex);
+        pthread_mutex_lock(&EXIT_MUTEX);
         exiting = 1;
-        pthread_mutex_unlock(&STARGATE->exit_mutex);
+        pthread_mutex_unlock(&EXIT_MUTEX);
     } else if(!strcmp(a_key, SG_CONFIGURE_KEY_LOAD_CC_MAP)){
         t_1d_char_array * f_val_arr = c_split_str_remainder(
             a_value,

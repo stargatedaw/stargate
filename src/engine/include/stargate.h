@@ -291,7 +291,6 @@ typedef struct {
     char samplegraph_folder[1024];
     char audio_pool_file[1024];
     char plugins_folder[1024];
-    pthread_mutex_t exit_mutex;
 } t_stargate;
 
 typedef struct {
@@ -383,7 +382,7 @@ void v_sample_period_split(
     SGFLT * a_input_buffer,
     int a_input_count
 );
-void v_wait_for_threads();
+NO_OPTIMIZATION void v_wait_for_threads();
 void v_sample_period_set_atm_events(
     t_sample_period * self,
     t_sg_seq_event_list * a_event_list,

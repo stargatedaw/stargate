@@ -28,9 +28,10 @@ void * v_worker_thread(void* a_arg){
     pthread_spinlock_t * f_lock =
         &STARGATE->worker_threads[f_thread_num].lock;
 
-    while(1)
-    {
+    while(1){
+        pthread_mutex_lock(f_track_block_mutex);
         pthread_cond_wait(f_track_cond, f_track_block_mutex);
+        pthread_mutex_unlock(f_track_block_mutex);
         pthread_spin_lock(f_lock);
 
         if(STARGATE->worker_threads[f_thread_num].track_thread_quit_notifier){

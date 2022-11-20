@@ -308,10 +308,17 @@ void * v_audio_recording_thread(void* a_arg){
     int f_count;
     int f_i;
     int f_frames;
+    int _exiting;
 
     sleep(3);
 
-    while(!exiting){
+    while(1){
+        pthread_mutex_lock(&EXIT_MUTEX);
+        _exiting = exiting;
+        pthread_mutex_unlock(&EXIT_MUTEX);
+        if(_exiting){
+            break;
+        }
         int f_did_something = 0;
 
         pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
@@ -376,7 +383,7 @@ void v_stop_record_audio(){
     char f_file_name_old[2048];
     char f_file_name_new[2048];
 
-    pthread_mutex_lock(&STARGATE->exit_mutex);
+    pthread_mutex_lock(&EXIT_MUTEX);
     log_info("Stopping recording, shutdown is inhibited.");
     pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
 
@@ -425,7 +432,7 @@ void v_stop_record_audio(){
     }
 
     pthread_mutex_unlock(&STARGATE->audio_inputs_mutex);
-    pthread_mutex_unlock(&STARGATE->exit_mutex);
+    pthread_mutex_unlock(&EXIT_MUTEX);
     log_info("Finished stopping recording, shutdown is no longer inhibited.");
 }
 

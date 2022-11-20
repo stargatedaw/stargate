@@ -400,7 +400,9 @@ void v_daw_osc_send(t_osc_send_data * a_buffers){
         }
 
         int f_index = STARGATE->osc_queue_index;
+        pthread_spin_lock(&STARGATE->ui_spinlock);
         STARGATE->osc_queue_index = 0;
+        pthread_spin_unlock(&STARGATE->ui_spinlock);
 
         pthread_spin_unlock(&STARGATE->main_lock);
 
