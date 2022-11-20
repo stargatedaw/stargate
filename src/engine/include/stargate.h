@@ -237,6 +237,18 @@ typedef struct {
     void (*mix)();
 } t_sg_host;
 
+struct SgWorkerThread {
+    char start_padding[CACHE_LINE_SIZE];
+    //For broadcasting to the threads that it's time to process the tracks
+    pthread_cond_t track_cond;
+    //For preventing the main thread from continuing until the workers finish
+    pthread_mutex_t track_block_mutex;
+    pthread_spinlock_t lock;
+    pthread_t thread;
+    int track_thread_quit_notifier;
+    char end_padding[CACHE_LINE_SIZE];
+};
+
 typedef struct {
     t_sg_thread_storage thread_storage[MAX_WORKER_THREADS];
     t_sg_host * current_host;
@@ -246,14 +258,8 @@ typedef struct {
     int sample_count;
     pthread_spinlock_t main_lock;
 
-    //For broadcasting to the threads that it's time to process the tracks
-    pthread_cond_t * track_cond;
-    //For preventing the main thread from continuing until the workers finish
-    pthread_mutex_t * track_block_mutexes;
-    pthread_spinlock_t * thread_locks;
-    pthread_t * worker_threads;
+    struct SgWorkerThread worker_threads[MAX_WORKER_THREADS];
     int worker_thread_count;
-    int * track_thread_quit_notifier;
     void * main_thread_args;
 
     int is_offline_rendering;
@@ -269,7 +275,7 @@ typedef struct {
     pthread_t audio_recording_thread;
     int audio_recording_quit_notifier;
     enum PlaybackMode playback_mode;
-    char * osc_cursor_message;
+    char osc_cursor_message[1024];
     int osc_queue_index;
     char osc_queue_keys[OSC_SEND_QUEUE_SIZE][12];
     char osc_queue_vals[OSC_SEND_QUEUE_SIZE][OSC_MAX_MESSAGE_SIZE];
@@ -279,13 +285,13 @@ typedef struct {
     t_midi_device_list * midi_devices;
     int midi_learn;
     t_plugin plugin_pool[MAX_PLUGIN_POOL_COUNT];
-    char* project_folder;
-    char* audio_folder;
-    char* audio_tmp_folder;
-    char* samples_folder;
-    char* samplegraph_folder;
-    char* audio_pool_file;
-    char* plugins_folder;
+    char project_folder[1024];
+    char audio_folder[1024];
+    char audio_tmp_folder[1024];
+    char samples_folder[1024];
+    char samplegraph_folder[1024];
+    char audio_pool_file[1024];
+    char plugins_folder[1024];
     pthread_mutex_t exit_mutex;
 } t_stargate;
 

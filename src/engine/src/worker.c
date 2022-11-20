@@ -21,20 +21,22 @@ void * v_worker_thread(void* a_arg){
     v_pre_fault_thread_stack(f_args->stack_size);
 
     int f_thread_num = f_args->thread_num;
-    pthread_cond_t * f_track_cond = &STARGATE->track_cond[f_thread_num];
+    pthread_cond_t * f_track_cond =
+        &STARGATE->worker_threads[f_thread_num].track_cond;
     pthread_mutex_t * f_track_block_mutex =
-        &STARGATE->track_block_mutexes[f_thread_num];
-    pthread_spinlock_t * f_lock = &STARGATE->thread_locks[f_thread_num];
+        &STARGATE->worker_threads[f_thread_num].track_block_mutex;
+    pthread_spinlock_t * f_lock =
+        &STARGATE->worker_threads[f_thread_num].lock;
 
     while(1)
     {
         pthread_cond_wait(f_track_cond, f_track_block_mutex);
         pthread_spin_lock(f_lock);
 
-        if(STARGATE->track_thread_quit_notifier[f_thread_num])
-        {
+        if(STARGATE->worker_threads[f_thread_num].track_thread_quit_notifier){
             pthread_spin_unlock(f_lock);
-            STARGATE->track_thread_quit_notifier[f_thread_num] = 2;
+            STARGATE->worker_threads[
+                f_thread_num].track_thread_quit_notifier = 2;
             log_info("Worker thread %i exiting...", f_thread_num);
             break;
         }
@@ -56,6 +58,7 @@ void v_init_worker_threads(
     int a_thread_count,
     int a_aux_threads
 ){
+    struct SgWorkerThread* _thread;
     int f_stack_size = (1024 * 1024);
 
     if(SINGLE_THREAD){
@@ -65,28 +68,6 @@ void v_init_worker_threads(
     }
 
     log_info("Spawning %i worker threads", STARGATE->worker_thread_count);
-
-    STARGATE->track_block_mutexes = (pthread_mutex_t*)malloc(
-        sizeof(pthread_mutex_t) * (STARGATE->worker_thread_count)
-    );
-    STARGATE->worker_threads = (pthread_t*)malloc(
-        sizeof(pthread_t) * (STARGATE->worker_thread_count)
-    );
-
-    hpalloc(
-        (void**)&STARGATE->track_thread_quit_notifier,
-        sizeof(int) * STARGATE->worker_thread_count
-    );
-
-    hpalloc(
-        (void**)&STARGATE->track_cond,
-        sizeof(pthread_cond_t) * STARGATE->worker_thread_count
-    );
-
-    hpalloc(
-        (void**)&STARGATE->thread_locks,
-        sizeof(pthread_spinlock_t) * STARGATE->worker_thread_count
-    );
 
     pthread_attr_t threadAttr;
     pthread_attr_init(&threadAttr);
@@ -107,7 +88,8 @@ void v_init_worker_threads(
     int f_i;
 
     for(f_i = 0; f_i < STARGATE->worker_thread_count; ++f_i){
-        STARGATE->track_thread_quit_notifier[f_i] = 0;
+        _thread = &STARGATE->worker_threads[f_i];
+        _thread->track_thread_quit_notifier = 0;
         t_thread_args * f_args = (t_thread_args*)malloc(
             sizeof(t_thread_args)
         );
@@ -118,9 +100,9 @@ void v_init_worker_threads(
             STARGATE->main_thread_args = (void*)f_args;
         }
         //pthread_mutex_init(&STARGATE->track_cond_mutex[f_i], NULL);
-        pthread_cond_init(&STARGATE->track_cond[f_i], NULL);
-        pthread_spin_init(&STARGATE->thread_locks[f_i], 0);
-        pthread_mutex_init(&STARGATE->track_block_mutexes[f_i], NULL);
+        pthread_cond_init(&_thread->track_cond, NULL);
+        pthread_spin_init(&_thread->lock, 0);
+        pthread_mutex_init(&_thread->track_block_mutex, NULL);
 #if SG_OS == _OS_MACOS
         pthread_setschedparam(
             STARGATE->worker_threads[f_i],
@@ -129,7 +111,7 @@ void v_init_worker_threads(
         );
 #endif
         pthread_create(
-            &STARGATE->worker_threads[f_i],
+            &STARGATE->worker_threads[f_i].thread,
             &threadAttr,
             v_worker_thread,
             (void*)f_args
@@ -204,6 +186,7 @@ NO_OPTIMIZATION void v_activate(
 
 void v_destructor(){
     int f_i;
+    struct SgWorkerThread* _thread;
 
     char tmp_sndfile_name[2048];
 
@@ -230,12 +213,12 @@ void v_destructor(){
 
     pthread_spin_lock(&STARGATE->main_lock);
 
-    for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i)
-    {
-        pthread_mutex_lock(&STARGATE->track_block_mutexes[f_i]);
-        STARGATE->track_thread_quit_notifier[f_i] = 1;
-        pthread_cond_broadcast(&STARGATE->track_cond[f_i]);
-        pthread_mutex_unlock(&STARGATE->track_block_mutexes[f_i]);
+    for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
+        _thread = &STARGATE->worker_threads[f_i];
+        pthread_mutex_lock(&_thread->track_block_mutex);
+        _thread->track_thread_quit_notifier = 1;
+        pthread_cond_broadcast(&_thread->track_cond);
+        pthread_mutex_unlock(&_thread->track_block_mutex);
     }
 
     pthread_spin_unlock(&STARGATE->main_lock);
@@ -244,10 +227,12 @@ void v_destructor(){
 
     //abort the application rather than hang indefinitely
     for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
+        _thread = &STARGATE->worker_threads[f_i];
         sg_assert(
-            STARGATE->track_thread_quit_notifier[f_i] == 2,
-            "v_destructor: track_thread_quit_notifier %i != 2",
-            STARGATE->track_thread_quit_notifier[f_i]
+            _thread->track_thread_quit_notifier == 2,
+            "v_destructor: track_thread_quit_notifier[%i] %i != 2",
+            f_i,
+            _thread->track_thread_quit_notifier
         );
     }
 }

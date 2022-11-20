@@ -543,11 +543,13 @@ void v_daw_run_engine(
         output = f_seq_period->period.buffers;
         //notify the worker threads to wake up
         int f_i;
+        struct SgWorkerThread* _thread;
         for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
-            pthread_spin_lock(&STARGATE->thread_locks[f_i]);
-            pthread_mutex_lock(&STARGATE->track_block_mutexes[f_i]);
-            pthread_cond_broadcast(&STARGATE->track_cond[f_i]);
-            pthread_mutex_unlock(&STARGATE->track_block_mutexes[f_i]);
+            _thread = &STARGATE->worker_threads[f_i];
+            pthread_spin_lock(&_thread->lock);
+            pthread_mutex_lock(&_thread->track_block_mutex);
+            pthread_cond_broadcast(&_thread->track_cond);
+            pthread_mutex_unlock(&_thread->track_block_mutex);
         }
 
         long f_next_current_sample =
@@ -601,7 +603,7 @@ void v_daw_run_engine(
 
         //unleash the hounds
         for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
-            pthread_spin_unlock(&STARGATE->thread_locks[f_i]);
+            pthread_spin_unlock(&STARGATE->worker_threads[f_i].lock);
         }
 
         v_daw_process((t_thread_args*)STARGATE->main_thread_args);

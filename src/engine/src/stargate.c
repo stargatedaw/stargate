@@ -299,13 +299,6 @@ void g_stargate_get(
     STARGATE->midi_learn = 0;
     STARGATE->is_offline_rendering = 0;
     pthread_spin_init(&STARGATE->main_lock, 0);
-    STARGATE->project_folder = (char*)malloc(sizeof(char) * 1024);
-    STARGATE->audio_folder = (char*)malloc(sizeof(char) * 1024);
-    STARGATE->audio_tmp_folder = (char*)malloc(sizeof(char) * 1024);
-    STARGATE->samples_folder = (char*)malloc(sizeof(char) * 1024);
-    STARGATE->samplegraph_folder = (char*)malloc(sizeof(char) * 1024);
-    STARGATE->audio_pool_file = (char*)malloc(sizeof(char) * 1024);
-    STARGATE->plugins_folder = (char*)malloc(sizeof(char) * 1024);
 
     STARGATE->preview_wav_item = 0;
     STARGATE->preview_audio_item = g_audio_item_get(a_sr);
@@ -345,7 +338,6 @@ void g_stargate_get(
 
     pthread_spin_init(&STARGATE->ui_spinlock, 0);
     STARGATE->osc_queue_index = 0;
-    STARGATE->osc_cursor_message = (char*)malloc(sizeof(char) * 1024);
 
     for(f_i = 0; f_i < MAX_PLUGIN_POOL_COUNT; ++f_i){
         STARGATE->plugin_pool[f_i].active = 0;
@@ -410,8 +402,7 @@ void v_set_host(int a_mode){
 
     t_midi_device * f_device;
 
-    if(STARGATE->midi_devices)
-    {
+    if(STARGATE->midi_devices){
         for(f_i = 0; f_i < STARGATE->midi_devices->count; ++f_i){
             f_device = &STARGATE->midi_devices->devices[f_i];
             if(f_device->loaded){
@@ -847,8 +838,8 @@ void v_wait_for_threads(){
     int f_i;
 
     for(f_i = 1; f_i < (STARGATE->worker_thread_count); ++f_i){
-        pthread_spin_lock(&STARGATE->thread_locks[f_i]);
-        pthread_spin_unlock(&STARGATE->thread_locks[f_i]);
+        pthread_spin_lock(&STARGATE->worker_threads[f_i].lock);
+        pthread_spin_unlock(&STARGATE->worker_threads[f_i].lock);
     }
 }
 
@@ -1562,9 +1553,9 @@ void plugin_init(
         log_info("Finished initializing plugin");
 
         char f_file_name[1024];
-        snprintf(
+        sg_snprintf(
             f_file_name,
-            1024,
+            1000,
             "%s%i",
             STARGATE->plugins_folder,
             a_plugin_uid
