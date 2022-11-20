@@ -52,8 +52,11 @@ def rotator(source, dest):
 
 class FailProofEmitter:
     def emit(self, record):
-        record = record.encode('cp850', errors='replace')
-        super().emit(record)
+        try:
+            record = record.encode('cp850', errors='replace')
+            super().emit(record)
+        except Exception as ex:
+            super().emit(f'FailProofEmitter: Failed to emit {record}: {ex}')
 
 class StreamHandler(logging.StreamHandler, FailProofEmitter):
     pass

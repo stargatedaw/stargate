@@ -132,15 +132,19 @@ def qt_message_handler(mode, context, message):
         f'{context.file}:{context.line}:{context.function}'
         f' "{message}"'
     )
-    if mode == QtCore.QtMsgType.QtWarningMsg:
-        LOG.warning(line)
-    elif mode in (
-        QtCore.QtMsgType.QtCriticalMsg,
-        QtCore.QtMsgType.QtFatalMsg,
-    ):
-        LOG.error(line)
-    else:
-        LOG.info(line)
+    try:
+        if mode == QtCore.QtMsgType.QtWarningMsg:
+            LOG.warning(line)
+        elif mode in (
+            QtCore.QtMsgType.QtCriticalMsg,
+            QtCore.QtMsgType.QtFatalMsg,
+        ):
+            LOG.error(line)
+        else:
+            LOG.info(line)
+    except Exception as ex:
+        LOG.warning(f'Could not log Qt message: {ex}')
+
 
 def _setup():
     setup_logging()
