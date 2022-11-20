@@ -3,8 +3,8 @@
 
 #include "compiler.h"
 
-inline SGFLT fclip(SGFLT value, SGFLT min, SGFLT max);
-inline SGFLT fclip_min(SGFLT value, SGFLT min);
-inline SGFLT fclip_max(SGFLT value, SGFLT max);
+SGFLT fclip(SGFLT value, SGFLT min, SGFLT max);
+SGFLT fclip_min(SGFLT value, SGFLT min);
+SGFLT fclip_max(SGFLT value, SGFLT max);
 
 #endif

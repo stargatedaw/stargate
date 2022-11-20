@@ -615,7 +615,7 @@ void effect_process_events(
     );
 }
 
-inline void _plugin_mix(
+void _plugin_mix(
     enum PluginRunMode run_mode,
     int pos,
     struct SamplePair* output_buffer,

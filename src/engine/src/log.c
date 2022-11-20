@@ -4,7 +4,7 @@
 
 #include "log.h"
 
-inline void _log_format(char* buffer, char* prefix, const char* format){
+void _log_format(char* buffer, char* prefix, const char* format){
     sprintf(buffer, "%s%s\n", prefix, format);
 }
 

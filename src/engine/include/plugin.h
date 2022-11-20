@@ -325,7 +325,7 @@ void effect_process_events(
     t_plugin_event_queue* atm_queue
 );
 
-inline void _plugin_mix(
+void _plugin_mix(
     enum PluginRunMode run_mode,
     int pos,
     struct SamplePair* output_buffer,
