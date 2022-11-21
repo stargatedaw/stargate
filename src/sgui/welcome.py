@@ -85,6 +85,8 @@ class Welcome(QtCore.QObject):
         updates_button.pressed.connect(ui_check_updates)
         buttons_vlayout.addWidget(updates_button)
 
+        self.rp_list.setFocus(QtCore.Qt.FocusReason.OtherFocusReason)
+
     def rp_doubleclick(self, index):
         project = str(self.rp_list.item(index).text())
         try:
