@@ -77,6 +77,10 @@ class MainWindow(QTabWidget):
         self.last_midi_dir = None
         shared.ROUTING_GRAPH_WIDGET.setToolTip(sg_strings.routing_graph)
 
+        self.engine_mon_label = QLabel()
+        self.engine_mon_label.setToolTip(sg_strings.ENGINE_MON)
+        self.setCornerWidget(self.engine_mon_label)
+
         self.setObjectName("plugin_ui")
 
         # Transport shortcuts (added here so they will work

@@ -25,13 +25,14 @@ __all__ = [
 ]
 
 ENGINE_SUBPROCESS = None
+ENGINE_PSUTIL = None
 
 def close_engine():
     """ Ask the engine to gracefully stop itself, then kill the process if it
         doesn't exit on it's own
     """
     constants.IPC.stop_server()
-    global ENGINE_SUBPROCESS
+    global ENGINE_SUBPROCESS, ENGINE_PSUTIL
     if ENGINE_SUBPROCESS is not None:
         f_exited = False
         for i in range(50):
@@ -53,6 +54,7 @@ def close_engine():
                 )
                 LOG.exception(ex)
         ENGINE_SUBPROCESS = None
+        ENGINE_PSUTIL = None
     if os.path.exists(ENGINE_PIDFILE):
         os.remove(ENGINE_PIDFILE)
     constants.READY = False
@@ -99,7 +101,6 @@ def open_engine(a_project_path, fps):
 
     f_pid = os.getpid()
     LOG.info(f"Starting audio engine with {a_project_path}")
-    global ENGINE_SUBPROCESS
 
     threads = int(util.DEVICE_SETTINGS['threads'])
     if threads == 0:
@@ -125,6 +126,10 @@ def reopen_engine():
     constants.IPC_ENABLED = True
 
 def run_engine(cmd):
-    global ENGINE_SUBPROCESS
+    global ENGINE_SUBPROCESS, ENGINE_PSUTIL
     ENGINE_SUBPROCESS = run_process(cmd, ENGINE_PIDFILE)
+    try:
+        ENGINE_PSUTIL = psutil.Process(ENGINE_SUBPROCESS.pid)
+    except:
+        LOG.exception('Could not create ENGINE_PSUTIL')
 

@@ -125,6 +125,7 @@ class SgMainWindow(QWidget):
     }
     daw_callback = Signal(str)
     wave_edit_callback = Signal(str)
+    engine_mon_callback = Signal(str)
 
     def __init__(self):
         super().__init__()
@@ -203,6 +204,13 @@ class SgMainWindow(QWidget):
 
         self.current_module = daw
         self.current_window = daw.MAIN_WINDOW
+
+        self.engine_mon_callback.connect(
+            daw.MAIN_WINDOW.engine_mon_label.setText
+        )
+        self.engine_mon_callback.connect(
+            wave_edit.MAIN_WINDOW.engine_mon_label.setText
+        )
 
         for f_module in shared.HOST_MODULES:
             self.transport_stack.addWidget(f_module.TRANSPORT.group_box)
@@ -751,6 +759,14 @@ class SgMainWindow(QWidget):
         f_window.exec()
 
     def subprocess_monitor(self):
+        try:
+            if engine.ENGINE_PSUTIL:
+                cpu = round(engine.ENGINE_PSUTIL.cpu_percent(), 1)
+                mem = round(engine.ENGINE_PSUTIL.memory_percent(), 1)
+                text = f'CPU: {cpu}% RAM: {mem}%'
+                self.engine_mon_callback.emit(text)
+        except:
+            pass
         try:
             if (
                 engine.ENGINE_SUBPROCESS

@@ -130,3 +130,8 @@ Instrument plugins can be placed before or after effect plugins, and
 will pass-through any audio from items or sends.
 """
 
+ENGINE_MON = """\
+Shows CPU and memory percentage.  Note that the CPU usage is a max of the
+cores that are in use, not based on the average of CPU load and available
+logical cores, which is less useful.
+"""

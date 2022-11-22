@@ -499,6 +499,10 @@ class MainWindow(QScrollArea):
         self.main_tabwidget = QTabWidget()
         self.main_layout.addWidget(self.main_tabwidget)
 
+        self.engine_mon_label = QLabel()
+        self.engine_mon_label.setToolTip(sg_strings.ENGINE_MON)
+        self.main_tabwidget.setCornerWidget(self.engine_mon_label)
+
         self.main_tabwidget.addTab(WAVE_EDITOR.widget, _("Wave Editor"))
 
         self.notes_tab = ProjectNotes(
