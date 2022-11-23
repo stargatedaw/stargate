@@ -34,6 +34,7 @@ from sgui.plugins import (
     limiter,
     multifx,
     nabu,
+    pitchglitch,
     reverb,
     sampler1,
     sidechain_comp,
@@ -72,6 +73,7 @@ PLUGIN_NAMES = [
     "X-Fade",
     'Wide Mixer',
     'Nabu',
+    'Pitch Glitch',
 ]
 
 PLUGIN_UIDS = {
@@ -172,12 +174,18 @@ PLUGIN_UIDS = {
             'parallel processing of effect chains'
         ),
     ),
+    'Pitch Glitch': (
+        18,
+        (
+            'MIDI note triggered, pitched glitch effect'
+        ),
+    ),
 }
 
 PLUGINS_SYNTH = ["VA1", "FM1"]
 PLUGINS_SAMPLER = ["Sampler1",]
 PLUGINS_EFFECTS = ["MultiFX", 'Nabu', "SG Delay", "SG EQ", "SG Reverb"]
-PLUGINS_MIDI_TRIGGERED = ["TriggerFX"]
+PLUGINS_MIDI_TRIGGERED = ["TriggerFX", 'Pitch Glitch']
 PLUGINS_DYNAMICS = ["SG Compressor", "SG Limiter"]
 PLUGINS_SIDECHAIN = ["Sidechain Comp.", "X-Fade", "SG Vocoder",]
 PLUGINS_MIXER = ["Simple Fader", "SG Channel", 'Wide Mixer']
@@ -227,6 +235,7 @@ PLUGIN_UI_TYPES = {
     15: limiter.LimiterPluginUI,
     16: widemixer.WideMixerPluginUI,
     17: nabu.NabuPluginUI,
+    18: pitchglitch.PitchGlitchUI,
 }
 
 PORTMAP_DICT = {

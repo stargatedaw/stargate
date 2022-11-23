@@ -3,8 +3,7 @@
 #include "audiodsp/modules/filter/dc_offset_filter.h"
 
 
-SGFLT f_dco_run(t_dco_dc_offset_filter* a_dco,SGFLT a_in)
-{
+SGFLT f_dco_run(t_dco_dc_offset_filter* a_dco,SGFLT a_in){
     SGFLT output =
         (a_in - (a_dco->in_n_m1)) + ((a_dco->out_n_m1) * (a_dco->coeff));
     output = f_remove_denormal(output);
@@ -15,14 +14,12 @@ SGFLT f_dco_run(t_dco_dc_offset_filter* a_dco,SGFLT a_in)
     return output;
 }
 
-void v_dco_reset(t_dco_dc_offset_filter* a_dco)
-{
+void v_dco_reset(t_dco_dc_offset_filter* a_dco){
     a_dco->in_n_m1 = 0.0f;
     a_dco->out_n_m1 = 0.0f;
 }
 
-void g_dco_init(t_dco_dc_offset_filter * f_result, SGFLT a_sr)
-{
+void g_dco_init(t_dco_dc_offset_filter * f_result, SGFLT a_sr){
     f_result->coeff = (1.0f - (6.6f/a_sr));
     v_dco_reset(f_result);
 }

@@ -166,32 +166,24 @@ int i_pick_voice(
         }
     }
 
-    f_i = 0;
     /* Look for an inactive voice */
-    while (f_i < (data->count))
-    {
-        if (data->voices[f_i].n_state == note_state_off)
-        {
+    for(f_i = 0; f_i < data->count; ++f_i){
+        if (data->voices[f_i].n_state == note_state_off){
             data->voices[f_i].note = a_current_note;
             data->voices[f_i].n_state = note_state_running;
             data->voices[f_i].on = a_current_sample + a_tick;
 
             return f_i;
-        }
-        else
-        {
+        } else {
             ++f_active_count;
 
-            if(f_active_count >= data->thresh)
-            {
+            if(f_active_count >= data->thresh){
                 int f_voice_to_kill = i_get_oldest_voice(data, 1, -1);
                 data->voices[f_voice_to_kill].n_state = note_state_killed;
                 data->voices[f_voice_to_kill].off = a_current_sample;
                 --f_active_count;
             }
         }
-
-        ++f_i;
     }
 
     int oldest_tick_voice = i_get_oldest_voice(data, 0, -1);
@@ -213,28 +205,22 @@ void v_voc_note_off(
     long a_current_sample,
     long a_tick
 ){
-    if(a_voc->poly_mode == POLY_MODE_MONO)
-    {
+    if(a_voc->poly_mode == POLY_MODE_MONO){
         //otherwise it's from an old note and should be ignored
-        if(a_note == a_voc->voices[0].note)
-        {
+        if(a_note == a_voc->voices[0].note){
             a_voc->voices[0].n_state = note_state_releasing;
             a_voc->voices[0].off = a_current_sample + a_tick;
         }
-    }
-    else
-    {
-        int f_i = 0;
-
-        while(f_i < (a_voc->count))
-        {
-            if(((a_voc->voices[f_i].note) == a_note) &&
-               ((a_voc->voices[f_i].n_state) == note_state_running))
-            {
-                a_voc->voices[f_i].n_state = note_state_releasing;
-                a_voc->voices[f_i].off = a_current_sample + a_tick;
+    } else {
+        for(int i = 0; i < a_voc->count; ++i){
+            if(
+                a_voc->voices[i].note == a_note
+                &&
+                a_voc->voices[i].n_state == note_state_running
+            ){
+                a_voc->voices[i].n_state = note_state_releasing;
+                a_voc->voices[i].off = a_current_sample + a_tick;
             }
-            ++f_i;
         }
     }
 }

@@ -23,6 +23,7 @@
 #include "plugins/fm1.h"
 #include "plugins/widemixer.h"
 #include "plugins/xfade.h"
+#include "plugins/pitchglitch.h"
 #include "csv/2d.h"
 #include "files.h"
 
@@ -45,6 +46,7 @@ PluginDescriptor_Function PLUGIN_DESC_FUNCS[] = {
     sg_lim_plugin_descriptor, //15
     widemixer_plugin_descriptor, //16
     nabu_plugin_descriptor, //17
+    PitchGlitchPluginDescriptor, //18
 };
 
 

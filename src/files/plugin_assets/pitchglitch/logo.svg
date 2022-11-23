@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="35.470001mm"
+   height="5.715405mm"
+   viewBox="0 0 35.470001 5.715405"
+   version="1.1"
+   id="svg535"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview537"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.149315"
+     inkscape:cx="83.980245"
+     inkscape:cy="145.16253"
+     inkscape:window-width="1920"
+     inkscape:window-height="1007"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs532">
+    <inkscape:path-effect
+       effect="join_type"
+       id="path-effect611"
+       is_visible="true"
+       lpeversion="1"
+       linecap_type="butt"
+       line_width="1"
+       linejoin_type="extrp_arc"
+       miter_limit="100"
+       attempt_force_join="true" />
+    <inkscape:path-effect
+       effect="perspective-envelope"
+       up_left_point="114.6,60.51"
+       up_right_point="158.18,60.50683"
+       down_left_point="119.92,74.450628"
+       down_right_point="166.98,74.450628"
+       id="path-effect597"
+       is_visible="true"
+       lpeversion="1"
+       deform_type="perspective"
+       horizontal_mirror="false"
+       vertical_mirror="false"
+       overflow_perspective="false" />
+    <inkscape:path-effect
+       effect="perspective-envelope"
+       up_left_point="180,296.82"
+       up_right_point="246.23955,296.82313"
+       down_left_point="150,327.62"
+       down_right_point="246.23955,327.62313"
+       id="path-effect582"
+       is_visible="true"
+       lpeversion="1"
+       deform_type="perspective"
+       horizontal_mirror="false"
+       vertical_mirror="false"
+       overflow_perspective="false" />
+    <rect
+       x="343.46735"
+       y="278.98495"
+       width="209.23872"
+       height="115.80508"
+       id="rect547" />
+    <rect
+       x="156.60005"
+       y="290.82867"
+       width="104.24798"
+       height="46.456429"
+       id="rect541" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-71.620777,-94.311989)">
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text545"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect547);display:inline;fill:#000000;fill-opacity:1;stroke:none" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.14067px;line-height:1.25;font-family:sans-serif;fill:#ececec;fill-opacity:1;stroke:none;stroke-width:0.103517"
+       x="74.873276"
+       y="103.23435"
+       id="text3180"
+       transform="scale(1.0502707,0.9521355)"><tspan
+         sodipodi:role="line"
+         id="tspan3178"
+         style="fill:#ececec;stroke-width:0.103517"
+         x="74.873276"
+         y="103.23435">pitch|GLITCH</tspan></text>
+  </g>
+</svg>
