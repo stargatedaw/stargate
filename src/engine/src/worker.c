@@ -35,9 +35,9 @@ void * v_worker_thread(void* a_arg){
         pthread_spin_lock(f_lock);
 
         if(STARGATE->worker_threads[f_thread_num].track_thread_quit_notifier){
-            pthread_spin_unlock(f_lock);
             STARGATE->worker_threads[
                 f_thread_num].track_thread_quit_notifier = 2;
+            pthread_spin_unlock(f_lock);
             log_info("Worker thread %i exiting...", f_thread_num);
             break;
         }
@@ -229,12 +229,14 @@ void v_destructor(){
     //abort the application rather than hang indefinitely
     for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
         _thread = &STARGATE->worker_threads[f_i];
+        pthread_spin_trylock(&_thread->lock);
         sg_assert(
             _thread->track_thread_quit_notifier == 2,
             "v_destructor: track_thread_quit_notifier[%i] %i != 2",
             f_i,
             _thread->track_thread_quit_notifier
         );
+        pthread_spin_unlock(&_thread->lock);
     }
 }
 
