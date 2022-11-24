@@ -603,6 +603,8 @@ void v_daw_run_engine(
 
         //unleash the hounds
         for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
+            t_daw_thread_storage * ts = &DAW->ts[f_i];
+            memcpy(ts, &DAW->ts[0], sizeof(t_daw_thread_storage));
             pthread_spin_unlock(&STARGATE->worker_threads[f_i].lock);
         }
 
@@ -645,10 +647,6 @@ void v_daw_process(t_thread_args * f_args){
         self->routing_graph->track_pool_sorted[f_args->thread_num];
 
     t_daw_thread_storage * f_ts = &DAW->ts[f_args->thread_num];
-
-    if(f_args->thread_num > 0){
-        memcpy(f_ts, &DAW->ts[0], sizeof(t_daw_thread_storage));
-    }
 
     int f_playback_mode = f_ts->playback_mode;
     int f_sample_count = f_ts->sample_count;
