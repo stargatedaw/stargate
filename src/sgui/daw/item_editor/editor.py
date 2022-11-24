@@ -155,6 +155,10 @@ class ItemEditorWidget:
 
     def on_item_rename(self, a_val=None):
         name = str(self.item_name_lineedit.text()).strip()
+        # Avoid shenanigans when Qt calls this event when the widget is not
+        # even focused or being edited
+        if name == shared.CURRENT_ITEM_NAME:
+            return
         constants.DAW_PROJECT.rename_items([shared.CURRENT_ITEM_NAME], name)
         constants.DAW_PROJECT.commit(_("Rename items"))
         items_dict = constants.DAW_PROJECT.get_items_dict()
