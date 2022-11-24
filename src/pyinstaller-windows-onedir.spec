@@ -8,8 +8,7 @@ a = Analysis(['scripts\\stargate'],
              pathex=['C:\\msys64\\home\\starg\\src\\stargate\\src'],
              binaries=[
                  ('engine/*.exe', 'engine'),
-                 ('engine/*.pdb', 'engine'),
-                 ('engine/*.dll', 'engine')
+                 ('engine/*.dll', 'engine'),
              ],
              datas=[
                  ('meta.json', '.'),

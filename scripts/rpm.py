@@ -104,6 +104,8 @@ global_spec_file = "{}.spec".format(MAJOR_VERSION,)
 
 f_spec_template = \
 """
+%global debug_package %{{nil}}
+
 Name:           {0}
 Version:        {1}
 
@@ -113,6 +115,7 @@ Summary:        Digital audio workstations, instrument and effect plugins
 License:        GPLv3
 URL:            http://github.com/stargateaudio/stargate/
 Source0:        {2}
+
 
 # Commented out to allow compiling from an old Debian VM, these
 # dependencies are still required
@@ -160,7 +163,6 @@ Stargate is digital audio workstations (DAWs), instrument and effect plugins
 {3}
 
 %install
-export DONT_STRIP=1
 rm -rf $RPM_BUILD_ROOT
 %make_install
 
@@ -176,7 +178,6 @@ xdg-mime default stargate.desktop text/stargate.project || true
 
 %attr(755, root, root) %{{_usr}}/bin/{0}
 %attr(755, root, root) %{{_usr}}/bin/{0}-engine
-%attr(755, root, root) %{{_usr}}/bin/{0}-engine-dbg
 %attr(755, root, root) %{{_usr}}/bin/{0}-sbsms
 %{{_usr}}/share/
 

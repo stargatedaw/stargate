@@ -167,18 +167,17 @@ lines-of-code:
 
 mac_osx:
 	CC=clang make engine
+	strip stargate-engine
 
 mingw:
 	# Build the Windows engine using MSYS2
 	rm -f stargate-engine.pdb
 	LINK_FLAGS="$(MINGW_LINK_FLAGS)" make engine
 	make -C .. commit_hash
-	###################
-	#### IMPORTANT ####
-	###################
-	# Go run the following command in the
-	# Visual Studio Developer Command Prompt
-	# from the engine directory:
+	strip stargate-engine
+	# To generate Windows debug symbols,  run the following command in the
+	# Visual Studio Developer Command Prompt from the engine directory:
+	#
 	# .\cv2pdb\cv2pdb.exe .\stargate-engine.exe
 
 pahole:

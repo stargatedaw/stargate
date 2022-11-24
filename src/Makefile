@@ -90,7 +90,6 @@ install_dirs:
 	install -d $(SG_DIR)/stargate
 
 install_engine:
-	install -m 755 engine/$(MAJOR)-engine-dbg $(DESTDIR)$(PREFIX)/bin
 	install -s -m 755 engine/$(MAJOR)-engine $(DESTDIR)$(PREFIX)/bin
 
 install_python:
