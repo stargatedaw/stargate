@@ -410,6 +410,9 @@ class PianoRollEditorWidget:
             'Enable or disable playing any notes that are drawn or moved.'
         )
         self.preview_note_action.triggered.connect(self.toggle_preview_note)
+        self.open_last_action.setShortcut(
+            QKeySequence.fromString("ALT+N"),
+        )
         self.preview_note_action.setCheckable(True)
         if get_file_setting('preview-note', bool, True):
             self.preview_note_action.setChecked(True)

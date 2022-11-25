@@ -14,6 +14,7 @@ from sglib.lib.util import *
 from sglib.lib.translate import _
 from sglib.math import color_interpolate
 from sgui.sgqt import *
+from sgui import shared as glbl_shared
 from sgui.util import get_font
 
 
@@ -25,6 +26,15 @@ class NotePreviewer:
         self.rack = shared.CURRENT_ITEM_TRACK
 
     def update(self, note):
+        if glbl_shared.IS_PLAYING or glbl_shared.IS_RECORDING:
+            if self.last_note is not None:
+                constants.DAW_IPC.note_off(
+                    self.rack,
+                    self.last_note,
+                    self.channel,
+                )
+            return
+
         if not self.active or note == self.last_note:
             return
 
