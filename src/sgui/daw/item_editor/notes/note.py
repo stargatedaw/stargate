@@ -5,6 +5,7 @@ from sglib.math import (
     linear_interpolate,
 )
 from sgui.daw import shared
+from sglib import constants
 from sglib.models.daw import *
 from sgui.daw.shared import *
 from sglib.models import stargate as sg_project, theme
@@ -15,6 +16,27 @@ from sglib.math import color_interpolate
 from sgui.sgqt import *
 from sgui.util import get_font
 
+
+class NotePreviewer:
+    def __init__(self):
+        self.active = get_file_setting('preview-note', int, 1)
+        self.last_note = None
+        self.channel = shared.ITEM_EDITOR.get_midi_channel()
+        self.rack = shared.CURRENT_ITEM_TRACK
+
+    def update(self, note):
+        if not self.active or note == self.last_note:
+            return
+
+        assert note >= 0 and note <= 120, note
+        constants.DAW_IPC.note_off(self.rack, self.last_note, self.channel)
+        self.last_note = note
+        constants.DAW_IPC.note_on(self.rack, note, self.channel)
+        args = (self.rack, note, self.channel)
+        LOG.info(f'Note preview: {args}')
+
+    def __del__(self):
+        constants.DAW_IPC.note_off(self.rack, self.last_note, self.channel)
 
 class PianoRollNoteItem(QGraphicsRectItem):
     """ An individual note in the PianoRollEditor """
@@ -69,6 +91,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
             'Select and move with the mouse, click near the end and drag\n'
             'to change note length'
         )
+        self.previewer = None
 
     def set_vel_line(self):
         if _shared.PARAMETER == 0:
@@ -368,11 +391,18 @@ class PianoRollNoteItem(QGraphicsRectItem):
                 f_item.setPos(f_pos_x, f_pos_y)
                 f_new_note = self.y_pos_to_note(f_pos_y)
                 f_item.update_note_text(f_new_note)
+                if not f_item.previewer:
+                    f_item.previewer = NotePreviewer()
+                f_item.previewer.update(f_new_note)
 
     def y_pos_to_note(self, a_y):
-        return int(shared.PIANO_ROLL_NOTE_COUNT -
-            ((a_y - _shared.PIANO_ROLL_HEADER_HEIGHT) /
-            shared.PIANO_ROLL_NOTE_HEIGHT))
+        return int(
+            shared.PIANO_ROLL_NOTE_COUNT - (
+                (
+                    a_y - _shared.PIANO_ROLL_HEADER_HEIGHT
+                ) / shared.PIANO_ROLL_NOTE_HEIGHT
+            )
+        )
 
     def mouseReleaseEvent(self, a_event):
         if _shared.PIANO_ROLL_DELETE_MODE:
@@ -384,6 +414,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
         if self.is_copying:
             f_new_selection = []
         for f_item in shared.PIANO_ROLL_EDITOR.get_selected_items():
+            f_item.previewer = None
             f_pos_x = f_item.pos().x()
             f_pos_y = f_item.pos().y()
             if self.is_resizing:

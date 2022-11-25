@@ -68,6 +68,7 @@ DRAW_LAST_ITEMS = False
 CURRENT_ITEM_NAME = None
 LAST_ITEM_NAME = None
 CURRENT_ITEM = None
+CURRENT_ITEM_TRACK = None
 CURRENT_ITEM_REF = None
 LAST_ITEM = None
 LAST_ITEM_REF = None
@@ -179,6 +180,7 @@ def global_open_items(
     a_items=None,
     a_reset_scrollbar=False,
     a_new_ref=None,
+    item_track=None,
 ):
     """
         @a_items:
@@ -192,10 +194,14 @@ def global_open_items(
         CURRENT_ITEM_LEN, \
         CURRENT_ITEM_NAME, \
         CURRENT_ITEM_REF, \
+        CURRENT_ITEM_TRACK, \
         ITEM_REF_POS, \
         LAST_ITEM, \
         LAST_ITEM_NAME, \
         LAST_ITEM_REF
+
+    if item_track is not None:
+        CURRENT_ITEM_TRACK = item_track
 
     if a_new_ref:
         LAST_ITEM_REF = CURRENT_ITEM_REF

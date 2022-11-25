@@ -1,7 +1,7 @@
 from . import _shared
 from ..abstract import AbstractItemEditor, ItemEditorHeader
 from .key import PianoKeyItem
-from .note import PianoRollNoteItem
+from .note import PianoRollNoteItem, NotePreviewer
 from sglib.math import clip_value, pitch_to_hz
 from sgui import widgets
 from sgui.daw import shared
@@ -417,6 +417,8 @@ class PianoRollEditor(AbstractItemEditor):
                 shared.ITEM_EDITOR.add_note(f_note_item)
                 _shared.SELECTED_PIANO_NOTE = f_note_item
                 f_drawn_note = self.draw_note(f_note_item)
+                f_drawn_note.previewer = NotePreviewer()
+                f_drawn_note.previewer.update(f_note_item.note_num)
                 f_drawn_note.setSelected(True)
                 f_drawn_note.resize_start_pos = f_drawn_note.note_item.start
                 f_drawn_note.resize_pos = f_drawn_note.pos()

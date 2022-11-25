@@ -402,6 +402,18 @@ class PianoRollEditorWidget:
             QKeySequence.fromString("ALT+F"),
         )
 
+        self.edit_menu.addSeparator()
+
+        self.preview_note_action = QAction('Preview Notes', self.edit_menu)
+        self.edit_menu.addAction(self.preview_note_action)
+        self.preview_note_action.setToolTip(
+            'Enable or disable playing any notes that are drawn or moved.'
+        )
+        self.preview_note_action.triggered.connect(self.toggle_preview_note)
+        self.preview_note_action.setCheckable(True)
+        if get_file_setting('preview-note', bool, True):
+            self.preview_note_action.setChecked(True)
+
         self.controls_grid_layout.addItem(
             QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),
             0,
@@ -410,6 +422,11 @@ class PianoRollEditorWidget:
 
         self.vlayout.addLayout(self.controls_grid_layout)
         self.vlayout.addWidget(shared.PIANO_ROLL_EDITOR)
+
+    def toggle_preview_note(self):
+        active = get_file_setting('preview-note', int, 1)
+        set_file_setting('preview-note', int(not active))
+        self.preview_note_action.setChecked(not active)
 
     def param_changed(self, value):
         _shared.PARAMETER = value

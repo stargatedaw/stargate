@@ -626,23 +626,32 @@ def seconds_to_time_str(a_seconds, a_sections=1):
         else:
             return [str(round(x * f_inc, 2)) for x in range(a_sections)]
 
+FILE_SETTING_CACHE = {}
+
 def get_file_setting(a_name, a_type, a_default):
+    if a_name in FILE_SETTING_CACHE:
+        return FILE_SETTING_CACHE[a_name]
     f_file_name = os.path.join(CONFIG_DIR, "{}.txt".format(a_name))
     if os.path.exists(f_file_name):
         try:
             with open(f_file_name) as f_file:
-                return a_type(f_file.read())
+                value = a_type(f_file.read())
+                FILE_SETTING_CACHE[a_name] = value
+                return value
         except Exception as ex:
             LOG.error("Error in get_file_setting {}".format(ex))
             os.remove(f_file_name)
     return a_default
 
 def set_file_setting(a_name, a_val):
+    FILE_SETTING_CACHE[a_name] = a_val
     f_file_name = os.path.join(CONFIG_DIR, "{}.txt".format(a_name))
     with open(f_file_name, "w", newline="\n") as f_file:
         f_file.write(str(a_val))
 
 def clear_file_setting(a_name):
+    if a_name in FILE_SETTING_CACHE:
+        FILE_SETTING_CACHE.pop(a_name)
     path = os.path.join(CONFIG_DIR, f"{a_name}.txt")
     if os.path.exists(path):
         os.remove(path)

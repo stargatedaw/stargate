@@ -206,6 +206,7 @@ class SequencerItem(QGraphicsRectItem):
             self.name,
             a_reset_scrollbar=True,
             a_new_ref=self.audio_item,
+            item_track=self.track_num,
         )
         editors = (
             shared.CURRENT_ITEM.items,
