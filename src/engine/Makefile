@@ -174,7 +174,7 @@ mingw:
 	rm -f stargate-engine.pdb
 	LINK_FLAGS="$(MINGW_LINK_FLAGS)" make engine
 	make -C .. commit_hash
-	strip stargate-engine
+	strip stargate-engine.exe
 	# To generate Windows debug symbols,  run the following command in the
 	# Visual Studio Developer Command Prompt from the engine directory:
 	#
