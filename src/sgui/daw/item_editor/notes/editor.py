@@ -490,7 +490,17 @@ class PianoRollEditor(AbstractItemEditor):
 
     def draw_piano(self):
         self.piano_keys = {}
-        f_black_notes = [2, 4, 6, 9, 11]
+        black_notes = [2, 4, 6, 9, 11]
+        black_brush = QLinearGradient(
+            0.0,
+            0.0,
+            float(self.piano_width),
+            0.0,
+        )
+        black_brush.setColorAt(0.0, QColor(0, 0, 0))
+        black_brush.setColorAt(0.5, QColor(0, 0, 0))
+        black_brush.setColorAt(0.66, QColor(22, 22, 22))
+        black_brush.setColorAt(0.91, QColor(255, 255, 255))
         f_piano_label = QFont()
         f_piano_label.setPointSize(8)
         self.piano = QGraphicsRectItem(
@@ -521,8 +531,11 @@ class PianoRollEditor(AbstractItemEditor):
         f_note_index = 0
         f_note_num = 0
 
-        for i in range(self.end_octave - self.start_octave,
-                       self.start_octave - self.start_octave, -1):
+        for i in range(
+            self.end_octave - self.start_octave,
+            self.start_octave - self.start_octave,
+            -1
+        ):
             for j in range(self.notes_in_octave, 0, -1):
                 f_key = PianoKeyItem(
                     self.piano_width,
@@ -533,7 +546,9 @@ class PianoRollEditor(AbstractItemEditor):
                 self.piano_keys[f_note_index] = f_key
                 f_note_index += 1
                 f_key.setPos(
-                    0, (self.note_height * j) + (self.octave_height * (i - 1)))
+                    0,
+                    (self.note_height * j) + (self.octave_height * (i - 1)),
+                )
 
                 tooltip = "{} - {}hz - MIDI note #{}".format(
                     util.note_num_to_string(f_note_num),
@@ -551,8 +566,8 @@ class PianoRollEditor(AbstractItemEditor):
                     f_label.setPos(4, 0)
                     f_label.setFont(f_piano_label)
                     f_label.setPen(QtCore.Qt.GlobalColor.black)
-                if j in f_black_notes:
-                    f_key.setBrush(QColor(0, 0, 0))
+                if j in black_notes:
+                    f_key.setBrush(black_brush)
                     f_key.is_black = True
                 else:
                     f_key.setBrush(QColor(255, 255, 255))
