@@ -504,7 +504,12 @@ class PianoRollEditor(AbstractItemEditor):
             0.0,
             _shared.PIANO_ROLL_HEADER_HEIGHT,
         )
-        f_key = PianoKeyItem(self.piano_width, self.note_height, self.piano)
+        f_key = PianoKeyItem(
+            self.piano_width,
+            self.note_height,
+            self.piano,
+            120,
+        )
         f_label = get_font().QGraphicsSimpleTextItem("C8", f_key)
         f_label.setPen(QtCore.Qt.GlobalColor.black)
         f_label.setFlag(
@@ -520,7 +525,11 @@ class PianoRollEditor(AbstractItemEditor):
                        self.start_octave - self.start_octave, -1):
             for j in range(self.notes_in_octave, 0, -1):
                 f_key = PianoKeyItem(
-                    self.piano_width, self.note_height, self.piano)
+                    self.piano_width,
+                    self.note_height,
+                    self.piano,
+                    120 - (((i - 1) * 12) + j),
+                )
                 self.piano_keys[f_note_index] = f_key
                 f_note_index += 1
                 f_key.setPos(

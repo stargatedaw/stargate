@@ -1,8 +1,7 @@
-from sglib.models.daw import *
-from sgui.daw.shared import *
-from sglib.lib.util import *
-from sglib.lib.translate import _
-from sgui.sgqt import *
+from sglib import constants
+from sglib.log import LOG
+from sgui.daw import shared
+from sgui.sgqt import QGraphicsRectItem, QApplication, QColor
 
 
 class PianoKeyItem(QGraphicsRectItem):
@@ -13,6 +12,7 @@ class PianoKeyItem(QGraphicsRectItem):
         a_piano_width,
         a_note_height,
         a_parent,
+        note,
     ):
         QGraphicsRectItem.__init__(
             self,
@@ -23,14 +23,29 @@ class PianoKeyItem(QGraphicsRectItem):
             a_parent,
         )
         self.setAcceptHoverEvents(True)
-        self.hover_brush = QColor(200, 200, 200)
+        self.hover_brush = QColor(120, 120, 120)
+        self.note = note
+        LOG.info(note)
 
     def hoverEnterEvent(self, a_event):
-        QGraphicsRectItem.hoverEnterEvent(self, a_event)
+        super().hoverEnterEvent(a_event)
         self.o_brush = self.brush()
         self.setBrush(self.hover_brush)
         QApplication.restoreOverrideCursor()
 
     def hoverLeaveEvent(self, a_event):
-        QGraphicsRectItem.hoverLeaveEvent(self, a_event)
+        super().hoverLeaveEvent(a_event)
         self.setBrush(self.o_brush)
+
+    def mousePressEvent(self, ev):
+        if shared.CURRENT_ITEM_TRACK is None:
+            return
+        self.channel = shared.ITEM_EDITOR.get_midi_channel()
+        self.rack = shared.CURRENT_ITEM_TRACK
+        constants.DAW_IPC.note_on(self.rack, self.note, self.channel)
+
+    def mouseReleaseEvent(self, ev):
+        if shared.CURRENT_ITEM_TRACK is None:
+            return
+        constants.DAW_IPC.note_off(self.rack, self.note, self.channel)
+
