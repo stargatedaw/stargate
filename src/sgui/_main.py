@@ -31,6 +31,13 @@ class MainStackedWidget(QStackedWidget):
         self.next = None
         self.previous = None
 
+    def toggle_full_screen(self):
+        fs = self.isFullScreen()
+        if fs:
+            self.showMaximized()
+        else:
+            self.showFullScreen()
+
     def show_main(self):
         if not self.show_splash():
             return

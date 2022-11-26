@@ -326,6 +326,21 @@ class SgMainWindow(QWidget):
 
         self.menu_appearance.addSeparator()
 
+        self.full_screen_action = QAction(
+            'Toggle Full Screen',
+            self.menu_appearance,
+        )
+        self.menu_appearance.addAction(self.full_screen_action)
+        self.full_screen_action.setToolTip(
+            'Toggle between full screen mode and normal mode'
+        )
+        self.full_screen_action.triggered.connect(
+            shared.MAIN_STACKED_WIDGET.toggle_full_screen
+        )
+        self.full_screen_action.setShortcut(QKeySequence("ALT+F12"))
+
+        self.menu_appearance.addSeparator()
+
         self.open_theme_action = QAction("Open Theme...", self.menu_appearance)
         self.menu_appearance.addAction(self.open_theme_action)
         self.open_theme_action.setToolTip(
