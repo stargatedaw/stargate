@@ -18,6 +18,8 @@ from sgui import shared as glbl_shared
 from sgui.util import get_font
 
 
+PREVIEW_NOTES = set()
+
 class NotePreviewer:
     def __init__(self):
         self.active = get_file_setting('preview-note', int, 1)
@@ -26,7 +28,13 @@ class NotePreviewer:
         self.rack = shared.CURRENT_ITEM_TRACK
 
     def update(self, note):
-        if glbl_shared.IS_PLAYING or glbl_shared.IS_RECORDING:
+        if (
+            len(PREVIEW_NOTES) > 6
+            or
+            glbl_shared.IS_PLAYING
+            or
+            glbl_shared.IS_RECORDING
+        ):
             if self.last_note is not None:
                 constants.DAW_IPC.note_off(
                     self.rack,
@@ -42,8 +50,6 @@ class NotePreviewer:
         constants.DAW_IPC.note_off(self.rack, self.last_note, self.channel)
         self.last_note = note
         constants.DAW_IPC.note_on(self.rack, note, self.channel)
-        args = (self.rack, note, self.channel)
-        LOG.info(f'Note preview: {args}')
 
     def __del__(self):
         constants.DAW_IPC.note_off(self.rack, self.last_note, self.channel)
@@ -283,7 +289,9 @@ class PianoRollNoteItem(QGraphicsRectItem):
         if self.is_resizing:
             f_pos_x = qt_event_pos(a_event).x()
             self.resize_last_mouse_pos = qt_event_pos(a_event).x()
-        for f_item in shared.PIANO_ROLL_EDITOR.get_selected_items():
+        selected_items = list(shared.PIANO_ROLL_EDITOR.get_selected_items())
+        unique_notes = {x.note_item.note_num for x in selected_items}
+        for f_item in selected_items:
             if self.is_resizing:
                 if shared.PIANO_ROLL_SNAP:
                     f_adjusted_width = round(
@@ -401,9 +409,13 @@ class PianoRollNoteItem(QGraphicsRectItem):
                 f_item.setPos(f_pos_x, f_pos_y)
                 f_new_note = self.y_pos_to_note(f_pos_y)
                 f_item.update_note_text(f_new_note)
-                if not f_item.previewer:
-                    f_item.previewer = NotePreviewer()
-                f_item.previewer.update(f_new_note)
+                if len(unique_notes) <= 6:
+                    orig_note = f_item.note_item.note_num
+                    if orig_note not in PREVIEW_NOTES and not f_item.previewer:
+                        PREVIEW_NOTES.add(orig_note)
+                        f_item.previewer = NotePreviewer()
+                    if f_item.previewer:
+                        f_item.previewer.update(f_new_note)
 
     def y_pos_to_note(self, a_y):
         return int(
@@ -415,6 +427,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
         )
 
     def mouseReleaseEvent(self, a_event):
+        PREVIEW_NOTES.clear()
         if _shared.PIANO_ROLL_DELETE_MODE:
             _shared.piano_roll_set_delete_mode(False)
             return
