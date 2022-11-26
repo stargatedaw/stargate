@@ -295,7 +295,7 @@ class SgMainWindow(QWidget):
         self.quit_action = QAction("Quit", self.menu_file)
         self.menu_file.addAction(self.quit_action)
         self.quit_action.setToolTip('Exit the application')
-        self.quit_action.triggered.connect(self.close)
+        self.quit_action.triggered.connect(shared.MAIN_STACKED_WIDGET.close)
         self.quit_action.setShortcut(QKeySequence.StandardKey.Quit)
 
         #self.menu_edit = self.menu_bar.addMenu(_("Edit"))
