@@ -9,6 +9,7 @@ from sglib.lib import strings as sg_strings
 from sglib.lib import util
 from sglib.lib.translate import _
 from sglib.lib.util import *
+from sglib.models.theme import get_asset_path
 from sgui import shared as glbl_shared
 from sgui import widgets
 from sgui.daw import shared
@@ -68,20 +69,58 @@ class SeqTrack:
         self.hlayout3.addWidget(self.menu_button)
         self.button_menu.aboutToShow.connect(self.menu_button_pressed)
         self.menu_created = False
-        self.solo_checkbox = QCheckBox()
+
+        self.toolbar = QToolBar()
+        self.toolbar.setObjectName('track_panel')
+        self.toolbar.setIconSize(QtCore.QSize(24, 24))
+
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('solo-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('solo-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.solo_checkbox = QAction(icon, '', self.toolbar)
         self.solo_checkbox.setToolTip('Solo this track')
-        self.mute_checkbox = QCheckBox()
+        self.solo_checkbox.setCheckable(True)
+        self.toolbar.addAction(self.solo_checkbox)
+        self.solo_checkbox.triggered.connect(self.on_solo)
+
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('mute-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('mute-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.mute_checkbox = QAction(icon, '', self.toolbar)
         self.mute_checkbox.setToolTip('Mute this track')
+        self.mute_checkbox.setCheckable(True)
+        self.toolbar.addAction(self.mute_checkbox)
+        self.mute_checkbox.triggered.connect(self.on_mute)
+
         self.hlayout3.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
         if self.track_number != 0:
-            self.solo_checkbox.stateChanged.connect(self.on_solo)
-            self.solo_checkbox.setObjectName("solo_checkbox")
-            self.hlayout3.addWidget(self.solo_checkbox)
-            self.mute_checkbox.stateChanged.connect(self.on_mute)
-            self.mute_checkbox.setObjectName("mute_checkbox")
-            self.hlayout3.addWidget(self.mute_checkbox)
+            self.hlayout3.addWidget(self.toolbar)
         self.action_widget = None
         self.automation_plugin_name = "None"
         self.port_num = None

@@ -330,12 +330,14 @@ class SequencerWidget:
         global_update_hidden_rows()
 
     def unsolo_all(self):
-        for f_track in shared.TRACK_PANEL.tracks.values():
-            f_track.solo_checkbox.setChecked(False)
+        for track in shared.TRACK_PANEL.tracks.values():
+            if track.solo_checkbox.isChecked():
+                track.solo_checkbox.trigger()
 
     def unmute_all(self):
-        for f_track in shared.TRACK_PANEL.tracks.values():
-            f_track.mute_checkbox.setChecked(False)
+        for track in shared.TRACK_PANEL.tracks.values():
+            if track.mute_checkbox.isChecked():
+                track.mute_checkbox.trigger()
 
     def open_sequence(self, uid=None):
         self.enabled = False

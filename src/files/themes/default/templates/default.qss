@@ -123,8 +123,6 @@ QSplitter::handle:horizontal
 QCheckBox#button_hide,
 QCheckBox#button_power,
 QCheckBox#button_power_small,
-QCheckBox#solo_checkbox,
-QCheckBox#mute_checkbox,
 QCheckBox#dc_checkbox,
 QRadioButton#rec_arm_radiobutton
 {
@@ -170,27 +168,13 @@ QCheckBox#button_hide::indicator::unchecked
 /* Track panel radio buttons  */
 
 QCheckBox#button_power_small::indicator,
-QCheckBox#dc_checkbox::indicator,
-QCheckBox#mute_checkbox::indicator,
-QCheckBox#solo_checkbox::indicator
+QCheckBox#dc_checkbox::indicator
 {
     background-color: none;
     border: 1px solid {{ border_color }};
     color: none;
     height: 27;
     width: 27;
-}
-
-/*Solo checkbox*/
-
-QCheckBox#solo_checkbox::indicator::unchecked
-{
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/solo-off.svg);
-}
-
-QCheckBox#solo_checkbox::indicator::checked
-{
-    image: url({{ ASSETS_DIR }}/solo-on.svg);
 }
 
 /* DC checkbox */
@@ -202,18 +186,6 @@ QCheckBox#dc_checkbox::indicator::unchecked
 QCheckBox#dc_checkbox::indicator::checked
 {
     image: url({{ ASSETS_DIR }}/dc-on.svg) 0 0 0 0 stretch stretch;
-}
-
-/*Mute checkbox*/
-
-QCheckBox#mute_checkbox::indicator::unchecked
-{
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/mute-off.svg) 0 0 0 0 stretch stretch;
-}
-
-QCheckBox#mute_checkbox::indicator::checked
-{
-    image: url({{ ASSETS_DIR }}/mute-on.svg) 0 0 0 0 stretch stretch;
 }
 
 QSpinBox,
@@ -455,6 +427,13 @@ QWidget#track_panel
     border: 1px solid {{ border_color }};
 }
 
+QToolButton#track_panel,
+QToolButton:pressed#track_panel {
+    background-color : {{ track_panel_background }};
+    margin: 0 0 0 0;
+    padding: 0px;
+}
+
 QLineEdit#track_panel
 {
     background-color: transparent;
@@ -467,7 +446,7 @@ QWidget#transport_panel
     border: none;
 }
 
-QToolButton, QToolButton:pressed {
+QToolButton#transport_panel, QToolButton:pressed#transport_panel {
     background-color: {{ transport_panel_background }};
     margin: 0 0 0 0;
     padding: 0px;
@@ -735,6 +714,10 @@ QMainWindow::separator:hover
     color: {{ text_color }};
     padding-left: 4px;
     spacing: 3px; /* spacing between items in the tool bar */
+}
+
+QToolBar {
+    background: none;
 }
 
 QToolBar::handle
