@@ -51,7 +51,7 @@ class TransportWidget:
             QIcon.Mode.Normal,
             QIcon.State.Off,
         )
-        self.play_button = QAction(icon, 'Play', self.play_group)
+        self.play_button = QAction(icon, '', self.play_group)
         self.play_button.setToolTip(
             'Begin playback.  Press spacebar to toggle',
         )
@@ -74,7 +74,7 @@ class TransportWidget:
             QIcon.Mode.Normal,
             QIcon.State.Off,
         )
-        self.stop_button = QAction(icon, 'Stop', self.play_group)
+        self.stop_button = QAction(icon, '', self.play_group)
         self.stop_button.setToolTip(
             'Stop playback or recording.  Press spacebar to toggle',
         )
@@ -98,7 +98,7 @@ class TransportWidget:
             QIcon.Mode.Normal,
             QIcon.State.Off,
         )
-        self.rec_button = QAction(icon, 'Record', self.play_group)
+        self.rec_button = QAction(icon, '', self.play_group)
         self.rec_button.setToolTip(
             'Stop playback or recording.  Press spacebar to toggle',
         )
