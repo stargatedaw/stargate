@@ -524,16 +524,6 @@ int seq_event_cmpfunc(void *self, void *other){
     t_seq_event *self_ev = (t_seq_event*)self;
     t_seq_event *other_ev = (t_seq_event*)other;
 
-    if(self_ev->tick == other_ev->tick){
-        if(self_ev->type != other_ev->type){
-            return self_ev->type < other_ev->type;
-        }
-        if(self_ev->type == EVENT_NOTEON || self_ev->type == EVENT_NOTEOFF){
-            return self_ev->note < other_ev->note;
-        } else {
-            return self_ev->value < other_ev->value;
-        }
-    }
     return self_ev->tick < other_ev->tick;
 }
 
