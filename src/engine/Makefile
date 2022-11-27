@@ -165,9 +165,17 @@ lines-of-code:
 	# benchmarks
 	find benchmark -name '*.c' -exec cat {} \; | wc -l
 
-mac_osx:
+macos:
 	CC=clang make engine
 	strip stargate-engine
+
+macos_arm:
+	OPTIMIZE_FLAGS= CC=clang \
+		CC_ARGS="-I/opt/homebrew/include -L /opt/homebrew/lib" \
+		PLAT_FLAGS="-mcpu=apple-a11"  \
+		DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib \
+		make engine
+
 
 mingw:
 	# Build the Windows engine using MSYS2

@@ -229,7 +229,9 @@ void v_destructor(){
     //abort the application rather than hang indefinitely
     for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
         _thread = &STARGATE->worker_threads[f_i];
-        pthread_spin_trylock(&_thread->lock);
+        if(!pthread_spin_trylock(&_thread->lock)){
+            log_warn("dtor: Unable to acquire lock for thread %i", f_i);    
+	}
         sg_assert(
             _thread->track_thread_quit_notifier == 2,
             "v_destructor: track_thread_quit_notifier[%i] %i != 2",

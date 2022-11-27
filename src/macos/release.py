@@ -25,12 +25,12 @@ os.chdir(CWD)
 if ARCH == 'x86_64':
     subprocess.check_call([
         'make',
-        'mac_osx',
+        'macos',
     ])
 elif ARCH == 'arm64':
     subprocess.check_call([
         'make',
-        'mac_osx_arm',
+        'macos_arm',
     ])
 else:
     assert False, f"Unknown arch. {ARCH}"
