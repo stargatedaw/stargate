@@ -1,6 +1,8 @@
 """
 
 """
+from collections import defaultdict
+
 from sglib.models.daw import *
 from sgui.sgqt import *
 
@@ -110,7 +112,7 @@ TRACK_NAME_COMBOBOXES = []
 ITEM_REF_POS = None
 MIDI_SCALE = 1.0
 
-ALL_PEAK_METERS = {}
+ALL_PEAK_METERS = defaultdict(lambda: [])
 
 LAST_NOTE_RESIZE = 0.25
 

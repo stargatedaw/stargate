@@ -430,8 +430,6 @@ QWidget#track_panel
 QToolButton#track_panel,
 QToolButton:pressed#track_panel {
     background-color : {{ track_panel_background }};
-    margin: 0 0 0 0;
-    padding: 0px;
 }
 
 QLineEdit#track_panel
@@ -448,8 +446,6 @@ QWidget#transport_panel
 
 QToolButton#transport_panel, QToolButton:pressed#transport_panel {
     background-color: {{ transport_panel_background }};
-    margin: 0 0 0 0;
-    padding: 0px;
 }
 
 QGroupBox::title
@@ -716,8 +712,18 @@ QMainWindow::separator:hover
     spacing: 3px; /* spacing between items in the tool bar */
 }
 
-QToolBar {
-    background: none;
+QToolBar, QToolButton {
+    border: 1px solid transparent;
+    margin: 0 0 0 0;
+    padding: 0px;
+}
+
+QToolButton::menu-indicator {
+    width:0px;
+}
+
+QToolButton:hover {
+    border: 1px solid white;
 }
 
 QToolBar::handle

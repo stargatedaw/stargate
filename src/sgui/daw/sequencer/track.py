@@ -33,10 +33,7 @@ class SeqTrack:
         self.main_vlayout = QVBoxLayout()
         self.main_hlayout.addLayout(self.main_vlayout)
         self.peak_meter = widgets.peak_meter()
-        if a_track_num in shared.ALL_PEAK_METERS:
-            shared.ALL_PEAK_METERS[a_track_num].append(self.peak_meter)
-        else:
-            shared.ALL_PEAK_METERS[a_track_num] = [self.peak_meter]
+        shared.ALL_PEAK_METERS[a_track_num].append(self.peak_meter)
         self.main_hlayout.addWidget(self.peak_meter.widget)
         self.group_box.setLayout(self.main_hlayout)
         self.track_name_lineedit = QLineEdit()
