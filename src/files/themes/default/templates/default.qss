@@ -713,9 +713,13 @@ QMainWindow::separator:hover
 }
 
 QToolBar, QToolButton {
-    border: 1px solid transparent;
     margin: 0 0 0 0;
     padding: 0px;
+}
+
+QToolButton {
+    border: 1px solid transparent;
+    border-radius: 3px;
 }
 
 QToolButton::menu-indicator {
