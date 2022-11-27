@@ -175,6 +175,7 @@ class AudioInput:
         self.callback = a_callback
         a_layout.addWidget(QLabel(str(a_num)), a_num + 1, 21)
         self.name_lineedit = QLineEdit(str(a_num))
+        self.name_lineedit.setMaximumWidth(120)
         self.name_lineedit.setToolTip('A friendly name to give this input')
         self.name_lineedit.editingFinished.connect(self.name_update)
         a_num += 1
@@ -207,6 +208,10 @@ class AudioInput:
         self.vol_label.setMinimumWidth(64)
         self.vol_layout.addWidget(self.vol_label)
         self.stereo_combobox = QComboBox()
+        self.stereo_combobox.setToolTip(
+            'Select an audio channel to pair with this one as the right '
+            'channel of a stereo pair'
+        )
         a_layout.addWidget(self.stereo_combobox, a_num, 4)
         self.stereo_combobox.setMinimumWidth(72)
         self.stereo_combobox.addItems([_("None")] +
@@ -278,6 +283,16 @@ class AudioInputWidget:
         for f_i in range(f_count):
             f_input = AudioInput(f_i, self.layout, self.callback, f_count - 1)
             self.inputs.append(f_input)
+        self.layout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+            200,
+            0
+        )
 
     def callback(self, a_notify):
         f_result = AudioInputTracks()
@@ -311,24 +326,7 @@ class TransportWidget(AbstractTransportWidget):
         self.hlayout1 = QHBoxLayout()
         self.vlayout.addLayout(self.hlayout1)
 
-        self.playback_menu_button = QPushButton("")
-        self.playback_menu_button.setMaximumWidth(21)
-        self.playback_menu_button.setSizePolicy(
-            QSizePolicy.Policy.Minimum,
-            QSizePolicy.Policy.Expanding,
-        )
-        self.hlayout1.addWidget(self.playback_menu_button)
-
-        self.playback_menu = QMenu(self.playback_menu_button)
-        self.playback_menu_button.setMenu(self.playback_menu)
-        self.playback_widget_action = QWidgetAction(self.playback_menu)
-        self.playback_widget = QWidget()
-        self.playback_widget_action.setDefaultWidget(self.playback_widget)
-        self.playback_vlayout = QVBoxLayout(self.playback_widget)
-        self.playback_menu.addAction(self.playback_widget_action)
-
         self.audio_inputs = AudioInputWidget()
-        self.playback_vlayout.addWidget(self.audio_inputs.widget)
 
         self.hlayout1.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
@@ -504,6 +502,11 @@ class MainWindow(QScrollArea):
         self.main_tabwidget.setCornerWidget(self.engine_mon_label)
 
         self.main_tabwidget.addTab(WAVE_EDITOR.widget, _("Wave Editor"))
+
+        self.main_tabwidget.addTab(
+            TRANSPORT.audio_inputs.widget,
+            _("Hardware"),
+        )
 
         self.notes_tab = ProjectNotes(
             self,
