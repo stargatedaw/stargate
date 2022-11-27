@@ -265,9 +265,19 @@ class AudioInput:
         self.suppress_updates = False
 
 
-class AudioInputWidget:
+class AudioInputWidget(QScrollArea):
     def __init__(self):
+        super().__init__()
+        self.setWidgetResizable(True)
+        self.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
+        )
+        self.setVerticalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded,
+        )
+
         self.widget = QWidget()
+        self.setWidget(self.widget)
         self.main_layout = QVBoxLayout(self.widget)
         self.layout = QGridLayout()
         self.main_layout.addWidget(QLabel(_("Audio Inputs")))
@@ -504,7 +514,7 @@ class MainWindow(QScrollArea):
         self.main_tabwidget.addTab(WAVE_EDITOR.widget, _("Wave Editor"))
 
         self.main_tabwidget.addTab(
-            TRANSPORT.audio_inputs.widget,
+            TRANSPORT.audio_inputs,
             _("Hardware"),
         )
 
