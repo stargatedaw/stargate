@@ -634,6 +634,7 @@ class Theme:
                 ASSETS_DIR=ASSETS_DIR,
                 FONT_SIZE=font_size,
                 FONT_UNIT=font_unit,
+                palette=palette, 
                 SYSTEM_COLORS=system_colors,
                 SCALER=scaler,
                 **variables

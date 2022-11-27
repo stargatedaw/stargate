@@ -17,6 +17,7 @@ class SplashScreen(QWidget):
     def __init__(self):
         global SPLASHSCREEN
         QWidget.__init__(self)
+        self.setObjectName('splash_widget')
         scaler = ui_scaler_factory()
         scaled_height = int(scaler.y_res * 0.8)
         self.pixmap = svg_to_pixmap(

@@ -30,6 +30,7 @@ class AbstractFileBrowserWidget:
         self.folders_tab_widget = QTabWidget()
         self.hsplitter.addWidget(self.folders_tab_widget)
         self.folders_widget = QWidget()
+        self.folders_widget.setObjectName('sidebar')
         self.vsplitter.addWidget(self.folders_widget)
         self.folders_widget_layout = QVBoxLayout()
         self.folders_widget.setLayout(self.folders_widget_layout)
@@ -59,6 +60,7 @@ class AbstractFileBrowserWidget:
         self.folders_widget_layout.addLayout(self.folder_filter_hlayout)
 
         self.list_folder = QListWidget()
+        self.list_folder.setObjectName('sidebar_list')
         self.list_folder.setToolTip('The folders in the current directory')
         self.list_folder.itemClicked.connect(self.folder_item_clicked)
         self.folders_widget_layout.addWidget(self.list_folder)
@@ -119,9 +121,11 @@ class AbstractFileBrowserWidget:
             self.bookmark_subfolders)
 
         self.bookmarks_tab = QWidget()
+        self.bookmarks_tab.setObjectName('sidebar')
         self.bookmarks_tab_vlayout = QVBoxLayout()
         self.bookmarks_tab.setLayout(self.bookmarks_tab_vlayout)
         self.list_bookmarks = QTreeWidget()
+        self.list_bookmarks.setObjectName('sidebar')
         self.list_bookmarks.setToolTip(
             'Bookmark folders from the file browser menu to keep here for '
             'easy access.  Some project folders are automatically kept as '
@@ -152,6 +156,7 @@ class AbstractFileBrowserWidget:
 
         self.file_vlayout = QVBoxLayout()
         self.file_widget = QWidget()
+        self.file_widget.setObjectName('sidebar')
         self.file_widget.setLayout(self.file_vlayout)
         self.vsplitter.addWidget(self.file_widget)
         self.filter_hlayout = QHBoxLayout()
@@ -171,6 +176,7 @@ class AbstractFileBrowserWidget:
         self.filter_hlayout.addWidget(self.filter_clear_button)
         self.file_vlayout.addLayout(self.filter_hlayout)
         self.list_file = file_list_widget()
+        self.list_file.setObjectName('sidebar_list')
         self.list_file.setToolTip('The files in the current directory')
         self.list_file.setSelectionMode(
             QAbstractItemView.SelectionMode.SingleSelection,
@@ -445,6 +451,7 @@ class AbstractFileBrowserWidget:
             dirs.sort()
             glbl_shared.APP.restoreOverrideCursor()
             dir_list_widget = QListWidget()
+            dir_list_widget.setObjectName('sidebar_list')
             dir_list_widget.setSelectionMode(
                 QAbstractItemView.SelectionMode.MultiSelection,
             )

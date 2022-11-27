@@ -20,21 +20,18 @@ class PlaylistWidget:
     def __init__(self):
         self.suppress_changes = True
         self.parent = QWidget()
+        self.parent.setObjectName('sidebar')
         layout = QVBoxLayout(self.parent)
 
         # Sequence list
-        sequence_widget = QWidget()
-        layout.addWidget(sequence_widget)
-        sequence_vlayout = QVBoxLayout(
-            sequence_widget,
-        )
         self.sequence_widget = QListWidget()
+        self.sequence_widget.setObjectName('sidebar_list')
+        layout.addWidget(self.sequence_widget)
         self.sequence_widget.setToolTip(
             'Select the song to show in the sequencer and play with the '
             'transport.  You can keep multiple songs to experiment, use '
             'as scratchpads, or re-use the tracks and plugins'
         )
-        sequence_vlayout.addWidget(self.sequence_widget)
         self.sequence_widget.setAlternatingRowColors(True)
         self.sequence_widget.setDragDropMode(
             QAbstractItemView.DragDropMode.DragOnly,

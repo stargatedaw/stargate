@@ -30,15 +30,11 @@ class Welcome(QtCore.QObject):
 
         self.widget = QWidget()
         self.widget.setObjectName('welcome_screen')
-        self.widget.setWindowTitle("Stargate")
-        self.widget.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
         hlayout = QHBoxLayout(self.widget)
         rp_vlayout = QVBoxLayout()
         hlayout.addLayout(rp_vlayout)
-        rp_label = QLabel("Recent Projects")
-        rp_label.setObjectName('welcome_screen')
-        rp_vlayout.addWidget(rp_label)
         self.rp_list = QListWidget()
+        self.rp_list.setObjectName('welcome_screen_rp')
         self.rp_list.doubleClicked.connect(
             lambda x: self.rp_doubleclick(x.row()),
         )
