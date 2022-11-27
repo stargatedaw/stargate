@@ -89,9 +89,10 @@ class MainWindow(QTabWidget):
         self.loop_mode_action = QAction(self)
         self.addAction(self.loop_mode_action)
         self.loop_mode_action.setShortcut(
-            QKeySequence.fromString("CTRL+L"))
+            QKeySequence.fromString("CTRL+L")
+        )
         self.loop_mode_action.triggered.connect(
-            shared.TRANSPORT.toggle_loop_mode,
+            shared.TRANSPORT.loop_mode_checkbox.trigger
         )
 
         self.select_mode_action = QAction(self)

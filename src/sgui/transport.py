@@ -3,7 +3,7 @@ from sglib.lib import strings as sg_strings, util
 from sglib.lib.translate import _
 from sglib.log import LOG
 from sglib.math import db_to_lin
-from sglib.models import theme
+from sglib.models.theme import get_asset_path
 from sgui import shared
 from sgui.sgqt import *
 from sgui import widgets
@@ -15,42 +15,97 @@ class TransportWidget:
         self.suppress_osc = True
         self.last_clock_text = None
         self.last_open_dir = util.HOME
-        self.group_box = QWidget()
-        self.group_box.setObjectName("transport_panel")
-        self.vlayout = QVBoxLayout()
-        self.vlayout.setContentsMargins(1, 1, 1, 1)
-        self.vlayout.setSpacing(1)
-        self.group_box.setLayout(self.vlayout)
-        self.hlayout1 = QHBoxLayout()
-        self.hlayout1.setContentsMargins(1, 1, 1, 1)
-        self.hlayout1.setSpacing(1)
-        self.menu_button = QPushButton()
-        self.menu_button.setObjectName("menu")
-        self.hlayout1.addWidget(self.menu_button)
-        self.vlayout.addLayout(self.hlayout1)
-        self.play_button = QRadioButton()
+
+        self.toolbar = QToolBar()
+        self.toolbar.setIconSize(QtCore.QSize(36, 36))
+        self.toolbar.setObjectName('transport_panel')
+        self.group_box = self.toolbar
+
+        self.menu_button = QToolButton(self.toolbar)
+        self.menu_button.setIcon(
+            QIcon(
+                get_asset_path('menu.svg'),
+            ),
+        )
+        self.menu_button.setPopupMode(
+            QToolButton.ToolButtonPopupMode.InstantPopup
+        )
+        self.toolbar.addWidget(self.menu_button)
+
+        self.toolbar.addSeparator()
+
+        self.play_group = QActionGroup(self.toolbar)
+
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('play-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('play-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.play_button = QAction(icon, 'Play', self.play_group)
         self.play_button.setToolTip(
             'Begin playback.  Press spacebar to toggle',
         )
-        self.play_button.setObjectName("play_button")
-        self.play_button.toggled.connect(self.on_play)
-        self.hlayout1.addWidget(self.play_button)
-        self.stop_button = QRadioButton()
+        self.play_button.setCheckable(True)
+        self.play_button.triggered.connect(self.on_play)
+        self.toolbar.addAction(self.play_button)
+
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('stop-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('stop-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.stop_button = QAction(icon, 'Stop', self.play_group)
         self.stop_button.setToolTip(
             'Stop playback or recording.  Press spacebar to toggle',
         )
+        self.stop_button.setCheckable(True)
         self.stop_button.setChecked(True)
-        self.stop_button.setObjectName("stop_button")
-        self.stop_button.toggled.connect(self.on_stop)
-        self.hlayout1.addWidget(self.stop_button)
-        self.rec_button = QRadioButton()
-        self.rec_button.setToolTip(
-            'Begin recording.  You must setup MIDI or audio input in the '
-            'hardware tab first'
+        self.stop_button.triggered.connect(self.on_stop)
+        self.toolbar.addAction(self.stop_button)
+
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('rec-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
         )
-        self.rec_button.setObjectName("rec_button")
-        self.rec_button.toggled.connect(self.on_rec)
-        self.hlayout1.addWidget(self.rec_button)
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('rec-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.rec_button = QAction(icon, 'Record', self.play_group)
+        self.rec_button.setToolTip(
+            'Stop playback or recording.  Press spacebar to toggle',
+        )
+        self.rec_button.setCheckable(True)
+        self.rec_button.triggered.connect(self.on_rec)
+        self.toolbar.addAction(self.rec_button)
+
         self.clock = QLCDNumber()
         self.clock.setToolTip(
             'The real time of the project, in minutes:seconds.1/10s.  '
@@ -61,10 +116,17 @@ class TransportWidget:
         self.clock.setFixedHeight(42)
         self.clock.setFixedWidth(180)
         self.clock.display("0:00.0")
-        self.hlayout1.addWidget(self.clock)
+        self.toolbar.addWidget(self.clock)
 
-        self.panic_button = QPushButton()
-        self.panic_button.setObjectName("panic")
+        self.panic_button = QToolButton(self.toolbar)
+        self.panic_button.setIcon(
+            QIcon(
+                get_asset_path('panic.svg'),
+            ),
+        )
+        self.panic_button.setPopupMode(
+            QToolButton.ToolButtonPopupMode.InstantPopup
+        )
         self.panic_menu = QMenu()
         self.panic_button.setMenu(self.panic_menu)
         self.all_notes_off_action = QAction("All notes off")
@@ -86,16 +148,17 @@ class TransportWidget:
         self.panic_menu.addAction(self.stop_engine_action)
         self.stop_engine_action.triggered.connect(self.on_stop_engine)
 
-        self.hlayout1.addWidget(self.panic_button)
+        self.toolbar.addWidget(self.panic_button)
 
-        self.host_layout = QVBoxLayout()
+        self.host_widget = QWidget()
+        self.host_layout = QVBoxLayout(self.host_widget)
         self.host_layout.setContentsMargins(1, 1, 1, 1)
         self.host_layout.setSpacing(1)
         self.host_layout.addWidget(
-            QLabel(_("Host")),
+            QLabel("Host"),
         )
-        self.hlayout1.addLayout(
-            self.host_layout,
+        self.toolbar.addWidget(
+            self.host_widget,
         )
         self.host_combobox = QComboBox()
         self.host_layout.addWidget(self.host_combobox)
@@ -112,7 +175,7 @@ class TransportWidget:
         knob_size = 40
         self.main_vol_knob = widgets.PixmapKnob(knob_size, -480, 0)
         self.load_main_vol()
-        self.hlayout1.addWidget(self.main_vol_knob)
+        self.toolbar.addWidget(self.main_vol_knob)
         self.main_vol_knob.valueChanged.connect(self.main_vol_changed)
         self.main_vol_knob.sliderReleased.connect(self.main_vol_released)
         self.main_vol_knob.setToolTip(
@@ -162,9 +225,9 @@ class TransportWidget:
 
     def on_spacebar(self):
         if shared.IS_PLAYING:
-            self.stop_button.click()
+            self.stop_button.trigger()
         else:
-            self.play_button.click()
+            self.play_button.trigger()
 
     def on_play(self):
         if not self.play_button.isChecked():

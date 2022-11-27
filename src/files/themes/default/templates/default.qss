@@ -120,14 +120,9 @@ QSplitter::handle:horizontal
 
 /* Transport tool selector */
 
-QRadioButton#tool_select,
-QRadioButton#tool_draw,
-QRadioButton#tool_erase,
-QRadioButton#tool_split,
 QCheckBox#button_hide,
 QCheckBox#button_power,
 QCheckBox#button_power_small,
-QCheckBox#loop_mode,
 QCheckBox#solo_checkbox,
 QCheckBox#mute_checkbox,
 QCheckBox#dc_checkbox,
@@ -136,31 +131,6 @@ QRadioButton#rec_arm_radiobutton
     background-color: transparent;
     spacing: 1px; /* Removes that junk on the right side where the
                      text would've been */
-}
-
-QCheckBox#loop_mode::indicator,
-QRadioButton#tool_select::indicator,
-QRadioButton#tool_draw::indicator,
-QRadioButton#tool_erase::indicator,
-QRadioButton#tool_split::indicator,
-QRadioButton#play_button::indicator,
-QRadioButton#rec_button::indicator,
-QRadioButton#stop_button::indicator
-{
-    background-color: {{ transport_panel_background }};
-    height: {{ transport_button_size }}px;
-    /* outline: none; */
-    width: {{ transport_button_size }}px;
-}
-
-QPushButton#menu,
-QPushButton#panic
-{
-    background-color: {{ transport_panel_background }};
-    height: {{ transport_button_size * 0.85 }}px;
-    /* outline: none; */
-    width: {{ transport_button_size * 0.85 }}px;
-    border-radius: 4px;
 }
 
 QCheckBox#button_hide,
@@ -173,23 +143,6 @@ QCheckBox#button_power::indicator
     height: 32px;
     outline: none;
     width: 32px;
-}
-
-QRadioButton#play_button,
-QRadioButton#rec_button,
-QRadioButton#stop_button
-{
-    margin-left: -6px;
-}
-
-QRadioButton#play_button::indicator::unchecked,
-QRadioButton#rec_button::indicator::unchecked,
-QRadioButton#stop_button::indicator::unchecked,
-QRadioButton#play_button::indicator::checked,
-QRadioButton#rec_button::indicator::checked,
-QRadioButton#stop_button::indicator::checked
-{
-    background: none;
 }
 
 QCheckBox#button_power_small::indicator::checked,
@@ -212,56 +165,6 @@ QCheckBox#button_hide::indicator::checked
 QCheckBox#button_hide::indicator::unchecked
 {
     image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/hide-off.svg);
-}
-
-QRadioButton#tool_select::indicator::unchecked
-{
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/select-off.svg);
-}
-
-QRadioButton#tool_select::indicator::checked
-{
-    image: url({{ ASSETS_DIR }}/select-on.svg);
-}
-
-QRadioButton#tool_draw::indicator::unchecked
-{
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/draw-off.svg);
-}
-
-QRadioButton#tool_draw::indicator::checked
-{
-    image: url({{ ASSETS_DIR }}/draw-on.svg);
-}
-
-QRadioButton#tool_erase::indicator::unchecked
-{
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/erase-off.svg);
-}
-
-QRadioButton#tool_erase::indicator::checked
-{
-    image: url({{ ASSETS_DIR }}/erase-on.svg);
-}
-
-QRadioButton#tool_split::indicator::unchecked
-{
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/split-off.svg);
-}
-
-QRadioButton#tool_split::indicator::checked
-{
-    image: url({{ ASSETS_DIR }}/split-on.svg);
-}
-
-QCheckBox#loop_mode::indicator::unchecked
-{
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/loop-off.svg);
-}
-
-QCheckBox#loop_mode::indicator::checked
-{
-    image: url({{ ASSETS_DIR }}/loop-on.svg);
 }
 
 /* Track panel radio buttons  */
@@ -311,46 +214,6 @@ QCheckBox#mute_checkbox::indicator::unchecked
 QCheckBox#mute_checkbox::indicator::checked
 {
     image: url({{ ASSETS_DIR }}/mute-on.svg) 0 0 0 0 stretch stretch;
-}
-
-QPushButton#menu
-{
-    border-image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/menu.svg);
-}
-
-QPushButton#panic
-{
-    border-image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/panic.svg);
-}
-
-QRadioButton#play_button::indicator::unchecked
-{
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/play-off.svg);
-}
-
-QRadioButton#play_button::indicator::checked
-{
-    image: url({{ ASSETS_DIR }}/play-on.svg);
-}
-
-QRadioButton#stop_button::indicator::unchecked
-{
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/stop-off.svg);
-}
-
-QRadioButton#stop_button::indicator::checked
-{
-    image: url({{ ASSETS_DIR }}/stop-on.svg);
-}
-
-QRadioButton#rec_button::indicator::unchecked
-{
-    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/rec-off.svg);
-}
-
-QRadioButton#rec_button::indicator::checked
-{
-    image: url({{ ASSETS_DIR }}/rec-on.svg);
 }
 
 QSpinBox,
@@ -601,7 +464,13 @@ QLineEdit#track_panel
 QWidget#transport_panel
 {
     background-color: {{ transport_panel_background }};
-    border: 2px solid {{ border_color }};
+    border: none;
+}
+
+QToolButton, QToolButton:pressed {
+    background-color: {{ transport_panel_background }};
+    margin: 0 0 0 0;
+    padding: 0px;
 }
 
 QGroupBox::title

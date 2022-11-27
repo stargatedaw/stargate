@@ -158,6 +158,7 @@ class SgMainWindow(QWidget):
         self.main_layout.addWidget(self.transport_splitter)
 
         self.transport_widget = QWidget()
+        self.transport_widget.setObjectName('transport_panel')
         self.transport_hlayout = QHBoxLayout(self.transport_widget)
         self.transport_hlayout.setContentsMargins(2, 2, 2, 2)
         self.transport_splitter.addWidget(self.transport_widget)
@@ -185,8 +186,8 @@ class SgMainWindow(QWidget):
         if shared.HIDE_HINT_BOX:
             sgqt.HINT_BOX.hide()
         self.transport_hlayout.addWidget(sgqt.HINT_BOX)
-        sgqt.HINT_BOX.setFixedHeight(70)
-        sgqt.HINT_BOX.setFixedWidth(390)
+        sgqt.HINT_BOX.setFixedHeight(50)
+        sgqt.HINT_BOX.setFixedWidth(460)
 
         self.main_stack = QStackedWidget()
         self.transport_splitter.addWidget(self.main_stack)

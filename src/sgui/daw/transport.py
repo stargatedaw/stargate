@@ -12,6 +12,7 @@ from sgui.daw.lib import item as item_lib
 from sgui.widgets.transport import AbstractTransportWidget
 from sglib.lib import util
 from sglib.lib.translate import _
+from sglib.models.theme import get_asset_path
 
 
 MREC_EVENTS = []
@@ -21,46 +22,129 @@ class TransportWidget(AbstractTransportWidget):
         self.recording_timestamp = None
         self.suppress_osc = True
         self.last_open_dir = HOME
-        self.group_box = QWidget()
-        self.group_box.setObjectName("transport_panel")
-        self.hlayout1 = QHBoxLayout(self.group_box)
+        self.toolbar = QToolBar()
+        self.toolbar.setObjectName('transport_panel')
+        self.toolbar.setIconSize(QtCore.QSize(36, 36))
+        self.group_box = self.toolbar
 
-        self.loop_mode_checkbox = QCheckBox()
-        self.loop_mode_checkbox.setObjectName("loop_mode")
-        self.hlayout1.addWidget(self.loop_mode_checkbox)
-        self.loop_mode_checkbox.stateChanged.connect(
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('loop-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('loop-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.loop_mode_checkbox = QAction(icon, '', self.toolbar)
+        self.loop_mode_checkbox.setToolTip(
+            'Enable or disable looping the sequencer region.  Set the '
+            'sequencer region by right clicking on the sequencer timeline.  '
+            'CTRL+L to toggle'
+        )
+        self.loop_mode_checkbox.setCheckable(True)
+        self.toolbar.addAction(self.loop_mode_checkbox)
+        self.loop_mode_checkbox.triggered.connect(
             self.on_loop_mode_changed,
         )
 
         # Mouse tools
-        self.tool_select_rb = QRadioButton()
-        self.tool_select_rb.setObjectName("tool_select")
+        self.mouse_tool_group = QActionGroup(self.toolbar)
+
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('select-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('select-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.tool_select_rb = QAction(icon, '', self.mouse_tool_group)
         self.tool_select_rb.setToolTip(
             _("Select items by clicking or dragging (hotkey: a)")
         )
-        self.hlayout1.addWidget(self.tool_select_rb)
-        self.tool_select_rb.clicked.connect(self.tool_select_clicked)
+        self.toolbar.addAction(self.tool_select_rb)
+        self.tool_select_rb.triggered.connect(self.tool_select_clicked)
+        self.tool_select_rb.setCheckable(True)
         self.tool_select_rb.setChecked(True)
 
-        self.tool_draw_rb = QRadioButton()
-        self.tool_draw_rb.setObjectName("tool_draw")
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('draw-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('draw-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.tool_draw_rb = QAction(icon, '', self.mouse_tool_group)
         self.tool_draw_rb.setToolTip(_("Draw items by clicking (hotkey: s)"))
-        self.tool_draw_rb.clicked.connect(self.tool_draw_clicked)
-        self.hlayout1.addWidget(self.tool_draw_rb)
+        self.tool_draw_rb.setCheckable(True)
+        self.tool_draw_rb.triggered.connect(self.tool_draw_clicked)
+        self.toolbar.addAction(self.tool_draw_rb)
 
-        self.tool_erase_rb = QRadioButton()
-        self.tool_erase_rb.setObjectName("tool_erase")
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('erase-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('erase-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.tool_erase_rb = QAction(icon, '', self.mouse_tool_group)
+        self.tool_erase_rb.setCheckable(True)
         self.tool_erase_rb.setToolTip(_(
             "Erase items by clicking and dragging (hotkey: d)"
         ))
-        self.tool_erase_rb.clicked.connect(self.tool_erase_clicked)
-        self.hlayout1.addWidget(self.tool_erase_rb)
+        self.tool_erase_rb.triggered.connect(self.tool_erase_clicked)
+        self.toolbar.addAction(self.tool_erase_rb)
 
-        self.tool_split_rb = QRadioButton()
-        self.tool_split_rb.setObjectName("tool_split")
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('split-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('split-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.tool_split_rb = QAction(icon, '', self.mouse_tool_group)
+        self.tool_split_rb.setCheckable(True)
         self.tool_split_rb.setToolTip(_("Split items by clicking (hotkey: f)"))
-        self.tool_split_rb.clicked.connect(self.tool_split_clicked)
-        self.hlayout1.addWidget(self.tool_split_rb)
+        self.tool_split_rb.triggered.connect(self.tool_split_clicked)
+        self.toolbar.addAction(self.tool_split_rb)
 
         self.suppress_osc = False
         shared.HARDWARE_WIDGET.overdub_checkbox.setToolTip(
@@ -331,11 +415,6 @@ class TransportWidget(AbstractTransportWidget):
             a_loop_mode = 1
         if not self.suppress_osc:
             constants.DAW_PROJECT.ipc().set_loop_mode(a_loop_mode)
-
-    def toggle_loop_mode(self):
-        self.loop_mode_checkbox.setChecked(
-            not self.loop_mode_checkbox.isChecked()
-        )
 
     def reset(self):
         self.loop_mode_checkbox.setChecked(False)

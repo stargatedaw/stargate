@@ -775,3 +775,22 @@ def set_theme(
     LOG.info(f"Setting theme file {path}")
     set_file_setting("default-style", path)
 
+def get_asset_path(asset: str):
+    path = os.path.join(
+        ASSETS_DIR,
+        VARIABLES['assets_subdir'],
+        asset,
+    )
+    if not os.path.exists(path):
+        path = os.path.join(
+            ASSETS_DIR,
+            asset,
+        )
+    pm_assert(
+        os.path.exists(path),
+        FileNotFoundError,
+        path,
+        f'{path} does not exist',
+    )
+    return path
+
