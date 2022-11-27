@@ -20,6 +20,8 @@ QLabel#welcome_screen {
 QLabel#hintbox {
     background-color: {{ background_color_alt2  }};
     color: {{ text_color }};
+    padding: 0px;
+    margin: 0px;
 }
 
 QFrame#separator_h {
