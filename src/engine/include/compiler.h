@@ -76,6 +76,7 @@ struct SamplePair {
 
     #define pthread_spinlock_t os_unfair_lock
     #define pthread_spin_lock os_unfair_lock_lock
+    #define pthread_spin_trylock os_unfair_lock_trylock
     #define pthread_spin_unlock os_unfair_lock_unlock
 
     void pthread_spin_init(os_unfair_lock * a_lock, void * a_opts);
