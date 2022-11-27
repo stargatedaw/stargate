@@ -1,5 +1,5 @@
 from sglib import constants
-from sglib.log import LOG
+from sgui import shared as glbl_shared
 from sgui.daw import shared
 from sgui.sgqt import QGraphicsRectItem, QApplication, QColor
 
@@ -25,7 +25,6 @@ class PianoKeyItem(QGraphicsRectItem):
         self.setAcceptHoverEvents(True)
         self.hover_brush = QColor(120, 120, 120)
         self.note = note
-        LOG.info(note)
 
     def hoverEnterEvent(self, a_event):
         super().hoverEnterEvent(a_event)
@@ -38,14 +37,26 @@ class PianoKeyItem(QGraphicsRectItem):
         self.setBrush(self.o_brush)
 
     def mousePressEvent(self, ev):
-        if shared.CURRENT_ITEM_TRACK is None:
+        if (
+            shared.CURRENT_ITEM_TRACK is None
+            or
+            glbl_shared.IS_PLAYING
+            or
+            glbl_shared.IS_RECORDING
+        ):
             return
         self.channel = shared.ITEM_EDITOR.get_midi_channel()
         self.rack = shared.CURRENT_ITEM_TRACK
         constants.DAW_IPC.note_on(self.rack, self.note, self.channel)
 
     def mouseReleaseEvent(self, ev):
-        if shared.CURRENT_ITEM_TRACK is None:
+        if (
+            shared.CURRENT_ITEM_TRACK is None
+            or
+            glbl_shared.IS_PLAYING
+            or
+            glbl_shared.IS_RECORDING
+        ):
             return
         constants.DAW_IPC.note_off(self.rack, self.note, self.channel)
 
