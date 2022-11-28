@@ -33,7 +33,7 @@ QWidget#splash_widget {
 }
 
 QLabel#hintbox {
-    background-color: {{ background_color_alt2  }};
+    background-color: {{ palette["gray4"] }};
     color: {{ text_color }};
     padding: 0px;
     margin: 0px;
@@ -780,7 +780,7 @@ QTabWidget::tab-bar {
 
 QTabWidget::pane {
     /*border: 1px solid #444;*/
-    border-top: 2px solid #C2C7CB;
+    border-top: 2px solid {{ palette["gray4"]  }};
     top: 1px;
 }
 
@@ -802,7 +802,7 @@ QTabBar::tab:!selected {
 
 QTabBar::tab:!selected:hover,
 QTabBar::tab:selected {
-    background-color: {{ tab_selected }};
+    background-color: {{ palette["purple"] }};
     color: {{ text_color }};
     margin-bottom: 0px;
 }
