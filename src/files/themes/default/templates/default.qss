@@ -113,7 +113,7 @@ QLabel#seq_zoom_size_label
 
 QWidget
 {
-    background-color: {{ background_color }};
+    background-color: {{ palette["gray3"] }};
     color: {{ text_color }};
     selection-background-color: {{ background_color_alt3 }};
     selection-color: #111111;
@@ -795,7 +795,7 @@ QTabBar::tab:first:!selected {
 }
 
 QTabBar::tab:!selected {
-    background-color: {{ background_color }};
+    background-color: {{ palette["gray5"] }};
     border-bottom-style: solid;
     color: {{ text_color }};
 }
