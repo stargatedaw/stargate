@@ -454,7 +454,7 @@ QWidget#plugin_widget
 
 QWidget#track_panel
 {
-    background-color : {{ track_panel_background }};
+    background-color : {{ palette["gray1"] }};
     border: 1px solid {{ border_color }};
 }
 
@@ -498,6 +498,7 @@ QWidget:item:selected
     color: {{ text_color_alt }};
 }
 
+/*
 QPushButton:disabled,
 QComboBox:disabled,
 QLineEdit:disabled
@@ -505,6 +506,7 @@ QLineEdit:disabled
     background-color: {{ background_color_disabled }};
     color: {{ text_color_disabled }};
 }
+*/
 
 QLineEdit
 {
@@ -620,14 +622,14 @@ QScrollBar::add-line:horizontal,
 QScrollBar::handle:horizontal,
 QScrollBar::sub-line:horizontal
 {
-    background: {{ hscrollbar }};
+    background: {{ palette["gray1"] }};
 }
 
 QScrollBar::add-line:vertical,
 QScrollBar::handle:vertical,
 QScrollBar::sub-line:vertical
 {
-    background: {{ vscrollbar }};
+    background: {{ palette["gray1"] }};
 }
 
 QComboBox:enabled,
@@ -765,6 +767,7 @@ QTabBar::tab
     background-color: {{ background_color }};
     border-bottom-style: none;
     border: 1px solid {{ border_color }};
+    border-radius: 6px;
     color: {{ text_color }};
     margin-right: -1px;
     padding-bottom: 2px;
