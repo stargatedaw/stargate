@@ -430,6 +430,8 @@ DIALOG_SHOWING = None
 class QDialog(QDialog):
     def _center(self):
         parent = self.parentWidget()
+        if not parent:
+            return
         geometry = parent.geometry()
         self.move(
             int(geometry.center().x() - (self.width() / 2) - geometry.left()),
@@ -439,8 +441,10 @@ class QDialog(QDialog):
     def closeEvent(self, event):
         global DIALOG_SHOWING
         DIALOG_SHOWING = None
-        widget = self.parentWidget().currentWidget()
-        widget.setEnabled(True)
+        parent = self.parentWidget()
+        if parent:
+            widget = parent.currentWidget()
+            widget.setEnabled(True)
         self._waiting = False
         super().closeEvent(event)
 
@@ -456,13 +460,14 @@ class QDialog(QDialog):
         self.setParent(parent)
         #self.setModal(True)
         current_widget = parent.currentWidget()
-        current_widget.setDisabled(True)
-        self.setMinimumHeight(
-            int(current_widget.height() * 0.2),
-        )
-        self.setMinimumWidth(
-            int(current_widget.width() * 0.2),
-        )
+        if current_widget:
+            current_widget.setDisabled(True)
+            self.setMinimumHeight(
+                int(current_widget.height() * 0.2),
+            )
+            self.setMinimumWidth(
+                int(current_widget.width() * 0.2),
+            )
         self.adjustSize()
         if center:
             self._center()
