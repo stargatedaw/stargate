@@ -365,7 +365,6 @@ class TransportWidget(AbstractTransportWidget):
     def on_stop(self):
         constants.WAVE_EDIT_PROJECT.ipc().wn_playback(0)
         WAVE_EDITOR.on_stop()
-        self.playback_menu_button.setEnabled(True)
         if glbl_shared.IS_RECORDING:
             self.show_rec_dialog()
 
@@ -381,7 +380,6 @@ class TransportWidget(AbstractTransportWidget):
                 "transport and set the number of audio inputs to 1 or more"))
             return False
         constants.WAVE_EDIT_PROJECT.ipc().wn_playback(2)
-        self.playback_menu_button.setEnabled(False)
         return True
 
     def show_rec_dialog(self):
@@ -480,40 +478,24 @@ class audio_item(SgAudioItem):
         f_result = audio_item(*a_arr)
         return f_result
 
-class MainWindow(QScrollArea):
+class MainWindow(QTabWidget):
     def __init__(self):
-        QScrollArea.__init__(self)
+        super().__init__()
         self.first_offline_render = True
         self.last_offline_dir = HOME
         self.copy_to_clipboard_checked = True
 
         self.setObjectName("plugin_ui")
-        self.widget = QWidget()
-        self.widget.setObjectName("plugin_ui")
-        self.setWidget(self.widget)
-        self.setWidgetResizable(True)
-        self.setHorizontalScrollBarPolicy(
-            QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded,
-        )
-        self.setVerticalScrollBarPolicy(
-            QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded,
-        )
-
-        self.main_layout = QVBoxLayout()
-        self.main_layout.setContentsMargins(2, 2, 2, 2)
-        self.widget.setLayout(self.main_layout)
 
         #The tabs
-        self.main_tabwidget = QTabWidget()
-        self.main_layout.addWidget(self.main_tabwidget)
-
         self.engine_mon_label = QLabel()
+        self.engine_mon_label.setFixedWidth(150)
         self.engine_mon_label.setToolTip(sg_strings.ENGINE_MON)
-        self.main_tabwidget.setCornerWidget(self.engine_mon_label)
+        self.setCornerWidget(self.engine_mon_label)
 
-        self.main_tabwidget.addTab(WAVE_EDITOR.widget, _("Wave Editor"))
+        self.addTab(WAVE_EDITOR.widget, _("Wave Editor"))
 
-        self.main_tabwidget.addTab(
+        self.addTab(
             TRANSPORT.audio_inputs,
             _("Hardware"),
         )
@@ -523,11 +505,11 @@ class MainWindow(QScrollArea):
             api_project_notes.load,
             api_project_notes.save,
         )
-        self.main_tabwidget.addTab(
+        self.addTab(
             self.notes_tab.widget,
             _("Project Notes"),
         )
-        self.main_tabwidget.currentChanged.connect(self.tab_changed)
+        self.currentChanged.connect(self.tab_changed)
 
     def on_undo(self):
         QMessageBox.warning(
@@ -540,7 +522,7 @@ class MainWindow(QScrollArea):
         self.on_undo()
 
     def tab_changed(self):
-        f_index = self.main_tabwidget.currentIndex()
+        f_index = self.currentIndex()
         if f_index == TAB_PLUGIN_RACK:
             for plugin in PLUGIN_RACK.plugins:
                 if plugin.plugin_ui:
@@ -593,7 +575,7 @@ class MainWindow(QScrollArea):
                 glbl_shared.on_ready()
             elif a_key == "stop":
                 LOG.info("Received message to stop playback from engine")
-                glbl_shared.TRANSPORT.stop_button.setChecked(True)
+                glbl_shared.TRANSPORT.stop_button.trigger()
         #This prevents multiple events from moving the same control,
         #only the last goes through
         for k, f_val in f_ui_dict.items():
@@ -1522,7 +1504,7 @@ def global_open_project(a_project_file):
         0,
         PluginSettingsWaveEditor,
     )
-    MAIN_WINDOW.main_tabwidget.insertTab(
+    MAIN_WINDOW.insertTab(
         1,
         PLUGIN_RACK.widget,
         _("Plugin Rack"),
@@ -1542,7 +1524,7 @@ def global_new_project(a_project_file):
         0,
         PluginSettingsWaveEditor,
     )
-    MAIN_WINDOW.main_tabwidget.insertTab(
+    MAIN_WINDOW.insertTab(
         1,
         PLUGIN_RACK.widget,
         _("Plugin Rack"),

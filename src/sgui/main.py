@@ -157,6 +157,7 @@ class SgMainWindow(QWidget):
         self.main_layout.addWidget(self.transport_splitter)
 
         self.transport_widget = QWidget()
+        self.transport_widget.setMaximumHeight(51)
         self.transport_widget.setObjectName('transport_panel')
         self.transport_hlayout = QHBoxLayout(self.transport_widget)
         self.transport_hlayout.setContentsMargins(2, 2, 2, 2)

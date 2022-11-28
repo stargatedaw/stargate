@@ -139,13 +139,13 @@ QScrollArea
 
 QSplitter::handle:vertical
 {
-    background-color: {{ border_color }};
+    background-color: {{ palette["black_light"] }};
     height: 3px;
 }
 
 QSplitter::handle:horizontal
 {
-    background-color: {{ border_color }};
+    background-color: {{ palette["black_light"] }};
     width:  3px;
 }
 
@@ -777,14 +777,18 @@ QTabBar::tab
 }
 
 
-QTabWidget::tab-bar {
+QTabWidget#item_editor::tab-bar {
+    alignment: left;
     left: 5px;
 }
 
+QTabWidget::tab-bar {
+    alignment: center;
+}
+
 QTabWidget::pane {
-    /*border: 1px solid #444;*/
-    border-top: 2px solid {{ palette["gray4"]  }};
-    top: 1px;
+    /* border-top: 2px solid {{ palette["gray4"]  }}; */
+    border-top: none;
 }
 
 QTabBar::tab:last {

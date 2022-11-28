@@ -78,6 +78,7 @@ class MainWindow(QTabWidget):
         shared.ROUTING_GRAPH_WIDGET.setToolTip(sg_strings.routing_graph)
 
         self.engine_mon_label = QLabel()
+        self.engine_mon_label.setFixedWidth(150)
         self.engine_mon_label.setToolTip(sg_strings.ENGINE_MON)
         self.setCornerWidget(self.engine_mon_label)
 

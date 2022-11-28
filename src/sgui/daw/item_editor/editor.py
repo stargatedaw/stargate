@@ -23,6 +23,7 @@ class ItemEditorWidget:
         self.widget.setLayout(self.main_vlayout)
 
         self.tab_widget = QTabWidget()
+        self.tab_widget.setObjectName('item_editor')
         self.main_vlayout.addWidget(self.tab_widget)
 
         shared.AUDIO_SEQ_WIDGET.hsplitter.insertWidget(
