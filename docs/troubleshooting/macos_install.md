@@ -8,6 +8,20 @@ If you see a pop-up warning that there is already a Stargate DAW app bundle
 installed, answer `Replace` to the dialog.
 
 # Issues
+## Spectrum analyzer does not work, various issues when trying to use it
+Stargate DAW uses the UDP protocal for communicating between the engine and
+the UI.  UDP has a limit of 64kb for packet sizes, which Stargate DAW stays
+within.  However, by default, MacOS limits it to 9216 bytes (which sometimes
+Stargate exceeds), `<sarcasm>` because apparently Apple knows better than the
+Internet Engineering Taskforce what the UDP protocol limits should be, and
+anybody that is sending more than the nice round number of 9216 bytes in one go
+is `doing it wrong`.`</sarcasm>`
+
+You can fix it by running this command: 
+```
+sudo sysctl -w net.inet.udp.maxdgram=65535
+```
+
 ## "Unverified Developer"
 If your Mac will not open apps from unverified developers:
 ```
@@ -23,7 +37,7 @@ from the context menu.
 Click Open.
 
 The app is saved as an exception to your security settings, and you can open it
-in the future by double-clicking it just as you can any registered app.
+in the future by double-clicking it or using Launchpad just as you can any registered app.
 ```
 from [HERE](
   https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac

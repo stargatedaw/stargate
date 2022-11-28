@@ -28,9 +28,23 @@ struct SocketData{
 static struct SocketData SOCKET_DATA;
 
 void ipc_init(){
+    struct timeval tv = (struct timeval){
+        .tv_usec = 10000,
+    };
     if((SOCKET_DATA.sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ){
         perror("socket creation failed");
         exit(EXIT_FAILURE);
+    }
+    if(
+        setsockopt(
+            SOCKET_DATA.sockfd,
+            SOL_SOCKET,
+            SO_RCVTIMEO,
+            &tv,
+            sizeof(tv)
+        ) < 0
+    ){
+        perror("Could not set client socket to SO_RCVTIMEO");
     }
     memset(
         &SOCKET_DATA.servaddr,
@@ -52,6 +66,9 @@ void ipc_client_send(
 ){
     int n;
     char buffer[1024];
+    struct timeval timeout = (struct timeval){
+        .tv_usec = 5000,
+    };
 
     sendto(
         SOCKET_DATA.sockfd,
@@ -85,7 +102,6 @@ void* ipc_server_thread(void* _arg){
     int response_len = strlen(response);
     struct sockaddr_in servaddr, cliaddr;
     struct timeval tv = (struct timeval){
-        .tv_sec = 0,
         .tv_usec = 100000,
     };
 
@@ -116,9 +132,11 @@ void* ipc_server_thread(void* _arg){
     memset(&cliaddr, 0, sizeof(cliaddr));
 
     // Filling server information
-    servaddr.sin_family = AF_INET; // IPv4
-    servaddr.sin_addr.s_addr = INADDR_ANY;
-    servaddr.sin_port = htons(IPC_ENGINE_SERVER_PORT);
+    servaddr = (struct sockaddr_in){
+        .sin_family = AF_INET, // IPv4
+        .sin_addr.s_addr = INADDR_ANY,
+        .sin_port = htons(IPC_ENGINE_SERVER_PORT),
+    };
 
     // Bind the socket with the server address
     if(
@@ -132,7 +150,7 @@ void* ipc_server_thread(void* _arg){
         exit(EXIT_FAILURE);
     }
 
-    len = (socklen_t)sizeof(cliaddr); //len is value/resuslt
+    len = (socklen_t)sizeof(cliaddr); //len is value/result
 
     while(!is_exiting()){
         n = recvfrom(
