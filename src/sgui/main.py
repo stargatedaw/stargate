@@ -13,7 +13,6 @@ GNU General Public License for more details.
 
 """
 from . import shared
-from .preflight import preflight
 from .updates import ui_check_updates
 from sglib.models import stargate as sg_project
 from sglib.models import theme
@@ -1486,7 +1485,6 @@ def main(
     widgets.knob_setup()
     QPixmapCache.setCacheLimit(1024 * 1024)
     MAIN_WINDOW = SgMainWindow()
-    preflight()
     # Ensure that the engine is not running before trying to access
     # audio hardware
     pid = check_engine()

@@ -2,6 +2,7 @@ import os
 import sys
 import time
 
+from .preflight import preflight
 from sglib.log import LOG, setup_logging
 from sglib.lib.translate import _
 from sglib.lib import util
@@ -194,6 +195,7 @@ def main(args):
     glbl_shared.MAIN_STACKED_WIDGET = MainStackedWidget()
     glbl_shared.MAIN_STACKED_WIDGET.setMinimumSize(1280, 700)
     glbl_shared.MAIN_STACKED_WIDGET.showMaximized()
+    preflight()
     if args.project_file:
         glbl_shared.MAIN_STACKED_WIDGET.start()
     else:
