@@ -66,9 +66,6 @@ void ipc_client_send(
 ){
     int n;
     char buffer[1024];
-    struct timeval timeout = (struct timeval){
-        .tv_usec = 5000,
-    };
 
     sendto(
         SOCKET_DATA.sockfd,
