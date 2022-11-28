@@ -14,9 +14,9 @@ import os
 SPLASHSCREEN = None
 
 class SplashScreen(QWidget):
-    def __init__(self):
+    def __init__(self, parent):
         global SPLASHSCREEN
-        QWidget.__init__(self)
+        super().__init__(parent)
         self.setObjectName('splash_widget')
         scaler = ui_scaler_factory()
         scaled_height = int(scaler.y_res * 0.8)
@@ -28,8 +28,9 @@ class SplashScreen(QWidget):
             height=scaled_height,
         )
         self.layout = QGridLayout(self)
-        self.pixmap_label =  QLabel()
-        self.text_label =  QLabel('Initializing...')
+        self.pixmap_label =  QLabel(self)
+        self.text_label =  QLabel('Initializing...', self)
+        self.text_label.setObjectName('transparent')
         self.layout.addWidget(self.pixmap_label, 1, 1)
         self.layout.addWidget(self.text_label, 2, 1)
         self.pixmap_label.setFixedSize(

@@ -5,6 +5,10 @@ QWidget:focus
     outline: none;
 }
 
+QStackedWidget#main_window {
+    background-color: {{ palette["black_light"]  }};
+}
+
 QWidget#welcome_screen {
     background-color: {{ palette["black_light"]  }};
     background-image: url({{ ASSETS_DIR }}/icon.svg);
@@ -37,6 +41,10 @@ QLabel#hintbox {
 
 QWidget#sidebar {
     background-color: {{ palette["gray5"] }};
+    color: {{ text_color }};
+}
+QLabel#transparent {
+    background-color: none;
     color: {{ text_color }};
 }
 

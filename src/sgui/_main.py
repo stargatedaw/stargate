@@ -25,6 +25,7 @@ from sgui.welcome import Welcome
 class MainStackedWidget(QStackedWidget):
     def __init__(self, *args, **kwargs):
         QStackedWidget.__init__(self, *args, **kwargs)
+        self.setObjectName('main_window')
         self.main_window = None
         self.welcome_window = None
         self.splash_screen = None
@@ -71,7 +72,7 @@ class MainStackedWidget(QStackedWidget):
             return False
 
         if not self.splash_screen:
-            self.splash_screen = SplashScreen()
+            self.splash_screen = SplashScreen(self)
             self.addWidget(self.splash_screen)
         self.setCurrentWidget(self.splash_screen)
         return True
