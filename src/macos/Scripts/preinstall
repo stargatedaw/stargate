@@ -1,0 +1,6 @@
+#!/bin/sh -xe
+
+if [ -d "/Applications/stargate.app" ]; then
+	echo "Deleting previous DMG install of Stargate DAW"
+	rm -rf /Applications/stargate.app
+fi

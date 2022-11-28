@@ -1,0 +1,5 @@
+#!/bin/sh -xe
+
+# Required so that MacOS does drop some of our UDP packets
+sysctl -w net.inet.udp.maxdgram=65535
+

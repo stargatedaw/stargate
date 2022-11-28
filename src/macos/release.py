@@ -1,10 +1,24 @@
 #!/usr/bin/env python3
 
+import argparse
 import json
 import os
 import platform
 import shutil
 import subprocess
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--dmg',
+        action='store_true',
+        default=False,
+        dest='dmg',
+        help='Build a DMG installer instead of a PKG',
+    )
+    return parser.parse_args()
+
+ARGS = parse_args()
 
 HOME = os.path.expanduser('~')
 ARCH = platform.machine()
@@ -60,18 +74,38 @@ ARCH_NAMES = {
     'arm64': 'm1',
 }
 
-DMG = f'{MAJOR_VERSION}-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.dmg'
-if os.path.exists(DMG):
-    os.remove(DMG)
+if ARGS.dmg:
+    DMG = f'{MAJOR_VERSION}-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.dmg'
+    if os.path.exists(DMG):
+        os.remove(DMG)
 
-subprocess.check_call([
-    'create-dmg',
-    '--volname', f'{MAJOR_VERSION}',
-    '--icon', f'{MAJOR_VERSION}.app', '50', '120',
-    '--hide-extension', f'{MAJOR_VERSION}.app',
-    '--app-drop-link', '300', '120',
-    '--format', 'UDBZ',
-    DMG,
-    f'{MAJOR_VERSION}.app',
-])
+    subprocess.check_call([
+        'create-dmg',
+        '--volname', f'{MAJOR_VERSION}',
+        '--icon', f'{MAJOR_VERSION}.app', '50', '120',
+        '--hide-extension', f'{MAJOR_VERSION}.app',
+        '--app-drop-link', '300', '120',
+        '--format', 'UDBZ',
+        DMG,
+        f'{MAJOR_VERSION}.app',
+    ])
+else:
+    PKG = f'StargateDAW-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.pkg'
+    subprocess.check_call([
+        'pkgbuild',
+        '--root', "stargate.app",
+        '--identifier', 'com.github.stargatedaw.stargate',
+        '--scripts', '../macos/Scripts',
+        '--install-location', "/Applications/Stargate DAW.app",
+        'Distribution.pkg',
+    ])
+    # Distribution.xml generated with:
+    #   productbuild --synthesize --package Distribution.pkg Distribution.xml
+    subprocess.check_call([
+        'productbuild',
+        '--distribution', '../macos/Distribution.xml',
+        '--resources', 'Resources',
+        '--package-path', '.',
+        PKG,
+    ])
 
