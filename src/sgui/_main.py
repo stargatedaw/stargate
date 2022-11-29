@@ -120,7 +120,7 @@ class MainStackedWidget(QStackedWidget):
             f_reply = QMessageBox.question(
                 self,
                 _('Message'),
-                _("Are you sure you want to quit?"),
+                _("Are you sure you want to close Stargate DAW?"),
                 (
                     QMessageBox.StandardButton.Yes
                     |

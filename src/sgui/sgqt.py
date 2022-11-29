@@ -523,7 +523,17 @@ class _QMessageBox:
         dialog = QDialog()
         layout = QVBoxLayout(dialog)
         #layout.addWidget(QLabel(title))
-        layout.addWidget(QLabel(message))
+        label = QLabel(message)
+        label.setObjectName('transparent')
+        layout.addWidget(label)
+        layout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         buttons_layout = QHBoxLayout()
         layout.addLayout(buttons_layout)
         for _int, name in _QMESSAGEBOX_STANDARDBUTTON_NAMES:
@@ -535,19 +545,43 @@ class _QMessageBox:
             return answer
 
     @staticmethod
-    def information(parent, title, message):
-        QMessageBox.warning(parent, title, message)
+    def information(parent, title, message, callback=None):
+        QMessageBox.warning(parent, title, message, callback)
 
     @staticmethod
-    def warning(parent, title, message):
+    def warning(parent, title, message, callback=None):
         dialog = QDialog()
         layout = QVBoxLayout(dialog)
-        layout.addWidget(QLabel(title))
-        layout.addWidget(QLabel(message))
+        if title:
+            title_label = QLabel(title)
+            title_label.setAlignment(
+                QtCore.Qt.AlignmentFlag.AlignTop
+                |
+                QtCore.Qt.AlignmentFlag.AlignCenter
+            )
+            title_label.setSizePolicy(
+                QSizePolicy.Policy.Expanding,
+                QSizePolicy.Policy.Minimum,
+            )
+            layout.addWidget(title_label)
+        label = QLabel(message)
+        label.setObjectName('transparent')
+        label.setWordWrap(True)
+        layout.addWidget(label)
+        layout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         buttons_layout = QHBoxLayout()
         layout.addLayout(buttons_layout)
         button = QPushButton("OK")
         button.pressed.connect(dialog.close)
+        if callback:
+            button.pressed.connect(callback)
         buttons_layout.addWidget(button)
         dialog.exec()
 

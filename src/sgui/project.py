@@ -179,7 +179,7 @@ def check_project_version(parent, project_file):
     else:
         msg = _(
             "Please update to the latest version of Stargate.  "
-            "This project {} was created with version '{}', however, "
+            "This project {} was last edited with version '{}', however, "
             "you are using version '{}'"
         ).format(
             project_file,

@@ -132,7 +132,7 @@ class SequencerWidget:
         self.hzoom_slider.setRange(0, 30)
         self.last_hzoom = 3
         self.hzoom_slider.setValue(self.last_hzoom)
-        self.hzoom_slider.setFixedWidth(90)
+        self.hzoom_slider.setFixedWidth(75)
         self.hzoom_slider.sliderPressed.connect(self.hzoom_pressed)
         self.hzoom_slider.sliderReleased.connect(self.hzoom_released)
         self.hzoom_slider.valueChanged.connect(self.set_hzoom)
@@ -146,7 +146,7 @@ class SequencerWidget:
         self.vzoom_slider.setRange(0, 60)
         self.last_vzoom = 0
         self.vzoom_slider.setValue(self.last_vzoom)
-        self.vzoom_slider.setFixedWidth(60)
+        self.vzoom_slider.setFixedWidth(75)
         self.vzoom_slider.sliderPressed.connect(self.vzoom_pressed)
         self.vzoom_slider.sliderReleased.connect(self.vzoom_released)
         self.vzoom_slider.valueChanged.connect(self.set_vzoom)
