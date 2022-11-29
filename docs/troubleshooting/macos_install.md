@@ -3,9 +3,7 @@ This document describes how to deal with various MacOS issues regarding
 the installation of Stargate DAW.
 
 # Basic installation
-Double-click on the .dmg file, drag and drop it into the Applications folder.
-If you see a pop-up warning that there is already a Stargate DAW app bundle
-installed, answer `Replace` to the dialog.
+Double-click the .pkg file to open the install wizard.
 
 # Issues
 ## Spectrum analyzer does not work, various issues when trying to use it
@@ -17,36 +15,16 @@ Internet Engineering Taskforce what the UDP protocol limits should be, and
 anybody that is sending more than the nice round number of 9216 bytes in one go
 is `doing it wrong`.`</sarcasm>`
 
-You can fix it by running this command: 
+You can fix it by running this command:
 ```
 sudo sysctl -w net.inet.udp.maxdgram=65535
 ```
 
 ## "Unverified Developer"
-If your Mac will not open apps from unverified developers:
-```
-In the Finder on your Mac, locate the app you want to open.  (NOTE: This will
-be /Applications for Stargate DAW)
-
-Don’t use Launchpad to do this. Launchpad doesn’t allow you to access the
-shortcut menu.
-
-Control-click (or 2-finger/right-click) the app icon, then choose Open
-from the context menu.
-
-Click Open.
-
-The app is saved as an exception to your security settings, and you can open it
-in the future by double-clicking it or using Launchpad just as you can any registered app.
-```
-from [HERE](
-  https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac
-)
-
-Note that the app is unverified because we are refusing to pay the fee or have
-our legal name(s) publicly listed for all to see.  You can verify that the
-downloads have not been modified by comparing the sha256 sums we provide, or
-else build the source code yourself using the instructions provided.
+Note that you may get a warning about unidentified/unverified developer.  This
+is because presently we are not paying a yearly fee to be part of the Apple
+Developer program.  To get around this, you can use Google to find instructions
+[such as this](https://customercare.primera.com/portal/en/kb/articles/how-to-open-a-primera-app-that-hasn-t-been-notarized-or-is-from-an-unidentified-developer)
 
 ## Unable to record the built-in microphone
 If you wish to record using the built-in MacBook microphone,
