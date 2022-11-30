@@ -105,6 +105,8 @@ class MultiFXSingle:
                 a_preset_mgr=a_preset_mgr,
                 knob_kwargs=knob_kwargs,
             )
+            f_knob.name_label.setObjectName('transparent')
+            f_knob.value_label.setObjectName('transparent')
             f_knob.add_to_grid_layout(self.layout, f_i)
             self.knobs.append(f_knob)
         if fixed_height:

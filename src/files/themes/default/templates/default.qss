@@ -119,7 +119,6 @@ QWidget
     selection-color: #111111;
 }
 
-QDialog,
 QDoubleSpinBox,
 QMainWindow,
 QScrollArea,
@@ -349,10 +348,12 @@ QSlider#pan_slider::add-page:horizontal
 QSlider#pan_slider::handle:horizontal
 {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #cccccc,
-        stop: 0.5 #dddddd stop: 1 #cccccc
+        x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #939393,
+        stop: 0.5 #9f9f9f,
+        stop: 1 #939393
     );
-    border: 2px solid white;
+    border: 2px solid #3b3a3b;
     height: 15px;
     image: none;
     margin-bottom: -3px;
@@ -442,8 +443,8 @@ QGroupBox
 
 QGroupBox#plugin_groupbox
 {
-    background-color : {{ background_color }};
-    border: 2px solid {{ border_color }};
+    background-color : {{ palette["gray3"] }};
+    border: 2px solid {{ palette["black_light"] }};
 }
 
 QWidget#plugin_widget
@@ -452,9 +453,8 @@ QWidget#plugin_widget
     border: none;
 }
 
-QWidget#track_panel
-{
-    background-color : {{ palette["gray1"] }};
+QWidget#track_panel {
+    background-color: #585858;
     border: 1px solid {{ border_color }};
 }
 
@@ -469,9 +469,21 @@ QLineEdit#track_panel
     border: none;
 }
 
-QWidget#transport_panel
-{
-    background-color: {{ transport_panel_background }};
+QDialog {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #565657,
+        stop: 1 #464643
+    );
+    border: 3px solid #222222;
+}
+
+QWidget#transport_panel {
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #acacac,
+        stop: 1 #7f7f7f
+    );
     border: none;
 }
 
