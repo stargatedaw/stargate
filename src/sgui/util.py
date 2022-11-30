@@ -237,6 +237,7 @@ def setup_theme(app):
     scaler = ui_scaler_factory()
     font = get_font()
     glbl_shared.APP = app
+    font.font.setStyleStrategy(QFont.StyleStrategy.PreferAntialias)
     app.setFont(font.font)
     font_size, font_unit = font.get_font_size()
     try:
