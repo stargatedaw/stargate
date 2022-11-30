@@ -1443,7 +1443,8 @@ class WaveEditorWidget:
         self.time_label_enabled = True
         self.playback_cursor = self.sample_graph.scene.addLine(
             self.sample_graph.start_marker.line.line(),
-            self.sample_graph.start_marker.line.pen())
+            self.sample_graph.start_marker.line.pen(),
+        )
 
     def on_stop(self):
         for f_control in self.controls_to_disable:

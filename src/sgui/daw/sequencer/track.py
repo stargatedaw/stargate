@@ -68,7 +68,7 @@ class SeqTrack:
         self.menu_created = False
 
         self.toolbar = QToolBar()
-        self.toolbar.setObjectName('track_panel')
+        #self.toolbar.setObjectName('track_panel')
         self.toolbar.setIconSize(QtCore.QSize(24, 24))
 
         icon = QIcon()
@@ -475,7 +475,9 @@ class TrackPanel:
             ),
         )
         for f_track in self.tracks.values():
-            f_track.group_box.setFixedHeight(shared.SEQUENCE_EDITOR_TRACK_HEIGHT)
+            f_track.group_box.setFixedHeight(
+                shared.SEQUENCE_EDITOR_TRACK_HEIGHT,
+            )
         self.tracks_widget.setUpdatesEnabled(True)
 
     def get_track_names(self):

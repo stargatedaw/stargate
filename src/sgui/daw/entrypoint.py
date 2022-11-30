@@ -71,6 +71,7 @@ class MainWindow(QTabWidget):
     """
     def __init__(self):
         super().__init__()
+        shared.setup()
         self.first_offline_render = True
         self.last_offline_dir = HOME
         self.copy_to_clipboard_checked = False
@@ -128,7 +129,8 @@ class MainWindow(QTabWidget):
         self.song_sequence_tab.setLayout(self.song_sequence_vlayout)
         self.sequencer_widget = QWidget()
         self.sequencer_vlayout = QVBoxLayout(self.sequencer_widget)
-        self.sequencer_vlayout.setContentsMargins(1, 1, 1, 1)
+        self.sequencer_vlayout.setContentsMargins(0, 0, 0, 0)
+        self.sequencer_vlayout.setSpacing(0)
         self.sequencer_vlayout.addWidget(self.song_sequence_tab)
         self.addTab(self.sequencer_widget, _("Sequencer"))
 
@@ -149,6 +151,11 @@ class MainWindow(QTabWidget):
 
         shared.PLAYLIST_EDITOR = PlaylistWidget()
         self.file_browser = FileDragDropper(util.is_audio_midi_file)
+        self.file_browser.list_file.setToolTip(
+            'The files in the current directory.  Drag and drop the files '
+            'into the sequencer to create a new sequencer item containing '
+            'the file'
+        )
         self.file_browser.folders_tab_widget.insertTab(
             0,
             shared.PLAYLIST_EDITOR.parent,

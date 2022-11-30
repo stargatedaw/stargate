@@ -578,6 +578,11 @@ class AudioItemSeqWidget(FileDragDropper):
     """
     def __init__(self):
         FileDragDropper.__init__(self, util.is_audio_file)
+        self.list_file.setToolTip(
+            'The files in the current directory.  Drag and drop the files '
+            'into the current sequencer item to create audio items, or drop '
+            'onto another audio item to replace it'
+        )
 
         self.papifx = widgets.per_audio_item_fx_widget(
             papifx_rel_callback,
@@ -590,7 +595,10 @@ class AudioItemSeqWidget(FileDragDropper):
         self.papifx_stack.addWidget(self.papifx_widget)
         self.papifx_stack.addWidget(QLabel(PAFFX_TEXT))
         self.papifx_stack.setCurrentIndex(1)
-        self.folders_tab_widget.addTab(self.papifx_stack, _("File FX"))
+        self.folders_tab_widget.addTab(
+            self.papifx_stack,
+            _("Audio File Effects"),
+        )
         self.papifx.widget.setDisabled(True)
         self.papifx_vlayout.addWidget(self.papifx.scroll_area)
 
@@ -605,24 +613,30 @@ class AudioItemSeqWidget(FileDragDropper):
         self.paifx_stack.addWidget(self.paifx_widget)
         self.paifx_stack.addWidget(QLabel(PAIFX_TEXT))
         self.paifx_stack.setCurrentIndex(1)
-        self.folders_tab_widget.addTab(self.paifx_stack, _("Item FX"))
+        self.folders_tab_widget.addTab(
+            self.paifx_stack,
+            _("Audio Item Effects"),
+        )
         self.paifx.widget.setDisabled(True)
         self.paifx_vlayout.addWidget(self.paifx.scroll_area)
 
         self.widget = QWidget()
+        self.widget.setContentsMargins(0, 0, 0, 0)
         self.vlayout = QVBoxLayout()
+        self.vlayout.setContentsMargins(0, 0, 0, 0)
+        self.vlayout.setSpacing(0)
         self.widget.setLayout(self.vlayout)
-        self.controls_grid_layout = QGridLayout()
-        self.controls_grid_layout.addItem(
-            QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),
-            0,
-            30,
-        )
-        self.vlayout.addLayout(self.controls_grid_layout)
+        self.hlayout = QHBoxLayout()
+        self.hlayout.setContentsMargins(5, 5, 5, 5)
+        self.hlayout.setSpacing(5)
+        self.vlayout.addLayout(self.hlayout)
         self.vlayout.addWidget(shared.AUDIO_SEQ)
 
         self.menu_button = QPushButton(_("Menu"))
-        self.controls_grid_layout.addWidget(self.menu_button, 0, 3)
+        self.hlayout.addWidget(self.menu_button)
+        self.hlayout.addItem(
+            QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),
+        )
         self.action_menu = QMenu(self.widget)
         self.menu_button.setMenu(self.action_menu)
 
@@ -731,8 +745,8 @@ class AudioItemSeqWidget(FileDragDropper):
         self.v_zoom_slider.setSingleStep(1)
         self.v_zoom_slider.setMaximumWidth(150)
         self.v_zoom_slider.valueChanged.connect(self.set_v_zoom)
-        self.controls_grid_layout.addWidget(QLabel(_("V")), 0, 45)
-        self.controls_grid_layout.addWidget(self.v_zoom_slider, 0, 46)
+        self.hlayout.addWidget(QLabel(_("V")))
+        self.hlayout.addWidget(self.v_zoom_slider)
 
         self.audio_items_clipboard = []
         self.disable_on_play = (self.menu_button,)

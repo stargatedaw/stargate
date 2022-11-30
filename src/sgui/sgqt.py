@@ -659,3 +659,43 @@ class QGraphicsRectItem(_HintItem, QGraphicsRectItem):
 class QGraphicsEllipseItem(_HintItem, QGraphicsEllipseItem):
     pass
 
+class ComboTabWidget(QWidget):
+    """ A class that replicates QTabWidget API, but using a QComboBox and
+        a QStackedWidget instead
+    """
+    def __init__(self):
+        super().__init__()
+        self.layout = QVBoxLayout(self)
+        self.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self._tabs = []
+        self._combobox = QComboBox()
+        self.layout.addWidget(self._combobox)
+        self.currentIndexChanged = self._combobox.currentIndexChanged
+        self.setCurrentIndex = self._combobox.setCurrentIndex
+        self._stack = QStackedWidget()
+        self.layout.addWidget(self._stack)
+        self._combobox.currentIndexChanged.connect(
+            self._stack.setCurrentIndex
+        )
+
+    def setCurrentWidget(self, widget):
+        index = None
+        for i, tab in zip(range(len(self._tabs)), self._tabs):
+            if tab[0] == widget:
+                index = i
+                break
+        assert index is not None, (widget, self._tabs)
+        self._combobox.setCurrentIndex(index)
+
+    def addTab(self, widget, name):
+        self._tabs.append((widget, name))
+        self._combobox.addItem(name)
+        self._stack.addWidget(widget)
+
+    def insertTab(self, index, widget, name):
+        self._tabs.insert(index, (widget, name))
+        self._combobox.insertItem(index, name)
+        self._stack.insertWidget(index, widget)
+

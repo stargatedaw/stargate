@@ -22,22 +22,31 @@ class AbstractFileBrowserWidget:
         self,
         a_filter_func=util.is_audio_file,
         file_list_widget=QListWidget,
+        tab_widget=ComboTabWidget,
     ):
         self.scroll_dict = {}
         self.filter_func = a_filter_func
         self.hsplitter = QSplitter(QtCore.Qt.Orientation.Horizontal)
         self.vsplitter = QSplitter(QtCore.Qt.Orientation.Vertical)
-        self.folders_tab_widget = QTabWidget()
+        self.folders_tab_widget = tab_widget()
+        self.folders_tab_widget.setContentsMargins (0, 0, 0, 0)
+        self.folders_tab_widget.setObjectName('sidebar')
         self.hsplitter.addWidget(self.folders_tab_widget)
         self.folders_widget = QWidget()
+        self.folders_widget.setContentsMargins (0, 0, 0, 0)
         self.folders_widget.setObjectName('sidebar')
         self.vsplitter.addWidget(self.folders_widget)
         self.folders_widget_layout = QVBoxLayout()
+        self.folders_widget_layout.setSpacing(0)
+        self.folders_widget_layout.setContentsMargins (0, 0, 0, 0)
         self.folders_widget.setLayout(self.folders_widget_layout)
-        self.folders_tab_widget.setMaximumWidth(660)
+        self.folders_tab_widget.setMaximumWidth(420)
         self.folders_tab_widget.addTab(self.vsplitter, _("Files"))
         self.folder_path_lineedit = QLineEdit()
-        self.folder_path_lineedit.setToolTip('The current directory')
+        self.folder_path_lineedit.setToolTip(
+            'The current directory.  Click on a child directory or the '
+            'buttons below to navigate to a different directory'
+        )
         self.folder_path_lineedit.setReadOnly(True)
         self.folders_widget_layout.addWidget(self.folder_path_lineedit)
 
@@ -155,7 +164,10 @@ class AbstractFileBrowserWidget:
         self.folders_tab_widget.addTab(self.bookmarks_tab, _("Bookmarks"))
 
         self.file_vlayout = QVBoxLayout()
+        self.file_vlayout.setContentsMargins(0, 0, 0, 0)
+        self.file_vlayout.setSpacing(0)
         self.file_widget = QWidget()
+        self.file_widget.setContentsMargins(0, 0, 0, 0)
         self.file_widget.setObjectName('sidebar')
         self.file_widget.setLayout(self.file_vlayout)
         self.vsplitter.addWidget(self.file_widget)

@@ -79,7 +79,7 @@ daw:
   # Sequencer item handle
   seq_item_handle: "{{ item_handle }}"
   # Sequencer selected item handle
-  seq_item_handle_selected: "{{ item_handle }}"
+  seq_item_handle_selected: "{{ palette['gray5'] }}"
   # Used to paint audio on sequencer items
   seq_item_audio: "#969696"
   # Used to paint notes on sequencer items

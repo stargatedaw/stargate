@@ -22,10 +22,15 @@ class PianoRollEditorWidget:
     """ This is the parent widget that contains the PianoRollEditor """
     def __init__(self):
         self.widget = QWidget()
+        self.widget.setContentsMargins(0, 0, 0, 0)
         self.vlayout = QVBoxLayout()
+        self.vlayout.setContentsMargins(0, 0, 0, 0)
+        self.vlayout.setSpacing(0)
         self.widget.setLayout(self.vlayout)
 
-        self.controls_grid_layout = QGridLayout()
+        self.hlayout = QHBoxLayout()
+        self.hlayout.setContentsMargins(5, 5, 5, 5)
+        self.hlayout.setSpacing(5)
         self.scale_key_combobox = QComboBox()
         self.scale_key_combobox.setToolTip(
             'Choose the root key for the musical scale to use'
@@ -34,19 +39,19 @@ class PianoRollEditorWidget:
         self.scale_key_combobox.addItems(_shared.PIANO_ROLL_NOTE_LABELS)
         self.scale_key_combobox.currentIndexChanged.connect(
             self.reload_handler)
-        self.controls_grid_layout.addWidget(QLabel("Key:"), 0, 3)
-        self.controls_grid_layout.addWidget(self.scale_key_combobox, 0, 4)
+        self.hlayout.addWidget(QLabel("Key:"))
+        self.hlayout.addWidget(self.scale_key_combobox)
         self.scale_combobox = QComboBox()
         self.scale_combobox.setToolTip('Choose the musical scale to use')
         self.scale_combobox.setMinimumWidth(172)
         self.scale_combobox.addItems(scales.SCALE_NAMES)
         self.scale_combobox.currentIndexChanged.connect(self.reload_handler)
-        self.controls_grid_layout.addWidget(QLabel(_("Scale:")), 0, 5)
-        self.controls_grid_layout.addWidget(self.scale_combobox, 0, 6)
+        self.hlayout.addWidget(QLabel(_("Scale:")))
+        self.hlayout.addWidget(self.scale_combobox)
 
-        self.controls_grid_layout.addWidget(QLabel("V"), 0, 45)
+        self.hlayout.addWidget(QLabel("V"))
         self.vzoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
-        self.controls_grid_layout.addWidget(self.vzoom_slider, 0, 46)
+        self.hlayout.addWidget(self.vzoom_slider)
         self.vzoom_slider.setObjectName("zoom_slider")
         self.vzoom_slider.setMaximumWidth(72)
         self.vzoom_slider.setRange(9, 24)
@@ -55,10 +60,8 @@ class PianoRollEditorWidget:
         self.vzoom_slider.valueChanged.connect(self.set_midi_vzoom)
         self.vzoom_slider.sliderReleased.connect(self.save_vzoom)
 
-        self.controls_grid_layout.addItem(
+        self.hlayout.addItem(
             QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),
-            0,
-            30,
         )
 
         self.param_combobox = QComboBox()
@@ -71,14 +74,14 @@ class PianoRollEditorWidget:
             ['Velocity', 'Pan', 'Attack', 'Decay', 'Sustain', 'Release'],
         )
         self.param_combobox.currentIndexChanged.connect(self.param_changed)
-        self.controls_grid_layout.addWidget(QLabel(_("Parameter")), 0, 26)
-        self.controls_grid_layout.addWidget(self.param_combobox, 0, 27)
+        self.hlayout.addWidget(QLabel(_("Parameter")))
+        self.hlayout.addWidget(self.param_combobox)
 
         self.edit_menu_button = QPushButton(_("Menu"))
         self.edit_menu_button.setFixedWidth(60)
         self.edit_menu = QMenu(self.widget)
         self.edit_menu_button.setMenu(self.edit_menu)
-        self.controls_grid_layout.addWidget(self.edit_menu_button, 0, 0)
+        self.hlayout.insertWidget(0, self.edit_menu_button)
 
         self.edit_actions_menu = self.edit_menu.addMenu(_("Edit"))
 
@@ -417,13 +420,11 @@ class PianoRollEditorWidget:
         if get_file_setting('preview-note', bool, True):
             self.preview_note_action.setChecked(True)
 
-        self.controls_grid_layout.addItem(
+        self.hlayout.addItem(
             QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),
-            0,
-            31,
         )
 
-        self.vlayout.addLayout(self.controls_grid_layout)
+        self.vlayout.addLayout(self.hlayout)
         self.vlayout.addWidget(shared.PIANO_ROLL_EDITOR)
 
     def toggle_preview_note(self):

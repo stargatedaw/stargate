@@ -19,7 +19,10 @@ class ItemEditorWidget:
         self.events_follow_default = True
 
         self.widget = QWidget()
+        self.widget.setContentsMargins(0, 0, 0, 0)
         self.main_vlayout = QVBoxLayout()
+        self.main_vlayout.setContentsMargins(0, 0, 0, 0)
+        self.main_vlayout.setSpacing(0)
         self.widget.setLayout(self.main_vlayout)
 
         self.tab_widget = QTabWidget()
@@ -36,27 +39,32 @@ class ItemEditorWidget:
         )
 
         self.piano_roll_tab = QWidget()
+        self.piano_roll_tab.setContentsMargins(0, 0, 0, 0)
         self.tab_widget.addTab(
             self.piano_roll_tab,
             _("Piano Roll"),
         )
-        self.notes_tab = QWidget()
         self.cc_tab = QWidget()
+        self.cc_tab.setContentsMargins(0, 0, 0, 0)
         self.tab_widget.addTab(
             self.cc_tab,
             _("CC"),
         )
         self.cc_vlayout = QVBoxLayout(self.cc_tab)
+        self.cc_vlayout.setContentsMargins(0, 0, 0, 0)
+        self.cc_vlayout.setSpacing(0)
         self.cc_vlayout.addWidget(shared.CC_EDITOR_WIDGET.widget)
 
         self.pitchbend_tab = QWidget()
+        self.pitchbend_tab.setContentsMargins(0, 0, 0, 0)
         self.tab_widget.addTab(
             self.pitchbend_tab,
             _("Pitchbend"),
         )
 
         self.piano_roll_hlayout = QHBoxLayout(self.piano_roll_tab)
-        self.piano_roll_hlayout.setContentsMargins(2, 2, 2, 2)
+        self.piano_roll_hlayout.setSpacing(0)
+        self.piano_roll_hlayout.setContentsMargins(0, 0, 0, 0)
         self.piano_roll_hlayout.addWidget(
             shared.PIANO_ROLL_EDITOR_WIDGET.widget,
         )
@@ -66,8 +74,12 @@ class ItemEditorWidget:
             False,
         )
         self.pb_hlayout = QHBoxLayout()
+        self.pb_hlayout.setSpacing(0)
+        self.pb_hlayout.setContentsMargins(0, 0, 0, 0)
         self.pitchbend_tab.setLayout(self.pb_hlayout)
         self.pb_auto_vlayout = QVBoxLayout()
+        self.pb_auto_vlayout.setSpacing(0)
+        self.pb_auto_vlayout.setContentsMargins(0, 0, 0, 0)
         self.pb_hlayout.addLayout(self.pb_auto_vlayout)
         self.pb_auto_vlayout.addWidget(self.pb_viewer_widget.widget)
 

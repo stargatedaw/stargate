@@ -261,7 +261,7 @@ class SequencerWidget:
         self.size_label.setText("Beat")
         self.set_hzoom_size()
         f_point = QtCore.QPoint(
-            int(_shared.SEQUENCE_TRACK_WIDTH + 10),
+            int(_shared.SEQUENCE_TRACK_WIDTH + 6),
             2,
         )
         f_widget = shared.MAIN_WINDOW.midi_scroll_area

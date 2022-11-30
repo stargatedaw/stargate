@@ -20,8 +20,11 @@ class PlaylistWidget:
     def __init__(self):
         self.suppress_changes = True
         self.parent = QWidget()
+        self.parent.setContentsMargins(0, 0, 0, 0)
         self.parent.setObjectName('sidebar')
         layout = QVBoxLayout(self.parent)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
 
         # Sequence list
         self.sequence_widget = QListWidget()

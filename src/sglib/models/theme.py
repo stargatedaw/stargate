@@ -634,7 +634,7 @@ class Theme:
                 ASSETS_DIR=ASSETS_DIR,
                 FONT_SIZE=font_size,
                 FONT_UNIT=font_unit,
-                palette=palette, 
+                palette=palette,
                 SYSTEM_COLORS=system_colors,
                 SCALER=scaler,
                 **variables
@@ -647,7 +647,10 @@ class Theme:
 
 
 def setup_globals():
-    global ASSETS_DIR, ICON_PATH, THEME_FILE
+    global \
+        ASSETS_DIR, \
+        ICON_PATH, \
+        THEME_FILE
 
     ICON_PATH = os.path.join(
         os.path.dirname(__file__),
@@ -720,6 +723,7 @@ def setup_globals():
         'assets',
     ])
 
+
 def open_theme(
     theme_file: str,
     scaler: UIScaler,
@@ -744,7 +748,11 @@ def load_theme(
     """ Load the QSS theme and system colors.  Do this before creating any
         widgets.
     """
-    global QSS, SYSTEM_COLORS, VARIABLES
+    global \
+        QSS, \
+        SYSTEM_COLORS, \
+        VARIABLES
+
     setup_globals()
     QSS, SYSTEM_COLORS, VARIABLES = open_theme(
         THEME_FILE,
@@ -752,6 +760,7 @@ def load_theme(
         font_size,
         font_unit,
     )
+
 
 def copy_theme(dest):
     theme_dir = os.path.dirname(THEME_FILE)

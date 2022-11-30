@@ -416,10 +416,15 @@ class AutomationEditorWidget:
     def __init__(self, a_viewer, a_is_cc=True):
         self.is_cc = a_is_cc
         self.widget = QWidget()
+        self.widget.setContentsMargins(0, 0, 0, 0)
         self.vlayout = QVBoxLayout()
+        self.vlayout.setContentsMargins(0, 0, 0, 0)
+        self.vlayout.setSpacing(0)
         self.widget.setLayout(self.vlayout)
         self.automation_viewer = a_viewer
         self.hlayout = QHBoxLayout()
+        self.hlayout.setContentsMargins(5, 5, 5, 5)
+        self.hlayout.setSpacing(5)
 
         if a_is_cc:
             self.control_combobox = QComboBox()

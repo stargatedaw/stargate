@@ -9,6 +9,7 @@ from sgui.sgqt import *
 from sglib import constants
 from sglib.log import LOG
 from sglib.math import clip_min
+from sglib.models import theme
 from sglib.models.daw.project import DawProject
 from sglib.lib import util
 from sglib.lib.translate import _
@@ -37,14 +38,6 @@ AUDIO_ITEM_LANE_COUNT = 24
 
 AUDIO_ITEM_HANDLE_HEIGHT = 12.0
 AUDIO_ITEM_HANDLE_SIZE = 6.25
-
-AUDIO_ITEM_HANDLE_PEN = QPen(QtCore.Qt.GlobalColor.white)
-AUDIO_ITEM_LINE_PEN = QPen(QtCore.Qt.GlobalColor.white, 2.0)
-AUDIO_ITEM_HANDLE_SELECTED_PEN = QPen(QColor.fromRgb(24, 24, 24))
-AUDIO_ITEM_LINE_SELECTED_PEN = QPen(
-    QColor.fromRgb(24, 24, 24),
-    2.0,
-)
 
 ITEM_SNAP_DIVISORS = {
     0: 4.0,
@@ -579,6 +572,28 @@ def open_rack(track_index: int):
     """
     PLUGIN_RACK.set_index(track_index)
     MAIN_WINDOW.setCurrentIndex(TAB_PLUGIN_RACK)
+
+def setup():
+    global \
+        AUDIO_ITEM_HANDLE_PEN, \
+        AUDIO_ITEM_LINE_PEN, \
+        AUDIO_ITEM_HANDLE_SELECTED_PEN, \
+        AUDIO_ITEM_LINE_SELECTED_PEN
+
+    AUDIO_ITEM_HANDLE_PEN = QPen(
+        QColor(theme.SYSTEM_COLORS.daw.seq_item_handle),
+    )
+    AUDIO_ITEM_LINE_PEN = QPen(
+        QColor(theme.SYSTEM_COLORS.daw.seq_item_handle),
+        2.0,
+    )
+    AUDIO_ITEM_HANDLE_SELECTED_PEN = QPen(
+        QColor(theme.SYSTEM_COLORS.daw.seq_item_handle_selected),
+    )
+    AUDIO_ITEM_LINE_SELECTED_PEN = QPen(
+        QColor(theme.SYSTEM_COLORS.daw.seq_item_handle_selected),
+        2.0,
+    )
 
 # Only functions, globals must accessed through the module
 __all__ = [

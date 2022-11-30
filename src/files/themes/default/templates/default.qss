@@ -58,17 +58,26 @@ QLabel#hintbox {
 }
 
 QWidget#sidebar {
+    margin: 0px;
     background-color: {{ palette["gray5"] }};
     color: {{ text_color }};
 }
+
 QLabel#transparent {
     background-color: none;
     color: {{ text_color }};
 }
 
-QListWidget#sidebar_list {
-    background-color: {{ palette["gray5"] }};
+QListWidget#sidebar_list,
+QListWidget:item#sidebar_list {
+    background-color: {{ palette["gray4"] }};
     color: {{ text_color }};
+}
+
+QListWidget:item:hover#sidebar_list,
+QListWidget:item:selected#sidebar_list {
+    background-color:{{ background_color_alt3 }};
+    color: {{ text_color_alt }};
 }
 
 QFrame#separator_h {
@@ -87,7 +96,7 @@ QFrame#separator_w {
 
 QMenu::item
 {
-    background-color: {{ background_color_alt2 }};
+    background-color: {{ palette["gray5"] }};
 }
 
 QMenu::separator
@@ -98,7 +107,7 @@ QMenu::separator
 
 QMenu
 {
-    background-color: {{ background_color_alt }};
+    background-color: {{  palette["gray5"] }};
     border: 1px solid #7a7a7a;
 }
 
@@ -445,8 +454,8 @@ QSlider#zoom_slider::handle:vertical
 
 QToolTip
 {
-    background-color: {{ background_color }};
-    border: 1px solid white;
+    background-color: {{ palette["gray5"] }};
+    border: 2px solid {{ palette["black"] }};
     color: {{ text_color }};
     padding: 6px;
 }
@@ -471,7 +480,7 @@ QWidget#plugin_widget
 }
 
 QWidget#track_panel {
-    background-color: #585858;
+    background-color: #4b4b4b;
     border: 1px solid {{ border_color }};
 }
 
@@ -547,7 +556,7 @@ QLineEdit:disabled
 
 QPushButton
 {
-    background-color: {{ background_color_alt }};
+    background-color: {{ palette["gray2a"] }};
     border: 1px solid {{ border_color }};
     color: {{ text_color }};
     padding-left: 3px;
@@ -574,8 +583,8 @@ QComboBox {
 
 QComboBox,
 QPushButton#nested_combobox {
-    background-color: #585858;
-    border: 1px solid #333333;
+    background-color: {{ palette["gray2a"] }};
+    border: 1px solid {{ palette["black_light"] }};
     border-radius: 3px;
     color: {{ text_color }};
 }
@@ -792,11 +801,13 @@ QTabBar::tab
     border: 1px solid {{ border_color }};
     border-radius: 6px;
     color: {{ text_color }};
+    height: 17px;
     margin-right: -1px;
     padding-bottom: 2px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 3px;
+    width: 69px;
 }
 
 
@@ -810,9 +821,15 @@ QTabWidget::tab-bar {
 }
 
 QTabWidget::pane {
-    /* border-top: 2px solid {{ palette["gray4"]  }}; */
-    border-top: none;
+    /* border-top: none; */
+    border-top: 2px solid transparent;
 }
+
+/*
+QTabWidget#item_editor::pane {
+    border-top: 2px solid {{ palette["gray4"]  }};
+}
+*/
 
 QTabBar::tab:last {
     /* the last selected tab has nothing to overlap with on the right */
