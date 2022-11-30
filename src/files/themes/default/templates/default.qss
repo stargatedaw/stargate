@@ -10,19 +10,32 @@ QStackedWidget#main_window {
 }
 
 QWidget#welcome_screen {
-    background-color: {{ palette["black_light"]  }};
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #2c2a2c,
+        stop: 1 #292629
+    );
     background-image: url({{ ASSETS_DIR }}/icon.svg);
     background-position: top right;
     background-repeat: no-repeat;
 }
 
 QListWidget#welcome_screen_rp {
-    background-color: {{ palette["black"]  }};
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #242124,
+        stop: 1 #232122
+    );
     color: {{ text_color }};
 }
 
 QPushButton#huge_button {
-    background-color: {{ palette["gray2"]  }};
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #5d595c,
+        stop: 0.5 #565159,
+        stop: 1 #5d595c
+    );
     font-size: 36px;
     height: 150px;
     width: 150px;
@@ -34,6 +47,11 @@ QWidget#splash_widget {
 
 QLabel#hintbox {
     background-color: {{ palette["gray4"] }};
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #393939,
+        stop: 1 #363636
+    );
     color: {{ text_color }};
     padding: 0px;
     margin: 0px;
@@ -85,9 +103,8 @@ QMenu
 }
 
 
-QWidget#plugin_rack
-{
-    background-color: {{ background_color_alt }};
+QWidget#plugin_rack {
+    background-color: {{ palette["gray3"] }};
 }
 
 QWidget#ccmaptabwidget,
