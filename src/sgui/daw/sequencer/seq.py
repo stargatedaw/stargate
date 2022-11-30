@@ -109,7 +109,7 @@ class ItemSequencer(QGraphicsView):
         self.scene.contextMenuEvent = self.sceneContextMenuEvent
         self.scene.setBackgroundBrush(
             QColor(
-                theme.SYSTEM_COLORS.widgets.default_scene_background
+                theme.SYSTEM_COLORS.daw.seq_background,
             )
         )
         #self.scene.selectionChanged.connect(self.highlight_selected)
