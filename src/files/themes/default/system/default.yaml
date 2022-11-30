@@ -67,7 +67,7 @@ daw:
   # Vertical bar lines in the sequencer
   seq_bar_line: "#090909"
   # Vertical beat lines in the sequencer
-  seq_beat_line: "#787878"
+  seq_beat_line: "#4c4d4d"
   # Sequencer header
   seq_header: "#1d1e22"
   # Sequencer header context menu event position marker
@@ -106,7 +106,7 @@ widgets:
   # The color that audio files are drawn with in the sampler and wave editor
   audio_item_viewer_color: "{{ palette.purple }}"
   # The default QGraphicsScene background color used by the widgets library
-  default_scene_background: "{{ palette.gray4  }}"
+  default_scene_background: "{{ palette.gray5  }}"
   # Used to draw the arc around the knob
   knob_arc_pen: "{{ palette.purple }}"
   # Used to draw the knob background
