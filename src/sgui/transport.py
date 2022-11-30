@@ -150,13 +150,15 @@ class TransportWidget:
 
         self.toolbar.addWidget(self.panic_button)
 
-        self.host_widget = QWidget()
+        self.host_widget = QWidget(self.toolbar)
+        self.host_widget.setObjectName('transport_widget')
         self.host_layout = QVBoxLayout(self.host_widget)
         self.host_layout.setContentsMargins(1, 1, 1, 1)
         self.host_layout.setSpacing(1)
-        self.host_layout.addWidget(
-            QLabel("Host"),
-        )
+        host_label = QLabel("Host")
+        host_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        host_label.setObjectName('transport_widget')
+        self.host_layout.addWidget(host_label)
         self.toolbar.addWidget(
             self.host_widget,
         )

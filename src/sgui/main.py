@@ -1408,8 +1408,8 @@ def global_new_project(a_project_file, a_wait=True):
 
 
 def splash_screen_opening(project_file):
-    if len(project_file) > 50:
-        f_msg = "Opening ..." + project_file[-50:]
+    if len(project_file) > 100:
+        f_msg = "Opening ..." + project_file[-100:]
     else:
         f_msg = "Opening " + project_file
     SPLASH_SCREEN.status_update(f_msg)

@@ -495,6 +495,11 @@ QDialog {
     border: 3px solid #222222;
 }
 
+QWidget#transport_widget {
+    background-color: none;
+    color: #111111;
+}
+
 QWidget#transport_panel {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
@@ -526,16 +531,6 @@ QWidget:item:selected
     background-color:{{ background_color_alt3 }};
     color: {{ text_color_alt }};
 }
-
-/*
-QPushButton:disabled,
-QComboBox:disabled,
-QLineEdit:disabled
-{
-    background-color: {{ background_color_disabled }};
-    color: {{ text_color_disabled }};
-}
-*/
 
 QLineEdit
 {
@@ -573,16 +568,15 @@ QPushButton#nested_combobox::menu-indicator
     subcontrol-position: right center;
 }
 
-QComboBox
-{
+QComboBox {
     combobox-popup: 0;
 }
 
 QComboBox,
-QPushButton#nested_combobox
-{
-    background-color: {{ combobox }};
-    border: 1px solid {{ border_color }};
+QPushButton#nested_combobox {
+    background-color: #585858;
+    border: 1px solid #333333;
+    border-radius: 3px;
     color: {{ text_color }};
 }
 
