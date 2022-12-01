@@ -208,7 +208,7 @@ class MainWindow(QTabWidget):
         )
         self.addTab(
             self.notes_tab.widget,
-            _("Project Notes"),
+            _("Notepad"),
         )
 
         self.currentChanged.connect(self.tab_changed)
