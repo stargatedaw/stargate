@@ -60,10 +60,6 @@ class PianoRollEditorWidget:
         self.vzoom_slider.valueChanged.connect(self.set_midi_vzoom)
         self.vzoom_slider.sliderReleased.connect(self.save_vzoom)
 
-        self.hlayout.addItem(
-            QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),
-        )
-
         self.param_combobox = QComboBox()
         self.param_combobox.setToolTip(
             'Per note parameters for instrument plugins.  Use CTRL+ALT+drag\n'
