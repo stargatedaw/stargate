@@ -1,12 +1,4 @@
 # Raspberry Pi4
-## UPDATE:
-Manjaro KDE, the one rpi4 distro that worked decently well late 2021 to early
-2022, no longer works very well as of late 2022.  Leaving this document here
-for historical reference, but know that you will likely need to do some serious
-tweaking to run a DAW on an rpi4
-
-...
-
 Stargate UI runs adequately on an rpi4, with some necessary tweaks.
 The engine is very optimized and runs adequately without tweaks, but the
 UI will lag unless additional optimizations are made to the operating system.
@@ -36,7 +28,7 @@ for rpi4 because:
 
 ### Installing Stargate DAW
 
-[See the Arch Linux instructions](./arch_linux.md)
+[See the Arch Linux instructions](../../docs/troubleshooting//arch_linux.md)
 
 ### Operating System Settings
 
@@ -71,9 +63,21 @@ This will greatly reduce audio dropouts and improve performance, but you will
 need a proper heavy heatsink on your rpi4.  We recommend getting a heavy-duty
 case that acts as a passive heatsink, something that weighs hundreds of grams.
 
-Before running Stargate, every time.  There are other ways to permanently make
-this setting if you desire.
+### Permanently
+```
+sudo -i
 
+pacman -Syu cpupower
+vim /etc/default/cpupower
+# Change the 'governor' field to 'performance'
+systemctl start cpupower
+systemctl enable cpupower
+
+# Check that the changes applied
+cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+```
+
+### Manually (you will need to do this every time before running Stargate)
 ```
 # Become root
 sudo -i
