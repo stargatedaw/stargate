@@ -659,8 +659,7 @@ QLabel {
     border: 1px solid #222222;
 }
 
-QLabel#plugin_name_label,
-QLabel#plugin_value_label {
+QLabel#transparent {
     background: none;
     border: none;
     color: #222222;

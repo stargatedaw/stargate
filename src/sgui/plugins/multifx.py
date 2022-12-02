@@ -84,56 +84,53 @@ MULTIFX_PORT_MAP = {
 STYLESHEET = """\
 QWidget {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #2a2a2a, stop: 0.5 #3a3a3f, stop: 1 #2a2a2a
+        x1: 0, y1: 0, x2: 0.5, y2: 1,
+        stop: 0 #141414, stop: 0.5 #1a1b1c, stop: 1 #141513
     );
     border: none;
 }
 
 QGroupBox#plugin_groupbox {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #060648, stop: 0.5 #0D0D4B, stop: 1 #060648
+        x1: 0, y1: 0, x2: 0.25, y2: 1,
+        stop: 0 #1b1b58, stop: 0.5 #1c1c5c, stop: 1 #1b1c59
     );
-    border: 2px solid #cccccc;
+    border: none;
+    border-radius: 9px;
     color: #cccccc;
 }
 
 QGroupBox::title {
     subcontrol-origin: margin;
-    subcontrol-position: top center; /* position at the top center */
+    subcontrol-position: top center;
     padding: 0 3px;
-    background-color: #0D0D4B;
-    border: 2px solid #cccccc;
+    background-color: none;
+    border: none;
 }
 
-QLabel#plugin_name_label,
-QLabel#plugin_value_label {
+QLabel {
     background: none;
     color: #cccccc;
 }
 
 QComboBox,
-QPushButton#nested_combobox
-{
+QPushButton {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
         stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
     );
     border: 1px solid #222222;
-    border-radius: 6px;
+    border-radius: 3px;
     color: #222222;
 }
 
-QAbstractItemView
-{
+QAbstractItemView {
     background-color: #222222;
     border: 2px solid #aaaaaa;
     selection-background-color: #cccccc;
 }
 
-QComboBox::drop-down
-{
+QComboBox::drop-down {
     border-bottom-right-radius: 3px;
     border-left-color: #222222;
     border-left-style: solid; /* just a single line */
@@ -145,15 +142,14 @@ QComboBox::drop-down
     width: 15px;
 }
 
-QComboBox::down-arrow
-{
+QComboBox::down-arrow {
     image: url({{ PLUGIN_ASSETS_DIR }}/drop-down.svg);
 }
 
 QWidget#left_logo {
     background-color: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #040438, stop: 1 #060630
+        stop: 0 #141458, stop: 1 #161650
     );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/multifx/logo-left.svg);
     background-position: center;
@@ -164,7 +160,7 @@ QWidget#left_logo {
 QWidget#right_logo {
     background-color: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #040438, stop: 1 #060630
+        stop: 0 #141458, stop: 1 #161650
     );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/logo-right.svg);
     background-position: center;
@@ -178,8 +174,7 @@ QMenu::item {
 	color: #cccccc;
 }
 
-QMenu::separator
-{
+QMenu::separator {
     height: 2px;
     background-color: #cccccc;
 }
@@ -228,12 +223,6 @@ class multifx_plugin_ui(AbstractPluginUI):
         self.main_vlayout = QVBoxLayout()
         self.main_hlayout.addLayout(self.main_vlayout)
         self.main_vlayout.addLayout(self.presets_hlayout)
-        self.fx_tab = QWidget()
-        self.fx_tab.setSizePolicy(
-            QSizePolicy.Policy.Expanding,
-            QSizePolicy.Policy.Expanding,
-        )
-        self.main_vlayout.addWidget(self.fx_tab)
 
         right_screws = get_screws()
         right_logo = QWidget()
@@ -246,17 +235,16 @@ class multifx_plugin_ui(AbstractPluginUI):
         self.main_hlayout.addWidget(right_logo)
 
         self.fx_layout = QGridLayout()
-        self.fx_hlayout = QHBoxLayout(self.fx_tab)
-        self.fx_hlayout.addLayout(self.fx_layout)
+        self.main_vlayout.addLayout(self.fx_layout)
 
         f_knob_size = 48
 
         f_port = 4
         f_column = 0
         f_row = 0
-        for f_i in range(8):
+        for i in range(8):
             f_effect = MultiFXSingle(
-                "FX{}".format(f_i),
+                f"FX{i}",
                 f_port,
                 self.plugin_rel_callback,
                 self.plugin_val_callback,
@@ -276,3 +264,4 @@ class multifx_plugin_ui(AbstractPluginUI):
 
         self.open_plugin_file()
         self.set_midi_learn(MULTIFX_PORT_MAP)
+

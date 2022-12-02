@@ -74,12 +74,7 @@ QComboBox{
     color: #cccccc;
 }
 
-QLabel#plugin_name_label{
-    background: none;
-    color: #222222;
-}
-
-QLabel#plugin_value_label{
+QLabel {
     background: none;
     color: #222222;
 }
