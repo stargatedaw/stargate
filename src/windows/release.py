@@ -27,7 +27,7 @@ subprocess.check_call(["pyinstaller", "pyinstaller-windows-onedir.spec"])
 TEMPLATE = r"""
 !define PRODUCT_NAME "stargate"
 !define PRODUCT_VERSION "{MAJOR_VERSION_NUM}.0"
-!define PRODUCT_PUBLISHER "stargateaudio"
+!define PRODUCT_PUBLISHER "stargatedaw"
 
 ;Require admin rights on NT6+ (When UAC is turned on)
 RequestExecutionLevel admin
@@ -36,7 +36,7 @@ SetCompressor /SOLID lzma
 
 Name "Stargate DAW {MINOR_VERSION}"
 OutFile "dist\StargateDAW-{MINOR_VERSION}-win64-installer.exe"
-InstallDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
+InstallDir "$PROGRAMFILES64\stargatedaw@github\Stargate"
 
 ;--------------------------------
 ;Interface Settings
@@ -105,10 +105,8 @@ Section "Base Install" SEC01
     ; Delete the old program
     RMDir /r $INSTDIR\program
     ; Clean up the old legacy file structure
-    ; TODO: Remove this in mid 2022
-    Delete $INSTDIR\{MAJOR_VERSION}.exe
-    Delete $INSTDIR\{MAJOR_VERSION}.ico
-    Delete $INSTDIR\..\_stargate_home
+    ; TODO: Remove this in mid 2023
+    RMDir /r "$PROGRAMFILES64\stargateaudio@github\Stargate"
     ; Install the program
     CreateDirectory $INSTDIR\program
     SetOutPath $INSTDIR\program
