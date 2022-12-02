@@ -106,7 +106,7 @@ Section "Base Install" SEC01
     RMDir /r $INSTDIR\program
     ; Clean up the old legacy file structure
     ; TODO: Remove this in mid 2023
-    RMDir /r "$PROGRAMFILES64\stargateaudio@github\Stargate"
+    RMDir /r "$PROGRAMFILES64\stargateaudio@github"
     ; Install the program
     CreateDirectory $INSTDIR\program
     SetOutPath $INSTDIR\program
