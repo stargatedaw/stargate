@@ -350,13 +350,9 @@ void v_run_pitchglitch(
             }
         }
         if(has_voices){
-            sample.left = f_dco_run(
-                &plugin_data->mono_modules.dc_offset_filter[0],
-                sample.left
-            );
-            sample.right = f_dco_run(
-                &plugin_data->mono_modules.dc_offset_filter[1],
-                sample.right
+            sample = stereo_dc_filter_run(
+                &plugin_data->mono_modules.dc_filter,
+                sample
             );
 
             v_axf_set_xfade(
@@ -375,8 +371,7 @@ void v_run_pitchglitch(
             );
         } else {
             sample = input_buffer[i];
-            v_dco_reset(&plugin_data->mono_modules.dc_offset_filter[0]);
-            v_dco_reset(&plugin_data->mono_modules.dc_offset_filter[1]);
+            stereo_dc_filter_reset(&plugin_data->mono_modules.dc_filter);
         }
         _plugin_mix(
             run_mode,
@@ -487,8 +482,7 @@ void PitchGlitchMonoInit(
     self->pan_smoother.last_value = 0.0f;
     g_sml_init(&self->pitchbend_smoother, a_sr, 1.0f, -1.0f, 0.1f);
     g_pn2_init(&self->panner);
-    g_dco_init(&self->dc_offset_filter[0], a_sr);
-    g_dco_init(&self->dc_offset_filter[1], a_sr);
+    stereo_dc_filter_init(&self->dc_filter, a_sr);
     g_axf_init(&self->dry_wet, -2.0);
     g_sml_init(&self->dry_wet_smoother, a_sr, 1.0f, 0.0f, 1.0f);
 }

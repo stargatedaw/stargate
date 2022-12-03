@@ -54,7 +54,7 @@ struct PitchGlitchMonoModules {
     t_smoother_linear pitchbend_smoother;
     t_pn2_panner2 panner;
     t_smoother_linear pan_smoother;
-    t_dco_dc_offset_filter dc_offset_filter[2];
+    struct StereoDCFilter dc_filter;
     t_smoother_linear dry_wet_smoother;
     t_audio_xfade dry_wet;
 };

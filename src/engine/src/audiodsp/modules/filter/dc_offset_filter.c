@@ -34,3 +34,25 @@ t_dco_dc_offset_filter * g_dco_get(SGFLT a_sr)
 
     return f_result;
 }
+
+void stereo_dc_filter_init(struct StereoDCFilter* self, SGFLT sr){
+    g_dco_init(&self->left, sr);
+    g_dco_init(&self->right, sr);
+}
+
+void stereo_dc_filter_reset(struct StereoDCFilter* self){
+    v_dco_reset(&self->left);
+    v_dco_reset(&self->right);
+}
+
+struct SamplePair stereo_dc_filter_run(
+    struct StereoDCFilter* self,
+    struct SamplePair input
+){
+    struct SamplePair result = (struct SamplePair){
+        .left = f_dco_run(&self->left, input.left),
+        .right = f_dco_run(&self->right, input.right),
+    };
+
+    return result;
+}
