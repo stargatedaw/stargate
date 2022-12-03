@@ -266,6 +266,11 @@ class custom_additive_oscillator(abstract_custom_oscillator):
         self.osc_num = 0
         self.hlayout.addWidget(QLabel(_("Oscillator#:")))
         self.osc_num_combobox = QComboBox()
+        self.osc_num_combobox.setToolTip(
+            'The oscillator number to view or modify.  There are 3 additive '
+            'oscillators to choose from in the oscillator dropdown menu for '
+            'each oscillator'
+        )
         self.osc_num_combobox.setMinimumWidth(66)
         self.hlayout.addWidget(self.osc_num_combobox)
         for f_i in range(1, a_osc_count + 1):
@@ -274,6 +279,11 @@ class custom_additive_oscillator(abstract_custom_oscillator):
             self.osc_index_changed)
         self.hlayout.addWidget(QLabel(_("Edit Mode:")))
         self.edit_mode_combobox = QComboBox()
+        self.edit_mode_combobox.setToolTip(
+            'Changes whether editing harmonics with the mouse affects all '
+            'harmonics or only odd harmonics.  Choose odd harmonics for '
+            'creating square-wave-like sounds, all harmonics for saw-wave-like'
+        )
         self.edit_mode_combobox.setMinimumWidth(90)
         self.hlayout.addWidget(self.edit_mode_combobox)
         self.edit_mode_combobox.addItems([_("All"), _("Odd")])

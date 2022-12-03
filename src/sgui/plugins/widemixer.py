@@ -253,7 +253,7 @@ class WideMixerPluginUI(AbstractPluginUI):
                 self.port_dict,
                 tooltip='The volume of the audio',
             )
-            self.tab_widget = QTabWidget()
+            self.tab_widget = ComboTabWidget()
             self.layout.addWidget(self.tab_widget)
             self.in_tab = QWidget()
             self.tab_widget.addTab(self.in_tab, _("In"))

@@ -179,6 +179,8 @@ QSplitter::handle:horizontal
 QCheckBox#button_hide,
 QCheckBox#button_power,
 QCheckBox#button_power_small,
+QCheckBox#solo_checkbox,
+QCheckBox#mute_checkbox,
 QCheckBox#dc_checkbox,
 QRadioButton#rec_arm_radiobutton
 {
@@ -243,6 +245,27 @@ QCheckBox#dc_checkbox::indicator::checked
 {
     image: url({{ ASSETS_DIR }}/dc-on.svg) 0 0 0 0 stretch stretch;
 }
+
+/*Solo checkbox*/
+
+QCheckBox#solo_checkbox::indicator::unchecked {
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/solo-off.svg);
+}
+
+QCheckBox#solo_checkbox::indicator::checked {
+    image: url({{ ASSETS_DIR }}/solo-on.svg);
+}
+
+/*Mute checkbox*/
+
+QCheckBox#mute_checkbox::indicator::unchecked {
+    image: url({{ ASSETS_DIR }}/{{ assets_subdir }}/mute-off.svg) 0 0 0 0 stretch stretch;
+}
+
+QCheckBox#mute_checkbox::indicator::checked {
+    image: url({{ ASSETS_DIR }}/mute-on.svg) 0 0 0 0 stretch stretch;
+}
+
 
 QSpinBox,
 QDoubleSpinBox

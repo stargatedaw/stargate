@@ -655,11 +655,11 @@ QWidget:item:selected
     color: #cccccc;
 }
 
-QLabel {
+QLabel#border_label {
     border: 1px solid #222222;
 }
 
-QLabel#transparent {
+QLabel {
     background: none;
     border: none;
     color: #222222;

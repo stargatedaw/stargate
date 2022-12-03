@@ -133,6 +133,7 @@ class MultiFXSingle:
             a_preset_mgr=a_preset_mgr,
             a_default_index=0,
         )
+        self.combobox.name_label.setObjectName('transparent')
         self.combobox.control.currentIndexChanged_connect(
             self.type_combobox_changed,
         )
