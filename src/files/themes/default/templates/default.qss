@@ -226,8 +226,9 @@ QCheckBox#button_hide::indicator::unchecked
 /* Track panel radio buttons  */
 
 QCheckBox#button_power_small::indicator,
-QCheckBox#dc_checkbox::indicator
-{
+QCheckBox#dc_checkbox::indicator,
+QCheckBox#mute_checkbox::indicator,
+QCheckBox#solo_checkbox::indicator {
     background-color: none;
     border: 1px solid {{ border_color }};
     color: none;
