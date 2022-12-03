@@ -4,6 +4,6 @@ mutagen
 numpy
 psutil
 pymarshal
-PyQt6
+PyQt6==6.2.3
 PyYAML
 wavefile

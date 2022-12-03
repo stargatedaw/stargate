@@ -5,6 +5,6 @@ numpy
 psutil
 pyinstaller
 pymarshal
-PyQt5
+PyQt6==6.2.3
 PyYAML
 wavefile
