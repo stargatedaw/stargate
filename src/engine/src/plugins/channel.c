@@ -117,11 +117,9 @@ void v_sgchnl_run(
     );
     SGFLT f_pan_law = plugin_data->port_table[SGCHNL_LAW] * 0.01f;
 
-    int f_i;
-
-    for(f_i = 0; f_i < sample_count; ++f_i){
+    for(int i = 0; i < sample_count; ++i){
         effect_process_events(
-            f_i,
+            i,
             &plugin_data->midi_events,
             plugin_data->port_table,
             plugin_data->descriptor,
@@ -149,9 +147,9 @@ void v_sgchnl_run(
             plugin_data->mono_modules.volume_smoother.last_value - f_pan_law
         );
 
-        left = input_buffers[f_i].left *
+        left = input_buffers[i].left *
             f_vol_linear * f_gain * plugin_data->mono_modules.panner.gainL;
-        right = input_buffers[f_i].right *
+        right = input_buffers[i].right *
             f_vol_linear * f_gain * plugin_data->mono_modules.panner.gainR;
         if(peak_meter){
             v_pkm_run_single(
@@ -163,7 +161,7 @@ void v_sgchnl_run(
 
         _plugin_mix(
             run_mode,
-            f_i,
+            i,
             output_buffers,
             left,
             right

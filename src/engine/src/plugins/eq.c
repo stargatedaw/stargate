@@ -186,16 +186,15 @@ void v_sgeq_set_port_value(
 }
 
 int _prefx_check_if_on(t_sgeq *plugin_data){
-    int f_i;
     int on = 0;
     t_sgeq_mono_modules* mm = &plugin_data->mono_modules;
 
-    for(f_i = 0; f_i < 6; ++f_i){
-        mm->pre_fx_func_ptr[f_i] = g_mf3_get_function_pointer(
-            (int)(*(plugin_data->pre_fx_combobox[f_i]))
+    for(int i = 0; i < 6; ++i){
+        mm->pre_fx_func_ptr[i] = g_mf3_get_function_pointer(
+            (int)(*(plugin_data->pre_fx_combobox[i]))
         );
 
-        if(mm->pre_fx_func_ptr[f_i] != v_mf3_run_off){
+        if(mm->pre_fx_func_ptr[i] != v_mf3_run_off){
             on = 1;
         }
     }
@@ -203,16 +202,15 @@ int _prefx_check_if_on(t_sgeq *plugin_data){
 }
 
 int _postfx_check_if_on(t_sgeq *plugin_data){
-    int f_i;
     int on = 0;
     t_sgeq_mono_modules* mm = &plugin_data->mono_modules;
 
-    for(f_i = 0; f_i < 6; ++f_i){
-        mm->post_fx_func_ptr[f_i] = g_mf3_get_function_pointer(
-            (int)(*(plugin_data->post_fx_combobox[f_i]))
+    for(int i = 0; i < 6; ++i){
+        mm->post_fx_func_ptr[i] = g_mf3_get_function_pointer(
+            (int)(*(plugin_data->post_fx_combobox[i]))
         );
 
-        if(mm->post_fx_func_ptr[f_i] != v_mf3_run_off){
+        if(mm->post_fx_func_ptr[i] != v_mf3_run_off){
             on = 1;
         }
     }
@@ -234,8 +232,6 @@ void v_sgeq_run(
     t_sgeq *plugin_data = (t_sgeq*)instance;
     t_mf3_multi * f_fx;
 
-    int f_i = 0;
-    int f_i2;
     t_sgeq_mono_modules* mm = &plugin_data->mono_modules;
     int prefx_on = _prefx_check_if_on(plugin_data);
     int postfx_on = _postfx_check_if_on(plugin_data);
@@ -250,11 +246,11 @@ void v_sgeq_run(
     );
     struct SamplePair sample;
 
-    for(f_i = 0; f_i < sample_count; ++f_i){
-        sample.left = input_buffer[f_i].left;
-        sample.right = input_buffer[f_i].right;
+    for(int i = 0; i < sample_count; ++i){
+        sample.left = input_buffer[i].left;
+        sample.right = input_buffer[i].right;
         effect_process_events(
-            f_i,
+            i,
             &plugin_data->midi_events,
             plugin_data->port_table,
             plugin_data->descriptor,
@@ -263,34 +259,34 @@ void v_sgeq_run(
         );
 
         if(prefx_on){
-            for(f_i2 = 0; f_i2 < 6; ++f_i2){
+            for(int j = 0; j < 6; ++j){
                 if(
-                    mm->pre_fx_func_ptr[f_i2]
+                    mm->pre_fx_func_ptr[j]
                     !=
                     v_mf3_run_off
                 ){
-                    f_fx = &mm->prefx[f_i2];
+                    f_fx = &mm->prefx[j];
                     v_sml_run(
-                        &mm->pre_smoothers[f_i2][0],
-                        *plugin_data->pre_fx_knob0[f_i2]
+                        &mm->pre_smoothers[j][0],
+                        *plugin_data->pre_fx_knob0[j]
                     );
                     v_sml_run(
-                        &mm->pre_smoothers[f_i2][1],
-                        *plugin_data->pre_fx_knob1[f_i2]
+                        &mm->pre_smoothers[j][1],
+                        *plugin_data->pre_fx_knob1[j]
                     );
                     v_sml_run(
-                        &mm->pre_smoothers[f_i2][2],
-                        *plugin_data->pre_fx_knob2[f_i2]
+                        &mm->pre_smoothers[j][2],
+                        *plugin_data->pre_fx_knob2[j]
                     );
 
                     v_mf3_set(
                         f_fx,
-                        mm->pre_smoothers[f_i2][0].last_value,
-                        mm->pre_smoothers[f_i2][1].last_value,
-                        mm->pre_smoothers[f_i2][2].last_value
+                        mm->pre_smoothers[j][0].last_value,
+                        mm->pre_smoothers[j][1].last_value,
+                        mm->pre_smoothers[j][2].last_value
                     );
 
-                    mm->pre_fx_func_ptr[f_i2](
+                    mm->pre_fx_func_ptr[j](
                         f_fx,
                         sample.left,
                         sample.right
@@ -302,53 +298,53 @@ void v_sgeq_run(
             }
         }
 
-        for(f_i2 = 0; f_i2 < SGEQ_EQ_COUNT; ++f_i2){
-            if(*plugin_data->eq_gain[f_i2] != 0.0f){
+        for(int j = 0; j < SGEQ_EQ_COUNT; ++j){
+            if(*plugin_data->eq_gain[j] != 0.0f){
                 v_pkq_calc_coeffs(
-                    &mm->eqs[f_i2],
-                    *plugin_data->eq_freq[f_i2],
-                    *plugin_data->eq_res[f_i2] * 0.01f,
-                    *plugin_data->eq_gain[f_i2] * 0.1f
+                    &mm->eqs[j],
+                    *plugin_data->eq_freq[j],
+                    *plugin_data->eq_res[j] * 0.01f,
+                    *plugin_data->eq_gain[j] * 0.1f
                 );
                 v_pkq_run(
-                    &mm->eqs[f_i2],
+                    &mm->eqs[j],
                     sample.left,
                     sample.right
                 );
-                sample.left = mm->eqs[f_i2].output0;
-                sample.right = mm->eqs[f_i2].output1;
+                sample.left = mm->eqs[j].output0;
+                sample.right = mm->eqs[j].output1;
             }
         }
 
         if(postfx_on){
-            for(f_i2 = 0; f_i2 < 6; ++f_i2){
+            for(int j = 0; j < 6; ++j){
                 if(
-                    mm->post_fx_func_ptr[f_i2]
+                    mm->post_fx_func_ptr[j]
                     !=
                     v_mf3_run_off
                 ){
-                    f_fx = &mm->postfx[f_i2];
+                    f_fx = &mm->postfx[j];
                     v_sml_run(
-                        &mm->post_smoothers[f_i2][0],
-                        *plugin_data->post_fx_knob0[f_i2]
+                        &mm->post_smoothers[j][0],
+                        *plugin_data->post_fx_knob0[j]
                     );
                     v_sml_run(
-                        &mm->post_smoothers[f_i2][1],
-                        *plugin_data->post_fx_knob1[f_i2]
+                        &mm->post_smoothers[j][1],
+                        *plugin_data->post_fx_knob1[j]
                     );
                     v_sml_run(
-                        &mm->post_smoothers[f_i2][2],
-                        *plugin_data->post_fx_knob2[f_i2]
+                        &mm->post_smoothers[j][2],
+                        *plugin_data->post_fx_knob2[j]
                     );
 
                     v_mf3_set(
                         f_fx,
-                        mm->post_smoothers[f_i2][0].last_value,
-                        mm->post_smoothers[f_i2][1].last_value,
-                        mm->post_smoothers[f_i2][2].last_value
+                        mm->post_smoothers[j][0].last_value,
+                        mm->post_smoothers[j][1].last_value,
+                        mm->post_smoothers[j][2].last_value
                     );
 
-                    mm->post_fx_func_ptr[f_i2](
+                    mm->post_fx_func_ptr[j](
                         f_fx,
                         sample.left,
                         sample.right
@@ -362,7 +358,7 @@ void v_sgeq_run(
 
         _plugin_mix(
             run_mode,
-            f_i,
+            i,
             output_buffer,
             sample.left,
             sample.right
@@ -493,11 +489,8 @@ void v_sgeq_mono_init(
     SGFLT a_sr,
     int a_plugin_uid
 ){
-    int f_i;
-    int f_i2;
-
-    for(f_i = 0; f_i < SGEQ_EQ_COUNT; ++f_i){
-        g_pkq_init(&a_mono->eqs[f_i], a_sr);
+    for(int i = 0; i < SGEQ_EQ_COUNT; ++i){
+        g_pkq_init(&a_mono->eqs[i], a_sr);
     }
 
     a_mono->spectrum_analyzer = g_spa_spectrum_analyzer_get(
@@ -505,12 +498,12 @@ void v_sgeq_mono_init(
         a_plugin_uid
     );
 
-    for(f_i = 0; f_i < 6; ++f_i){
-        g_mf3_init(&a_mono->prefx[f_i], a_sr, 1);
-        a_mono->pre_fx_func_ptr[f_i] = v_mf3_run_off;
-        for(f_i2 = 0; f_i2 < 3; ++f_i2){
+    for(int i = 0; i < 6; ++i){
+        g_mf3_init(&a_mono->prefx[i], a_sr, 1);
+        a_mono->pre_fx_func_ptr[i] = v_mf3_run_off;
+        for(int j = 0; j < 3; ++j){
             g_sml_init(
-                &a_mono->pre_smoothers[f_i][f_i2],
+                &a_mono->pre_smoothers[i][j],
                 a_sr,
                 127.0f,
                 0.0f,
@@ -519,12 +512,12 @@ void v_sgeq_mono_init(
         }
     }
 
-    for(f_i = 0; f_i < 6; ++f_i){
-        g_mf3_init(&a_mono->postfx[f_i], a_sr, 1);
-        a_mono->post_fx_func_ptr[f_i] = v_mf3_run_off;
-        for(f_i2 = 0; f_i2 < 3; ++f_i2){
+    for(int i = 0; i < 6; ++i){
+        g_mf3_init(&a_mono->postfx[i], a_sr, 1);
+        a_mono->post_fx_func_ptr[i] = v_mf3_run_off;
+        for(int j = 0; j < 3; ++j){
             g_sml_init(
-                &a_mono->post_smoothers[f_i][f_i2],
+                &a_mono->post_smoothers[i][j],
                 a_sr,
                 127.0f,
                 0.0f,

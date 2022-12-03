@@ -30,12 +30,9 @@ void v_sgdelay_panic(PluginHandle instance)
 {
     t_sgdelay *plugin = (t_sgdelay*)instance;
 
-    int f_i = 0;
-    while(f_i < plugin->mono_modules.delay->delay0.sample_count)
-    {
-        plugin->mono_modules.delay->delay0.buffer[f_i] = 0.0f;
-        plugin->mono_modules.delay->delay1.buffer[f_i] = 0.0f;
-        ++f_i;
+    for(int i = 0; i < plugin->mono_modules.delay->delay0.sample_count; ++i){
+        plugin->mono_modules.delay->delay0.buffer[i] = 0.0f;
+        plugin->mono_modules.delay->delay1.buffer[i] = 0.0f;
     }
 }
 
@@ -105,7 +102,6 @@ void v_sgdelay_run(
     int midi_channel
 ){
     t_sgdelay *plugin_data = (t_sgdelay*)instance;
-    int f_i;
 
     effect_translate_midi_events(
         midi_events,
@@ -115,9 +111,9 @@ void v_sgdelay_run(
         midi_channel
     );
 
-    for(f_i = 0; f_i < sample_count; ++f_i){
+    for(int i = 0; i < sample_count; ++i){
         effect_process_events(
-            f_i,
+            i,
             &plugin_data->midi_events,
             plugin_data->port_table,
             plugin_data->descriptor,
@@ -141,13 +137,13 @@ void v_sgdelay_run(
         );
 
         v_ldl_run_delay(plugin_data->mono_modules.delay,
-            input_buffer[f_i].left,
-            input_buffer[f_i].right
+            input_buffer[i].left,
+            input_buffer[i].right
         );
 
         _plugin_mix(
             run_mode,
-            f_i,
+            i,
             output_buffer,
             plugin_data->mono_modules.delay->output0,
             plugin_data->mono_modules.delay->output1

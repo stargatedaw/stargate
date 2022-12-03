@@ -101,7 +101,6 @@ void v_sg_comp_run(
     int midi_channel
 ){
     t_sg_comp *plugin_data = (t_sg_comp*)instance;
-    int f_i = 0;
     int f_is_rms = (int)(plugin_data->port_table[SG_COMP_MODE]);
     t_cmp_compressor * f_cmp = &plugin_data->mono_modules.compressor;
     SGFLT f_gain = f_db_to_linear_fast(
@@ -115,9 +114,9 @@ void v_sg_comp_run(
         midi_channel
     );
 
-    for(f_i = 0; f_i < sample_count; ++f_i){
+    for(int i = 0; i < sample_count; ++i){
         effect_process_events(
-            f_i,
+            i,
             &plugin_data->midi_events,
             plugin_data->port_table,
             plugin_data->descriptor,
@@ -142,20 +141,20 @@ void v_sg_comp_run(
             );
             v_cmp_run_rms(
                 f_cmp,
-                input_buffer[f_i].left,
-                input_buffer[f_i].right
+                input_buffer[i].left,
+                input_buffer[i].right
             );
         } else {
             v_cmp_run(
                 f_cmp,
-                input_buffer[f_i].left,
-                input_buffer[f_i].right
+                input_buffer[i].left,
+                input_buffer[i].right
             );
         }
 
         _plugin_mix(
             run_mode,
-            f_i,
+            i,
             output_buffer,
             f_cmp->output0 * f_gain,
             f_cmp->output1 * f_gain
