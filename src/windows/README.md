@@ -7,13 +7,12 @@ The following components must be setup and configured prior to building:
 - Python
 - MSYS2
 - NSIS
-- Visual Studio
 - Stargate repo and dependencies
 
 The build steps proceed as follows:
 - Pull the source code
 - Build the engine exe
-- Strip the DWARF debug symbols and convert them to PDB
+- (optional) Strip the DWARF debug symbols and convert them to PDB
 - Run pyinstaller to create the portable executable
 - Run NSIS to create the Windows installer
 
@@ -27,10 +26,10 @@ The VM should have at least 100GB of hard disk space
 - Install [Python3 64bit](https://www.python.org/downloads/windows/), be sure
   to select the option to add Python to PATH / environment variables
 - Install [NSIS](https://nsis.sourceforge.io/Download)
-- Install [Visual Studio](https://visualstudio.microsoft.com/downloads/),
   select the `Desktop Development with C++` package
 
 ### Optional
+- Install [Visual Studio](https://visualstudio.microsoft.com/downloads/),
 - Install [WinDbg](
     https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools
   ).  Useful for debugging
@@ -54,11 +53,11 @@ make mingw_deps
 
 ## Windows cmd.exe
 ```
+cd C:\msys64\home\starg\src\stargate\src
 python -m venv venv\stargate
 venv\stargate\scripts\activate.bat
 pip install pyinstaller
-cd C:\msys64\home\starg\src\stargate\src
-pip install -r requirements-windows.txt
+pip install -r windows\requirements.txt
 ```
 
 # Creating a new release

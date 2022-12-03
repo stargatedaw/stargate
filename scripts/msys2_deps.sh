@@ -1,6 +1,7 @@
 #!/bin/bash -x
 
 pacman -S \
+    make \
     mingw-w64-x86_64-ffmpeg \
     mingw-w64-x86_64-fftw \
     mingw-w64-x86_64-flac \

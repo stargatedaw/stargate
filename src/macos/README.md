@@ -20,7 +20,7 @@ git clone https://github.com/stargateaudio/stargate.git
 cd stargate
 ./scripts/homebrew_deps.sh
 cd src
-pip3 install --user -r requirements-mac.txt
+pip3 install --user -r macos/requirements.txt
 make sbsms
 
 # Run locally
