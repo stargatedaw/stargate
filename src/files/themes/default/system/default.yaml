@@ -46,8 +46,6 @@ daw:
   note_vel_min_color: "#7777b9"
   # The sequencer playback cursor
   playback_cursor: "{{ palette.white }}"
-  # Vertical 16th note lines in the sequencer
-  seq_16th_line: "#090909"
   # Enable antialiasing for the sequencer
   seq_antialiasing: false
   # Sequencer automation points
@@ -68,6 +66,8 @@ daw:
   seq_bar_line: "#090909"
   # Vertical beat lines in the sequencer
   seq_beat_line: "#4c4d4d"
+  # Vertical 16th note lines in the sequencer
+  seq_16th_line: "#090909"
   # Sequencer header
   seq_header: "#1d1e22"
   # Sequencer header context menu event position marker

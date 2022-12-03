@@ -482,7 +482,7 @@ class AudioItemSeq(AbstractItemEditor):
         #f_beat_pen = QPen(QColor(210, 210, 210))
         f_16th_pen = QPen(
             QColor(
-                theme.SYSTEM_COLORS.daw.seq_16th_line,
+                theme.SYSTEM_COLORS.daw.seq_beat_line,
             ),
         )
         track_pen = QPen(
