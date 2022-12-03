@@ -780,6 +780,8 @@ class PluginRackTab:
             "The top row of letters, q through ], will play notes on this "
             "rack on this MIDI channel"
         )
+        self.menu_layout.addItem(QSpacerItem(60, 1))
+        self.menu_layout.addWidget(QLabel(_("QWERTY:")))
         self.menu_layout.addWidget(QLabel(_("MIDI Channel")))
         self.menu_layout.addWidget(self.channel_combobox)
 
@@ -809,7 +811,7 @@ class PluginRackTab:
         )
         self.plugins_order_action.triggered.connect(self.set_plugin_order)
 
-        self.menu_layout.addItem(QSpacerItem(20, 1))
+        self.menu_layout.addItem(QSpacerItem(60, 1))
         self.menu_layout.addWidget(self.plugins_button)
 
         self.menu_layout.addItem(
