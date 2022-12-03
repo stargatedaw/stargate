@@ -921,6 +921,10 @@ QRadioButton::indicator:checked
     );
 }
 
+QCheckBox#button_power_small::indicator:hover,
+QCheckBox#dc_checkbox::indicator:hover,
+QCheckBox#mute_checkbox::indicator:hover,
+QCheckBox#solo_checkbox::indicator:hover,
 QRadioButton::indicator:hover,
 QCheckBox::indicator:hover
 {
