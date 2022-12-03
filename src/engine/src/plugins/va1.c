@@ -39,18 +39,15 @@ void v_va1_set_cc_map(PluginHandle instance, char * a_msg){
 
 void va1Panic(PluginHandle instance){
     t_va1 *plugin = (t_va1*)instance;
-    int f_i;
-    for(f_i = 0; f_i < VA1_POLYPHONY; ++f_i){
-        v_adsr_kill(&plugin->data[f_i].adsr_amp);
+    for(int i = 0; i < VA1_POLYPHONY; ++i){
+        v_adsr_kill(&plugin->data[i].adsr_amp);
     }
 }
 
 void v_va1_on_stop(PluginHandle instance){
     t_va1 *plugin = (t_va1 *)instance;
-    int f_i = 0;
-    while(f_i < VA1_POLYPHONY){
-        v_va1_poly_note_off(&plugin->data[f_i], 0);
-        ++f_i;
+    for(int i = 0; i < VA1_POLYPHONY; ++i){
+        v_va1_poly_note_off(&plugin->data[i], 0);
     }
     plugin->sv_pitch_bend_value = 0.0f;
 }
@@ -241,17 +238,15 @@ NO_OPTIMIZATION PluginHandle g_va1_instantiate(
         sizeof(struct SamplePair) * 4096 * plugin_data->oversample
     );
 
-    int f_i;
-
     g_voc_voices_init(
         &plugin_data->voices,
         VA1_POLYPHONY,
         VA1_POLYPHONY_THRESH
     );
 
-    for (f_i = 0; f_i < VA1_POLYPHONY; ++f_i){
-        g_va1_poly_init(&plugin_data->data[f_i], a_sr, f_i);
-        plugin_data->data[f_i].note_f = f_i;
+    for(int i = 0; i < VA1_POLYPHONY; ++i){
+        g_va1_poly_init(&plugin_data->data[i], a_sr, i);
+        plugin_data->data[i].note_f = i;
     }
 
     plugin_data->sampleNo = 0;
@@ -604,12 +599,10 @@ void v_run_va1(
 
     plugin_data->voices.poly_mode = f_poly_mode;
 
-    int f_i;
-
-    for(f_i = 0; f_i < event_count; ++f_i){
+    for(int i = 0; i < event_count; ++i){
         v_va1_process_midi_event(
             plugin_data,
-            events[f_i],
+            events[i],
             f_poly_mode,
             midi_channel
         );
@@ -618,8 +611,8 @@ void v_run_va1(
     v_plugin_event_queue_reset(&plugin_data->atm_queue);
 
     t_seq_event * ev_tmp;
-    for(f_i = 0; f_i < atm_events->len; ++f_i){
-        ev_tmp = (t_seq_event*)atm_events->data[f_i];
+    for(int i = 0; i < atm_events->len; ++i){
+        ev_tmp = (t_seq_event*)atm_events->data[i];
         v_plugin_event_queue_add(
             &plugin_data->atm_queue,
             ev_tmp->type,
@@ -631,7 +624,6 @@ void v_run_va1(
 
     plugin_data->main_vol_lin = f_db_to_linear_fast(*plugin_data->main_vol);
 
-    int f_i2, f_i3;
     t_plugin_event_queue_item * f_midi_item;
 
     memset(
@@ -640,11 +632,11 @@ void v_run_va1(
         sizeof(struct SamplePair) * sample_count * plugin_data->oversample
     );
 
-    for(f_i = 0; f_i < sample_count; ++f_i){
+    for(int i = 0; i < sample_count; ++i){
         while(1){
             f_midi_item = v_plugin_event_queue_iter(
                 &plugin_data->midi_queue,
-                f_i
+                i
             );
             if(!f_midi_item){
                 break;
@@ -667,7 +659,7 @@ void v_run_va1(
 
         v_plugin_event_queue_atm_set(
             &plugin_data->atm_queue,
-            f_i,
+            i,
             plugin_data->port_table
         );
 
@@ -684,20 +676,20 @@ void v_run_va1(
             plugin_data->sv_pitch_bend_value
         );
 
-        for(f_i2 = 0; f_i2 < VA1_POLYPHONY; ++f_i2){
-            if(plugin_data->data[f_i2].adsr_amp.stage != ADSR_STAGE_OFF){
-                for(f_i3 = 0; f_i3 < plugin_data->oversample; ++f_i3){
+        for(int j = 0; j < VA1_POLYPHONY; ++j){
+            if(plugin_data->data[j].adsr_amp.stage != ADSR_STAGE_OFF){
+                for(int k = 0; k < plugin_data->oversample; ++k){
                     v_run_va1_voice(
                         plugin_data,
-                        &plugin_data->voices.voices[f_i2],
-                        &plugin_data->data[f_i2],
+                        &plugin_data->voices.voices[j],
+                        &plugin_data->data[j],
                         plugin_data->os_buffer,
-                        f_i,
-                        f_i3
+                        i,
+                        k
                     );
                 }
             } else {
-                plugin_data->voices.voices[f_i2].n_state = note_state_off;
+                plugin_data->voices.voices[j].n_state = note_state_off;
             }
         }
 
@@ -708,17 +700,17 @@ void v_run_va1(
     const int os_count = plugin_data->oversample;
     const SGFLT os_recip = plugin_data->os_recip;
 
-    for(f_i = f_i2 = 0; f_i < sample_count; ++f_i){
+    for(int i = 0, j = 0; i < sample_count; ++i){
         f_avgL = 0.0f;
         f_avgR = 0.0f;
-        for(f_i3 = 0; f_i3 < os_count; ++f_i3){
+        for(int k = 0; k < os_count; ++k){
             f_avgL += v_nosvf_run_6_pole_lp(
                 &plugin_data->mono_modules.aa_filterL,
-                plugin_data->os_buffer[f_i2 + f_i3].left
+                plugin_data->os_buffer[j + k].left
             );
             f_avgR += v_nosvf_run_6_pole_lp(
                 &plugin_data->mono_modules.aa_filterR,
-                plugin_data->os_buffer[f_i2 + f_i3].right
+                plugin_data->os_buffer[j + k].right
             );
         }
 
@@ -735,18 +727,18 @@ void v_run_va1(
 
         f_avgL = f_avgL * os_recip * 1.412429;
         f_avgR = f_avgR * os_recip * 1.412429;
-        sample.left = input_buffer[f_i].left +
+        sample.left = input_buffer[i].left +
             (f_avgL * plugin_data->mono_modules.panner.gainL);
-        sample.right = input_buffer[f_i].right +
+        sample.right = input_buffer[i].right +
             (f_avgR * plugin_data->mono_modules.panner.gainR);
         _plugin_mix(
             run_mode,
-            f_i,
+            i,
             output_buffer,
             sample.left,
             sample.right
         );
-        f_i2 += os_count;
+        j += os_count;
     }
 }
 

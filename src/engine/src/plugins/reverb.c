@@ -110,7 +110,6 @@ void v_sreverb_run(
     t_sreverb* plugin_data = (t_sreverb*)instance;
     t_sreverb_mono_modules* mm = &plugin_data->mono_modules;
     struct SamplePair sample;
-    int f_i = 0;
 
     effect_translate_midi_events(
         midi_events,
@@ -122,9 +121,9 @@ void v_sreverb_run(
 
     SGFLT f_dry_vol;
 
-    for(f_i = 0; f_i < sample_count; ++f_i){
+    for(int i = 0; i < sample_count; ++i){
         effect_process_events(
-            f_i,
+            i,
             &plugin_data->midi_events,
             plugin_data->port_table,
             plugin_data->descriptor,
@@ -134,7 +133,7 @@ void v_sreverb_run(
 
         v_plugin_event_queue_atm_set(
             &plugin_data->atm_queue,
-            f_i,
+            i,
             plugin_data->port_table
         );
 
@@ -164,8 +163,8 @@ void v_sreverb_run(
 
         v_rvb_reverb_run(
             &mm->reverb,
-            input_buffer[f_i].left,
-            input_buffer[f_i].right
+            input_buffer[i].left,
+            input_buffer[i].right
         );
 
         v_sml_run(
@@ -191,15 +190,15 @@ void v_sreverb_run(
         );
 
         sample.left = (
-            input_buffer[f_i].left * f_dry_vol * mm->dry_panner.gainL
+            input_buffer[i].left * f_dry_vol * mm->dry_panner.gainL
         ) + (mm->reverb.output[0] * mm->wet_panner.gainL);
         sample.right = (
-            input_buffer[f_i].right * f_dry_vol * mm->dry_panner.gainR
+            input_buffer[i].right * f_dry_vol * mm->dry_panner.gainR
         ) + (mm->reverb.output[1] * mm->wet_panner.gainR);
 
         _plugin_mix(
             run_mode,
-            f_i,
+            i,
             output_buffer,
             sample.left,
             sample.right
