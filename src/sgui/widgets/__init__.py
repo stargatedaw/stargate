@@ -23,7 +23,7 @@ from .lfo_dialog import lfo_dialog
 from .main import main_widget
 from .multifx import MultiFXSingle
 from .multifx10 import MultiFX10
-from .note_selector import note_selector_widget
+from .note_selector import NoteSelectorWidget
 from .ordered_table import ordered_table_dialog
 from .paif import per_audio_item_fx_widget
 from .peak_meter import peak_meter

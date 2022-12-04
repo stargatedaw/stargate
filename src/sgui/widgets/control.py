@@ -7,7 +7,7 @@ from sglib.math import (
 )
 from .knob import PixmapKnob
 from .nested_combobox import NestedComboBox
-from .note_selector import note_selector_widget
+from .note_selector import NoteSelectorWidget
 from sgui import shared as glbl_shared
 from sglib.lib import util
 from sglib.lib.translate import _
@@ -340,7 +340,7 @@ class AbstractUiControl(GridLayoutControl):
         f_dialog.setMinimumWidth(210)
         f_dialog.setWindowTitle(_("Set to Note"))
         f_vlayout = QVBoxLayout(f_dialog)
-        f_note_selector = note_selector_widget(0, None, None)
+        f_note_selector = NoteSelectorWidget(0, None, None)
         f_note_selector.set_value(self.get_value())
         f_vlayout.addWidget(f_note_selector.widget)
         f_ok_button = QPushButton(_("OK"))

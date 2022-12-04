@@ -737,7 +737,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.sample_base_pitches = []
         f_port_start = SAMPLER1_SAMPLE_PITCH_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
-            f_sample_pitch = note_selector_widget(
+            f_sample_pitch = NoteSelectorWidget(
                 f_port_start + f_i,
                 self.plugin_rel_callback, self.plugin_val_callback,
                 self.port_dict, 60)
@@ -747,7 +747,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.sample_low_notes = []
         f_port_start = SAMPLER1_PLAY_PITCH_LOW_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
-            f_low_pitch = note_selector_widget(
+            f_low_pitch = NoteSelectorWidget(
                 f_port_start + f_i,
                 self.plugin_rel_callback, self.plugin_val_callback,
                 self.port_dict, 0)
@@ -757,7 +757,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.sample_high_notes = []
         f_port_start = SAMPLER1_PLAY_PITCH_HIGH_PORT_RANGE_MIN
         for f_i in range(SAMPLER1_MAX_SAMPLE_COUNT):
-            f_high_pitch = note_selector_widget(
+            f_high_pitch = NoteSelectorWidget(
                 f_port_start + f_i,
                 self.plugin_rel_callback, self.plugin_val_callback,
                 self.port_dict, 120)
@@ -1451,7 +1451,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         self.loop_mode_combobox.currentIndexChanged.connect(
             self.loopModeChanged,
         )
-        self.loop_tune_note_selector = note_selector_widget(0, None, None)
+        self.loop_tune_note_selector = NoteSelectorWidget(0, None, None)
         self.loop_tune_button = QPushButton(_("Tune"))
         self.loop_tune_button.pressed.connect(self.on_loop_tune)
         self.sample_view_extra_controls_gridview.addWidget(
@@ -2110,7 +2110,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
             LOG.error("Unknown configure message '{}'".format(a_key))
 
     def set_all_base_pitches(self):
-        f_widget = note_selector_widget(0, None, None)
+        f_widget = NoteSelectorWidget(0, None, None)
         self.set_all_dialog(
             f_widget,
             self.sample_base_pitches,
@@ -2118,7 +2118,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         )
 
     def set_all_low_notes(self):
-        f_widget = note_selector_widget(0, None, None)
+        f_widget = NoteSelectorWidget(0, None, None)
         self.set_all_dialog(
             f_widget,
             self.sample_low_notes,
@@ -2126,7 +2126,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         )
 
     def set_all_high_notes(self):
-        f_widget = note_selector_widget(0, None, None)
+        f_widget = NoteSelectorWidget(0, None, None)
         self.set_all_dialog(
             f_widget,
             self.sample_high_notes,
@@ -2683,7 +2683,7 @@ class sampler1_plugin_ui(AbstractPluginUI):
         f_layout.addLayout(f_time_gridlayout)
 
         f_time_gridlayout.addWidget(QLabel(_("Base Pitch")), 1, 0)
-        f_base_note_selector = note_selector_widget(0, None, None)
+        f_base_note_selector = NoteSelectorWidget(0, None, None)
         f_time_gridlayout.addWidget(f_base_note_selector.widget, 1, 1)
         self.find_selected_radio_button()
         f_base_note_selector.set_value(

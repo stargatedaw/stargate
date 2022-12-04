@@ -1,6 +1,6 @@
 from . import _shared
 from .control import *
-from .note_selector import note_selector_widget
+from .note_selector import NoteSelectorWidget
 from sglib.lib.translate import _
 from sgui.sgqt import *
 
@@ -166,14 +166,14 @@ class main_widget:
             self.mono_combobox.add_to_grid_layout(self.layout, 7)
         if a_min_note_port or a_max_note_port:
             assert(a_min_note_port and a_max_note_port)
-            self.min_note = note_selector_widget(
+            self.min_note = NoteSelectorWidget(
                 a_min_note_port,
                 a_rel_callback,
                 a_val_callback,
                 a_port_dict,
                 0, a_preset_mgr,
             )
-            self.max_note = note_selector_widget(
+            self.max_note = NoteSelectorWidget(
                 a_max_note_port,
                 a_rel_callback,
                 a_val_callback,

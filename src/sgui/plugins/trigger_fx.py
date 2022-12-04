@@ -181,7 +181,7 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             ),
         )
         self.gate_on_checkbox.add_to_grid_layout(self.gate_gridlayout, 3)
-        self.gate_note_selector = note_selector_widget(
+        self.gate_note_selector = NoteSelectorWidget(
             TRIGGERFX_GATE_NOTE,
             self.plugin_rel_callback,
             self.plugin_val_callback,
@@ -264,7 +264,7 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             ),
         )
         self.glitch_on_checkbox.add_to_grid_layout(self.glitch_gridlayout, 3)
-        self.glitch_note_selector = note_selector_widget(
+        self.glitch_note_selector = NoteSelectorWidget(
             TRIGGERFX_GLITCH_NOTE,
             self.plugin_rel_callback,
             self.plugin_val_callback,

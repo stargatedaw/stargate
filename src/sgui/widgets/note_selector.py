@@ -3,17 +3,18 @@ from sgui.sgqt import *
 
 NOTE_SELECTOR_CLIPBOARD = None
 
-class note_selector_widget:
+class NoteSelectorWidget:
     def __init__(
         self,
         a_port_num,
         a_rel_callback,
         a_val_callback,
         a_port_dict=None,
-        a_default_value=None,
+        a_default_value=60,
         a_preset_mgr=None,
         name_label=None,
     ):
+        self.suppress_changes = True
         self.control = self
         self.port_num = a_port_num
         self.rel_callback = a_rel_callback
@@ -52,11 +53,8 @@ class note_selector_widget:
             self.name_label = None
         self.value_label = None
         self.default_value = a_default_value
-        if a_default_value is not None:
-            self.selected_note = a_default_value
-            self.set_value(a_default_value)
-        else:
-            self.selected_note = 60
+        self.selected_note = a_default_value
+        self.set_value(a_default_value)
         if a_preset_mgr is not None:
             a_preset_mgr.add_control(self)
 
@@ -80,26 +78,33 @@ class note_selector_widget:
         pass
 
     def control_value_changed(self, a_val=None):
+        if self.suppress_changes:
+            return
         note = self.note_combobox.currentIndex()
         octave = self.octave_spinbox.value()
         if note == 0:
             self.octave_spinbox.setMaximum(8)
         else:
+            self.suppress_changes = True
             self.octave_spinbox.setMaximum(7)
             if octave > 7:
                 octave = 7
                 self.octave_spinbox.setValue(7)
+            self.suppress_changes = False
 
         self.selected_note = note + ((octave + 2) * 12)
-        if not self.suppress_changes:
-            if self.val_callback is not None:
-                self.val_callback(self.port_num, self.selected_note)
-            if self.rel_callback is not None:
-                self.rel_callback(self.port_num, self.selected_note)
+        if self.val_callback is not None:
+            self.val_callback(self.port_num, self.selected_note)
+        if self.rel_callback is not None:
+            self.rel_callback(self.port_num, self.selected_note)
 
     def set_value(self, a_val, a_changed=False):
         self.suppress_changes = True
         self.note_combobox.setCurrentIndex(a_val % 12)
+        if a_val % 12 == 0:
+            self.octave_spinbox.setMaximum(8)
+        else:
+            self.octave_spinbox.setMaximum(7)
         self.octave_spinbox.setValue((int(float(a_val) / 12.0)) - 2)
         self.suppress_changes = False
         if a_changed:
