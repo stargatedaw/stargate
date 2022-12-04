@@ -19,7 +19,7 @@ import psutil
 
 if IS_LINUX:
     from .path.linux import *
-if IS_MAC_OSX:
+if IS_MACOS:
     from .path.macos import *
 elif IS_WINDOWS:
     from .path.windows import *
@@ -173,7 +173,7 @@ if IS_WINDOWS:
         "sbsms.exe",
     )
     PAULSTRETCH_PATH = sys.executable
-elif IS_MAC_OSX:
+elif IS_MACOS:
     if IS_LOCAL_DEVEL:
         RUBBERBAND_PATH = which('rubberband')
         PAULSTRETCH_PATH = sys.argv[0]

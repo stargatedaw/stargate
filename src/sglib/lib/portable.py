@@ -3,7 +3,7 @@
     flash drive install.
 """
 
-from sglib.constants import IS_MAC_OSX, IS_WINDOWS, USER_HOME
+from sglib.constants import IS_MACOS, IS_WINDOWS, USER_HOME
 from sglib.log import LOG
 import os
 import pathlib
@@ -22,7 +22,7 @@ def escape_path(path):
                 f'"{USER_HOME}".  "{path}" will not be accessible on '
                 'another computer'
             )
-    if IS_MAC_OSX:
+    if IS_MACOS:
         path_split = os.path.split(path)
         home_split = os.path.split(USER_HOME)
         if (

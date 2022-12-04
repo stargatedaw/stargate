@@ -89,7 +89,7 @@ class HardwareDialog:
                 'libportmidi.so.0',
                 'libportmidi.so',
             )
-        elif util.IS_MAC_OSX:
+        elif util.IS_MACOS:
             pa_paths = (
                 os.path.join(util.INSTALL_PREFIX, 'libportaudio.2.dylib'),
                 os.path.join(util.ENGINE_DIR, 'libportaudio.2.dylib'),
@@ -306,7 +306,7 @@ class HardwareDialog:
         f_device_name_combobox.setToolTip(DEVICE_TOOLTIP)
         f_device_name_combobox.setMinimumWidth(390)
         f_window_layout.addWidget(f_device_name_combobox, 5, 1)
-        if util.IS_WINDOWS or util.IS_MAC_OSX:
+        if util.IS_WINDOWS or util.IS_MACOS:
             f_window_layout.addWidget(QLabel(_("Input Device")), 6, 0)
             f_input_name_combobox = QComboBox()
             f_input_name_combobox.setMinimumWidth(390)
@@ -548,7 +548,7 @@ class HardwareDialog:
             f_device_name_combobox.addItems(
                 f_host_api_device_names[self.subsystem],
             )
-            if util.IS_WINDOWS or util.IS_MAC_OSX:
+            if util.IS_WINDOWS or util.IS_MACOS:
                 f_input_name_combobox.clear()
                 f_input_name_combobox.addItems(
                     [""] + f_host_api_input_names[self.subsystem],
@@ -565,7 +565,7 @@ class HardwareDialog:
             if f_samplerate in self.sample_rates:
                 f_samplerate_combobox.setCurrentIndex(
                     f_samplerate_combobox.findText(f_samplerate))
-            if util.IS_WINDOWS or util.IS_MAC_OSX:
+            if util.IS_WINDOWS or util.IS_MACOS:
                 idx_lookup = {
                     QComboBoxName.itemText(i): i
                     for i in range(f_input_name_combobox.count())
@@ -653,7 +653,7 @@ class HardwareDialog:
 
             try:
                 #if (
-                #    (util.IS_WINDOWS or util.IS_MAC_OSX)
+                #    (util.IS_WINDOWS or util.IS_MACOS)
                 #    and
                 #    f_audio_inputs
                 #):
@@ -696,7 +696,7 @@ class HardwareDialog:
                 if (
                     util.IS_WINDOWS
                     or
-                    util.IS_MAC_OSX
+                    util.IS_MACOS
                 ) and self.input_name:
                     f_file.write("inputName|{}\n".format(self.input_name))
                 f_file.write("bufferSize|{}\n".format(f_buffer_size))
@@ -767,7 +767,7 @@ class HardwareDialog:
         f_device_name_combobox.currentIndexChanged.connect(
             output_combobox_changed,
         )
-        if util.IS_WINDOWS or util.IS_MAC_OSX:
+        if util.IS_WINDOWS or util.IS_MACOS:
             f_input_name_combobox.currentIndexChanged.connect(
                 input_combobox_changed,
             )
@@ -799,7 +799,7 @@ class HardwareDialog:
                                     f_device_name_combobox.findText(f_dev))
                                 break
                 if (
-                    (util.IS_WINDOWS or util.IS_MAC_OSX)
+                    (util.IS_WINDOWS or util.IS_MACOS)
                     and
                     "inputName" in util.DEVICE_SETTINGS
                 ):

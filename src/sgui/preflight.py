@@ -6,7 +6,7 @@ import subprocess
 from sgui.sgqt import QMessageBox
 from sglib.hardware import rpi
 from sglib.lib.translate import _
-from sglib.lib.util import IS_MAC_OSX
+from sglib.lib.util import IS_MACOS
 from sglib.log import LOG
 
 __all__ = ['preflight']
@@ -50,7 +50,7 @@ def _log_system_info():
         LOG.warning(ex)
 
 def preflight_macos_udp():
-    if not IS_MAC_OSX:
+    if not IS_MACOS:
         return
     try:
         output = subprocess.check_output(['sysctl', 'net.inet.udp.maxdgram'])

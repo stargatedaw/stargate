@@ -8,7 +8,7 @@ __all__ = [
     'DEFAULT_PROJECT_DIR',
     'HOME',
     'IS_LINUX',
-    'IS_MAC_OSX',
+    'IS_MACOS',
     'IS_WINDOWS',
     'LOG_DIR',
     'MAJOR_VERSION',
@@ -24,7 +24,7 @@ ARCH = platform.machine()
 assert "cygwin" not in sys.platform, "Cygwin is unsupported"
 IS_WINDOWS = "win32" in sys.platform or "msys" in sys.platform
 IS_LINUX = "linux" in sys.platform
-IS_MAC_OSX = "darwin" in sys.platform
+IS_MACOS = "darwin" in sys.platform
 
 USER_HOME = os.path.expanduser("~")
 IS_PORTABLE_INSTALL = False
@@ -46,7 +46,7 @@ if IS_WINDOWS:
         )
         IS_PORTABLE_INSTALL = True
         PORTABLE_ROOT = pathlib.Path(sys.executable).drive.upper()
-elif IS_MAC_OSX:
+elif IS_MACOS:
     dirname = os.path.dirname(sys.executable)
     if os.path.isfile(
         os.path.join(dirname, '..', '..', '..', '_stargate_home'),
