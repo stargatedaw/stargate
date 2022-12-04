@@ -16,10 +16,14 @@ import time
 
 import psutil
 
+KEY_CTRL = 'CTRL'
+KEY_ALT = 'ALT'
 
 if IS_LINUX:
     from .path.linux import *
 if IS_MACOS:
+    KEY_CTRL = 'CMD'
+    KEY_ALT = 'OPT'
     from .path.macos import *
 elif IS_WINDOWS:
     from .path.windows import *

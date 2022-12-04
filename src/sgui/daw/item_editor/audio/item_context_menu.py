@@ -185,20 +185,13 @@ def show(current_item):
 
     f_volume_action = QAction(_("Volume..."), f_properties_menu)
     f_properties_menu.addAction(f_volume_action)
-    if util.IS_MACOS:
-        f_volume_action.setToolTip(
-            'Change the volume of the audio item.  You can also use '
-            'CMD+OPT+drag '
-            'up and down to change volume of one or more audio items, and '
-            'CMD+SHIFT+drag to change for all instances of the file'
-        )
-    else:
-        f_volume_action.setToolTip(
-            'Change the volume of the audio item.  You can also use '
-            'CTRL+ALT+drag '
-            'up and down to change volume of one or more audio items, and '
-            'CTRL+SHIFT+drag to change for all instances of the file'
-        )
+    f_volume_action.setToolTip(
+        'Change the volume of the audio item.  You can also use '
+        f'{util.KEY_CTRL}+{util.KEY_ALT}+drag '
+        'up and down to change volume of one or more audio items, and '
+        f'{util.KEY_CTRL}+SHIFT+drag '
+        'to change for all instances of the file'
+    )
     f_volume_action.triggered.connect(volume_dialog)
 
     f_normalize_action = QAction(_("Normalize..."), f_properties_menu)
