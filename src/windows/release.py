@@ -102,11 +102,15 @@ Section "Base Install" SEC01
     SectionIn RO
     SetOutPath $INSTDIR
     writeUninstaller "$INSTDIR\uninstall.exe"
+
     ; Clean up the old legacy file structure
     ; TODO: Remove this in mid 2023
-    RMDir /r "$PROGRAMFILES64\stargateaudio@github\Stargate"
+    RMDir /r "$PROGRAMFILES64\stargateaudio@github\Stargate\program"
+    Delete "$PROGRAMFILES64\stargateaudio@github\Stargate\uninstall.exe"
     ; Only if empty
+    RMDir "$PROGRAMFILES64\stargateaudio@github\Stargate"
     RMDir "$PROGRAMFILES64\stargateaudio@github"
+
     ; Delete the old program
     RMDir /r $INSTDIR\program
     ; Install the program
@@ -142,7 +146,7 @@ Section /o "Portable Flash Drive Install" SEC03
     FileClose $9
 SectionEnd
 
-LangString DESC_SEC03 ${{LANG_ENGLISH}} "Store settings and projects in the same folder as the exexecutable.  Only use this if you are installing to a flash drive."
+LangString DESC_SEC03 ${{LANG_ENGLISH}} "Store settings and projects in the same folder as the executable.  Only use this if you are installing to a flash drive, and you must change the install folder to the flash drive in the next step."
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
 !insertmacro MUI_DESCRIPTION_TEXT ${{SEC03}} $(DESC_SEC03)
