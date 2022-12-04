@@ -102,11 +102,13 @@ Section "Base Install" SEC01
     SectionIn RO
     SetOutPath $INSTDIR
     writeUninstaller "$INSTDIR\uninstall.exe"
-    ; Delete the old program
-    RMDir /r $INSTDIR\program
     ; Clean up the old legacy file structure
     ; TODO: Remove this in mid 2023
-    RMDir /r "$PROGRAMFILES64\stargateaudio@github"
+    RMDir /r "$PROGRAMFILES64\stargateaudio@github\Stargate"
+    ; Only if empty
+    RMDir "$PROGRAMFILES64\stargateaudio@github"
+    ; Delete the old program
+    RMDir /r $INSTDIR\program
     ; Install the program
     CreateDirectory $INSTDIR\program
     SetOutPath $INSTDIR\program
