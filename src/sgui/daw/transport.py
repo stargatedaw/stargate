@@ -46,7 +46,7 @@ class TransportWidget(AbstractTransportWidget):
         self.loop_mode_checkbox.setToolTip(
             'Enable or disable looping the sequencer region.  Set the '
             'sequencer region by right clicking on the sequencer timeline.  '
-            'CTRL+L to toggle'
+            f'{util.KEY_CTRL}+L to toggle'
         )
         self.loop_mode_checkbox.setCheckable(True)
         self.toolbar.addAction(self.loop_mode_checkbox)
