@@ -62,8 +62,9 @@ class PianoRollEditorWidget:
 
         self.param_combobox = QComboBox()
         self.param_combobox.setToolTip(
-            'Per note parameters for instrument plugins.  Use CTRL+ALT+drag\n'
-            'and CTRL+SHIFT+drag selected items to modify these values'
+            'Per note expression parameters for plugins.  Use '
+            'CTRL+ALT+drag (change value) and CTRL+SHIFT+drag (value curve) '
+            'selected items to modify these values'
         )
         self.param_combobox.setMinimumWidth(75)
         self.param_combobox.addItems(
