@@ -93,19 +93,15 @@ class AbstractFileBrowserWidget:
         self.menu_button.setMenu(self.menu_button_menu)
         self.folder_buttons_hlayout.addWidget(self.menu_button)
 
-        self.copy_action = QAction(_("Copy"), self.menu_button_menu)
-        self.menu_button_menu.addAction(self.copy_action)
-        self.copy_action.setToolTip(
-            'Copy the current folder to the system clipboard'
+        self.reload_action = QAction('Reload', self.menu_button_menu)
+        self.reload_action.setToolTip(
+            'Reload the current folder, use this when you have added or '
+            'deleted files externally'
         )
-        self.copy_action.triggered.connect(self.copy_button_pressed)
-
-        self.paste_action = QAction(_("Paste"), self.menu_button_menu)
-        self.menu_button_menu.addAction(self.paste_action)
-        self.paste_action.setToolTip(
-            'Open a folder path in the system clipboard'
+        self.menu_button_menu.addAction(self.reload_action)
+        self.reload_action.triggered.connect(
+            lambda: self.set_folder(self.last_open_dir)
         )
-        self.paste_action.triggered.connect(self.paste_button_pressed)
 
         self.menu_button_menu.addSeparator()
 
@@ -121,13 +117,30 @@ class AbstractFileBrowserWidget:
             _("Bookmark Subfolders..."),
             self.menu_button_menu,
         )
-        self.menu_button_menu.addAction(self.bookmark_subfolders_action)
+        #self.menu_button_menu.addAction(self.bookmark_subfolders_action)
         self.bookmark_subfolders_action.setToolTip(
             'Open a dialog to bookmark selected subfolders of the current '
             'folder'
         )
         self.bookmark_subfolders_action.triggered.connect(
-            self.bookmark_subfolders)
+            self.bookmark_subfolders
+        )
+
+        self.menu_button_menu.addSeparator()
+
+        self.copy_action = QAction(_("Copy"), self.menu_button_menu)
+        self.menu_button_menu.addAction(self.copy_action)
+        self.copy_action.setToolTip(
+            'Copy the current folder to the system clipboard'
+        )
+        self.copy_action.triggered.connect(self.copy_button_pressed)
+
+        self.paste_action = QAction(_("Paste"), self.menu_button_menu)
+        self.menu_button_menu.addAction(self.paste_action)
+        self.paste_action.setToolTip(
+            'Open a folder path in the system clipboard'
+        )
+        self.paste_action.triggered.connect(self.paste_button_pressed)
 
         self.bookmarks_tab = QWidget()
         self.bookmarks_tab.setObjectName('sidebar')
@@ -506,8 +519,10 @@ class AbstractFileBrowserWidget:
                 #entire book copied to the clipboard
                 f_str = f_text[100:]
                 QMessageBox.warning(
-                    self.hsplitter, _("Error"),
-                    _("'{}' does not exist.").format(f_str))
+                    self.hsplitter,
+                    "Error",
+                    f"'{f_str}' does not exist.",
+                )
 
     def bookmark_clicked(self, a_item):
         #test = QTreeWidgetItem()
@@ -561,6 +576,30 @@ class AbstractFileBrowserWidget:
 
     def set_folder(self, a_folder, a_full_path=False):
         if (
+            a_full_path
+            and
+            not os.path.isdir(a_folder)
+        ) or (
+            not a_full_path
+            and
+            not os.path.isdir(
+                os.path.join(self.last_open_dir, a_folder)
+            )
+        ):
+            QMessageBox.warning(
+                self.hsplitter,
+                _("Error"),
+                f'{a_folder} no longer exists',
+            )
+            if (
+                os.path.isdir(self.last_open_dir)
+                or
+                not os.path.isdir(USER_HOME)
+            ):
+                return
+            else:
+                a_folder = USER_HOME
+        if (
             util.IS_WINDOWS
             and
             not a_full_path
@@ -582,8 +621,11 @@ class AbstractFileBrowserWidget:
             self.last_open_dir = a_folder
         else:
             if util.IS_WINDOWS and (
-                (a_full_path and not a_folder)
-                or (
+                (
+                    a_full_path
+                    and
+                    not a_folder
+                ) or (
                     not a_full_path
                     and
                     len(self.last_open_dir) == 3
@@ -600,7 +642,8 @@ class AbstractFileBrowserWidget:
                 return
             else:
                 self.last_open_dir = os.path.abspath(
-                    os.path.join(self.last_open_dir, a_folder))
+                    os.path.join(self.last_open_dir, a_folder)
+                )
         self.last_open_dir = os.path.normpath(self.last_open_dir)
         if self.last_open_dir != self.history[-1]:
             #don't keep more than one copy in history
@@ -673,8 +716,8 @@ class AbstractFileBrowserWidget:
 
 
 class FileBrowserWidget(AbstractFileBrowserWidget):
-    def __init__(self):
-        AbstractFileBrowserWidget.__init__(self)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.load_button = QPushButton(_("Load"))
         self.load_button.setToolTip(
             'Load the selected file into the editor'

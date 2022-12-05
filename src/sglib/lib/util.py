@@ -815,3 +815,25 @@ def proj_file_str(a_val):
         f_val = round(a_val, 6)
     return str(f_val)
 
+def resolve_symlinks(path: str, max_depth=20) -> str:
+    """ Recursively resolve symlinks to get the true path of a file or folder
+
+        @path:      The path to check
+        @max_depth: The maximum number of links to resolve
+
+        @returns: The fully resolved path
+        @raises:
+            FileNotFoundError: If @path does not exist
+            RecursionError: If max_depth is exceeded
+    """
+    if not os.path.exists(path):
+        raise FileNotFoundError(path)
+    for i in range(max_depth):
+        if os.path.islink(path):
+            path = os.readlink(path)
+        else:
+            break
+    if os.path.islink(path):
+        raise RecursionError(path)
+    return path
+
