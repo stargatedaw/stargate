@@ -203,6 +203,11 @@ MULTIFX10_METADATA[MULTIFX10KNOB_FX_COUNT] = {
         v_mf10_reset_null,
         6,
     }, // 36
+    {
+        v_mf10_run_bp_dw,
+        v_mf10_reset_svf,
+        3,
+    }, //37
 };
 
 void v_mf10_reset_null(t_mf10_multi* self){
@@ -938,6 +943,34 @@ void v_mf10_run_lp_dw(
     v_svf2_run_2_pole_lp(&self->svf, a_in0, a_in1);
     self->output0 = f_axf_run_xfade(&self->xfader, a_in0, self->svf.output0);
     self->output1 = f_axf_run_xfade(&self->xfader, a_in1, self->svf.output1);
+}
+
+void v_mf10_run_bp_dw(
+    t_mf10_multi* self,
+    SGFLT a_in0,
+    SGFLT a_in1
+){
+    mf10_transform_svf_filter(self);
+    self->control_value[2] = self->control[2] * 0.007874016f;
+    v_axf_set_xfade(
+        &self->xfader,
+        self->control_value[2]
+    );
+    v_svf2_run_2_pole_bp(
+        &self->svf,
+        a_in0,
+        a_in1
+    );
+    self->output0 = f_axf_run_xfade(
+        &self->xfader,
+        a_in0,
+        self->svf.output0
+    );
+    self->output1 = f_axf_run_xfade(
+        &self->xfader,
+        a_in1,
+        self->svf.output1
+    );
 }
 
 void v_mf10_run_hp_dw(

@@ -95,6 +95,7 @@ MULTIFX_INFO = {
         'A flanger without LFO, modulation using automation',
     ),
     "Soft Clipper": MultiFXInfo(35, 'Soft clipping distortion'),
+    "BP D/W": MultiFXInfo(37, 'A 2 pole bandpass filter with a dry/wet knob'),
 }
 
 def mfx_set_tooltip(knobs, idx: int):

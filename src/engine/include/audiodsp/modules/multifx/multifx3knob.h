@@ -15,7 +15,7 @@ GNU General Public License for more details.
 #define MULTIFX3KNOB_H
 
 /*This is actually count, not index TODO:  Rename*/
-#define MULTIFX3KNOB_MAX_INDEX 36
+#define MULTIFX3KNOB_MAX_INDEX 38
 #define MULTIFX3KNOB_KNOB_COUNT 3
 
 #include "audiodsp/lib/amp.h"
@@ -103,6 +103,7 @@ void v_mf3_run_glitch(t_mf3_multi*, SGFLT, SGFLT);
 void v_mf3_run_ring_mod(t_mf3_multi*, SGFLT, SGFLT);
 void v_mf3_run_lofi(t_mf3_multi*, SGFLT, SGFLT);
 void v_mf3_run_s_and_h(t_mf3_multi*, SGFLT, SGFLT);
+void v_mf3_run_bp_dw(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_hp_dw(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_lp_dw(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_monofier(t_mf3_multi*,SGFLT,SGFLT);

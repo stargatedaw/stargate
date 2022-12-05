@@ -55,6 +55,8 @@ const fp_mf3_run mf3_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
     v_mf3_run_phaser_static, //33
     v_mf3_run_flanger_static, //34
     v_mf3_run_soft_clipper, //35
+    NULL, //36
+    v_mf3_run_bp_dw, //37
 };
 
 SG_THREAD_LOCAL
@@ -751,6 +753,34 @@ void v_mf3_run_lp_dw(
     v_svf2_run_2_pole_lp(&self->svf, a_in0, a_in1);
     self->output0 = f_axf_run_xfade(&self->xfader, a_in0, self->svf.output0);
     self->output1 = f_axf_run_xfade(&self->xfader, a_in1, self->svf.output1);
+}
+
+void v_mf3_run_bp_dw(
+    t_mf3_multi* self,
+    SGFLT a_in0,
+    SGFLT a_in1
+){
+    f_mfx_transform_svf_filter(self);
+    self->control_value[2] = self->control[2] * 0.007874016f;
+    v_axf_set_xfade(
+        &self->xfader,
+        self->control_value[2]
+    );
+    v_svf2_run_2_pole_bp(
+        &self->svf,
+        a_in0,
+        a_in1
+    );
+    self->output0 = f_axf_run_xfade(
+        &self->xfader,
+        a_in0,
+        self->svf.output0
+    );
+    self->output1 = f_axf_run_xfade(
+        &self->xfader,
+        a_in1,
+        self->svf.output1
+    );
 }
 
 void v_mf3_run_hp_dw(

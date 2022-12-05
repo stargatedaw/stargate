@@ -14,7 +14,7 @@ GNU General Public License for more details.
 #ifndef MULTIFX10KNOB_H
 #define MULTIFX10KNOB_H
 
-#define MULTIFX10KNOB_FX_COUNT 37
+#define MULTIFX10KNOB_FX_COUNT 38
 #define MULTIFX10KNOB_KNOB_COUNT 10
 #define MULTIFX10_MAX_FX_COUNT 12
 
@@ -151,6 +151,7 @@ void v_mf10_run_glitch(t_mf10_multi*, SGFLT, SGFLT);
 void v_mf10_run_ring_mod(t_mf10_multi*, SGFLT, SGFLT);
 void v_mf10_run_lofi(t_mf10_multi*, SGFLT, SGFLT);
 void v_mf10_run_s_and_h(t_mf10_multi*, SGFLT, SGFLT);
+void v_mf10_run_bp_dw(t_mf10_multi*,SGFLT,SGFLT);
 void v_mf10_run_hp_dw(t_mf10_multi*,SGFLT,SGFLT);
 void v_mf10_run_lp_dw(t_mf10_multi*,SGFLT,SGFLT);
 void v_mf10_run_monofier(t_mf10_multi*,SGFLT,SGFLT);

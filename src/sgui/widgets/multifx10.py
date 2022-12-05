@@ -22,6 +22,7 @@ MULTIFX10_EFFECTS_LOOKUP = {
 MULTIFX10_FILTERS = [
     "BP2",
     "BP4",
+    'BP D/W',
     "BP Spread",
     "EQ",
     "Formant",
@@ -688,6 +689,16 @@ class MultiFX10:
             self.knobs[4].set_min_max(10.0, 500.0)
             self.knobs[5].val_conversion = _shared.KC_127_ZERO_TO_X
             self.knobs[5].set_min_max(-36.0, 36.0)
+        elif a_val == 37: #BP2-Dry/Wet
+            self.hide_knobs(3)
+            self.knobs[0].name_label.setText(_("Freq"))
+            self.knobs[1].name_label.setText(_("Res"))
+            self.knobs[2].name_label.setText(_("Wet"))
+            self.knobs[0].val_conversion = _shared.KC_127_PITCH
+            self.knobs[1].val_conversion = _shared.KC_127_ZERO_TO_X
+            self.knobs[1].set_min_max(-30.0, 0.0)
+            self.knobs[2].val_conversion = _shared.KC_NONE
+            self.knobs[2].value_label.setText("")
         else:
             raise NotImplementedError(f"Unknown FX uid: {a_val}")
 
