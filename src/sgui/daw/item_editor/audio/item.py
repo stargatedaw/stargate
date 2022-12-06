@@ -660,6 +660,8 @@ class AudioSeqItem(QGraphicsRectItem):
 
     def mousePressEvent(self, a_event):
         if glbl_shared.IS_PLAYING:
+            shared.AUDIO_SEQ.scene.clearSelection()
+            self.setSelected(True)
             return
 
         if not self.isSelected():
