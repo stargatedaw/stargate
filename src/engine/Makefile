@@ -4,8 +4,9 @@ NAME ?= stargate-engine
 
 # Compiler flags
 CC ?= gcc
+CFLAGS ?=
 CC_ARGS ?= -Wall
-OPT_LVL ?= -O2 -g -ggdb3
+PROD_FLAGS ?= -O3 -fomit-frame-pointer
 # These assume a modern x86 CPU, change or remove for other platforms
 PLAT_FLAGS ?= -mfpmath=sse -mssse3 -mtune=generic -mstackrealign
 LIBEXT ?= so
@@ -132,7 +133,7 @@ debugger:
 engine:
 	# Compile the cli
 	$(CC) \
-	    -fpie $(CC_ARGS) $(OPT_LVL) $(BUILD_FLAGS) \
+	    -fpie $(CC_ARGS) $(PROD_FLAGS) $(BUILD_FLAGS) \
 	    $(shell find cli -name '*.c') $(LINK_FLAGS) -o $(NAME)
 
 gprof:
