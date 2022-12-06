@@ -82,9 +82,9 @@ onto here.
 """)
 
 AudioSeqItem = _("""
-A single instance of an audio file.  Right click on an audio item to see the
-various tools and actions available.  Select a single item and add effects
-using "File FX" and "Item FX" tabs on the right.
+An audio file.  Right click to see actions.  CTRL+ALT+drag to change item
+volume, CTRL+SHIFT+drag to volume curve, ALT+SHIFT+drag to change file volume,
+CTRL+drag to duplicate
 """
 )
 
