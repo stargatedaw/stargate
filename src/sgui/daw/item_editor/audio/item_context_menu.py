@@ -183,18 +183,18 @@ def show(current_item):
             f_action.setCheckable(True)
             f_action.setChecked(True)
 
-    f_volume_action = QAction(_("Volume..."), f_properties_menu)
+    f_volume_action = QAction(_("Item Volume..."), f_properties_menu)
     f_properties_menu.addAction(f_volume_action)
     f_volume_action.setToolTip(
         'Change the volume of the audio item.  You can also use '
         f'{util.KEY_CTRL}+{util.KEY_ALT}+drag '
         'up and down to change volume of one or more audio items, and '
-        f'{util.KEY_CTRL}+SHIFT+drag '
-        'to change for all instances of the file'
+        f'{util.KEY_ALT}+SHIFT+drag '
+        'to change for all instances of the file in the entire project'
     )
     f_volume_action.triggered.connect(volume_dialog)
 
-    f_normalize_action = QAction(_("Normalize..."), f_properties_menu)
+    f_normalize_action = QAction("Normalize File Volume...", f_properties_menu)
     f_properties_menu.addAction(f_normalize_action)
     f_normalize_action.setToolTip(
         'Normalize audio items to a given level.  Note that this is '
@@ -488,6 +488,14 @@ def volume_dialog():
         f_db_spinbox.setValue(0.)
     f_ok_button = QPushButton(_("OK"))
     f_ok_cancel_layout = QHBoxLayout()
+    f_layout.addItem(
+        QSpacerItem(
+            1,
+            1,
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Expanding,
+        ),
+    )
     f_layout.addLayout(f_ok_cancel_layout)
     f_ok_cancel_layout.addWidget(f_ok_button)
     f_ok_button.pressed.connect(on_ok)
@@ -495,33 +503,27 @@ def volume_dialog():
     f_ok_cancel_layout.addWidget(f_cancel_button)
     f_cancel_button.pressed.connect(on_cancel)
     f_window.exec()
-    return f_window.f_result
 
 def normalize_dialog():
-    f_val = _normalize_dialog()
-    if f_val is None:
-        return
-    f_save = False
-    audio_pool = constants.PROJECT.get_audio_pool()
-    audio_pool_by_uid = audio_pool.by_uid()
-    ap_entries = set()
-    for f_item in shared.AUDIO_SEQ.get_selected():
-        f_save = True
-        entry = f_item.normalize(f_val, audio_pool_by_uid)
-        ap_entries.add(entry)
-    if f_save:
-        constants.PROJECT.save_audio_pool(audio_pool)
-        for entry in ap_entries:
-            constants.IPC.audio_pool_entry_volume(
-                entry.uid,
-                entry.volume,
-            )
-        constants.DAW_PROJECT.commit(_("Normalize audio items"))
-        global_open_audio_items(True)
-
-def _normalize_dialog():
     def on_ok():
-        f_window.f_result = f_db_spinbox.value()
+        db = f_db_spinbox.value()
+        f_save = False
+        audio_pool = constants.PROJECT.get_audio_pool()
+        audio_pool_by_uid = audio_pool.by_uid()
+        ap_entries = set()
+        for f_item in shared.AUDIO_SEQ.get_selected():
+            f_save = True
+            entry = f_item.normalize(db, audio_pool_by_uid)
+            ap_entries.add(entry)
+        if f_save:
+            constants.PROJECT.save_audio_pool(audio_pool)
+            for entry in ap_entries:
+                constants.IPC.audio_pool_entry_volume(
+                    entry.uid,
+                    entry.volume,
+                )
+            constants.DAW_PROJECT.commit(_("Normalize audio items"))
+            global_open_audio_items(True)
         f_window.close()
 
     def on_cancel():
@@ -547,14 +549,21 @@ def _normalize_dialog():
     f_db_spinbox.setRange(-18, 0)
     f_ok_button = QPushButton(_("OK"))
     f_ok_cancel_layout = QHBoxLayout()
+    f_layout.addItem(
+        QSpacerItem(
+            1,
+            1,
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Expanding,
+        ),
+    )
     f_layout.addLayout(f_ok_cancel_layout)
     f_ok_cancel_layout.addWidget(f_ok_button)
     f_ok_button.pressed.connect(on_ok)
     f_cancel_button = QPushButton(_("Cancel"))
     f_ok_cancel_layout.addWidget(f_cancel_button)
     f_cancel_button.pressed.connect(on_cancel)
-    f_window.exec()
-    return f_window.f_result
+    f_window.exec(block=False)
 
 def reset_fades():
     f_list = shared.AUDIO_SEQ.get_selected()

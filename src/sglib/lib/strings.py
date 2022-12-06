@@ -13,6 +13,7 @@ GNU General Public License for more details.
 """
 
 from sglib.lib.translate import _
+from sglib.lib.util import KEY_CTRL, KEY_ALT
 
 
 audio_viewer_widget_papifx = _("""\
@@ -81,10 +82,10 @@ audio items in addition to MIDI.  Drag audio files from the file browser
 onto here.
 """)
 
-AudioSeqItem = _("""
-An audio file.  Right click to see actions.  CTRL+ALT+drag to change item
-volume, CTRL+SHIFT+drag to volume curve, ALT+SHIFT+drag to change file volume,
-CTRL+drag to duplicate
+AudioSeqItem = _(f"""
+An audio file.  Right click to see actions.  {KEY_CTRL}+{KEY_ALT}+drag to
+change item volume, CTRL+SHIFT+drag to volume curve, {KEY_ALT}+SHIFT+drag to
+change file volume, {KEY_CTRL}+drag to duplicate
 """
 )
 
