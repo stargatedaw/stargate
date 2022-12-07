@@ -164,7 +164,6 @@ class ItemSequencer(QGraphicsView):
             self.context_menu_enabled = True
             return
         if _shared.SEQUENCE_EDITOR_MODE == 0:
-            context_menu.populate_takes_menu()
             context_menu.MENU.exec(QCursor.pos())
         elif _shared.SEQUENCE_EDITOR_MODE == 1:
             atm_context_menu.MENU.exec(QCursor.pos())

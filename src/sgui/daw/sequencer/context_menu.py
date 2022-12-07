@@ -16,21 +16,77 @@ def cut_selected():
     _shared.copy_selected()
     _shared.delete_selected()
 
-def takes_menu_triggered(a_action):
-    f_uid = shared.SEQUENCER.current_item.audio_item.item_uid
-    f_new_uid = a_action.item_uid
-    for f_item in shared.SEQUENCER.get_selected_items():
-        if f_item.audio_item.item_uid == f_uid:
-            f_item_obj = f_item.audio_item
-            shared.CURRENT_SEQUENCE.remove_item_ref(f_item_obj)
-            f_item_obj.uid = f_new_uid
-            shared.SEQUENCER.selected_item_strings.add(str(f_item_obj))
-            f_item_ref = f_item_obj.clone()
-            f_item_ref.item_uid = f_new_uid
-            shared.CURRENT_SEQUENCE.add_item_ref_by_uid(f_item_ref)
-    constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
-    constants.DAW_PROJECT.commit(_("Change active take"))
-    shared.SEQ_WIDGET.open_sequence()
+
+def takes_action_triggered():
+    def on_double_click(item):
+        f_uid = shared.SEQUENCER.current_item.audio_item.item_uid
+        f_new_uid = item.item_uid
+        for f_item in shared.SEQUENCER.get_selected_items():
+            if f_item.audio_item.item_uid == f_uid:
+                f_item_obj = f_item.audio_item
+                shared.CURRENT_SEQUENCE.remove_item_ref(f_item_obj)
+                f_item_obj.uid = f_new_uid
+                shared.SEQUENCER.selected_item_strings.add(str(f_item_obj))
+                f_item_ref = f_item_obj.clone()
+                f_item_ref.item_uid = f_new_uid
+                shared.CURRENT_SEQUENCE.add_item_ref_by_uid(f_item_ref)
+        constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
+        constants.DAW_PROJECT.commit(_("Change active take"))
+        shared.SEQ_WIDGET.open_sequence()
+        dialog.close()
+
+    dialog = QDialog()
+    layout = QVBoxLayout(dialog)
+    list_widget = QListWidget()
+    list_widget.setToolTip(
+        'Double-click a take to set it as the active take for this item'
+    )
+    list_widget.setSelectionBehavior(
+         QAbstractItemView.SelectionBehavior.SelectRows,
+    )
+    list_widget.setSelectionMode(
+        QAbstractItemView.SelectionMode.SingleSelection,
+    )
+    list_widget.itemDoubleClicked.connect(on_double_click)
+    layout.addWidget(list_widget)
+    cancel_button = QPushButton('Cancel')
+    layout.addWidget(cancel_button)
+    cancel_button.pressed.connect(dialog.close)
+
+    if shared.SEQUENCER.current_item:
+        current_uid = shared.SEQUENCER.current_item.audio_item.item_uid
+        takes = constants.DAW_PROJECT.get_takes()
+        take_list = takes.get_take(current_uid)
+        if take_list:
+            items_dict = constants.DAW_PROJECT.get_items_dict()
+            for uid in take_list[1]:
+                if uid == current_uid:
+                    continue
+                name = items_dict.get_name_by_uid(uid)
+                list_widget_item = QListWidgetItem(name)
+                list_widget_item.item_uid = uid
+                list_widget.addItem(list_widget_item)
+            list_widget.sortItems()
+        else:
+            QMessageBox.warning(
+                None,
+                'Error',
+                (
+                    'No takes available for this item.  Right click and '
+                    'choose one of the create takes actions to duplicate '
+                    'this item to a new take'
+                ),
+            )
+            return
+    else:
+        QMessageBox.warning(
+            None,
+            'Error',
+            'No item selected, right-click on an item to manage takes',
+        )
+        return
+
+    dialog.exec(block=False)
 
 def _next_item_name(item_name):
     match = re.match(
@@ -394,20 +450,6 @@ def glue_selected():
             _("You must select at least 2 items on one or more tracks"),
         )
 
-def populate_takes_menu():
-    takes_menu.clear()
-    if shared.SEQUENCER.current_item:
-        f_takes = constants.DAW_PROJECT.get_takes()
-        f_take_list = f_takes.get_take(
-            shared.SEQUENCER.current_item.audio_item.item_uid,
-        )
-        if f_take_list:
-            f_items_dict = constants.DAW_PROJECT.get_items_dict()
-            for f_uid in f_take_list[1]:
-                f_name = f_items_dict.get_name_by_uid(f_uid)
-                f_action = takes_menu.addAction(f_name)
-                f_action.item_uid = f_uid
-
 def init():
     global \
         MENU, \
@@ -448,8 +490,13 @@ def init():
     MENU.addAction(_shared.delete_action)
     MENU.addSeparator()
 
-    takes_menu = MENU.addMenu(_("Takes"))
-    takes_menu.triggered.connect(takes_menu_triggered)
+    takes_action = QAction(_("Takes..."), MENU)
+    takes_action.setToolTip(
+        'Manage "takes" for this item.  A take is a variation of an item, '
+        'that can be switched between.  Use this to group related items.'
+    )
+    MENU.addAction(takes_action)
+    takes_action.triggered.connect(takes_action_triggered)
 
     unlink_selected_action = QAction("Create New Take for Item(s)", MENU)
     MENU.addAction(unlink_selected_action)
