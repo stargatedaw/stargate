@@ -122,7 +122,9 @@ class Welcome(QtCore.QObject):
             glbl_shared.MAIN_STACKED_WIDGET.show_main()
 
     def on_new(self):
-        if new_project(self.widget):
+        path = new_project(self.widget)
+        if path:
+            self.rp_list.insertItem(0, path)
             self.close()
 
     def on_open(self):

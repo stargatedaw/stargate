@@ -61,12 +61,13 @@ def new_project(a_parent=None):
                     f"{MAJOR_VERSION}.project",
                 )
                 set_project(f_file)
-                return True
+                return f_file
             else:
-                return False
+                return None
     except Exception as ex:
         LOG.exception(ex)
         QMessageBox.warning(a_parent, "Error", str(ex))
+        return None
 
 def clone_project(parent):
     try:
