@@ -66,7 +66,7 @@ import traceback
 CLOSE_ENGINE_ON_RENDER = True
 
 class MainWindow(QTabWidget):
-    """ The main window for DAW-Next that contains all widgets
+    """ The main window for DAW that contains all widgets
         except TransportWidget
     """
     def __init__(self):
@@ -318,9 +318,10 @@ class MainWindow(QTabWidget):
                     f_track_num = f_file.split(".", 1)[0].zfill(3)
                     f_track_name = f_tracks.tracks[int(f_track_num)].name
                     f_new = "{}-{}.wav".format(f_track_num, f_track_name)
-                    os.rename(
+                    shutil.move(
                         os.path.join(f_out_file, f_file),
-                        os.path.join(f_out_file, f_new))
+                        os.path.join(f_out_file, f_new),
+                    )
 
         def cancel_handler():
             f_window.close()
