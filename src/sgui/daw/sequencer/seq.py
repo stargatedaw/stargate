@@ -234,13 +234,22 @@ class ItemSequencer(QGraphicsView):
                 f_pos_y = f_pos.y() - _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
                 f_beat = float(f_pos_x // _shared.SEQUENCER_PX_PER_BEAT)
                 f_track = int(f_pos_y // shared.SEQUENCE_EDITOR_TRACK_HEIGHT)
-                LOG.info(f"{f_track}, {shared.TRACK_NAMES}")
-                f_item_name = "{}-1".format(shared.TRACK_NAMES[f_track])
-                f_uid = constants.DAW_PROJECT.create_empty_item(f_item_name)
+                if a_event.modifiers() == (
+                    QtCore.Qt.KeyboardModifier.ControlModifier
+                ) and len(_shared.SEQUENCE_CLIPBOARD) == 1:
+                    item_ref = _shared.SEQUENCE_CLIPBOARD[0]
+                    f_uid = item_ref.item_uid
+                    length = item_ref.length_beats
+                else:
+                    f_item_name = "{}-1".format(shared.TRACK_NAMES[f_track])
+                    f_uid = constants.DAW_PROJECT.create_empty_item(
+                        f_item_name,
+                    )
+                    length = _shared.LAST_ITEM_LENGTH
                 f_item_ref = sequencer_item(
                     f_track,
                     f_beat,
-                    _shared.LAST_ITEM_LENGTH,
+                    length,
                     f_uid,
                 )
                 shared.CURRENT_SEQUENCE.add_item_ref_by_uid(f_item_ref)

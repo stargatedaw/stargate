@@ -482,7 +482,9 @@ def init():
     paste_selected_action = QAction(_("Paste to Selected Track"), MENU)
     MENU.addAction(paste_selected_action)
     paste_selected_action.setToolTip(
-        'Paste previously copied items to the track under the mouse cursor'
+        'Paste previously copied items to the track under the mouse cursor. '
+        'You can also select the draw tool and CTRL+click to paste if a '
+        'single item is copied to the clipboard'
     )
     paste_selected_action.triggered.connect(_shared.paste_selected)
 
