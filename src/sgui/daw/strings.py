@@ -19,8 +19,9 @@ Sequencer contains tracks, items, and automation. Use the mouse tools in
 the transport to edit sequencer items. Right click on items or the
 timeline for actions.  All items/tracks can contain audio and MIDI.""")
 
-sequencer_item = _("""\
-Right click on an item to see the various tools and actions available.
-Set the mouse tool to "select", and click and drag selected to move.
-CTRL+drag to copy selected items.  Double-click to edit.""")
+sequencer_item = """
+Right click to see available actions.  See mouse tools in transport.
+Click+drag selected to move.  CTRL+drag to copy selected items.  Double-click
+to edit.  ALT+click to multi-select
+"""
 

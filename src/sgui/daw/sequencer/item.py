@@ -512,10 +512,9 @@ class SequencerItem(QGraphicsRectItem):
 
         if a_event.modifiers() == (
             QtCore.Qt.KeyboardModifier.AltModifier
-            |
-            QtCore.Qt.KeyboardModifier.ShiftModifier
         ):
-            self.setSelected((not self.isSelected()))
+            self.setSelected(not self.isSelected())
+            shared.SEQUENCER.set_selected_strings()
             return
 
         if not self.isSelected():
@@ -715,7 +714,6 @@ class SequencerItem(QGraphicsRectItem):
         if glbl_shared.IS_PLAYING or self.event_pos_orig is None:
             return
         f_was_resizing = self.is_resizing
-        QGraphicsRectItem.mouseReleaseEvent(self, a_event)
         QApplication.restoreOverrideCursor()
         #Set to True when testing, set to False for better UI performance...
         f_reset_selection = True
@@ -761,8 +759,11 @@ class SequencerItem(QGraphicsRectItem):
                 f_item.start_offset = clip_min(
                     f_item.start_offset, 0.0)
                 f_item.length_beats -= f_item.start_beat - f_old_start
-            elif f_audio_item.is_stretching and \
-            f_item.time_stretch_mode >= 2:
+            elif (
+                f_audio_item.is_stretching
+                and
+                f_item.time_stretch_mode >= 2
+            ):
                 f_reset_selection = True
                 f_x = f_audio_item.width_orig + f_event_diff + \
                     f_audio_item.quantize_offset
@@ -834,5 +835,6 @@ class SequencerItem(QGraphicsRectItem):
             constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
             constants.DAW_PROJECT.commit(_("Update sequencer items"))
         shared.SEQUENCER.set_selected_strings()
+        QGraphicsRectItem.mouseReleaseEvent(self, a_event)
         shared.SEQ_WIDGET.open_sequence()
 

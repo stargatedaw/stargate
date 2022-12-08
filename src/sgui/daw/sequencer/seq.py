@@ -222,19 +222,11 @@ class ItemSequencer(QGraphicsView):
             if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
                 f_item = self.get_item(f_pos)
                 if f_item:
-                    if not f_item.isSelected():
-                        self.scene.clearSelection()
-                    f_item.setSelected(True)
-                    self.selected_item_strings = {f_item.get_selected_string()}
                     QGraphicsView.mousePressEvent(self, a_event)
                     return
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_DRAW:
                 f_item = self.get_item(f_pos)
                 if f_item:
-                    if not f_item.isSelected():
-                        self.scene.clearSelection()
-                    f_item.setSelected(True)
-                    self.selected_item_strings = {f_item.get_selected_string()}
                     QGraphicsView.mousePressEvent(self, a_event)
                     return
                 self.scene.clearSelection()
@@ -403,6 +395,11 @@ class ItemSequencer(QGraphicsView):
 
     def get_selected_items(self):
         return [x for x in self.audio_items if x.isSelected()]
+
+    def restore_selected(self):
+        for item in self.audio_items:
+            if item.get_selected_string() in self.selected_item_strings:
+                item.setSelected(True)
 
     def set_selected_strings(self):
         if self.ignore_selection_change:
