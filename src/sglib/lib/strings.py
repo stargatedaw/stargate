@@ -71,9 +71,11 @@ pitchbend_dialog = _("""\
 Pitchbend values are in semitones.  Use this dialog to add points with
 precision,or double-click on the editor to add points.""")
 
-PianoRollEditor = _("""\
-The piano roll editor is used to edit MIDI notes.  See the "Parameter"
-combobox, the menu button and the mouse tools in the transport panel.""")
+PianoRollEditor = f"""
+Edit MIDI notes.  See the "Parameter" combobox, the menu button and the mouse
+tools in the transport panel. Draw notes holding {KEY_ALT} to move instead of
+change length
+"""
 
 
 AudioItemSeq = _("""\
