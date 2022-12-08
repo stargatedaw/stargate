@@ -401,7 +401,7 @@ class SequencerItem(QGraphicsRectItem):
             self.start_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
             self.length_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
             self.stretch_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
-            self.split_line.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
+            self.split_line.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
 
             self.start_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
             self.length_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
