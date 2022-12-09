@@ -630,6 +630,7 @@ class ItemSequencer(QGraphicsView):
 
     def sceneDragEnterEvent(self, a_event):
         a_event.setAccepted(True)
+        self.last_drag_item = None
         self.silhouette = Silhouette()
         self.scene.addItem(self.silhouette)
         self.silhouette.quantize(a_event.scenePos())
@@ -637,9 +638,23 @@ class ItemSequencer(QGraphicsView):
     def sceneDragMoveEvent(self, a_event):
         self.silhouette.quantize(a_event.scenePos())
         a_event.setDropAction(QtCore.Qt.DropAction.CopyAction)
+        item = self.get_item(a_event.scenePos())
+        if item and item != self.last_drag_item:
+            self.silhouette.hide()
+            item.set_brush(override=True)
+            if self.last_drag_item:
+                self.last_drag_item.set_brush()
+            self.last_drag_item = item
+        elif not item:
+            self.silhouette.show()
+            if self.last_drag_item:
+                self.last_drag_item.set_brush()
 
     def sceneDragLeaveEvent(self, a_event):
         self.silhouette.hide()
+        if self.last_drag_item:
+            self.last_drag_item.set_brush()
+        QGraphicsScene.dragLeaveEvent(self.scene, a_event)
 
     def check_running(self):
         if glbl_shared.IS_PLAYING:
@@ -697,10 +712,49 @@ class ItemSequencer(QGraphicsView):
             LOG.info('menu.exec()')
         shared.clear_seq_drop()
 
+    def replace_item(self, item, uid):
+        item.audio_item.item_uid = uid
+        constants.DAW_PROJECT.save_sequence(
+            shared.CURRENT_SEQUENCE,
+            a_notify=True,
+        )
+        constants.DAW_PROJECT.commit("Added sequencer item")
+        shared.SEQ_WIDGET.open_sequence()
+
+    def replace_all_instances_of_item(self, item_uid, uid):
+        for item in shared.CURRENT_SEQUENCE.items:
+            if item.item_uid == item_uid:
+                item.item_uid = uid
+        constants.DAW_PROJECT.save_sequence(
+            shared.CURRENT_SEQUENCE,
+            a_notify=True,
+        )
+        constants.DAW_PROJECT.commit("Added sequencer item")
+        shared.SEQ_WIDGET.open_sequence()
+
     def add_existing_item(self, event, uid):
         if self.check_running():
             return
-        beat, track = _shared.pos_to_beat_and_track(event.scenePos())
+        scene_pos = event.scenePos()
+        override_item = self.get_item(scene_pos)
+        if override_item:
+            menu = QMenu()
+            action = menu.addAction("Replace this item")
+            action.triggered.connect(
+                lambda : self.replace_item(override_item, uid)
+            )
+            action = menu.addAction(
+                "Replace all instances of this item",
+            )
+            action.triggered.connect(
+                lambda : self.replace_all_instances_of_item(
+                    override_item.audio_item.item_uid,
+                    uid,
+                )
+            )
+            menu.exec(QCursor.pos())
+            return
+        beat, track = _shared.pos_to_beat_and_track(scene_pos)
         item = constants.DAW_PROJECT.get_item_by_uid(uid)
         refs = {x for x in shared.CURRENT_SEQUENCE.items if x.item_uid == uid}
         if refs:

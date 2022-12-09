@@ -356,9 +356,9 @@ class SequencerItem(QGraphicsRectItem):
         else:
             return False
 
-    def set_brush(self, a_index=None):
+    def set_brush(self, a_index=None, override=False):
         if theme.SYSTEM_COLORS.daw.seq_item_background_use_track_color:
-            if self.isSelected():
+            if self.isSelected() or override:
                 brush = theme.SYSTEM_COLORS.daw.seq_selected_item
             else:
                 brush = shared.TRACK_COLORS.get_color(
@@ -369,7 +369,7 @@ class SequencerItem(QGraphicsRectItem):
         self.setBrush(
             QColor(brush),
         )
-        if self.isSelected():
+        if self.isSelected() or override:
             item_color = QColor(
                 theme.SYSTEM_COLORS.daw.seq_selected_item,
             )
