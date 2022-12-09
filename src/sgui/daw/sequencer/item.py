@@ -631,11 +631,6 @@ class SequencerItem(QGraphicsRectItem):
             f_x -= _shared.SEQUENCER_QUANTIZE_PX
         return f_x
 
-    def quantize_scene(self, a_x):
-        f_x = a_x
-        f_x = self.quantize_all(f_x)
-        return f_x
-
     def mouseMoveEvent(self, a_event):
         if glbl_shared.IS_PLAYING or self.event_pos_orig is None:
             return
@@ -702,7 +697,7 @@ class SequencerItem(QGraphicsRectItem):
                 f_pos_x = clip_value(f_pos_x, 0.0, f_max_x)
                 f_pos_y = self.lane_number_to_y_pos(
                     f_lane_offset + f_item.audio_item.track_num)
-                f_pos_x = f_item.quantize_scene(f_pos_x)
+                f_pos_x = f_item.quantize_all(f_pos_x)
                 f_item.setPos(f_pos_x, f_pos_y)
                 if not f_item.is_moving:
                     f_item.is_moving = True

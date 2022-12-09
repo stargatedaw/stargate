@@ -56,7 +56,7 @@ def set_seq_snap(a_val=None):
     else:
         SEQUENCER_SNAP_VAL = a_val
     SEQ_SNAP_RANGE = 8
-    f_divisor = shared.ITEM_SNAP_DIVISORS[a_val]
+    f_divisor = util.ITEM_SNAP_DIVISORS[a_val]
     if a_val > 0:
         SEQ_QUANTIZE = True
         SEQ_LINES_ENABLED = False

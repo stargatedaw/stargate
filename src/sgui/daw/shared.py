@@ -21,14 +21,6 @@ from sgui.daw.lib import item as item_lib
 AUDIO_ITEMS_TO_DROP = []
 MIDI_FILES_TO_DROP = []
 
-AUDIO_LINES_ENABLED = True
-AUDIO_SNAP_RANGE = 8
-AUDIO_SNAP_VAL = 2
-AUDIO_PX_PER_BEAT = 100.0
-
-AUDIO_QUANTIZE = False
-AUDIO_QUANTIZE_PX = 100.0
-AUDIO_QUANTIZE_AMT = 1.0
 
 AUDIO_RULER_HEIGHT = 20.0
 AUDIO_ITEM_HEIGHT = 75.0
@@ -38,17 +30,6 @@ AUDIO_ITEM_LANE_COUNT = 24
 
 AUDIO_ITEM_HANDLE_HEIGHT = 12.0
 AUDIO_ITEM_HANDLE_SIZE = 6.25
-
-ITEM_SNAP_DIVISORS = {
-    0: 4.0,
-    1: 1.0,
-    2: 2.0,
-    3: 3.0,
-    4: 4.0,
-    5: 8.0,
-    6: 16.0,
-    7: 32.0,
-}
 
 NO_PEN = QPen(QtCore.Qt.PenStyle.NoPen)
 NO_PEN.setWidth(0)
@@ -444,7 +425,9 @@ def set_piano_roll_quantize(a_index=None):
     else:
         PIANO_ROLL_SNAP = True
 
-    PIANO_ROLL_SNAP_DIVISOR = ITEM_SNAP_DIVISORS[PIANO_ROLL_QUANTIZE_INDEX]
+    PIANO_ROLL_SNAP_DIVISOR = util.ITEM_SNAP_DIVISORS[
+        PIANO_ROLL_QUANTIZE_INDEX
+    ]
 
     PIANO_ROLL_SNAP_BEATS = 1.0 / PIANO_ROLL_SNAP_DIVISOR
     LAST_NOTE_RESIZE = clip_min(
@@ -513,27 +496,6 @@ def global_open_audio_items(
         AUDIO_SEQ.setUpdatesEnabled(True)
         AUDIO_SEQ.update()
         AUDIO_SEQ.horizontalScrollBar().setMinimum(0)
-
-def set_audio_snap(a_val):
-    global AUDIO_QUANTIZE, AUDIO_QUANTIZE_PX, AUDIO_QUANTIZE_AMT, \
-        AUDIO_SNAP_VAL, AUDIO_LINES_ENABLED, AUDIO_SNAP_RANGE
-
-    AUDIO_SNAP_VAL = a_val
-    AUDIO_QUANTIZE = True
-    AUDIO_LINES_ENABLED = True
-    AUDIO_SNAP_RANGE = 8
-
-    f_divisor = ITEM_SNAP_DIVISORS[a_val]
-
-    AUDIO_QUANTIZE_PX = AUDIO_PX_PER_BEAT / f_divisor
-    AUDIO_SNAP_RANGE = int(f_divisor)
-    AUDIO_QUANTIZE_AMT = f_divisor
-
-    if a_val == 0:
-        AUDIO_QUANTIZE = False
-        AUDIO_LINES_ENABLED = False
-    elif a_val == 1:
-        AUDIO_LINES_ENABLED = False
 
 def global_update_track_comboboxes(a_index=None, a_value=None):
     if (
@@ -616,7 +578,6 @@ __all__ = [
     'open_last',
     'get_current_sequence_length',
     'seconds_to_beats',
-    'set_audio_snap',
     'set_piano_roll_quantize',
     'routing_graph_toggle_callback',
 ]

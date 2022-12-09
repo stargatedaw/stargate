@@ -302,10 +302,10 @@ class AudioSeqItem(QGraphicsRectItem):
             f_temp_seconds *= self.audio_item.timestretch_amt
 
         f_start = self.audio_item.start_beat
-        f_start *= shared.AUDIO_PX_PER_BEAT
+        f_start *= _shared.AUDIO_PX_PER_BEAT
 
         f_length_seconds = seconds_to_beats(
-            f_temp_seconds) * shared.AUDIO_PX_PER_BEAT
+            f_temp_seconds) * _shared.AUDIO_PX_PER_BEAT
         self.length_seconds_orig_px = f_length_seconds
         self.rect_orig = QtCore.QRectF(
             0.0,
@@ -440,7 +440,7 @@ class AudioSeqItem(QGraphicsRectItem):
         self.setToolTip(sg_strings.AudioSeqItem)
 
     def clip_at_sequence_end(self):
-        f_max_x = shared.CURRENT_ITEM_LEN * shared.AUDIO_PX_PER_BEAT
+        f_max_x = shared.CURRENT_ITEM_LEN * _shared.AUDIO_PX_PER_BEAT
         f_pos_x = self.pos().x()
         f_end = f_pos_x + self.rect().width()
         if f_end > f_max_x:
@@ -536,7 +536,7 @@ class AudioSeqItem(QGraphicsRectItem):
                 self.setBrush(color)
 
     def pos_to_musical_time(self, a_pos):
-        return a_pos / shared.AUDIO_PX_PER_BEAT
+        return a_pos / _shared.AUDIO_PX_PER_BEAT
 
     def start_handle_mouseClickEvent(self, a_event):
         if glbl_shared.IS_PLAYING:
@@ -593,7 +593,7 @@ class AudioSeqItem(QGraphicsRectItem):
         self.check_selected_status()
         a_event.setAccepted(True)
         QGraphicsRectItem.mousePressEvent(self.stretch_handle, a_event)
-        f_max_sequence_pos = shared.AUDIO_PX_PER_BEAT * shared.CURRENT_ITEM_LEN
+        f_max_sequence_pos = _shared.AUDIO_PX_PER_BEAT * shared.CURRENT_ITEM_LEN
         for f_item in shared.AUDIO_SEQ.audio_items:
             if (
                 f_item.isSelected()
@@ -703,8 +703,8 @@ class AudioSeqItem(QGraphicsRectItem):
 
             f_event_pos = qt_event_pos(a_event).x()
             # for items that are not quantized
-            f_pos = f_event_pos - (f_event_pos - self.quantize(f_event_pos))
-            f_scene_pos = self.quantize(a_event.scenePos().x())
+            f_pos = f_event_pos - (f_event_pos - _shared.quantize(f_event_pos))
+            f_scene_pos = _shared.quantize(a_event.scenePos().x())
             f_musical_pos = self.pos_to_musical_time(f_scene_pos)
             f_sample_shown = f_item.sample_end - f_item.sample_start
             f_sample_rect_pos = f_pos / self.rect().width()
@@ -750,7 +750,7 @@ class AudioSeqItem(QGraphicsRectItem):
                 f_item.setZValue(2400.0)
                 f_item_pos = f_item.pos().x()
                 f_item.quantize_offset = \
-                    f_item_pos - f_item.quantize_all(f_item_pos)
+                    f_item_pos - _shared.quantize_all(f_item_pos)
                 if a_event.modifiers() == (
                     QtCore.Qt.KeyboardModifier.ControlModifier
                 ):
@@ -800,7 +800,7 @@ class AudioSeqItem(QGraphicsRectItem):
 
     def hoverEnterEvent(self, a_event):
         f_item_pos = self.pos().x()
-        self.quantize_offset = f_item_pos - self.quantize_all(f_item_pos)
+        self.quantize_offset = f_item_pos - _shared.quantize_all(f_item_pos)
         super().hoverEnterEvent(a_event)
 
     def hoverMoveEvent(self, a_event):
@@ -809,7 +809,7 @@ class AudioSeqItem(QGraphicsRectItem):
                 self.split_line_is_shown = True
                 self.split_line.show()
             f_x = qt_event_pos(a_event).x()
-            f_x = self.quantize_all(f_x)
+            f_x = _shared.quantize_all(f_x)
             f_x -= self.quantize_offset
             self.split_line.setPos(f_x, 0.0)
         else:
@@ -837,31 +837,6 @@ class AudioSeqItem(QGraphicsRectItem):
             TRACK_COUNT_ALL,
         )
         return (a_lane_num * shared.AUDIO_ITEM_HEIGHT) + shared.AUDIO_RULER_HEIGHT
-
-    def quantize_all(self, a_x):
-        f_x = a_x
-        if shared.AUDIO_QUANTIZE:
-            f_x = round(f_x / shared.AUDIO_QUANTIZE_PX) * shared.AUDIO_QUANTIZE_PX
-        return f_x
-
-    def quantize(self, a_x):
-        f_x = a_x
-        f_x = self.quantize_all(f_x)
-        if shared.AUDIO_QUANTIZE and f_x < shared.AUDIO_QUANTIZE_PX:
-            f_x = shared.AUDIO_QUANTIZE_PX
-        return f_x
-
-    def quantize_start(self, a_x):
-        f_x = a_x
-        f_x = self.quantize_all(f_x)
-        if f_x >= self.length_handle.pos().x():
-            f_x -= shared.AUDIO_QUANTIZE_PX
-        return f_x
-
-    def quantize_scene(self, a_x):
-        f_x = a_x
-        f_x = self.quantize_all(f_x)
-        return f_x
 
     def update_fade_in_line(self):
         f_pos = self.fade_in_handle.pos()
@@ -906,7 +881,7 @@ class AudioSeqItem(QGraphicsRectItem):
                     f_x, shared.AUDIO_ITEM_HANDLE_SIZE,
                     f_item.length_px_minus_start)
                 if f_x < f_item.length_px_minus_start:
-                    f_x = f_item.quantize(f_x)
+                    f_x = _shared.quantize(f_x)
                     f_x -= f_item.quantize_offset
                 f_item.length_handle.setPos(
                     f_x - shared.AUDIO_ITEM_HANDLE_SIZE,
@@ -920,11 +895,16 @@ class AudioSeqItem(QGraphicsRectItem):
                 f_x = f_item.width_orig + f_event_diff + \
                     f_item.quantize_offset
                 f_x = clip_value(
-                    f_x, f_item.sample_start_offset_px,
-                    f_item.length_handle.pos().x())
+                    f_x,
+                    f_item.sample_start_offset_px,
+                    f_item.length_handle.pos().x(),
+                )
                 f_x = clip_min(f_x, f_item.min_start)
                 if f_x > f_item.min_start:
-                    f_x = f_item.quantize_start(f_x)
+                    f_x = f_item.quantize_start(
+                        f_x,
+                        f_item.length_handle.pos().x(),
+                    )
                     f_x -= f_item.quantize_offset
                 f_item.start_handle.setPos(
                     f_x,
@@ -974,7 +954,7 @@ class AudioSeqItem(QGraphicsRectItem):
                     f_item.stretch_width_default * 200.0,
                 )
                 f_x = clip_max(f_x, f_item.max_stretch)
-                f_x = f_item.quantize(f_x)
+                f_x = _shared.quantize(f_x)
                 f_x -= f_item.quantize_offset
                 f_item.stretch_handle.setPos(
                     f_x - shared.AUDIO_ITEM_HANDLE_SIZE,
@@ -1043,12 +1023,12 @@ class AudioSeqItem(QGraphicsRectItem):
 
     def _mm_else(self, a_event):
         QGraphicsRectItem.mouseMoveEvent(self, a_event)
-        if shared.AUDIO_QUANTIZE:
+        if _shared.AUDIO_QUANTIZE:
             f_max_x = (shared.CURRENT_ITEM_LEN *
-                shared.AUDIO_PX_PER_BEAT) - shared.AUDIO_QUANTIZE_PX
+                _shared.AUDIO_PX_PER_BEAT) - _shared.AUDIO_QUANTIZE_PX
         else:
             f_max_x = (shared.CURRENT_ITEM_LEN *
-                shared.AUDIO_PX_PER_BEAT) - shared.AUDIO_ITEM_HANDLE_SIZE
+                _shared.AUDIO_PX_PER_BEAT) - shared.AUDIO_ITEM_HANDLE_SIZE
         f_new_lane, f_ignored = self.y_pos_to_lane_number(
             a_event.scenePos().y(),
         )
@@ -1057,7 +1037,7 @@ class AudioSeqItem(QGraphicsRectItem):
             if f_item.isSelected():
                 f_pos_x = f_item.pos().x()
                 f_pos_x = clip_value(f_pos_x, 0.0, f_max_x)
-                f_pos_x = f_item.quantize_scene(f_pos_x)
+                f_pos_x = _shared.quantize_all(f_pos_x)
                 f_pos_y = self.lane_number_to_y_pos(
                     f_lane_offset + f_item.audio_item.lane_num,
                 )
@@ -1124,7 +1104,7 @@ class AudioSeqItem(QGraphicsRectItem):
                     shared.AUDIO_ITEM_HANDLE_SIZE,
                     f_audio_item.length_px_minus_start,
                 )
-                f_x = f_audio_item.quantize(f_x)
+                f_x = _shared.quantize(f_x)
                 f_x -= f_audio_item.quantize_offset
                 f_audio_item.setRect(
                     0.0,
@@ -1144,7 +1124,7 @@ class AudioSeqItem(QGraphicsRectItem):
             elif f_audio_item.is_start_resizing:
                 f_x = f_audio_item.start_handle.scenePos().x()
                 f_x = clip_min(f_x, 0.0)
-                f_x = self.quantize_all(f_x)
+                f_x = _shared.quantize_all(f_x)
                 if f_x < f_audio_item.sample_start_offset_px:
                     f_x = f_audio_item.sample_start_offset_px
                 f_start_result = self.pos_to_musical_time(f_x)
@@ -1181,7 +1161,7 @@ class AudioSeqItem(QGraphicsRectItem):
                     f_x, f_audio_item.stretch_width_default * 0.1,
                     f_audio_item.stretch_width_default * 200.0)
                 f_x = clip_max(f_x, f_audio_item.max_stretch)
-                f_x = f_audio_item.quantize(f_x)
+                f_x = _shared.quantize(f_x)
                 f_x -= f_audio_item.quantize_offset
                 f_item.timestretch_amt = \
                     f_x / f_audio_item.stretch_width_default
@@ -1239,7 +1219,7 @@ class AudioSeqItem(QGraphicsRectItem):
                             )
                 else:
                     f_audio_item.set_brush(f_item.lane_num)
-                f_pos_x = self.quantize_all(f_pos_x)
+                f_pos_x = _shared.quantize_all(f_pos_x)
                 f_item.lane_num, f_pos_y = self.y_pos_to_lane_number(f_pos_y)
                 f_audio_item.setPos(f_pos_x, f_pos_y)
                 f_start_result = f_audio_item.pos_to_musical_time(f_pos_x)

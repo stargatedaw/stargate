@@ -391,13 +391,13 @@ class AudioItemSeq(AbstractItemEditor):
         if self.check_running():
             return
 
-        f_beat_frac = f_x / shared.AUDIO_PX_PER_BEAT
+        f_beat_frac = f_x / _shared.AUDIO_PX_PER_BEAT
         f_beat_frac = clip_min(f_beat_frac, 0.0)
         LOG.info("f_beat_frac: {}".format(f_beat_frac))
-        if shared.AUDIO_QUANTIZE:
+        if _shared.AUDIO_QUANTIZE:
             f_beat_frac = int(
-                f_beat_frac * shared.AUDIO_QUANTIZE_AMT
-            ) / shared.AUDIO_QUANTIZE_AMT
+                f_beat_frac * _shared.AUDIO_QUANTIZE_AMT
+            ) / _shared.AUDIO_QUANTIZE_AMT
 
         f_lane_num = int(
             (f_y - shared.AUDIO_RULER_HEIGHT) / shared.AUDIO_ITEM_HEIGHT
@@ -486,7 +486,7 @@ class AudioItemSeq(AbstractItemEditor):
 
     def draw_header(self):
         f_sequence_length = shared.CURRENT_ITEM_LEN
-        f_size = shared.AUDIO_PX_PER_BEAT * f_sequence_length
+        f_size = _shared.AUDIO_PX_PER_BEAT * f_sequence_length
         self.total_height = (shared.AUDIO_ITEM_LANE_COUNT *
             (shared.AUDIO_ITEM_HEIGHT)) + shared.AUDIO_RULER_HEIGHT
         AbstractItemEditor.draw_header(
@@ -498,8 +498,8 @@ class AudioItemSeq(AbstractItemEditor):
         self.scene.addItem(self.header)
         if shared.ITEM_REF_POS:
             f_start, f_end = shared.ITEM_REF_POS
-            f_start_x = f_start * shared.AUDIO_PX_PER_BEAT
-            f_end_x = f_end * shared.AUDIO_PX_PER_BEAT
+            f_start_x = f_start * _shared.AUDIO_PX_PER_BEAT
+            f_end_x = f_end * _shared.AUDIO_PX_PER_BEAT
             f_start_line = QGraphicsLineItem(
                 f_start_x,
                 0.0,
@@ -549,7 +549,7 @@ class AudioItemSeq(AbstractItemEditor):
         number_brush = QColor(
             theme.SYSTEM_COLORS.daw.seq_header_text,
         )
-        if shared.AUDIO_PX_PER_BEAT >= 20:
+        if _shared.AUDIO_PX_PER_BEAT >= 20:
             for i in range(int(f_sequence_length)):
                 f_number = get_font().QGraphicsSimpleTextItem(
                     "{}".format(i + 1),
@@ -563,9 +563,9 @@ class AudioItemSeq(AbstractItemEditor):
                 self.text_list.append(f_number)
                 self.scene.addLine(i3, 0.0, i3, self.total_height, f_v_pen)
                 f_number.setPos(i3 + 3.0, 2)
-                if shared.AUDIO_LINES_ENABLED:
-                    for f_i4 in range(1, shared.AUDIO_SNAP_RANGE):
-                        f_sub_x = i3 + (shared.AUDIO_QUANTIZE_PX * f_i4)
+                if _shared.AUDIO_LINES_ENABLED:
+                    for f_i4 in range(1, _shared.AUDIO_SNAP_RANGE):
+                        f_sub_x = i3 + (_shared.AUDIO_QUANTIZE_PX * f_i4)
                         f_line = self.scene.addLine(
                             f_sub_x,
                             shared.AUDIO_RULER_HEIGHT,
@@ -575,18 +575,18 @@ class AudioItemSeq(AbstractItemEditor):
                         )
                         self.beat_line_list.append(f_line)
 #                for f_beat_i in range(1, 4):
-#                    f_beat_x = i3 + (shared.AUDIO_PX_PER_BEAT * f_beat_i)
+#                    f_beat_x = i3 + (_shared.AUDIO_PX_PER_BEAT * f_beat_i)
 #                    f_line = self.scene.addLine(
 #                        f_beat_x, 0.0, f_beat_x, self.total_height, f_beat_pen)
 #                    self.beat_line_list.append(f_line)
-#                    if shared.AUDIO_LINES_ENABLED:
-#                        for f_i4 in range(1, shared.AUDIO_SNAP_RANGE):
-#                            f_sub_x = f_beat_x + (shared.AUDIO_QUANTIZE_PX * f_i4)
+#                    if _shared.AUDIO_LINES_ENABLED:
+#                        for f_i4 in range(1, _shared.AUDIO_SNAP_RANGE):
+#                            f_sub_x = f_beat_x + (_shared.AUDIO_QUANTIZE_PX * f_i4)
 #                            f_line = self.scene.addLine(
 #                                f_sub_x, shared.AUDIO_RULER_HEIGHT,
 #                                f_sub_x, self.total_height, f_16th_pen)
 #                            self.beat_line_list.append(f_line)
-                i3 += shared.AUDIO_PX_PER_BEAT
+                i3 += _shared.AUDIO_PX_PER_BEAT
         self.scene.addLine(
             i3,
             shared.AUDIO_RULER_HEIGHT,
@@ -1008,18 +1008,18 @@ def set_audio_seq_zoom(a_horizontal, a_vertical):
         50.
     )
 
-    shared.AUDIO_PX_PER_BEAT = linear_interpolate(
+    _shared.AUDIO_PX_PER_BEAT = linear_interpolate(
         min_px_per_beat,
         max_px_per_beat,
         horizontal,
     )
-    shared.AUDIO_SEQ.px_per_beat = shared.AUDIO_PX_PER_BEAT
-    set_audio_snap(shared.AUDIO_SNAP_VAL)
+    shared.AUDIO_SEQ.px_per_beat = _shared.AUDIO_PX_PER_BEAT
+    _shared.set_audio_snap(_shared.AUDIO_SNAP_VAL)
     shared.AUDIO_ITEM_HEIGHT = 75.0 * a_vertical
     shared.AUDIO_SEQ.scene.setSceneRect(
         0.0,
         0.0,
-        float(shared.AUDIO_PX_PER_BEAT * f_sequence_length),
+        float(_shared.AUDIO_PX_PER_BEAT * f_sequence_length),
         float(shared.AUDIO_ITEM_HEIGHT * shared.AUDIO_ITEM_MAX_LANE),
     )
 

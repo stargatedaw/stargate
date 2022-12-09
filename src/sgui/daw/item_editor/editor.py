@@ -1,4 +1,5 @@
 from .abstract import AbstractItemEditor
+from .audio._shared import set_audio_snap
 from .automation import AutomationEditorWidget
 from sglib import constants
 from sgui.daw import shared
