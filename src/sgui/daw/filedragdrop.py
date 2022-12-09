@@ -2,15 +2,9 @@ from sglib import constants
 from sgui import widgets
 from sgui.daw import shared
 from sglib.lib import util
+from sgui.widgets import FileDragDropListWidget
 from sgui.sgqt import *
 import os
-
-class FileDragDropListWidget(QListWidget):
-    def startDrag(self, *args, **kwargs):
-        drag = QtGui.QDrag(self)
-        drag.setMimeData(self.model().mimeData(self.selectedIndexes()))
-        drag.setHotSpot(self.viewport().mapFromGlobal(QCursor.pos()))
-        drag.exec(QtCore.Qt.DropAction.MoveAction)
 
 class FileDragDropper(widgets.AbstractFileBrowserWidget):
     def __init__(

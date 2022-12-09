@@ -2,6 +2,7 @@ from sglib import constants
 from sglib.log import LOG
 from sglib.api.daw import api_playlist
 from sgui.daw.lib import sequence as sequence_lib
+from sgui.widgets import FileDragDropListWidget
 from sgui.sgqt import (
     QtCore,
     QAbstractItemView,
@@ -11,7 +12,6 @@ from sgui.sgqt import (
     QPushButton,
     QMessageBox,
     QVBoxLayout,
-    QListWidget,
     QListWidgetItem,
 )
 
@@ -27,7 +27,7 @@ class PlaylistWidget:
         layout.setContentsMargins(0, 0, 0, 0)
 
         # Sequence list
-        self.sequence_widget = QListWidget()
+        self.sequence_widget = FileDragDropListWidget()
         self.sequence_widget.setObjectName('sidebar_list')
         layout.addWidget(self.sequence_widget)
         self.sequence_widget.setToolTip(

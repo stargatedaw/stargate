@@ -1,6 +1,7 @@
 from sglib import constants
 from sglib.log import LOG
 from sgui.daw import shared
+from sgui.widgets import FileDragDropListWidget
 from sgui.sgqt import (
     QtCore,
     QAbstractItemView,
@@ -41,7 +42,7 @@ class ItemListWidget:
         layout.setSpacing(0)
         layout.setContentsMargins(0, 0, 0, 0)
 
-        self.items_widget = QListWidget()
+        self.items_widget = FileDragDropListWidget()
         self.items_widget.mousePressEvent = self.mousePressEvent
         self.items_widget.setObjectName('sidebar_list')
         layout.addWidget(self.items_widget)

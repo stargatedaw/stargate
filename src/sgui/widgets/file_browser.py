@@ -17,6 +17,13 @@ def open_bookmarks():
     for widget in FILE_BROWSER_WIDGETS:
         widget.open_bookmarks()
 
+class FileDragDropListWidget(QListWidget):
+    def startDrag(self, *args, **kwargs):
+        drag = QtGui.QDrag(self)
+        drag.setMimeData(self.model().mimeData(self.selectedIndexes()))
+        drag.setHotSpot(self.viewport().mapFromGlobal(QCursor.pos()))
+        drag.exec(QtCore.Qt.DropAction.MoveAction)
+
 class AbstractFileBrowserWidget:
     def __init__(
         self,

@@ -13,6 +13,7 @@ from .eq import *
 from .file_browser import (
     AbstractFileBrowserWidget,
     FileBrowserWidget,
+    FileDragDropListWidget,
 )
 from .file_select import file_select_widget
 from .filter import filter_widget
