@@ -250,6 +250,7 @@ class TransportWidget(AbstractTransportWidget):
         if shared.MAIN_WINDOW.currentIndex() == shared.TAB_ITEM_EDITOR:
             shared.SEQUENCER.open_sequence()
         shared.PLAYLIST_EDITOR.on_play()
+        shared.ITEMLIST.on_play()
         shared.SEQ_WIDGET.on_play()
         shared.AUDIO_SEQ_WIDGET.on_play()
         shared.HARDWARE_WIDGET.on_play()
@@ -264,6 +265,7 @@ class TransportWidget(AbstractTransportWidget):
     def on_stop(self):
         constants.DAW_PROJECT.ipc().en_playback(0)
         shared.PLAYLIST_EDITOR.on_stop()
+        shared.ITEMLIST.on_stop()
         shared.SEQ_WIDGET.on_stop()
         shared.HARDWARE_WIDGET.on_stop()
         shared.AUDIO_SEQ_WIDGET.on_stop()
@@ -386,6 +388,7 @@ class TransportWidget(AbstractTransportWidget):
             )
             return False
         shared.PLAYLIST_EDITOR.on_play()
+        shared.ITEMLIST.on_play()
         shared.SEQ_WIDGET.on_play()
         shared.HARDWARE_WIDGET.on_rec()
         shared.AUDIO_SEQ_WIDGET.on_play()

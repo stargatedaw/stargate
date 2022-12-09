@@ -34,6 +34,7 @@ from .item_editor.notes import (
     PianoRollEditorWidget,
 )
 from .sequencer import (
+    ItemListWidget,
     ItemSequencer,
     PlaylistWidget,
     SequencerWidget,
@@ -149,18 +150,27 @@ class MainWindow(QTabWidget):
         self.midi_hlayout.addWidget(shared.TRACK_PANEL.tracks_widget)
         self.midi_hlayout.addWidget(shared.SEQUENCER)
 
-        shared.PLAYLIST_EDITOR = PlaylistWidget()
         self.file_browser = FileDragDropper(util.is_audio_midi_file)
         self.file_browser.list_file.setToolTip(
             'The files in the current directory.  Drag and drop the files '
             'into the sequencer to create a new sequencer item containing '
             'the file'
         )
+
+        shared.PLAYLIST_EDITOR = PlaylistWidget()
         self.file_browser.folders_tab_widget.insertTab(
             0,
             shared.PLAYLIST_EDITOR.parent,
             _("Songs"),
         )
+
+        shared.ITEMLIST = ItemListWidget()
+        self.file_browser.folders_tab_widget.insertTab(
+            0,
+            shared.ITEMLIST.parent,
+            _("Items"),
+        )
+
         self.file_browser.folders_tab_widget.setCurrentIndex(0)
         self.file_browser.set_multiselect(True)
         self.file_browser.hsplitter.setSizePolicy(
@@ -220,6 +230,7 @@ class MainWindow(QTabWidget):
         MAIN_WINDOW.last_offline_dir = constants.PROJECT.user_folder
         MAIN_WINDOW.notes_tab.load()
         shared.PLAYLIST_EDITOR.open()
+        shared.ITEMLIST.open()
 
     def new_project(self):
         """ Open a new project in the widgets """
@@ -227,6 +238,7 @@ class MainWindow(QTabWidget):
         self.last_offline_dir = constants.PROJECT.user_folder
         self.notes_tab.load()
         shared.PLAYLIST_EDITOR.open()
+        shared.ITEMLIST.open()
 
     def vscrollbar_released(self, a_val=None):
         # Avoid a bug where the bottom track is truncated

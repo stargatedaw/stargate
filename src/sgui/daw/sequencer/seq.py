@@ -614,13 +614,16 @@ class ItemSequencer(QGraphicsView):
         return False
 
     def sceneDropEvent(self, a_event):
-        LOG.info(
-            f'sceneDropEvent: {shared.AUDIO_ITEMS_TO_DROP} '
-            f'{shared.MIDI_FILES_TO_DROP}'
-        )
+        LOG.info([
+            shared.AUDIO_ITEMS_TO_DROP,
+            shared.MIDI_FILES_TO_DROP,
+            shared.ITEM_TO_DROP,
+        ])
         f_pos = a_event.scenePos()
         if shared.AUDIO_ITEMS_TO_DROP:
-            self.add_items(f_pos, shared.AUDIO_ITEMS_TO_DROP)
+            self.add_audio_items(f_pos, shared.AUDIO_ITEMS_TO_DROP)
+        elif shared.ITEM_TO_DROP:
+            self.add_existing_item(a_event, shared.ITEM_TO_DROP._uid)
         elif shared.MIDI_FILES_TO_DROP:
             def _finish(multi):
                 f_midi_path = shared.MIDI_FILES_TO_DROP[0]
@@ -658,9 +661,7 @@ class ItemSequencer(QGraphicsView):
             action.triggered.connect(_finish)
             menu.exec(QCursor.pos())
             LOG.info('menu.exec()')
-
-        shared.AUDIO_ITEMS_TO_DROP.clear()
-        shared.MIDI_FILES_TO_DROP.clear()
+        shared.clear_seq_drop()
 
     def quantize(self, a_beat):
         if _shared.SEQ_QUANTIZE:
@@ -682,7 +683,30 @@ class ItemSequencer(QGraphicsView):
 
         return f_beat_frac, f_lane_num
 
-    def add_items(self, a_pos, a_item_list, a_single_item=None):
+    def add_existing_item(self, event, uid):
+        if self.check_running():
+            return
+        beat, track = self.pos_to_beat_and_track(event.scenePos())
+        item = constants.DAW_PROJECT.get_item_by_uid(uid)
+        refs = {x for x in shared.CURRENT_SEQUENCE.items if x.item_uid == uid}
+        if refs:
+            length = max(x.length_beats for x in refs)
+        else:
+            length = item.get_length(
+                shared.CURRENT_SEQUENCE.get_tempo_at_pos(beat),
+            )
+            length = round(length + 0.49),
+        item_ref = sequencer_item(track, beat, length, uid)
+        shared.CURRENT_SEQUENCE.add_item_ref_by_uid(item_ref)
+        #item_lib.save_item_by_uid(uid, item)
+        constants.DAW_PROJECT.save_sequence(
+            shared.CURRENT_SEQUENCE,
+            a_notify=True,
+        )
+        constants.DAW_PROJECT.commit("Added sequencer item")
+        shared.SEQ_WIDGET.open_sequence()
+
+    def add_audio_items(self, a_pos, a_item_list, a_single_item=None):
         if self.check_running():
             return
 
@@ -692,11 +716,11 @@ class ItemSequencer(QGraphicsView):
                 multi_action = menu.addAction(
                     "Add each file to it's own track")
                 multi_action.triggered.connect(
-                    lambda : self.add_items(a_pos, a_item_list, False))
+                    lambda : self.add_audio_items(a_pos, a_item_list, False))
                 single_action = menu.addAction(
                     "Add all files to one item on one track")
                 single_action.triggered.connect(
-                    lambda : self.add_items(a_pos, a_item_list, True))
+                    lambda : self.add_audio_items(a_pos, a_item_list, True))
                 menu.exec(QCursor.pos())
                 return
             else:
@@ -748,8 +772,11 @@ class ItemSequencer(QGraphicsView):
                 f_length = f_graph.length_in_seconds / f_seconds_per_beat
                 if a_single_item:
                     f_item = DawAudioItem(
-                        f_uid, a_start_bar=0, a_start_beat=0.0,
-                        a_lane_num=lane_num)
+                        f_uid,
+                        a_start_bar=0,
+                        a_start_beat=0.0,
+                        a_lane_num=lane_num,
+                    )
                     lane_num += 1
                     f_items.add_item(f_index, f_item)
                     if f_length > f_item_ref.length_beats:
@@ -778,7 +805,10 @@ class ItemSequencer(QGraphicsView):
             shared.CURRENT_SEQUENCE.add_item_ref_by_uid(f_item_ref)
             item_lib.save_item_by_uid(f_item_uid, f_items)
 
-        constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE, a_notify=not f_restart)
+        constants.DAW_PROJECT.save_sequence(
+            shared.CURRENT_SEQUENCE,
+            a_notify=not f_restart,
+        )
         constants.DAW_PROJECT.commit("Added audio items")
         shared.SEQ_WIDGET.open_sequence()
         self.last_open_dir = os.path.dirname(f_file_name_str)

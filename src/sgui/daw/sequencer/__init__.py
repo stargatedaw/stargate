@@ -10,6 +10,7 @@ from sgui.sgqt import *
 from . import _shared
 from .atm_item import SeqAtmItem
 from .item import SequencerItem
+from .itemlist import ItemListWidget
 from .playlist import PlaylistWidget
 from .seq import ItemSequencer
 from .track import SeqTrack, TrackPanel

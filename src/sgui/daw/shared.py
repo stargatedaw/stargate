@@ -20,6 +20,13 @@ from sgui.daw.lib import item as item_lib
 
 AUDIO_ITEMS_TO_DROP = []
 MIDI_FILES_TO_DROP = []
+ITEM_TO_DROP = None
+
+def clear_seq_drop():
+    global ITEM_TO_DROP
+    ITEM_TO_DROP = None
+    AUDIO_ITEMS_TO_DROP.clear()
+    MIDI_FILES_TO_DROP.clear()
 
 AUDIO_ITEM_HANDLE_HEIGHT = 12.0
 AUDIO_ITEM_HANDLE_SIZE = 6.25
@@ -115,13 +122,13 @@ PB_EDITOR = None
 PIANO_ROLL_EDITOR = None
 PIANO_ROLL_EDITOR_WIDGET = None
 PLAYLIST_EDITOR = None
+ITEMLIST = None
 PLUGIN_RACK = None
 ROUTING_GRAPH_WIDGET = None
 SEQUENCER = None
 SEQ_WIDGET = None
 TRACK_PANEL = None
 TRANSPORT = None
-
 
 def get_current_sequence_length():
     return CURRENT_SEQUENCE.get_length() if CURRENT_SEQUENCE else 32
