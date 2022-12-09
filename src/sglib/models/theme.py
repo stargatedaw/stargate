@@ -218,6 +218,7 @@ class DawColors:
         note_vel_min_color="#199ef8",
         note_selected_color="#cccccc",
         playback_cursor="#ff0000",
+        drag_drop_silhouette="#7878ff",
     ):
         self.seq_antialiasing = type_assert(
             seq_antialiasing,
@@ -385,6 +386,10 @@ class DawColors:
         )
         self.playback_cursor = type_assert(
             playback_cursor,
+            str,
+        )
+        self.drag_drop_silhouette = type_assert(
+            drag_drop_silhouette,
             str,
         )
 

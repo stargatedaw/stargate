@@ -1,6 +1,9 @@
 from sglib import constants
+from sglib.math import clip_value
 from sglib.lib.util import pi_path, ITEM_SNAP_DIVISORS
 from sglib.log import LOG
+from sgui import shared as glbl_shared
+from sgui.daw import shared
 from sgui.sgqt import *
 import os
 
@@ -48,7 +51,7 @@ def global_get_audio_file_from_clipboard():
     f_path = f_clipboard.text()
     if not f_path:
         QMessageBox.warning(
-            shared.MAIN_WINDOW,
+            glbl_shared.MAIN_WINDOW,
             _("Error"),
             _("No text in the system clipboard"),
         )
@@ -60,7 +63,7 @@ def global_get_audio_file_from_clipboard():
         else:
             f_path = f_path[:100]
             QMessageBox.warning(
-                shared.MAIN_WINDOW,
+                glbl_shared.MAIN_WINDOW,
                 _("Error"),
                 _("{} is not a valid file").format(f_path),
             )
@@ -88,14 +91,12 @@ def set_audio_snap(a_val):
         AUDIO_LINES_ENABLED = False
 
 def quantize_all(a_x):
-    f_x = a_x
     if AUDIO_QUANTIZE:
-        f_x = round(f_x / AUDIO_QUANTIZE_PX) * AUDIO_QUANTIZE_PX
+        f_x = round(a_x / AUDIO_QUANTIZE_PX) * AUDIO_QUANTIZE_PX
     return f_x
 
 def quantize(a_x):
-    f_x = a_x
-    f_x = quantize_all(f_x)
+    f_x = quantize_all(a_x)
     if AUDIO_QUANTIZE and f_x < AUDIO_QUANTIZE_PX:
         f_x = AUDIO_QUANTIZE_PX
     return f_x
@@ -106,3 +107,8 @@ def quantize_start(a_x, _min):
         f_x -= AUDIO_QUANTIZE_PX
     return f_x
 
+def y_to_lane(y):
+    lane = int(
+        (y - shared.AUDIO_RULER_HEIGHT) / shared.AUDIO_ITEM_HEIGHT
+    )
+    return clip_value(lane, 0, shared.AUDIO_ITEM_MAX_LANE)

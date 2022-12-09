@@ -94,6 +94,8 @@ daw:
   seq_tempo_marker: "{{ palette.white }}"
   # Horizontal track lines in the sequencer
   seq_track_line: "#090909"
+  # The silhouette when dragging an item onto a view
+  drag_drop_silhouette: "#6212a2"
   # Default track colors, also applies to audio item editor
   track_default_colors:
     - "#559549"

@@ -88,6 +88,28 @@ def paif_rel_callback(a_port, a_val):
             shared.CURRENT_ITEM,
         )
 
+class Silhouette(QGraphicsRectItem):
+    def __init__(self):
+        super().__init__()
+        self.setRect(
+            QtCore.QRectF(
+                0.0,
+                0.0,
+                float(_shared.AUDIO_QUANTIZE_PX),
+                float(shared.AUDIO_ITEM_HEIGHT),
+            ),
+        )
+        self.setBrush(
+            QColor(theme.SYSTEM_COLORS.daw.drag_drop_silhouette),
+        )
+
+    def quantize(self, pos):
+        lane = _shared.y_to_lane(pos.y())
+        self.setPos(
+            _shared.quantize(pos.x()),
+            (lane * shared.AUDIO_ITEM_HEIGHT) + shared.AUDIO_RULER_HEIGHT,
+        )
+
 class AudioItemSeq(AbstractItemEditor):
     """ This is the QGraphicsView and QGraphicsScene for editing audio
         items within a SequencerItem on the "Items" tab.
@@ -340,19 +362,27 @@ class AudioItemSeq(AbstractItemEditor):
     def sceneDragEnterEvent(self, a_event):
         a_event.setAccepted(True)
         self.last_drag_item = None
+        self.silhouette = Silhouette()
+        self.scene.addItem(self.silhouette)
+        self.silhouette.quantize(a_event.scenePos())
 
     def sceneDragMoveEvent(self, a_event):
+        self.silhouette.quantize(a_event.scenePos())
         a_event.setDropAction(QtCore.Qt.DropAction.CopyAction)
         item = self.get_item_at_scene_pos(a_event.scenePos())
         if item and item != self.last_drag_item:
+            self.silhouette.hide()
             item.set_brush(override=True)
             if self.last_drag_item:
                 self.last_drag_item.set_brush()
             self.last_drag_item = item
-        elif not item and self.last_drag_item:
-            self.last_drag_item.set_brush()
+        elif not item:
+            self.silhouette.show()
+            if self.last_drag_item:
+                self.last_drag_item.set_brush()
 
     def sceneDragLeaveEvent(self, a_event):
+        self.silhouette.hide()
         if self.last_drag_item:
             self.last_drag_item.set_brush()
         QGraphicsScene.dragLeaveEvent(self.scene, a_event)
@@ -367,6 +397,7 @@ class AudioItemSeq(AbstractItemEditor):
         return False
 
     def sceneDropEvent(self, a_event):
+        self.silhouette.hide()
         if not shared.ITEM_EDITOR.enabled:
             shared.ITEM_EDITOR.show_not_enabled_warning()
             return
@@ -399,10 +430,7 @@ class AudioItemSeq(AbstractItemEditor):
                 f_beat_frac * _shared.AUDIO_QUANTIZE_AMT
             ) / _shared.AUDIO_QUANTIZE_AMT
 
-        f_lane_num = int(
-            (f_y - shared.AUDIO_RULER_HEIGHT) / shared.AUDIO_ITEM_HEIGHT
-        )
-        f_lane_num = clip_value(f_lane_num, 0, shared.AUDIO_ITEM_MAX_LANE)
+        f_lane_num = _shared.y_to_lane(f_y)
 
         f_items = shared.CURRENT_ITEM
 
