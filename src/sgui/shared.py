@@ -61,7 +61,10 @@ def clean_audio_pool():
     LOG.info(f"clean_audio_pool: freeing {f_result}'")
     if f_result:
         f_msg = "|".join(str(x) for x in sorted(f_result))
-        constants.IPC.clean_audio_pool(f_msg)
+        # Disable for now, the item list breaks this by allowing things
+        # to be brought back after the last item is deleted.
+        # TODO: Implement a way to reload items only if not loaded
+        # constants.IPC.clean_audio_pool(f_msg)
 
     #if util.USE_HUGEPAGES:
     #    for f_uid in (x for x in f_result if x not in MEMORY_ENTROPY_UIDS):
