@@ -43,6 +43,30 @@ def sequence_editor_set_delete_mode(a_enabled):
         shared.SEQUENCER.selected_item_strings = set()
         QApplication.restoreOverrideCursor()
 
+class Silhouette(QGraphicsRectItem):
+    def __init__(self):
+        super().__init__()
+        self.setRect(
+            QtCore.QRectF(
+                0.0,
+                0.0,
+                float(_shared.SEQUENCER_PX_PER_BEAT),
+                float(shared.SEQUENCE_EDITOR_TRACK_HEIGHT),
+            ),
+        )
+        self.setBrush(
+            QColor(theme.SYSTEM_COLORS.daw.drag_drop_silhouette),
+        )
+
+    def quantize(self, pos):
+        beat, track = _shared.pos_to_beat_and_track(pos)
+        self.setPos(
+            beat * _shared.SEQUENCER_PX_PER_BEAT,
+            (
+                track * shared.SEQUENCE_EDITOR_TRACK_HEIGHT
+            ) + _shared.SEQUENCE_EDITOR_HEADER_HEIGHT,
+        )
+
 class ItemSequencer(QGraphicsView):
     """ This is the sequencer QGraphicsView and QGraphicsScene on
         the "Sequencer" tab
@@ -107,6 +131,7 @@ class ItemSequencer(QGraphicsView):
         self.scene.dropEvent = self.sceneDropEvent
         self.scene.dragEnterEvent = self.sceneDragEnterEvent
         self.scene.dragMoveEvent = self.sceneDragMoveEvent
+        self.scene.dragLeaveEvent = self.sceneDragLeaveEvent
         self.scene.contextMenuEvent = self.sceneContextMenuEvent
         self.scene.setBackgroundBrush(
             QColor(
@@ -300,7 +325,7 @@ class ItemSequencer(QGraphicsView):
                     self.current_coord[0])
                 if f_port is not None:
                     f_track, f_beat, f_val = self.current_coord
-                    f_beat = self.quantize(f_beat)
+                    f_beat = _shared.quantize(f_beat)
                     f_point = DawAtmPoint(
                         f_beat, f_port, f_val,
                         *shared.TRACK_PANEL.get_atm_params(f_track))
@@ -605,9 +630,16 @@ class ItemSequencer(QGraphicsView):
 
     def sceneDragEnterEvent(self, a_event):
         a_event.setAccepted(True)
+        self.silhouette = Silhouette()
+        self.scene.addItem(self.silhouette)
+        self.silhouette.quantize(a_event.scenePos())
 
     def sceneDragMoveEvent(self, a_event):
+        self.silhouette.quantize(a_event.scenePos())
         a_event.setDropAction(QtCore.Qt.DropAction.CopyAction)
+
+    def sceneDragLeaveEvent(self, a_event):
+        self.silhouette.hide()
 
     def check_running(self):
         if glbl_shared.IS_PLAYING:
@@ -615,6 +647,7 @@ class ItemSequencer(QGraphicsView):
         return False
 
     def sceneDropEvent(self, a_event):
+        self.silhouette.hide()
         LOG.info([
             shared.AUDIO_ITEMS_TO_DROP,
             shared.MIDI_FILES_TO_DROP,
@@ -628,7 +661,7 @@ class ItemSequencer(QGraphicsView):
         elif shared.MIDI_FILES_TO_DROP:
             def _finish(multi):
                 f_midi_path = shared.MIDI_FILES_TO_DROP[0]
-                f_beat, f_lane_num = self.pos_to_beat_and_track(f_pos)
+                f_beat, f_lane_num = _shared.pos_to_beat_and_track(f_pos)
                 f_midi = DawMidiFile(f_midi_path, constants.DAW_PROJECT)
                 if multi:
                     f_midi.multi_item()
@@ -664,30 +697,10 @@ class ItemSequencer(QGraphicsView):
             LOG.info('menu.exec()')
         shared.clear_seq_drop()
 
-    def quantize(self, a_beat):
-        if _shared.SEQ_QUANTIZE:
-            return int(
-                a_beat * _shared.SEQ_QUANTIZE_AMT
-            ) / _shared.SEQ_QUANTIZE_AMT
-        else:
-            return a_beat
-
-    def pos_to_beat_and_track(self, a_pos):
-        f_beat_frac = (a_pos.x() / _shared.SEQUENCER_PX_PER_BEAT)
-        f_beat_frac = clip_min(f_beat_frac, 0.0)
-        f_beat_frac = self.quantize(f_beat_frac)
-
-        f_lane_num = int((a_pos.y() - _shared.SEQUENCE_EDITOR_HEADER_HEIGHT) /
-            shared.SEQUENCE_EDITOR_TRACK_HEIGHT)
-        f_lane_num = clip_value(
-            f_lane_num, 0, TRACK_COUNT_ALL - 1)
-
-        return f_beat_frac, f_lane_num
-
     def add_existing_item(self, event, uid):
         if self.check_running():
             return
-        beat, track = self.pos_to_beat_and_track(event.scenePos())
+        beat, track = _shared.pos_to_beat_and_track(event.scenePos())
         item = constants.DAW_PROJECT.get_item_by_uid(uid)
         refs = {x for x in shared.CURRENT_SEQUENCE.items if x.item_uid == uid}
         if refs:
@@ -696,7 +709,9 @@ class ItemSequencer(QGraphicsView):
             length = item.get_length(
                 shared.CURRENT_SEQUENCE.get_tempo_at_pos(beat),
             )
-            length = round(length + 0.49),
+            length = round(length + 0.49)
+        if length < 1.0:
+            length = 4.0
         item_ref = sequencer_item(track, beat, length, uid)
         shared.CURRENT_SEQUENCE.add_item_ref_by_uid(item_ref)
         #item_lib.save_item_by_uid(uid, item)
@@ -729,7 +744,7 @@ class ItemSequencer(QGraphicsView):
 
         glbl_shared.APP.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
 
-        f_beat_frac, f_track_num = self.pos_to_beat_and_track(a_pos)
+        f_beat_frac, f_track_num = _shared.pos_to_beat_and_track(a_pos)
 
         f_seconds_per_beat = (60.0 /
             shared.CURRENT_SEQUENCE.get_tempo_at_pos(f_beat_frac))

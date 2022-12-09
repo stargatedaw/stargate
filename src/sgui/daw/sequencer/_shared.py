@@ -5,6 +5,7 @@ from sgui.daw import shared
 from sglib.models.daw import *
 from sglib.lib.translate import _
 from sglib.lib import util
+from sglib.math import clip_min, clip_value
 from sgui.sgqt import *
 
 
@@ -43,6 +44,27 @@ SEQ_LINES_ENABLED = False
 SEQ_SNAP_RANGE = 8
 
 SEQUENCE_EDITOR_DELETE_MODE = False
+
+def pos_to_beat_and_track(a_pos):
+    f_beat_frac = (a_pos.x() / SEQUENCER_PX_PER_BEAT)
+    f_beat_frac = clip_min(f_beat_frac, 0.0)
+    f_beat_frac = quantize(f_beat_frac)
+
+    f_lane_num = int((a_pos.y() - SEQUENCE_EDITOR_HEADER_HEIGHT) /
+        shared.SEQUENCE_EDITOR_TRACK_HEIGHT)
+    f_lane_num = clip_value(
+        f_lane_num,
+        0,
+        TRACK_COUNT_ALL - 1,
+    )
+
+    return f_beat_frac, f_lane_num
+
+def quantize(a_beat):
+    if SEQ_QUANTIZE:
+        return int(a_beat * SEQ_QUANTIZE_AMT) / SEQ_QUANTIZE_AMT
+    else:
+        return a_beat
 
 def set_seq_snap(a_val=None):
     global \
