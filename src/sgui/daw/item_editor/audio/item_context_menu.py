@@ -186,9 +186,9 @@ def show(current_item):
     f_volume_action = QAction(_("Item Volume..."), f_properties_menu)
     f_properties_menu.addAction(f_volume_action)
     f_volume_action.setToolTip(
-        'Change the volume of the audio item.  You can also use '
+        'Change the volume of the audio item.  You can use '
         f'{util.KEY_CTRL}+{util.KEY_ALT}+drag '
-        'up and down to change volume of one or more audio items, and '
+        'to change volume of one or more audio items, and '
         f'{util.KEY_ALT}+SHIFT+drag '
         'to change for all instances of the file in the entire project'
     )

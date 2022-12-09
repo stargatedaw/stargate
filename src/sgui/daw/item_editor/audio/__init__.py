@@ -96,7 +96,7 @@ class Silhouette(QGraphicsRectItem):
                 0.0,
                 0.0,
                 float(_shared.AUDIO_QUANTIZE_PX),
-                float(shared.AUDIO_ITEM_HEIGHT),
+                float(_shared.AUDIO_ITEM_HEIGHT),
             ),
         )
         self.setBrush(
@@ -107,7 +107,7 @@ class Silhouette(QGraphicsRectItem):
         lane = _shared.y_to_lane(pos.y())
         self.setPos(
             _shared.quantize(pos.x()),
-            (lane * shared.AUDIO_ITEM_HEIGHT) + shared.AUDIO_RULER_HEIGHT,
+            (lane * _shared.AUDIO_ITEM_HEIGHT) + _shared.AUDIO_RULER_HEIGHT,
         )
 
 class AudioItemSeq(AbstractItemEditor):
@@ -515,12 +515,12 @@ class AudioItemSeq(AbstractItemEditor):
     def draw_header(self):
         f_sequence_length = shared.CURRENT_ITEM_LEN
         f_size = _shared.AUDIO_PX_PER_BEAT * f_sequence_length
-        self.total_height = (shared.AUDIO_ITEM_LANE_COUNT *
-            (shared.AUDIO_ITEM_HEIGHT)) + shared.AUDIO_RULER_HEIGHT
+        self.total_height = (_shared.AUDIO_ITEM_LANE_COUNT *
+            (_shared.AUDIO_ITEM_HEIGHT)) + _shared.AUDIO_RULER_HEIGHT
         AbstractItemEditor.draw_header(
             self,
             f_size,
-            shared.AUDIO_RULER_HEIGHT,
+            _shared.AUDIO_RULER_HEIGHT,
         )
         self.header.setZValue(1500.0)
         self.scene.addItem(self.header)
@@ -532,7 +532,7 @@ class AudioItemSeq(AbstractItemEditor):
                 f_start_x,
                 0.0,
                 f_start_x,
-                shared.AUDIO_RULER_HEIGHT,
+                _shared.AUDIO_RULER_HEIGHT,
                 self.header,
             )
             start_pen = QPen(
@@ -546,7 +546,7 @@ class AudioItemSeq(AbstractItemEditor):
                 f_end_x,
                 0.0,
                 f_end_x,
-                shared.AUDIO_RULER_HEIGHT,
+                _shared.AUDIO_RULER_HEIGHT,
                 self.header,
             )
             end_pen = QPen(
@@ -596,7 +596,7 @@ class AudioItemSeq(AbstractItemEditor):
                         f_sub_x = i3 + (_shared.AUDIO_QUANTIZE_PX * f_i4)
                         f_line = self.scene.addLine(
                             f_sub_x,
-                            shared.AUDIO_RULER_HEIGHT,
+                            _shared.AUDIO_RULER_HEIGHT,
                             f_sub_x,
                             self.total_height,
                             f_16th_pen,
@@ -611,21 +611,21 @@ class AudioItemSeq(AbstractItemEditor):
 #                        for f_i4 in range(1, _shared.AUDIO_SNAP_RANGE):
 #                            f_sub_x = f_beat_x + (_shared.AUDIO_QUANTIZE_PX * f_i4)
 #                            f_line = self.scene.addLine(
-#                                f_sub_x, shared.AUDIO_RULER_HEIGHT,
+#                                f_sub_x, _shared.AUDIO_RULER_HEIGHT,
 #                                f_sub_x, self.total_height, f_16th_pen)
 #                            self.beat_line_list.append(f_line)
                 i3 += _shared.AUDIO_PX_PER_BEAT
         self.scene.addLine(
             i3,
-            shared.AUDIO_RULER_HEIGHT,
+            _shared.AUDIO_RULER_HEIGHT,
             i3,
             self.total_height,
             f_reg_pen,
         )
-        for i2 in range(shared.AUDIO_ITEM_LANE_COUNT):
+        for i2 in range(_shared.AUDIO_ITEM_LANE_COUNT):
             f_y = (
-                shared.AUDIO_ITEM_HEIGHT * (i2 + 1)
-            ) + shared.AUDIO_RULER_HEIGHT
+                _shared.AUDIO_ITEM_HEIGHT * (i2 + 1)
+            ) + _shared.AUDIO_RULER_HEIGHT
             self.scene.addLine(0, f_y, f_size, f_y, track_pen)
         self.check_line_count()
         self.set_header_y_pos()
@@ -1043,11 +1043,11 @@ def set_audio_seq_zoom(a_horizontal, a_vertical):
     )
     shared.AUDIO_SEQ.px_per_beat = _shared.AUDIO_PX_PER_BEAT
     _shared.set_audio_snap(_shared.AUDIO_SNAP_VAL)
-    shared.AUDIO_ITEM_HEIGHT = 75.0 * a_vertical
+    _shared.AUDIO_ITEM_HEIGHT = 75.0 * a_vertical
     shared.AUDIO_SEQ.scene.setSceneRect(
         0.0,
         0.0,
         float(_shared.AUDIO_PX_PER_BEAT * f_sequence_length),
-        float(shared.AUDIO_ITEM_HEIGHT * shared.AUDIO_ITEM_MAX_LANE),
+        float(_shared.AUDIO_ITEM_HEIGHT * _shared.AUDIO_ITEM_MAX_LANE),
     )
 

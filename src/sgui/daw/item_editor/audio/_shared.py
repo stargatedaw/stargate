@@ -3,7 +3,6 @@ from sglib.math import clip_value
 from sglib.lib.util import pi_path, ITEM_SNAP_DIVISORS
 from sglib.log import LOG
 from sgui import shared as glbl_shared
-from sgui.daw import shared
 from sgui.sgqt import *
 import os
 
@@ -14,6 +13,12 @@ AUDIO_LINES_ENABLED = True
 AUDIO_SNAP_RANGE = 8
 AUDIO_SNAP_VAL = 2
 AUDIO_PX_PER_BEAT = 100.0
+
+AUDIO_RULER_HEIGHT = 20.0
+AUDIO_ITEM_HEIGHT = 75.0
+
+AUDIO_ITEM_MAX_LANE = 23
+AUDIO_ITEM_LANE_COUNT = 24
 
 PAINTER_PATH_CACHE = {}
 
@@ -109,6 +114,6 @@ def quantize_start(a_x, _min):
 
 def y_to_lane(y):
     lane = int(
-        (y - shared.AUDIO_RULER_HEIGHT) / shared.AUDIO_ITEM_HEIGHT
+        (y - AUDIO_RULER_HEIGHT) / AUDIO_ITEM_HEIGHT
     )
-    return clip_value(lane, 0, shared.AUDIO_ITEM_MAX_LANE)
+    return clip_value(lane, 0, AUDIO_ITEM_MAX_LANE)

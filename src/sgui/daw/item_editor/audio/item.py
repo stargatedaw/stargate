@@ -87,7 +87,7 @@ class AudioSeqItem(QGraphicsRectItem):
             )
             _shared.PAINTER_PATH_CACHE[f_uid] = self.painter_paths
 
-        self.y_inc = shared.AUDIO_ITEM_HEIGHT / len(self.painter_paths)
+        self.y_inc = _shared.AUDIO_ITEM_HEIGHT / len(self.painter_paths)
         f_y_pos = 0.0
         self.path_items = []
         for f_painter_path in self.painter_paths:
@@ -121,7 +121,7 @@ class AudioSeqItem(QGraphicsRectItem):
             shared.AUDIO_ITEM_HANDLE_HEIGHT,
             0.0,
             (
-                shared.AUDIO_ITEM_HEIGHT * -1.0
+                _shared.AUDIO_ITEM_HEIGHT * -1.0
             ) + shared.AUDIO_ITEM_HANDLE_HEIGHT,
             self.start_handle,
         )
@@ -133,7 +133,7 @@ class AudioSeqItem(QGraphicsRectItem):
         self.length_handle_line = QGraphicsLineItem(
             shared.AUDIO_ITEM_HANDLE_SIZE, shared.AUDIO_ITEM_HANDLE_HEIGHT,
             shared.AUDIO_ITEM_HANDLE_SIZE,
-            (shared.AUDIO_ITEM_HEIGHT * -1.0) + shared.AUDIO_ITEM_HANDLE_HEIGHT,
+            (_shared.AUDIO_ITEM_HEIGHT * -1.0) + shared.AUDIO_ITEM_HANDLE_HEIGHT,
             self.length_handle)
 
         self.fade_in_handle = AudioSeqItemHandle(parent=self)
@@ -165,10 +165,10 @@ class AudioSeqItem(QGraphicsRectItem):
             shared.AUDIO_ITEM_HANDLE_SIZE,
             (
                 shared.AUDIO_ITEM_HANDLE_HEIGHT * 0.5
-            ) - (shared.AUDIO_ITEM_HEIGHT * 0.5),
+            ) - (_shared.AUDIO_ITEM_HEIGHT * 0.5),
             shared.AUDIO_ITEM_HANDLE_SIZE,
             (
-                shared.AUDIO_ITEM_HEIGHT * 0.5
+                _shared.AUDIO_ITEM_HEIGHT * 0.5
             ) + (shared.AUDIO_ITEM_HANDLE_HEIGHT * 0.5),
             self.stretch_handle,
         )
@@ -178,7 +178,7 @@ class AudioSeqItem(QGraphicsRectItem):
             0.0,
             0.0,
             0.0,
-            shared.AUDIO_ITEM_HEIGHT,
+            _shared.AUDIO_ITEM_HEIGHT,
             self,
         )
         self.split_line.mapFromParent(0.0, 0.0)
@@ -311,7 +311,7 @@ class AudioSeqItem(QGraphicsRectItem):
             0.0,
             0.0,
             float(f_length_seconds),
-            float(shared.AUDIO_ITEM_HEIGHT),
+            float(_shared.AUDIO_ITEM_HEIGHT),
         )
         self.length_px_start = (self.audio_item.sample_start *
             0.001 * f_length_seconds)
@@ -320,8 +320,8 @@ class AudioSeqItem(QGraphicsRectItem):
             0.001 * f_length_seconds)
         f_length = self.length_px_minus_end - self.length_px_start
 
-        f_track_num = (shared.AUDIO_RULER_HEIGHT +
-            shared.AUDIO_ITEM_HEIGHT * self.audio_item.lane_num)
+        f_track_num = (_shared.AUDIO_RULER_HEIGHT +
+            _shared.AUDIO_ITEM_HEIGHT * self.audio_item.lane_num)
 
         f_fade_in = self.audio_item.fade_in * 0.001
         f_fade_out = self.audio_item.fade_out * 0.001
@@ -329,7 +329,7 @@ class AudioSeqItem(QGraphicsRectItem):
             0.0,
             0.0,
             float(f_length),
-            float(shared.AUDIO_ITEM_HEIGHT),
+            float(_shared.AUDIO_ITEM_HEIGHT),
         )
         f_fade_in_handle_pos = (f_length * f_fade_in)
         f_fade_in_handle_pos = clip_value(
@@ -371,7 +371,7 @@ class AudioSeqItem(QGraphicsRectItem):
             # Kludge to fix the problem, there must be a better way...
             if f_channels == 1:
                 f_y_offset = \
-                    (1.0 - self.vol_linear) * (shared.AUDIO_ITEM_HEIGHT * 0.5)
+                    (1.0 - self.vol_linear) * (_shared.AUDIO_ITEM_HEIGHT * 0.5)
             else:
                 f_y_offset = (1.0 - self.vol_linear) * self.y_inc * f_i_inc
             for f_path_item in self.path_items:
@@ -399,10 +399,10 @@ class AudioSeqItem(QGraphicsRectItem):
 
         self.length_handle.setPos(
             f_length - shared.AUDIO_ITEM_HANDLE_SIZE,
-            shared.AUDIO_ITEM_HEIGHT - shared.AUDIO_ITEM_HANDLE_HEIGHT)
+            _shared.AUDIO_ITEM_HEIGHT - shared.AUDIO_ITEM_HANDLE_HEIGHT)
         self.start_handle.setPos(
             0.0,
-            shared.AUDIO_ITEM_HEIGHT - shared.AUDIO_ITEM_HANDLE_HEIGHT,
+            _shared.AUDIO_ITEM_HEIGHT - shared.AUDIO_ITEM_HANDLE_HEIGHT,
         )
         if (
             self.audio_item.time_stretch_mode >= 2
@@ -419,7 +419,7 @@ class AudioSeqItem(QGraphicsRectItem):
             self.stretch_handle.setPos(
                 f_length - shared.AUDIO_ITEM_HANDLE_SIZE,
                 (
-                    shared.AUDIO_ITEM_HEIGHT * 0.5
+                    _shared.AUDIO_ITEM_HEIGHT * 0.5
                 ) - (shared.AUDIO_ITEM_HANDLE_HEIGHT * 0.5),
             )
 
@@ -449,7 +449,7 @@ class AudioSeqItem(QGraphicsRectItem):
                 0.0,
                 0.0,
                 float(f_end_px),
-                float(shared.AUDIO_ITEM_HEIGHT),
+                float(_shared.AUDIO_ITEM_HEIGHT),
             )
             self.audio_item.sample_end = \
                 ((self.rect().width() + self.length_px_start) /
@@ -824,10 +824,10 @@ class AudioSeqItem(QGraphicsRectItem):
         super().hoverLeaveEvent(a_event)
 
     def y_pos_to_lane_number(self, a_y_pos):
-        f_lane_num = int((a_y_pos - shared.AUDIO_RULER_HEIGHT) / shared.AUDIO_ITEM_HEIGHT)
+        f_lane_num = int((a_y_pos - _shared.AUDIO_RULER_HEIGHT) / _shared.AUDIO_ITEM_HEIGHT)
         f_lane_num = clip_value(
-            f_lane_num, 0, shared.AUDIO_ITEM_MAX_LANE)
-        f_y_pos = (f_lane_num * shared.AUDIO_ITEM_HEIGHT) + shared.AUDIO_RULER_HEIGHT
+            f_lane_num, 0, _shared.AUDIO_ITEM_MAX_LANE)
+        f_y_pos = (f_lane_num * _shared.AUDIO_ITEM_HEIGHT) + _shared.AUDIO_RULER_HEIGHT
         return f_lane_num, f_y_pos
 
     def lane_number_to_y_pos(self, a_lane_num):
@@ -836,18 +836,18 @@ class AudioSeqItem(QGraphicsRectItem):
             0,
             TRACK_COUNT_ALL,
         )
-        return (a_lane_num * shared.AUDIO_ITEM_HEIGHT) + shared.AUDIO_RULER_HEIGHT
+        return (a_lane_num * _shared.AUDIO_ITEM_HEIGHT) + _shared.AUDIO_RULER_HEIGHT
 
     def update_fade_in_line(self):
         f_pos = self.fade_in_handle.pos()
         self.fade_in_handle_line.setLine(
-            f_pos.x(), 0.0, 0.0, shared.AUDIO_ITEM_HEIGHT)
+            f_pos.x(), 0.0, 0.0, _shared.AUDIO_ITEM_HEIGHT)
 
     def update_fade_out_line(self):
         f_pos = self.fade_out_handle.pos()
         self.fade_out_handle_line.setLine(
             f_pos.x() + shared.AUDIO_ITEM_HANDLE_SIZE, 0.0,
-            self.rect().width(), shared.AUDIO_ITEM_HEIGHT)
+            self.rect().width(), _shared.AUDIO_ITEM_HEIGHT)
 
     def add_vol_line(self, vol):
         self.vol_line = QGraphicsLineItem(
@@ -867,7 +867,7 @@ class AudioSeqItem(QGraphicsRectItem):
 
     def set_vol_line(self, vol):
         f_pos = (float(48 - (vol + 24))
-            * 0.020833333) * shared.AUDIO_ITEM_HEIGHT # 1.0 / 48.0
+            * 0.020833333) * _shared.AUDIO_ITEM_HEIGHT # 1.0 / 48.0
         self.vol_line.setPos(0, f_pos)
         self.label.setText(f"{vol}dB")
 
@@ -885,7 +885,7 @@ class AudioSeqItem(QGraphicsRectItem):
                     f_x -= f_item.quantize_offset
                 f_item.length_handle.setPos(
                     f_x - shared.AUDIO_ITEM_HANDLE_SIZE,
-                    shared.AUDIO_ITEM_HEIGHT - shared.AUDIO_ITEM_HANDLE_HEIGHT,
+                    _shared.AUDIO_ITEM_HEIGHT - shared.AUDIO_ITEM_HANDLE_HEIGHT,
                 )
 
     def _mm_start_resize(self, a_event):
@@ -908,7 +908,7 @@ class AudioSeqItem(QGraphicsRectItem):
                     f_x -= f_item.quantize_offset
                 f_item.start_handle.setPos(
                     f_x,
-                    shared.AUDIO_ITEM_HEIGHT - shared.AUDIO_ITEM_HANDLE_HEIGHT,
+                    _shared.AUDIO_ITEM_HEIGHT - shared.AUDIO_ITEM_HANDLE_HEIGHT,
                 )
 
     def _mm_fade_in(self, a_event):
@@ -958,7 +958,7 @@ class AudioSeqItem(QGraphicsRectItem):
                 f_x -= f_item.quantize_offset
                 f_item.stretch_handle.setPos(
                     f_x - shared.AUDIO_ITEM_HANDLE_SIZE,
-                    (shared.AUDIO_ITEM_HEIGHT * 0.5) -
+                    (_shared.AUDIO_ITEM_HEIGHT * 0.5) -
                     (shared.AUDIO_ITEM_HANDLE_HEIGHT * 0.5),
                 )
 
@@ -1110,7 +1110,7 @@ class AudioSeqItem(QGraphicsRectItem):
                     0.0,
                     0.0,
                     float(f_x),
-                    float(shared.AUDIO_ITEM_HEIGHT),
+                    float(_shared.AUDIO_ITEM_HEIGHT),
                 )
                 f_item.sample_end = (
                     (
@@ -1186,7 +1186,7 @@ class AudioSeqItem(QGraphicsRectItem):
                     0.0,
                     0.0,
                     float(f_x),
-                    float(shared.AUDIO_ITEM_HEIGHT),
+                    float(_shared.AUDIO_ITEM_HEIGHT),
                 )
             elif (
                 self.is_amp_curving
