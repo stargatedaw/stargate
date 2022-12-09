@@ -333,7 +333,7 @@ class ItemEditorWidget:
         if index is None:
             index = self.tab_widget.currentIndex()
         args = {
-            shared.TAB_IE_AUDIO: {"draw": False, "erase": False},
+            shared.TAB_IE_AUDIO: {"draw": False},
             shared.TAB_IE_NOTES: {"split": False},
             shared.TAB_IE_CC: {"erase": False, "split": False},
             shared.TAB_IE_PB: {"erase": False, "split": False},

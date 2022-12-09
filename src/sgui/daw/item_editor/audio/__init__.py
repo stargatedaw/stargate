@@ -95,9 +95,13 @@ class AudioItemSeq(AbstractItemEditor):
     def __init__(self):
         AbstractItemEditor.__init__(self)
         self.reset_line_lists()
+        self.is_erasing = False
         self.h_zoom = 1.0
         self.v_zoom = 1.0
         self.scene = QGraphicsScene(self)
+        self.scene.mousePressEvent = self.sceneMousePressEvent
+        self.scene.mouseMoveEvent = self.sceneMouseMoveEvent
+        self.scene.mouseReleaseEvent = self.sceneMouseReleaseEvent
         self.scene.dropEvent = self.sceneDropEvent
         self.scene.dragEnterEvent = self.sceneDragEnterEvent
         self.scene.dragMoveEvent = self.sceneDragMoveEvent
@@ -282,6 +286,56 @@ class AudioItemSeq(AbstractItemEditor):
             shared.AUDIO_SEQ_WIDGET.papifx_stack.setCurrentIndex(1)
             shared.AUDIO_SEQ_WIDGET.papifx.widget.setDisabled(True)
             shared.AUDIO_SEQ_WIDGET.paifx.widget.setDisabled(True)
+
+    def erase_tool(self, event):
+        item = self.get_item_at_scene_pos(event.scenePos())
+        if item:
+            item.hide()
+            self.items_to_delete.append(item)
+
+    def erase_tool_start(self):
+        self.is_erasing = True
+        self.items_to_delete = []
+        self.setDragMode(QGraphicsView.DragMode.NoDrag)
+        QApplication.setOverrideCursor(
+            QtCore.Qt.CursorShape.ForbiddenCursor,
+        )
+
+    def erase_tool_finish(self):
+        self.is_erasing = False
+        self.setDragMode(
+            QGraphicsView.DragMode.RubberBandDrag,
+        )
+        QApplication.restoreOverrideCursor()
+        if not self.items_to_delete:
+            return
+        items = shared.CURRENT_ITEM
+        paif = shared.CURRENT_ITEM
+        for item in self.items_to_delete:
+            items.remove_item(item.track_num)
+            paif.clear_row_if_exists(item.track_num)
+        item_lib.save_item(shared.CURRENT_ITEM_NAME, shared.CURRENT_ITEM)
+        constants.DAW_PROJECT.commit(_("Delete audio item(s)"))
+        global_open_audio_items(True)
+
+    def sceneMousePressEvent(self, event):
+        if shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
+            self.erase_tool_start()
+            self.erase_tool(event)
+            event.accept()
+        QGraphicsScene.mousePressEvent(self.scene, event)
+
+    def sceneMouseMoveEvent(self, event):
+        if self.is_erasing:
+            self.erase_tool(event)
+            event.accept()
+        QGraphicsScene.mouseMoveEvent(self.scene, event)
+
+    def sceneMouseReleaseEvent(self, event):
+        if self.is_erasing:
+            self.erase_tool_finish()
+            event.accept()
+        QGraphicsScene.mouseReleaseEvent(self.scene, event)
 
     def sceneDragEnterEvent(self, a_event):
         a_event.setAccepted(True)
