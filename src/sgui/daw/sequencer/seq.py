@@ -506,6 +506,7 @@ class ItemSequencer(QGraphicsView):
         self.setUpdatesEnabled(True)
         self.update()
         self.enabled = True
+        shared.ITEMLIST.open()
 
     def open_atm_sequence(self):
         self.atm_paths = {}
