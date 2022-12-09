@@ -132,12 +132,15 @@ void v_svf_set_input_value(
     t_svf_kernel*  a_kernel,
     SGFLT a_input_value
 ){
+    SGFLT oversample_iterator;
+
     a_kernel->filter_input = a_input_value;
 
-    SGFLT oversample_iterator = 0.0f;
-
-    while((oversample_iterator) < 1.0f)
-    {
+    for(
+        oversample_iterator = 0.0f;
+        oversample_iterator < 1.0f;
+        ++oversample_iterator
+    ){
         a_kernel->hp = f_linear_interpolate(
             a_kernel->filter_last_input,
             a_input_value,
@@ -379,15 +382,13 @@ void v_svf_set_res(t_state_variable_filter * a_svf, SGFLT a_db)
 }
 
 void g_svf_init(t_state_variable_filter * f_svf, SGFLT a_sample_rate){
+    int i;
+
     f_svf->sr = a_sample_rate * ((SGFLT)(SVF_OVERSAMPLE_MULTIPLIER));
     f_svf->pi2_div_sr = (PI2 / (f_svf->sr));
 
-    int f_i = 0;
-
-    while(f_i < SVF_MAX_CASCADE)
-    {
-        g_svf_filter_kernel_init(&f_svf->filter_kernels[f_i]);
-        ++f_i;
+    for(i = 0; i < SVF_MAX_CASCADE; ++i){
+        g_svf_filter_kernel_init(&f_svf->filter_kernels[i]);
     }
 
     f_svf->cutoff_note = 60.0f;

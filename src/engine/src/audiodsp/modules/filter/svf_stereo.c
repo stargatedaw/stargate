@@ -447,16 +447,13 @@ void v_svf2_set_res(t_svf2_filter * a_svf, SGFLT a_db){
 }
 
 void g_svf2_init(t_svf2_filter * f_svf, SGFLT a_sample_rate){
+    int i;
     f_svf->sr = a_sample_rate * ((SGFLT)(SVF_OVERSAMPLE_MULTIPLIER));
     f_svf->pi2_div_sr = (PI2 / (f_svf->sr));
 
-    int f_i = 0;
-
-    while(f_i < SVF_MAX_CASCADE)
-    {
-        g_svf2_filter_kernel_init(&f_svf->filter_kernels[f_i][0]);
-        g_svf2_filter_kernel_init(&f_svf->filter_kernels[f_i][1]);
-        ++f_i;
+    for(i = 0; i < SVF_MAX_CASCADE; ++i){
+        g_svf2_filter_kernel_init(&f_svf->filter_kernels[i][0]);
+        g_svf2_filter_kernel_init(&f_svf->filter_kernels[i][1]);
     }
 
     f_svf->cutoff_note = 60.0f;
