@@ -659,6 +659,8 @@ class ItemSequencer(QGraphicsView):
             menu.exec(QCursor.pos())
             LOG.info('menu.exec()')
 
+        shared.AUDIO_ITEMS_TO_DROP.clear()
+        shared.MIDI_FILES_TO_DROP.clear()
 
     def quantize(self, a_beat):
         if _shared.SEQ_QUANTIZE:
