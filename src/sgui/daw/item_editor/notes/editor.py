@@ -341,6 +341,7 @@ class PianoRollEditor(AbstractItemEditor):
             self.hover_restore_cursor_event()
         elif shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
             _shared.piano_roll_set_delete_mode(True)
+            a_event.accept()
             return
         elif (
             a_event.modifiers() == (

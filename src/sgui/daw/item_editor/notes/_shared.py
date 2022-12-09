@@ -15,9 +15,10 @@ PIANO_ROLL_HEADER_HEIGHT = 45
 
 
 def piano_roll_set_delete_mode(a_enabled):
+    global PIANO_ROLL_DELETE_MODE
     if a_enabled:
         shared.PIANO_ROLL_EDITOR.setDragMode(QGraphicsView.DragMode.NoDrag)
-        PIANO_ROLL_DELETED_NOTES = []
+        PIANO_ROLL_DELETED_NOTES.clear()
         PIANO_ROLL_DELETE_MODE = True
         QApplication.setOverrideCursor(
             QtCore.Qt.CursorShape.ForbiddenCursor,
