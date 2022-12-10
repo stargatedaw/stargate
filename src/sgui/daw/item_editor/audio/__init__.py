@@ -105,8 +105,10 @@ class Silhouette(QGraphicsRectItem):
 
     def quantize(self, pos):
         lane = _shared.y_to_lane(pos.y())
+        x = pos.x()
+        quantized = _shared.quantize_all(x, _round=False)
         self.setPos(
-            _shared.quantize(pos.x()),
+            quantized,
             (lane * _shared.AUDIO_ITEM_HEIGHT) + _shared.AUDIO_RULER_HEIGHT,
         )
 
@@ -409,6 +411,7 @@ class AudioItemSeq(AbstractItemEditor):
                 f_x = a_event.scenePos().x()
                 f_y = a_event.scenePos().y()
                 self.add_items(f_x, f_y, shared.AUDIO_ITEMS_TO_DROP)
+        shared.clear_seq_drop()
 
     def get_item_at_scene_pos(self, pos):
         items = [

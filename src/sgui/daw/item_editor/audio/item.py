@@ -901,7 +901,7 @@ class AudioSeqItem(QGraphicsRectItem):
                 )
                 f_x = clip_min(f_x, f_item.min_start)
                 if f_x > f_item.min_start:
-                    f_x = f_item.quantize_start(
+                    f_x = _shared.quantize_start(
                         f_x,
                         f_item.length_handle.pos().x(),
                     )

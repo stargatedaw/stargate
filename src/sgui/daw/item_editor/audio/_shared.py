@@ -95,10 +95,11 @@ def set_audio_snap(a_val):
     elif a_val == 1:
         AUDIO_LINES_ENABLED = False
 
-def quantize_all(a_x):
+def quantize_all(a_x, _round=True):
+    func = round if _round else int
     if AUDIO_QUANTIZE:
-        f_x = round(a_x / AUDIO_QUANTIZE_PX) * AUDIO_QUANTIZE_PX
-    return f_x
+        a_x = func(a_x / AUDIO_QUANTIZE_PX) * AUDIO_QUANTIZE_PX
+    return a_x
 
 def quantize(a_x):
     f_x = quantize_all(a_x)

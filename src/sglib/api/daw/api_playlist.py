@@ -85,4 +85,7 @@ def change_name(orig_name, new_name):
     entry = by_name[orig_name]
     entry.name = new_name
     constants.DAW_PROJECT.save_playlist(playlist)
+    sequence = constants.DAW_PROJECT.get_sequence(entry.seq_uid)
+    sequence.name = new_name
+    constants.DAW_PROJECT.save_sequence(sequence, uid=entry.seq_uid)
 

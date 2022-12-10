@@ -56,6 +56,9 @@ class ItemListWidget:
         self.items_widget.setSelectionMode(
             QAbstractItemView.SelectionMode.SingleSelection,
         )
+        self.items_widget.setEditTriggers(
+            QAbstractItemView.EditTrigger.NoEditTriggers,
+        )
 
         self.suppress_changes = False
 

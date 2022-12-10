@@ -18,6 +18,7 @@ from sgui.sgqt import (
 
 class PlaylistWidget:
     def __init__(self):
+        self._current_sequence = None
         self.suppress_changes = True
         self.parent = QWidget()
         self.parent.setContentsMargins(0, 0, 0, 0)
@@ -37,7 +38,7 @@ class PlaylistWidget:
         )
         self.sequence_widget.setAlternatingRowColors(True)
         self.sequence_widget.setDragDropMode(
-            QAbstractItemView.DragDropMode.DragOnly,
+            QAbstractItemView.DragDropMode.NoDragDrop,
         )
         self.sequence_widget.setSelectionMode(
             QAbstractItemView.SelectionMode.ExtendedSelection,
@@ -103,6 +104,7 @@ class PlaylistWidget:
             name = str(item.text())
             LOG.info(f"Opening sequence {name}")
             sequence_lib.change_sequence(name)
+            self._current_sequence = name
 
     def sequence_changed(self, item):
         """ Currently only catches rename events when the user double clicks
@@ -114,6 +116,7 @@ class PlaylistWidget:
         if new_name and new_name != item.orig_name:
             try:
                 api_playlist.change_name(item.orig_name, new_name)
+                self._current_sequence = new_name
             except FileExistsError:
                 QMessageBox.warning(
                     self.parent,
@@ -175,6 +178,8 @@ class PlaylistWidget:
         """
         self.sequence_widget.clear()
         playlist_names, sequence_names, selected = api_playlist.load()
+        if self._current_sequence:
+            selected = self._current_sequence
         for name in sequence_names:
             item = self.add_sequence_item(name)
             if name == selected:
