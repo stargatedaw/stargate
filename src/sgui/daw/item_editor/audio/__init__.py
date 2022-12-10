@@ -343,7 +343,11 @@ class AudioItemSeq(AbstractItemEditor):
         global_open_audio_items(True)
 
     def sceneMousePressEvent(self, event):
-        if shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
+        if (
+            event.button() == QtCore.Qt.MouseButton.LeftButton
+            and
+            shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE
+        ):
             self.erase_tool_start()
             self.erase_tool(event)
             event.accept()

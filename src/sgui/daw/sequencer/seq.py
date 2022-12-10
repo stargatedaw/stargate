@@ -288,7 +288,8 @@ class ItemSequencer(QGraphicsView):
                 return
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
                 self.deleted_items = []
-                sequence_editor_set_delete_mode(True)
+                if a_event.button() == QtCore.Qt.MouseButton.LeftButton:
+                    sequence_editor_set_delete_mode(True)
             else:
                 f_item = self.get_item(f_pos)
                 if f_item:
@@ -312,7 +313,8 @@ class ItemSequencer(QGraphicsView):
                 self.atm_select_pos_x = f_pos.x()
                 self.atm_select_track = self.current_coord[0]
                 if shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
-                    self.atm_delete = True
+                    if a_event.button() == QtCore.Qt.MouseButton.LeftButton:
+                        self.atm_delete = True
                     return
             elif a_event.button() == QtCore.Qt.MouseButton.RightButton:
                 pass

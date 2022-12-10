@@ -202,8 +202,9 @@ class PianoRollNoteItem(QGraphicsRectItem):
 
     def mousePressEvent(self, a_event):
         if shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
-            _shared.piano_roll_set_delete_mode(True)
-            self.delete_later()
+            if a_event.button() == QtCore.Qt.MouseButton.LeftButton:
+                _shared.piano_roll_set_delete_mode(True)
+                self.delete_later()
             return
         elif a_event.modifiers() == (
             QtCore.Qt.KeyboardModifier.ControlModifier
@@ -280,7 +281,8 @@ class PianoRollNoteItem(QGraphicsRectItem):
 
     def mouseMoveEvent(self, a_event):
         if shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
-            self.delete_later()
+            if a_event.button() == QtCore.Qt.MouseButton.LeftButton:
+                self.delete_later()
             return
         if self.is_velocity_dragging or self.is_velocity_curving:
             f_pos = qt_event_pos(a_event)
