@@ -871,20 +871,29 @@ class AudioSeqItem(QGraphicsRectItem):
         self.vol_line.setPos(0, f_pos)
         self.label.setText(f"{vol}dB")
 
+    def quantize_end(self, event_diff):
+        """ Quantize the item length.  Allows the end to resize to the full
+            length of the item unquantized
+        """
+        x = self.width_orig + event_diff + \
+            self.quantize_offset
+        x = clip_value(
+            x,
+            shared.AUDIO_ITEM_HANDLE_SIZE,
+            self.length_px_minus_start,
+        )
+        if x < self.length_px_minus_start:
+            x = _shared.quantize(x)
+            x -= self.quantize_offset
+        return x
+
     def _mm_resize(self, a_event):
         f_event_diff = self._mm_event_diff(a_event)
-        for f_item in shared.AUDIO_SEQ.audio_items:
-            if f_item.isSelected():
-                f_x = f_item.width_orig + f_event_diff + \
-                    f_item.quantize_offset
-                f_x = clip_value(
-                    f_x, shared.AUDIO_ITEM_HANDLE_SIZE,
-                    f_item.length_px_minus_start)
-                if f_x < f_item.length_px_minus_start:
-                    f_x = _shared.quantize(f_x)
-                    f_x -= f_item.quantize_offset
-                f_item.length_handle.setPos(
-                    f_x - shared.AUDIO_ITEM_HANDLE_SIZE,
+        for item in shared.AUDIO_SEQ.audio_items:
+            if item.isSelected():
+                x = item.quantize_end(f_event_diff)
+                item.length_handle.setPos(
+                    x - shared.AUDIO_ITEM_HANDLE_SIZE,
                     _shared.AUDIO_ITEM_HEIGHT - shared.AUDIO_ITEM_HANDLE_HEIGHT,
                 )
 
@@ -1092,24 +1101,11 @@ class AudioSeqItem(QGraphicsRectItem):
             f_item = f_audio_item.audio_item
             f_pos_x = f_audio_item.pos().x()
             if f_audio_item.is_resizing:
-                f_x = (
-                    f_audio_item.width_orig
-                    +
-                    f_event_diff
-                    +
-                    f_audio_item.quantize_offset
-                )
-                f_x = clip_value(
-                    f_x,
-                    shared.AUDIO_ITEM_HANDLE_SIZE,
-                    f_audio_item.length_px_minus_start,
-                )
-                f_x = _shared.quantize(f_x)
-                f_x -= f_audio_item.quantize_offset
+                x = f_audio_item.quantize_end(f_event_diff)
                 f_audio_item.setRect(
                     0.0,
                     0.0,
-                    float(f_x),
+                    float(x),
                     float(_shared.AUDIO_ITEM_HEIGHT),
                 )
                 f_item.sample_end = (
@@ -1120,7 +1116,11 @@ class AudioSeqItem(QGraphicsRectItem):
                     ) / f_audio_item.length_seconds_orig_px
                 ) * 1000.0
                 f_item.sample_end = clip_value(
-                    f_item.sample_end, 1.0, 1000.0, True)
+                    f_item.sample_end,
+                    1.0,
+                    1000.0,
+                    True,
+                )
             elif f_audio_item.is_start_resizing:
                 f_x = f_audio_item.start_handle.scenePos().x()
                 f_x = clip_min(f_x, 0.0)
