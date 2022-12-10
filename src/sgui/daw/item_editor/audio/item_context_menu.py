@@ -183,10 +183,10 @@ def show(current_item):
             f_action.setCheckable(True)
             f_action.setChecked(True)
 
-    f_volume_action = QAction(_("Item Volume..."), f_properties_menu)
+    f_volume_action = QAction(_("Volume..."), f_properties_menu)
     f_properties_menu.addAction(f_volume_action)
     f_volume_action.setToolTip(
-        'Change the volume of the audio item.  You can use '
+        'Change the volume of the audio item.  You can also use '
         f'{util.KEY_CTRL}+{util.KEY_ALT}+drag '
         'to change volume of one or more audio items, and '
         f'{util.KEY_ALT}+SHIFT+drag '
@@ -450,6 +450,35 @@ def output_mode_triggered(a_action):
 
 def volume_dialog():
     def on_ok():
+        if vol_type_combobox.currentIndex() == 0:
+            update_file_volume()
+        elif vol_type_combobox.currentIndex() == 1:
+            update_item_volume()
+        else:
+            raise IndexError(vol_type_combobox.currentIndex())
+
+    def update_file_volume():
+        f_val = round(f_db_spinbox.value(), 1)
+        audio_pool = constants.PROJECT.get_audio_pool()
+        audio_pool_by_uid = audio_pool.by_uid()
+        ap_entries = set()
+        for uid in {x.audio_item.uid for x in shared.AUDIO_SEQ.get_selected()}:
+            f_save = True
+            entry = audio_pool_by_uid[uid]
+            entry.volume = f_val
+            ap_entries.add(entry)
+        if f_save:
+            constants.PROJECT.save_audio_pool(audio_pool)
+            for entry in ap_entries:
+                constants.IPC.audio_pool_entry_volume(
+                    entry.uid,
+                    entry.volume,
+                )
+            constants.DAW_PROJECT.commit(_("Change file volume"))
+            global_open_audio_items(True)
+        f_window.close()
+
+    def update_item_volume():
         f_val = round(f_db_spinbox.value(), 1)
         for f_item in shared.AUDIO_SEQ.get_selected():
             f_item.audio_item.vol = f_val
@@ -457,7 +486,7 @@ def volume_dialog():
             shared.CURRENT_ITEM_NAME,
             shared.CURRENT_ITEM,
         )
-        constants.DAW_PROJECT.commit(_("Normalize audio items"))
+        constants.DAW_PROJECT.commit(_("Change item volume"))
         global_open_audio_items(True)
         f_window.close()
 
@@ -470,12 +499,13 @@ def volume_dialog():
     f_window.setFixedSize(150, 90)
     f_layout = QVBoxLayout()
     f_window.setLayout(f_layout)
-    f_hlayout = QHBoxLayout()
-    f_layout.addLayout(f_hlayout)
-    f_hlayout.addWidget(QLabel("dB"))
+    gridlayout = QGridLayout()
+    f_layout.addLayout(gridlayout)
+    gridlayout.addWidget(QLabel("dB"), 0, 0)
     f_db_spinbox = QDoubleSpinBox()
+    f_db_spinbox.setMinimumWidth(90)
     f_db_spinbox.setToolTip('The volume of the audio items, in decibels')
-    f_hlayout.addWidget(f_db_spinbox)
+    gridlayout.addWidget(f_db_spinbox, 0, 1)
     f_db_spinbox.setDecimals(1)
     f_db_spinbox.setRange(-24, 24)
     f_vols = {
@@ -486,8 +516,17 @@ def volume_dialog():
         f_db_spinbox.setValue(f_vols.pop())
     else:
         f_db_spinbox.setValue(0.)
-    f_ok_button = QPushButton(_("OK"))
-    f_ok_cancel_layout = QHBoxLayout()
+
+    gridlayout.addWidget(QLabel("Volume Type"), 1, 0)
+    vol_type_combobox = QComboBox()
+    vol_type_combobox.addItems(['File', 'Item'])
+    vol_type_combobox.setToolTip(
+        'File volume changes the volume for all instances of each selected '
+        'audio file in the entire project. Item volume changes it only for '
+        'the selected items'
+    )
+    gridlayout.addWidget(vol_type_combobox, 1, 1)
+
     f_layout.addItem(
         QSpacerItem(
             1,
@@ -496,6 +535,8 @@ def volume_dialog():
             QSizePolicy.Policy.Expanding,
         ),
     )
+    f_ok_button = QPushButton(_("OK"))
+    f_ok_cancel_layout = QHBoxLayout()
     f_layout.addLayout(f_ok_cancel_layout)
     f_ok_cancel_layout.addWidget(f_ok_button)
     f_ok_button.pressed.connect(on_ok)
