@@ -302,6 +302,9 @@ class SgSpinBox(_QLineEdit):
         delta *= self.step_size * steps_mult
         value = self.value_at_press + delta
 
+        # Round to nearest multiple of step size
+        value = self.step_size * round(value / self.step_size)
+
         if self.spinbox_type == SgSpinBox.TYPE_DOUBLE:
             value = round(value, self.decimals)
         self.setValue(value)
