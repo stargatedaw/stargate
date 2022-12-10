@@ -1,4 +1,8 @@
-#!/bin/sh -xe
+#!/bin/bash -xe
+
+SG_LAUNCH_DAEMON="/Library/LaunchDaemons/com.github.stargatedaw.stargate.launchdaemon.plist"
+
+/bin/launchctl unload "${SG_LAUNCH_DAEMON}" || true
 
 if [ -d "/Applications/stargate.app" ]; then
 	echo "Deleting previous DMG install of Stargate DAW"
