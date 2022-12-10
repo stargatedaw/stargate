@@ -762,6 +762,7 @@ class AutomationEditorWidget:
         f_begin_end_layout = QHBoxLayout()
         f_layout.addLayout(f_begin_end_layout, 6, 1)
         f_start_button = QPushButton("<<")
+        f_start_button.setToolTip('Go to the start of the item')
         f_start_button.pressed.connect(goto_start)
         f_begin_end_layout.addWidget(f_start_button)
         f_begin_end_layout.addItem(
