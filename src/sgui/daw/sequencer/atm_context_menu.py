@@ -266,6 +266,14 @@ def lfo_atm():
         return
     f_range = shared.SEQUENCER.get_loop_pos()
     if not f_range:
+        QMessageBox.warning(
+            shared.SEQUENCER,
+            _("Error"),
+            _(
+                "You must set the region start and end by right-clicking on "
+                "the sequencer header"
+            ),
+        )
         return
     f_start_beat, f_end_beat = f_range
     if f_end_beat - f_start_beat > 64:
@@ -287,7 +295,10 @@ def lfo_atm():
         QMessageBox.warning(
             shared.SEQUENCER,
             _("Error"),
-            _("Track has no automation selected"),
+            _(
+                "Track has no automation selected.  Use the menu button on "
+                "the track to select a plugin and control to automate"
+            ),
         )
         return
 

@@ -30,10 +30,9 @@ def lfo_dialog(a_update_callback, a_save_callback):
         save()
 
     f_dialog = QDialog()
-    f_dialog.setWindowModality(QtCore.Qt.WindowModality.NonModal)
-    f_dialog.setMinimumWidth(450)
+    f_dialog.setFixedSize(570, 200)
     f_dialog.retval = False
-    f_dialog.setWindowTitle(_("LFO Generator"))
+    f_dialog.setWindowTitle(_("LFO Tool"))
     f_vlayout = QVBoxLayout(f_dialog)
     f_layout = QGridLayout()
     f_vlayout.addLayout(f_layout)
@@ -90,6 +89,9 @@ def lfo_dialog(a_update_callback, a_save_callback):
     f_end_freq_knob.add_to_grid_layout(f_layout, 10)
 
     f_end_freq_cbox = QCheckBox()
+    f_end_freq_cbox.setToolTip(
+        'If checked, the End Freq. knob is enabled'
+    )
     f_end_freq_cbox.stateChanged.connect(update_and_save)
     f_layout.addWidget(f_end_freq_cbox, 5, 10)
 
@@ -126,6 +128,9 @@ def lfo_dialog(a_update_callback, a_save_callback):
     f_end_amp_knob.add_to_grid_layout(f_layout, 12)
 
     f_end_amp_cbox = QCheckBox()
+    f_end_amp_cbox.setToolTip(
+        'If checked, the End Amp. knob is enabled'
+    )
     f_end_amp_cbox.stateChanged.connect(update_and_save)
     f_layout.addWidget(f_end_amp_cbox, 5, 12)
 
@@ -139,6 +144,10 @@ def lfo_dialog(a_update_callback, a_save_callback):
         127,
         64,
         _shared.KC_INTEGER,
+        tooltip=(
+            'Change the center line at the start of the LFO.  Amplitude '
+            'should be less than full value if using this knob'
+        ),
     )
     f_start_center_knob.add_to_grid_layout(f_layout, 15)
 
@@ -152,10 +161,17 @@ def lfo_dialog(a_update_callback, a_save_callback):
         127,
         64,
         _shared.KC_INTEGER,
+        tooltip=(
+            'Change the center line at the end of the LFO.  Amplitude '
+            'should be less than full value if using this knob'
+        ),
     )
     f_end_center_knob.add_to_grid_layout(f_layout, 16)
 
     f_end_center_cbox = QCheckBox()
+    f_end_center_cbox.setToolTip(
+        'If checked, the End Center knob is enabled'
+    )
     f_end_center_cbox.stateChanged.connect(update_and_save)
     f_layout.addWidget(f_end_center_cbox, 5, 16)
 
@@ -208,8 +224,9 @@ def lfo_dialog(a_update_callback, a_save_callback):
     f_end_fade_knob.add_to_grid_layout(f_layout, 25)
 
     f_playback_widget = playback_widget()
-    f_layout.addWidget(f_playback_widget.play_button, 1, 30)
-    f_layout.addWidget(f_playback_widget.stop_button, 1, 31)
+    # Does not work, also there is no longer button styling for it
+    # f_layout.addWidget(f_playback_widget.play_button, 1, 30)
+    # f_layout.addWidget(f_playback_widget.stop_button, 1, 31)
 
     f_controls = (
         f_phase_knob, f_start_freq_knob, f_start_amp_knob,
@@ -233,6 +250,6 @@ def lfo_dialog(a_update_callback, a_save_callback):
     update()
     save()
     f_dialog.move(0, 0)
-    f_dialog.exec()
+    f_dialog.exec(center=False)
     return f_dialog.retval
 
