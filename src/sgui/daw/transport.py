@@ -347,7 +347,7 @@ class TransportWidget(AbstractTransportWidget):
         f_layout.addWidget(QLabel(_("Item Name:")), 3, 1)
         f_file = QLineEdit()
         f_file.setToolTip(
-            'The name to assign to this recording.  You must choose a unique '
+            'The name to assign to this recording.  You should choose a unique '
             'name each time'
         )
         f_file.setMaxLength(24)
@@ -360,6 +360,14 @@ class TransportWidget(AbstractTransportWidget):
         f_ok_cancel_layout = QHBoxLayout()
         f_ok_cancel_layout.addWidget(f_ok_button)
         f_ok_cancel_layout.addWidget(f_cancel_button)
+        vlayout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         vlayout.addLayout(f_ok_cancel_layout)
         f_window.exec()
 

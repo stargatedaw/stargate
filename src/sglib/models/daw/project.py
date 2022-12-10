@@ -754,7 +754,10 @@ class DawProject(AbstractProject):
             return False
 
     def get_next_default_item_name(
-            self, a_item_name="item", a_items_dict=None):
+        self,
+        a_item_name="item",
+        a_items_dict=None,
+    ):
         f_item_name = str(a_item_name)
         f_end_number = re.search(r"[0-9]+$", f_item_name)
         if f_item_name == "item":
@@ -772,7 +775,7 @@ class DawProject(AbstractProject):
         else:
             f_items_dict = self.get_items_dict()
         for i in range(f_start, 10000):
-            f_result = "{}-{}".format(f_item_name, i)
+            f_result = "{}-{}".format(f_item_name, i).strip('-')
             if not f_result in f_items_dict.uid_lookup:
                 if f_item_name == "item":
                     self.last_item_number = i
