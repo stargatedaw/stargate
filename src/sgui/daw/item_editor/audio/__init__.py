@@ -201,6 +201,16 @@ class AudioItemSeq(AbstractItemEditor):
         constants.DAW_PROJECT.commit(_("Delete audio item(s)"))
         global_open_audio_items(True)
 
+    def warn_multi_select(
+        self,
+        msg="You must have exactly one item selected",
+    ) -> bool:
+        if len(self.get_selected()) == 1:
+            return True
+        else:
+            QMessageBox.warning(None, "Error", msg)
+            return False
+
     def crossfade_selected(self):
         f_list = self.get_selected()
         if len(f_list) < 2:
@@ -879,6 +889,10 @@ class AudioItemSeqWidget(FileDragDropper):
         shared.AUDIO_SEQ.delete_selected()
 
     def on_papifx_copy(self):
+        if shared.AUDIO_SEQ.warn_multi_select(
+            "Only one item can be selected to copy, please select exactly one"
+        ):
+            return
         if _shared.CURRENT_ITEM is not None:
             self.paifx_clipboard = shared.AUDIO_SEQ_WIDGET.papifx.get_list()
 
@@ -924,6 +938,10 @@ class AudioItemSeqWidget(FileDragDropper):
 
 
     def on_paifx_copy(self):
+        if shared.AUDIO_SEQ.warn_multi_select(
+            "Only one item can be selected to copy, please select exactly one"
+        ):
+            return
         if (
             _shared.CURRENT_AUDIO_ITEM_INDEX is not None
             and
