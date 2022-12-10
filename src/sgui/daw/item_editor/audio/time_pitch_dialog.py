@@ -84,7 +84,8 @@ class TimePitchDialogWidget:
 
         self.crispness_layout = QHBoxLayout()
         self.vlayout2.addLayout(self.crispness_layout)
-        self.crispness_layout.addWidget(QLabel(_("Crispness")))
+        self.crispness_label = QLabel(_("Crispness"))
+        self.crispness_layout.addWidget(self.crispness_label)
         self.crispness_combobox = QComboBox()
         self.crispness_combobox.setToolTip(
             'Rubberband crispness settings, see the Rubberband documentation'
@@ -124,7 +125,23 @@ class TimePitchDialogWidget:
         self.timestretch_amt.valueChanged.connect(self.timestretch_changed)
         self.timestretch_amt_end.valueChanged.connect(self.timestretch_changed)
         self.crispness_combobox.currentIndexChanged.connect(
-            self.timestretch_changed)
+            self.timestretch_changed,
+        )
+
+        self.end_controls = (
+            self.pitch_shift_end_checkbox,
+            self.pitch_shift_end,
+            self.timestretch_amt_end_checkbox,
+            self.timestretch_amt_end,
+        )
+        self.crispness_controls = (
+            self.crispness_label,
+            self.crispness_combobox,
+        )
+        self.timestretch_mode.currentTextChanged.connect(
+            self.hide_controls,
+        )
+        self.hide_controls(self.timestretch_mode.currentText())
 
         self.ok_layout = QHBoxLayout()
         self.ok = QPushButton(_("OK"))
@@ -136,6 +153,18 @@ class TimePitchDialogWidget:
         self.vlayout2.addLayout(self.ok_layout)
 
         self.last_open_dir = HOME
+
+    def hide_controls(self, text):
+        for control in self.end_controls:
+            if text == 'SBSMS':
+                control.show()
+            else:
+                control.hide()
+        for control in self.crispness_controls:
+            if 'Rubberband' in text:
+                control.show()
+            else:
+                control.hide()
 
     def timestretch_end_mode_changed(self, a_val=None):
         if not self.timestretch_amt_end_checkbox.isChecked():
