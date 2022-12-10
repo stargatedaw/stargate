@@ -160,13 +160,24 @@ class AudioInput:
         self.output_track_combobox.setCurrentIndex(a_val.output)
         self.suppress_updates = False
 
+NO_AUDIO_INPUTS_INSTRUCTIONS = """\
+No audio inputs available.  If you are using an audio device that inputs, press
+the Hardware Settings button and ensure that the audio inputs control is set to
+a number greater than 0.
+"""
+
 class AudioInputWidget:
     def __init__(self):
-        self.widget = QWidget()
-        self.main_layout = QVBoxLayout(self.widget)
         self.layout = QGridLayout()
-        self.main_layout.addWidget(QLabel(_("Audio Inputs")))
-        self.main_layout.addLayout(self.layout)
+        self.inputs = []
+        f_count = 0
+        if "audioInputs" in util.DEVICE_SETTINGS:
+            f_count = int(util.DEVICE_SETTINGS["audioInputs"])
+        if f_count == 0:
+            self.layout.addWidget(
+                QLabel(NO_AUDIO_INPUTS_INSTRUCTIONS),
+            )
+            return
         f_labels = (
             _("Name"),
             _("Rec."),
@@ -178,12 +189,13 @@ class AudioInputWidget:
         )
         for f_i, f_label in zip(range(len(f_labels)), f_labels):
             self.layout.addWidget(QLabel(f_label), 0, f_i)
-        self.inputs = []
-        f_count = 0
-        if "audioInputs" in util.DEVICE_SETTINGS:
-            f_count = int(util.DEVICE_SETTINGS["audioInputs"])
         for f_i in range(f_count):
-            f_input = AudioInput(f_i, self.layout, self.callback, f_count - 1)
+            f_input = AudioInput(
+                f_i,
+                self.layout,
+                self.callback,
+                f_count - 1,
+            )
             self.inputs.append(f_input)
 
     def get_inputs(self):

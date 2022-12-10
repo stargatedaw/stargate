@@ -194,6 +194,10 @@ class SgMainWindow(QWidget):
 
         SPLASH_SCREEN.status_update(_("Loading DAW"))
         daw.init()
+        # Must do it here so that everything is initialized
+        daw.shared.HARDWARE_WIDGET.hardware_settings_button.pressed.connect(
+            self.on_change_audio_settings,
+        )
         SPLASH_SCREEN.status_update(_("Loading Wave Editor"))
         from sgui import wave_edit
         wave_edit.init()
@@ -290,7 +294,8 @@ class SgMainWindow(QWidget):
             'device settings'
         )
         self.audio_device_action.triggered.connect(
-            self.on_change_audio_settings)
+            self.on_change_audio_settings,
+        )
         self.menu_file.addSeparator()
 
         self.quit_action = QAction("Quit", self.menu_file)

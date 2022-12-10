@@ -87,6 +87,13 @@ class MidiDevice:
         self.record_checkbox.setChecked(a_routing.on)
         self.suppress_updates = False
 
+NO_MIDI_DEVICES_INSTRUCTIONS = """\
+No MIDI devices enabled.  If you are using MIDI devices, ensure that they are
+plugged in, and press the Hardware Settings button, go to the MIDI In tab, and
+enable your MIDI device(s).  If the MIDI In tab is not present, that means that
+no MIDI devices were detected.
+"""
+
 class MidiDevicesDialog:
     """ The container for all of the MidiDevice objects, located in
         the DAW Hardware tab
@@ -96,6 +103,11 @@ class MidiDevicesDialog:
         self.devices = []
         self.devices_dict = {}
         if not util.MIDI_IN_DEVICES:
+            self.layout.addWidget(
+                QLabel(NO_MIDI_DEVICES_INSTRUCTIONS),
+                0,
+                0,
+            )
             return
         self.layout.addWidget(
             QLabel(_("On")),
@@ -166,6 +178,13 @@ class HardwareWidget(QScrollArea):
         self.setWidget(self.widget)
         self.vlayout = QVBoxLayout(self.widget)
         self.widget.setLayout(self.vlayout)
+        self.hardware_settings_button = QPushButton('Hardware Settings')
+        self.vlayout.addWidget(self.hardware_settings_button)
+        self.hardware_settings_button.setToolTip(
+            'Show the hardware settings dialog where you can enable or '
+            'disable audio inputs and MIDI devices.  This will close and '
+            'reopen the project window'
+        )
 
         self.setWidgetResizable(True)
         self.setHorizontalScrollBarPolicy(
@@ -185,8 +204,9 @@ class HardwareWidget(QScrollArea):
         self.vlayout.addLayout(shared.MIDI_DEVICES_DIALOG.layout)
         self.active_devices = []
 
+        self.vlayout.addWidget(QLabel(_("Audio Inputs")))
         self.audio_inputs = AudioInputWidget()
-        self.vlayout.addWidget(self.audio_inputs.widget)
+        self.vlayout.addLayout(self.audio_inputs.layout)
         self.vlayout.addItem(
             QSpacerItem(
                 10,
