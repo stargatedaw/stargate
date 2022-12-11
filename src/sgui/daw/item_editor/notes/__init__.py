@@ -398,7 +398,7 @@ class PianoRollEditorWidget:
             'Open the previously opened item.  Use this to rapidly switch '
             'between 2 items you are editing'
         )
-        self.open_last_action.triggered.connect(self.open_last)
+        self.open_last_action.triggered.connect(shared.open_last)
         self.open_last_action.setShortcut(
             QKeySequence.fromString("ALT+F"),
         )
@@ -464,14 +464,6 @@ class PianoRollEditorWidget:
             return
         for f_note in shared.PIANO_ROLL_EDITOR.note_items:
             f_note.setSelected(True)
-
-    def open_last(self):
-        if shared.LAST_ITEM_NAME:
-            global_open_items(
-                shared.LAST_ITEM_NAME,
-                a_new_ref=shared.LAST_ITEM_REF,
-            )
-            shared.PIANO_ROLL_EDITOR.draw_item()
 
     def draw_last(self):
         shared.DRAW_LAST_ITEMS = not shared.DRAW_LAST_ITEMS

@@ -253,6 +253,15 @@ def open_last():
     if LAST_ITEM_NAME:
         global_open_items(LAST_ITEM_NAME, a_new_ref=LAST_ITEM_REF)
         MAIN_WINDOW.tab_changed()
+    else:
+        QMessageBox.warning(
+            None,
+            "Error",
+            (
+                "You musst open at least 2 items from the sequencer to use "
+                "this feature"
+            ),
+        )
 
 def global_open_project(a_project_file):
     """ Opens or creates a new project """
