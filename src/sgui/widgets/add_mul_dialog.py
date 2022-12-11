@@ -32,7 +32,6 @@ def add_mul_dialog(a_update_callback, a_save_callback):
         save()
 
     f_dialog = QDialog()
-    f_dialog.setWindowModality(QtCore.Qt.WindowModality.NonModal)
     f_dialog.setMinimumWidth(720)
     f_dialog.retval = False
     f_dialog.setWindowTitle("Transform Events")
@@ -42,6 +41,9 @@ def add_mul_dialog(a_update_callback, a_save_callback):
 
     f_layout.addWidget(QLabel("Add"), 0, 0)
     f_add_slider = QSpinBox()
+    f_add_slider.setToolTip(
+        'Add this number to each value'
+    )
     f_add_slider.setRange(-127, 127)
     f_add_slider.setValue(0)
     f_add_slider.valueChanged.connect(add_changed)
@@ -49,6 +51,7 @@ def add_mul_dialog(a_update_callback, a_save_callback):
 
     f_layout.addWidget(QLabel("Multiply"), 1, 0)
     f_mul_slider = QDoubleSpinBox()
+    f_mul_slider.setToolTip('Multiply the values by this number')
     f_mul_slider.setDecimals(2)
     f_mul_slider.setSingleStep(0.01)
     f_mul_slider.setRange(-1.0, 1.0)
@@ -57,8 +60,8 @@ def add_mul_dialog(a_update_callback, a_save_callback):
     f_layout.addWidget(f_mul_slider, 1, 1)
 
     f_playback_widget = playback_widget()
-    f_layout.addWidget(f_playback_widget.play_button, 0, 30, 2, 1)
-    f_layout.addWidget(f_playback_widget.stop_button, 0, 31, 2, 1)
+    # f_layout.addWidget(f_playback_widget.play_button, 0, 30, 2, 1)
+    # f_layout.addWidget(f_playback_widget.stop_button, 0, 31, 2, 1)
 
     ok_cancel_layout = QHBoxLayout()
     vlayout.addLayout(ok_cancel_layout)
@@ -69,6 +72,6 @@ def add_mul_dialog(a_update_callback, a_save_callback):
     ok_cancel_layout.addWidget(f_cancel_button)
     f_cancel_button.pressed.connect(f_dialog.close)
     f_dialog.move(0, 0)
-    f_dialog.exec()
+    f_dialog.exec(center=False)
     return f_dialog.retval
 
