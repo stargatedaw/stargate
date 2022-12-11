@@ -122,8 +122,6 @@ INT_TO_NOTE = [
     'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B',
 ]
 
-TERMINAL = None
-
 AUDIO_FILE_EXTS = [".WAV", ".AIF", ".AIFF", ".FLAC"]
 MIDI_FILE_EXTS = [".MIDI", ".MID"]
 AUDIO_MIDI_FILE_EXTS = AUDIO_FILE_EXTS + MIDI_FILE_EXTS
@@ -258,11 +256,6 @@ def has_pasuspender(cmd) -> list:
         return ['pasuspender', '--'] + cmd
     return cmd
 
-
-for _terminal in ("x-terminal-emulator", "gnome-terminal", "konsole"):
-    if which(_terminal):
-        TERMINAL = _terminal
-        break
 
 class WinVolInfo:
     def __init__(self):
