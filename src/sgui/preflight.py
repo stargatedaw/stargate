@@ -46,6 +46,7 @@ def _log_system_info():
         import platform
         LOG.info(f"Python version: {platform.python_version()}")
         LOG.info(f"Platform: {platform.platform()}")
+        LOG.info(f"Machine Arch: {platform.machine()}")
     except Exception as ex:
         LOG.warning(ex)
 
@@ -66,6 +67,6 @@ def preflight_macos_udp():
         LOG.exception('Failed to read MacOS net.inet.udp.maxdgram')
 
 def preflight():
+    _log_system_info()
     preflight_macos_udp()
     _preflight_rpi()
-    _log_system_info()
