@@ -356,6 +356,41 @@ class ItemSequencer(QGraphicsView):
                     'Did not expect to hit this else statement'
                 )
 
+    def _mm_item_draw(self, event):
+        f_item = self.get_item(event.scenePos())
+        if f_item:
+            return
+        pos = event.scenePos()
+        start_pos = event.buttonDownScenePos(
+            QtCore.Qt.MouseButton.LeftButton,
+        )
+        pos = QtCore.QPointF(pos.x(), start_pos.y())
+        beat = float(pos.x() // _shared.SEQUENCER_PX_PER_BEAT)
+        if beat <= self._draw_start_beat:
+            return
+        self.draw_item_ref.start_beat = beat
+        shared.CURRENT_SEQUENCE.add_item_ref_by_uid(self.draw_item_ref)
+        self.selected_item_strings = {str(self.draw_item_ref)}
+        constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
+        constants.DAW_PROJECT.commit(_("Add new item ref"))
+        shared.SEQ_WIDGET.open_sequence()
+
+    def _mm_atm_select(self, event):
+        if self.atm_select_pos_x is None:
+            return
+        f_pos_x = event.scenePos().x()
+        f_vals = sorted((f_pos_x, self.atm_select_pos_x))
+        for f_item in self.get_all_points(self.atm_select_track):
+            f_item_pos_x = f_item.pos().x()
+            if (
+                f_item_pos_x >= f_vals[0]
+                and
+                f_item_pos_x <= f_vals[1]
+            ):
+                f_item.setSelected(True)
+            else:
+                f_item.setSelected(False)
+
     def sceneMouseMoveEvent(self, a_event):
         QGraphicsScene.mouseMoveEvent(self.scene, a_event)
         if _shared.SEQUENCE_EDITOR_MODE == 0:
@@ -365,37 +400,12 @@ class ItemSequencer(QGraphicsView):
                     f_item.hide()
                     self.deleted_items.append(f_item.audio_item)
             elif self._is_drawing:
-                f_item = self.get_item(a_event.scenePos())
-                if f_item:
-                    return
-                pos = a_event.scenePos()
-                start_pos = a_event.buttonDownScenePos(
-                    QtCore.Qt.MouseButton.LeftButton,
-                )
-                pos = QtCore.QPointF(pos.x(), start_pos.y())
-                beat = float(pos.x() // _shared.SEQUENCER_PX_PER_BEAT)
-                if beat <= self._draw_start_beat:
-                    return
-                self.draw_item_ref.start_beat = beat
-                shared.CURRENT_SEQUENCE.add_item_ref_by_uid(self.draw_item_ref)
-                self.selected_item_strings = {str(self.draw_item_ref)}
-                constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
-                constants.DAW_PROJECT.commit(_("Add new item ref"))
-                shared.SEQ_WIDGET.open_sequence()
+                self._mm_item_draw(a_event)
         elif _shared.SEQUENCE_EDITOR_MODE == 1:
-            if self.atm_select_pos_x is not None:
-                f_pos_x = a_event.scenePos().x()
-                f_vals = sorted((f_pos_x, self.atm_select_pos_x))
-                for f_item in self.get_all_points(self.atm_select_track):
-                    f_item_pos_x = f_item.pos().x()
-                    if (
-                        f_item_pos_x >= f_vals[0]
-                        and
-                        f_item_pos_x <= f_vals[1]
-                    ):
-                        f_item.setSelected(True)
-                    else:
-                        f_item.setSelected(False)
+            if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
+                self._mm_atm_select(a_event)
+            elif shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
+                self._mm_atm_select(a_event)
 
     def sceneMouseReleaseEvent(self, a_event):
         self._is_drawing = False
