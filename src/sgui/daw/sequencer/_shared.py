@@ -181,6 +181,7 @@ def _paste(orig=True):
                 ),
             )
         shared.SEQUENCER.automation_save_callback()
+        shared.SEQUENCER.open_atm_sequence()
 
 def delete_selected():
     if shared.SEQUENCER.check_running():
