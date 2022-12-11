@@ -4,6 +4,7 @@ NAME ?= stargate-engine
 
 # Compiler flags
 CC ?= gcc
+CSTD ?= c11
 CFLAGS ?=
 CC_ARGS ?= -Wall
 PROD_FLAGS ?= -O3 -fomit-frame-pointer
@@ -33,7 +34,7 @@ DEFINES ?= \
 
 BASE_FLAGS ?= $(OPTIMIZE_FLAGS) $(DEFINES)
 
-BUILD_FLAGS ?= -std=gnu11 $(PLAT_FLAGS) $(BASE_FLAGS) $(CFLAGS) $(INC) $(SRC)
+BUILD_FLAGS ?= -std=$(CSTD) $(PLAT_FLAGS) $(BASE_FLAGS) $(CFLAGS) $(INC) $(SRC)
 
 MATH_LIB_FLAG ?= -lm
 ALSA_FLAG ?= $(shell pkg-config --libs alsa)
