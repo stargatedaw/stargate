@@ -201,6 +201,12 @@ class ItemSequencer(QGraphicsView):
                 return f_item
         return None
 
+    def get_point(self, a_pos):
+        for f_item in self.scene.items(a_pos):
+            if isinstance(f_item, SeqAtmItem):
+                return f_item
+        return None
+
     def check_header(self, a_pos):
         for f_item in self.scene.items(a_pos):
             if f_item == self.header:
@@ -311,26 +317,23 @@ class ItemSequencer(QGraphicsView):
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_SPLIT:
                 QGraphicsView.mousePressEvent(self, a_event)
                 return
-
         elif _shared.SEQUENCE_EDITOR_MODE == 1:
             self.setDragMode(QGraphicsView.DragMode.NoDrag)
             self.atm_select_pos_x = None
             self.atm_select_track = None
-            if (
-                shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT
-                or
-                shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE
-            ):
+            if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
+                self.current_coord = self.get_item_coord(f_pos, True)
+                if not self.get_point(f_pos):
+                    self.scene.clearSelection()
+                self.atm_select_pos_x = f_pos.x()
+                self.atm_select_track = self.current_coord[0]
+            elif shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
                 self.current_coord = self.get_item_coord(f_pos, True)
                 self.scene.clearSelection()
                 self.atm_select_pos_x = f_pos.x()
                 self.atm_select_track = self.current_coord[0]
-                if shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
-                    if a_event.button() == QtCore.Qt.MouseButton.LeftButton:
-                        self.atm_delete = True
-                    return
-            elif a_event.button() == QtCore.Qt.MouseButton.RightButton:
-                pass
+                self.atm_delete = True
+                return
             elif (
                 shared.EDITOR_MODE == shared.EDITOR_MODE_DRAW
                 and
