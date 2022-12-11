@@ -249,20 +249,29 @@ class ItemSequencer(QGraphicsView):
         self._is_drawing = True
         self._draw_start_beat = f_beat
 
-    def _mp_item_split(self, event, pos):
-        raise NotImplementedError
-
-    def _mp_atm_select(self, event, pos):
-        raise NotImplementedError
-
-    def _mp_atm_draw(self, event, pos):
-        raise NotImplementedError
-
-    def _mp_atm_erase(self, event, pos):
-        raise NotImplementedError
-
-    def _mp_atm_split(self, event, pos):
-        raise NotImplementedError
+    def _mp_atm_draw(self, event):
+        if self.current_coord is None:
+            return
+        port, index = shared.TRACK_PANEL.has_automation(
+            self.current_coord[0],
+        )
+        if port is None:
+            event.accept()
+            QGraphicsView.mousePressEvent(self, event)
+        else:
+            track, beat, val = self.current_coord
+            beat = _shared.quantize(beat)
+            point = DawAtmPoint(
+                beat,
+                port,
+                val,
+                *shared.TRACK_PANEL.get_atm_params(track),
+            )
+            shared.ATM_SEQUENCE.add_point(point)
+            point_item = self.draw_point(point)
+            point_item.setSelected(True)
+            self.current_atm_point = point_item
+            QGraphicsView.mousePressEvent(self, event)
 
     def mousePressEvent(self, a_event):
         if glbl_shared.IS_PLAYING:
@@ -299,21 +308,23 @@ class ItemSequencer(QGraphicsView):
                             self.current_item.get_selected_string(),
                         }
                 self.show_context_menu()
+            a_event.accept()
+            QGraphicsView.mousePressEvent(self, a_event)
         elif _shared.SEQUENCE_EDITOR_MODE == 0:
             self.current_item = self.get_item(f_pos)
             self.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
             if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
                 f_item = self.get_item(f_pos)
-                if f_item:
-                    QGraphicsView.mousePressEvent(self, a_event)
-                    return
+                if not f_item:
+                    a_event.accept()
+                QGraphicsView.mousePressEvent(self, a_event)
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_DRAW:
                 self._mp_item_draw(a_event, f_pos)
-                return
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
                 self.deleted_items = []
-                if a_event.button() == QtCore.Qt.MouseButton.LeftButton:
-                    sequence_editor_set_delete_mode(True)
+                sequence_editor_set_delete_mode(True)
+                a_event.accept()
+                QGraphicsView.mousePressEvent(self, a_event)
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_SPLIT:
                 QGraphicsView.mousePressEvent(self, a_event)
                 return
@@ -327,34 +338,23 @@ class ItemSequencer(QGraphicsView):
                     self.scene.clearSelection()
                 self.atm_select_pos_x = f_pos.x()
                 self.atm_select_track = self.current_coord[0]
+                a_event.accept()
+                QGraphicsView.mousePressEvent(self, a_event)
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
                 self.current_coord = self.get_item_coord(f_pos, True)
                 self.scene.clearSelection()
                 self.atm_select_pos_x = f_pos.x()
                 self.atm_select_track = self.current_coord[0]
                 self.atm_delete = True
-                return
-            elif (
-                shared.EDITOR_MODE == shared.EDITOR_MODE_DRAW
-                and
-                self.current_coord is not None
-            ):
-                f_port, f_index = shared.TRACK_PANEL.has_automation(
-                    self.current_coord[0])
-                if f_port is not None:
-                    f_track, f_beat, f_val = self.current_coord
-                    f_beat = _shared.quantize(f_beat)
-                    f_point = DawAtmPoint(
-                        f_beat, f_port, f_val,
-                        *shared.TRACK_PANEL.get_atm_params(f_track))
-                    shared.ATM_SEQUENCE.add_point(f_point)
-                    point_item = self.draw_point(f_point)
-                    point_item.setSelected(True)
-                    self.current_atm_point = point_item
-                    QGraphicsView.mousePressEvent(self, a_event)
-                    return
-        a_event.accept()
-        QGraphicsView.mousePressEvent(self, a_event)
+            elif shared.EDITOR_MODE == shared.EDITOR_MODE_DRAW:
+                self._mp_atm_draw(a_event)
+            elif shared.EDITOR_MODE == shared.EDITOR_MODE_SPLIT:
+                a_event.accept()
+                QGraphicsView.mousePressEvent(self, a_event)
+            else:
+                raise NotImplementedError(
+                    'Did not expect to hit this else statement'
+                )
 
     def sceneMouseMoveEvent(self, a_event):
         QGraphicsScene.mouseMoveEvent(self.scene, a_event)
