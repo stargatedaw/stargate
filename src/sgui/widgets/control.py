@@ -259,7 +259,14 @@ class AbstractUiControl(GridLayoutControl):
         f_spinbox.setMaximum(self.control.maximum())
         f_spinbox.setValue(self.control.value())
         f_layout.addWidget(f_spinbox, 3, 1)
-
+        vlayout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         ok_cancel_layout = QHBoxLayout()
         vlayout.addLayout(ok_cancel_layout)
         f_cancel_button = QPushButton(_("Cancel"))
@@ -321,6 +328,14 @@ class AbstractUiControl(GridLayoutControl):
         f_groupbox_layout.addWidget(QLabel("Length"), 0, 1)
         f_groupbox_layout.addWidget(f_beat_frac_combobox, 1, 1)
         ok_cancel_layout = QHBoxLayout()
+        vlayout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         vlayout.addLayout(ok_cancel_layout)
         ok_cancel_layout.addWidget(f_sync_button)
         ok_cancel_layout.addWidget(f_cancel_button)
@@ -343,13 +358,21 @@ class AbstractUiControl(GridLayoutControl):
         f_note_selector = NoteSelectorWidget(0, None, None)
         f_note_selector.set_value(self.get_value())
         f_vlayout.addWidget(f_note_selector.widget)
+        f_vlayout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         f_ok_button = QPushButton(_("OK"))
         f_ok_button.pressed.connect(ok_button_pressed)
         f_cancel_button = QPushButton(_("Cancel"))
         f_ok_cancel_layout = QHBoxLayout()
         f_cancel_button.pressed.connect(f_dialog.close)
-        f_ok_cancel_layout.addWidget(f_cancel_button)
         f_ok_cancel_layout.addWidget(f_ok_button)
+        f_ok_cancel_layout.addWidget(f_cancel_button)
         f_vlayout.addLayout(f_ok_cancel_layout)
         f_dialog.exec()
 
@@ -383,6 +406,14 @@ class AbstractUiControl(GridLayoutControl):
         f_layout.addWidget(f_ratio_spinbox, 0, 1)
 
         ok_cancel_layout = QHBoxLayout()
+        vlayout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         vlayout.addLayout(ok_cancel_layout)
         f_ok_button = QPushButton(_("OK"))
         f_ok_button.pressed.connect(ok_button_pressed)
@@ -410,6 +441,14 @@ class AbstractUiControl(GridLayoutControl):
         f_spinbox.setRange(int(f_min), int(f_max))
         f_spinbox.setValue(int(self.get_value() // 12))
         f_layout.addWidget(f_spinbox, 0, 1)
+        vlayout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         f_ok_button = QPushButton(_("OK"))
         f_ok_button.pressed.connect(ok_button_pressed)
         f_cancel_button = QPushButton(_("Cancel"))
@@ -494,6 +533,14 @@ class AbstractUiControl(GridLayoutControl):
         f_high_spinbox.setRange(self.control.minimum(), self.control.maximum())
         f_high_spinbox.setValue(f_default_high)
         f_spinbox_layout.addWidget(f_high_spinbox)
+        f_layout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         f_ok_cancel_layout = QHBoxLayout()
         f_layout.addLayout(f_ok_cancel_layout)
         f_ok_button = QPushButton(_("OK"))
