@@ -592,7 +592,7 @@ class SequencerItem(QGraphicsRectItem):
         f_lane_num = clip_value(
             f_lane_num,
             0,
-            TRACK_COUNT_ALL,
+            TRACK_COUNT_ALL - 1,
         )
         f_y_pos = (
             f_lane_num * shared.SEQUENCE_EDITOR_TRACK_HEIGHT
@@ -690,7 +690,8 @@ class SequencerItem(QGraphicsRectItem):
                 f_max_x = (get_current_sequence_length() *
                     _shared.SEQUENCER_PX_PER_BEAT) - shared.AUDIO_ITEM_HANDLE_SIZE
             f_new_lane, f_ignored = self.y_pos_to_lane_number(
-                a_event.scenePos().y())
+                a_event.scenePos().y(),
+            )
             f_lane_offset = f_new_lane - self.audio_item.track_num
             for f_item in shared.SEQUENCER.get_selected():
                 f_pos_x = f_item.pos().x()
