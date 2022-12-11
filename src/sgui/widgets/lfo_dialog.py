@@ -65,7 +65,7 @@ def lfo_dialog(a_update_callback, a_save_callback):
         10,
         400,
         100,
-        _shared.KC_DECIMAL,
+        _shared.KC_HZ_DECIMAL,
         tooltip=(
             'The frequency of the LFO at the start of the region, in hertz'
         ),
@@ -81,7 +81,7 @@ def lfo_dialog(a_update_callback, a_save_callback):
         10,
         400,
         100,
-        _shared.KC_DECIMAL,
+        _shared.KC_HZ_DECIMAL,
         tooltip=(
             'The frequency of the LFO at the end of the region, in hertz'
         ),
