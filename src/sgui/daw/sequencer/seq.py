@@ -403,7 +403,9 @@ class ItemSequencer(QGraphicsView):
                 self._mm_item_draw(a_event)
         elif _shared.SEQUENCE_EDITOR_MODE == 1:
             if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
-                self._mm_atm_select(a_event)
+                point = self.get_point(a_event.scenePos())
+                if not point:
+                    self._mm_atm_select(a_event)
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
                 self._mm_atm_select(a_event)
 

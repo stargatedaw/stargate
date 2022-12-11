@@ -53,36 +53,61 @@ class SeqAtmItem(QGraphicsEllipseItem):
                 ),
             )
 
+    def _quantize(self, pos):
+        pos = pos
+        x = pos.x()
+        if _shared.SEQ_QUANTIZE:
+            x = round(
+                x / _shared.SEQUENCER_QUANTIZE_PX
+            ) * _shared.SEQUENCER_QUANTIZE_PX
+        else:
+            x = round(
+                x / _shared.SEQUENCER_QUANTIZE_64TH
+            ) * _shared.SEQUENCER_QUANTIZE_64TH
+        x = clip_min(x, 0.0)
+        y = clip_value(pos.y(), self.min_y, self.max_y)
+        return x, y
+
+    def quantize(self, pos):
+        x, y = self._quantize(pos)
+        self.setPos(x, y)
+        delta_x = x - self.orig_x
+        delta_y = y - self.orig_y
+        for point in self._selected_points:
+            new_x = clip_min(point.orig_x + delta_x, 0.0)
+            new_y = clip_value(
+                point.orig_y + delta_y,
+                point.min_y,
+                point.max_y,
+            )
+            point.setPos(new_x, new_y)
+
     def mousePressEvent(self, a_event):
+        self._selected_points = [
+            x for x in shared.SEQUENCER.get_selected_points()
+            if x != self
+        ]
         shared.SEQUENCER.remove_atm_path(self.item.index)
-        a_event.setAccepted(True)
-        QGraphicsEllipseItem.mousePressEvent(self, a_event)
+        #a_event.setAccepted(True)
+        #QGraphicsEllipseItem.mousePressEvent(self, a_event)
+        self.orig_x = self.pos().x()
+        self.orig_y = self.pos().y()
+        for point in self._selected_points:
+            point.orig_x = point.pos().x()
+            point.orig_y = point.pos().y()
         self.quantize(a_event.scenePos())
 
     def mouseMoveEvent(self, a_event):
-        QGraphicsEllipseItem.mouseMoveEvent(self, a_event)
+        #QGraphicsEllipseItem.mouseMoveEvent(self, a_event)
         self.quantize(a_event.scenePos())
-
-    def quantize(self, a_pos):
-        f_pos = a_pos
-        f_x = f_pos.x()
-        if _shared.SEQ_QUANTIZE:
-            f_x = round(
-                f_x / _shared.SEQUENCER_QUANTIZE_PX
-            ) * _shared.SEQUENCER_QUANTIZE_PX
-        else:
-            f_x = round(
-                f_x / _shared.SEQUENCER_QUANTIZE_64TH
-            ) * _shared.SEQUENCER_QUANTIZE_64TH
-        f_x = clip_min(f_x, 0.0)
-        f_y = clip_value(f_pos.y(), self.min_y, self.max_y)
-        self.setPos(f_x, f_y)
 
     def mouseReleaseEvent(self, a_event):
         a_event.setAccepted(True)
         QGraphicsEllipseItem.mouseReleaseEvent(self, a_event)
         self.quantize(a_event.scenePos())
         self.set_point_value()
+        for point in self._selected_points:
+            point.set_point_value()
         self.save_callback()
 
     def set_point_value(self):
