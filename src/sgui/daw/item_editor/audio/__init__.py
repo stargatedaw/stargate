@@ -825,7 +825,7 @@ class AudioItemSeqWidget(FileDragDropper):
         self.action_menu.addSeparator()
 
         self.open_last_action = QAction(
-            _("Open Last Item(s)"),
+            _("Open Last Item"),
             self.action_menu,
         )
         self.action_menu.addAction(self.open_last_action)
