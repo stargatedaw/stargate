@@ -207,6 +207,57 @@ class ItemSequencer(QGraphicsView):
                 return True
         return False
 
+    def _mp_item_draw(self, event, pos):
+        f_item = self.get_item(pos)
+        if f_item:
+            QGraphicsView.mousePressEvent(self, event)
+            return
+        self.scene.clearSelection()
+        pos_x = pos.x()
+        pos_y = pos.y() - _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
+        f_beat = float(pos_x // _shared.SEQUENCER_PX_PER_BEAT)
+        f_track = int(pos_y // shared.SEQUENCE_EDITOR_TRACK_HEIGHT)
+        if event.modifiers() == (
+            QtCore.Qt.KeyboardModifier.ControlModifier
+        ) and len(_shared.SEQUENCE_CLIPBOARD) == 1:
+            item_ref = _shared.SEQUENCE_CLIPBOARD[0]
+            f_uid = item_ref.item_uid
+            length = item_ref.length_beats
+        else:
+            f_item_name = "{}-1".format(shared.TRACK_NAMES[f_track])
+            f_uid = constants.DAW_PROJECT.create_empty_item(
+                f_item_name,
+            )
+            length = _shared.LAST_ITEM_LENGTH
+        self.draw_item_ref = sequencer_item(
+            f_track,
+            f_beat,
+            length,
+            f_uid,
+        )
+        shared.CURRENT_SEQUENCE.add_item_ref_by_uid(self.draw_item_ref)
+        self.selected_item_strings = {str(self.draw_item_ref)}
+        constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
+        constants.DAW_PROJECT.commit(_("Add new item ref"))
+        shared.SEQ_WIDGET.open_sequence()
+        self._is_drawing = True
+        self._draw_start_beat = f_beat
+
+    def _mp_item_split(self, event, pos):
+        raise NotImplementedError
+
+    def _mp_atm_select(self, event, pos):
+        raise NotImplementedError
+
+    def _mp_atm_draw(self, event, pos):
+        raise NotImplementedError
+
+    def _mp_atm_erase(self, event, pos):
+        raise NotImplementedError
+
+    def _mp_atm_split(self, event, pos):
+        raise NotImplementedError
+
     def mousePressEvent(self, a_event):
         if glbl_shared.IS_PLAYING:
             return
@@ -251,53 +302,15 @@ class ItemSequencer(QGraphicsView):
                     QGraphicsView.mousePressEvent(self, a_event)
                     return
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_DRAW:
-                f_item = self.get_item(f_pos)
-                if f_item:
-                    QGraphicsView.mousePressEvent(self, a_event)
-                    return
-                self.scene.clearSelection()
-                f_pos_x = f_pos.x()
-                f_pos_y = f_pos.y() - _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
-                f_beat = float(f_pos_x // _shared.SEQUENCER_PX_PER_BEAT)
-                f_track = int(f_pos_y // shared.SEQUENCE_EDITOR_TRACK_HEIGHT)
-                if a_event.modifiers() == (
-                    QtCore.Qt.KeyboardModifier.ControlModifier
-                ) and len(_shared.SEQUENCE_CLIPBOARD) == 1:
-                    item_ref = _shared.SEQUENCE_CLIPBOARD[0]
-                    f_uid = item_ref.item_uid
-                    length = item_ref.length_beats
-                else:
-                    f_item_name = "{}-1".format(shared.TRACK_NAMES[f_track])
-                    f_uid = constants.DAW_PROJECT.create_empty_item(
-                        f_item_name,
-                    )
-                    length = _shared.LAST_ITEM_LENGTH
-                self.draw_item_ref = sequencer_item(
-                    f_track,
-                    f_beat,
-                    length,
-                    f_uid,
-                )
-                shared.CURRENT_SEQUENCE.add_item_ref_by_uid(self.draw_item_ref)
-                self.selected_item_strings = {str(self.draw_item_ref)}
-                constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
-                constants.DAW_PROJECT.commit(_("Add new item ref"))
-                shared.SEQ_WIDGET.open_sequence()
-                self._is_drawing = True
-                self._draw_start_beat = f_beat
+                self._mp_item_draw(a_event, f_pos)
                 return
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
                 self.deleted_items = []
                 if a_event.button() == QtCore.Qt.MouseButton.LeftButton:
                     sequence_editor_set_delete_mode(True)
-            else:
-                f_item = self.get_item(f_pos)
-                if f_item:
-                    self.selected_item_strings = {
-                        f_item.get_selected_string(),
-                    }
-                else:
-                    self.clear_selected_item_strings()
+            elif shared.EDITOR_MODE == shared.EDITOR_MODE_SPLIT:
+                QGraphicsView.mousePressEvent(self, a_event)
+                return
 
         elif _shared.SEQUENCE_EDITOR_MODE == 1:
             self.setDragMode(QGraphicsView.DragMode.NoDrag)
