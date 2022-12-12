@@ -637,18 +637,6 @@ class AudioSeqItem(QGraphicsRectItem):
             TRANSPORT.tempo_spinbox.value(),
         )
 
-    def set_paif_for_all_instance(self):
-        f_paif = constants.DAW_PROJECT.get_audio_per_item_fx_sequence(
-            shared.CURRENT_SEQUENCE.uid,
-        )
-        f_paif_row = f_paif.get_row(self.track_num)
-        constants.DAW_PROJECT.set_paif_for_all_audio_items(
-            self.audio_item.uid, f_paif_row)
-
-    def set_fades_for_all_instances(self):
-        constants.DAW_PROJECT.set_fades_for_all_audio_items(self.audio_item)
-        global_open_audio_items()
-
     def normalize(self, a_value, audio_pool_by_uid):
         f_val = self.graph_object.normalize(a_value)
         entry = audio_pool_by_uid[self.audio_item.uid]
