@@ -196,6 +196,17 @@ class TransportWidget:
 
     def on_stop_engine(self):
         constants.IPC.kill_engine()
+        QMessageBox.warning(
+            None,
+            None,
+            (
+                'Audio engine has been requested to stop immediately.  '
+                'You will need to close and re-open Stargate DAW to '
+                'continue using'
+            ),
+        )
+        if shared.IS_PLAYING:
+            self.stop_button.trigger()
 
     def main_vol_released(self):
         util.set_file_setting(
