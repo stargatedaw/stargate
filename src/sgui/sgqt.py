@@ -484,6 +484,7 @@ class QDialog(QDialog):
         if resize:
             self.adjustSize()
         if center:
+            shared.MAIN_STACKED_WIDGET.resized.connect(self._center)
             self._center()
 
         self.show()

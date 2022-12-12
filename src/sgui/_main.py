@@ -16,6 +16,7 @@ from sgui.sgqt import (
     QMessageBox,
     QStackedWidget,
     QtCore,
+    Signal,
 )
 from sgui.splash import SplashScreen
 from sgui.util import setup_theme, ui_scaler_factory
@@ -23,6 +24,8 @@ from sgui.welcome import Welcome
 
 
 class MainStackedWidget(QStackedWidget):
+    resized = Signal()
+
     def __init__(self, *args, **kwargs):
         QStackedWidget.__init__(self, *args, **kwargs)
         self.setObjectName('main_window')
@@ -134,6 +137,10 @@ class MainStackedWidget(QStackedWidget):
             )
         else:
             event.accept()
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.resized.emit()
 
 def qt_message_handler(mode, context, message):
     line = (
