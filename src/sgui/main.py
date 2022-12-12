@@ -536,7 +536,6 @@ class SgMainWindow(QWidget):
             self.subprocess_timer.setSingleShot(False)
             self.subprocess_timer.start(1000)
 
-        self.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
         self.on_collapse_splitters(a_restore=True)
 
     def appimage_install(self):

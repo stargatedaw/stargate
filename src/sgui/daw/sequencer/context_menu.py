@@ -319,8 +319,17 @@ def on_rename_items():
     f_new_lineedit.setToolTip('The new name of the item(s)')
     f_new_lineedit.editingFinished.connect(on_name_changed)
     f_new_lineedit.setMaxLength(24)
+    f_new_lineedit.setFocusPolicy(QtCore.Qt.FocusPolicy.StrongFocus)
     f_layout.addWidget(QLabel(_("New name:")), 0, 0)
     f_layout.addWidget(f_new_lineedit, 0, 1)
+    vlayout.addItem(
+        QSpacerItem(
+            1,
+            1,
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Expanding,
+        ),
+    )
     ok_cancel_layout = QHBoxLayout()
     vlayout.addLayout(ok_cancel_layout)
     f_ok_button = QPushButton(_("OK"))
@@ -329,6 +338,7 @@ def on_rename_items():
     f_cancel_button = QPushButton(_("Cancel"))
     ok_cancel_layout.addWidget(f_cancel_button)
     f_cancel_button.clicked.connect(cancel_handler)
+    f_window.set_focus(f_new_lineedit)
     f_window.exec()
 
 def transpose_dialog():

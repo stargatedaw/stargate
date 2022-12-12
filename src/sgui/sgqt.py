@@ -441,6 +441,16 @@ class QDialog(QDialog):
             int(geometry.center().y() - (self.height() / 2) - geometry.top()),
         )
 
+    def set_focus(self, widget):
+        self._focus_timer = QtCore.QTimer(self)
+        self._focus_timer.timeout.connect(
+            lambda: widget.setFocus(
+                QtCore.Qt.FocusReason.OtherFocusReason,
+            )
+        )
+        self._focus_timer.setSingleShot(True)
+        self._focus_timer.start(50)
+
     def closeEvent(self, event):
         global DIALOG_SHOWING
         DIALOG_SHOWING = None
