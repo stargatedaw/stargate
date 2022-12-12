@@ -52,7 +52,7 @@ def clean_audio_pool():
             MEMORY_ENTROPY_UIDS.remove(f_uid)
     #invert
     audio_pool = constants.PROJECT.get_audio_pool()
-    LOG.info(f"{audio_pool}")
+    # LOG.info(f"{audio_pool}")
     f_result = [
         x.uid
         for x in audio_pool.pool

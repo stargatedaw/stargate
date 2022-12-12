@@ -602,8 +602,9 @@ class SequencerItem(QGraphicsRectItem):
     def lane_number_to_y_pos(self, a_lane_num):
         a_lane_num = clip_value(
             a_lane_num, 0, TRACK_COUNT_ALL)
-        return (a_lane_num *
-            shared.SEQUENCE_EDITOR_TRACK_HEIGHT) + _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
+        return (
+            a_lane_num * shared.SEQUENCE_EDITOR_TRACK_HEIGHT
+        ) + _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
 
     def quantize_all(self, a_x):
         f_x = a_x

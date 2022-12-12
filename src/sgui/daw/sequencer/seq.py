@@ -1,3 +1,5 @@
+import copy
+
 from sglib import constants
 from sglib.log import LOG
 from sglib.models.daw import *
@@ -215,8 +217,7 @@ class ItemSequencer(QGraphicsView):
         return False
 
     def _mp_item_draw(self, event, pos):
-        f_item = self.get_item(pos)
-        if f_item:
+        if self.get_item(pos):
             QGraphicsView.mousePressEvent(self, event)
             return
         self.scene.clearSelection()
@@ -279,6 +280,7 @@ class ItemSequencer(QGraphicsView):
             return
         f_pos = self.mapToScene(qt_event_pos(a_event))
         self.current_coord = self.get_item_coord(f_pos)
+        self._start_pos = f_pos
 
         if f_pos.x() > self.max_x:
             return
@@ -359,20 +361,18 @@ class ItemSequencer(QGraphicsView):
                 )
 
     def _mm_item_draw(self, event):
-        f_item = self.get_item(event.scenePos())
-        if f_item:
-            return
         pos = event.scenePos()
-        start_pos = event.buttonDownScenePos(
-            QtCore.Qt.MouseButton.LeftButton,
-        )
-        pos = QtCore.QPointF(pos.x(), start_pos.y())
+        item_pos = QtCore.QPointF(pos.x(), self._start_pos.y())
+        if self.get_item(item_pos):
+            return
         beat = float(pos.x() // _shared.SEQUENCER_PX_PER_BEAT)
         if beat <= self._draw_start_beat:
             return
         self.draw_item_ref.start_beat = beat
-        shared.CURRENT_SEQUENCE.add_item_ref_by_uid(self.draw_item_ref)
-        self.selected_item_strings = {str(self.draw_item_ref)}
+        shared.CURRENT_SEQUENCE.add_item_ref_by_uid(
+            copy.deepcopy(self.draw_item_ref),
+        )
+        self.selected_item_strings.add(str(self.draw_item_ref))
         constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
         constants.DAW_PROJECT.commit(_("Add new item ref"))
         shared.SEQ_WIDGET.open_sequence()
