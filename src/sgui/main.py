@@ -300,7 +300,7 @@ class SgMainWindow(QWidget):
 
         self.quit_action = QAction("Quit", self.menu_file)
         self.menu_file.addAction(self.quit_action)
-        self.quit_action.setToolTip('Exit the application')
+        self.quit_action.setToolTip('Close Stargate DAW')
         self.quit_action.triggered.connect(shared.MAIN_STACKED_WIDGET.close)
         self.quit_action.setShortcut(QKeySequence.StandardKey.Quit)
 
@@ -921,7 +921,7 @@ class SgMainWindow(QWidget):
         QMessageBox.warning(
             MAIN_WINDOW,
             _("Theme Applied..."),
-            _("Changed theme.  Please restart the application")
+            _("Changed theme.  Please restart Stargate DAW")
         )
 
     def on_copy_theme(self):
@@ -971,7 +971,7 @@ class SgMainWindow(QWidget):
                 QMessageBox.warning(
                     MAIN_WINDOW,
                     _("Theme Applied..."),
-                    _("Changed theme.  Please restart the application")
+                    _("Changed theme.  Please restart Stargate DAW")
                 )
         except Exception as ex:
             show_generic_exception(ex)
