@@ -398,6 +398,14 @@ def transpose_dialog():
         ),
     )
     f_layout.addWidget(f_duplicate_notes, 2, 1)
+    vlayout.addItem(
+        QSpacerItem(
+            1,
+            1,
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Expanding,
+        ),
+    )
     ok_cancel_layout = QHBoxLayout()
     vlayout.addLayout(ok_cancel_layout)
     f_ok = QPushButton(_("OK"))

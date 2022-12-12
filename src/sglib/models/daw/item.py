@@ -96,8 +96,8 @@ class item:
             if f_new_length_seconds < f_min_len:
                 LOG.info("Popping item of length {}".format(f_new_length_seconds))
                 f_to_delete.append(k)
-            for f_tuple in locals().items():
-                LOG.info(f_tuple)
+            #for f_tuple in locals().items():
+            #    LOG.info(f_tuple)
         for k in f_to_delete:
             self.items.pop(k)
 
