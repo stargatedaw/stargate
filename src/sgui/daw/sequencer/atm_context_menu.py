@@ -355,6 +355,8 @@ def break_atm(checked=False, new_val=1):
         for point in points:
             point.break_after = new_val
         shared.SEQUENCER.automation_save_callback()
+    else:
+        QMessageBox.warning(None, "Error", "No points selected")
 
 def unbreak_atm():
     break_atm(new_val=0)
@@ -447,7 +449,6 @@ def init():
 
     MENU.addSeparator()
 
-    # TODO:  What is this?
     break_atm_action = QAction(
         _("Break after selected automation point(s)"),
         MENU,
@@ -461,7 +462,6 @@ def init():
     break_atm_action.triggered.connect(break_atm)
     break_atm_action.setShortcut(QKeySequence.fromString("CTRL+B"))
 
-    # TODO:  What is this?
     unbreak_atm_action = QAction(
         _("Un-break after selected automation point(s)"),
         MENU,
