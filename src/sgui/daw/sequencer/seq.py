@@ -75,6 +75,7 @@ class ItemSequencer(QGraphicsView):
         QGraphicsView.__init__(self)
 
         self._is_drawing = False
+        self._is_point_moving = False
         self.setToolTip(daw_strings.sequencer)
         self.setCacheMode(QGraphicsView.CacheModeFlag.CacheBackground)
         self.setViewportUpdateMode(
@@ -334,10 +335,11 @@ class ItemSequencer(QGraphicsView):
             self.atm_select_track = None
             if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
                 self.current_coord = self.get_item_coord(f_pos, True)
-                if not self.get_point(f_pos):
+                self._is_point_moving = bool(self.get_point(f_pos))
+                if not self._is_point_moving:
                     self.scene.clearSelection()
-                self.atm_select_pos_x = f_pos.x()
-                self.atm_select_track = self.current_coord[0]
+                    self.atm_select_pos_x = f_pos.x()
+                    self.atm_select_track = self.current_coord[0]
                 a_event.accept()
                 QGraphicsView.mousePressEvent(self, a_event)
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
@@ -403,8 +405,7 @@ class ItemSequencer(QGraphicsView):
                 self._mm_item_draw(a_event)
         elif _shared.SEQUENCE_EDITOR_MODE == 1:
             if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
-                point = self.get_point(a_event.scenePos())
-                if not point:
+                if not self._is_point_moving:
                     self._mm_atm_select(a_event)
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
                 self._mm_atm_select(a_event)

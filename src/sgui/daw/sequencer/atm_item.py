@@ -70,6 +70,13 @@ class SeqAtmItem(QGraphicsEllipseItem):
 
     def quantize(self, pos):
         x, y = self._quantize(pos)
+        if(
+            self.pos().x() == x
+            and
+            self.pos().y() == y
+        ):
+            return
+        shared.SEQUENCER.setUpdatesEnabled(False)
         self.setPos(x, y)
         delta_x = x - self.orig_x
         delta_y = y - self.orig_y
@@ -81,6 +88,8 @@ class SeqAtmItem(QGraphicsEllipseItem):
                 point.max_y,
             )
             point.setPos(new_x, new_y)
+        shared.SEQUENCER.setUpdatesEnabled(True)
+        shared.SEQUENCER.update()
 
     def mousePressEvent(self, a_event):
         self._selected_points = [
