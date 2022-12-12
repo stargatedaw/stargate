@@ -310,8 +310,10 @@ class SeqTrack:
         self.control_combobox.clear()
         if self.automation_plugin_name != "None":
             self.control_combobox.addItems(
-                CC_NAMES[self.automation_plugin_name])
+                CC_NAMES[self.automation_plugin_name],
+            )
         shared.TRACK_PANEL.update_plugin_track_map()
+        self.update_in_use_combobox()
 
     def control_changed(self, a_val=None):
         self.set_cc_num()
