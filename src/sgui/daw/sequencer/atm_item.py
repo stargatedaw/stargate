@@ -92,32 +92,39 @@ class SeqAtmItem(QGraphicsEllipseItem):
         shared.SEQUENCER.update()
 
     def mousePressEvent(self, a_event):
-        self._selected_points = [
-            x for x in shared.SEQUENCER.get_selected_points()
-            if x != self
-        ]
-        shared.SEQUENCER.remove_atm_path(self.item.index)
-        #a_event.setAccepted(True)
-        #QGraphicsEllipseItem.mousePressEvent(self, a_event)
-        self.orig_x = self.pos().x()
-        self.orig_y = self.pos().y()
-        for point in self._selected_points:
-            point.orig_x = point.pos().x()
-            point.orig_y = point.pos().y()
-        self.quantize(a_event.scenePos())
+        if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
+            self._selected_points = [
+                x for x in shared.SEQUENCER.get_selected_points()
+                if x != self
+            ]
+            shared.SEQUENCER.remove_atm_path(self.item.index)
+            #a_event.setAccepted(True)
+            #QGraphicsEllipseItem.mousePressEvent(self, a_event)
+            self.orig_x = self.pos().x()
+            self.orig_y = self.pos().y()
+            for point in self._selected_points:
+                point.orig_x = point.pos().x()
+                point.orig_y = point.pos().y()
+            self.quantize(a_event.scenePos())
+        elif shared.EDITOR_MODE == shared.EDITOR_MODE_SPLIT:
+            self.item.break_after = int(not self.item.break_after)
+            self.set_point_value()
+            self.save_callback()
 
     def mouseMoveEvent(self, a_event):
-        #QGraphicsEllipseItem.mouseMoveEvent(self, a_event)
-        self.quantize(a_event.scenePos())
+        if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
+            #QGraphicsEllipseItem.mouseMoveEvent(self, a_event)
+            self.quantize(a_event.scenePos())
 
     def mouseReleaseEvent(self, a_event):
         a_event.setAccepted(True)
         QGraphicsEllipseItem.mouseReleaseEvent(self, a_event)
-        self.quantize(a_event.scenePos())
-        self.set_point_value()
-        for point in self._selected_points:
-            point.set_point_value()
-        self.save_callback()
+        if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
+            self.quantize(a_event.scenePos())
+            self.set_point_value()
+            for point in self._selected_points:
+                point.set_point_value()
+            self.save_callback()
 
     def set_point_value(self):
         f_pos = self.pos()
