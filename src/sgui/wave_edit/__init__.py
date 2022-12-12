@@ -1415,11 +1415,11 @@ class WaveEditorWidget:
 
     def marker_callback(self, a_val=None):
         if self.callbacks_enabled:
-            f_item = self.get_audio_item()
-            constants.WAVE_EDIT_PROJECT.ipc().we_set(
-                "0|{}".format(f_item))
-            f_start = self.sample_graph.start_marker.value
-            self.set_time_label(f_start * 0.001, True)
+            item = self.get_audio_item()
+            constants.WAVE_EDIT_PROJECT.ipc().we_set(f"0|{item}")
+            if hasattr(self.sample_graph, 'start_marker'):
+                start = self.sample_graph.start_marker.value
+                self.set_time_label(start * 0.001, True)
 
     def set_playback_cursor(self, a_pos):
         if self.playback_cursor is not None:
