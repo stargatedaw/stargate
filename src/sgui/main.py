@@ -868,6 +868,14 @@ class SgMainWindow(QWidget):
         f_lineedit.setMinimumWidth(240)
         f_lineedit.setMaxLength(48)
         f_layout.addWidget(f_lineedit)
+        f_layout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         f_ok_layout = QHBoxLayout()
         f_layout.addLayout(f_ok_layout)
         f_ok_button = QPushButton(_("OK"))
@@ -876,6 +884,7 @@ class SgMainWindow(QWidget):
         f_cancel_button = QPushButton(_("Cancel"))
         f_ok_layout.addWidget(f_cancel_button)
         f_cancel_button.pressed.connect(f_window.close)
+        f_window.set_focus(f_lineedit)
         f_window.exec()
 
     def prepare_to_quit(self):

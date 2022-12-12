@@ -464,7 +464,7 @@ class QDialog(QDialog):
     def _end_wait(self):
         self._waiting = False
 
-    def exec(self, block=True, center=True):
+    def exec(self, block=True, center=True, resize=True):
         global DIALOG_SHOWING
         DIALOG_SHOWING = self
         # Avoid circular dependency
@@ -481,7 +481,8 @@ class QDialog(QDialog):
             self.setMinimumWidth(
                 int(current_widget.width() * 0.2),
             )
-        self.adjustSize()
+        if resize:
+            self.adjustSize()
         if center:
             self._center()
 

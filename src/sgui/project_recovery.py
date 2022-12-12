@@ -20,22 +20,6 @@ import shutil
 import sys
 import tarfile
 
-f_prefix_dir = os.path.dirname(__file__)
-f_path = os.path.join(
-    f_prefix_dir,
-    "..",
-    "share",
-    "stargate",
-    "stargate",
-)
-f_path = os.path.abspath(f_path)
-print(f_path)
-sys.path.insert(0, f_path)
-
-f_parent_dir = os.path.dirname(os.path.abspath(__file__))
-f_parent_dir = os.path.abspath(os.path.join(f_parent_dir, ".."))
-sys.path.insert(0, f_parent_dir)
-
 from sglib.constants import DEFAULT_PROJECT_DIR
 from sglib.lib.translate import _
 from sgui.sgqt import *
@@ -69,6 +53,11 @@ class ProjectRecoveryWidget(QListWidget):
             and
             len(f_items) == 1
         ):
+            QMessageBox.warning(
+                None,
+                "Error",
+                "Must select exactly one version",
+            )
             return
         f_project_dir = os.path.join(self.project_dir, "projects")
         f_tmp_dir = "{}-tmp-{}".format(
@@ -108,7 +97,7 @@ def project_recover_dialog(a_file):
     global DIALOG_WINDOW
     DIALOG_WINDOW = QDialog()
     DIALOG_WINDOW.setMinimumHeight(600)
-    DIALOG_WINDOW.setMinimumWidth(600)
+    DIALOG_WINDOW.setMinimumWidth(1000)
     DIALOG_WINDOW.setWindowState(QtCore.Qt.WindowState.WindowMaximized)
     DIALOG_WINDOW.setWindowTitle("Project History")
     f_project_dir = os.path.dirname(str(a_file))
@@ -150,8 +139,7 @@ def project_recover_dialog(a_file):
     cancel_button = QPushButton(_('Cancel'))
     cancel_button.pressed.connect(DIALOG_WINDOW.close)
     f_hlayout.addWidget(cancel_button)
-    print("showing")
-    DIALOG_WINDOW.exec(block=False)
+    DIALOG_WINDOW.exec(block=False, resize=False)
 
 def parse_args():
     parser = argparse.ArgumentParser(
