@@ -134,8 +134,11 @@ def show(event):
 def header_time_modify():
     def ok_handler():
         marker = tempo_marker(
-            shared.SEQUENCER.header_event_pos, tempo.value(),
-            tsig_num.value(), int(str(tsig_den.currentText())))
+            shared.SEQUENCER.header_event_pos,
+            tempo.value(),
+            tsig_num.value(),
+            int(str(tsig_den.currentText())),
+        )
         shared.CURRENT_SEQUENCE.set_marker(marker)
         constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
         constants.DAW_PROJECT.commit(_("Set tempo marker"))
@@ -196,6 +199,14 @@ def header_time_modify():
         tsig_num.setValue(4)
         tsig_den.setCurrentIndex(1)
 
+    vlayout.addItem(
+        QSpacerItem(
+            1,
+            1,
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Expanding,
+        ),
+    )
     ok_cancel_layout = QHBoxLayout()
     vlayout.addLayout(ok_cancel_layout)
     ok = QPushButton(_("Save"))
@@ -330,6 +341,14 @@ def header_time_range():
         tsig_num.setValue(4)
         tsig_den.setCurrentIndex(1)
 
+    vlayout.addItem(
+        QSpacerItem(
+            1,
+            1,
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Expanding,
+        ),
+    )
     ok_cancel_layout = QHBoxLayout()
     vlayout.addLayout(ok_cancel_layout)
     ok = QPushButton(_("Create"))
@@ -385,6 +404,14 @@ def header_marker_modify():
 
     layout.addWidget(QLabel(_("Text")), 0, 0)
     layout.addWidget(text, 0, 1)
+    vlayout.addItem(
+        QSpacerItem(
+            1,
+            1,
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Expanding,
+        ),
+    )
     ok_cancel_layout = QHBoxLayout()
     vlayout.addLayout(ok_cancel_layout)
     ok = QPushButton(_("Save"))
