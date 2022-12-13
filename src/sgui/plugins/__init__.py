@@ -802,12 +802,14 @@ class PluginRackTab:
         self.plugins_button.setMenu(self.plugins_menu)
 
         self.plugins_order_action = QAction(
-            _("Plugin Order..."),
+            _("Reorder Plugins..."),
             self.plugins_menu,
         )
         self.plugins_menu.addAction(self.plugins_order_action)
         self.plugins_order_action.setToolTip(
-            'Open a dialog to reorder the plugins in the selected track'
+            'Open a dialog to reorder the plugins in the selected track.  '
+            'This will reset plugin routing, you will need to change plugin '
+            'Route again if you want non-sequential routing'
         )
         self.plugins_order_action.triggered.connect(self.set_plugin_order)
 
