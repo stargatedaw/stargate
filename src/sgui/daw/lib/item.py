@@ -41,7 +41,7 @@ def save_recorded_items(
     a_sample_count,
     a_file_name,
 ):
-    LOG.info("\n".join(a_mrec_list))
+    LOG.debug("\n".join(a_mrec_list))
 
     project = constants.DAW_PROJECT
     f_audio_files_dict = {}
@@ -84,8 +84,8 @@ def save_recorded_items(
 
     f_mrec_items = [x.split("|") for x in a_mrec_list]
     f_mrec_items.sort(key=lambda x: int(x[-1]))
-    LOG.info("\n".join(str(x) for x in f_mrec_items))
-    f_item_length = a_end_beat - a_start_beat
+    LOG.debug("\n".join(str(x) for x in f_mrec_items))
+    f_item_length = round(a_end_beat - a_start_beat + 0.5)
     f_sequencer = project.get_sequence()
     f_note_tracker = defaultdict(lambda: {})
     f_items_to_save = {}
@@ -120,8 +120,12 @@ def save_recorded_items(
             f_start = clip_value(f_start, 0.0, f_end)
             f_end = clip_value(f_end, f_start, 1000.0)
             f_audio_item = DawAudioItem(
-                f_uid, a_sample_start=f_start, a_sample_end=f_end,
-                a_output_track=f_mode, a_lane_num=f_lane)
+                f_uid,
+                a_sample_start=f_start,
+                a_sample_end=f_end,
+                a_output_track=f_mode,
+                a_lane_num=f_lane,
+            )
             f_index = f_item.get_next_index()
             f_item.add_item(f_index, f_audio_item)
 
@@ -178,12 +182,12 @@ def save_recorded_items(
             f_note.set_length(f_length)
         else:
             assert False, "Need a different algorithm for this"
-            LOG.info("Using tick length for:")
+            LOG.debug("Using tick length for:")
             f_sample_count = f_tick - f_note.start_sample
             f_seconds = float(f_sample_count) / float(a_sr)
             f_note.set_length(f_seconds * f_beats_per_second)
         old_note = f_note_tracker[(a_track_num, channel)].pop(f_note_num)
-        LOG.info(f'Note off: {old_note}')
+        LOG.debug(f'Note off: {old_note}')
 
     new_take()
 
@@ -199,7 +203,7 @@ def save_recorded_items(
             new_take()
 
         if f_type == "loop":
-            LOG.info("Loop event")
+            LOG.debug("Loop event")
             f_audio_frame += a_sample_count
             continue
 
@@ -212,11 +216,11 @@ def save_recorded_items(
                 f_tick,
                 channel,
             ) = (int(x) for x in f_event[3:])
-            LOG.info("New note: {} {}".format(f_beat, f_note_num))
+            LOG.debug("New note: {} {}".format(f_beat, f_note_num))
             f_note = MIDINote(f_beat, 1.0, f_note_num, f_velocity, channel=channel)
             f_note.start_sample = f_tick
             if f_note_num in f_note_tracker[f_track]:
-                LOG.info("Terminating note early: {}".format(
+                LOG.debug("Terminating note early: {}".format(
                     (f_track, f_note_num, f_tick)))
                 set_note_length(
                     f_track,
@@ -226,7 +230,7 @@ def save_recorded_items(
                     f_tick,
                 )
             f_note_tracker[(f_track, channel)][f_note_num] = f_note
-            LOG.info(f'Note on: {f_note}')
+            LOG.debug(f'Note on: {f_note}')
             project.rec_item.add_note(f_note, a_check=False)
         elif f_type == "off":
             f_note_num, f_tick, channel = (int(x) for x in f_event[3:])
@@ -246,14 +250,14 @@ def save_recorded_items(
             f_val = float(f_val)
             channel = int(channel)
             f_cc = MIDIControl(f_beat, f_port, f_val, channel)
-            LOG.info(f'New CC: {f_cc}')
+            LOG.debug(f'New CC: {f_cc}')
             project.rec_item.add_cc(f_cc)
         elif f_type == "pb":
             f_val = float(f_event[3]) / 8192.0
             f_val = clip_value(f_val, -1.0, 1.0)
             channel = int(f_event[5])
             f_pb = MIDIPitchbend(f_beat, f_val, channel)
-            LOG.info(f'New pitchbend: {f_pb}')
+            LOG.debug(f'New pitchbend: {f_pb}')
             project.rec_item.add_pb(f_pb)
         else:
             LOG.error("Invalid mrec event type {}".format(f_type))

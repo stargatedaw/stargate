@@ -623,19 +623,25 @@ class DawProject(AbstractProject):
             )
             constants.DAW_IPC.save_item(a_uid)
 
-    def save_sequence(self, a_sequence, a_notify=True, uid=None):
-        if not self.suppress_updates:
-            a_sequence.fix_overlaps()
-            if uid is None:
-                uid = str(constants.DAW_CURRENT_SEQUENCE_UID)
-            self.save_file(
-                FOLDER_SONGS,
-                uid,
-                str(a_sequence),
-            )
-            if a_notify:
-                constants.DAW_IPC.save_sequence(uid)
-            self.check_output()
+    def save_sequence(
+        self,
+        a_sequence,
+        a_notify=True,
+        uid=None,
+    ):
+        if self.suppress_updates:
+            return
+        a_sequence.fix_overlaps()
+        if uid is None:
+            uid = str(constants.DAW_CURRENT_SEQUENCE_UID)
+        self.save_file(
+            FOLDER_SONGS,
+            uid,
+            str(a_sequence),
+        )
+        if a_notify:
+            constants.DAW_IPC.save_sequence(uid)
+        self.check_output()
 
     def save_tracks(self, a_tracks):
         if not self.suppress_updates:

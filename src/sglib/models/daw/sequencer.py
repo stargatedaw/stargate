@@ -147,21 +147,32 @@ class sequencer:
             f_item.start_beat += a_length
 
     def clear_range(self, a_track_list, a_start_beat, a_end_beat):
+        LOG.debug(
+            f'Clearing items from {a_start_beat} to {a_end_beat} '
+            f'for {a_track_list}'
+        )
         for f_item in [x for x in self.items if x.track_num in a_track_list]:
             f_end_beat = f_item.start_beat + f_item.length_beats
-            if f_item.start_beat >= a_start_beat and \
-            a_start_beat < a_end_beat:
+            if (
+                f_item.start_beat >= a_start_beat
+                and
+                f_item.start_beat < a_end_beat
+            ):
                 if f_end_beat <= a_end_beat:
+                    LOG.debug(f'{f_item.__dict__} is in range, deleting')
                     self.items.remove(f_item)
                 else:
+                    _item = str(f_item.__dict__)
                     f_diff = a_end_beat - f_item.start_beat
                     f_item.start_offset += f_diff
                     f_item.length_beats -= f_diff
                     f_item.start_beat = a_end_beat
+                    LOG.debug(f'{_item} is now {f_item.__dict__}')
             elif f_item.start_beat < a_start_beat:
-                if f_end_beat >= a_start_beat and \
-                f_end_beat < a_end_beat:
+                if f_end_beat > a_start_beat:
+                    _item = str(f_item.__dict__)
                     f_item.length_beats = a_start_beat - f_item.start_beat
+                    LOG.debug(f'{_item} is now {f_item.__dict__}')
 
     def get_length(self):
         f_item_max = max(x.start_beat + x.length_beats
@@ -171,26 +182,64 @@ class sequencer:
         return max((f_item_max, f_marker_max)) + 64
 
     def fix_overlaps(self):
+        to_delete = set()
+        to_delete_list = []
+
+        def to_delete_add(item, reason):
+            to_delete.add(item)
+            to_delete_list.append((item, reason))
+
+        for x in (y for y in self.items if y.length_beats < 0.25):
+            to_delete_add(x, f"Item too short, length: {x.length_beats}")
+
         # Delete items with length < 1/16th note
-        f_to_delete = {x for x in self.items if x.length_beats < 0.25}
-        for f_i in range(_shared.TRACK_COUNT_ALL):
-            f_items = [
-                x for x in self.items if x.track_num == f_i and
-                x not in f_to_delete]
-            if f_items:
-                f_items.sort()
-                for f_item, f_next in zip(f_items, f_items[1:]):
-                    if f_item.start_beat == f_next.start_beat:
-                        # sort is by start_beat then (not modified)
-                        f_to_delete.add(f_item)
-                    f_end = f_item.start_beat + f_item.length_beats
-                    if f_end > f_next.start_beat:
-                        f_item.length_beats = (
-                            f_next.start_beat - f_item.start_beat)
-                        if f_item.length_beats < 0.25:
-                            f_to_delete.add(f_item)
-        for f_item in f_to_delete:
-            self.items.remove(f_item)
+        for i in range(_shared.TRACK_COUNT_ALL):
+            items = [
+                x for x in self.items
+                if x.track_num == i
+                and
+                x not in to_delete
+            ]
+            if items:
+                # sort is by start_beat then (not modified)
+                items.sort()
+                for item, _next in zip(items, items[1:]):
+                    if item.start_beat == _next.start_beat:
+                        to_delete_add(
+                            item,
+                            (
+                                f'Current {item.__dict__} and '
+                                f'next {_next.__dict__} items overlap'
+                            ),
+                        )
+                        continue
+                    end = item.start_beat + item.length_beats
+                    if end > _next.start_beat:
+                        length_beats = _next.start_beat - item.start_beat
+                        if length_beats < 0.25:
+                            to_delete_add(
+                                item,
+                                (
+                                    f'After trimming {item.__dict__} '
+                                    f'is too short: {length_beats}'
+                                ),
+                            )
+                        else:
+                            item.length_beats = length_beats
+        LOG.debug(
+            f'self.items count {len(self.items)} '
+            f'to_delete count: {len(to_delete)}'
+        )
+        _to_delete = {str(x) for x in to_delete}
+        LOG.debug(_to_delete)
+        LOG.debug([str(x) for x in self.items])
+        for item, reason in to_delete_list:
+            LOG.debug(f"Removing {item.__dict__} from sequencer: {reason} ")
+        self.items = [x for x in self.items if str(x) not in _to_delete]
+        LOG.debug(
+            f'self.items count {len(self.items)} '
+            f'to_delete count: {len(to_delete)}'
+        )
 
     def __str__(self):
         f_result = []

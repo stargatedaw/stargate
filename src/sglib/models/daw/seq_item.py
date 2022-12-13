@@ -23,10 +23,15 @@ class sequencer_item:
 
     def __str__(self):
         assert self.item_uid >= 0, "Negative UID"
-        return "|".join(str(x) for x in
-            (self.track_num, round(self.start_beat, 6),
-            round(self.length_beats, 6), self.item_uid,
-            round(self.start_offset, 6)))
+        return "|".join(
+            str(x) for x in (
+                self.track_num,
+                round(self.start_beat, 6),
+                round(self.length_beats, 6),
+                self.item_uid,
+                round(self.start_offset, 6),
+            )
+        )
 
     def __lt__(self, other):
         if self.track_num == other.track_num:
