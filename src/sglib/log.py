@@ -66,7 +66,7 @@ class _RotatingFileHandler(RotatingFileHandler, FailProofEmitter):
 
 def setup_logging(
     format=FORMAT,
-    level=logging.INFO,
+    level=logging.DEBUG if 'SG_DEBUG' in os.environ else logging.INFO,
     log=LOG,
     stream=sys.stdout,
     maxBytes=1024*1024*10,
