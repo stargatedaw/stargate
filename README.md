@@ -1,4 +1,4 @@
-# Stargate DAW
+![Banner](assets/banner.png?raw=true "Banner")
 Stargate is an all-in-one DAW and plugin suite, designed to be a comprehensive
 solution for music production, with a focus on providing unique and innovative
 features, especially for EDM production.  To understand what Stargate is,
