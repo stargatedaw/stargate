@@ -421,10 +421,6 @@ class SgMainWindow(QWidget):
 
         self.menu_help = self.menu_bar.addMenu(_("Help"))
 
-        self.youtube_action = self.menu_help.addAction(
-            _("Watch Tutorial Videos on Youtube..."),
-        )
-        self.youtube_action.triggered.connect(self.on_youtube)
         self.manual_action = self.menu_help.addAction(
             _("View User Manual on Github..."),
         )
@@ -639,12 +635,6 @@ class SgMainWindow(QWidget):
     def on_sfzinstruments(self):
         url = QtCore.QUrl(
             "https://github.com/sfzinstruments",
-        )
-        QDesktopServices.openUrl(url)
-
-    def on_youtube(self):
-        url = QtCore.QUrl(
-            "https://www.youtube.com/channel/UC0xYkPBN3cqMMaTQxc38Rfw",
         )
         QDesktopServices.openUrl(url)
 
