@@ -1500,6 +1500,8 @@ def global_open_project(a_project_file):
     MAIN_WINDOW.notes_tab.load()
     WAVE_EDITOR.open_project()
     TRANSPORT.open_project()
+    if PLUGIN_RACK:
+        MAIN_WINDOW.removeTab(1)
     PLUGIN_RACK = PluginRack(
         constants.WAVE_EDIT_PROJECT,
         0,
@@ -1520,6 +1522,8 @@ def global_new_project(a_project_file):
     MAIN_WINDOW.last_offline_dir = constants.PROJECT.user_folder
     MAIN_WINDOW.notes_tab.load()
     WAVE_EDITOR.open_project()
+    if PLUGIN_RACK:
+        MAIN_WINDOW.removeTab(1)
     PLUGIN_RACK = PluginRack(
         constants.WAVE_EDIT_PROJECT,
         0,
