@@ -860,6 +860,19 @@ class WaveEditorWidget:
             'sample start/end and fade in/out'
         )
 
+    def check_loaded(self, playing=False):
+        if self.graph_object is None:
+            QMessageBox.warning(
+                None,
+                "Error",
+                "No file loaded.  Select a file in the browser and click Load",
+            )
+            return False
+        elif playing and glbl_shared.IS_PLAYING:
+            return False
+        else:
+            return True
+
     def save_callback(self):
         f_result = track_plugins()
         f_result.plugins = [x.get_value() for x in self.plugins]
@@ -888,7 +901,7 @@ class WaveEditorWidget:
 #        raise NotImplementedError
 
     def bookmark_file(self):
-        if self.graph_object is None:
+        if not self.check_loaded():
             return
         f_list = self.get_bookmark_list()
         if self.current_file not in f_list:
@@ -922,7 +935,7 @@ class WaveEditorWidget:
             self.bookmark_button.setMenu(None)
 
     def delete_bookmark(self):
-        if self.graph_object is None:
+        if not self.check_loaded():
             return
         f_list = constants.WAVE_EDIT_PROJECT.get_we_bm()
         if self.current_file in f_list:
@@ -935,7 +948,7 @@ class WaveEditorWidget:
         self.file_browser.open_file_in_browser(f_path)
 
     def normalize_dialog(self):
-        if self.graph_object is None or glbl_shared.IS_PLAYING:
+        if not self.check_loaded(playing=True):
             return
         f_val = normalize_dialog()
         if f_val is not None:
