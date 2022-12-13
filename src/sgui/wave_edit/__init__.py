@@ -35,8 +35,7 @@ TOTAL_FX_COUNT = 10
 
 wave_edit_folder = os.path.join("projects", "wave_edit")
 wave_edit_folder_tracks = os.path.join(wave_edit_folder, "tracks")
-file_wave_editor_bookmarks = os.path.join(
-    wave_edit_folder, "bookmarks.txt")
+file_wave_editor_bookmarks = os.path.join(wave_edit_folder, "bookmarks.txt")
 file_notes = os.path.join(wave_edit_folder, "notes.txt")
 file_pyinput = os.path.join(wave_edit_folder, "input.txt")
 
@@ -159,6 +158,14 @@ def normalize_dialog():
     f_db_spinbox.setDecimals(1)
     f_db_spinbox.setValue(0.0)
     f_ok_button = QPushButton(_("OK"))
+    f_layout.addItem(
+        QSpacerItem(
+            1,
+            1,
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Expanding,
+        ),
+    )
     f_ok_cancel_layout = QHBoxLayout()
     f_layout.addLayout(f_ok_cancel_layout)
     f_ok_cancel_layout.addWidget(f_ok_button)
@@ -1500,7 +1507,7 @@ def global_open_project(a_project_file):
     MAIN_WINDOW.notes_tab.load()
     WAVE_EDITOR.open_project()
     TRANSPORT.open_project()
-    if PLUGIN_RACK:
+    if MAIN_WINDOW.tabText(1) == 'Plugin Rack':
         MAIN_WINDOW.removeTab(1)
     PLUGIN_RACK = PluginRack(
         constants.WAVE_EDIT_PROJECT,
@@ -1522,7 +1529,7 @@ def global_new_project(a_project_file):
     MAIN_WINDOW.last_offline_dir = constants.PROJECT.user_folder
     MAIN_WINDOW.notes_tab.load()
     WAVE_EDITOR.open_project()
-    if PLUGIN_RACK:
+    if MAIN_WINDOW.tabText(1) == 'Plugin Rack':
         MAIN_WINDOW.removeTab(1)
     PLUGIN_RACK = PluginRack(
         constants.WAVE_EDIT_PROJECT,
@@ -1532,7 +1539,7 @@ def global_new_project(a_project_file):
     MAIN_WINDOW.insertTab(
         1,
         PLUGIN_RACK.widget,
-        _("Plugin Rack"),
+        "Plugin Rack",
     )
 
 def on_ready():
@@ -1550,17 +1557,21 @@ def active_audio_pool_uids():
         )
     return result
 
-constants.WAVE_EDIT_PROJECT = WaveEditProject(True)
-
-ALL_PEAK_METERS = {}
-
-WAVE_EDITOR = WaveEditorWidget()
-TRANSPORT = TransportWidget()
-MAIN_WINDOW = MainWindow()
-
-CLOSE_ENGINE_ON_RENDER = False
-
-PLUGIN_RACK = None
 
 def init():
-    pass
+    global \
+        ALL_PEAK_METERS, \
+        CLOSE_ENGINE_ON_RENDER, \
+        MAIN_WINDOW, \
+        PLUGIN_RACK, \
+        TRANSPORT, \
+        WAVE_EDITOR
+
+    constants.WAVE_EDIT_PROJECT = WaveEditProject(True)
+    ALL_PEAK_METERS = {}
+    WAVE_EDITOR = WaveEditorWidget()
+    TRANSPORT = TransportWidget()
+    MAIN_WINDOW = MainWindow()
+    CLOSE_ENGINE_ON_RENDER = False
+    PLUGIN_RACK = None
+

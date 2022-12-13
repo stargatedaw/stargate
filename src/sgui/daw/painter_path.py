@@ -62,9 +62,8 @@ def pop_path_from_cache(a_uid):
         PIXMAP_CACHE_UNSCALED.pop(a_uid)
 
 def clear_caches():
-    global PIXMAP_CACHE, PIXMAP_CACHE_UNSCALED
-    PIXMAP_CACHE = {}
-    PIXMAP_CACHE_UNSCALED = {}
+    PIXMAP_CACHE.clear()
+    PIXMAP_CACHE_UNSCALED.clear()
 
 def painter_path(
     item,

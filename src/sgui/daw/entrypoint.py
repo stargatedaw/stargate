@@ -79,6 +79,9 @@ class MainWindow(QTabWidget):
         self.last_midi_dir = None
         shared.ROUTING_GRAPH_WIDGET.setToolTip(sg_strings.routing_graph)
 
+        # Otherwise they are incorrect on project reload
+        painter_path.clear_caches()
+
         self.engine_mon_label = QLabel()
         self.engine_mon_label.setFixedWidth(150)
         self.engine_mon_label.setToolTip(sg_strings.ENGINE_MON)
