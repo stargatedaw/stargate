@@ -10,7 +10,7 @@ from sglib.models.stargate.midi_events import (
     MIDIPitchbend,
 )
 from sglib.models.daw.seq_item import sequencer_item
-from sgui.daw import painter_path
+from sgui.daw import painter_path, shared
 import os
 import shutil
 
@@ -136,7 +136,9 @@ def save_recorded_items(
             new_item(a_track_num)
 
     def new_item(a_track_num):
-        f_name = project.get_next_default_item_name(f_item_name)
+        f_name = project.get_next_default_item_name(
+            f'{shared.TRACK_NAMES[a_track_num]}-{f_item_name}',
+        )
         f_uid = project.create_empty_item(f_name)
         f_item = project.get_item_by_uid(f_uid)
         f_items_to_save[f_uid] = f_item

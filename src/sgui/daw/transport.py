@@ -295,11 +295,18 @@ class TransportWidget(AbstractTransportWidget):
         f_inputs = shared.HARDWARE_WIDGET.audio_inputs.inputs
         def ok_handler():
             f_file_name = str(f_file.text())
-            if f_file_name is None or f_file_name == "":
+            if (
+                f_file_name is None
+                or
+                len(f_file_name) < 4
+            ):
                 QMessageBox.warning(
                     f_window,
                     _("Error"),
-                    _("You must select a name for the item"),
+                    _(
+                        "You must select a name for the recorded item(s) "
+                        'at least 4 characters long'
+                    ),
                 )
                 return
 
@@ -337,13 +344,11 @@ class TransportWidget(AbstractTransportWidget):
             f_window.close()
 
         f_window = QDialog(shared.MAIN_WINDOW)
-        f_window.setWindowTitle(_("Save Recorded Files"))
-        f_window.setMinimumWidth(330)
         vlayout = QVBoxLayout()
         f_layout = QGridLayout()
+        vlayout.addWidget(QLabel("Save Recorded Files"))
         vlayout.addLayout(f_layout)
         f_window.setLayout(vlayout)
-        f_layout.addWidget(QLabel(_("Save recorded items")), 0, 2)
         f_layout.addWidget(QLabel(_("Item Name:")), 3, 1)
         f_file = QLineEdit()
         f_file.setToolTip(
@@ -369,6 +374,7 @@ class TransportWidget(AbstractTransportWidget):
             ),
         )
         vlayout.addLayout(f_ok_cancel_layout)
+        f_window.set_focus(f_file)
         f_window.exec()
 
     def on_rec(self):
