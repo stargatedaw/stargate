@@ -421,11 +421,6 @@ class SgMainWindow(QWidget):
 
         self.menu_help = self.menu_bar.addMenu(_("Help"))
 
-        self.manual_action = self.menu_help.addAction(
-            _("View User Manual on Github..."),
-        )
-        self.manual_action.triggered.connect(self.on_manual)
-
         self.sfzinstruments_action = self.menu_help.addAction(
             _("Download SFZ instruments for Sampler1"),
         )
@@ -635,13 +630,6 @@ class SgMainWindow(QWidget):
     def on_sfzinstruments(self):
         url = QtCore.QUrl(
             "https://github.com/sfzinstruments",
-        )
-        QDesktopServices.openUrl(url)
-
-    def on_manual(self):
-        url = QtCore.QUrl(
-            "https://github.com/stargatedaw/stargate/"
-            "tree/main/docs/UserManual",
         )
         QDesktopServices.openUrl(url)
 
