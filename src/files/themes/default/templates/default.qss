@@ -115,6 +115,9 @@ QMenu
 QWidget#plugin_rack {
     background-color: {{ palette["gray3"] }};
 }
+QWidget#rack_background {
+    background-color: #0f0f0f;
+}
 
 QWidget#ccmaptabwidget,
 QWidget#itemtabwidget,

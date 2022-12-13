@@ -965,8 +965,10 @@ class PluginRack:
         self.scroll_hlayout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
-        self.scroll_vlayout = QVBoxLayout()
-        self.scroll_hlayout.addLayout(self.scroll_vlayout)
+        self.rack_widget = QWidget()
+        self.rack_widget.setObjectName('rack_background')
+        self.scroll_vlayout = QVBoxLayout(self.rack_widget)
+        self.scroll_hlayout.addWidget(self.rack_widget)
         self.scroll_hlayout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
