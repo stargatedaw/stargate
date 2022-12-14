@@ -46,6 +46,10 @@ GNU General Public License for more details.
 #include "stargate.h"
 #include "wave_edit.h"
 #include "worker.h"
+#if SG_OS == _OS_MACOS
+    #include <pthread/qos.h>
+#endif
+
 
 #ifndef NO_MIDI
     #include "hardware/midi.h"
@@ -448,6 +452,14 @@ NO_OPTIMIZATION void set_thread_params(){
         sched_setscheduler(0, RT_SCHED, &f_proc_param);
         log_info("Process scheduler is now %i", sched_getscheduler(0));
     }
+#endif
+
+#if SG_OS == _OS_MACOS
+    int qos_result = pthread_set_qos_class_self_np(
+        QOS_CLASS_USER_INTERACTIVE,
+        0
+    );
+    log_info("qos_result main: %i", qos_result);
 #endif
 }
 

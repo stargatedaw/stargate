@@ -13,6 +13,9 @@
 #include "wave_edit.h"
 #include "worker.h"
 
+#if SG_OS == _OS_MACOS
+    #include <pthread/qos.h>
+#endif
 
 void * v_worker_thread(void* a_arg){
     t_thread_args * f_args = (t_thread_args*)(a_arg);
@@ -84,6 +87,12 @@ void v_init_worker_threads(
     const struct sched_param rt_sched_param = {
         .sched_priority = sched_priority,
     };
+    int qos_result = pthread_attr_set_qos_class_np(
+        &threadAttr, 
+        QOS_CLASS_USER_INTERACTIVE,
+        0
+    );
+    log_info("qos_result worker: %i", qos_result);
 #endif
 
     int f_i;
