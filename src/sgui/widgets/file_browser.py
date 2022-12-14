@@ -266,7 +266,12 @@ class AbstractFileBrowserWidget:
             QMessageBox.warning(
                 self.vsplitter,
                 _("Error"),
-                _("The folder did not exist:\n\n{}").format(f_dir),
+                _(
+                    f"The folder does not exist:\n\n{f_dir}\n\n"
+                    'If opening a file that is in use, the original file '
+                    'may have been moved and deleted, '
+                    'the cached version in the project is being used'
+                ),
             )
 
     def on_bookmark_save_as(self):
