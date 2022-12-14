@@ -41,7 +41,7 @@ The VM should have at least 100GB of hard disk space
 cd ~
 mkdir src && cd src
 pacman -S git make
-git clone -r https://github.com/stargateaudio/stargate.git
+git clone --recursive https://github.com/stargateaudio/stargate.git
 cd stargate/src
 ./windows/msys2_deps.sh
 make mingw_deps
