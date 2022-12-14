@@ -58,22 +58,25 @@ class MainStackedWidget(QStackedWidget):
             self.welcome_window = Welcome()
             self.addWidget(self.welcome_window.widget)
         self.setCurrentWidget(self.welcome_window.widget)
+        self.welcome_window.load_rp()
 
     def start(self):
         if self.show_splash():
             self.show_main()
 
-    def show_splash(self):
+    def check_hardware(self, _next=None):
         hardware_dialog = widgets.HardwareDialog()
         result = hardware_dialog.check_device()
         if result:
             self.show_hardware_dialog(
-                self.start,
+                _next if _next else self.show_welcome,
                 self.show_welcome,
                 result,
             )
             return False
+        return True
 
+    def show_splash(self):
         if not self.splash_screen:
             self.splash_screen = SplashScreen(self)
             self.addWidget(self.splash_screen)

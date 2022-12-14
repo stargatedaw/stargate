@@ -1,7 +1,6 @@
 from .updates import ui_check_updates
 from sgui.main import main
 from sgui.sgqt import *
-from sgui.widgets.hardware_dialog import HardwareDialog
 from .project import (
     check_project_version,
     clone_project,
@@ -40,7 +39,6 @@ class Welcome(QtCore.QObject):
         )
         rp_vlayout.addWidget(self.rp_list)
         self.rp_list.installEventFilter(self)
-        self.load_rp()
         buttons_vlayout = QVBoxLayout()
         hlayout.addLayout(buttons_vlayout)
         buttons_vlayout.addItem(
@@ -84,6 +82,8 @@ class Welcome(QtCore.QObject):
         self.rp_list.setFocus(QtCore.Qt.FocusReason.OtherFocusReason)
 
     def rp_doubleclick(self, index):
+        if not glbl_shared.MAIN_STACKED_WIDGET.check_hardware():
+            return
         project = str(self.rp_list.item(index).text())
         try:
             check_project_version(self.widget, project)
@@ -111,8 +111,8 @@ class Welcome(QtCore.QObject):
                 x.replace('/', '\\')
                 for x in self.history
             ]
-        LOG.info(f"Project history: {self.history}")
         if self.history:
+            self.rp_list.clear()
             self.rp_list.addItems(self.history)
             self.rp_list.setCurrentRow(0)
 
@@ -122,16 +122,21 @@ class Welcome(QtCore.QObject):
             glbl_shared.MAIN_STACKED_WIDGET.show_main()
 
     def on_new(self):
+        if not glbl_shared.MAIN_STACKED_WIDGET.check_hardware(self.on_new):
+            return
         path = new_project(self.widget)
         if path:
-            self.rp_list.insertItem(0, path)
             self.close()
 
     def on_open(self):
+        if not glbl_shared.MAIN_STACKED_WIDGET.check_hardware(self.on_open):
+            return
         if open_project(self.widget):
             self.close()
 
     def on_clone(self):
+        if not glbl_shared.MAIN_STACKED_WIDGET.check_hardware(self.on_clone):
+            return
         if clone_project(self.widget):
             self.close()
 
