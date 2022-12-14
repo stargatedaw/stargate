@@ -1,10 +1,11 @@
+PyQt6-Qt6==6.2.3
+PyQt6==6.2.3
+PyYAML
 jinja2
 mido
 mutagen
 numpy
 psutil
+pyinstaller
 pymarshal
-PyQt6==6.2.3
-PyQt6-Qt6==6.2.3
-PyYAML
 wavefile

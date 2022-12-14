@@ -1,0 +1,3 @@
+[submodule "src/vendor/portaudio-binaries"]
+	path = src/vendor/portaudio-binaries
+	url = https://github.com/spatialaudio/portaudio-binaries.git

@@ -21,10 +21,12 @@ The build steps proceed as follows:
 (or install Windows to your hard drive if you are `into that`).
 The VM should have at least 100GB of hard disk space
 
-- Create a user called stargate
+- Create a user called stargate (the rest of the instructions assume this name
+  it is not an actual requirement to have this user name)
 - Install [MSYS2 64bit](https://www.msys2.org/wiki/MSYS2-installation/)
 - Install [Python3 64bit](https://www.python.org/downloads/windows/), be sure
-  to select the option to add Python to PATH / environment variables
+  to select the option to add Python to PATH / environment variables. At the
+  time of this writing, Python3.7 and later are supported.
 - Install [NSIS](https://nsis.sourceforge.io/Download)
   select the `Desktop Development with C++` package
 
@@ -39,15 +41,9 @@ The VM should have at least 100GB of hard disk space
 cd ~
 mkdir src && cd src
 pacman -S git make
-git clone https://github.com/stargateaudio/stargate.git
-cd stargate
-./scripts/msys2_deps.sh
-cd src/vendor
-# Because git submodule init does not seem to work on Windows
-git clone https://github.com/stargateaudio/libcds.git
-git clone https://github.com/spatialaudio/portaudio-binaries.git
-# Build our dependencies
-cd ..
+git clone -r https://github.com/stargateaudio/stargate.git
+cd stargate/src
+./windows/msys2_deps.sh
 make mingw_deps
 ```
 
@@ -56,7 +52,6 @@ make mingw_deps
 cd C:\msys64\home\starg\src\stargate\src
 python -m venv venv\stargate
 venv\stargate\scripts\activate.bat
-pip install pyinstaller
 pip install -r windows\requirements.txt
 ```
 
@@ -68,11 +63,14 @@ git pull
 # Note that you may need to run this again
 # make mingw_deps
 cd engine
-source mingw64-source-me.sh
+. mingw64-source-me.sh
 make mingw
 ```
 
 ## Visual Studio Terminal
+NOTE: Deprecated, no longer required for release, but instructions kept in
+case anybody wants Windows debug symbols
+
 There are 2 different ways to execute this command.
 
 Either:
@@ -91,8 +89,8 @@ Finally, execute the command:
 
 ## Windows cmd.exe
 ```
-venv\stargate\Scripts\activate.bat
 cd C:\msys64\home\starg\src\stargate\src
+venv\Scripts\activate.bat
 # Build the portable exe and installer exe
 python windows\release.py
 ```
