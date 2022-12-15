@@ -57,16 +57,16 @@ but you must allocate system memory for it that can only be used for HugePages.
 )
 
 HOST_API_TOOLTIP = _("""\
-Select the host API to list devices for in the "Audio Device" dropdown.  Not
+Select the audio API to list devices for in the "Audio Device" dropdown.  Not
 all host APIs are ideal for audio, research the host APIs available for your
 operating system.
 """)
 
 if util.IS_LINUX:
     HOST_API_TOOLTIP = """\
-Unless you are using Firewire (for which JACK is the only choice on Linux),
-it is recommended that you stop the JACK server and use your
-device directly using ALSA for best performance, stability and latency.
+Select the audio API to list devices for in the "Audio Device" dropdown.
+If possible, use ALSA directly, without Pipewire, for the best performance,
+latency and stability.
 """
 
 DEVICE_TOOLTIP = _("""\
