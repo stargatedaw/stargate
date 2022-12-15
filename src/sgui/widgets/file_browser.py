@@ -158,7 +158,7 @@ class AbstractFileBrowserWidget:
         self.list_bookmarks.setToolTip(
             'Bookmark folders from the file browser menu to keep here for '
             'easy access.  Some project folders are automatically kept as '
-            'bookmarks'
+            'bookmarks.  Right click a bookmark to see actions.'
         )
         self.list_bookmarks.setHeaderHidden(True)
         self.list_bookmarks.itemClicked.connect(self.bookmark_clicked)
@@ -172,7 +172,7 @@ class AbstractFileBrowserWidget:
         )
         self.bookmarks_tab_vlayout.addLayout(self.bookmark_button_hlayout)
         self.bookmark_button_hlayout.addWidget(self.bookmarks_reload_button)
-        self.bookmarks_reload_button.pressed.connect(self.open_bookmarks)
+        self.bookmarks_reload_button.pressed.connect(open_bookmarks)
         self.bookmarks_menu_button = QPushButton(_("Menu"))
         self.bookmark_button_hlayout.addWidget(self.bookmarks_menu_button)
         f_bookmark_menu = QMenu(self.bookmarks_tab)
@@ -299,7 +299,7 @@ class AbstractFileBrowserWidget:
         if not f_file is None and not str(f_file) == "":
             f_file = str(f_file)
             shutil.copy(f_file, bookmark.BOOKMARKS_FILE)
-            self.open_bookmarks()
+            open_bookmarks()
 
     def on_refresh(self):
         self.set_folder(".")
@@ -424,7 +424,7 @@ class AbstractFileBrowserWidget:
                     return
                 bookmark.add_file_bookmark(
                     f_val, self.last_open_dir, f_text)
-            self.open_bookmarks()
+            open_bookmarks()
             if not a_recursive:
                 f_window.close()
 
@@ -556,7 +556,7 @@ class AbstractFileBrowserWidget:
                         _("This bookmark no longer exists.  You may have "
                         "deleted it in another window."),
                     )
-                self.open_bookmarks()
+                open_bookmarks()
 
     def delete_bookmark(self):
         f_items = self.list_bookmarks.selectedItems()
@@ -572,7 +572,7 @@ class AbstractFileBrowserWidget:
                 bookmark.delete_file_bookmark(
                     f_parent.text(0), f_items[0].text(0))
                 self.list_bookmarks.clear()
-            self.open_bookmarks()
+            open_bookmarks()
 
     def bookmark_context_menu_event(self, a_event):
         f_menu = QMenu(self.list_bookmarks)
