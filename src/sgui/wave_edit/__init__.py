@@ -682,13 +682,9 @@ class WaveEditorWidget:
         self.paste_action.triggered.connect(self.open_file_from_clipboard)
         self.paste_action.setShortcut(QKeySequence.StandardKey.Paste)
 
-        self.open_folder_action = QAction(
-            _("Open parent folder in browser"),
-            self.menu,
-        )
+        self.open_folder_action = QAction(_("Open File in Browser"), self.menu)
         self.open_folder_action.setToolTip(
-            'Open the parent folder of the currently loaded audio file in '
-            'the file browser'
+            'Open the currently loaded audio file in the file browser'
         )
         self.menu.addAction(self.open_folder_action)
         self.open_folder_action.triggered.connect(self.open_item_folder)
