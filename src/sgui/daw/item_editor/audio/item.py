@@ -652,6 +652,12 @@ class AudioSeqItem(QGraphicsRectItem):
             self.setSelected(True)
             return
 
+        if a_event.modifiers() == (
+            QtCore.Qt.KeyboardModifier.AltModifier
+        ):
+            self.setSelected(not self.isSelected())
+            return
+
         if not self.isSelected():
             shared.AUDIO_SEQ.scene.clearSelection()
             self.setSelected(True)

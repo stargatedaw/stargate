@@ -85,9 +85,9 @@ onto here.
 """)
 
 AudioSeqItem = _(f"""
-An audio file.  Right click to see actions.  {KEY_CTRL}+{KEY_ALT}+drag to
-change item volume, CTRL+SHIFT+drag to volume curve, {KEY_ALT}+SHIFT+drag to
-change file volume, {KEY_CTRL}+drag to duplicate
+Audio item.  Right click: actions.  {KEY_CTRL}+{KEY_ALT}+drag: item volume,
+CTRL+SHIFT+drag: vol. curve, {KEY_ALT}+SHIFT+drag: file vol.  {KEY_CTRL}+drag:
+copy, {KEY_ALT}+click: multi-select
 """
 )
 
