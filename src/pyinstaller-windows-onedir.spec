@@ -1,11 +1,11 @@
 # -*- mode: python ; coding: utf-8 -*-
-
+import os
 
 block_cipher = None
 
 
 a = Analysis(['scripts\\stargate'],
-             pathex=['C:\\msys64\\home\\starg\\src\\stargate\\src'],
+             pathex=[os.path.abspath(SPECPATH)],
              binaries=[
                  ('engine/*.exe', 'engine'),
                  ('engine/*.dll', 'engine'),
