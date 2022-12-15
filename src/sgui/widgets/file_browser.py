@@ -156,13 +156,18 @@ class AbstractFileBrowserWidget:
         self.list_bookmarks = QTreeWidget()
         self.list_bookmarks.setObjectName('sidebar')
         self.list_bookmarks.setToolTip(
-            'Bookmark folders from the file browser menu to keep here for '
-            'easy access.  Some project folders are automatically kept as '
-            'bookmarks.  Right click a bookmark to see actions.'
+            'Bookmark folders created from the file browser menu. '
+            'Some project folders are automatically kept as '
+            '"system" bookmarks.  Right click a bookmark to see actions.'
         )
         self.list_bookmarks.setHeaderHidden(True)
         self.list_bookmarks.itemClicked.connect(self.bookmark_clicked)
-        self.list_bookmarks.contextMenuEvent = self.bookmark_context_menu_event
+        self.list_bookmarks.setContextMenuPolicy(
+            QtCore.Qt.ContextMenuPolicy.CustomContextMenu,
+        )
+        self.list_bookmarks.customContextMenuRequested.connect(
+            self.bookmark_context_menu_event,
+        )
         self.bookmarks_tab_vlayout.addWidget(self.list_bookmarks)
         self.bookmark_button_hlayout = QHBoxLayout()
         self.bookmarks_reload_button = QPushButton(_("Reload"))
@@ -373,10 +378,14 @@ class AbstractFileBrowserWidget:
         f_dict = bookmark.get_file_bookmarks()
         for k in sorted(f_dict.keys(), key=lambda s: s.lower()):
             f_parent = QTreeWidgetItem()
+            f_parent._parent = k
+            f_parent._name = None
             f_parent.setText(0, k)
             self.list_bookmarks.addTopLevelItem(f_parent)
             for k2 in sorted(f_dict[k].keys(), key=lambda s: s.lower()):
                 f_child = QTreeWidgetItem()
+                f_child._parent = k
+                f_child._name = k2
                 f_child.setText(0, k2)
                 f_parent.addChild(f_child)
             f_parent.setExpanded(True)
@@ -558,26 +567,22 @@ class AbstractFileBrowserWidget:
                     )
                 open_bookmarks()
 
-    def delete_bookmark(self):
-        f_items = self.list_bookmarks.selectedItems()
-        if len(f_items) > 0:
-            f_parent = f_items[0].parent()
-            if f_parent is None:
-                f_parent = f_items[0]
-                for f_i in range(f_parent.childCount()):
-                    f_child = f_parent.child(f_i)
-                    bookmark.delete_file_bookmark(
-                        f_parent.text(0), f_child.text(0))
-            else:
-                bookmark.delete_file_bookmark(
-                    f_parent.text(0), f_items[0].text(0))
-                self.list_bookmarks.clear()
+    def bookmark_context_menu_event(self, pos):
+        def delete_bookmark(item):
+            bookmark.delete_file_bookmark(item._parent, item._name)
             open_bookmarks()
-
-    def bookmark_context_menu_event(self, a_event):
+        item = self.list_bookmarks.itemAt(pos)
+        if (
+            not item
+            or
+            item._parent == 'system'
+            or
+            item._name is None
+        ):
+            return
         f_menu = QMenu(self.list_bookmarks)
         f_del_action = f_menu.addAction(_("Delete"))
-        f_del_action.triggered.connect(self.delete_bookmark)
+        f_del_action.triggered.connect(lambda: delete_bookmark(item))
         f_menu.exec(QCursor.pos())
 
     def folder_item_clicked(self, a_item):
