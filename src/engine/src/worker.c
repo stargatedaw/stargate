@@ -15,6 +15,9 @@
 
 #if SG_OS == _OS_MACOS
     #include <pthread/qos.h>
+#elif SG_OS == _OS_WINDOWS
+    #include <Windows.h>
+    #include <avrt.h>
 #endif
 
 void * v_worker_thread(void* a_arg){
@@ -30,6 +33,17 @@ void * v_worker_thread(void* a_arg){
         &STARGATE->worker_threads[f_thread_num].track_block_mutex;
     pthread_spinlock_t * f_lock =
         &STARGATE->worker_threads[f_thread_num].lock;
+
+#if SG_OS == _OS_WINDOWS
+    HRESULT hr;
+    HANDLE hTask;
+    DWORD taskIndex = 0;
+    hTask = AvSetMmThreadCharacteristics(TEXT("Pro Audio"), &taskIndex);
+    if (hTask == NULL){
+        hr = E_FAIL;
+        log_error("Failed to set Windows thread characteristics: %ld", hr);
+    }
+#endif
 
     while(1){
         pthread_mutex_lock(f_track_block_mutex);
@@ -88,7 +102,7 @@ void v_init_worker_threads(
         .sched_priority = sched_priority,
     };
     int qos_result = pthread_attr_set_qos_class_np(
-        &threadAttr, 
+        &threadAttr,
         QOS_CLASS_USER_INTERACTIVE,
         0
     );
@@ -239,7 +253,7 @@ void v_destructor(){
     for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
         _thread = &STARGATE->worker_threads[f_i];
         if(!pthread_spin_trylock(&_thread->lock)){
-            log_warn("dtor: Unable to acquire lock for thread %i", f_i);    
+            log_warn("dtor: Unable to acquire lock for thread %i", f_i);
 	}
         sg_assert(
             _thread->track_thread_quit_notifier == 2,
