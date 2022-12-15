@@ -16,14 +16,6 @@ Detected a Raspberry Pi with suboptimal settings.  "
 Please see https://github.com/stargatedaw/stargate/src/linux/rpi4.md
 """
 
-MACOS_UDP_WARNING = """\
-Detected that your UDP packet size limit is too low.  This will prevent some
-features such as the spectrum analyzer from working.  Please run this command
-from the terminal to set the UDP packet size to it's maximum limit:
-
-    sudo sysctl -w net.inet.udp.maxdgram=65535
-"""
-
 def _preflight_rpi():
     try:
         if rpi.is_rpi():
@@ -50,23 +42,6 @@ def _log_system_info():
     except Exception as ex:
         LOG.warning(ex)
 
-def preflight_macos_udp():
-    if not IS_MACOS:
-        return
-    try:
-        output = subprocess.check_output(['sysctl', 'net.inet.udp.maxdgram'])
-        output = output.decode('utf-8')
-        size = int(output.split()[1])
-        if size != 65535:
-            QMessageBox.warning(
-                None,
-                "Warning",
-                MACOS_UDP_WARNING,
-            )
-    except:
-        LOG.exception('Failed to read MacOS net.inet.udp.maxdgram')
-
 def preflight():
     _log_system_info()
-    preflight_macos_udp()
     _preflight_rpi()

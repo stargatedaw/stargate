@@ -93,6 +93,16 @@ class SocketIPCTransport(AbstractIPCTransport):
         self.host = host
         self.port = port
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.socket.setsockopt(
+            socket.SOL_SOCKET, 
+            socket.SO_SNDBUF,
+            500000,
+        )
+        self.socket.setsockopt(
+            socket.SOL_SOCKET, 
+            socket.SO_RCVBUF,
+            500000,
+        )
         self.socket.connect((self.host, self.port))
         self.socket.setblocking(0)
         self.failures = 0

@@ -27,14 +27,38 @@ struct SocketData{
 
 static struct SocketData SOCKET_DATA;
 
+void _set_buf_size(int sockfd){
+    int bufsize = 500000;
+    if(
+        setsockopt(
+            sockfd,
+            SOL_SOCKET,
+            SO_RCVBUF,
+            (char*)&bufsize,
+            sizeof(bufsize)
+        ) < 0
+    ){
+        log_error("Unable to set SO_RCVBUF");
+    }
+    if(
+        setsockopt(
+            sockfd,
+            SOL_SOCKET,
+            SO_SNDBUF,
+            (char*)&bufsize,
+            sizeof(bufsize)
+        ) < 0
+    ){
+        log_error("Unable to set SO_SNDBUF");
+    }
+}
+
 void ipc_init(){
     struct timeval tv = (struct timeval){
         .tv_usec = 10000,
     };
-    if((SOCKET_DATA.sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ){
-        perror("socket creation failed");
-        exit(EXIT_FAILURE);
-    }
+    SOCKET_DATA.sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    sg_assert(SOCKET_DATA.sockfd >= 0, "socket creation failed");
     if(
         setsockopt(
             SOCKET_DATA.sockfd,
@@ -44,8 +68,9 @@ void ipc_init(){
             sizeof(tv)
         ) < 0
     ){
-        perror("Could not set client socket to SO_RCVTIMEO");
+        log_error("Could not set client socket to SO_RCVTIMEO");
     }
+    _set_buf_size(SOCKET_DATA.sockfd);
     memset(
         &SOCKET_DATA.servaddr,
         0,
@@ -103,16 +128,8 @@ void* ipc_server_thread(void* _arg){
     };
 
     // Creating socket file descriptor
-    if (
-        (sockfd = socket(
-            AF_INET,
-            SOCK_DGRAM,
-            0
-        )) < 0
-    ){
-        perror("socket creation failed");
-        exit(EXIT_FAILURE);
-    }
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    sg_assert(sockfd >= 0, "socket creation failed");
     if(
         setsockopt(
             sockfd,
@@ -122,8 +139,9 @@ void* ipc_server_thread(void* _arg){
             sizeof(tv)
         ) < 0
     ){
-        perror("Error");
+        log_error("Unable to set SO_RCVTIMEO");
     }
+    _set_buf_size(sockfd);
 
     memset(&servaddr, 0, sizeof(servaddr));
     memset(&cliaddr, 0, sizeof(cliaddr));
@@ -136,16 +154,14 @@ void* ipc_server_thread(void* _arg){
     };
 
     // Bind the socket with the server address
-    if(
+    sg_assert(
         bind(
             sockfd,
             (const struct sockaddr *)&servaddr,
             sizeof(servaddr)
-        ) < 0
-    ){
-        perror("bind failed");
-        exit(EXIT_FAILURE);
-    }
+        ) >= 0,
+        "bind failed"
+    );
 
     len = (socklen_t)sizeof(cliaddr); //len is value/result
 
