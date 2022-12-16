@@ -90,8 +90,7 @@ class MidiDevice:
 NO_MIDI_DEVICES_INSTRUCTIONS = """\
 No MIDI devices enabled.  If you are using MIDI devices, ensure that they are
 plugged in, and press the Hardware Settings button, go to the MIDI In tab, and
-enable your MIDI device(s).  If the MIDI In tab is not present, that means that
-no MIDI devices were detected.
+enable your MIDI device(s).
 """
 
 class MidiDevicesDialog:

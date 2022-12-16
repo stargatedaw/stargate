@@ -25,6 +25,12 @@ import os
 import sys
 import time
 
+NO_MIDI_DEVICES_MSG = """\
+No MIDI devices detected.  If this is not expected, try unplugging and plugging
+your MIDI devicei back, and check that you have drivers installed if required
+by your device
+"""
+
 if __name__ == "__main__":
     # For running as a stand-alone script
     f_parent_dir = os.path.dirname(os.path.abspath(__file__))
@@ -517,11 +523,15 @@ class HardwareDialog:
                         f_checkbox.setChecked(True)
                     self.midi_in_checkboxes[f_midi_device_name] = f_checkbox
 
-                for f_cbox in sorted(
-                    self.midi_in_checkboxes,
-                    key=lambda x: x.lower(),
-                ):
-                    f_midi_in_layout.addWidget(self.midi_in_checkboxes[f_cbox])
+            for f_cbox in sorted(
+                self.midi_in_checkboxes,
+                key=lambda x: x.lower(),
+            ):
+                f_midi_in_layout.addWidget(self.midi_in_checkboxes[f_cbox])
+            if not self.midi_in_checkboxes:
+                f_midi_in_layout.addWidget(
+                    QLabel(NO_MIDI_DEVICES_MSG)
+                )
             LOG.info("Finished enumerating MIDI devices")
 
         f_midi_in_layout.addItem(
