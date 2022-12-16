@@ -26,9 +26,9 @@ import sys
 import time
 
 NO_MIDI_DEVICES_MSG = """\
-No MIDI devices detected.  If this is not expected, try unplugging and plugging
-your MIDI devicei back, and check that you have drivers installed if required
-by your device
+No MIDI devices detected.  If this is not expected, try closing Stargate DAW,
+then unplugging and plugging your MIDI device back in,  Check that you have
+drivers installed if required by your device
 """
 
 if __name__ == "__main__":
