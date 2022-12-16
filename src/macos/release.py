@@ -10,11 +10,11 @@ import subprocess
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--dmg',
+        '--pkg',
         action='store_true',
         default=False,
-        dest='dmg',
-        help='Build a DMG installer instead of a PKG',
+        dest='pkg',
+        help='Build a PKG installer instead of a DMG',
     )
     return parser.parse_args()
 
@@ -49,9 +49,10 @@ elif ARCH == 'arm64':
 else:
     assert False, f"Unknown arch. {ARCH}"
 
-BUNDLE = f'dist/{MAJOR_VERSION}.app'
-if os.path.isdir(BUNDLE):
-    shutil.rmtree(BUNDLE)
+BUNDLE = 'Stargate DAW.app'
+BUNDLE_PATH = os.path.join('dist', BUNDLE)
+if os.path.isdir(BUNDLE_PATH):
+    shutil.rmtree(BUNDLE_PATH)
 
 for version in ('3.8', '3.9', '3.10', '3.11'):
     try:
@@ -74,29 +75,30 @@ ARCH_NAMES = {
     'arm64': 'm1',
 }
 
-if ARGS.dmg:
-    DMG = f'{MAJOR_VERSION}-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.dmg'
+def build_dmg():
+    DMG = f'StargateDAW-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.dmg'
     if os.path.exists(DMG):
         os.remove(DMG)
 
     subprocess.check_call([
         'create-dmg',
-        '--volname', f'{MAJOR_VERSION}',
-        '--icon', f'{MAJOR_VERSION}.app', '50', '120',
-        '--hide-extension', f'{MAJOR_VERSION}.app',
+        '--volname', 'Stargate DAW',
+        '--icon', BUNDLE, '50', '120',
+        '--hide-extension', BUNDLE,
         '--app-drop-link', '300', '120',
         '--format', 'UDBZ',
         DMG,
-        f'{MAJOR_VERSION}.app',
+        BUNDLE,
     ])
-else:
+
+def build_pkg():
     PKG = f'StargateDAW-{MINOR_VERSION}-macos-{ARCH_NAMES[ARCH]}-{ARCH}.pkg'
     subprocess.check_call([
         'pkgbuild',
-        '--root', "stargate.app",
+        '--root', BUNDLE,
         '--identifier', 'com.github.stargatedaw.stargate',
         '--scripts', '../macos/Scripts',
-        '--install-location', "/Applications/Stargate DAW.app",
+        '--install-location', f"/Applications/{BUNDLE}",
         'Distribution.pkg',
     ])
     # Distribution.xml generated with:
@@ -108,4 +110,9 @@ else:
         '--package-path', '.',
         PKG,
     ])
+
+if ARGS.pkg:
+    build_pkg()
+else:
+    build_dmg()
 

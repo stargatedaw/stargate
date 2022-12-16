@@ -67,6 +67,6 @@ coll = COLLECT(exe,
                upx_exclude=[],
                name='stargate')
 app = BUNDLE(coll,
-             name='stargate.app',
+             name='Stargate DAW.app',
              icon='macos/stargate.icns',
              bundle_identifier='io.github.stargateaudio')

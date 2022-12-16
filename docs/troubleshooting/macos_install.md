@@ -6,20 +6,6 @@ the installation of Stargate DAW.
 Double-click the .pkg file to open the install wizard.
 
 # Issues
-## Spectrum analyzer does not work, various issues when trying to use it
-Stargate DAW uses the UDP protocal for communicating between the engine and
-the UI.  UDP has a limit of 64kb for packet sizes, which Stargate DAW stays
-within.  However, by default, MacOS limits it to 9216 bytes (which sometimes
-Stargate exceeds), `<sarcasm>` because apparently Apple knows better than the
-Internet Engineering Taskforce what the UDP protocol limits should be, and
-anybody that is sending more than the nice round number of 9216 bytes in one go
-is `doing it wrong`.`</sarcasm>`
-
-You can fix it by running this command:
-```
-sudo sysctl -w net.inet.udp.maxdgram=65535
-```
-
 ## "Unverified Developer"
 Note that you may get a warning about unidentified/unverified developer.  This
 is because presently we are not paying a yearly fee to be part of the Apple
@@ -27,8 +13,14 @@ Developer program.  To get around this, you can use Google to find instructions
 [such as this](https://customercare.primera.com/portal/en/kb/articles/how-to-open-a-primera-app-that-hasn-t-been-notarized-or-is-from-an-unidentified-developer)
 
 ## Unable to record the built-in microphone
-If you wish to record using the built-in MacBook microphone,
-[see this](https://support.apple.com/en-us/HT209175)
+At the moment, it will not be possible to request microphone access from 
+Stargate DAW, however, there is a workaround.  You can open a Terminal and
+run Stargate DAW from the terminal, and grant the terminal access to the 
+microphone when prompted.  This is the command to run Stargate DAW from the
+terminal:
+```
+/Applications/Stargate\ DAW.app/Contents/MacOS/stargate
+```
 
 ## Portable install mode
 NOTE: It is recommended to use an exFAT formatted flash drive, as other formats
