@@ -567,7 +567,7 @@ class HardwareDialog:
                     f_samplerate_combobox.findText(f_samplerate))
             if util.IS_WINDOWS or util.IS_MACOS:
                 idx_lookup = {
-                    QComboBoxName.itemText(i): i
+                    f_input_name_combobox.itemText(i): i
                     for i in range(f_input_name_combobox.count())
                 }
                 if f_str in idx_lookup:
