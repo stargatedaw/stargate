@@ -217,7 +217,9 @@ class AudioInput:
         self.stereo_combobox = QComboBox()
         self.stereo_combobox.setToolTip(
             'Select an audio channel to pair with this one as the right '
-            'channel of a stereo pair'
+            'channel of a stereo pair.  To record stereo, you only need to '
+            'record arm this track, record arming the other will record it '
+            'as mono'
         )
         a_layout.addWidget(self.stereo_combobox, a_num, 4)
         self.stereo_combobox.setMinimumWidth(72)
@@ -430,7 +432,7 @@ class TransportWidget(AbstractTransportWidget):
                             f_new_path += ".wav"
                         shutil.move(f_path, f_new_path)
                     else:
-                        LOG.error("Error, path did not exist: {}".format(f_path))
+                        LOG.error(f"Error, path did not exist: {f_path}")
             self.open_rec_dir = f_open_rec_dir_checkbox.isChecked()
             if self.open_rec_dir:
                 WAVE_EDITOR.file_browser.set_folder(
@@ -458,6 +460,9 @@ class TransportWidget(AbstractTransportWidget):
         f_hlayout.addWidget(f_name_lineedit)
         f_open_rec_dir_checkbox = QRadioButton(
             _("Open recording directory in the file browser when finished?"),
+        )
+        f_open_rec_dir_checkbox.setToolTip(
+            'Allows easy access to open any recorded files'
         )
         f_layout.addWidget(f_open_rec_dir_checkbox)
         if self.open_rec_dir:
@@ -1440,7 +1445,9 @@ class WaveEditorWidget:
     def set_playback_cursor(self, a_pos):
         if self.playback_cursor is not None:
             self.playback_cursor.setPos(
-                a_pos * widgets.AUDIO_ITEM_SCENE_WIDTH, 0.0)
+                a_pos * widgets.AUDIO_ITEM_SCENE_WIDTH,
+                0.0,
+            )
         self.set_time_label(a_pos)
 
     def set_time_label(self, a_value, a_override=False):
@@ -1450,8 +1457,13 @@ class WaveEditorWidget:
             f_seconds %= 60.0
             f_tenths = round(f_seconds - float(int(f_seconds)), 1)
             f_seconds = str(int(f_seconds)).zfill(2)
-            glbl_shared.TRANSPORT.set_time("{}:{}.{}".format(
-                f_minutes, f_seconds, str(f_tenths)[2]))
+            glbl_shared.TRANSPORT.set_time(
+                "{}:{}.{}".format(
+                    f_minutes,
+                    f_seconds,
+                    str(f_tenths)[2],
+                ),
+            )
 
     def on_play(self):
         for f_control in self.controls_to_disable:
@@ -1471,13 +1483,16 @@ class WaveEditorWidget:
         self.time_label_enabled = False
         if self.history:
             self.set_time_label(
-                self.sample_graph.start_marker.value * 0.001, True)
+                self.sample_graph.start_marker.value * 0.001,
+                True,
+            )
         if self.graph_object is not None:
             self.sample_graph.redraw_item(
                 self.sample_graph.start_marker.value,
                 self.sample_graph.end_marker.value,
                 self.sample_graph.fade_in_marker.value,
-                self.sample_graph.fade_out_marker.value)
+                self.sample_graph.fade_out_marker.value,
+            )
 
     def set_sample_graph(self, a_file_name):
         self.graph_object = constants.PROJECT.get_sample_graph_by_name(
