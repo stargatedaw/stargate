@@ -475,6 +475,14 @@ class AbstractFileBrowserWidget:
             f_lineedit.setText(os.path.basename(self.last_open_dir))
             f_grid_layout.addWidget(QLabel(_("Name:")), 1, 0)
             f_grid_layout.addWidget(f_lineedit, 1, 1)
+        f_layout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         f_hlayout2 = QHBoxLayout()
         f_layout.addLayout(f_hlayout2)
         if a_recursive:
