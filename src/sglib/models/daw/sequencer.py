@@ -146,6 +146,22 @@ class sequencer:
         for f_item in (x for x in self.items if x.start_beat >= a_start):
             f_item.start_beat += a_length
 
+    def set_first_beat(self, beat):
+        _min = min(x.start_beat for x in self.items)
+        offset = int(beat - _min)
+        for item in self.items:
+            item.start_beat += offset
+        markers = {(0, 2): self.markers[(0, 2)]}
+        for marker in self.markers.values():
+            if (marker.beat, marker.type) == (0, 2):
+                continue # don't move the first tempo marker
+            marker.beat += offset
+            if marker.type == 1:
+                marker.start_beat += offset
+            tpl = (marker.beat, marker.type)
+            markers[tpl] = marker
+        self.markers = markers
+
     def clear_range(self, a_track_list, a_start_beat, a_end_beat):
         LOG.debug(
             f'Clearing items from {a_start_beat} to {a_end_beat} '

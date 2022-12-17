@@ -56,6 +56,16 @@ def show(event):
 
     menu.addSeparator()
 
+    set_first_beat_action = QAction("Set as first beat of song", menu)
+    menu.addAction(set_first_beat_action)
+    set_first_beat_action.setToolTip(
+        "Move all items so that this beat is the first beat of the song.  "
+        'use to add or remove space from the beginning of the song'
+    )
+    set_first_beat_action.triggered.connect(set_first_beat)
+
+    menu.addSeparator()
+
     clear_tempo_range_action = QAction(
         _("Clear Time/Tempo Markers in Region"),
         menu,
@@ -130,6 +140,12 @@ def show(event):
     # Otherwise, the entire scene gets redrawn and we should not delete it
     if not menu.exec(QCursor.pos()):
         shared.SEQUENCER.scene.removeItem(pos_line)
+
+def set_first_beat():
+    shared.CURRENT_SEQUENCE.set_first_beat(shared.SEQUENCER.header_event_pos)
+    constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
+    constants.DAW_PROJECT.commit(_("Set first beat"))
+    shared.SEQ_WIDGET.open_sequence()
 
 def header_time_modify():
     def ok_handler():
