@@ -201,8 +201,20 @@ class AudioInput:
         self.monitor_checkbox.clicked.connect(self.update_engine)
         a_layout.addWidget(self.monitor_checkbox, a_num, 2)
 
+        self.stereo_combobox = QComboBox()
+        self.stereo_combobox.setToolTip(
+            'Select an audio channel to pair with this one as the right '
+            'channel of a stereo pair.  To record stereo, you only need to '
+            'record arm this track, record arming the other will record it '
+            'as mono'
+        )
+        a_layout.addWidget(self.stereo_combobox, a_num, 3)
+        self.stereo_combobox.setMinimumWidth(72)
+        self.stereo_combobox.addItems([_("None")] +
+            [str(x) for x in range(a_count + 1)])
+        self.stereo_combobox.currentIndexChanged.connect(self.update_engine)
         self.vol_layout = QHBoxLayout()
-        a_layout.addLayout(self.vol_layout, a_num, 3)
+        a_layout.addLayout(self.vol_layout, a_num, 4)
         self.vol_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
         self.vol_slider.setToolTip('Volume gain for this input in decibels')
         self.vol_slider.setRange(-240, 240)
@@ -214,18 +226,6 @@ class AudioInput:
         self.vol_label = QLabel("0.0dB")
         self.vol_label.setMinimumWidth(64)
         self.vol_layout.addWidget(self.vol_label)
-        self.stereo_combobox = QComboBox()
-        self.stereo_combobox.setToolTip(
-            'Select an audio channel to pair with this one as the right '
-            'channel of a stereo pair.  To record stereo, you only need to '
-            'record arm this track, record arming the other will record it '
-            'as mono'
-        )
-        a_layout.addWidget(self.stereo_combobox, a_num, 4)
-        self.stereo_combobox.setMinimumWidth(72)
-        self.stereo_combobox.addItems([_("None")] +
-            [str(x) for x in range(a_count + 1)])
-        self.stereo_combobox.currentIndexChanged.connect(self.update_engine)
         self.suppress_updates = False
 
     def name_update(self, a_val=None):
@@ -288,20 +288,42 @@ class AudioInputWidget(QScrollArea):
         self.widget = QWidget()
         self.setWidget(self.widget)
         self.main_layout = QVBoxLayout(self.widget)
+        self.hardware_settings_button = QPushButton('Hardware Settings')
+        self.main_layout.addWidget(self.hardware_settings_button)
+        self.hardware_settings_button.setToolTip(
+            'Show the hardware settings dialog where you can enable or '
+            'disable audio inputs and MIDI devices.  This will close and '
+            'reopen the project window'
+        )
         self.layout = QGridLayout()
         self.main_layout.addWidget(QLabel(_("Audio Inputs")))
         self.main_layout.addLayout(self.layout)
-        f_labels = (
-            _("Name"), _("Rec."), _("Mon."), _("Gain"), _("Stereo"))
-        for f_i, f_label in zip(range(len(f_labels)), f_labels):
-            self.layout.addWidget(QLabel(f_label), 0, f_i)
         self.inputs = []
         f_count = 0
         if "audioInputs" in util.DEVICE_SETTINGS:
             f_count = int(util.DEVICE_SETTINGS["audioInputs"])
-        for f_i in range(f_count):
-            f_input = AudioInput(f_i, self.layout, self.callback, f_count - 1)
-            self.inputs.append(f_input)
+        if f_count == 0:
+            self.layout.addWidget(
+                QLabel(sg_strings.NO_AUDIO_INPUTS_INSTRUCTIONS),
+            )
+        else:
+            f_labels = (
+                _("Name"),
+                _("Rec."),
+                _("Mon."),
+                _("Stereo"),
+                _("Gain"),
+            )
+            for f_i, f_label in zip(range(len(f_labels)), f_labels):
+                self.layout.addWidget(QLabel(f_label), 0, f_i)
+            for f_i in range(f_count):
+                f_input = AudioInput(
+                    f_i,
+                    self.layout,
+                    self.callback,
+                    f_count - 1,
+                )
+                self.inputs.append(f_input)
         self.layout.addItem(
             QSpacerItem(
                 1,

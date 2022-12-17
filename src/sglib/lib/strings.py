@@ -138,3 +138,10 @@ Shows CPU and memory percentage.  Note that the CPU usage is a max of the
 cores that are in use, not based on the average of CPU load and available
 logical cores, which is less useful.
 """
+
+NO_AUDIO_INPUTS_INSTRUCTIONS = """\
+No audio inputs available.  If you are using an audio device with inputs, press
+the Hardware Settings button and ensure that the audio inputs control is set to
+a number greater than 0.
+"""
+

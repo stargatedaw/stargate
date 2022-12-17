@@ -7,6 +7,7 @@ from sgui.plugins import *
 from sgui.sgqt import *
 
 from sglib.lib import util
+from sglib.lib.strings import NO_AUDIO_INPUTS_INSTRUCTIONS
 from sglib.lib.translate import _
 from sglib.models.stargate import AudioInputTrack, AudioInputTracks
 from sgui.daw import shared
@@ -159,12 +160,6 @@ class AudioInput:
         self.output_mode_combobox.setCurrentIndex(a_val.sidechain)
         self.output_track_combobox.setCurrentIndex(a_val.output)
         self.suppress_updates = False
-
-NO_AUDIO_INPUTS_INSTRUCTIONS = """\
-No audio inputs available.  If you are using an audio device with inputs, press
-the Hardware Settings button and ensure that the audio inputs control is set to
-a number greater than 0.
-"""
 
 class AudioInputWidget:
     def __init__(self):

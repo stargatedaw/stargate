@@ -201,6 +201,8 @@ class SgMainWindow(QWidget):
         SPLASH_SCREEN.status_update(_("Loading Wave Editor"))
         from sgui import wave_edit
         wave_edit.init()
+        button = wave_edit.TRANSPORT.audio_inputs.hardware_settings_button
+        button.pressed.connect(self.on_change_audio_settings)
 
         self.wave_editor_module = wave_edit
 
