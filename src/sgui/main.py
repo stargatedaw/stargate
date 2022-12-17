@@ -323,6 +323,7 @@ class SgMainWindow(QWidget):
             self.menu_appearance,
         )
         self.menu_appearance.addAction(self.collapse_splitters_action)
+        self.addAction(self.collapse_splitters_action)
         self.collapse_splitters_action.setToolTip(
             'Toggle collapsing the transport, create more room for the '
             'sequencer or wave editor'
@@ -339,6 +340,7 @@ class SgMainWindow(QWidget):
             self.menu_appearance,
         )
         self.menu_appearance.addAction(self.full_screen_action)
+        self.addAction(self.full_screen_action)
         self.full_screen_action.setToolTip(
             'Toggle between full screen mode and normal mode'
         )
