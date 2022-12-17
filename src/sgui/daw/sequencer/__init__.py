@@ -93,6 +93,7 @@ class SequencerWidget:
 
         self.unsolo_action = QAction(_("Un-Solo All"), self.menu)
         self.menu.addAction(self.unsolo_action)
+        self.widget.addAction(self.unsolo_action)
         self.unsolo_action.setToolTip(
             'Disable solo for any tracks that have been soloed'
         )
@@ -101,6 +102,7 @@ class SequencerWidget:
 
         self.unmute_action = QAction(_("Un-Mute All"), self.menu)
         self.menu.addAction(self.unmute_action)
+        self.widget.addAction(self.unmute_action)
         self.unmute_action.setToolTip(
             'Disable mute for any tracks that have been muted'
         )
