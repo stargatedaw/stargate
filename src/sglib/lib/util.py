@@ -5,7 +5,6 @@ from sglib.math import clip_max, clip_min, clip_value
 import ctypes
 import json
 import math
-import multiprocessing
 import os
 import platform
 import random
@@ -21,12 +20,14 @@ KEY_ALT = 'ALT'
 
 if IS_LINUX:
     from .path.linux import *
-if IS_MACOS:
+elif IS_MACOS:
     KEY_CTRL = 'CMD'
     KEY_ALT = 'OPT'
     from .path.macos import *
 elif IS_WINDOWS:
     from .path.windows import *
+else:
+    raise OSError('Unsupported platform: {platform.platform()}')
 
 terminating_char = "\\"
 
@@ -82,9 +83,11 @@ ENGINE_RETCODE = None
 
 CPU_COUNT = psutil.cpu_count(logical=False)
 if CPU_COUNT is None:
+    import multiprocessing
     CPU_COUNT = multiprocessing.cpu_count()
     if not is_rpi():  # Assume SMT
         CPU_COUNT /= 2
+# engine does not support more than 16
 CPU_COUNT = clip_value(CPU_COUNT, 1, 16)
 AUTO_CPU_COUNT = clip_value(
     CPU_COUNT if CPU_COUNT <= 2 else CPU_COUNT - 1,
@@ -268,9 +271,11 @@ class WinVolInfo:
             ctypes.c_wchar_p(drive),
             self.volumeNameBuffer,
             ctypes.sizeof(self.volumeNameBuffer),
-            None, None, None,
+            None,
+            None,
+            None,
             self.fileSystemNameBuffer,
-            ctypes.sizeof(self.fileSystemNameBuffer)
+            ctypes.sizeof(self.fileSystemNameBuffer),
         )
         return str(self.volumeNameBuffer.value)
 
@@ -388,21 +393,17 @@ def is_file_type(a_file, a_list):
         return True
     return False
 
+BEAT_FRAC_INDICES = {
+    0: 0.0625,
+    1:  0.125,
+    2: 0.25,
+    3: 0.33333333,
+    4: 0.5,
+    5: 1.0,
+}
+
 def beat_frac_text_to_float(f_index):
-    if f_index == 0:
-        return 0.0625
-    elif f_index == 1:
-        return 0.125
-    elif f_index == 2:
-        return 0.25
-    elif f_index == 3:
-        return 0.33333333
-    elif f_index == 4:
-        return 0.5
-    elif f_index == 5:
-        return 1.0
-    else:
-        return 0.25
+    return BEAT_FRAC_INDICES.get(f_index, 0.25)
 
 def bar_frac_text_to_float(a_text):
     return BAR_FRACS_DICT[str(a_text)] * 4.0
