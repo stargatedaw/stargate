@@ -10,10 +10,10 @@ from sglib.lib.util import (
     set_file_setting,
 )
 from sglib.hardware.rpi import is_rpi
+from sglib.lib.util import CPU_COUNT
 from sglib.log import LOG
 from sglib.models import theme
 from sgui import shared as glbl_shared
-import multiprocessing
 import sys
 
 
@@ -279,16 +279,15 @@ def get_fps() -> int:
         return 20
     screen = QGuiApplication.primaryScreen()
     is_gt_hd = screen.physicalSize().width() > 2000
-    cpu_count = multiprocessing.cpu_count()
-    if cpu_count >= 8:
+    if CPU_COUNT >= 8:
         if is_gt_hd:
             return 36
         if screen.refreshRate() > 60:
             return 60
         return int(screen.refreshRate())
-    elif cpu_count >= 6:
+    elif CPU_COUNT >= 6:
         return 30
-    elif cpu_count >= 4:
+    elif CPU_COUNT >= 4:
         return 25
     else:
         return 20
