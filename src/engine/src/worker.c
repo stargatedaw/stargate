@@ -110,6 +110,7 @@ void v_init_worker_threads(
 #endif
 
     int f_i;
+    char thread_name[64];
 
     for(f_i = 0; f_i < STARGATE->worker_thread_count; ++f_i){
         _thread = &STARGATE->worker_threads[f_i];
@@ -140,6 +141,8 @@ void v_init_worker_threads(
             v_worker_thread,
             (void*)f_args
         );
+        sg_snprintf(thread_name, 64, "Worker %i", f_i);
+        set_thread_name(STARGATE->worker_threads[f_i].thread, thread_name);
     }
 
     pthread_attr_destroy(&threadAttr);
@@ -157,6 +160,7 @@ void v_init_worker_threads(
             v_audio_recording_thread,
             NULL
         );
+        set_thread_name(STARGATE->audio_recording_thread, "Audio Recording");
 
         pthread_create(
             &STARGATE->osc_queue_thread,
@@ -164,6 +168,7 @@ void v_init_worker_threads(
             v_osc_send_thread,
             (void*)STARGATE
         );
+        set_thread_name(STARGATE->osc_queue_thread, "OSC Queue");
         pthread_attr_destroy(&auxThreadAttr);
     }
 }

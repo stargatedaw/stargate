@@ -364,6 +364,7 @@ NO_OPTIMIZATION void start_socket_thread(){
         "pthread_create failed with %i",
         result
     );
+    set_thread_name(SOCKET_SERVER_THREAD, "Socket Server");
 }
 
 #if SG_OS != _OS_WINDOWS
@@ -386,6 +387,7 @@ NO_OPTIMIZATION void start_socket_thread(){
             ui_process_monitor_thread,
             (void*)f_ui_thread_args
         );
+        set_thread_name(f_ui_monitor_thread, "UI Monitor");
     }
 #endif
 

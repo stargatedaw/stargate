@@ -237,3 +237,9 @@ void sg_snprintf(
         (int)size
     );
 }
+
+void set_thread_name(pthread_t thread, const char* name){
+#if SG_OS == _OS_LINUX
+    pthread_setname_np(thread, name);
+#endif
+}

@@ -148,4 +148,6 @@ typedef struct {
 } t_sg_thread_storage;
 
 void sg_print_stack_trace();
+void set_thread_name(pthread_t thread, const char* name);
+
 #endif
