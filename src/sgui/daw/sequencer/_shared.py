@@ -202,7 +202,8 @@ def delete_selected():
         shared.SEQUENCER.automation_save_callback()
 
 def init():
-    global copy_action, delete_action
+    global copy_action, delete_action, SEQUENCE_EDITOR_MODE
+    SEQUENCE_EDITOR_MODE = 0
     copy_action = QAction(
         parent=shared.SEQUENCER,
         text=_("Copy"),
