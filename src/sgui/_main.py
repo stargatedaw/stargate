@@ -105,6 +105,7 @@ class MainStackedWidget(QStackedWidget):
         self.setCurrentWidget(self.hardware_dialog)
 
     def closeEvent(self, event):
+        self.raise_()
         if glbl_shared.IGNORE_CLOSE_EVENT:
             if sgqt.DIALOG_SHOWING:
                 event.ignore()
