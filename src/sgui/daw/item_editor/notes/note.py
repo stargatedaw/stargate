@@ -103,11 +103,12 @@ class PianoRollNoteItem(QGraphicsRectItem):
         self.set_vel_line()
         self.set_brush()
         self.setToolTip(
-            'A MIDI note to be sent to an instrument in the plugin rack\n'
-            'Select and move with the mouse, click near the end and drag\n'
-            'to change note length'
+            'A MIDI note to be sent to an instrument in the plugin rack. '
+            'Select and move with the mouse, click near the end and drag '
+            f'to change note length.  {util.KEY_ALT}+click to multi-select'
         )
         self.previewer = None
+        self.selection_toggle = False
 
     def set_vel_line(self):
         if _shared.PARAMETER == 0:
@@ -262,6 +263,12 @@ class PianoRollNoteItem(QGraphicsRectItem):
 
     def mousePressEvent(self, a_event):
         if a_event.button() == QtCore.Qt.MouseButton.RightButton:
+            return
+        if a_event.modifiers() == (
+            QtCore.Qt.KeyboardModifier.AltModifier
+        ):
+            self.selection_toggle = True
+            self.setSelected(not self.isSelected())
             return
         if shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
             _shared.piano_roll_set_delete_mode(True)
@@ -426,6 +433,8 @@ class PianoRollNoteItem(QGraphicsRectItem):
     def mouseMoveEvent(self, a_event):
         if a_event.button() == QtCore.Qt.MouseButton.RightButton:
             return
+        if self.selection_toggle:
+            return
         if shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
             self.delete_later()
             return
@@ -476,7 +485,8 @@ class PianoRollNoteItem(QGraphicsRectItem):
             f_new_note_length = min_note_length
         f_item.note_item.set_length(f_new_note_length)
 
-    def _mr_copy(self, f_item, f_pos_x, f_recip):
+    def _mr_copy(self, f_item, f_pos_x, f_recip, f_new_selection):
+        f_pos_y = f_item.pos().y()
         f_new_note_start = (
             f_pos_x - shared.PIANO_KEYS_WIDTH
         ) * shared.CURRENT_ITEM_LEN * f_recip
@@ -514,6 +524,14 @@ class PianoRollNoteItem(QGraphicsRectItem):
     def mouseReleaseEvent(self, a_event):
         if a_event.button() == QtCore.Qt.MouseButton.RightButton:
             return
+        if self.selection_toggle:
+            shared.PIANO_ROLL_EDITOR.selected_note_strings.clear()
+            for item in shared.PIANO_ROLL_EDITOR.get_selected_items():
+                shared.PIANO_ROLL_EDITOR.selected_note_strings.append(
+                    item.get_selected_string(),
+                )
+            self.selection_toggle = False
+            return
         PREVIEW_NOTES.clear()
         if _shared.PIANO_ROLL_DELETE_MODE:
             _shared.piano_roll_set_delete_mode(False)
@@ -531,14 +549,19 @@ class PianoRollNoteItem(QGraphicsRectItem):
             elif self.is_velocity_dragging or self.is_velocity_curving:
                 pass
             elif self.is_copying:
-                self._mr_copy(f_item, f_pos_x, f_recip)
+                self._mr_copy(
+                    f_item,
+                    f_pos_x,
+                    f_recip,
+                    f_new_selection,
+                )
             else:
                 self._mr_move(f_item, f_pos_x, f_recip)
         if self.is_resizing:
             shared.LAST_NOTE_RESIZE = self.note_item.length
         shared.CURRENT_ITEM.fix_overlaps()
         _shared.SELECTED_PIANO_NOTE = None
-        shared.PIANO_ROLL_EDITOR.selected_note_strings = []
+        shared.PIANO_ROLL_EDITOR.selected_note_strings.clear()
         if self.is_copying:
             for f_new_item in f_new_selection:
                 shared.PIANO_ROLL_EDITOR.selected_note_strings.append(
@@ -554,6 +577,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
             f_item.is_copying = False
             f_item.is_velocity_dragging = False
             f_item.is_velocity_curving = False
+            f_item.selection_toggle = False
         global_save_and_reload_items()
         self.showing_resize_cursor = False
         QApplication.restoreOverrideCursor()
