@@ -3,6 +3,9 @@ from sglib.lib.util import *
 
 
 class tracks:
+    __slots__ = [
+        'tracks',
+    ]
     def __init__(self):
         self.tracks = {}
 
@@ -45,6 +48,13 @@ class tracks:
         return f_result
 
 class track:
+    __slots__ = [
+        'track_uid',
+        'name',
+        'solo',
+        'mute',
+        'track_pos',
+    ]
     def __init__(
         self,
         a_track_uid=-1,

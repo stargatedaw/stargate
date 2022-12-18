@@ -7,6 +7,7 @@ class sequencer_item:
         'item_uid',
         'start_offset',
         'modified',
+        'uid',
     ]
     def __init__(
         self,

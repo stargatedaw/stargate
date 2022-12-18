@@ -8,6 +8,20 @@ class AbstractMIDIEvent:
         return self.start < other.start
 
 class MIDINote(AbstractMIDIEvent):
+    __slots__ = [
+        'start',
+        'length',
+        'velocity',
+        'pan',
+        'attack',
+        'decay',
+        'sustain',
+        'release',
+        'note_num',
+        'channel',
+        'is_selected',
+        'end',
+    ]
     def __init__(
         self,
         a_start,
@@ -152,6 +166,13 @@ class MIDINote(AbstractMIDIEvent):
 
 
 class MIDIControl(AbstractMIDIEvent):
+    __slots__ = [
+        'start',
+        'cc_num',
+        'cc_val',
+        'channel',
+    ]
+
     def __init__(self, a_start, a_cc_num, a_cc_val, channel=0):
         self.start = round(float(a_start), 6)
         self.cc_num = int(a_cc_num)
@@ -198,6 +219,11 @@ class MIDIControl(AbstractMIDIEvent):
 
 
 class MIDIPitchbend(AbstractMIDIEvent):
+    __slots__ = [
+        'start',
+        'pb_val',
+        'channel',
+    ]
     def __init__(self, a_start, a_pb_val, channel=0):
         self.start = round(float(a_start), 6)
         self.pb_val = round(float(a_pb_val), 6)

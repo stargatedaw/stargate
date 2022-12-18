@@ -5,6 +5,11 @@ from sglib.lib.translate import _
 
 
 class loop_marker(_shared.abstract_marker):
+    __slots__ = [
+        'type',
+        'beat',
+        'start_beat',
+    ]
     def __init__(self, a_beat, a_start_beat):
         self.type = 1
         self.beat = int(a_beat)

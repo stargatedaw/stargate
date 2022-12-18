@@ -3,6 +3,9 @@ import ast
 
 
 class TrackColors:
+    __slots__ = [
+        'colors',
+    ]
     def __init__(self):
         self.colors = {}
 

@@ -22,6 +22,22 @@ def remove_item_from_sg_cache(a_path):
 global_sample_graph_cache = {}
 
 class SampleGraph:
+    __slots__ = [
+        'sample_graph_cache',
+        '_file',
+        'sample_dir',
+        'sample_dir_file',
+        'timestamp',
+        'channels',
+        'high_peaks',
+        'low_peaks',
+        'count',
+        'length_in_seconds',
+        'sample_rate',
+        'frame_count',
+        'peak',
+        'cache',
+    ]
     @staticmethod
     def create(a_file_name, a_sample_dir):
         """ Used to instantiate a sample_graph, but

@@ -6,6 +6,10 @@ from sglib.lib.translate import _
 
 
 class DawAtmRegion:
+    __slots__ = [
+        'plugins',
+        'points',
+    ]
     def __init__(self):
         self.plugins = {}
         self.points = []
