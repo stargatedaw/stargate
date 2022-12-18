@@ -13,15 +13,16 @@ GNU General Public License for more details.
 """
 
 from sglib.lib.translate import _
+from sglib.lib.util import KEY_CTRL, KEY_ALT
 
 sequencer = _("""\
 Sequencer contains tracks, items, and automation. Use the mouse tools in
 the transport to edit sequencer items. Right click on items or the
 timeline for actions.  All items/tracks can contain audio and MIDI.""")
 
-sequencer_item = """
+sequencer_item = f"""
 Right click to see available actions.  See mouse tools in transport.
-Click+drag selected to move.  CTRL+drag to copy selected items.  Double-click
-to edit.  ALT+click to multi-select
+Click+drag selected to move.  {KEY_CTRL}+drag to copy selected items.
+Double-click to edit.  {KEY_ALT}+click to multi-select
 """
 

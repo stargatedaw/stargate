@@ -152,9 +152,9 @@ class TransportWidget(AbstractTransportWidget):
             "unlink existing items and append new events to the "
             "existing events"))
         self.loop_mode_checkbox.setToolTip(
-            "Use this to toggle between normal playback and looping a \n"
-            "region set by right clicking the sequencer timeline.\n"
-            "You can toggle with CTRL+L"
+            "Use this to toggle between normal playback and looping a "
+            "region set by right clicking the sequencer timeline. "
+            f"You can toggle with {util.KEY_CTRL}+L"
         )
 
     def tab_changed(self, index):

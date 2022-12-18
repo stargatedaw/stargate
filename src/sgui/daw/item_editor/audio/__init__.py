@@ -762,8 +762,8 @@ class AudioItemSeqWidget(FileDragDropper):
         self.action_menu.addAction(self.paste_action)
         self.paste_action.setToolTip(
             'Paste previously copied items into this item at the same '
-            'position.  To copy items within the same item, CTRL+click and '
-            'drag'
+            'position.  To copy items within the same item, '
+            f'{KEY_CTRL}+click and drag'
         )
         self.paste_action.triggered.connect(self.on_paste)
         self.paste_action.setShortcut(QKeySequence.StandardKey.Paste)
