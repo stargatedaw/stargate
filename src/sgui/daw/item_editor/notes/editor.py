@@ -330,6 +330,61 @@ class PianoRollEditor(AbstractItemEditor):
             self.set_selected_strings()
         self.click_enabled = True
 
+    def _mp_draw(self, event, f_pos_x, f_pos_y):
+        f_recip = 1.0 / shared.PIANO_ROLL_GRID_WIDTH
+        if self.vel_rand == 1:
+            pass
+        elif self.vel_rand == 2:
+            pass
+        f_note = int(
+            shared.PIANO_ROLL_NOTE_COUNT - (
+                (f_pos_y - _shared.PIANO_ROLL_HEADER_HEIGHT)
+                / self.note_height
+            )
+        ) + 1
+        channel = shared.ITEM_EDITOR.get_midi_channel()
+        if shared.PIANO_ROLL_SNAP:
+            f_beat = (
+                int(
+                    (f_pos_x - shared.PIANO_KEYS_WIDTH) /
+                    shared.PIANO_ROLL_SNAP_VALUE
+                ) * shared.PIANO_ROLL_SNAP_VALUE
+            ) * f_recip * shared.CURRENT_ITEM_LEN
+            f_note_item = sg_project.MIDINote(
+                f_beat,
+                shared.LAST_NOTE_RESIZE,
+                f_note,
+                self.get_vel(f_beat),
+                channel=channel,
+            )
+        else:
+            f_beat = (
+                f_pos_x - shared.PIANO_KEYS_WIDTH
+            ) * f_recip * shared.CURRENT_ITEM_LEN
+            f_note_item = sg_project.MIDINote(
+                f_beat,
+                0.25,
+                f_note,
+                self.get_vel(f_beat),
+                channel=channel,
+            )
+        shared.ITEM_EDITOR.add_note(f_note_item)
+        _shared.SELECTED_PIANO_NOTE = f_note_item
+        f_drawn_note = self.draw_note(f_note_item)
+        f_drawn_note.previewer = NotePreviewer()
+        f_drawn_note.previewer.update(f_note_item.note_num)
+        f_drawn_note.setSelected(True)
+        f_drawn_note.resize_start_pos = f_drawn_note.note_item.start
+        f_drawn_note.resize_pos = f_drawn_note.pos()
+        f_drawn_note.resize_rect = f_drawn_note.rect()
+        f_drawn_note.is_resizing = event.modifiers() != (
+            QtCore.Qt.KeyboardModifier.AltModifier
+        )
+        f_cursor_pos = QCursor.pos()
+        f_drawn_note.mouse_y_pos = f_cursor_pos.y()
+        f_drawn_note.resize_last_mouse_pos = \
+            f_pos_x - f_drawn_note.pos().x()
+
     def sceneMousePressEvent(self, a_event):
         if not shared.ITEM_EDITOR.enabled:
             shared.ITEM_EDITOR.show_not_enabled_warning()
@@ -382,56 +437,7 @@ class PianoRollEditor(AbstractItemEditor):
                 and
                 f_pos_y < shared.PIANO_ROLL_TOTAL_HEIGHT
             ):
-                f_recip = 1.0 / shared.PIANO_ROLL_GRID_WIDTH
-                if self.vel_rand == 1:
-                    pass
-                elif self.vel_rand == 2:
-                    pass
-                f_note = int(
-                    shared.PIANO_ROLL_NOTE_COUNT - ((f_pos_y -
-                    _shared.PIANO_ROLL_HEADER_HEIGHT) / self.note_height)) + 1
-                channel = shared.ITEM_EDITOR.get_midi_channel()
-                if shared.PIANO_ROLL_SNAP:
-                    f_beat = (
-                        int(
-                            (f_pos_x - shared.PIANO_KEYS_WIDTH) /
-                            shared.PIANO_ROLL_SNAP_VALUE
-                        ) * shared.PIANO_ROLL_SNAP_VALUE
-                    ) * f_recip * shared.CURRENT_ITEM_LEN
-                    f_note_item = sg_project.MIDINote(
-                        f_beat,
-                        shared.LAST_NOTE_RESIZE,
-                        f_note,
-                        self.get_vel(f_beat),
-                        channel=channel,
-                    )
-                else:
-                    f_beat = (
-                        f_pos_x - shared.PIANO_KEYS_WIDTH
-                    ) * f_recip * shared.CURRENT_ITEM_LEN
-                    f_note_item = sg_project.MIDINote(
-                        f_beat,
-                        0.25,
-                        f_note,
-                        self.get_vel(f_beat),
-                        channel=channel,
-                    )
-                shared.ITEM_EDITOR.add_note(f_note_item)
-                _shared.SELECTED_PIANO_NOTE = f_note_item
-                f_drawn_note = self.draw_note(f_note_item)
-                f_drawn_note.previewer = NotePreviewer()
-                f_drawn_note.previewer.update(f_note_item.note_num)
-                f_drawn_note.setSelected(True)
-                f_drawn_note.resize_start_pos = f_drawn_note.note_item.start
-                f_drawn_note.resize_pos = f_drawn_note.pos()
-                f_drawn_note.resize_rect = f_drawn_note.rect()
-                f_drawn_note.is_resizing = a_event.modifiers() != (
-                    QtCore.Qt.KeyboardModifier.AltModifier
-                )
-                f_cursor_pos = QCursor.pos()
-                f_drawn_note.mouse_y_pos = f_cursor_pos.y()
-                f_drawn_note.resize_last_mouse_pos = \
-                    f_pos_x - f_drawn_note.pos().x()
+                self._mp_draw(a_event, f_pos_x, f_pos_y)
 
         a_event.setAccepted(True)
         QGraphicsScene.mousePressEvent(self.scene, a_event)
