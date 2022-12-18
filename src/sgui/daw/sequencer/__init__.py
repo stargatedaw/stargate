@@ -19,6 +19,7 @@ from sgui import shared as glbl_shared
 from sgui.daw import shared
 from sgui import widgets
 from sglib.lib.translate import _
+from sglib.math import clip_value
 
 class SequencerWidget:
     """ The widget that holds the sequencer """
@@ -129,7 +130,9 @@ class SequencerWidget:
 
         self.hlayout0.addWidget(QLabel("H"))
         self.hzoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
-        self.hzoom_slider.setToolTip('Horizontal zoom')
+        self.hzoom_slider.setToolTip(
+            f'Horizontal zoom.  {KEY_CTRL}+MouseWheel'
+        )
         self.hlayout0.addWidget(self.hzoom_slider)
         self.hzoom_slider.setObjectName("zoom_slider")
         self.hzoom_slider.setRange(0, 30)
@@ -143,7 +146,9 @@ class SequencerWidget:
 
         self.hlayout0.addWidget(QLabel("V"))
         self.vzoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
-        self.vzoom_slider.setToolTip('Vertical zoom')
+        self.vzoom_slider.setToolTip(
+            f'Vertical zoom.  {KEY_ALT}+MouseWheel'
+        )
         self.hlayout0.addWidget(self.vzoom_slider)
         self.vzoom_slider.setObjectName("zoom_slider")
         self.vzoom_slider.setRange(0, 60)
@@ -179,7 +184,10 @@ class SequencerWidget:
         self.scrollbar.setSingleStep(_shared.SEQUENCER_PX_PER_BEAT)
 
         self.widgets_to_disable = (
-            self.hzoom_slider, self.vzoom_slider, self.menu_button)
+            self.hzoom_slider,
+            self.vzoom_slider,
+            self.menu_button,
+        )
 
     def toggle_edit_mode(self):
         if not glbl_shared.IS_PLAYING:
@@ -319,6 +327,65 @@ class SequencerWidget:
             _shared.SEQUENCER_PX_PER_BEAT = ((self.last_hzoom - 6) * 4) + 24
             self.size_label.setText("Beat")
             self.set_hzoom_size()
+
+    def inc_hzoom(self, up: bool):
+        glbl_shared.MAIN_STACKED_WIDGET.setUpdatesEnabled(False)
+        val = self.hzoom_slider.value()
+        step = self.hzoom_slider.singleStep()
+        val = (val + 1) if up else (val - 1)
+        val = clip_value(val, 6, self.hzoom_slider.maximum())
+        self.hzoom_slider.setValue(val)
+        self.last_hzoom = val
+        shared.SEQUENCER.ignore_moves = False
+        _shared.DRAW_SEQUENCER_GRAPHS = True
+        old_px_per_beat = _shared.SEQUENCER_PX_PER_BEAT
+        _shared.SEQUENCER_PX_PER_BEAT = ((self.last_hzoom - 6) * 4) + 24
+        shared.SEQUENCER.open_sequence()
+        self.scrollbar.setValue(
+            int(
+                (
+                    _shared.SEQUENCER_PX_PER_BEAT
+                    /
+                    old_px_per_beat
+                ) * self.scrollbar.value()
+            )
+        )
+        self.scrollbar.setSingleStep(int(_shared.SEQUENCER_PX_PER_BEAT))
+        glbl_shared.MAIN_STACKED_WIDGET.setUpdatesEnabled(True)
+        glbl_shared.MAIN_STACKED_WIDGET.update()
+
+    def inc_vzoom(self, up: bool):
+        glbl_shared.MAIN_STACKED_WIDGET.setUpdatesEnabled(False)
+        val = self.vzoom_slider.value()
+        step = self.vzoom_slider.singleStep()
+        val = (val + step) if up else (val - step)
+        val = clip_value(
+            val,
+            self.vzoom_slider.minimum(),
+            self.vzoom_slider.maximum(),
+        )
+        self.vzoom_slider.setValue(val)
+        self.last_vzoom = val
+        old_height_px = shared.SEQUENCE_EDITOR_TRACK_HEIGHT
+        shared.SEQUENCE_EDITOR_TRACK_HEIGHT = (self.last_vzoom * 8) + 64
+        _shared.SEQUENCE_EDITOR_TOTAL_HEIGHT = (
+            _shared.SEQUENCE_EDITOR_TRACK_COUNT
+            *
+            shared.SEQUENCE_EDITOR_TRACK_HEIGHT
+        )
+        shared.TRACK_PANEL.set_track_height()
+        shared.SEQUENCER.open_sequence()
+        f_scrollbar = shared.MAIN_WINDOW.midi_scroll_area.verticalScrollBar()
+        f_scrollbar.setValue(
+            int(
+                (shared.SEQUENCE_EDITOR_TRACK_HEIGHT / old_height_px)
+                * f_scrollbar.value()
+            ),
+        )
+        shared.MAIN_WINDOW.vscrollbar_released()  # Quantizes the vertical pos
+        f_scrollbar.setSingleStep(shared.SEQUENCE_EDITOR_TRACK_HEIGHT)
+        glbl_shared.MAIN_STACKED_WIDGET.setUpdatesEnabled(True)
+        glbl_shared.MAIN_STACKED_WIDGET.update()
 
     def set_snap(self, a_val=None):
         _shared.set_seq_snap(a_val)

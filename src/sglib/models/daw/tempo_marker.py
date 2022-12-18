@@ -5,6 +5,15 @@ from sglib.lib.translate import _
 
 
 class tempo_marker(_shared.abstract_marker):
+    __slots__ = [
+        'type',
+        'beat',
+        'tempo',
+        'tsig_num',
+        'tsig_den',
+        'real_tempo',
+    ]
+
     def __init__(self, a_beat, a_tempo, a_tsig_num, a_tsig_den):
         self.type = 2
         self.beat = int(a_beat)

@@ -8,6 +8,12 @@ from sglib.lib.translate import _
 
 
 class sequencer:
+    __slots__ = [
+        'name',
+        'items',
+        'markers',
+        'loop_marker',
+    ]
     def __init__(self, name=None):
         self.name = name
         self.items = []
@@ -175,20 +181,15 @@ class sequencer:
                 f_item.start_beat < a_end_beat
             ):
                 if f_end_beat <= a_end_beat:
-                    LOG.debug(f'{f_item.__dict__} is in range, deleting')
                     self.items.remove(f_item)
                 else:
-                    _item = str(f_item.__dict__)
                     f_diff = a_end_beat - f_item.start_beat
                     f_item.start_offset += f_diff
                     f_item.length_beats -= f_diff
                     f_item.start_beat = a_end_beat
-                    LOG.debug(f'{_item} is now {f_item.__dict__}')
             elif f_item.start_beat < a_start_beat:
                 if f_end_beat > a_start_beat:
-                    _item = str(f_item.__dict__)
                     f_item.length_beats = a_start_beat - f_item.start_beat
-                    LOG.debug(f'{_item} is now {f_item.__dict__}')
 
     def get_length(self):
         f_item_max = max(x.start_beat + x.length_beats
@@ -223,10 +224,7 @@ class sequencer:
                     if item.start_beat == _next.start_beat:
                         to_delete_add(
                             item,
-                            (
-                                f'Current {item.__dict__} and '
-                                f'next {_next.__dict__} items overlap'
-                            ),
+                            'Current and next items overlap',
                         )
                         continue
                     end = item.start_beat + item.length_beats
@@ -235,10 +233,7 @@ class sequencer:
                         if length_beats < 0.25:
                             to_delete_add(
                                 item,
-                                (
-                                    f'After trimming {item.__dict__} '
-                                    f'is too short: {length_beats}'
-                                ),
+                                'After trimming item is too short'
                             )
                         else:
                             item.length_beats = length_beats
@@ -250,7 +245,7 @@ class sequencer:
         LOG.debug(_to_delete)
         LOG.debug([str(x) for x in self.items])
         for item, reason in to_delete_list:
-            LOG.debug(f"Removing {item.__dict__} from sequencer: {reason} ")
+            LOG.debug(f"Removing {item} from sequencer: {reason} ")
         self.items = [x for x in self.items if str(x) not in _to_delete]
         LOG.debug(
             f'self.items count {len(self.items)} '

@@ -1,5 +1,13 @@
 
 class sequencer_item:
+    __slots__ = [
+        'track_num',
+        'start_beat',
+        'length_beats',
+        'item_uid',
+        'start_offset',
+        'modified',
+    ]
     def __init__(
         self,
         a_track_num,

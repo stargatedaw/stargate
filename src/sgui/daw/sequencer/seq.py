@@ -147,6 +147,7 @@ class ItemSequencer(QGraphicsView):
         #self.scene.selectionChanged.connect(self.set_selected_strings)
         self.setAcceptDrops(True)
         self.setScene(self.scene)
+        self.scene.installEventFilter(self)
         self.audio_items = []
         self.track = 0
         self.gradient_index = 0
@@ -185,6 +186,18 @@ class ItemSequencer(QGraphicsView):
         self.addAction(context_menu.unlink_unique_action)
 
         self.context_menu_enabled = True
+
+    def eventFilter(self, obj, event):
+        if event.type() == QtCore.QEvent.Type.GraphicsSceneWheel:
+            if event.modifiers() == QtCore.Qt.KeyboardModifier.ControlModifier:
+                event.accept()
+                shared.SEQ_WIDGET.inc_hzoom(event.delta() > 0)
+                return True
+            elif event.modifiers() == QtCore.Qt.KeyboardModifier.AltModifier:
+                event.accept()
+                shared.SEQ_WIDGET.inc_vzoom(event.delta() > 0)
+                return True
+        return False
 
     def show_context_menu(self):
         if glbl_shared.IS_PLAYING:

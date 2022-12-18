@@ -14,6 +14,15 @@ import traceback
 MAX_AUDIO_ITEM_COUNT = 256
 
 class item:
+    __slots__ = [
+        'items',
+        'notes',
+        'ccs',
+        'pitchbends',
+        'uid',
+        'fx_list',
+    ]
+
     def __init__(self, a_uid):
         self.items = {}  # audio items:  TODO rename
         self.notes = []

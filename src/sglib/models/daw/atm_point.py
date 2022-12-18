@@ -5,6 +5,15 @@ from sglib.lib.translate import _
 
 
 class DawAtmPoint:
+    __slots__ = [
+        'beat',
+        'port_num',
+        'cc_val',
+        'index',
+        'plugin_index',
+        'break_after',
+        'curve',
+    ]
     def __init__(
         self,
         a_beat,
