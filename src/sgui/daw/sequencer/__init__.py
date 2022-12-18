@@ -351,6 +351,7 @@ class SequencerWidget:
             )
         )
         self.scrollbar.setSingleStep(int(_shared.SEQUENCER_PX_PER_BEAT))
+        _shared.set_seq_snap()
         glbl_shared.MAIN_STACKED_WIDGET.setUpdatesEnabled(True)
         glbl_shared.MAIN_STACKED_WIDGET.update()
 
