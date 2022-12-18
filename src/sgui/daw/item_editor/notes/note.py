@@ -200,41 +200,85 @@ class PianoRollNoteItem(QGraphicsRectItem):
         QGraphicsRectItem.mouseDoubleClickEvent(self, a_event)
         QApplication.restoreOverrideCursor()
 
+    def _mp_vel_drag(self, event):
+        if not self.isSelected():
+            shared.PIANO_ROLL_EDITOR.scene.clearSelection()
+            self.setSelected(True)
+        self.is_velocity_dragging = True
+        self._mp_vel_finish(event)
+
+    def _mp_vel_curve(self, event):
+        if not self.isSelected():
+            shared.PIANO_ROLL_EDITOR.scene.clearSelection()
+            self.setSelected(True)
+        f_list = [
+            x.note_item.start
+            for x in shared.PIANO_ROLL_EDITOR.get_selected_items()
+        ]
+        if len(f_list) > 1:
+            f_list.sort()
+            self.is_velocity_curving = True
+            self.vc_start = f_list[0]
+            self.vc_mid = self.note_item.start
+            self.vc_end = f_list[-1]
+        elif len(f_list) <= 1:
+            self.is_velocity_dragging = True
+        self._mp_vel_finish(event)
+
+    def _mp_vel_finish(self, event):
+        event.setAccepted(True)
+        QGraphicsRectItem.mousePressEvent(self, event)
+        self.orig_y = qt_event_pos(event).y()
+        QApplication.setOverrideCursor(QtCore.Qt.CursorShape.BlankCursor)
+        for f_item in shared.PIANO_ROLL_EDITOR.get_selected_items():
+            if _shared.PARAMETER == 0:
+                f_item.orig_value = f_item.note_item.velocity
+            elif _shared.PARAMETER >= 1:
+                f_item.orig_value = f_item.note_item.get_pmn_param(
+                    _shared.PARAMETER,
+                )
+            f_item.set_brush()
+        for f_item in shared.PIANO_ROLL_EDITOR.note_items:
+            if _shared.PARAMETER == 0:
+                f_item.note_text.setText(str(f_item.note_item.velocity))
+            if _shared.PARAMETER >= 1:
+                f_item.note_text.setText(
+                    str(f_item.note_item.get_pmn_param(_shared.PARAMETER)),
+                )
+
+    def _mp_resize(self, event):
+        self.is_resizing = True
+        self.mouse_y_pos = QCursor.pos().y()
+        self.resize_last_mouse_pos = qt_event_pos(event).x()
+        for f_item in shared.PIANO_ROLL_EDITOR.get_selected_items():
+            f_item.resize_start_pos = f_item.note_item.start
+            f_item.resize_pos = f_item.pos()
+            f_item.resize_rect = f_item.rect()
+
+    def _mp_copy(self, event):
+        self.is_copying = True
+        for f_item in shared.PIANO_ROLL_EDITOR.get_selected_items():
+            shared.PIANO_ROLL_EDITOR.draw_note(f_item.note_item)
+
     def mousePressEvent(self, a_event):
+        if a_event.button() == QtCore.Qt.MouseButton.RightButton:
+            return
         if shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
-            if a_event.button() == QtCore.Qt.MouseButton.LeftButton:
-                _shared.piano_roll_set_delete_mode(True)
-                self.delete_later()
+            _shared.piano_roll_set_delete_mode(True)
+            self.delete_later()
             return
         elif a_event.modifiers() == (
             QtCore.Qt.KeyboardModifier.ControlModifier
             |
             QtCore.Qt.KeyboardModifier.AltModifier
         ):
-            if not self.isSelected():
-                shared.PIANO_ROLL_EDITOR.scene.clearSelection()
-                self.setSelected(True)
-            self.is_velocity_dragging = True
+            self._mp_vel_drag(a_event)
         elif a_event.modifiers() == (
             QtCore.Qt.KeyboardModifier.ControlModifier
             |
             QtCore.Qt.KeyboardModifier.ShiftModifier
         ):
-            if not self.isSelected():
-                shared.PIANO_ROLL_EDITOR.scene.clearSelection()
-                self.setSelected(True)
-            f_list = [
-                x.note_item.start
-                for x in shared.PIANO_ROLL_EDITOR.get_selected_items()
-            ]
-            if len(f_list) > 1:
-                f_list.sort()
-                self.is_velocity_curving = True
-                self.vc_start = f_list[0]
-                self.vc_mid = self.note_item.start
-                self.vc_end = f_list[-1]
-            elif len(f_list) <= 1:
-                self.is_velocity_dragging = True
+            self._mp_vel_curve(a_event)
         else:
             a_event.setAccepted(True)
             QGraphicsRectItem.mousePressEvent(self, a_event)
@@ -244,45 +288,146 @@ class PianoRollNoteItem(QGraphicsRectItem):
             self.setBrush(s_brush)
             self.o_pos = self.pos()
             if self.mouse_is_at_end(qt_event_pos(a_event)):
-                self.is_resizing = True
-                self.mouse_y_pos = QCursor.pos().y()
-                self.resize_last_mouse_pos = qt_event_pos(a_event).x()
-                for f_item in shared.PIANO_ROLL_EDITOR.get_selected_items():
-                    f_item.resize_start_pos = f_item.note_item.start
-                    f_item.resize_pos = f_item.pos()
-                    f_item.resize_rect = f_item.rect()
+                self._mp_resize(a_event)
             elif a_event.modifiers() == (
                 QtCore.Qt.KeyboardModifier.ControlModifier
             ):
-                self.is_copying = True
-                for f_item in shared.PIANO_ROLL_EDITOR.get_selected_items():
-                    shared.PIANO_ROLL_EDITOR.draw_note(f_item.note_item)
-        if self.is_velocity_curving or self.is_velocity_dragging:
-            a_event.setAccepted(True)
-            QGraphicsRectItem.mousePressEvent(self, a_event)
-            self.orig_y = qt_event_pos(a_event).y()
-            QApplication.setOverrideCursor(QtCore.Qt.CursorShape.BlankCursor)
-            for f_item in shared.PIANO_ROLL_EDITOR.get_selected_items():
-                if _shared.PARAMETER == 0:
-                    f_item.orig_value = f_item.note_item.velocity
-                elif _shared.PARAMETER >= 1:
-                    f_item.orig_value = f_item.note_item.get_pmn_param(
-                        _shared.PARAMETER,
-                    )
-                f_item.set_brush()
-            for f_item in shared.PIANO_ROLL_EDITOR.note_items:
-                if _shared.PARAMETER == 0:
-                    f_item.note_text.setText(str(f_item.note_item.velocity))
-                if _shared.PARAMETER >= 1:
-                    f_item.note_text.setText(
-                        str(f_item.note_item.get_pmn_param(_shared.PARAMETER)),
-                    )
+                self._mp_copy(a_event)
         shared.PIANO_ROLL_EDITOR.click_enabled = True
 
+    def _mm_vel_drag(self, f_item, f_val):
+        if _shared.PARAMETER == 0:
+            f_new_vel = clip_value(
+                f_val + f_item.orig_value,
+                1,
+                127,
+            )
+            f_new_vel = int(f_new_vel)
+            f_item.note_item.velocity = f_new_vel
+            f_item.note_text.setText(str(f_new_vel))
+        elif _shared.PARAMETER >= 1:
+            new_value = clip_value(
+                (f_val * 0.01) + f_item.orig_value,
+                -1.0,
+                1.0,
+            )
+            new_value = round(new_value, 2)
+            f_item.note_item.set_pmn_param(
+                _shared.PARAMETER,
+                new_value,
+            )
+            f_item.note_text.setText(str(new_value))
+        f_item.set_brush()
+        f_item.set_vel_line()
+
+    def _mm_vel_curve(self, f_item, f_val):
+        if _shared.PARAMETER == 0:
+            f_start = f_item.note_item.start
+            if f_start == self.vc_mid:
+                f_new_vel = f_val + f_item.orig_value
+            else:
+                if f_start > self.vc_mid:
+                    f_frac = (f_start -
+                        self.vc_mid) / (self.vc_end - self.vc_mid)
+                    f_new_vel = linear_interpolate(
+                        f_val, 0.3 * f_val, f_frac)
+                else:
+                    f_frac = (f_start -
+                        self.vc_start) / (self.vc_mid - self.vc_start)
+                    f_new_vel = linear_interpolate(
+                        0.3 * f_val, f_val, f_frac)
+                f_new_vel += f_item.orig_value
+            f_new_vel = clip_value(f_new_vel, 1, 127)
+            f_new_vel = int(f_new_vel)
+            f_item.note_item.velocity = f_new_vel
+            f_item.note_text.setText(str(f_new_vel))
+            f_item.set_brush()
+            f_item.set_vel_line()
+        elif _shared.PARAMETER >= 1:
+            f_start = f_item.note_item.start
+            if f_start == self.vc_mid:
+                new_value = (f_val * 0.01) + f_item.orig_value
+            else:
+                if f_start > self.vc_mid:
+                    f_frac = (f_start -
+                        self.vc_mid) / (self.vc_end - self.vc_mid)
+                    new_value = linear_interpolate(
+                        f_val * 0.01,
+                        0.003 * f_val,
+                        f_frac,
+                    )
+                else:
+                    f_frac = (f_start -
+                        self.vc_start) / (self.vc_mid - self.vc_start)
+                    new_value = linear_interpolate(
+                        0.003 * f_val,
+                        f_val * 0.01,
+                        f_frac,
+                    )
+                new_value += f_item.orig_value
+            new_value = clip_value(new_value, -1.0, 1.0)
+            new_value = round(new_value, 2)
+            f_item.note_item.set_pmn_param(
+                _shared.PARAMETER,
+                new_value,
+            )
+            f_item.note_text.setText(str(new_value))
+            f_item.set_brush()
+            f_item.set_vel_line()
+
+    def _mm_resize(self, f_item, f_pos_x):
+        if shared.PIANO_ROLL_SNAP:
+            f_adjusted_width = round(
+                f_pos_x / shared.PIANO_ROLL_SNAP_VALUE) * \
+                shared.PIANO_ROLL_SNAP_VALUE
+            if f_adjusted_width == 0.0:
+                f_adjusted_width = shared.PIANO_ROLL_SNAP_VALUE
+        else:
+            f_adjusted_width = clip_min(
+                f_pos_x,
+                shared.PIANO_ROLL_MIN_NOTE_LENGTH,
+            )
+        f_item.resize_rect.setWidth(int(f_adjusted_width))
+        f_item.setRect(f_item.resize_rect)
+        f_item.setPos(f_item.resize_pos.x(), f_item.resize_pos.y())
+        # Does not work on Wayland
+        #QCursor.setPos(QCursor.pos().x(), self.mouse_y_pos)
+
+    def _mm_move(self, f_item, preview):
+        f_pos_x = f_item.pos().x()
+        f_pos_y = f_item.pos().y()
+        if f_pos_x < shared.PIANO_KEYS_WIDTH:
+            f_pos_x = shared.PIANO_KEYS_WIDTH
+        elif f_pos_x > shared.PIANO_ROLL_GRID_MAX_START_TIME:
+            f_pos_x = shared.PIANO_ROLL_GRID_MAX_START_TIME
+        if f_pos_y < _shared.PIANO_ROLL_HEADER_HEIGHT:
+            f_pos_y = _shared.PIANO_ROLL_HEADER_HEIGHT
+        elif f_pos_y > shared.PIANO_ROLL_TOTAL_HEIGHT:
+            f_pos_y = shared.PIANO_ROLL_TOTAL_HEIGHT
+        f_pos_y = \
+            (int((f_pos_y - _shared.PIANO_ROLL_HEADER_HEIGHT) /
+            self.note_height) * self.note_height) + \
+            _shared.PIANO_ROLL_HEADER_HEIGHT
+        if shared.PIANO_ROLL_SNAP:
+            f_pos_x = (int((f_pos_x - shared.PIANO_KEYS_WIDTH) /
+            shared.PIANO_ROLL_SNAP_VALUE) *
+            shared.PIANO_ROLL_SNAP_VALUE) + shared.PIANO_KEYS_WIDTH
+        f_item.setPos(f_pos_x, f_pos_y)
+        f_new_note = self.y_pos_to_note(f_pos_y)
+        f_item.update_note_text(f_new_note)
+        if preview:
+            orig_note = f_item.note_item.note_num
+            if orig_note not in PREVIEW_NOTES and not f_item.previewer:
+                PREVIEW_NOTES.add(orig_note)
+                f_item.previewer = NotePreviewer()
+            if f_item.previewer:
+                f_item.previewer.update(f_new_note)
+
     def mouseMoveEvent(self, a_event):
+        if a_event.button() == QtCore.Qt.MouseButton.RightButton:
+            return
         if shared.EDITOR_MODE == shared.EDITOR_MODE_ERASE:
-            if a_event.button() == QtCore.Qt.MouseButton.LeftButton:
-                self.delete_later()
+            self.delete_later()
             return
         if self.is_velocity_dragging or self.is_velocity_curving:
             f_pos = qt_event_pos(a_event)
@@ -299,129 +444,13 @@ class PianoRollNoteItem(QGraphicsRectItem):
         unique_notes = {x.note_item.note_num for x in selected_items}
         for f_item in selected_items:
             if self.is_resizing:
-                if shared.PIANO_ROLL_SNAP:
-                    f_adjusted_width = round(
-                        f_pos_x / shared.PIANO_ROLL_SNAP_VALUE) * \
-                        shared.PIANO_ROLL_SNAP_VALUE
-                    if f_adjusted_width == 0.0:
-                        f_adjusted_width = shared.PIANO_ROLL_SNAP_VALUE
-                else:
-                    f_adjusted_width = clip_min(
-                        f_pos_x,
-                        shared.PIANO_ROLL_MIN_NOTE_LENGTH,
-                    )
-                f_item.resize_rect.setWidth(int(f_adjusted_width))
-                f_item.setRect(f_item.resize_rect)
-                f_item.setPos(f_item.resize_pos.x(), f_item.resize_pos.y())
-                # Does not work on Wayland
-                #QCursor.setPos(QCursor.pos().x(), self.mouse_y_pos)
+                self._mm_resize(f_item, f_pos_x)
             elif self.is_velocity_dragging:
-                if _shared.PARAMETER == 0:
-                    f_new_vel = clip_value(
-                        f_val + f_item.orig_value,
-                        1,
-                        127,
-                    )
-                    f_new_vel = int(f_new_vel)
-                    f_item.note_item.velocity = f_new_vel
-                    f_item.note_text.setText(str(f_new_vel))
-                elif _shared.PARAMETER >= 1:
-                    new_value = clip_value(
-                        (f_val * 0.01) + f_item.orig_value,
-                        -1.0,
-                        1.0,
-                    )
-                    new_value = round(new_value, 2)
-                    f_item.note_item.set_pmn_param(
-                        _shared.PARAMETER,
-                        new_value,
-                    )
-                    f_item.note_text.setText(str(new_value))
-                f_item.set_brush()
-                f_item.set_vel_line()
+                self._mm_vel_drag(f_item, f_val)
             elif self.is_velocity_curving:
-                if _shared.PARAMETER == 0:
-                    f_start = f_item.note_item.start
-                    if f_start == self.vc_mid:
-                        f_new_vel = f_val + f_item.orig_value
-                    else:
-                        if f_start > self.vc_mid:
-                            f_frac = (f_start -
-                                self.vc_mid) / (self.vc_end - self.vc_mid)
-                            f_new_vel = linear_interpolate(
-                                f_val, 0.3 * f_val, f_frac)
-                        else:
-                            f_frac = (f_start -
-                                self.vc_start) / (self.vc_mid - self.vc_start)
-                            f_new_vel = linear_interpolate(
-                                0.3 * f_val, f_val, f_frac)
-                        f_new_vel += f_item.orig_value
-                    f_new_vel = clip_value(f_new_vel, 1, 127)
-                    f_new_vel = int(f_new_vel)
-                    f_item.note_item.velocity = f_new_vel
-                    f_item.note_text.setText(str(f_new_vel))
-                    f_item.set_brush()
-                    f_item.set_vel_line()
-                elif _shared.PARAMETER >= 1:
-                    f_start = f_item.note_item.start
-                    if f_start == self.vc_mid:
-                        new_value = (f_val * 0.01) + f_item.orig_value
-                    else:
-                        if f_start > self.vc_mid:
-                            f_frac = (f_start -
-                                self.vc_mid) / (self.vc_end - self.vc_mid)
-                            new_value = linear_interpolate(
-                                f_val * 0.01,
-                                0.003 * f_val,
-                                f_frac,
-                            )
-                        else:
-                            f_frac = (f_start -
-                                self.vc_start) / (self.vc_mid - self.vc_start)
-                            new_value = linear_interpolate(
-                                0.003 * f_val,
-                                f_val * 0.01,
-                                f_frac,
-                            )
-                        new_value += f_item.orig_value
-                    new_value = clip_value(new_value, -1.0, 1.0)
-                    new_value = round(new_value, 2)
-                    f_item.note_item.set_pmn_param(
-                        _shared.PARAMETER,
-                        new_value,
-                    )
-                    f_item.note_text.setText(str(new_value))
-                    f_item.set_brush()
-                    f_item.set_vel_line()
+                self._mm_vel_curve(f_item, f_val)
             else:
-                f_pos_x = f_item.pos().x()
-                f_pos_y = f_item.pos().y()
-                if f_pos_x < shared.PIANO_KEYS_WIDTH:
-                    f_pos_x = shared.PIANO_KEYS_WIDTH
-                elif f_pos_x > shared.PIANO_ROLL_GRID_MAX_START_TIME:
-                    f_pos_x = shared.PIANO_ROLL_GRID_MAX_START_TIME
-                if f_pos_y < _shared.PIANO_ROLL_HEADER_HEIGHT:
-                    f_pos_y = _shared.PIANO_ROLL_HEADER_HEIGHT
-                elif f_pos_y > shared.PIANO_ROLL_TOTAL_HEIGHT:
-                    f_pos_y = shared.PIANO_ROLL_TOTAL_HEIGHT
-                f_pos_y = \
-                    (int((f_pos_y - _shared.PIANO_ROLL_HEADER_HEIGHT) /
-                    self.note_height) * self.note_height) + \
-                    _shared.PIANO_ROLL_HEADER_HEIGHT
-                if shared.PIANO_ROLL_SNAP:
-                    f_pos_x = (int((f_pos_x - shared.PIANO_KEYS_WIDTH) /
-                    shared.PIANO_ROLL_SNAP_VALUE) *
-                    shared.PIANO_ROLL_SNAP_VALUE) + shared.PIANO_KEYS_WIDTH
-                f_item.setPos(f_pos_x, f_pos_y)
-                f_new_note = self.y_pos_to_note(f_pos_y)
-                f_item.update_note_text(f_new_note)
-                if len(unique_notes) <= 6:
-                    orig_note = f_item.note_item.note_num
-                    if orig_note not in PREVIEW_NOTES and not f_item.previewer:
-                        PREVIEW_NOTES.add(orig_note)
-                        f_item.previewer = NotePreviewer()
-                    if f_item.previewer:
-                        f_item.previewer.update(f_new_note)
+                self._mm_move(f_item, len(unique_notes) <= 6)
 
     def y_pos_to_note(self, a_y):
         return int(
@@ -433,6 +462,8 @@ class PianoRollNoteItem(QGraphicsRectItem):
         )
 
     def mouseReleaseEvent(self, a_event):
+        if a_event.button() == QtCore.Qt.MouseButton.RightButton:
+            return
         PREVIEW_NOTES.clear()
         if _shared.PIANO_ROLL_DELETE_MODE:
             _shared.piano_roll_set_delete_mode(False)
