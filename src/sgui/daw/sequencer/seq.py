@@ -190,13 +190,21 @@ class ItemSequencer(QGraphicsView):
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.Type.GraphicsSceneWheel:
             if event.modifiers() == QtCore.Qt.KeyboardModifier.ControlModifier:
-                event.accept()
                 shared.SEQ_WIDGET.inc_hzoom(event.delta() > 0)
-                return True
             elif event.modifiers() == QtCore.Qt.KeyboardModifier.AltModifier:
-                event.accept()
                 shared.SEQ_WIDGET.inc_vzoom(event.delta() > 0)
-                return True
+            else:
+                scrollbar = \
+                    shared.MAIN_WINDOW.midi_scroll_area.verticalScrollBar()
+                track_height = shared.SEQUENCE_EDITOR_TRACK_HEIGHT
+                inc = -track_height if event.delta() > 0 else track_height
+                scrollbar.setValue(
+                    int(inc + scrollbar.value()),
+                )
+                # Quantizes the vertical pos
+                shared.MAIN_WINDOW.vscrollbar_released()
+            event.accept()
+            return True
         return False
 
     def show_context_menu(self):
