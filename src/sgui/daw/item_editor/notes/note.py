@@ -461,6 +461,56 @@ class PianoRollNoteItem(QGraphicsRectItem):
             )
         )
 
+    def _mr_resize(self, f_item, f_pos_x, f_recip):
+        f_new_note_length = (
+            (f_pos_x + f_item.rect().width() - shared.PIANO_KEYS_WIDTH)
+            * f_recip * shared.CURRENT_ITEM_LEN
+        ) - f_item.resize_start_pos
+        if (
+            shared.PIANO_ROLL_SNAP
+            and
+            f_new_note_length < shared.PIANO_ROLL_SNAP_BEATS
+        ):
+            f_new_note_length = shared.PIANO_ROLL_SNAP_BEATS
+        elif f_new_note_length < min_note_length:
+            f_new_note_length = min_note_length
+        f_item.note_item.set_length(f_new_note_length)
+
+    def _mr_copy(self, f_item, f_pos_x, f_recip):
+        f_new_note_start = (
+            f_pos_x - shared.PIANO_KEYS_WIDTH
+        ) * shared.CURRENT_ITEM_LEN * f_recip
+        f_new_note_num = self.y_pos_to_note(f_pos_y)
+        f_new_note = sg_project.MIDINote(
+            f_new_note_start,
+            f_item.note_item.length,
+            f_new_note_num,
+            f_item.note_item.velocity,
+            f_item.note_item.pan,
+            f_item.note_item.attack,
+            f_item.note_item.decay,
+            f_item.note_item.sustain,
+            f_item.note_item.release,
+            f_item.note_item.channel,
+        )
+        shared.CURRENT_ITEM.add_note(f_new_note, False)
+        # pass a ref instead of a str in case
+        # fix_overlaps() modifies it.
+        f_item.note_item = f_new_note
+        f_new_selection.append(f_item)
+
+    def _mr_move(self, f_item, f_pos_x, f_recip):
+        f_pos_y = f_item.pos().y()
+        f_new_note_start = (
+            f_pos_x - shared.PIANO_KEYS_WIDTH
+        ) * shared.CURRENT_ITEM_LEN * f_recip
+        f_new_note_num = self.y_pos_to_note(f_pos_y)
+        shared.CURRENT_ITEM.notes.remove(f_item.note_item)
+        f_item.note_item.set_start(f_new_note_start)
+        f_item.note_item.note_num = f_new_note_num
+        shared.CURRENT_ITEM.notes.append(f_item.note_item)
+        shared.CURRENT_ITEM.notes.sort()
+
     def mouseReleaseEvent(self, a_event):
         if a_event.button() == QtCore.Qt.MouseButton.RightButton:
             return
@@ -476,48 +526,14 @@ class PianoRollNoteItem(QGraphicsRectItem):
         for f_item in shared.PIANO_ROLL_EDITOR.get_selected_items():
             f_item.previewer = None
             f_pos_x = f_item.pos().x()
-            f_pos_y = f_item.pos().y()
             if self.is_resizing:
-                f_new_note_length = ((f_pos_x + f_item.rect().width() -
-                    shared.PIANO_KEYS_WIDTH) * f_recip *
-                    shared.CURRENT_ITEM_LEN) - f_item.resize_start_pos
-                if shared.PIANO_ROLL_SNAP and \
-                f_new_note_length < shared.PIANO_ROLL_SNAP_BEATS:
-                    f_new_note_length = shared.PIANO_ROLL_SNAP_BEATS
-                elif f_new_note_length < min_note_length:
-                    f_new_note_length = min_note_length
-                f_item.note_item.set_length(f_new_note_length)
+                self._mr_resize(f_item, f_pos_x, f_recip)
             elif self.is_velocity_dragging or self.is_velocity_curving:
                 pass
+            elif self.is_copying:
+                self._mr_copy(f_item, f_pos_x, f_recip)
             else:
-                f_new_note_start = (
-                    f_pos_x - shared.PIANO_KEYS_WIDTH
-                ) * shared.CURRENT_ITEM_LEN * f_recip
-                f_new_note_num = self.y_pos_to_note(f_pos_y)
-                if self.is_copying:
-                    f_new_note = sg_project.MIDINote(
-                        f_new_note_start,
-                        f_item.note_item.length,
-                        f_new_note_num,
-                        f_item.note_item.velocity,
-                        f_item.note_item.pan,
-                        f_item.note_item.attack,
-                        f_item.note_item.decay,
-                        f_item.note_item.sustain,
-                        f_item.note_item.release,
-                        f_item.note_item.channel,
-                    )
-                    shared.CURRENT_ITEM.add_note(f_new_note, False)
-                    # pass a ref instead of a str in case
-                    # fix_overlaps() modifies it.
-                    f_item.note_item = f_new_note
-                    f_new_selection.append(f_item)
-                else:
-                    shared.CURRENT_ITEM.notes.remove(f_item.note_item)
-                    f_item.note_item.set_start(f_new_note_start)
-                    f_item.note_item.note_num = f_new_note_num
-                    shared.CURRENT_ITEM.notes.append(f_item.note_item)
-                    shared.CURRENT_ITEM.notes.sort()
+                self._mr_move(f_item, f_pos_x, f_recip)
         if self.is_resizing:
             shared.LAST_NOTE_RESIZE = self.note_item.length
         shared.CURRENT_ITEM.fix_overlaps()
