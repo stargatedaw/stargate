@@ -925,9 +925,9 @@ class ItemSequencer(QGraphicsView):
     def set_playback_pos(self, a_beat=0.0):
         f_right = self.sceneRect().right()
         self.playback_pos = float(a_beat)
-        if self.playback_pos > f_right:
-            return
         f_pos = (self.playback_pos * _shared.SEQUENCER_PX_PER_BEAT)
+        if f_pos > f_right:
+            return
         self.playback_cursor.setPos(f_pos, 0.0)
         if (
             glbl_shared.IS_PLAYING
