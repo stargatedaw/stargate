@@ -79,6 +79,46 @@ EDITOR_MODE_SPLIT = 3
 # The global variable that editors reference on mousePressEvent
 EDITOR_MODE = EDITOR_MODE_SELECT
 
+CURSORS = {
+    EDITOR_MODE_SELECT: QtCore.Qt.CursorShape.ArrowCursor,
+    EDITOR_MODE_DRAW: QtCore.Qt.CursorShape.DragCopyCursor,
+    EDITOR_MODE_ERASE: QtCore.Qt.CursorShape.ForbiddenCursor,
+    EDITOR_MODE_SPLIT: QtCore.Qt.CursorShape.SplitHCursor,
+}
+
+IS_IN_CURSOR_WIDGET = False
+
+def set_cursor():
+    if IS_IN_CURSOR_WIDGET:
+        QApplication.restoreOverrideCursor()
+        shape = CURSORS[EDITOR_MODE]
+        QApplication.setOverrideCursor(QCursor(shape))
+
+_IS_MOVE_CURSOR = False
+
+def set_move_cursor():
+    global _IS_MOVE_CURSOR
+    _IS_MOVE_CURSOR = EDITOR_MODE in (EDITOR_MODE_SELECT, EDITOR_MODE_DRAW)
+    if _IS_MOVE_CURSOR:
+        QApplication.setOverrideCursor(
+            QCursor(QtCore.Qt.CursorShape.SizeAllCursor),
+        )
+
+def restore_move_cursor():
+    if _IS_MOVE_CURSOR:
+        QApplication.restoreOverrideCursor()
+
+class HoverCursorChange(QtCore.QObject):
+    def enterEvent(self, event):
+        global IS_IN_CURSOR_WIDGET
+        IS_IN_CURSOR_WIDGET = True
+        set_cursor()
+
+    def leaveEvent(self, event):
+        global IS_IN_CURSOR_WIDGET
+        IS_IN_CURSOR_WIDGET = False
+        QApplication.restoreOverrideCursor()
+
 PLAYBACK_POS = 0.0
 SUPPRESS_TRACK_COMBOBOX_CHANGES = False
 TRACK_NAME_COMBOBOXES = []
@@ -589,4 +629,6 @@ __all__ = [
     'seconds_to_beats',
     'set_piano_roll_quantize',
     'routing_graph_toggle_callback',
+    'HoverCursorChange',
+    'set_cursor',
 ]

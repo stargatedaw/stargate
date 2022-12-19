@@ -320,7 +320,7 @@ class PianoRollEditor(AbstractItemEditor):
 
     def focusOutEvent(self, a_event):
         QGraphicsView.focusOutEvent(self, a_event)
-        QApplication.restoreOverrideCursor()
+        # QApplication.restoreOverrideCursor()
 
     def sceneMouseReleaseEvent(self, a_event):
         if _shared.PIANO_ROLL_DELETE_MODE:
@@ -460,7 +460,7 @@ class PianoRollEditor(AbstractItemEditor):
             self.viewer_width,
             _shared.PIANO_ROLL_HEADER_HEIGHT,
         )
-        self.header.hoverEnterEvent = self.hover_restore_cursor_event
+        # self.header.hoverEnterEvent = self.hover_restore_cursor_event
         self.scene.addItem(self.header)
         #self.header.mapToScene(self.piano_width + self.padding, 0.0)
         self.value_width = self.px_per_beat / self.grid_div

@@ -22,7 +22,7 @@ class ItemEditorHeader(QGraphicsRectItem):
         )
 
 
-class AbstractItemEditor(QGraphicsView):
+class AbstractItemEditor(QGraphicsView, shared.HoverCursorChange):
     """ Base class for things on the "Items" tab.  Over time, more
         functionality should be absorbed into here and standardized
         across the different editors.

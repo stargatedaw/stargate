@@ -814,7 +814,12 @@ class AutomationItem(QGraphicsEllipseItem):
     """
     def __init__(self, a_time, a_value, a_cc, a_view, a_is_cc):
         QGraphicsEllipseItem.__init__(
-            self, 0, 0, AUTOMATION_POINT_DIAMETER, AUTOMATION_POINT_DIAMETER)
+            self,
+            0,
+            0,
+            AUTOMATION_POINT_DIAMETER,
+            AUTOMATION_POINT_DIAMETER,
+        )
         self.setFlag(
             QGraphicsItem.GraphicsItemFlag.ItemIsMovable,
         )
@@ -846,6 +851,14 @@ class AutomationItem(QGraphicsEllipseItem):
         self.cc_item = a_cc
         self.parent_view = a_view
         self.is_cc = a_is_cc
+
+    def hoverEnterEvent(self, a_event):
+        shared.set_move_cursor()
+        super().hoverEnterEvent(a_event)
+
+    def hoverLeaveEvent(self, a_event):
+        shared.restore_move_cursor()
+        super().hoverLeaveEvent(a_event)
 
     def set_brush(self):
         if self.isSelected():

@@ -793,6 +793,7 @@ class AudioSeqItem(QGraphicsRectItem):
                     f_item.add_vol_line(f_item.orig_value)
 
     def hoverEnterEvent(self, a_event):
+        shared.set_move_cursor()
         f_item_pos = self.pos().x()
         self.quantize_offset = f_item_pos - _shared.quantize_all(f_item_pos)
         super().hoverEnterEvent(a_event)
@@ -812,6 +813,7 @@ class AudioSeqItem(QGraphicsRectItem):
                 self.split_line.hide()
 
     def hoverLeaveEvent(self, a_event):
+        shared.restore_move_cursor()
         if self.split_line_is_shown:
             self.split_line_is_shown = False
             self.split_line.hide()

@@ -204,21 +204,25 @@ class TransportWidget(AbstractTransportWidget):
 
     def tool_select_clicked(self, a_val=None):
         shared.EDITOR_MODE = shared.EDITOR_MODE_SELECT
+        shared.set_cursor()
         if not self.tool_select_rb.isChecked():
             self.tool_select_rb.setChecked(True)
 
     def tool_draw_clicked(self, a_val=None):
         shared.EDITOR_MODE = shared.EDITOR_MODE_DRAW
+        shared.set_cursor()
         if not self.tool_draw_rb.isChecked():
             self.tool_draw_rb.setChecked(True)
 
     def tool_erase_clicked(self, a_val=None):
         shared.EDITOR_MODE = shared.EDITOR_MODE_ERASE
+        shared.set_cursor()
         if not self.tool_erase_rb.isChecked():
             self.tool_erase_rb.setChecked(True)
 
     def tool_split_clicked(self, a_val=None):
         shared.EDITOR_MODE = shared.EDITOR_MODE_SPLIT
+        shared.set_cursor()
         if not self.tool_split_rb.isChecked():
             self.tool_split_rb.setChecked(True)
 

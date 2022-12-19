@@ -559,6 +559,7 @@ class SequencerItem(QGraphicsRectItem):
                     f_item.width_orig = f_item.rect().width()
 
     def hoverEnterEvent(self, a_event):
+        shared.set_move_cursor()
         f_item_pos = self.pos().x()
         self.quantize_offset = f_item_pos - self.quantize_all(f_item_pos)
         super().hoverEnterEvent(a_event)
@@ -578,6 +579,7 @@ class SequencerItem(QGraphicsRectItem):
                 self.split_line.hide()
 
     def hoverLeaveEvent(self, a_event):
+        shared.restore_move_cursor()
         if self.split_line_is_shown:
             self.split_line_is_shown = False
             self.split_line.hide()

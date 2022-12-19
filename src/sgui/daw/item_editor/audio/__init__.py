@@ -169,7 +169,6 @@ class AudioItemSeq(AbstractItemEditor):
             self.delete_selected()
         else:
             QGraphicsView.keyPressEvent(self, a_event)
-        QApplication.restoreOverrideCursor()
 
     def scrollContentsBy(self, x, y):
         QGraphicsView.scrollContentsBy(self, x, y)
@@ -331,16 +330,12 @@ class AudioItemSeq(AbstractItemEditor):
         self.is_erasing = True
         self.items_to_delete = []
         self.setDragMode(QGraphicsView.DragMode.NoDrag)
-        QApplication.setOverrideCursor(
-            QtCore.Qt.CursorShape.ForbiddenCursor,
-        )
 
     def erase_tool_finish(self):
         self.is_erasing = False
         self.setDragMode(
             QGraphicsView.DragMode.RubberBandDrag,
         )
-        QApplication.restoreOverrideCursor()
         if not self.items_to_delete:
             return
         items = shared.CURRENT_ITEM

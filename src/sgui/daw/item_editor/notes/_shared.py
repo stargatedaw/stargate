@@ -20,9 +20,6 @@ def piano_roll_set_delete_mode(a_enabled):
         shared.PIANO_ROLL_EDITOR.setDragMode(QGraphicsView.DragMode.NoDrag)
         PIANO_ROLL_DELETED_NOTES.clear()
         PIANO_ROLL_DELETE_MODE = True
-        QApplication.setOverrideCursor(
-            QtCore.Qt.CursorShape.ForbiddenCursor,
-        )
     else:
         shared.PIANO_ROLL_EDITOR.setDragMode(
             QGraphicsView.DragMode.RubberBandDrag,
@@ -32,5 +29,4 @@ def piano_roll_set_delete_mode(a_enabled):
             f_item.delete()
         shared.PIANO_ROLL_EDITOR.selected_note_strings = []
         global_save_and_reload_items()
-        QApplication.restoreOverrideCursor()
 

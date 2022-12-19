@@ -157,12 +157,6 @@ class PianoRollNoteItem(QGraphicsRectItem):
         else:
             return a_pos.x() > (f_width * 0.72)
 
-    def hoverMoveEvent(self, a_event):
-        #QGraphicsRectItem.hoverMoveEvent(self, a_event)
-        if not self.is_resizing:
-            shared.PIANO_ROLL_EDITOR.click_enabled = False
-            self.show_resize_cursor(a_event)
-
     def delete_later(self):
         if self.isEnabled() and self not in _shared.PIANO_ROLL_DELETED_NOTES:
             _shared.PIANO_ROLL_DELETED_NOTES.append(self)
@@ -186,15 +180,22 @@ class PianoRollNoteItem(QGraphicsRectItem):
         return self.note_item.selection_str()
 
     def hoverEnterEvent(self, a_event):
-        QGraphicsRectItem.hoverEnterEvent(self, a_event)
+        shared.set_move_cursor()
         shared.PIANO_ROLL_EDITOR.click_enabled = False
         super().hoverEnterEvent(a_event)
 
+    def hoverMoveEvent(self, a_event):
+        #QGraphicsRectItem.hoverMoveEvent(self, a_event)
+        if not self.is_resizing:
+            shared.PIANO_ROLL_EDITOR.click_enabled = False
+            self.show_resize_cursor(a_event)
+
     def hoverLeaveEvent(self, a_event):
-        QGraphicsRectItem.hoverLeaveEvent(self, a_event)
+        shared.restore_move_cursor()
         shared.PIANO_ROLL_EDITOR.click_enabled = True
-        QApplication.restoreOverrideCursor()
-        self.showing_resize_cursor = False
+        if self.showing_resize_cursor:
+            QApplication.restoreOverrideCursor()
+            self.showing_resize_cursor = False
         super().hoverLeaveEvent(a_event)
 
     def mouseDoubleClickEvent(self, a_event):

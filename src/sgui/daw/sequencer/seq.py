@@ -36,14 +36,10 @@ def sequence_editor_set_delete_mode(a_enabled):
     if a_enabled:
         shared.SEQUENCER.setDragMode(QGraphicsView.DragMode.NoDrag)
         _shared.SEQUENCE_EDITOR_DELETE_MODE = True
-        QApplication.setOverrideCursor(
-            QtCore.Qt.CursorShape.ForbiddenCursor,
-        )
     else:
         shared.SEQUENCER.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
         _shared.SEQUENCE_EDITOR_DELETE_MODE = False
         shared.SEQUENCER.selected_item_strings = set()
-        QApplication.restoreOverrideCursor()
 
 class Silhouette(QGraphicsRectItem):
     def __init__(self):
@@ -69,7 +65,7 @@ class Silhouette(QGraphicsRectItem):
             ) + _shared.SEQUENCE_EDITOR_HEADER_HEIGHT,
         )
 
-class ItemSequencer(QGraphicsView):
+class ItemSequencer(QGraphicsView, HoverCursorChange):
     """ This is the sequencer QGraphicsView and QGraphicsScene on
         the "Sequencer" tab
     """
