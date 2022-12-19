@@ -33,14 +33,15 @@ class SequencerItemHandle(QGraphicsRectItem):
         )
 
     def hoverEnterEvent(self, event):
-        if not glbl_shared.IS_PLAYING:
+        if not glbl_shared.IS_PLAYING and shared._is_move_cursor():
             QApplication.setOverrideCursor(
                 QtCore.Qt.CursorShape.SizeHorCursor,
             )
         super().hoverEnterEvent(event)
 
     def hoverLeaveEvent(self, event):
-        QApplication.restoreOverrideCursor()
+        if not glbl_shared.IS_PLAYING and shared._is_move_cursor():
+            QApplication.restoreOverrideCursor()
         super().hoverLeaveEvent(event)
 
 

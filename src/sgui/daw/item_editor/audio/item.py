@@ -42,15 +42,16 @@ class AudioSeqItemHandle(QGraphicsRectItem):
             ),
         )
 
-
     def hoverEnterEvent(self, a_event):
-        QApplication.setOverrideCursor(
-            QtCore.Qt.CursorShape.SizeHorCursor,
-        )
+        if not glbl_shared.IS_PLAYING and shared._is_move_cursor():
+            QApplication.setOverrideCursor(
+                QtCore.Qt.CursorShape.SizeHorCursor,
+            )
         super().hoverEnterEvent(a_event)
 
     def hoverLeaveEvent(self, a_event):
-        QApplication.restoreOverrideCursor()
+        if not glbl_shared.IS_PLAYING and shared._is_move_cursor():
+            QApplication.restoreOverrideCursor()
         super().hoverLeaveEvent(a_event)
 
 

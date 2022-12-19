@@ -186,7 +186,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
 
     def hoverMoveEvent(self, a_event):
         #QGraphicsRectItem.hoverMoveEvent(self, a_event)
-        if not self.is_resizing:
+        if not self.is_resizing and shared._is_move_cursor():
             shared.PIANO_ROLL_EDITOR.click_enabled = False
             self.show_resize_cursor(a_event)
 

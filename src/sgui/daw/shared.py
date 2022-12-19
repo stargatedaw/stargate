@@ -94,18 +94,17 @@ def set_cursor():
         shape = CURSORS[EDITOR_MODE]
         QApplication.setOverrideCursor(QCursor(shape))
 
-_IS_MOVE_CURSOR = False
+def _is_move_cursor():
+    return EDITOR_MODE in (EDITOR_MODE_SELECT, EDITOR_MODE_DRAW)
 
 def set_move_cursor():
-    global _IS_MOVE_CURSOR
-    _IS_MOVE_CURSOR = EDITOR_MODE in (EDITOR_MODE_SELECT, EDITOR_MODE_DRAW)
-    if _IS_MOVE_CURSOR:
+    if _is_move_cursor():
         QApplication.setOverrideCursor(
             QCursor(QtCore.Qt.CursorShape.SizeAllCursor),
         )
 
 def restore_move_cursor():
-    if _IS_MOVE_CURSOR:
+    if _is_move_cursor():
         QApplication.restoreOverrideCursor()
 
 class HoverCursorChange(QtCore.QObject):
