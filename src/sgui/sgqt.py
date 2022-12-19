@@ -270,7 +270,9 @@ class SgSpinBox(_QLineEdit):
         if event.buttons() == QtCore.Qt.MouseButton.LeftButton:
             self.value_at_press = self.value()
             self.pos_at_press = event.pos()
-            self.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.SizeVerCursor))
+            QApplication.setOverrideCursor(
+                QtGui.QCursor(QtCore.Qt.CursorShape.SizeVerCursor),
+            )
         else:
             super(SgSpinBox, self).mousePressEvent(event)
             self.selectAll()
@@ -279,7 +281,7 @@ class SgSpinBox(_QLineEdit):
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
             self.value_at_press = None
             self.pos_at_press = None
-            self.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.IBeamCursor))
+            QApplication.restoreOverrideCursor()
             return
         super(SgSpinBox, self).mouseReleaseEvent(event)
 
