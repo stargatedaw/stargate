@@ -53,6 +53,9 @@ class DawProject(AbstractProject):
         self.last_item_number = 1
         self.clear_history()
         self.suppress_updates = False
+        self._items_dict_cache = None
+        self._sequence_cache = {}
+        self._item_cache = {}
 
     def ipc(self):
         return constants.DAW_IPC
@@ -306,6 +309,8 @@ class DawProject(AbstractProject):
         self.save_file("", file_takes, str(a_takes))
 
     def get_items_dict(self):
+        if self._items_dict_cache:
+            return self._items_dict_cache
         try:
             f_file = open(self.pyitems_file, "r")
         except:
@@ -315,6 +320,7 @@ class DawProject(AbstractProject):
         return name_uid_dict.from_str(f_str)
 
     def save_items_dict(self, a_uid_dict):
+        self._items_dict_cache = a_uid_dict
         self.save_file("", file_pyitems, str(a_uid_dict))
 
     def create_sequence(self, name):
@@ -373,6 +379,8 @@ class DawProject(AbstractProject):
             and
             uid < constants.DAW_MAX_SONG_COUNT
         ), uid
+        if uid in self._sequence_cache:
+            return self._sequence_cache[uid]
         sequencer_file = os.path.join(
             self.song_folder,
             str(uid),
@@ -500,17 +508,24 @@ class DawProject(AbstractProject):
 
     def get_item_by_uid(self, a_item_uid):
         a_item_uid = int(a_item_uid)
-        f_result = item.from_str(
-            self.get_item_string(a_item_uid),
+        if a_item_uid in self._item_cache:
+            _item = self._item_cache[a_item_uid]
+        else:
+            _item = item.from_str(
+                self.get_item_string(a_item_uid),
+                a_item_uid,
+            )
+        assert _item.uid == a_item_uid, (
+            "UIDs do not match",
+            _item.uid,
             a_item_uid,
         )
-        assert f_result.uid == a_item_uid, "UIDs do not match"
-        return f_result
+        return _item
 
     def get_item_by_name(self, a_item_name):
-        f_items_dict = self.get_items_dict()
-        f_uid = f_items_dict.get_uid_by_name(a_item_name)
-        return item.from_str(self.get_item_string(f_uid), f_uid)
+        items_dict = self.get_items_dict()
+        uid = items_dict.get_uid_by_name(a_item_name)
+        return self.get_item_by_uid(uid)
 
     def save_audio_inputs(self, a_tracks):
         if not self.suppress_updates:
@@ -614,6 +629,7 @@ class DawProject(AbstractProject):
 
     def save_item_by_uid(self, a_uid, a_item, a_new_item=False):
         a_uid = int(a_uid)
+        self._item_cache[a_uid] = a_item
         if not self.suppress_updates:
             self.save_file(
                 folder_items,
@@ -634,6 +650,7 @@ class DawProject(AbstractProject):
         a_sequence.fix_overlaps()
         if uid is None:
             uid = str(constants.DAW_CURRENT_SEQUENCE_UID)
+        self._sequence_cache[uid] = a_sequence
         self.save_file(
             FOLDER_SONGS,
             uid,

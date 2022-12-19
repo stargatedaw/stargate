@@ -16,6 +16,7 @@ LOG = logging.getLogger(__name__)
 FORMAT = (
     '[%(asctime)s] %(levelname)s %(pathname)-30s: %(lineno)s - %(message)s'
 )
+SG_DEBUG = 'SG_DEBUG' in os.environ
 
 
 class RedactingFilter(logging.Filter):
@@ -66,7 +67,7 @@ class _RotatingFileHandler(RotatingFileHandler, FailProofEmitter):
 
 def setup_logging(
     format=FORMAT,
-    level=logging.DEBUG if 'SG_DEBUG' in os.environ else logging.INFO,
+    level=logging.DEBUG if SG_DEBUG else logging.INFO,
     log=LOG,
     stream=sys.stdout,
     maxBytes=1024*1024*10,
