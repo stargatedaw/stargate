@@ -116,8 +116,10 @@ class HoverCursorChange(QtCore.QObject):
     def leaveEvent(self, event):
         global IS_IN_CURSOR_WIDGET
         IS_IN_CURSOR_WIDGET = False
-        for i in range(3):
+        for i in range(6):
             QApplication.restoreOverrideCursor()
+            if not QApplication.overrideCursor():
+                break
 
 PLAYBACK_POS = 0.0
 SUPPRESS_TRACK_COMBOBOX_CHANGES = False
