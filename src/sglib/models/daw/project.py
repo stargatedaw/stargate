@@ -18,6 +18,7 @@ from sglib.lib import util
 from sglib.lib.util import *
 from sglib.lib.translate import _
 from sglib.log import LOG
+import copy
 import math
 import os
 import re
@@ -608,7 +609,9 @@ class DawProject(AbstractProject):
     def create_empty_item(self, a_item_name="item"):
         f_items_dict = self.get_items_dict()
         f_item_name = self.get_next_default_item_name(
-            a_item_name, a_items_dict=f_items_dict)
+            a_item_name,
+            a_items_dict=f_items_dict,
+        )
         f_uid = f_items_dict.add_new_item(f_item_name)
         self.save_file(folder_items, str(f_uid), item(f_uid))
         constants.DAW_IPC.save_item(f_uid)
@@ -622,13 +625,18 @@ class DawProject(AbstractProject):
         f_new_item = self.get_item_by_uid(f_old_uid)
         f_new_item.uid = f_uid
         self.save_file(
-            folder_items, str(f_uid), str(f_new_item))
+            folder_items,
+            str(f_uid),
+            str(f_new_item),
+        )
         constants.DAW_IPC.save_item(f_uid)
         self.save_items_dict(f_items_dict)
         return f_uid
 
     def save_item_by_uid(self, a_uid, a_item, a_new_item=False):
         a_uid = int(a_uid)
+        a_item = copy.deepcopy(a_item)
+        a_item.uid = a_uid
         self._item_cache[a_uid] = a_item
         if not self.suppress_updates:
             self.save_file(
