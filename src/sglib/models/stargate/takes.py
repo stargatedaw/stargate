@@ -7,6 +7,17 @@ class SgTakes:
         self._dict = {}   # map take uid to a list of item uids
         self._lookup = {}  # map item uid to take uid
 
+    def are_common(self, uids):
+        """ Return a take uid if all item uids are part of the same take,
+            otherwise return None
+        """
+        takes = {self._lookup.get(x, None) for x in uids}
+        if len(takes) == 1:
+            # The take could be None, but then it would just return None,
+            # which is still the correct outcome
+            return takes.pop()
+        return None
+
     def get_take_uid(self, a_item_uid):
         a_item_uid = int(a_item_uid)
         if a_item_uid in self._lookup:

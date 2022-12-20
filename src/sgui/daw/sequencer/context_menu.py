@@ -19,17 +19,15 @@ def cut_selected():
 
 def takes_action_triggered():
     def on_double_click(item):
-        f_uid = shared.SEQUENCER.current_item.audio_item.item_uid
         f_new_uid = item.item_uid
         for f_item in shared.SEQUENCER.get_selected_items():
-            if f_item.audio_item.item_uid == f_uid:
-                f_item_obj = f_item.audio_item
-                shared.CURRENT_SEQUENCE.remove_item_ref(f_item_obj)
-                f_item_obj.uid = f_new_uid
-                shared.SEQUENCER.selected_item_strings.add(str(f_item_obj))
-                f_item_ref = f_item_obj.clone()
-                f_item_ref.item_uid = f_new_uid
-                shared.CURRENT_SEQUENCE.add_item_ref_by_uid(f_item_ref)
+            f_item_obj = f_item.audio_item
+            shared.CURRENT_SEQUENCE.remove_item_ref(f_item_obj)
+            f_item_obj.uid = f_new_uid
+            shared.SEQUENCER.selected_item_strings.add(str(f_item_obj))
+            f_item_ref = f_item_obj.clone()
+            f_item_ref.item_uid = f_new_uid
+            shared.CURRENT_SEQUENCE.add_item_ref_by_uid(f_item_ref)
         constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
         constants.DAW_PROJECT.commit(_("Change active take"))
         shared.SEQ_WIDGET.open_sequence()
@@ -53,14 +51,27 @@ def takes_action_triggered():
     layout.addWidget(cancel_button)
     cancel_button.pressed.connect(dialog.close)
 
-    if shared.SEQUENCER.current_item:
-        current_uid = shared.SEQUENCER.current_item.audio_item.item_uid
-        takes = constants.DAW_PROJECT.get_takes()
+    takes = constants.DAW_PROJECT.get_takes()
+    selected = list(shared.SEQUENCER.get_selected_items())
+    if selected:
+        uids = [x.audio_item.item_uid for x in selected]
+        take = takes.are_common(uids)
+        if take is None:
+            QMessageBox.warning(
+                None,
+                'Error',
+                (
+                    'The selected items are part of multiple take groups, '
+                    'only items from one take group can be managed per action'
+                ),
+            )
+            return
+        current_uid = uids[0]
         take_list = takes.get_take(current_uid)
         if take_list:
             items_dict = constants.DAW_PROJECT.get_items_dict()
             for uid in take_list[1]:
-                if uid == current_uid:
+                if len(uids) == 1 and uid == current_uid:
                     continue
                 name = items_dict.get_name_by_uid(uid)
                 list_widget_item = QListWidgetItem(name)
