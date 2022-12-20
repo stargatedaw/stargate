@@ -699,12 +699,9 @@ QLineEdit,
 QSpinBox,
 QDoubleSpinBox,
 QComboBox {
-    background: qlineargradient(
-        x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
-    );
+    background: #aaaaaa;
     border: 1px solid #222222;
-    border-radius: 6px;
+    border-radius: 3px;
     color: #222222;
 }
 
@@ -881,7 +878,7 @@ QComboBox::drop-down
 
 QComboBox::down-arrow
 {
-    image: url({{ PLUGIN_ASSETS_DIR }}/drop-down.svg);
+    image: url({{ PLUGIN_ASSETS_DIR }}/drop-down-dark.svg);
 }
 
 QCheckBox,
@@ -1312,7 +1309,11 @@ class fm1_plugin_ui(AbstractPluginUI):
                 self.port_dict,
                 self.preset_manager,
                 knob_kwargs=knob_kwargs,
-                tooltip='Macros are used to morph between FM settings',
+                tooltip=(
+                    'Macros are used to morph between FM settings.  At 0.0, '
+                    'the FM Matrix settings are used, at 1.0, the settings '
+                    'this knob are used'
+                ),
             )
             f_macro.add_to_grid_layout(
                 self.fm_macro_knobs_gridlayout,
@@ -1357,6 +1358,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             f_fm_macro_matrix.setVerticalScrollBarPolicy(
                 QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
             )
+            f_fm_macro_matrix.resizeColumnsToContents()
             f_fm_macro_matrix.horizontalHeader().setSectionResizeMode(
                 QHeaderView.ResizeMode.Fixed,
             )
@@ -1365,7 +1367,6 @@ class fm1_plugin_ui(AbstractPluginUI):
             )
 
             self.fm_gridlayout.addWidget(f_fm_macro_matrix, 3, f_i)
-            f_fm_macro_matrix.resizeColumnsToContents()
 
             for f_i2 in range(6):
                 for f_i3 in range(6):

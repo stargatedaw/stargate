@@ -37,10 +37,10 @@ ADD_OSC_FILL.setColorAt(0.71425, QColor(0, 0, 255, 90)) #indigo
 ADD_OSC_FILL.setColorAt(0.8571, QColor(255, 0, 255, 90)) #violet
 
 ADD_OSC_BACKGROUND = QLinearGradient(0.0, 0.0, 10.0, ADDITIVE_OSC_HEIGHT)
-ADD_OSC_BACKGROUND.setColorAt(0.0, QColor(40, 40, 40))
-ADD_OSC_BACKGROUND.setColorAt(0.2, QColor(20, 20, 20))
-ADD_OSC_BACKGROUND.setColorAt(0.7, QColor(30, 30, 30))
-ADD_OSC_BACKGROUND.setColorAt(1.0, QColor(40, 40, 40))
+ADD_OSC_BACKGROUND.setColorAt(0.0, QColor("#333333"))
+ADD_OSC_BACKGROUND.setColorAt(0.2, QColor("#2c2c2c"))
+ADD_OSC_BACKGROUND.setColorAt(0.7, QColor("#303030"))
+ADD_OSC_BACKGROUND.setColorAt(1.0, QColor("#333333"))
 
 ADD_OSC_SINE_CACHE = {}
 
