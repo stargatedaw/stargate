@@ -198,7 +198,17 @@ def on_unlink_item():
         not shared.SEQUENCER.current_coord
         or
         not shared.SEQUENCER.current_item
+        or
+        len(shared.SEQUENCER.get_selected_items()) != 1
     ):
+        QMessageBox.warning(
+            None,
+            'Error',
+            (
+                'You must right-click on a single selected item when choosing '
+                'this action'
+            ),
+        )
         return
 
     f_uid_dict = constants.DAW_PROJECT.get_items_dict()
@@ -260,11 +270,19 @@ def on_unlink_item():
     vlayout.addLayout(f_layout)
     f_window.setLayout(vlayout)
     f_new_lineedit = QLineEdit(f_current_item_text)
-    f_new_lineedit.setToolTip('The name of the new item copy')
+    f_new_lineedit.setToolTip('The name of the new item take')
     f_new_lineedit.editingFinished.connect(on_name_changed)
     f_new_lineedit.setMaxLength(24)
     f_layout.addWidget(QLabel(_("New name:")), 0, 0)
     f_layout.addWidget(f_new_lineedit, 0, 1)
+    vlayout.addItem(
+        QSpacerItem(
+            1,
+            1,
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Expanding,
+        ),
+    )
     ok_cancel_layout = QHBoxLayout()
     vlayout.addLayout(ok_cancel_layout)
     f_ok_button = QPushButton(_("OK"))
