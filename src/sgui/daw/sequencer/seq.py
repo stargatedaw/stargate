@@ -185,14 +185,18 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
 
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.Type.GraphicsSceneWheel:
-            if event.delta() == 0:
+            if event.delta() > 20:
+                up = True
+            elif event.delta() < -20:
+                up = False
+            else:
                 return False
             if event.modifiers() == QtCore.Qt.KeyboardModifier.ControlModifier:
-                shared.SEQ_WIDGET.inc_hzoom(event.delta() > 0)
+                shared.SEQ_WIDGET.inc_hzoom(up)
                 event.accept()
                 return True
             elif event.modifiers() == QtCore.Qt.KeyboardModifier.AltModifier:
-                shared.SEQ_WIDGET.inc_vzoom(event.delta() > 0)
+                shared.SEQ_WIDGET.inc_vzoom(up)
                 event.accept()
                 return True
         return False

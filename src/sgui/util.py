@@ -1,3 +1,5 @@
+from collections import deque
+import datetime
 import os
 from xml.etree import ElementTree as xmltree
 
@@ -308,4 +310,38 @@ def Separator(
     line.setObjectName(f'separator_{orientation}')
     #line.setLineWidth(1)
     return line
+
+class TouchpadFilter:
+    """ Workaround for jerky touchpads
+    """
+    def __init__(self, max_queue_size=7):
+        """
+        @max_queue_size: Higher values are smoother but less responsive
+        """
+        self.max_queue_size = max_queue_size
+        self.queue = deque()
+        self.last_ts = datetime.datetime.now()
+        self.last_result = None
+
+    def run(self, direction: bool) -> bool:
+        now = datetime.datetime.now()
+        if now - self.last_ts > datetime.timedelta(seconds=2):
+            self.queue.clear()
+        self.last_ts = now
+
+        self.queue.append(direction)
+        if len(self.queue) > self.max_queue_size:
+            self.queue.popleft()
+        truths = self.queue.count(True)
+        falsehoods = self.queue.count(False)
+        if truths == falsehoods and self.last_result is not None:
+            return self.last_result
+        result = truths > falsehoods
+        # Prevent jerking when the queue reaches equilibrium
+        if self.last_result is not None and result != self.last_result:
+            self.queue.clear()
+            for i in range(self.max_queue_size):
+                self.queue.append(result)
+        self.last_result = result
+        return result
 

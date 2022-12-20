@@ -6,6 +6,7 @@ from sgui.daw.shared import *
 from sglib.lib.util import *
 from sgui.plugins import *
 from sgui.sgqt import *
+from sgui.util import TouchpadFilter
 
 from . import _shared
 from .atm_item import SeqAtmItem
@@ -25,6 +26,7 @@ class SequencerWidget:
     """ The widget that holds the sequencer """
     def __init__(self):
         self.enabled = False
+        self.touchpad_filter = TouchpadFilter()
         self.widget = QWidget()
         self.widget.setSizePolicy(
             QSizePolicy.Policy.Minimum,
@@ -329,6 +331,7 @@ class SequencerWidget:
             self.set_hzoom_size()
 
     def inc_hzoom(self, up: bool):
+        up = self.touchpad_filter.run(up)
         glbl_shared.MAIN_STACKED_WIDGET.setUpdatesEnabled(False)
         val = self.hzoom_slider.value()
         step = self.hzoom_slider.singleStep()
@@ -356,6 +359,7 @@ class SequencerWidget:
         glbl_shared.MAIN_STACKED_WIDGET.update()
 
     def inc_vzoom(self, up: bool):
+        up = self.touchpad_filter.run(up)
         glbl_shared.MAIN_STACKED_WIDGET.setUpdatesEnabled(False)
         val = self.vzoom_slider.value()
         step = self.vzoom_slider.singleStep()
