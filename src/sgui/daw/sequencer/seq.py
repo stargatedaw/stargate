@@ -195,7 +195,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                 shared.SEQ_WIDGET.inc_hzoom(up)
                 event.accept()
                 return True
-            elif event.modifiers() == QtCore.Qt.KeyboardModifier.AltModifier:
+            elif event.modifiers() == QtCore.Qt.KeyboardModifier.ShiftModifier:
                 shared.SEQ_WIDGET.inc_vzoom(up)
                 event.accept()
                 return True

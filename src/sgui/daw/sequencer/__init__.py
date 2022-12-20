@@ -149,7 +149,7 @@ class SequencerWidget:
         self.hlayout0.addWidget(QLabel("V"))
         self.vzoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
         self.vzoom_slider.setToolTip(
-            f'Vertical zoom.  {KEY_ALT}+MouseWheel'
+            f'Vertical zoom.  SHIFT+MouseWheel'
         )
         self.hlayout0.addWidget(self.vzoom_slider)
         self.vzoom_slider.setObjectName("zoom_slider")
