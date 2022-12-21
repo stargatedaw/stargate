@@ -249,6 +249,7 @@ class TransportWidget(AbstractTransportWidget):
             shared.HARDWARE_WIDGET.overdub_checkbox,
         ):
             f_widget.setEnabled(a_enabled)
+        shared.TRACK_PANEL.set_controls_enabled(a_enabled)
 
     def on_play(self):
         if shared.MAIN_WINDOW.currentIndex() == shared.TAB_ITEM_EDITOR:

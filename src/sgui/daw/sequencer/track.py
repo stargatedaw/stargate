@@ -125,6 +125,9 @@ class SeqTrack:
         self.suppress_osc = False
         self.automation_combobox = None
 
+    def set_controls_enabled(self, enabled: bool):
+        self.menu_button.setEnabled(enabled)
+
     def menu_button_pressed(self):
         if not self.menu_created:
             self.create_menu()
@@ -463,6 +466,10 @@ class TrackPanel:
                 _shared.SEQUENCE_EDITOR_TRACK_COUNT)
             }
         self.set_track_height()
+
+    def set_controls_enabled(self, enabled: bool):
+        for track in self.tracks.values():
+            track.set_controls_enabled(enabled)
 
     def set_track_height(self):
         self.tracks_widget.setUpdatesEnabled(False)
