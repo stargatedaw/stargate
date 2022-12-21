@@ -494,6 +494,9 @@ class AudioItemViewerWidget(QGraphicsView):
         f_groupbox_layout = QGridLayout()
         vlayout.addLayout(f_groupbox_layout)
         bpm_spinbox = QDoubleSpinBox()
+        bpm_spinbox.setToolTip(
+            'The tempo to tempo sync length to'
+        )
         bpm_spinbox.setDecimals(1)
         bpm_spinbox.setRange(60, 200)
         bpm_spinbox.setSingleStep(0.1)
@@ -503,10 +506,17 @@ class AudioItemViewerWidget(QGraphicsView):
             "1/4", "2/4", "4/4", "None",
         ]
         f_beat_frac_combobox = QComboBox()
+        f_beat_frac_combobox.setToolTip(
+            'The musical length to tempo sync to'
+        )
         f_beat_frac_combobox.setMinimumWidth(75)
         f_beat_frac_combobox.addItems(f_beat_fracs)
         f_beat_frac_combobox.setCurrentIndex(self.last_tempo_combobox_index)
         count_spinbox = QSpinBox()
+        count_spinbox.setToolTip(
+            'The count of "Unit" to tempo sync to.  For example, a count of '
+            '3 at 1/16 would be 3/16'
+        )
         count_spinbox.setRange(1, 64)
         count_spinbox.setValue(int(self.last_ts_beat))
         f_sync_button = QPushButton(_("Sync"))
@@ -519,6 +529,14 @@ class AudioItemViewerWidget(QGraphicsView):
         f_groupbox_layout.addWidget(f_beat_frac_combobox, 1, 1)
         f_groupbox_layout.addWidget(QLabel("Count"), 0, 2)
         f_groupbox_layout.addWidget(count_spinbox, 1, 2)
+        vlayout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         ok_cancel_layout = QHBoxLayout()
         vlayout.addLayout(ok_cancel_layout)
         ok_cancel_layout.addWidget(f_sync_button)
