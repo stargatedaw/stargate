@@ -31,6 +31,118 @@ def clear_seq_drop():
 AUDIO_ITEM_HANDLE_HEIGHT = 12.0
 AUDIO_ITEM_HANDLE_SIZE = 6.25
 
+BOTTOM_LEFT_TRI = QtGui.QPolygonF()
+BOTTOM_LEFT_TRI.append(
+    QtCore.QPointF(0.0, 0.0)
+)
+BOTTOM_LEFT_TRI.append(
+    QtCore.QPointF(
+        float(AUDIO_ITEM_HANDLE_SIZE),
+        float(AUDIO_ITEM_HANDLE_HEIGHT),
+    )
+)
+BOTTOM_LEFT_TRI.append(
+    QtCore.QPointF(
+        0.0,
+        float(AUDIO_ITEM_HANDLE_HEIGHT),
+    ),
+)
+BOTTOM_LEFT_TRI.append(
+    QtCore.QPointF(0.0, 0.0)
+)
+
+BOTTOM_RIGHT_TRI = QtGui.QPolygonF()
+BOTTOM_RIGHT_TRI.append(
+    QtCore.QPointF(
+        float(AUDIO_ITEM_HANDLE_SIZE),
+        float(AUDIO_ITEM_HANDLE_HEIGHT),
+    )
+)
+BOTTOM_RIGHT_TRI.append(
+    QtCore.QPointF(
+        0.0,
+        float(AUDIO_ITEM_HANDLE_HEIGHT),
+    ),
+)
+BOTTOM_RIGHT_TRI.append(
+    QtCore.QPointF(
+        float(AUDIO_ITEM_HANDLE_SIZE),
+        0.0,
+    ),
+)
+BOTTOM_RIGHT_TRI.append(
+    QtCore.QPointF(
+        float(AUDIO_ITEM_HANDLE_SIZE),
+        float(AUDIO_ITEM_HANDLE_HEIGHT),
+    )
+)
+
+TOP_LEFT_TRI = QtGui.QPolygonF()
+TOP_LEFT_TRI.append(
+    QtCore.QPointF(0.0, 0.0)
+)
+TOP_LEFT_TRI.append(
+    QtCore.QPointF(
+        float(AUDIO_ITEM_HANDLE_SIZE),
+        0.0,
+    )
+)
+TOP_LEFT_TRI.append(
+    QtCore.QPointF(
+        0.0,
+        float(AUDIO_ITEM_HANDLE_HEIGHT),
+    ),
+)
+TOP_LEFT_TRI.append(
+    QtCore.QPointF(0.0, 0.0)
+)
+
+TOP_RIGHT_TRI = QtGui.QPolygonF()
+TOP_RIGHT_TRI.append(
+    QtCore.QPointF(0.0, 0.0),
+)
+TOP_RIGHT_TRI.append(
+    QtCore.QPointF(
+        float(AUDIO_ITEM_HANDLE_SIZE),
+        0.0,
+    ),
+)
+TOP_RIGHT_TRI.append(
+    QtCore.QPointF(
+        float(AUDIO_ITEM_HANDLE_SIZE),
+        float(AUDIO_ITEM_HANDLE_HEIGHT),
+    ),
+)
+TOP_RIGHT_TRI.append(
+    QtCore.QPointF(0.0, 0.0),
+)
+
+RECT_ITEM_HANDLE = QtGui.QPolygonF()
+RECT_ITEM_HANDLE.append(
+    QtCore.QPointF(0.0, 0.0),
+)
+RECT_ITEM_HANDLE.append(
+    QtCore.QPointF(
+        float(AUDIO_ITEM_HANDLE_SIZE),
+        0.0,
+    ),
+)
+RECT_ITEM_HANDLE.append(
+    QtCore.QPointF(
+        float(AUDIO_ITEM_HANDLE_SIZE),
+        float(AUDIO_ITEM_HANDLE_HEIGHT),
+    ),
+)
+RECT_ITEM_HANDLE.append(
+    QtCore.QPointF(
+        0.0,
+        float(AUDIO_ITEM_HANDLE_HEIGHT),
+    ),
+)
+RECT_ITEM_HANDLE.append(
+    QtCore.QPointF(0.0, 0.0),
+)
+
 NO_PEN = QPen(QtCore.Qt.PenStyle.NoPen)
 NO_PEN.setWidth(0)
 

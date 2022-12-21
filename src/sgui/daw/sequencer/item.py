@@ -18,19 +18,13 @@ from sglib.lib.translate import _
 from sgui.sgqt import *
 from sgui.util import get_font
 
-class SequencerItemHandle(QGraphicsRectItem):
-    def __init__(self, *args, **kwargs):
+
+class SequencerItemHandle(QGraphicsPolygonItem):
+    def __init__(self, _polygon, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setZValue(2200.0)
         self.setAcceptHoverEvents(True)
-        self.setRect(
-            QtCore.QRectF(
-                0.0,
-                0.0,
-                float(shared.AUDIO_ITEM_HANDLE_SIZE),
-                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
-            ),
-        )
+        self.setPolygon(_polygon)
 
     def hoverEnterEvent(self, event):
         if not glbl_shared.IS_PLAYING and shared._is_move_cursor():
@@ -120,7 +114,10 @@ class SequencerItem(QGraphicsRectItem):
         )
         self.label.setZValue(2100.00)
 
-        self.start_handle = SequencerItemHandle(parent=self)
+        self.start_handle = SequencerItemHandle(
+            _polygon=shared.BOTTOM_LEFT_TRI,
+            parent=self,
+        )
         self.start_handle.mousePressEvent = self.start_handle_mouseClickEvent
         self.start_handle_line = QGraphicsLineItem(
             0.0,
@@ -134,7 +131,10 @@ class SequencerItem(QGraphicsRectItem):
 
         self.start_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
 
-        self.length_handle = SequencerItemHandle(parent=self)
+        self.length_handle = SequencerItemHandle(
+            _polygon=shared.BOTTOM_RIGHT_TRI,
+            parent=self,
+        )
         self.length_handle.mousePressEvent = self.length_handle_mouseClickEvent
         self.length_handle_line = QGraphicsLineItem(
             shared.AUDIO_ITEM_HANDLE_SIZE,
@@ -146,7 +146,10 @@ class SequencerItem(QGraphicsRectItem):
             self.length_handle,
         )
 
-        self.stretch_handle = SequencerItemHandle(parent=self)
+        self.stretch_handle = SequencerItemHandle(
+            _polygon=shared.BOTTOM_RIGHT_TRI,
+            parent=self,
+        )
         self.stretch_handle.mousePressEvent = \
             self.stretch_handle_mouseClickEvent
         self.stretch_handle_line = QGraphicsLineItem(

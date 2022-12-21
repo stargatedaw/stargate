@@ -29,18 +29,11 @@ from . import (
 from sgui.util import get_font
 
 
-class AudioSeqItemHandle(QGraphicsRectItem):
-    def __init__(self, *args, **kwargs):
+class AudioSeqItemHandle(QGraphicsPolygonItem):
+    def __init__(self, _polygon, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setAcceptHoverEvents(True)
-        self.setRect(
-            QtCore.QRectF(
-                0.0,
-                0.0,
-                float(shared.AUDIO_ITEM_HANDLE_SIZE),
-                float(shared.AUDIO_ITEM_HANDLE_HEIGHT),
-            ),
-        )
+        self.setPolygon(_polygon)
 
     def hoverEnterEvent(self, a_event):
         if not glbl_shared.IS_PLAYING and shared._is_move_cursor():
@@ -115,7 +108,10 @@ class AudioSeqItem(QGraphicsRectItem):
             QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations,
         )
 
-        self.start_handle = AudioSeqItemHandle(parent=self)
+        self.start_handle = AudioSeqItemHandle(
+            shared.BOTTOM_LEFT_TRI,
+            parent=self,
+        )
         self.start_handle.mousePressEvent = self.start_handle_mouseClickEvent
         self.start_handle_line = QGraphicsLineItem(
             0.0,
@@ -129,7 +125,10 @@ class AudioSeqItem(QGraphicsRectItem):
 
         self.start_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
 
-        self.length_handle = AudioSeqItemHandle(parent=self)
+        self.length_handle = AudioSeqItemHandle(
+            shared.BOTTOM_RIGHT_TRI,
+            parent=self,
+        )
         self.length_handle.mousePressEvent = self.length_handle_mouseClickEvent
         self.length_handle_line = QGraphicsLineItem(
             shared.AUDIO_ITEM_HANDLE_SIZE, shared.AUDIO_ITEM_HANDLE_HEIGHT,
@@ -137,7 +136,10 @@ class AudioSeqItem(QGraphicsRectItem):
             (_shared.AUDIO_ITEM_HEIGHT * -1.0) + shared.AUDIO_ITEM_HANDLE_HEIGHT,
             self.length_handle)
 
-        self.fade_in_handle = AudioSeqItemHandle(parent=self)
+        self.fade_in_handle = AudioSeqItemHandle(
+            shared.TOP_LEFT_TRI,
+            parent=self,
+        )
         self.fade_in_handle.mousePressEvent = \
             self.fade_in_handle_mouseClickEvent
         self.fade_in_handle_line = QGraphicsLineItem(
@@ -148,7 +150,10 @@ class AudioSeqItem(QGraphicsRectItem):
             self,
         )
 
-        self.fade_out_handle = AudioSeqItemHandle(parent=self)
+        self.fade_out_handle = AudioSeqItemHandle(
+            shared.TOP_RIGHT_TRI,
+            parent=self,
+        )
         self.fade_out_handle.mousePressEvent = \
             self.fade_out_handle_mouseClickEvent
         self.fade_out_handle_line = QGraphicsLineItem(
@@ -159,7 +164,10 @@ class AudioSeqItem(QGraphicsRectItem):
             self,
         )
 
-        self.stretch_handle = AudioSeqItemHandle(parent=self)
+        self.stretch_handle = AudioSeqItemHandle(
+            shared.RECT_ITEM_HANDLE,
+            parent=self,
+        )
         self.stretch_handle.mousePressEvent = \
             self.stretch_handle_mouseClickEvent
         self.stretch_handle_line = QGraphicsLineItem(
@@ -469,19 +477,6 @@ class AudioSeqItem(QGraphicsRectItem):
                     theme.SYSTEM_COLORS.daw.seq_selected_item,
                 ),
             )
-            self.start_handle.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
-            self.length_handle.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
-            self.fade_in_handle.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
-            self.fade_out_handle.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
-            self.stretch_handle.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
-            self.split_line.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
-
-            self.start_handle_line.setPen(shared.AUDIO_ITEM_LINE_SELECTED_PEN)
-            self.length_handle_line.setPen(shared.AUDIO_ITEM_LINE_SELECTED_PEN)
-            self.fade_in_handle_line.setPen(shared.AUDIO_ITEM_LINE_SELECTED_PEN)
-            self.fade_out_handle_line.setPen(shared.AUDIO_ITEM_LINE_SELECTED_PEN)
-            self.stretch_handle_line.setPen(shared.AUDIO_ITEM_LINE_SELECTED_PEN)
-
             self.label.setBrush(
                 QColor(
                     theme.SYSTEM_COLORS.daw.item_audio_label_selected,
@@ -490,25 +485,30 @@ class AudioSeqItem(QGraphicsRectItem):
             handle_brush = QColor(
                 theme.SYSTEM_COLORS.daw.item_audio_handle_selected,
             )
-            self.start_handle.setBrush(handle_brush)
-            self.length_handle.setBrush(handle_brush)
-            self.fade_in_handle.setBrush(handle_brush)
-            self.fade_out_handle.setBrush(handle_brush)
-            self.stretch_handle.setBrush(handle_brush)
+            for item in (
+                self.start_handle,
+                self.length_handle,
+                self.fade_in_handle,
+                self.fade_out_handle,
+                self.stretch_handle,
+                self.split_line,
+                self.start_handle_line,
+                self.length_handle_line,
+                self.fade_in_handle_line,
+                self.fade_out_handle_line,
+                self.stretch_handle_line,
+            ):
+                item.setPen(handle_brush)
+
+            for item in (
+                self.start_handle,
+                self.length_handle,
+                self.fade_in_handle,
+                self.fade_out_handle,
+                self.stretch_handle,
+            ):
+                item.setBrush(handle_brush)
         else:
-            self.start_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
-            self.length_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
-            self.fade_in_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
-            self.fade_out_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
-            self.stretch_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
-            self.split_line.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
-
-            self.start_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
-            self.length_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
-            self.fade_in_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
-            self.fade_out_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
-            self.stretch_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
-
             self.label.setBrush(
                 QColor(
                     theme.SYSTEM_COLORS.daw.item_audio_label,
@@ -517,11 +517,30 @@ class AudioSeqItem(QGraphicsRectItem):
             handle_brush = QColor(
                 theme.SYSTEM_COLORS.daw.item_audio_handle,
             )
-            self.start_handle.setBrush(handle_brush)
-            self.length_handle.setBrush(handle_brush)
-            self.fade_in_handle.setBrush(handle_brush)
-            self.fade_out_handle.setBrush(handle_brush)
-            self.stretch_handle.setBrush(handle_brush)
+            for item in (
+                self.start_handle,
+                self.length_handle,
+                self.fade_in_handle,
+                self.fade_out_handle,
+                self.stretch_handle,
+                self.split_line,
+                self.start_handle_line,
+                self.length_handle_line,
+                self.fade_in_handle_line,
+                self.fade_out_handle_line,
+                self.stretch_handle_line,
+            ):
+                item.setPen(handle_brush)
+
+            for item in (
+                self.start_handle,
+                self.length_handle,
+                self.fade_in_handle,
+                self.fade_out_handle,
+                self.stretch_handle,
+            ):
+                item.setBrush(handle_brush)
+
             track_colors = theme.SYSTEM_COLORS.daw.track_default_colors
             if a_index is None:
                 i = self.audio_item.lane_num % len(track_colors)

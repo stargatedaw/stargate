@@ -676,6 +676,9 @@ class QGraphicsRectItem(_HintItem, QGraphicsRectItem):
 class QGraphicsEllipseItem(_HintItem, QGraphicsEllipseItem):
     pass
 
+class QGraphicsPolygonItem(_HintItem, QGraphicsPolygonItem):
+    pass
+
 class ComboTabWidget(QWidget):
     """ A class that replicates QTabWidget API, but using a QComboBox and
         a QStackedWidget instead
