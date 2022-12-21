@@ -190,8 +190,10 @@ class AudioSeqItem(QGraphicsRectItem):
             _shared.AUDIO_ITEM_HEIGHT,
             self,
         )
-        self.split_line.mapFromParent(0.0, 0.0)
         self.split_line.hide()
+        self.split_line.setPen(shared.SPLIT_LINE_PEN)
+        self.split_line.setZValue(3000)
+        self.split_line.mapFromParent(0.0, 0.0)
         self.split_line_is_shown = False
 
         self.setAcceptHoverEvents(True)
@@ -491,7 +493,6 @@ class AudioSeqItem(QGraphicsRectItem):
                 self.fade_in_handle,
                 self.fade_out_handle,
                 self.stretch_handle,
-                self.split_line,
                 self.start_handle_line,
                 self.length_handle_line,
                 self.fade_in_handle_line,
@@ -523,7 +524,6 @@ class AudioSeqItem(QGraphicsRectItem):
                 self.fade_in_handle,
                 self.fade_out_handle,
                 self.stretch_handle,
-                self.split_line,
                 self.start_handle_line,
                 self.length_handle_line,
                 self.fade_in_handle_line,
