@@ -33,11 +33,11 @@ class RoutingGraphNode(QGraphicsRectItem):
         self.text = get_font().QGraphicsSimpleTextItem(a_text, self)
         self.setToolTip(a_text)
         self.text.setPos(3.0, 3.0)
-        self.setPen(
-            QColor(
-                theme.SYSTEM_COLORS.widgets.rout_graph_node_text,
-            ),
+        text_color = QColor(
+            theme.SYSTEM_COLORS.widgets.rout_graph_node_text,
         )
+        self.text.setBrush(text_color)
+        self.text.setPen(text_color)
         self.set_brush()
         self.setFlag(
             QGraphicsItem.GraphicsItemFlag.ItemClipsChildrenToShape,

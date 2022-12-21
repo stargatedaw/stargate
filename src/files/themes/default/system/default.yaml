@@ -6,7 +6,7 @@ daw:
   # Item editor selected CC/pitchbend automation point
   item_atm_point_selected: "#f0f0f0"
   # Item editor audio item handle
-  item_audio_handle: "{{ palette.white }}"
+  item_audio_handle: "{{ item_handle }}"
   # Item editor selected audio item handle
   item_audio_handle_selected: "#181818"
   # The horizontal line that is drawn on audio items during
@@ -98,12 +98,12 @@ daw:
   drag_drop_silhouette: "#6212a2"
   # Default track colors, also applies to audio item editor
   track_default_colors:
-    - "#559549"
-    - "#49956e"
-    - "#498595"
-    - "#495095"
-    - "#714995"
-    - "#95498e"
+    - "#157519"
+    - "#19656e"
+    - "#195585"
+    - "#293075"
+    - "#511965"
+    - "#55193e"
 widgets:
   # The color that audio files are drawn with in the sampler and wave editor
   audio_item_viewer_color: "{{ palette.purple }}"
@@ -131,13 +131,13 @@ widgets:
   # The color of a playback cursor line
   playback_cursor: "{{ palette.white }}"
   # Routing graph widget node
-  rout_graph_node: "#f89e19"
+  rout_graph_node: "#b86e19"
   # Routing graph widget node text
   rout_graph_node_text: "{{ palette.white }}"
   # Routing graph widget to node when mouse hovering
-  rout_graph_to: "#e7a0a0"
+  rout_graph_to: "#b76060"
   # Routing graph widget from node when mouse hovering
-  rout_graph_from: "#a0a0e7"
+  rout_graph_from: "#6060b7"
   # Routing graph widget matrix lines
   rout_graph_lines: "#696969"
   # Routing graph wires connecting audio
