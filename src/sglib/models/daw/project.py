@@ -618,11 +618,11 @@ class DawProject(AbstractProject):
         self.save_items_dict(f_items_dict)
         return f_uid
 
-    def copy_item(self, a_old_item, a_new_item):
+    def copy_item(self, a_old_item: str, a_new_item: str):
         f_items_dict = self.get_items_dict()
         f_uid = f_items_dict.add_new_item(a_new_item)
         f_old_uid = f_items_dict.get_uid_by_name(a_old_item)
-        f_new_item = self.get_item_by_uid(f_old_uid)
+        f_new_item = copy.deepcopy(self.get_item_by_uid(f_old_uid))
         f_new_item.uid = f_uid
         self.save_file(
             folder_items,
