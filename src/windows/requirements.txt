@@ -1,4 +1,4 @@
-PyQt6-Qt6==6.2.3
+PyQt6-Qt6==6.2.4
 PyQt6==6.2.3
 PyYAML
 jinja2
