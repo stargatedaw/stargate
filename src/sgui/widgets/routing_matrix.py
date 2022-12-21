@@ -31,6 +31,7 @@ class RoutingGraphNode(QGraphicsRectItem):
         )
         self.track_index = int(track_index)
         self.text = get_font().QGraphicsSimpleTextItem(a_text, self)
+        self.setZValue(2400)
         self.setToolTip(a_text)
         self.text.setPos(3.0, 3.0)
         text_color = QColor(
@@ -307,7 +308,7 @@ class RoutingGraphWidget(QGraphicsView):
                         f_dest_y - 4,
                         f_pen,
                     )
-                    line.setZValue(2000)
+                    line.setZValue(2700)
                     line = self.scene.addLine(
                         f_v_wire_x,
                         f_dest_y,
@@ -315,7 +316,7 @@ class RoutingGraphWidget(QGraphicsView):
                         f_dest_y - 4,
                         f_pen,
                     )
-                    line.setZValue(2000)
+                    line.setZValue(2700)
                     # Connection circle
                     circle = QGraphicsEllipseItem(
                         f_v_wire_x - self.wire_width_div2,
@@ -377,7 +378,7 @@ class RoutingGraphWidget(QGraphicsView):
                         f_dest_y + 4,
                         f_pen,
                     )
-                    line.setZValue(2000)
+                    line.setZValue(2700)
                     line = self.scene.addLine(
                         f_v_wire_x,
                         f_dest_y,
@@ -385,7 +386,7 @@ class RoutingGraphWidget(QGraphicsView):
                         f_dest_y + 4,
                         f_pen,
                     )
-                    line.setZValue(2000)
+                    line.setZValue(2700)
 
                     # Connection circle
                     circle = QGraphicsEllipseItem(

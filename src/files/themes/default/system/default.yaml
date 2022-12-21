@@ -141,11 +141,11 @@ widgets:
   # Routing graph widget matrix lines
   rout_graph_lines: "#696969"
   # Routing graph wires connecting audio
-  rout_graph_wire_audio: "{{ palette.white }}"
+  rout_graph_wire_audio: "#44aa44"
   # Routing graph wires connecting midi
-  rout_graph_wire_midi: "#6666cc"
+  rout_graph_wire_midi: "#4444aa"
   # Routing graph wires connecting audio sidechain inputs
-  rout_graph_wire_sc: "#cc6666"
+  rout_graph_wire_sc: "#aa4444"
   # Splash screen shown at start up
   splash_screen: "splash.svg"
   # Text status messages on splash screen shown at start up
