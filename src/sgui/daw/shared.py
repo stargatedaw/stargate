@@ -703,7 +703,8 @@ def setup():
         AUDIO_ITEM_HANDLE_PEN, \
         AUDIO_ITEM_LINE_PEN, \
         AUDIO_ITEM_HANDLE_SELECTED_PEN, \
-        AUDIO_ITEM_LINE_SELECTED_PEN
+        AUDIO_ITEM_LINE_SELECTED_PEN, \
+        SPLIT_LINE_PEN
 
     AUDIO_ITEM_HANDLE_PEN = QPen(
         QColor(theme.SYSTEM_COLORS.daw.seq_item_handle),
@@ -718,6 +719,10 @@ def setup():
     AUDIO_ITEM_LINE_SELECTED_PEN = QPen(
         QColor(theme.SYSTEM_COLORS.daw.seq_item_handle_selected),
         2.0,
+    )
+    SPLIT_LINE_PEN = QPen(
+        QColor(theme.SYSTEM_COLORS.daw.seq_item_handle_selected),
+        3.0,
     )
 
 # Only functions, globals must accessed through the module

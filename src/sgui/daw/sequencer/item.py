@@ -175,8 +175,9 @@ class SequencerItem(QGraphicsRectItem):
             shared.SEQUENCE_EDITOR_TRACK_HEIGHT,
             self,
         )
-        self.split_line.mapFromParent(0.0, 0.0)
         self.split_line.hide()
+        self.split_line.mapFromParent(0.0, 0.0)
+        self.split_line.setZValue(3000)
         self.split_line_is_shown = False
 
         self.setAcceptHoverEvents(True)
@@ -382,7 +383,7 @@ class SequencerItem(QGraphicsRectItem):
             self.start_handle.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
             self.length_handle.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
             self.stretch_handle.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
-            self.split_line.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
+            self.split_line.setPen(shared.SPLIT_LINE_PEN)
 
             self.start_handle_line.setPen(shared.AUDIO_ITEM_LINE_SELECTED_PEN)
             self.length_handle_line.setPen(shared.AUDIO_ITEM_LINE_SELECTED_PEN)
@@ -405,7 +406,7 @@ class SequencerItem(QGraphicsRectItem):
             self.start_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
             self.length_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
             self.stretch_handle.setPen(shared.AUDIO_ITEM_HANDLE_PEN)
-            self.split_line.setPen(shared.AUDIO_ITEM_HANDLE_SELECTED_PEN)
+            self.split_line.setPen(shared.SPLIT_LINE_PEN)
 
             self.start_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
             self.length_handle_line.setPen(shared.AUDIO_ITEM_LINE_PEN)
