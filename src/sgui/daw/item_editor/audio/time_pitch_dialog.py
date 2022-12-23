@@ -242,7 +242,7 @@ class TimePitchDialogWidget:
             self.timestretch_amt_end_checkbox.setChecked(False)
             self.pitch_shift_end_checkbox.setChecked(False)
         elif a_val == 5:
-            self.hide_controls(pitch=True, _time=True, crisp=True, end=True)
+            self.hide_controls(pitch=True, _time=True, end=True)
             self.timestretch_amt_end_checkbox.setChecked(False)
             self.crispness_combobox.setCurrentIndex(5)
         elif a_val == 6:
