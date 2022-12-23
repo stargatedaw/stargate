@@ -39,6 +39,76 @@ file_wave_editor_bookmarks = os.path.join(wave_edit_folder, "bookmarks.txt")
 file_notes = os.path.join(wave_edit_folder, "notes.txt")
 file_pyinput = os.path.join(wave_edit_folder, "input.txt")
 
+class TimePitchDialogWidget(TimePitchDialogWidget):
+    def __init__(self, path):
+        super().__init__(
+            modes=[
+                'Rubberband',
+                'Rubberband(formants)',
+                'SBSMS',
+                'Paulstretch',
+            ],
+        )
+        self.path = path
+
+    def ok_handler(self, a_val=None):
+        f_file, f_filter = QFileDialog.getSaveFileName(
+            MAIN_WINDOW,
+            "Save file as...",
+            WAVE_EDITOR.last_offline_dir,
+            filter="Wav File (*.wav)",
+            options=QFileDialog.Option.DontUseNativeDialog,
+        )
+        if f_file is None:
+            return
+        f_file = str(f_file)
+        if f_file == "":
+            return
+
+        mode = util.TIMESTRETCH_INDEXES[self.timestretch_mode.currentText()]
+        f_stretch = self.timestretch_amt.value()
+        f_pitch = self.pitch_shift.value()
+
+        if not f_file.endswith(".wav"):
+            f_file += ".wav"
+        WAVE_EDITOR.last_offline_dir = os.path.dirname(f_file)
+
+        if mode in (3, 4):
+            f_crispness = self.crispness_combobox.currentIndex()
+            f_preserve_formants = mode == 4
+            f_proc = util.rubberband(
+                self.path,
+                f_file,
+                f_stretch,
+                f_pitch,
+                f_crispness,
+                f_preserve_formants,
+            )
+        elif mode == 5:
+            stretch_end = self.timestretch_amt_end.value() \
+                if self.timestretch_amt_end_checkbox.isChecked() else None
+            pitch_end = self.pitch_shift_end.value() if \
+                self.pitch_shift_end_checkbox.isChecked() else None
+            f_proc = util.sbsms(
+                self.path,
+                f_file,
+                f_stretch,
+                f_pitch,
+                stretch_end,
+                pitch_end,
+            )
+        elif mode == 6:
+            f_proc = util.paulstretch(
+                self.path,
+                f_file,
+                f_stretch,
+            )
+        else:
+            raise ValueError(f"Invalid algorithm {mode}")
+
+        f_proc.wait()
+        WAVE_EDITOR.open_file(f_file)
+        self.widget.close()
 
 class WaveEditProject(AbstractProject):
     def __init__(self, a_with_audio):
@@ -982,189 +1052,11 @@ class WaveEditorWidget:
         self.vol_slider.setValue(int(f_val * 10.0))
 
     def stretch_shift_dialog(self):
-        f_path = self.current_file
-        if f_path is None or glbl_shared.IS_PLAYING:
+        path = self.current_file
+        if path is None or glbl_shared.IS_PLAYING:
             return
-
-        f_base_file_name = f_path.rsplit("/", 1)[1]
-        f_base_file_name = f_base_file_name.rsplit(".", 1)[0]
-        LOG.info(f_base_file_name)
-
-        def on_ok(a_val=None):
-            f_file, f_filter = QFileDialog.getSaveFileName(
-                MAIN_WINDOW,
-                "Save file as...",
-                self.last_offline_dir,
-                filter="Wav File (*.wav)",
-                options=QFileDialog.Option.DontUseNativeDialog,
-            )
-            if f_file is None:
-                return
-            f_file = str(f_file)
-            if f_file == "":
-                return
-
-            f_algo = str(f_algo_combobox.currentText())
-            f_stretch = f_timestretch_amt.value()
-            f_pitch = f_pitch_shift.value()
-
-            if not f_file.endswith(".wav"):
-                f_file += ".wav"
-            self.last_offline_dir = os.path.dirname(f_file)
-
-            if f_algo == "Rubberband":
-                f_crispness = f_crispness_combobox.currentIndex()
-                f_preserve_formants = f_preserve_formants_checkbox.isChecked()
-                f_proc = util.rubberband(
-                    f_path,
-                    f_file,
-                    f_stretch,
-                    f_pitch,
-                    f_crispness,
-                    f_preserve_formants,
-                )
-            elif f_algo == "SBSMS":
-                stretch_end = timestretch_end.value() \
-                    if timestretch_end_checkbox.isChecked() else None
-                pitch_end = pitch_shift_end.value() if \
-                    pitch_shift_end_checkbox.isChecked() else None
-                f_proc = util.sbsms(
-                    f_path,
-                    f_file,
-                    f_stretch,
-                    f_pitch,
-                    stretch_end,
-                    pitch_end,
-                )
-            elif f_algo == "Paulstretch":
-                f_proc = util.paulstretch(
-                    f_path,
-                    f_file,
-                    f_stretch,
-                )
-            else:
-                raise ValueError(f"Invalid algorithm {f_algo}")
-
-            f_proc.wait()
-            self.open_file(f_file)
-            f_window.close()
-
-        def on_cancel(a_val=None):
-            f_window.close()
-
-        def algo_changed(index=None):
-            algo = str(f_algo_combobox.currentText())
-            if algo == "Rubberband":
-                f_timestretch_amt.setRange(0.2, 4.0)
-                pitch_shift_label.show()
-                f_pitch_shift.show()
-                rubberband_groupbox.show()
-                sbsms_groupbox.hide()
-            elif algo == "SBSMS":
-                f_timestretch_amt.setRange(0.2, 4.0)
-                pitch_shift_label.show()
-                f_pitch_shift.show()
-                rubberband_groupbox.hide()
-                sbsms_groupbox.show()
-            elif algo == "Paulstretch":
-                f_timestretch_amt.setRange(0.2, 30.0)
-                rubberband_groupbox.hide()
-                sbsms_groupbox.hide()
-                f_pitch_shift.hide()
-                pitch_shift_label.hide()
-
-        f_window = QDialog(self.widget)
-        f_window.setMinimumWidth(390)
-        f_window.setWindowTitle(_("Time-Stretch/Pitch-Shift Sample"))
-        f_layout = QVBoxLayout()
-        f_window.setLayout(f_layout)
-
-        f_time_gridlayout = QGridLayout()
-        f_layout.addLayout(f_time_gridlayout)
-
-        pitch_shift_label = QLabel(_("Pitch(semitones):"))
-        f_time_gridlayout.addWidget(pitch_shift_label, 10, 0)
-        f_pitch_shift = QDoubleSpinBox()
-        f_pitch_shift.setRange(-36, 36)
-        f_pitch_shift.setValue(0.0)
-        f_pitch_shift.setDecimals(6)
-        f_time_gridlayout.addWidget(f_pitch_shift, 10, 1)
-
-        f_time_gridlayout.addWidget(QLabel(_("Stretch:")), 5, 0)
-        f_timestretch_amt = QDoubleSpinBox()
-        f_timestretch_amt.setRange(0.2, 4.0)
-        f_timestretch_amt.setDecimals(6)
-        f_timestretch_amt.setSingleStep(0.1)
-        f_timestretch_amt.setValue(1.0)
-        f_time_gridlayout.addWidget(f_timestretch_amt, 5, 1)
-        f_time_gridlayout.addWidget(QLabel(_("Algorithm:")), 0, 0)
-        f_algo_combobox = QComboBox()
-
-        f_time_gridlayout.addWidget(f_algo_combobox, 0, 1)
-
-        rubberband_groupbox = QGroupBox(_("Rubberband Options"))
-        f_layout.addWidget(rubberband_groupbox)
-        rubberband_groupbox_layout = QGridLayout(rubberband_groupbox)
-        rubberband_groupbox_layout.addWidget(QLabel(_("Crispness")), 12, 0)
-        f_crispness_combobox = QComboBox()
-        f_crispness_combobox.addItems(CRISPNESS_SETTINGS)
-        f_crispness_combobox.setCurrentIndex(5)
-        rubberband_groupbox_layout.addWidget(f_crispness_combobox, 12, 1)
-        f_preserve_formants_checkbox = QCheckBox("Preserve formants?")
-        f_preserve_formants_checkbox.setChecked(True)
-        rubberband_groupbox_layout.addWidget(
-            f_preserve_formants_checkbox,
-            18,
-            1,
-        )
-
-        sbsms_groupbox = QGroupBox(_("SBSMS Options"))
-        f_layout.addWidget(sbsms_groupbox)
-        sbsms_groupbox_layout = QGridLayout(sbsms_groupbox)
-        pitch_shift_end_checkbox = QCheckBox(_("Pitch Shift End"))
-        sbsms_groupbox_layout.addWidget(pitch_shift_end_checkbox, 10, 0)
-        pitch_shift_end = QDoubleSpinBox()
-        sbsms_groupbox_layout.addWidget(pitch_shift_end, 10, 1)
-        pitch_shift_end.setRange(-36, 36)
-        pitch_shift_end.setValue(0.0)
-        pitch_shift_end.setDecimals(6)
-        timestretch_end_checkbox = QCheckBox(_("Time Stretch End"))
-        sbsms_groupbox_layout.addWidget(timestretch_end_checkbox, 20, 0)
-        timestretch_end = QDoubleSpinBox()
-        sbsms_groupbox_layout.addWidget(timestretch_end, 20, 1)
-        timestretch_end.setRange(0.2, 4.0)
-        timestretch_end.setDecimals(6)
-        timestretch_end.setSingleStep(0.1)
-        timestretch_end.setValue(1.0)
-
-        f_layout.addItem(
-            QSpacerItem(
-                1,
-                1,
-                QSizePolicy.Policy.Minimum,
-                QSizePolicy.Policy.Expanding,
-            ),
-        )
-        algorithms = ["Rubberband"]
-        if util.SBSMS:
-            algorithms.append('SBSMS')
-        if util.PAULSTRETCH_PATH:
-            algorithms.append('Paulstretch')
-        f_algo_combobox.addItems(algorithms)
-        f_algo_combobox.currentIndexChanged.connect(algo_changed)
-        f_algo_combobox.setMinimumWidth(120)
-        algo_changed()
-
-        f_hlayout2 = QHBoxLayout()
-        f_layout.addLayout(f_hlayout2)
-        f_ok_button = QPushButton(_("OK"))
-        f_ok_button.pressed.connect(on_ok)
-        f_hlayout2.addWidget(f_ok_button)
-        f_cancel_button = QPushButton(_("Cancel"))
-        f_cancel_button.pressed.connect(on_cancel)
-        f_hlayout2.addWidget(f_cancel_button)
-
-        f_window.exec()
+        dialog = TimePitchDialogWidget(path)
+        dialog.widget.exec()
 
     def open_file_from_action(self, a_action):
         self.open_file(a_action.file_name)

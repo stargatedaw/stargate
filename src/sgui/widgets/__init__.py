@@ -37,6 +37,7 @@ from .ramp_env import ramp_env_widget
 from .routing_matrix import *
 from .sample_viewer import *
 from .spectrum import spectrum
+from .time_pitch_dialog import TimePitchDialogWidget
 from .va_osc import osc_widget
 from sglib.lib import util
 from sglib.lib.translate import _
