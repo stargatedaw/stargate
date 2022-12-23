@@ -884,12 +884,14 @@ class AudioItemSeqWidget(FileDragDropper):
         shared.AUDIO_SEQ.delete_selected()
 
     def on_papifx_copy(self):
-        if shared.AUDIO_SEQ.warn_multi_select(
+        if not shared.AUDIO_SEQ.warn_multi_select(
             "Only one item can be selected to copy, please select exactly one"
         ):
             return
         if _shared.CURRENT_ITEM is not None:
             self.paifx_clipboard = shared.AUDIO_SEQ_WIDGET.papifx.get_list()
+        else:
+            QMessageBox.warning(None, None, 'You must right click on an item')
 
     def on_papifx_paste(self):
         if self.paifx_clipboard is not None:
@@ -915,7 +917,8 @@ class AudioItemSeqWidget(FileDragDropper):
                     self.paifx_clipboard,
                 )
                 ipc.audio_per_file_fx_paste(str(fx))
-
+        else:
+            QMessageBox.warning(None, None, 'You must copy to the clipboard')
 
     def on_papifx_clear(self):
         pool = constants.PROJECT.get_audio_pool()
@@ -933,7 +936,7 @@ class AudioItemSeqWidget(FileDragDropper):
 
 
     def on_paifx_copy(self):
-        if shared.AUDIO_SEQ.warn_multi_select(
+        if not shared.AUDIO_SEQ.warn_multi_select(
             "Only one item can be selected to copy, please select exactly one"
         ):
             return
@@ -946,6 +949,8 @@ class AudioItemSeqWidget(FileDragDropper):
             self.paifx_clipboard = f_paif.get_row(
                 _shared.CURRENT_AUDIO_ITEM_INDEX,
             )
+        else:
+            QMessageBox.warning(None, None, 'You must right click on an item')
 
     def on_paifx_paste(self):
         if (
@@ -966,6 +971,12 @@ class AudioItemSeqWidget(FileDragDropper):
             )
             shared.AUDIO_SEQ_WIDGET.paifx.set_from_list(
                 self.paifx_clipboard,
+            )
+        else:
+            QMessageBox.warning(
+                None,
+                None,
+                'You must copy to the clipboard and right click on an item'
             )
 
     def on_paifx_clear(self):
