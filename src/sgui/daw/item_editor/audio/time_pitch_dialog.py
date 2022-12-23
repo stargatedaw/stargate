@@ -33,9 +33,12 @@ class TimePitchDialogWidget:
         self.timestretch_mode.addItems(TIMESTRETCH_MODES)
         self.timestretch_mode.setCurrentIndex(a_audio_item.time_stretch_mode)
         self.timestretch_mode.currentIndexChanged.connect(
-            self.timestretch_mode_changed)
-        self.time_pitch_gridlayout.addWidget(QLabel(_("Pitch:")), 0, 0)
+            self.timestretch_mode_changed,
+        )
+        self.pitch_label = QLabel("Pitch:")
+        self.time_pitch_gridlayout.addWidget(self.pitch_label, 0, 0)
         self.pitch_shift = QDoubleSpinBox()
+        self.pitch_controls = (self.pitch_label, self.pitch_shift)
         self.pitch_shift.setToolTip('The pitch adjustment, in semitones')
         self.pitch_shift.setRange(-36, 36)
         self.pitch_shift.setValue(float(a_audio_item.pitch_shift))
@@ -64,8 +67,10 @@ class TimePitchDialogWidget:
         self.pitch_shift_end.setDecimals(6)
         self.time_pitch_gridlayout.addWidget(self.pitch_shift_end, 0, 3)
 
-        self.time_pitch_gridlayout.addWidget(QLabel(_("Time:")), 1, 0)
+        self.time_label = QLabel(_("Time:"))
+        self.time_pitch_gridlayout.addWidget(self.time_label, 1, 0)
         self.timestretch_amt = QDoubleSpinBox()
+        self.time_controls = (self.time_label, self.timestretch_amt)
         self.timestretch_amt.setToolTip(
             'The time stretch amount.  2.0 doubles the length of the item, '
             '0.5 halfs the length of the item,  Note that the algorithms are '
@@ -111,18 +116,6 @@ class TimePitchDialogWidget:
         )
         self.time_pitch_gridlayout.addWidget(self.timestretch_amt_end, 1, 3)
 
-        self.timestretch_mode_changed(0)
-
-        self.timestretch_mode.currentIndexChanged.connect(
-            self.timestretch_changed)
-        self.pitch_shift.valueChanged.connect(self.timestretch_changed)
-        self.pitch_shift_end.valueChanged.connect(self.timestretch_changed)
-        self.timestretch_amt.valueChanged.connect(self.timestretch_changed)
-        self.timestretch_amt_end.valueChanged.connect(self.timestretch_changed)
-        self.crispness_combobox.currentIndexChanged.connect(
-            self.timestretch_changed,
-        )
-
         self.end_controls = (
             self.pitch_shift_end_checkbox,
             self.pitch_shift_end,
@@ -133,10 +126,19 @@ class TimePitchDialogWidget:
             self.crispness_label,
             self.crispness_combobox,
         )
-        self.timestretch_mode.currentTextChanged.connect(
-            self.hide_controls,
+
+
+        self.timestretch_mode_changed()
+
+        self.timestretch_mode.currentIndexChanged.connect(
+            self.timestretch_changed)
+        self.pitch_shift.valueChanged.connect(self.timestretch_changed)
+        self.pitch_shift_end.valueChanged.connect(self.timestretch_changed)
+        self.timestretch_amt.valueChanged.connect(self.timestretch_changed)
+        self.timestretch_amt_end.valueChanged.connect(self.timestretch_changed)
+        self.crispness_combobox.currentIndexChanged.connect(
+            self.timestretch_changed,
         )
-        self.hide_controls(self.timestretch_mode.currentText())
 
         self.ok_layout = QHBoxLayout()
         self.ok = QPushButton(_("OK"))
@@ -157,14 +159,30 @@ class TimePitchDialogWidget:
 
         self.last_open_dir = HOME
 
-    def hide_controls(self, text):
+    def hide_controls(
+        self,
+        end=False,
+        crisp=False,
+        pitch=False,
+        _time=False,
+    ):
         for control in self.end_controls:
-            if text == 'SBSMS':
+            if end:
                 control.show()
             else:
                 control.hide()
         for control in self.crispness_controls:
-            if 'Rubberband' in text:
+            if crisp:
+                control.show()
+            else:
+                control.hide()
+        for control in self.pitch_controls:
+            if pitch:
+                control.show()
+            else:
+                control.hide()
+        for control in self.time_controls:
+            if _time:
                 control.show()
             else:
                 control.hide()
@@ -196,73 +214,42 @@ class TimePitchDialogWidget:
 
     def timestretch_mode_changed(self, a_val=None):
         a_val = util.TIMESTRETCH_INDEXES[
-            str(self.timestretch_mode.currentText())]
+            str(self.timestretch_mode.currentText())
+        ]
         if a_val == 0:
-            self.pitch_shift.setEnabled(False)
-            self.timestretch_amt.setEnabled(False)
+            self.hide_controls()
             self.pitch_shift.setValue(0.0)
             self.pitch_shift_end.setValue(0.0)
             self.timestretch_amt.setValue(1.0)
             self.timestretch_amt_end.setValue(1.0)
-            self.timestretch_amt_end_checkbox.setEnabled(False)
             self.timestretch_amt_end_checkbox.setChecked(False)
-            self.pitch_shift_end_checkbox.setEnabled(False)
             self.pitch_shift_end_checkbox.setChecked(False)
             self.crispness_combobox.setCurrentIndex(5)
-            self.crispness_combobox.setEnabled(False)
         elif a_val == 1:
-            self.pitch_shift.setEnabled(True)
-            self.timestretch_amt.setEnabled(False)
+            self.hide_controls(pitch=True)
             self.timestretch_amt.setValue(1.0)
             self.timestretch_amt_end.setValue(1.0)
-            self.timestretch_amt_end.setEnabled(False)
-            self.timestretch_amt_end_checkbox.setEnabled(False)
             self.timestretch_amt_end_checkbox.setChecked(False)
-            self.pitch_shift_end_checkbox.setEnabled(True)
-            self.pitch_shift_end.setEnabled(True)
             self.crispness_combobox.setCurrentIndex(5)
-            self.crispness_combobox.setEnabled(False)
         elif a_val == 2:
-            self.pitch_shift.setEnabled(False)
-            self.timestretch_amt.setEnabled(True)
+            self.hide_controls(_time=True)
             self.pitch_shift.setValue(0.0)
             self.pitch_shift_end.setValue(0.0)
-            self.pitch_shift_end.setEnabled(False)
-            self.timestretch_amt_end.setEnabled(True)
-            self.timestretch_amt_end_checkbox.setEnabled(True)
-            self.pitch_shift_end_checkbox.setEnabled(False)
             self.pitch_shift_end_checkbox.setChecked(False)
             self.crispness_combobox.setCurrentIndex(5)
-            self.crispness_combobox.setEnabled(False)
         elif a_val == 3 or a_val == 4:
-            self.pitch_shift.setEnabled(True)
-            self.pitch_shift_end.setEnabled(False)
-            self.timestretch_amt.setEnabled(True)
-            self.timestretch_amt_end_checkbox.setEnabled(False)
+            self.hide_controls(pitch=True, _time=True, crisp=True)
             self.timestretch_amt_end_checkbox.setChecked(False)
-            self.pitch_shift_end_checkbox.setEnabled(False)
             self.pitch_shift_end_checkbox.setChecked(False)
-            self.crispness_combobox.setEnabled(True)
         elif a_val == 5:
-            self.pitch_shift.setEnabled(True)
-            self.pitch_shift_end.setEnabled(True)
-            self.timestretch_amt.setEnabled(True)
-            self.timestretch_amt_end.setEnabled(True)
-            self.timestretch_amt_end_checkbox.setEnabled(True)
-            self.pitch_shift_end_checkbox.setEnabled(True)
-            self.crispness_combobox.setCurrentIndex(5)
-            self.crispness_combobox.setEnabled(False)
-        elif a_val == 6:
-            self.pitch_shift.setEnabled(True)
-            self.timestretch_amt.setEnabled(True)
-            self.timestretch_amt_end.setEnabled(False)
-            self.pitch_shift_end.setEnabled(False)
-            self.timestretch_amt_end_checkbox.setEnabled(False)
+            self.hide_controls(pitch=True, _time=True, crisp=True, end=True)
             self.timestretch_amt_end_checkbox.setChecked(False)
-            self.pitch_shift_end_checkbox.setEnabled(False)
+            self.crispness_combobox.setCurrentIndex(5)
+        elif a_val == 6:
+            self.hide_controls(pitch=True, _time=True)
+            self.timestretch_amt_end_checkbox.setChecked(False)
             self.pitch_shift_end_checkbox.setChecked(False)
             self.crispness_combobox.setCurrentIndex(5)
-            self.crispness_combobox.setEnabled(False)
 
 
     def ok_handler(self):
