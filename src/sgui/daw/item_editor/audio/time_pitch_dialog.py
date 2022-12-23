@@ -16,20 +16,15 @@ class TimePitchDialogWidget:
         self.widget = QDialog(parent=glbl_shared.MAIN_WINDOW)
         self.widget.setWindowTitle(_("Time/Pitch..."))
         self.widget.setMaximumWidth(480)
-        self.main_vlayout = QVBoxLayout(self.widget)
 
-        self.layout = QGridLayout()
-        self.main_vlayout.addLayout(self.layout)
-
-        self.vlayout2 = QVBoxLayout()
-        self.layout.addLayout(self.vlayout2, 1, 1)
+        self.vlayout = QVBoxLayout(self.widget)
         self.start_hlayout = QHBoxLayout()
-        self.vlayout2.addLayout(self.start_hlayout)
+        self.vlayout.addLayout(self.start_hlayout)
 
         self.timestretch_hlayout = QHBoxLayout()
         self.time_pitch_gridlayout = QGridLayout()
-        self.vlayout2.addLayout(self.timestretch_hlayout)
-        self.vlayout2.addLayout(self.time_pitch_gridlayout)
+        self.vlayout.addLayout(self.timestretch_hlayout)
+        self.vlayout.addLayout(self.time_pitch_gridlayout)
         self.timestretch_hlayout.addWidget(QLabel(_("Mode:")))
         self.timestretch_mode = QComboBox()
 
@@ -83,7 +78,7 @@ class TimePitchDialogWidget:
         self.time_pitch_gridlayout.addWidget(self.timestretch_amt, 1, 1)
 
         self.crispness_layout = QHBoxLayout()
-        self.vlayout2.addLayout(self.crispness_layout)
+        self.vlayout.addLayout(self.crispness_layout)
         self.crispness_label = QLabel(_("Crispness"))
         self.crispness_layout.addWidget(self.crispness_label)
         self.crispness_combobox = QComboBox()
@@ -150,7 +145,15 @@ class TimePitchDialogWidget:
         self.cancel = QPushButton(_("Cancel"))
         self.cancel.pressed.connect(self.widget.close)
         self.ok_layout.addWidget(self.cancel)
-        self.vlayout2.addLayout(self.ok_layout)
+        self.vlayout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
+        self.vlayout.addLayout(self.ok_layout)
 
         self.last_open_dir = HOME
 
