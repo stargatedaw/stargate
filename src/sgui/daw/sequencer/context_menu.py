@@ -296,23 +296,20 @@ def on_unlink_item():
 def on_rename_items():
     if _shared.SEQUENCE_EDITOR_MODE != 0:
         return
-    f_result = []
-    for f_item_name in (
+    f_result = sorted({
         x.name
         for x in shared.SEQUENCER.get_selected_items()
-    ):
-        if not f_item_name in f_result:
-            f_result.append(f_item_name)
+    })
     if not f_result:
         return
 
     def ok_handler():
         f_new_name = str(f_new_lineedit.text())
-        if f_new_name == "":
+        if len(f_new_name) < 5:
             QMessageBox.warning(
                 shared.SEQUENCER.group_box,
                 _("Error"),
-                _("Name cannot be blank"),
+                _("Name must be at least 5 characters"),
             )
             return
         global SEQUENCE_CLIPBOARD
@@ -588,7 +585,11 @@ def init():
 
     rename_action = QAction(_("Rename Selected Item(s)..."), MENU)
     MENU.addAction(rename_action)
-    rename_action.setToolTip('Open a dialog to rename selected items')
+    rename_action.setToolTip(
+        'Open a dialog to rename selected items.  Names will be given a '
+        'numeric suffix, if multiple items are selected they will have '
+        'the same name with different suffixes'
+    )
     rename_action.triggered.connect(on_rename_items)
 
     transpose_action = QAction(_("Transpose..."), MENU)
