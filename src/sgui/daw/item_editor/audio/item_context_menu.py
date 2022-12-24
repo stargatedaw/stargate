@@ -424,7 +424,17 @@ def replace_with_clipboard_all():
         global_open_items()
 
 def clone_sef():
-    constants.DAW_PROJECT.clone_sef(CURRENT_ITEM.audio_item)
+    selected = [x.audio_item for x in shared.AUDIO_SEQ.get_selected()]
+    file_uids = {x.uid for x in selected}
+    if len(file_uids) != len(selected):
+        QMessageBox.warning(
+            None,
+            'Error',
+            'Multiple instances of the same file selected',
+        )
+        return
+    for audio_item in selected:
+        constants.DAW_PROJECT.clone_sef(audio_item)
     constants.DAW_PROJECT.commit(_("Replace audio item"))
     shared.CURRENT_ITEM = constants.DAW_PROJECT.get_item_by_uid(
         shared.CURRENT_ITEM.uid,
