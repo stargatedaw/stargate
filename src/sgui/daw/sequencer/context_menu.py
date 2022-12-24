@@ -305,11 +305,11 @@ def on_rename_items():
 
     def ok_handler():
         f_new_name = str(f_new_lineedit.text())
-        if len(f_new_name) < 5:
+        if len(f_new_name) < 4:
             QMessageBox.warning(
-                shared.SEQUENCER.group_box,
+                None,
                 _("Error"),
-                _("Name must be at least 5 characters"),
+                _("Name must be at least 4 characters"),
             )
             return
         global SEQUENCE_CLIPBOARD
