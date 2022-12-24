@@ -29,6 +29,15 @@ def show(current_item):
     shared.AUDIO_SEQ.context_menu_enabled = False
 
     f_file_menu = f_menu.addMenu(_("File"))
+
+    preview_action = QAction('Preview', f_file_menu)
+    f_file_menu.addAction(preview_action)
+    preview_action.setToolTip(
+        'Preview the file.  Same as previewing in the file browser, use the '
+        'file browser "Stop" button to stop the preview'
+    )
+    preview_action.triggered.connect(preview_audio_item)
+
     f_save_a_copy_action = QAction("Save a Copy...", f_file_menu)
     f_file_menu.addAction(f_save_a_copy_action)
     f_save_a_copy_action.setToolTip('Save a new copy of this audio file')
@@ -695,6 +704,17 @@ def edit_papifx():
 def edit_paif():
     CURRENT_ITEM.setSelected(True)
     shared.AUDIO_SEQ_WIDGET.folders_tab_widget.setCurrentIndex(3)
+
+def preview_audio_item():
+    uid = [x.audio_item.uid for x in shared.AUDIO_SEQ.get_selected()]
+    if len(uid) != 1:
+        QMessageBox.warning(None, "Error", "Must select exactly one item")
+        return
+    uid = uid[0]
+    audio_pool = constants.PROJECT.get_audio_pool()
+    audio_pool_by_uid = audio_pool.by_uid()
+    entry = audio_pool_by_uid[uid]
+    constants.IPC.preview_audio(entry.path)
 
 def crisp_menu_triggered(a_action):
     f_index = CRISPNESS_SETTINGS.index(a_action.crisp_mode)
