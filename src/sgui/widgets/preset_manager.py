@@ -201,14 +201,23 @@ class preset_manager_widget:
 
     def on_save_as(self, a_new=False):
         def ok_handler():
-            f_name = util.remove_bad_chars(f_lineedit.text())
+            f_name = util.remove_bad_chars(f_lineedit.text()).strip()
+            if len(f_name.replace('.sgp', '')) < 4:
+                QMessageBox.warning(
+                    None,
+                    _("Error"),
+                    _("Names must contain at least 4 characters"),
+                )
+                return
             f_file = os.path.join(self.bank_dir, f_name)
             if not f_file.endswith(".sgp"):
                 f_file += ".sgp"
             if os.path.exists(f_file):
                 QMessageBox.warning(
-                    self.group_box, _("Error"),
-                    _("This bank name already exists"))
+                    None,
+                    _("Error"),
+                    _("This bank name already exists"),
+                )
                 return
             if a_new:
                 util.write_file_text(
@@ -219,8 +228,9 @@ class preset_manager_widget:
             util.write_file_text(self.bank_file, self.preset_path)
             self.load_banks()
             self.program_combobox.setCurrentIndex(
-                self.program_combobox.findText(f_name))
-
+                self.program_combobox.findText(f_name),
+            )
+            f_dialog.close()
 
         f_dialog = QDialog(self.group_box)
         f_dialog.setWindowTitle(_("Save Bank"))
@@ -230,8 +240,17 @@ class preset_manager_widget:
         f_groupbox_layout.addWidget(QLabel(_("Name")), 0, 0)
         f_lineedit = QLineEdit()
         f_groupbox_layout.addWidget(f_lineedit, 0, 1)
+        vlayout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         f_sync_button = QPushButton(_("OK"))
         f_sync_button.pressed.connect(ok_handler)
+        f_lineedit.returnPressed.connect(ok_handler)
         f_cancel_button = QPushButton(_("Cancel"))
         f_cancel_button.pressed.connect(f_dialog.close)
         ok_cancel_layout = QHBoxLayout()
@@ -314,11 +333,11 @@ class preset_manager_widget:
         def ok_handler():
             preset_name = str(f_lineedit.text())
             preset_name = util.remove_bad_chars(preset_name).strip()
-            if not preset_name:
+            if len(preset_name) < 5:
                 QMessageBox.warning(
                     self.group_box,
                     _("Error"),
-                    _("You must name the preset"),
+                    _("Preset names must be at least 5 characters"),
                 )
                 return
             LOG.info(f"Saving preset '{preset_name}'")
@@ -351,8 +370,17 @@ class preset_manager_widget:
         f_groupbox_layout.addWidget(QLabel(_("Name")), 0, 0)
         f_lineedit = QLineEdit()
         f_groupbox_layout.addWidget(f_lineedit, 0, 1, 1, 2)
+        vlayout.addItem(
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+        )
         f_sync_button = QPushButton(_("OK"))
         f_sync_button.pressed.connect(ok_handler)
+        f_lineedit.returnPressed.connect(ok_handler)
         f_cancel_button = QPushButton(_("Cancel"))
         f_cancel_button.pressed.connect(f_dialog.close)
         ok_cancel_layout = QHBoxLayout()

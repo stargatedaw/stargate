@@ -416,6 +416,8 @@ class AbstractPluginSettings:
             self.layout = QHBoxLayout(self.controls_widget)
             self.layout.setContentsMargins(3, 3, 3, 3)
             self.plugin_label = QLabel(f"Plugin {a_index + 1: <2}")
+            # Constant width so 'Plugin 10' is not wider than 'Plugin 3'
+            self.plugin_label.setFixedWidth(75)
             self.layout.addWidget(self.plugin_label)
             self.vlayout.addWidget(self.controls_widget)
             self.layout.addWidget(self.plugin_combobox)

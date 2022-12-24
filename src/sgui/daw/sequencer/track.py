@@ -37,6 +37,12 @@ class SeqTrack:
         self.main_hlayout.addWidget(self.peak_meter.widget)
         self.group_box.setLayout(self.main_hlayout)
         self.track_name_lineedit = QLineEdit()
+        self.track_name_lineedit.returnPressed.connect(
+            self.track_name_lineedit.clearFocus
+        )
+        self.track_name_lineedit.setFocusPolicy(
+            QtCore.Qt.FocusPolicy.ClickFocus,
+        )
         self.track_name_lineedit.setObjectName("track_panel")
         if a_track_num == 0:
             self.track_name_lineedit.setText("Main")
@@ -127,6 +133,7 @@ class SeqTrack:
 
     def set_controls_enabled(self, enabled: bool):
         self.menu_button.setEnabled(enabled)
+        self.track_name_lineedit.setEnabled(enabled)
 
     def menu_button_pressed(self):
         if not self.menu_created:
