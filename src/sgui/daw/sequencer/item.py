@@ -436,7 +436,7 @@ class SequencerItem(QGraphicsRectItem):
             return
         self.check_selected_status()
         a_event.setAccepted(True)
-        QGraphicsRectItem.mousePressEvent(self.length_handle, a_event)
+        QGraphicsPolygonItem.mousePressEvent(self.length_handle, a_event)
         for f_item in shared.SEQUENCER.audio_items:
             if f_item.isSelected():
                 f_item.min_start = f_item.pos().x() * -1.0
@@ -451,7 +451,7 @@ class SequencerItem(QGraphicsRectItem):
             return
         self.check_selected_status()
         a_event.setAccepted(True)
-        QGraphicsRectItem.mousePressEvent(self.length_handle, a_event)
+        QGraphicsPolygonItem.mousePressEvent(self.length_handle, a_event)
         for f_item in shared.SEQUENCER.audio_items:
             if f_item.isSelected():
                 f_item.is_resizing = True

@@ -563,7 +563,7 @@ class AudioSeqItem(QGraphicsRectItem):
             return
         self.check_selected_status()
         a_event.setAccepted(True)
-        QGraphicsRectItem.mousePressEvent(self.length_handle, a_event)
+        QGraphicsPolygonItem.mousePressEvent(self.length_handle, a_event)
         for f_item in shared.AUDIO_SEQ.audio_items:
             if f_item.isSelected():
                 f_item.min_start = f_item.pos().x() * -1.0
@@ -578,7 +578,7 @@ class AudioSeqItem(QGraphicsRectItem):
             return
         self.check_selected_status()
         a_event.setAccepted(True)
-        QGraphicsRectItem.mousePressEvent(self.length_handle, a_event)
+        QGraphicsPolygonItem.mousePressEvent(self.length_handle, a_event)
         for f_item in shared.AUDIO_SEQ.audio_items:
             if f_item.isSelected():
                 f_item.is_resizing = True
@@ -592,7 +592,7 @@ class AudioSeqItem(QGraphicsRectItem):
             return
         self.check_selected_status()
         a_event.setAccepted(True)
-        QGraphicsRectItem.mousePressEvent(self.fade_in_handle, a_event)
+        QGraphicsPolygonItem.mousePressEvent(self.fade_in_handle, a_event)
         for f_item in shared.AUDIO_SEQ.audio_items:
             if f_item.isSelected():
                 f_item.is_fading_in = True
@@ -602,7 +602,7 @@ class AudioSeqItem(QGraphicsRectItem):
             return
         self.check_selected_status()
         a_event.setAccepted(True)
-        QGraphicsRectItem.mousePressEvent(self.fade_out_handle, a_event)
+        QGraphicsPolygonItem.mousePressEvent(self.fade_out_handle, a_event)
         for f_item in shared.AUDIO_SEQ.audio_items:
             if f_item.isSelected():
                 f_item.is_fading_out = True
