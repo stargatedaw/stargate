@@ -21,6 +21,8 @@ from sgui.daw import shared
 from sgui import widgets
 from sglib.lib.translate import _
 from sglib.math import clip_value
+from sgui.daw.lib import sequence as sequence_lib
+
 
 class SequencerWidget:
     """ The widget that holds the sequencer """
@@ -461,5 +463,10 @@ class SequencerWidget:
             shared.PLUGIN_RACK.set_track_order(
                 f_result,
                 shared.TRACK_NAMES,
+            )
+            # Avoid a situation where the default song is playing and
+            # a different song is displaying
+            sequence_lib.change_sequence(
+                shared.PLAYLIST_EDITOR._current_sequence,
             )
 
