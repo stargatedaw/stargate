@@ -146,7 +146,7 @@ mingw:
 mingw_deps:
 	# vendor/sbsms/cli/sbsms.exe
 	cp \
-		 /mingw64/bin/libFLAC-8.dll \
+		 /mingw64/bin/libFLAC.dll \
 		 /mingw64/bin/libfftw3-3.dll \
 		 /mingw64/bin/libfftw3f-3.dll \
 		 /mingw64/bin/libgcc_s_seh-1.dll \
