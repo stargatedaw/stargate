@@ -231,41 +231,43 @@ void v_daw_process_atm(
     int f_i, f_i2;
     t_track * f_track = self->track_pool[f_track_num];
     t_atm_tick * tick;
+    t_daw_atm_port * current_port;
 
     int f_pool_index = f_plugin->pool_uid;
 
     f_plugin->atm_count = 0;
 
-    if(a_ts->playback_mode == PLAYBACK_MODE_OFF)
-    {
+    if(a_ts->playback_mode == PLAYBACK_MODE_OFF){
         return;
     }
 
-    if((!self->overdub_mode) && (a_playback_mode == 2) &&
-        (f_track->extern_midi))
-    {
+    if(
+        !self->overdub_mode
+        &&
+        a_playback_mode == 2
+        &&
+        f_track->extern_midi
+    ){
         return;
     }
 
+    if(!self->en_song->sequences_atm){
+        return;
+    }
     t_daw_atm_plugin * f_current_item =
         &self->en_song->sequences_atm->plugins[f_pool_index];
-    t_daw_atm_port * current_port;
 
-    if(!self->en_song->sequences_atm || !f_current_item->port_count)
-    {
+    if(!f_current_item->port_count){
         return;
     }
 
-    for(f_i = 0; f_i < a_ts->atm_tick_count; ++f_i)
-    {
+    for(f_i = 0; f_i < a_ts->atm_tick_count; ++f_i){
         tick = &a_ts->atm_ticks[f_i];
 
-        for(f_i2 = 0; f_i2 < f_current_item->port_count; ++f_i2)
-        {
+        for(f_i2 = 0; f_i2 < f_current_item->port_count; ++f_i2){
             current_port = &f_current_item->ports[f_i2];
 
-            while(1)
-            {
+            while(1){
                 t_daw_atm_point * f_point =
                     &current_port->points[current_port->atm_pos];
                 t_daw_atm_point * next_point = NULL;
@@ -273,12 +275,15 @@ void v_daw_process_atm(
                 int is_last_tick =
                     current_port->atm_pos == (current_port->point_count - 1);
 
-                if(!is_last_tick &&
-                   f_point->tick < tick->tick &&
-                   tick->tick >=
-                       current_port->points[current_port->atm_pos + 1].tick
-                  )
-                {
+                if(
+                    !is_last_tick
+                    &&
+                    f_point->tick < tick->tick
+                    &&
+                    tick->tick
+                    >=
+                    current_port->points[current_port->atm_pos + 1].tick
+                ){
                     ++current_port->atm_pos;
                     continue;
                 }
@@ -342,8 +347,7 @@ void v_daw_process_atm(
     }
 
     f_plugin->atm_list->len = f_plugin->atm_count;
-    for(f_i = 0; f_i < f_plugin->atm_count; ++f_i)
-    {
+    for(f_i = 0; f_i < f_plugin->atm_count; ++f_i){
         f_plugin->atm_list->data[f_i] = &f_plugin->atm_buffer[f_i];
     }
 

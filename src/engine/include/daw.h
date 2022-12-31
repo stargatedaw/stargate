@@ -127,7 +127,6 @@ typedef struct {
     t_sg_seq_event_result seq_event_result;
     t_daw_song* en_song;  // current song, I forget what EN used to stand for
     t_daw_song song_pool[DAW_MAX_SONG_COUNT];
-    t_daw_atm_sequence* atm_pool[DAW_MAX_SONG_COUNT];
     t_track* track_pool[DN_TRACK_COUNT];
     t_daw_routing_graph * routing_graph;
 
