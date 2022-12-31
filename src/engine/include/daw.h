@@ -125,8 +125,9 @@ typedef struct {
 typedef struct {
     t_daw_thread_storage ts[MAX_WORKER_THREADS];
     t_sg_seq_event_result seq_event_result;
-    t_daw_song* en_song;
-    t_daw_sequence* seq_pool[DAW_MAX_SONG_COUNT];
+    t_daw_song* en_song;  // current song, I forget what EN used to stand for
+    t_daw_song song_pool[DAW_MAX_SONG_COUNT];
+    t_daw_atm_sequence* atm_pool[DAW_MAX_SONG_COUNT];
     t_track* track_pool[DN_TRACK_COUNT];
     t_daw_routing_graph * routing_graph;
 
@@ -141,11 +142,12 @@ typedef struct {
 
     t_daw_midi_routing_list midi_routing;
 
-    char* project_folder;
-    char* item_folder;
-    char* sequence_folder;
-    char* tracks_folder;
-    char* seq_event_file;
+    char automation_folder[1024];
+    char project_folder[1024];
+    char item_folder[1024];
+    char sequence_folder[1024];
+    char tracks_folder[1024];
+    char seq_event_file[1024];
 } t_daw;
 
 
@@ -157,7 +159,7 @@ void v_daw_routing_graph_free(t_daw_routing_graph*);
  * @uid: The uid of the t_daw_sequence to fetch
  */
 t_daw_sequence * g_daw_sequence_get(t_daw* daw, int uid);
-t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw*);
+t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw*, int);
 void v_daw_atm_sequence_free(t_daw_atm_sequence*);
 void g_daw_item_get(t_daw*, int);
 
@@ -274,7 +276,7 @@ void v_daw_open_tracks();
 void v_daw_configure(const char* a_key, const char* a_value);
 void v_daw_offline_render_prep(t_daw * self);
 //* Load the sequence pool at start up
-void g_daw_seq_pool_load(t_daw*);
+void g_daw_song_pool_load(t_daw*);
 /* Set the active sequence
  * @uid: THe UID of the sequence to play
  */

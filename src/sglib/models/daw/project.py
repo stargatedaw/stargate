@@ -22,6 +22,7 @@ import copy
 import math
 import os
 import re
+import shutil
 
 try:
     from sg_py_vendor.pymarshal.json import *
@@ -32,6 +33,7 @@ except ImportError:
 folder_daw = os.path.join("projects", "daw")
 folder_items = os.path.join(folder_daw, "items")
 folder_tracks = os.path.join(folder_daw, "tracks")
+folder_automation = os.path.join(folder_daw, 'automation')
 
 FOLDER_SONGS = os.path.join(folder_daw, "songs")
 FILE_PLAYLIST = os.path.join(folder_daw, 'playlist.json')
@@ -57,6 +59,30 @@ class DawProject(AbstractProject):
         self._items_dict_cache = None
         self._sequence_cache = {}
         self._item_cache = {}
+
+    def quirks(self):
+        """ Make modifications to the project folder format as needed, to
+            bring old projects up to date on format changes
+        """
+        # TODO Stargate v2: Remove all existing quirks
+        self._quirk_per_song_automation()
+
+    def _quirk_per_song_automation(self):
+        """ When the song list feature was implemented, this was overlooked,
+            and automation was shared between all songs, which is never really
+            ideal, and often just bad.  So copy automation.txt for the
+            automation folder for each song uid, as this will be equivalent
+            to what already existed, and not delete somebody's automation
+        """
+        if not os.path.isfile(self.automation_file):
+            return
+        LOG.info('Migrating project to per-song automation files')
+        uids = [os.path.basename(x) for x in os.listdir(self.song_folder)]
+        for uid in uids:
+            path = os.path.join(self.automation_folder, uid)
+            LOG.info(f'Copying {self.automation_file} to {path}')
+            shutil.copy(self.automation_file, path)
+        os.remove(self.automation_file)
 
     def ipc(self):
         return constants.DAW_IPC
@@ -132,9 +158,16 @@ class DawProject(AbstractProject):
         #folders
         self.project_folder = os.path.dirname(a_project_file)
         self.project_file = os.path.splitext(
-            os.path.basename(a_project_file))[0]
+            os.path.basename(a_project_file)
+        )[0]
+        self.automation_folder = os.path.join(
+            self.project_folder,
+            folder_automation,
+        )
         self.items_folder = os.path.join(
-            self.project_folder, folder_items)
+            self.project_folder,
+            folder_items,
+        )
         self.host_folder = os.path.join(
             self.project_folder, folder_daw)
         self.track_pool_folder = os.path.join(
@@ -166,14 +199,22 @@ class DawProject(AbstractProject):
             self.project_folder, file_pyinput)
 
         self.project_folders = [
+            self.automation_folder,
             self.items_folder,
             self.project_folder,
             self.song_folder,
             self.track_pool_folder,
         ]
+        # Do it here in case we add new folders later after a project
+        # has already been created
+        for project_dir in self.project_folders:
+            if not os.path.isdir(project_dir):
+                LOG.info(f'Creating directory: {project_dir}')
+                os.makedirs(project_dir)
 
     def open_project(self, a_project_file, a_notify_osc=True):
         self.set_project_folders(a_project_file)
+        self.quirks()
         if not os.path.exists(a_project_file):
             LOG.info("project file {} does not exist, creating as "
                 "new project".format(a_project_file))
@@ -184,11 +225,6 @@ class DawProject(AbstractProject):
 
     def new_project(self, a_project_file, a_notify_osc=True):
         self.set_project_folders(a_project_file)
-
-        for project_dir in self.project_folders:
-            LOG.info(project_dir)
-            if not os.path.isdir(project_dir):
-                os.makedirs(project_dir)
 
         j = marshal_json(Playlist.new())
         j = json.dumps(j, indent=2, sort_keys=True)
@@ -335,6 +371,7 @@ class DawProject(AbstractProject):
             uid,
             str(sequence),
         )
+        self.save_atm_sequence(DawAtmRegion(), uid)
         constants.DAW_IPC.new_sequence(uid)
         return uid, sequence
 
@@ -437,15 +474,20 @@ class DawProject(AbstractProject):
         self.save_file("", FILE_PLAYLIST, j)
         self.commit("Update playlist")
 
-    def get_atm_sequence(self):
-        if os.path.isfile(self.automation_file):
-            with open(self.automation_file) as f_file:
-                return DawAtmRegion.from_str(f_file.read())
+    def get_atm_sequence(self, song_uid=None):
+        if song_uid is None:
+            song_uid = constants.DAW_CURRENT_SEQUENCE_UID
+        path = os.path.join(self.automation_folder, str(song_uid))
+        if os.path.isfile(path):
+            with open(path) as f:
+                return DawAtmRegion.from_str(f.read())
         else:
             return DawAtmRegion()
 
-    def save_atm_sequence(self, a_sequence):
-        self.save_file(folder_daw, "automation.txt", str(a_sequence))
+    def save_atm_sequence(self, a_sequence, song_uid):
+        if song_uid is None:
+            song_uid = constants.DAW_CURRENT_SEQUENCE_UID
+        self.save_file(folder_automation, str(song_uid), str(a_sequence))
         self.commit("Update automation")
         constants.DAW_IPC.save_atm_sequence()
 

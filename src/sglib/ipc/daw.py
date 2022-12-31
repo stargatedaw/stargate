@@ -11,6 +11,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 """
 
+from sglib import constants
 from sglib.lib.util import (
     bool_to_int,
     get_wait_file_path,
@@ -105,8 +106,10 @@ class DawIPC(AbstractIPC):
     def save_tracks(self):
         self.send_configure("st", "")
 
-    def save_atm_sequence(self):
-        self.send_configure("sa", "")
+    def save_atm_sequence(self, song_uid=None):
+        if song_uid is None:
+            song_uid = constants.DAW_CURRENT_SEQUENCE_UID
+        self.send_configure("sa", str(song_uid))
 
     def offline_render(self, a_start_beat, a_end_beat, a_file_name):
         self.send_configure(

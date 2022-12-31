@@ -429,11 +429,9 @@ void g_daw_song_get(t_daw* self, int a_lock){
     t_daw_song * f_result;
     lmalloc((void**)&f_result, sizeof(t_daw_song));
 
-    f_result->sequences_atm = NULL;
-
-    f_result->sequences_atm = g_daw_atm_sequence_get(self);
+    f_result->sequences_atm = g_daw_atm_sequence_get(self, 0);
     // Assumed to already be loaded
-    f_result->sequences = self->seq_pool[0];
+    f_result->sequences = self->song_pool[0].sequences;
 
     t_daw_song * f_old = self->en_song;
 

@@ -3,8 +3,7 @@
 #include "files.h"
 
 
-t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self)
-{
+t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self, int song_uid){
     int f_i2;
     t_daw_atm_sequence * f_result = NULL;
     t_daw_atm_plugin * current_plugin = NULL;
@@ -16,13 +15,12 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self)
     sg_snprintf(
         f_file,
         1024,
-        "%s%sautomation.txt",
-        self->project_folder,
-        PATH_SEP
+        "%s%i",
+        self->automation_folder,
+        song_uid
     );
 
-    if(i_file_exists(f_file))
-    {
+    if(i_file_exists(f_file)){
         lmalloc((void**)&f_result, sizeof(t_daw_atm_sequence));
 
         for(f_i2 = 0; f_i2 < MAX_PLUGIN_POOL_COUNT; ++f_i2)
@@ -40,8 +38,7 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self)
         int f_port_pos = 0;
         int f_plugin_uid = -1;
 
-        while(1)
-        {
+        while(1){
             v_iterate_2d_char_array(f_current_string);
             if(f_current_string->eof)
             {

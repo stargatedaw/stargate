@@ -14,12 +14,6 @@ t_daw * g_daw_get(){
     f_result->overdub_mode = 0;
     f_result->loop_mode = 0;
 
-    f_result->project_folder = (char*)malloc(sizeof(char) * 1024);
-    f_result->seq_event_file = (char*)malloc(sizeof(char) * 1024);
-    f_result->item_folder = (char*)malloc(sizeof(char) * 1024);
-    f_result->sequence_folder = (char*)malloc(sizeof(char) * 1024);
-    f_result->tracks_folder = (char*)malloc(sizeof(char) * 1024);
-
     f_result->en_song = NULL;
     f_result->is_soloed = 0;
 
@@ -62,7 +56,7 @@ t_daw * g_daw_get(){
     f_result->routing_graph = NULL;
 
     for(f_i = 0; f_i < DAW_MAX_SONG_COUNT; ++f_i){
-        f_result->seq_pool[f_i] = NULL;
+        f_result->song_pool[f_i] = (t_daw_song){};
     }
 
     for(f_i = 0; f_i < DN_TRACK_COUNT; ++f_i){
@@ -91,7 +85,8 @@ void g_daw_seq_pool_load(t_daw* self){
     for(i = 0; i < DAW_MAX_SONG_COUNT; ++i){
         sg_snprintf(path, 2048, "%s%i", self->sequence_folder, i);
         if(i_file_exists(path)){
-            self->seq_pool[i] = g_daw_sequence_get(self, i);
+            self->song_pool[i].sequences = g_daw_sequence_get(self, i);
+            self->song_pool[i].sequences_atm = g_daw_atm_sequence_get(self, i);
         }
     }
 }
@@ -118,6 +113,14 @@ void v_daw_open_project(int a_first_load){
         DAW->sequence_folder,
         1024,
         "%s%ssongs%s",
+        DAW->project_folder,
+        PATH_SEP,
+        PATH_SEP
+    );
+    sg_snprintf(
+        DAW->automation_folder,
+        1024,
+        "%s%sautomation%s",
         DAW->project_folder,
         PATH_SEP,
         PATH_SEP
@@ -741,12 +744,13 @@ void daw_set_sequence(t_daw* self, int uid){
     );
     // Must be loaded
     sg_assert_ptr(
-        self->seq_pool[uid],
+        self->song_pool[uid].sequences,
         "daw_set_sequence: sequence uid %i not loaded",
         uid
     );
 
     pthread_spin_lock(&STARGATE->main_lock);
-    self->en_song->sequences = self->seq_pool[uid];
+    self->en_song->sequences = self->song_pool[uid].sequences;
+    self->en_song->sequences_atm = self->song_pool[uid].sequences_atm;
     pthread_spin_unlock(&STARGATE->main_lock);
 }

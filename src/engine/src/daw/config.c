@@ -122,15 +122,22 @@ void v_daw_configure(const char* a_key, const char* a_value){
             uid,
             DAW_MAX_SONG_COUNT
         );
-        t_daw_sequence * f_result = g_daw_sequence_get(self, uid);
+        t_daw_sequence * sequence = g_daw_sequence_get(self, uid);
+        t_daw_atm_sequence * atm = g_daw_atm_sequence_get(self, uid);
         // Should not already be set
         sg_assert(
-            !self->seq_pool[uid],
+            !self->song_pool[uid].sequences,
             "v_daw_configure: DN_CONFIGURE_KEY_NS seq already set"
+        );
+        // Should not already be set
+        sg_assert(
+            !self->song_pool[uid].sequences_atm,
+            "v_daw_configure: DN_CONFIGURE_KEY_NS seq atm already set"
         );
 
         pthread_spin_lock(&STARGATE->main_lock);
-        self->seq_pool[uid] = f_result;
+        self->song_pool[uid].sequences = sequence;
+        self->song_pool[uid].sequences_atm = atm;
         pthread_spin_unlock(&STARGATE->main_lock);
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_SR)) {
         // save sequence (reload after save)
@@ -150,14 +157,14 @@ void v_daw_configure(const char* a_key, const char* a_value){
         // It is assumed that the current sequence is the only sequence that
         // can be edited.  Ensure that is the case.
         sg_assert(
-            self->en_song->sequences == self->seq_pool[uid],
+            self->en_song->sequences == self->song_pool[uid].sequences,
             "v_daw_configure: DN_CONFIGURE_KEY_SR not editing current song"
         );
         t_daw_sequence * f_old_sequence = NULL;
         f_old_sequence = self->en_song->sequences;
 
         pthread_spin_lock(&STARGATE->main_lock);
-        self->seq_pool[uid] = f_result;
+        self->song_pool[uid].sequences = f_result;
         self->en_song->sequences = f_result;
         pthread_spin_unlock(&STARGATE->main_lock);
 
@@ -171,23 +178,17 @@ void v_daw_configure(const char* a_key, const char* a_value){
         g_daw_item_get(self, atoi(a_value));
         pthread_spin_unlock(&STARGATE->main_lock);
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_SAVE_ATM)){
-        t_daw_atm_sequence * f_result = g_daw_atm_sequence_get(self);
+        int song_uid = atoi(a_value);
+        t_daw_atm_sequence * f_result = g_daw_atm_sequence_get(self, song_uid);
+        t_daw_atm_sequence * f_old_sequence = self->en_song->sequences_atm;
 
-        t_daw_atm_sequence * f_old_sequence = NULL;
-        if(self->en_song->sequences_atm)
-        {
-            f_old_sequence = self->en_song->sequences_atm;
-        }
         pthread_spin_lock(&STARGATE->main_lock);
         self->en_song->sequences_atm = f_result;
         pthread_spin_unlock(&STARGATE->main_lock);
-        if(f_old_sequence)
-        {
+        if(f_old_sequence){
             v_daw_atm_sequence_free(f_old_sequence);
         }
-    }
-    else if(!strcmp(a_key, DN_CONFIGURE_KEY_LOOP)) //Set loop mode
-    {
+    } else if(!strcmp(a_key, DN_CONFIGURE_KEY_LOOP)) {  //Set loop mode
         int f_value = atoi(a_value);
 
         pthread_spin_lock(&STARGATE->main_lock);
