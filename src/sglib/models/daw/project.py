@@ -484,7 +484,7 @@ class DawProject(AbstractProject):
         else:
             return DawAtmRegion()
 
-    def save_atm_sequence(self, a_sequence, song_uid):
+    def save_atm_sequence(self, a_sequence, song_uid=None):
         if song_uid is None:
             song_uid = constants.DAW_CURRENT_SEQUENCE_UID
         self.save_file(folder_automation, str(song_uid), str(a_sequence))
