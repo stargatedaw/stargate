@@ -45,7 +45,7 @@ def paste_atm_point():
         )
         return
     f_track, f_beat, f_val = shared.SEQUENCER.current_coord
-    f_beat = shared.SEQUENCER.quantize(f_beat)
+    f_beat = _shared.quantize(f_beat)
     f_val = glbl_shared.CC_CLIPBOARD
     f_port, f_index = shared.TRACK_PANEL.has_automation(
         shared.SEQUENCER.current_coord[0],
@@ -87,9 +87,8 @@ def paste_track_sequence():
         not shared.SEQUENCER.track_atm_clipboard
     ):
         return
-    f_beat = shared.SEQUENCER.quantize(
-        shared.SEQUENCER.current_coord[1],
-    )
+    f_track, f_beat, f_val = shared.SEQUENCER.current_coord
+    f_beat = _shared.quantize(f_beat)
     for f_point in (
         x.clone()
         for x in shared.SEQUENCER.track_atm_clipboard
