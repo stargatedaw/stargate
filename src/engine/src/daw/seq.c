@@ -425,33 +425,35 @@ void v_daw_song_free(t_daw_song * a_daw_song){
     }
 }
 
+// Only called during start up.  This function has a number of issues,
+// should eventually replace it completely and re-evaluate the start up
+// sequence
 void g_daw_song_get(t_daw* self, int a_lock){
-    t_daw_song * f_result;
-    lmalloc((void**)&f_result, sizeof(t_daw_song));
+    t_daw_song f_result;
 
-    f_result->sequences_atm = g_daw_atm_sequence_get(self, 0);
+    f_result.sequences_atm = g_daw_atm_sequence_get(self, 0);
     // Assumed to already be loaded
-    f_result->sequences = self->song_pool[0].sequences;
+    f_result.sequences = self->song_pool[0].sequences;
 
-    t_daw_song * f_old = self->en_song;
+    //t_daw_song * f_old = self->en_song;
 
     if(a_lock){
         pthread_spin_lock(&STARGATE->main_lock);
     }
 
-    self->en_song = f_result;
+    self->song_pool[0] = f_result;
+    self->en_song = &self->song_pool[0];
 
     if(a_lock){
         pthread_spin_unlock(&STARGATE->main_lock);
     }
 
-    if(f_old){
-        v_daw_song_free(f_old);
-    }
+    //if(f_old){
+    //    v_daw_song_free(f_old);
+    //}
 }
 
-void v_daw_set_time_params(t_daw * self, int sample_count)
-{
+void v_daw_set_time_params(t_daw * self, int sample_count){
     self->ts[0].ml_sample_period_inc_beats =
         ((self->ts[0].playback_inc) * ((SGFLT)(sample_count)));
     self->ts[0].ml_current_beat =

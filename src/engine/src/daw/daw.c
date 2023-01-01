@@ -755,7 +755,6 @@ void daw_set_sequence(t_daw* self, int uid){
     );
 
     pthread_spin_lock(&STARGATE->main_lock);
-    self->en_song->sequences = self->song_pool[uid].sequences;
-    self->en_song->sequences_atm = self->song_pool[uid].sequences_atm;
+    self->en_song = &self->song_pool[uid];
     pthread_spin_unlock(&STARGATE->main_lock);
 }
