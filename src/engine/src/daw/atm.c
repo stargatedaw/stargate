@@ -66,10 +66,10 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self, int song_uid){
 
                 lmalloc(
                     (void**)&current_plugin->ports,
-                    sizeof(t_daw_atm_port) * f_port_count);
+                    sizeof(t_daw_atm_port) * f_port_count
+                );
 
-                for(f_i2 = 0; f_i2 < f_port_count; ++f_i2)
-                {
+                for(f_i2 = 0; f_i2 < f_port_count; ++f_i2){
                     current_plugin->ports[f_i2].atm_pos = 0;
                     current_plugin->ports[f_i2].point_count = 0;
                     current_plugin->ports[f_i2].points = NULL;
@@ -79,9 +79,7 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self, int song_uid){
 
                 f_pos = 0;
                 f_port_pos = 0;
-            }
-            else if(f_current_string->current_str[0] == 'q')
-            {
+            } else if(f_current_string->current_str[0] == 'q'){
                 v_iterate_2d_char_array(f_current_string);
                 int f_port_num = atoi(f_current_string->current_str);
 
@@ -107,12 +105,11 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self, int song_uid){
                 current_port->point_count = f_point_count;
                 lmalloc(
                     (void**)&current_port->points,
-                    sizeof(t_daw_atm_point) * f_point_count);
+                    sizeof(t_daw_atm_point) * f_point_count
+                );
                 ++f_port_pos;
                 f_pos = 0;
-            }
-            else
-            {
+            } else {
                 double f_beat = atof(f_current_string->current_str);
 
                 v_iterate_2d_char_array(f_current_string);
@@ -162,20 +159,19 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self, int song_uid){
 
                 f_point->beat = f_beat;
                 f_point->tick = (int)(
-                    (f_beat / SG_AUTOMATION_RESOLUTION) + 0.5f);
+                    (f_beat / SG_AUTOMATION_RESOLUTION) + 0.5f
+                );
                 f_point->port = f_port;
                 f_point->val = f_val;
                 f_point->index = f_index;
                 f_point->plugin = f_plugin;
                 f_point->break_after = f_break_after;
 
-                if(f_pos == current_port->point_count - 1)
-                {
+                if(f_pos == current_port->point_count - 1){
                     f_point->recip = 0.0f;
                 }
 
-                if(f_pos > 0)
-                {
+                if(f_pos > 0){
                     last_point = &current_port->points[f_pos - 1];
                     last_point->recip =
                         1.0f / (f_point->beat - last_point->beat);
@@ -191,14 +187,12 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self, int song_uid){
     return f_result;
 }
 
-void v_daw_atm_sequence_free(t_daw_atm_sequence * self)
-{
+void v_daw_atm_sequence_free(t_daw_atm_sequence * self){
     int f_i, f_i2;
     t_daw_atm_plugin * current_plugin = NULL;
     t_daw_atm_port * current_port = NULL;
 
-    for(f_i = 0; f_i < MAX_PLUGIN_TOTAL_COUNT; ++f_i)
-    {
+    for(f_i = 0; f_i < MAX_PLUGIN_TOTAL_COUNT; ++f_i){
         current_plugin = &self->plugins[f_i];
 
         if(current_plugin->ports)
