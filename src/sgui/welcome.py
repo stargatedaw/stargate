@@ -85,6 +85,17 @@ class Welcome(QtCore.QObject):
         if not glbl_shared.MAIN_STACKED_WIDGET.check_hardware():
             return
         project = str(self.rp_list.item(index).text())
+        if not os.path.isfile(project):
+            QMessageBox.warning(
+                None,
+                "Error",
+                (
+                    f"'{project}' was moved, deleted or the storage device "
+                    "is no longer readable"
+                ),
+            )
+            self.load_rp()
+            return
         try:
             check_project_version(self.widget, project)
         except StargateProjectVersionError:
