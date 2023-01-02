@@ -748,11 +748,14 @@ void daw_set_sequence(t_daw* self, int uid){
         "daw_set_sequence: sequence uid %i not loaded",
         uid
     );
+    // May actually not be loaded, especially in older projects, and that is OK
+    /*
     sg_assert_ptr(
         self->song_pool[uid].sequences_atm,
         "daw_set_sequence: atm sequence uid %i not loaded",
         uid
     );
+    */
 
     pthread_spin_lock(&STARGATE->main_lock);
     self->en_song = &self->song_pool[uid];
