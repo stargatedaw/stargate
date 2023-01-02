@@ -153,17 +153,24 @@ class sequencer:
             f_item.start_beat += a_length
 
     def set_first_beat(self, beat):
+        if not self.items:
+            return
         _min = min(x.start_beat for x in self.items)
         offset = int(beat - _min)
         for item in self.items:
             item.start_beat += offset
         markers = {(0, 2): self.markers[(0, 2)]}
-        for marker in self.markers.values():
+        for key in sorted(self.markers):
+            marker = self.markers[key]
             if (marker.beat, marker.type) == (0, 2):
                 continue # don't move the first tempo marker
             marker.beat += offset
-            if marker.type == 1:
+            if marker.beat < 0:
+                marker.beat = 0
+            if marker.type == 1:  # Region marker
                 marker.start_beat += offset
+                if marker.start_beat < 0:
+                    marker.start_beat = 0
             tpl = (marker.beat, marker.type)
             markers[tpl] = marker
         self.markers = markers
