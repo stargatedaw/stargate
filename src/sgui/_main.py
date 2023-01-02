@@ -59,6 +59,7 @@ class MainStackedWidget(QStackedWidget):
             self.addWidget(self.welcome_window.widget)
         self.setCurrentWidget(self.welcome_window.widget)
         self.welcome_window.load_rp()
+        self.setWindowTitle('Stargate DAW')
 
     def start(self):
         if self.show_splash():

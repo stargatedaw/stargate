@@ -103,15 +103,13 @@ def prepare_to_quit():
 def set_window_title():
     if not MAIN_WINDOW:
         return
-    dirname = constants.PROJECT.project_folder
+    dirname = os.path.normpath(constants.PROJECT.project_folder)
+    project_dir = os.path.normpath(constants.DEFAULT_PROJECT_DIR)
+    if dirname.startswith(project_dir):
+        dirname = dirname.replace(project_dir, '...', 1)
     if util.IS_WINDOWS:
         dirname = dirname.replace('/', '\\')
-    MAIN_WINDOW.setWindowTitle(
-        'Stargate - {}'.format(
-            os.path.join(
-                dirname,
-                f'{util.MAJOR_VERSION}.project',
-            )
-        ),
+    MAIN_STACKED_WIDGET.setWindowTitle(
+        f'Stargate DAW - {dirname}'
     )
 
