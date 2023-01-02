@@ -116,6 +116,7 @@ class PlaylistWidget:
         if new_name and new_name != item.orig_name:
             try:
                 api_playlist.change_name(item.orig_name, new_name)
+                sequence_lib.change_sequence(new_name)
                 self._current_sequence = new_name
             except FileExistsError:
                 QMessageBox.warning(
