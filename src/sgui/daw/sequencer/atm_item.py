@@ -92,7 +92,11 @@ class SeqAtmItem(QGraphicsEllipseItem):
         shared.SEQUENCER.update()
 
     def mousePressEvent(self, a_event):
-        if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
+        if shared.EDITOR_MODE in (
+            shared.EDITOR_MODE_SELECT,
+            shared.EDITOR_MODE_DRAW,
+        ):
+            self.is_moving = True
             self._selected_points = [
                 x for x in shared.SEQUENCER.get_selected_points()
                 if x != self
@@ -112,14 +116,15 @@ class SeqAtmItem(QGraphicsEllipseItem):
             self.save_callback()
 
     def mouseMoveEvent(self, a_event):
-        if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
+        if self.is_moving:
             #QGraphicsEllipseItem.mouseMoveEvent(self, a_event)
             self.quantize(a_event.scenePos())
 
     def mouseReleaseEvent(self, a_event):
         a_event.setAccepted(True)
         QGraphicsEllipseItem.mouseReleaseEvent(self, a_event)
-        if shared.EDITOR_MODE == shared.EDITOR_MODE_SELECT:
+        if self.is_moving:
+            self.is_moving = False
             self.quantize(a_event.scenePos())
             self.set_point_value()
             for point in self._selected_points:

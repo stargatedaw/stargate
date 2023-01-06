@@ -266,7 +266,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
         self._is_drawing = True
         self._draw_start_beat = f_beat
 
-    def _mp_atm_draw(self, event):
+    def _mp_atm_draw(self, event, pos):
         if self.current_coord is None:
             return
         port, index = shared.TRACK_PANEL.has_automation(
@@ -285,10 +285,20 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                 *shared.TRACK_PANEL.get_atm_params(track),
             )
             shared.ATM_SEQUENCE.add_point(point)
+            self.scene.clearSelection()
             point_item = self.draw_point(point)
             point_item.setSelected(True)
+            point_item.is_moving = True
             self.current_atm_point = point_item
+            point_pos = point_item.pos()
+            # Move it under the mouse cursor so the event will propagate to it
+            point_item.setPos(
+                pos.x() - (point_item.rect().width() * 0.5),
+                pos.y() - (point_item.rect().height() * 0.5),
+            )
             QGraphicsView.mousePressEvent(self, event)
+            # Move it back to it's quantized position
+            point_item.setPos(point_pos)
 
     def mousePressEvent(self, a_event):
         if glbl_shared.IS_PLAYING:
@@ -366,7 +376,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                 self.atm_select_track = self.current_coord[0]
                 self.atm_delete = True
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_DRAW:
-                self._mp_atm_draw(a_event)
+                self._mp_atm_draw(a_event, f_pos)
             elif shared.EDITOR_MODE == shared.EDITOR_MODE_SPLIT:
                 a_event.accept()
                 QGraphicsView.mousePressEvent(self, a_event)
@@ -1345,8 +1355,9 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                 a_point.index, shared.TRACK_PANEL.plugin_uid_map))
             return
         f_track = shared.TRACK_PANEL.plugin_uid_map[a_point.index]
-        f_min = (f_track *
-            shared.SEQUENCE_EDITOR_TRACK_HEIGHT) + _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
+        f_min = (
+            f_track * shared.SEQUENCE_EDITOR_TRACK_HEIGHT
+        ) + _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
         f_max = (
             f_min
             +
@@ -1355,7 +1366,11 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
             _shared.ATM_POINT_DIAMETER
         )
         f_item = SeqAtmItem(
-            a_point, self.automation_save_callback, f_min, f_max)
+            a_point,
+            self.automation_save_callback,
+            f_min,
+            f_max,
+        )
         self.scene.addItem(f_item)
         f_item.setPos(self.get_pos_from_point(a_point))
         self.automation_points.append(f_item)
