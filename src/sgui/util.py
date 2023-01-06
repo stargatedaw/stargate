@@ -27,6 +27,7 @@ def get_font():
 def set_font():
     global FONT
     FONT = FontManager.factory()
+    QApplication.setFont(FONT.font)
 
 def show_generic_exception(
     ex,
@@ -149,6 +150,11 @@ def log_screen_info():
 
 class FontManager:
     def __init__(self, font):
+        font.setStyleStrategy(
+            QFont.StyleStrategy.PreferAntialias
+            |
+            QFont.StyleStrategy.PreferQuality
+        )
         self.font = font
 
     def get_font_size(self):

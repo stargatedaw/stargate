@@ -821,13 +821,13 @@ QToolBar::handle
     spacing: 3px; /* spacing between items in the tool bar */
 }
 
-QTabBar::tab
-{
+QTabBar::tab {
     background-color: {{ background_color }};
     border-bottom-style: none;
     border: 1px solid {{ border_color }};
     border-radius: 6px;
     color: {{ text_color }};
+    font-weight: bold;
     height: 17px;
     margin-right: -1px;
     padding-bottom: 2px;
