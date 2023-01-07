@@ -118,3 +118,12 @@ def y_to_lane(y):
         (y - AUDIO_RULER_HEIGHT) / AUDIO_ITEM_HEIGHT
     )
     return clip_value(lane, 0, AUDIO_ITEM_MAX_LANE)
+
+def lane_to_y(lane):
+    lane = clip_value(
+        lane,
+        0,
+        AUDIO_ITEM_MAX_LANE,
+    )
+    return (lane * AUDIO_ITEM_HEIGHT) + AUDIO_RULER_HEIGHT
+

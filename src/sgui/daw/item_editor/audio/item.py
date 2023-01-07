@@ -771,10 +771,13 @@ class AudioSeqItem(QGraphicsRectItem):
                     f_item.is_copying = True
                     f_item.width_orig = f_item.rect().width()
                     f_item.per_item_fx = shared.CURRENT_ITEM.get_row(
-                        f_item.track_num)
+                        f_item.track_num,
+                    )
                     shared.AUDIO_SEQ.draw_item(
-                        f_item.track_num, f_item.audio_item,
-                        f_item.graph_object)
+                        f_item.track_num,
+                        f_item.audio_item,
+                        f_item.graph_object,
+                    )
                 if self.is_fading_out:
                     f_item.fade_orig_pos = f_item.fade_out_handle.pos().x()
                 elif self.is_fading_in:
@@ -840,19 +843,15 @@ class AudioSeqItem(QGraphicsRectItem):
         super().hoverLeaveEvent(a_event)
 
     def y_pos_to_lane_number(self, a_y_pos):
-        f_lane_num = int((a_y_pos - _shared.AUDIO_RULER_HEIGHT) / _shared.AUDIO_ITEM_HEIGHT)
+        f_lane_num = int(
+            (a_y_pos - _shared.AUDIO_RULER_HEIGHT) / _shared.AUDIO_ITEM_HEIGHT
+        )
         f_lane_num = clip_value(
             f_lane_num, 0, _shared.AUDIO_ITEM_MAX_LANE)
-        f_y_pos = (f_lane_num * _shared.AUDIO_ITEM_HEIGHT) + _shared.AUDIO_RULER_HEIGHT
+        f_y_pos = (
+            f_lane_num * _shared.AUDIO_ITEM_HEIGHT
+        ) + _shared.AUDIO_RULER_HEIGHT
         return f_lane_num, f_y_pos
-
-    def lane_number_to_y_pos(self, a_lane_num):
-        a_lane_num = clip_value(
-            a_lane_num,
-            0,
-            TRACK_COUNT_ALL,
-        )
-        return (a_lane_num * _shared.AUDIO_ITEM_HEIGHT) + _shared.AUDIO_RULER_HEIGHT
 
     def update_fade_in_line(self):
         f_pos = self.fade_in_handle.pos()
@@ -1049,11 +1048,13 @@ class AudioSeqItem(QGraphicsRectItem):
     def _mm_else(self, a_event):
         QGraphicsRectItem.mouseMoveEvent(self, a_event)
         if _shared.AUDIO_QUANTIZE:
-            f_max_x = (shared.CURRENT_ITEM_LEN *
-                _shared.AUDIO_PX_PER_BEAT) - _shared.AUDIO_QUANTIZE_PX
+            f_max_x = (
+                shared.CURRENT_ITEM_LEN * _shared.AUDIO_PX_PER_BEAT
+            ) - _shared.AUDIO_QUANTIZE_PX
         else:
-            f_max_x = (shared.CURRENT_ITEM_LEN *
-                _shared.AUDIO_PX_PER_BEAT) - shared.AUDIO_ITEM_HANDLE_SIZE
+            f_max_x = (
+                shared.CURRENT_ITEM_LEN * _shared.AUDIO_PX_PER_BEAT
+            ) - shared.AUDIO_ITEM_HANDLE_SIZE
         f_new_lane, f_ignored = self.y_pos_to_lane_number(
             a_event.scenePos().y(),
         )
@@ -1063,7 +1064,7 @@ class AudioSeqItem(QGraphicsRectItem):
                 f_pos_x = f_item.pos().x()
                 f_pos_x = clip_value(f_pos_x, 0.0, f_max_x)
                 f_pos_x = _shared.quantize_all(f_pos_x)
-                f_pos_y = self.lane_number_to_y_pos(
+                f_pos_y = _shared.lane_to_y(
                     f_lane_offset + f_item.audio_item.lane_num,
                 )
                 f_item.setPos(f_pos_x, f_pos_y)
