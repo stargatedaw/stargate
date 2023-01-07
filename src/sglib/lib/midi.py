@@ -16,14 +16,15 @@ class MidiEvent:
 
 def load_midi_file(path: str):
     def pos_to_beat():
-        return start_offset + (pos / sec_per_beat)
+        return round(start_offset + (pos / sec_per_beat), 4)
     midi_file = mido.MidiFile(path)
     f_note_on_dict = {}
     f_item_list = []
     sec_per_beat = 0.5
     start_offset = 0.0  # in beats
     pos = 0.0
-    for event in (x for x in midi_file if not x.is_meta):
+    for event in midi_file:
+        LOG.debug(f'Event type: {event.type} is_meta: {event.is_meta}')
         pos += event.time
         if event.type == "set_tempo":
             start_offset = pos_to_beat()
@@ -38,7 +39,7 @@ def load_midi_file(path: str):
             f_tuple = (event.channel, event.note)
             if f_tuple in f_note_on_dict:
                 f_event = f_note_on_dict[f_tuple]
-                LOG.info(f'note-off {event.note} time: {event.time}')
+                LOG.debug(f'note-off {event.note} time: {event.time}')
                 f_event.length = pos_to_beat() - f_event.start_beat
                 f_item_list.append(f_event)
                 f_note_on_dict.pop(f_tuple)
@@ -48,7 +49,7 @@ def load_midi_file(path: str):
                     "note-on event, ignoring event:\n{}".format(event)
                 )
         elif event.type == "note_on":
-            LOG.info(f'note-on {event.note} time: {event.time}')
+            LOG.debug(f'note-on {event.note} time: {event.time}')
             start_beat = pos_to_beat()
             f_event = MidiEvent(event, start_beat)
             f_tuple = (event.channel, event.note)
