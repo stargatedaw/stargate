@@ -14,38 +14,54 @@ class MidiEvent:
     def __lt__(self, other):
         return self.start_beat < other.start_beat
 
-def load_midi_file(a_file):
-    f_midi_text_arr = mido.MidiFile(str(a_file))
-    #First fix the lengths of events that have note-off events
+def load_midi_file(path: str):
+    def pos_to_beat():
+        return start_offset + (pos / sec_per_beat)
+    midi_file = mido.MidiFile(path)
     f_note_on_dict = {}
     f_item_list = []
-    f_pos = 0
-    f_sec_per_beat = 0.5
-    for f_ev in f_midi_text_arr:
-        if f_ev.type == "set_tempo":
-            f_sec_per_beat = f_ev.tempo / 1000000.0
-        elif f_ev.type == "note_off" or (
-        f_ev.type == "note_on" and f_ev.velocity == 0):
-            f_tuple = (f_ev.channel, f_ev.note)
+    sec_per_beat = 0.5
+    start_offset = 0.0  # in beats
+    pos = 0.0
+    for event in (x for x in midi_file if not x.is_meta):
+        pos += event.time
+        if event.type == "set_tempo":
+            start_offset = pos_to_beat()
+            sec_per_beat = event.tempo / 1000000.0
+            pos = 0.0
+            LOG.info('Tempo change: {sec_per_beat} {start_offset}')
+        elif event.type == "note_off" or (
+            event.type == "note_on"
+            and
+            event.velocity == 0
+        ):
+            f_tuple = (event.channel, event.note)
             if f_tuple in f_note_on_dict:
                 f_event = f_note_on_dict[f_tuple]
-                f_event.length = f_pos - f_event.start_beat
+                LOG.info(f'note-off {event.note} time: {event.time}')
+                f_event.length = pos_to_beat() - f_event.start_beat
                 f_item_list.append(f_event)
                 f_note_on_dict.pop(f_tuple)
             else:
                 LOG.warning(
                     "Error, note-off event does not correspond to a "
-                    "note-on event, ignoring event:\n{}".format(f_ev)
+                    "note-on event, ignoring event:\n{}".format(event)
                 )
-        elif f_ev.type == "note_on":
-            f_event = MidiEvent(f_ev, f_pos)
-            f_tuple = (f_ev.channel, f_ev.note)
+        elif event.type == "note_on":
+            LOG.info(f'note-on {event.note} time: {event.time}')
+            start_beat = pos_to_beat()
+            f_event = MidiEvent(event, start_beat)
+            f_tuple = (event.channel, event.note)
             if f_tuple in f_note_on_dict:
-                f_note_on_dict[f_tuple].length = f_pos - f_event.start_beat
+                LOG.warning(
+                    'Truncating note-on that did not receive a note-off, '
+                    'because another note-on event on the same note started'
+                )
+                f_note_on_dict[f_tuple].length = \
+                    start_beat - f_event.start_beat
             f_note_on_dict[f_tuple] = f_event
         else:
-            LOG.warning("Ignoring event: {}".format(f_ev))
-        f_pos += f_ev.time / f_sec_per_beat
+            LOG.warning("Ignoring event: {}".format(event))
 
     f_item_list.sort()
     return f_item_list

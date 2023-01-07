@@ -5,7 +5,7 @@ from .item import item
 from .seq_item import sequencer_item
 from .sequencer import sequencer
 from sglib import constants
-from sglib.math import clip_value
+from sglib.math import clip_min, clip_value
 from sglib.models.daw.playlist import Playlist
 from sglib.models.daw.routing import MIDIRoutes, RoutingGraph
 from sglib.models.stargate import AudioInputTracks
@@ -446,7 +446,7 @@ class DawProject(AbstractProject):
         ]
         f_end_beat = math.ceil(
             max(
-                x.get_length()
+                clip_min(x.get_length(), 1.0)
                 for x in a_midi_file.result_dict.values()
             )
         )
@@ -456,7 +456,11 @@ class DawProject(AbstractProject):
             if f_track >= _shared.TRACK_COUNT_ALL:
                 break
             f_item_ref = sequencer_item(
-                f_track, a_beat_offset, v.get_length(), v.uid)
+                f_track,
+                a_beat_offset,
+                math.ceil(clip_min(v.get_length(), 1.0)),
+                v.uid,
+            )
             f_sequencer.add_item_ref_by_uid(f_item_ref)
         self.save_sequence(f_sequencer)
 
