@@ -23,6 +23,10 @@ class DawMidiFile:
     def single_item(self):
         uid = self.project.create_empty_item()
         item = self.project.get_item_by_uid(uid)
+        _channel = None
+        channels = {x.ev.channel for x in self.item_list}
+        if len(channels) == 1:
+            _channel = 0
         for f_event in self.item_list:
             if f_event.length >= _shared.min_note_length:
                 velocity = f_event.ev.velocity
@@ -30,7 +34,7 @@ class DawMidiFile:
                 LOG.info(f"beat : {beat}")
                 pitch = f_event.ev.note
                 length = f_event.length
-                channel = f_event.ev.channel
+                channel = f_event.ev.channel if _channel is None else _channel
                 midi_note = MIDINote(
                     beat,
                     length,
