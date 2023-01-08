@@ -75,8 +75,13 @@ def global_get_audio_file_from_clipboard():
     return None
 
 def set_audio_snap(a_val):
-    global AUDIO_QUANTIZE, AUDIO_QUANTIZE_PX, AUDIO_QUANTIZE_AMT, \
-        AUDIO_SNAP_VAL, AUDIO_LINES_ENABLED, AUDIO_SNAP_RANGE
+    global \
+        AUDIO_QUANTIZE, \
+        AUDIO_QUANTIZE_PX, \
+        AUDIO_QUANTIZE_AMT, \
+        AUDIO_SNAP_VAL, \
+        AUDIO_LINES_ENABLED, \
+        AUDIO_SNAP_RANGE
 
     AUDIO_SNAP_VAL = a_val
     AUDIO_QUANTIZE = True

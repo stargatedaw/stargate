@@ -759,8 +759,14 @@ class AudioSeqItem(QGraphicsRectItem):
             self.is_amp_dragging_audio_pool = True
         else:
             QGraphicsRectItem.mousePressEvent(self, a_event)
+            QApplication.setOverrideCursor(QtCore.Qt.CursorShape.BlankCursor)
             self.event_pos_orig = qt_event_pos(a_event).x()
+            lanes = []
+            start_beats = []
             for f_item in shared.AUDIO_SEQ.get_selected():
+                f_item.orig_pos_x = f_item.pos().x()
+                start_beats.append(f_item.audio_item.start_beat)
+                lanes.append(f_item.audio_item.lane_num)
                 f_item.setZValue(2400.0)
                 f_item_pos = f_item.pos().x()
                 f_item.quantize_offset = \
@@ -786,6 +792,16 @@ class AudioSeqItem(QGraphicsRectItem):
                     f_item.width_orig = 0.0
                 else:
                     f_item.width_orig = f_item.rect().width()
+                self._max_lane = (
+                    _shared.AUDIO_ITEM_MAX_LANE +
+                    (self.audio_item.lane_num - max(lanes))
+                ) - 1
+                self._min_lane = self.audio_item.lane_num - min(lanes)
+                self._max_beat = (
+                    shared.CURRENT_ITEM_LEN +
+                    (self.audio_item.start_beat - max(start_beats))
+                )
+                self._min_beat = self.audio_item.start_beat - min(start_beats)
         if (
             self.is_amp_curving
             or
@@ -798,7 +814,6 @@ class AudioSeqItem(QGraphicsRectItem):
             self.event_pos_orig = qt_event_pos(a_event).x()
             QGraphicsRectItem.mousePressEvent(self, a_event)
             self.orig_y = qt_event_pos(a_event).y()
-            QApplication.setOverrideCursor(QtCore.Qt.CursorShape.BlankCursor)
             if self.is_amp_dragging_audio_pool:
                 self._audio_pool = constants.PROJECT.get_audio_pool()
                 self._audio_pool_by_uid = self._audio_pool.by_uid()
@@ -1037,22 +1052,29 @@ class AudioSeqItem(QGraphicsRectItem):
     def _mm_else(self, a_event):
         QGraphicsRectItem.mouseMoveEvent(self, a_event)
         if _shared.AUDIO_QUANTIZE:
-            f_max_x = (
-                shared.CURRENT_ITEM_LEN * _shared.AUDIO_PX_PER_BEAT
+            max_x = (
+                self._max_beat * _shared.AUDIO_PX_PER_BEAT
             ) - _shared.AUDIO_QUANTIZE_PX
         else:
-            f_max_x = (
-                shared.CURRENT_ITEM_LEN * _shared.AUDIO_PX_PER_BEAT
+            max_x = (
+                self._max_beat * _shared.AUDIO_PX_PER_BEAT
             ) - shared.AUDIO_ITEM_HANDLE_SIZE
-        f_new_lane = _shared.y_to_lane(a_event.scenePos().y())
-        f_lane_offset = f_new_lane - self.audio_item.lane_num
+        min_x = self._min_beat * _shared.AUDIO_PX_PER_BEAT
+        pos_x = self.pos().x()
+        pos_x = clip_value(pos_x, min_x, max_x)
+        pos_x = _shared.quantize_all(pos_x)
+        pos_x_offset = pos_x - self.orig_pos_x
+        new_lane = clip_value(
+            _shared.y_to_lane(a_event.scenePos().y()),
+            self._min_lane,
+            self._max_lane,
+        )
+        lane_offset = new_lane - self.audio_item.lane_num
         for f_item in shared.AUDIO_SEQ.audio_items:
             if f_item.isSelected():
-                f_pos_x = f_item.pos().x()
-                f_pos_x = clip_value(f_pos_x, 0.0, f_max_x)
-                f_pos_x = _shared.quantize_all(f_pos_x)
+                f_pos_x = f_item.orig_pos_x + pos_x_offset
                 f_pos_y = _shared.lane_to_y(
-                    f_lane_offset + f_item.audio_item.lane_num,
+                    lane_offset + f_item.audio_item.lane_num,
                 )
                 f_item.setPos(f_pos_x, f_pos_y)
                 if not f_item.is_moving:
@@ -1162,8 +1184,10 @@ class AudioSeqItem(QGraphicsRectItem):
                 f_x = f_audio_item.width_orig + f_event_diff + \
                     f_audio_item.quantize_offset
                 f_x = clip_value(
-                    f_x, f_audio_item.stretch_width_default * 0.1,
-                    f_audio_item.stretch_width_default * 200.0)
+                    f_x,
+                    f_audio_item.stretch_width_default * 0.1,
+                    f_audio_item.stretch_width_default * 200.0,
+                )
                 f_x = clip_max(f_x, f_audio_item.max_stretch)
                 f_x = _shared.quantize(f_x)
                 f_x -= f_audio_item.quantize_offset
@@ -1223,10 +1247,10 @@ class AudioSeqItem(QGraphicsRectItem):
                             )
                 else:
                     f_audio_item.set_brush(f_item.lane_num)
-                f_pos_x = _shared.quantize_all(f_pos_x)
+                #f_pos_x = _shared.quantize_all(f_pos_x)
                 f_item.lane_num = _shared.y_to_lane(f_pos_y)
-                f_pos_y = _shared.lane_to_y(f_item.lane_num)
-                f_audio_item.setPos(f_pos_x, f_pos_y)
+                #f_pos_y = _shared.lane_to_y(f_item.lane_num)
+                #f_audio_item.setPos(f_pos_x, f_pos_y)
                 f_start_result = f_audio_item.pos_to_musical_time(f_pos_x)
                 f_item.set_pos(0, f_start_result)
             f_audio_item.clip_at_sequence_end()
