@@ -401,7 +401,7 @@ void v_daw_process_note_offs(
     long f_next_current_sample = a_ts->f_next_current_sample;
 
     int f_i2;
-    int i;
+    int i, j;
     int channel;
     long note_off;
     long sample_count = f_next_current_sample - f_current_sample;
@@ -415,29 +415,87 @@ void v_daw_process_note_offs(
             continue;
         }
         midi_channels[channel] = 1;
-        for(f_i2 = 0; f_i2 < MIDI_NOTE_COUNT; ++f_i2){
-            note_off = f_track->note_offs[channel][f_i2];
-            if(
-                // f_note_off >= f_current_sample
-                note_off != -1
-                &&
-                note_off < f_next_current_sample
-            ){
-                t_seq_event * f_event =
-                    &f_track->event_buffer[f_track->period_event_index];
-                v_ev_clear(f_event);
-
-                v_ev_set_noteoff(f_event, channel, f_i2, 0);
-                f_event->tick = note_off - f_current_sample;
-                if(f_event->tick < 0){
-                    f_event->tick = 0;
-                } else if(f_event->tick >= sample_count){
-                    f_event->tick = sample_count - 1;
+        if(channel == 16){
+            for(j = 0; j < MIDI_CHANNEL_COUNT; ++j){
+                if(midi_channels[j] && j != 16){
+                    continue;
                 }
-                ++f_track->period_event_index;
-                f_track->note_offs[channel][f_i2] = -1;
+                midi_channels[j] = 1;
+                for(f_i2 = 0; f_i2 < MIDI_NOTE_COUNT; ++f_i2){
+                    note_off = f_track->note_offs[j][f_i2];
+                    if(
+                        // f_note_off >= f_current_sample
+                        note_off != -1
+                        &&
+                        note_off < f_next_current_sample
+                    ){
+                        t_seq_event * f_event =
+                            &f_track->event_buffer[f_track->period_event_index];
+                        v_ev_clear(f_event);
 
-                shds_list_append(f_track->event_list, f_event);
+                        v_ev_set_noteoff(f_event, j, f_i2, 0);
+                        f_event->tick = note_off - f_current_sample;
+                        if(f_event->tick < 0){
+                            f_event->tick = 0;
+                        } else if(f_event->tick >= sample_count){
+                            f_event->tick = sample_count - 1;
+                        }
+                        ++f_track->period_event_index;
+                        f_track->note_offs[j][f_i2] = -1;
+
+                        shds_list_append(f_track->event_list, f_event);
+                    }
+                }
+
+            }
+        } else {
+            for(f_i2 = 0; f_i2 < MIDI_NOTE_COUNT; ++f_i2){
+                note_off = f_track->note_offs[channel][f_i2];
+                if(
+                    // f_note_off >= f_current_sample
+                    note_off != -1
+                    &&
+                    note_off < f_next_current_sample
+                ){
+                    t_seq_event * f_event =
+                        &f_track->event_buffer[f_track->period_event_index];
+                    v_ev_clear(f_event);
+
+                    v_ev_set_noteoff(f_event, channel, f_i2, 0);
+                    f_event->tick = note_off - f_current_sample;
+                    if(f_event->tick < 0){
+                        f_event->tick = 0;
+                    } else if(f_event->tick >= sample_count){
+                        f_event->tick = sample_count - 1;
+                    }
+                    ++f_track->period_event_index;
+                    f_track->note_offs[channel][f_i2] = -1;
+
+                    shds_list_append(f_track->event_list, f_event);
+                }
+                note_off = f_track->note_offs[16][f_i2];
+                if(
+                    // f_note_off >= f_current_sample
+                    note_off != -1
+                    &&
+                    note_off < f_next_current_sample
+                ){
+                    t_seq_event * f_event =
+                        &f_track->event_buffer[f_track->period_event_index];
+                    v_ev_clear(f_event);
+
+                    v_ev_set_noteoff(f_event, 16, f_i2, 0);
+                    f_event->tick = note_off - f_current_sample;
+                    if(f_event->tick < 0){
+                        f_event->tick = 0;
+                    } else if(f_event->tick >= sample_count){
+                        f_event->tick = sample_count - 1;
+                    }
+                    ++f_track->period_event_index;
+                    f_track->note_offs[16][f_i2] = -1;
+
+                    shds_list_append(f_track->event_list, f_event);
+                }
             }
         }
     }
@@ -523,6 +581,29 @@ void v_daw_process_midi(
                         v_ev_set_noteoff(
                             f_buff_ev,
                             f_event->channel,
+                            f_event->note,
+                            0
+                        );
+                        f_buff_ev->tick = f_note_sample_offset;
+                        ++f_track->period_event_index;
+                    }
+                    if(
+                        f_track->note_offs[16][f_event->note]
+                        >=
+                        a_current_sample
+                    ){
+                        t_seq_event * f_buff_ev;
+
+                        /*There's already a note_off scheduled ahead of
+                         * this one, process it immediately to avoid
+                         * hung notes*/
+                        f_buff_ev = &f_track->event_buffer[
+                            f_track->period_event_index
+                        ];
+                        v_ev_clear(f_buff_ev);
+                        v_ev_set_noteoff(
+                            f_buff_ev,
+                            16,
                             f_event->note,
                             0
                         );
