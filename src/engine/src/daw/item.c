@@ -28,7 +28,7 @@ void g_daw_item_get(t_daw* self, int a_uid){
 
     t_2d_char_array * f_current_string = g_get_2d_array_from_file(
         f_full_path,
-        LARGE_STRING
+        LARGE_STRING * 3
     );
 
     int f_event_pos = 0;
