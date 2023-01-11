@@ -434,6 +434,7 @@ class DawProject(AbstractProject):
         a_midi_file,
         a_beat_offset,
         a_track_offset,
+        item_name,
     ):
         """
             @a_midi_file:  An instance of DawMidiFile

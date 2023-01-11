@@ -1,5 +1,6 @@
 import copy
 
+from .midi_file_dialog import midi_file_dialog
 from sglib import constants
 from sglib.log import LOG
 from sglib.models.daw import *
@@ -28,7 +29,6 @@ from sgui import widgets
 from sgui.daw import shared
 from sgui.daw import strings as daw_strings
 from sgui.daw.lib import item as item_lib
-from sgui.daw.lib.midi_file import DawMidiFile
 from sglib.models import theme
 
 
@@ -730,42 +730,18 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
         elif shared.ITEM_TO_DROP:
             self.add_existing_item(a_event, shared.ITEM_TO_DROP._uid)
         elif shared.MIDI_FILES_TO_DROP:
-            def _finish(multi):
-                f_midi_path = shared.MIDI_FILES_TO_DROP[0]
-                f_beat, f_lane_num = _shared.pos_to_beat_and_track(f_pos)
-                f_midi = DawMidiFile(f_midi_path, constants.DAW_PROJECT)
-                if multi:
-                    f_midi.multi_item()
-                else:
-                    f_midi.single_item()
-                constants.DAW_PROJECT.import_midi_file(
-                    f_midi,
-                    f_beat,
-                    f_lane_num,
+            if len(shared.MIDI_FILES_TO_DROP) != 1:
+                QMessageBox.warning(
+                    None,
+                    "Error",
+                    "Only one MIDI file can be dropped at a time",
                 )
-                constants.DAW_PROJECT.commit("Import MIDI file")
-                shared.SEQ_WIDGET.open_sequence()
+                shared.clear_seq_drop()
+                return
+            midi_path = shared.MIDI_FILES_TO_DROP[0]
+            beat, track_index = _shared.pos_to_beat_and_track(f_pos)
+            midi_file_dialog(midi_path, beat, track_index)
 
-            menu = QMenu()
-
-            action = QAction('Import all channels to one item', menu)
-            menu.addAction(action)
-            action.setToolTip(
-                'If more than one MIDI channel, import as a single item '
-                'containing multiple MIDI channels'
-            )
-            action.triggered.connect(_finish)
-
-            action = QAction('Import each channel to one track', menu)
-            menu.addAction(action)
-            action.setToolTip(
-                'If more than one MIDI channel, import each channel as '
-                'a different item on a different track with one MIDI channel '
-                'per item, remapped to channel 1'
-            )
-            action.triggered.connect(_finish)
-            menu.exec(QCursor.pos())
-            LOG.info('menu.exec()')
         shared.clear_seq_drop()
 
     def replace_item(self, item, uid):

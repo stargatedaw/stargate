@@ -60,9 +60,14 @@ def load_midi_file(path: str):
                 )
                 f_note_on_dict[f_tuple].length = \
                     start_beat - f_event.start_beat
+                f_item_list.append(f_note_on_dict[f_tuple])
             f_note_on_dict[f_tuple] = f_event
+        elif event.type in ('control_change', 'pitchwheel'):
+            start_beat = pos_to_beat()
+            f_event = MidiEvent(event, start_beat)
+            f_item_list.append(f_event)
         else:
-            LOG.warning("Ignoring event: {}".format(event))
+            LOG.debug("Ignoring event: {}".format(event))
 
     f_item_list.sort()
     return f_item_list

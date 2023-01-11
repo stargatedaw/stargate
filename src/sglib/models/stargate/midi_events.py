@@ -22,6 +22,7 @@ class MIDINote(AbstractMIDIEvent):
         'is_selected',
         'end',
     ]
+
     def __init__(
         self,
         a_start,
