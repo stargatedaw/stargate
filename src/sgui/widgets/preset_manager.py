@@ -16,6 +16,7 @@ class preset_manager_widget:
         a_plugin_name,
         a_configure_dict=None,
         a_reconfigure_callback=None,
+        horizontal=True,
     ):
         self.suppress_change = False
         self.plugin_name = str(a_plugin_name)
@@ -35,9 +36,7 @@ class preset_manager_widget:
         )
         self.group_box = QWidget()
         self.group_box.setObjectName("plugin_groupbox")
-        self.layout = QHBoxLayout(self.group_box)
         self.bank_label = QLabel(_("Bank"))
-        self.layout.addWidget(self.bank_label)
         self.bank_combobox = QComboBox()
         self.bank_combobox.setToolTip(
             'Presets are divided into "banks".  This selects the preset '
@@ -45,15 +44,11 @@ class preset_manager_widget:
         )
         self.bank_combobox.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.bank_combobox.setMinimumWidth(210)
-        self.layout.addWidget(self.bank_combobox)
         self.presets_label = QLabel(_("Presets"))
-        self.layout.addWidget(self.presets_label)
-        self.layout.setContentsMargins(3, 3, 3, 3)
         self.program_combobox = QComboBox()
         self.program_combobox.setToolTip('Select the preset to use')
         self.program_combobox.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.program_combobox.setMinimumWidth(300)
-        self.layout.addWidget(self.program_combobox)
         self.more_button = QPushButton(_("Menu"))
 
         self.more_menu = QMenu(self.more_button)
@@ -91,7 +86,6 @@ class preset_manager_widget:
         f_reset_default_action.triggered.connect(self.reset_controls)
 
         self.more_button.setMenu(self.more_menu)
-        self.layout.addWidget(self.more_button)
         self.presets_delimited = {}
         self.controls = {}
         self.suppress_bank_changes = False
@@ -100,6 +94,28 @@ class preset_manager_widget:
         self.load_presets()
         self.program_combobox.currentIndexChanged.connect(self.program_changed)
         self.bank_combobox.currentIndexChanged.connect(self.bank_changed)
+
+        if horizontal:
+            self.layout = QHBoxLayout(self.group_box)
+            self.layout.addWidget(self.bank_label)
+            self.layout.addWidget(self.bank_combobox)
+            self.layout.addWidget(self.presets_label)
+            self.layout.setContentsMargins(3, 3, 3, 3)
+            self.layout.addWidget(self.program_combobox)
+            self.layout.addWidget(self.more_button)
+        else:
+            self.layout = QVBoxLayout(self.group_box)
+            hlayout1 = QHBoxLayout()
+            self.layout.addLayout(hlayout1)
+            hlayout2 = QHBoxLayout()
+            self.layout.addLayout(hlayout2)
+            hlayout1.addWidget(self.bank_label)
+            hlayout1.addWidget(self.bank_combobox)
+            hlayout2.addWidget(self.presets_label)
+            hlayout2.addWidget(self.program_combobox)
+            hlayout1.addWidget(self.more_button)
+            self.bank_label.setFixedWidth(45)
+            self.presets_label.setFixedWidth(45)
 
     def delete_preset(self):
         f_name = self.program_combobox.currentText()

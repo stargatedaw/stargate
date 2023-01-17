@@ -38,14 +38,24 @@ SREVERB_PORT_MAP = {
 }
 
 STYLESHEET = """\
-QWidget#transparent {
+QWidget#dark{
+    background: qlineargradient(
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #282828,
+        stop: 1 #202121
+    );
+}
+
+QWidget#dark_label{
     background: none;
+    border: none;
+    color: #cccccc;
 }
 
 QWidget#plugin_window {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #f6b95f,
+        stop: 0 #d6b95f,
         stop: 1 #d2884e
     );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/reverb/logo.svg);
@@ -57,11 +67,11 @@ QWidget#plugin_window {
 QComboBox,
 QPushButton {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #323233, stop: 1 #2f2f30
     );
     border: 1px solid #222222;
-    border-radius: 6px;
+    border-radius: 3px;
     color: #cccccc;
 }
 
@@ -70,7 +80,7 @@ QLabel#plugin_name_label
 {
     background-color: none;
     border: none;
-    color: #cccccc;
+    color: #333333;
 }
 
 """
@@ -83,12 +93,13 @@ class ReverbPluginUI(AbstractPluginUI):
             stylesheet=STYLESHEET,
             **kwargs
         )
-        self.widget.setFixedHeight(160)
+        self.widget.setFixedHeight(100)
         self._plugin_name = "SREVERB"
         self.is_instrument = False
 
         self.preset_manager = preset_manager_widget(
             self.get_plugin_name(),
+            horizontal=False,
         )
         self.main_hlayout = QHBoxLayout()
         left_screws = get_screws()
@@ -100,16 +111,10 @@ class ReverbPluginUI(AbstractPluginUI):
         self.main_vlayout = QVBoxLayout()
         self.main_hlayout.addLayout(self.main_vlayout)
 
-        self.preset_manager.group_box.setObjectName('transparent')
-        self.preset_manager.bank_label.setObjectName('plugin_name_label')
-        self.preset_manager.presets_label.setObjectName('plugin_name_label')
-        self.hlayout0 = QHBoxLayout()
-        self.main_vlayout.addLayout(self.hlayout0)
+        self.preset_manager.group_box.setObjectName('dark')
+        self.preset_manager.bank_label.setObjectName('dark_label')
+        self.preset_manager.presets_label.setObjectName('dark_label')
 
-        self.hlayout0.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
-        self.hlayout0.addWidget(self.preset_manager.group_box)
         self.reverb_groupbox_gridlayout = QGridLayout()
         self.main_vlayout.addLayout(self.reverb_groupbox_gridlayout)
         self.reverb_groupbox_gridlayout.addItem(
@@ -117,10 +122,12 @@ class ReverbPluginUI(AbstractPluginUI):
             1,
             0,
         )
-        self.reverb_groupbox_gridlayout.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-            1,
+        self.reverb_groupbox_gridlayout.addWidget(
+            self.preset_manager.group_box,
+            0,
             30,
+            3,
+            1,
         )
         right_screws = get_screws()
         self.main_hlayout.addLayout(right_screws)

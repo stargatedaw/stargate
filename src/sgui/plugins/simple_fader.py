@@ -54,7 +54,11 @@ class sfader_plugin_ui(AbstractPluginUI):
             )
         else:
             self.volume_slider.add_to_grid_layout(
-                self.volume_gridlayout, 0, a_alignment=None)
+                self.volume_gridlayout,
+                0,
+                a_alignment=None,
+            )
+            self.widget.setFixedHeight(100)
         self.volume_slider.value_label.setMinimumWidth(91)
         self.open_plugin_file()
         self.set_midi_learn(SFADER_PORT_MAP)

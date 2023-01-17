@@ -179,9 +179,10 @@ class TransportWidget:
             knob_size,
             -480,
             0,
-            arc_width_pct=5.0,
+            arc_width_pct=0.0,
             arc_space=0.0,
-            bg_svg='default_bg',
+            fg_svg=get_asset_path('transport-knob-fg.svg'),
+            bg_svg=get_asset_path('transport-knob-bg.svg'),
         )
         self.load_main_vol()
         self.toolbar.addWidget(self.main_vol_knob)

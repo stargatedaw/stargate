@@ -32,6 +32,9 @@ class SgChnlPluginUI(AbstractPluginUI):
         self._plugin_name = "SGCHNL"
         self.is_instrument = False
         f_knob_size = 42
+        knob_kwargs = {
+            'bg_svg': 'default_bg',
+        }
         self.gain_gridlayout = QGridLayout()
         if self.is_mixer:
             self.pan_slider = slider_control(
@@ -67,6 +70,7 @@ class SgChnlPluginUI(AbstractPluginUI):
             None,
             knob_kwargs={
                 'arc_type': ArcType.BIDIRECTIONAL,
+                'bg_svg': 'default_bg',
             },
             tooltip=(
                 'Adjust the volume, in decibels.  Use the fader for\n'
@@ -89,8 +93,10 @@ class SgChnlPluginUI(AbstractPluginUI):
                 KC_DECIMAL,
                 self.port_dict,
                 None,
+                knob_kwargs=knob_kwargs,
             )
             self.pan_knob.add_to_grid_layout(self.gain_gridlayout, 1)
+            self.widget.setFixedHeight(100)
         self.pan_law_knob = knob_control(
             f_knob_size,
             _("Law"),
@@ -108,6 +114,7 @@ class SgChnlPluginUI(AbstractPluginUI):
                 'Sound loses power when only coming from one speaker,\n'
                 'pan law compensates by reducing center volume'
             ),
+            knob_kwargs=knob_kwargs,
         )
         self.pan_law_knob.add_to_grid_layout(self.gain_gridlayout, 2)
 

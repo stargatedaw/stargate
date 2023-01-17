@@ -47,13 +47,14 @@ QWidget#plugin_window{
     border: none;
 }
 
-QComboBox{
+QComboBox,
+QPushButton {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #323233, stop: 1 #2f2f30
     );
     border: 1px solid #222222;
-    border-radius: 6px;
+    border-radius: 3px;
     color: #cccccc;
 }
 
@@ -82,7 +83,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             stylesheet=STYLESHEET,
             **kwargs
         )
-        self.widget.setFixedHeight(160)
+        self.widget.setFixedHeight(100)
         knob_kwargs = {
             'arc_width_pct': 0.,
             'fg_svg': os.path.join(
@@ -95,6 +96,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
 
         self.preset_manager = preset_manager_widget(
             self.get_plugin_name(),
+            horizontal=False,
         )
 
         self.main_hlayout = QHBoxLayout()
@@ -110,13 +112,6 @@ class sg_comp_plugin_ui(AbstractPluginUI):
         self.preset_manager.group_box.setObjectName('transparent')
         self.preset_manager.bank_label.setObjectName('plugin_name_label')
         self.preset_manager.presets_label.setObjectName('plugin_name_label')
-        self.hlayout0 = QHBoxLayout()
-        self.main_vlayout.addLayout(self.hlayout0)
-
-        self.hlayout0.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
-        self.hlayout0.addWidget(self.preset_manager.group_box)
 
         self.groupbox_gridlayout = QGridLayout()
         self.groupbox_gridlayout.addItem(
@@ -124,10 +119,12 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             1,
             0,
         )
-        self.groupbox_gridlayout.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        self.groupbox_gridlayout.addWidget(
+            self.preset_manager.group_box,
+            0,
+            60,
+            3,
             1,
-            30,
         )
         self.main_vlayout.addLayout(self.groupbox_gridlayout)
 
