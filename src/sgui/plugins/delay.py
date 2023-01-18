@@ -69,6 +69,7 @@ class sgdelay_plugin_ui(AbstractPluginUI):
             stylesheet=STYLESHEET,
             **kwargs,
         )
+        self.widget.setFixedHeight(100)
         self._plugin_name = "SGDELAY"
         self.is_instrument = False
 

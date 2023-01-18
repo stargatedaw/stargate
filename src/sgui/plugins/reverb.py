@@ -83,6 +83,7 @@ class ReverbPluginUI(AbstractPluginUI):
             stylesheet=STYLESHEET,
             **kwargs
         )
+        self.widget.setFixedHeight(160)
         self._plugin_name = "SREVERB"
         self.is_instrument = False
 

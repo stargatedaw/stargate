@@ -77,6 +77,7 @@ class scc_plugin_ui(AbstractPluginUI):
             stylesheet=STYLESHEET,
             **kwargs,
         )
+        self.widget.setFixedHeight(100)
         self._plugin_name = "Sidechain Comp."
         self.is_instrument = False
 

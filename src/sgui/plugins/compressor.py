@@ -82,6 +82,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
             stylesheet=STYLESHEET,
             **kwargs
         )
+        self.widget.setFixedHeight(160)
         knob_kwargs = {
             'arc_width_pct': 0.,
             'fg_svg': os.path.join(

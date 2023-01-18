@@ -66,6 +66,7 @@ class LimiterPluginUI(AbstractPluginUI):
             stylesheet=STYLESHEET,
             **kwargs,
         )
+        self.widget.setFixedHeight(100)
         self._plugin_name = "SG Limiter"
         self.is_instrument = False
 

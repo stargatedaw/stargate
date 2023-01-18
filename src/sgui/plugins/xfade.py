@@ -88,6 +88,7 @@ class xfade_plugin_ui(AbstractPluginUI):
             stylesheet=STYLESHEET,
             **kwargs,
         )
+        self.widget.setFixedHeight(100)
         self._plugin_name = "XFADE"
         self.is_instrument = False
         f_knob_size = DEFAULT_KNOB_SIZE

@@ -594,6 +594,8 @@ class PluginSettingsMain(AbstractPluginSettings):
             a_qcbox=False,
         )
 
+        self.layout.parentWidget().setFixedHeight(42)
+
         self.midi_channel_combobox = QComboBox()
         self.midi_channel_combobox.setMinimumWidth(48)
         self.midi_channel_combobox.addItems(MIDI_CHANNELS)

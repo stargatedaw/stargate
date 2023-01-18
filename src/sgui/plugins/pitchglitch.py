@@ -141,6 +141,7 @@ class PitchGlitchUI(AbstractPluginUI):
             stylesheet=STYLESHEET,
             **kwargs,
         )
+        self.widget.setFixedHeight(100)
         self._plugin_name = "PITCHGLITCH"
         self.is_instrument = False
 
