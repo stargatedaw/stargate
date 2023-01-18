@@ -101,7 +101,7 @@ class sg_comp_plugin_ui(AbstractPluginUI):
         self.main_hlayout.addLayout(left_screws)
         self.layout.addLayout(self.main_hlayout)
 
-        f_knob_size = DEFAULT_LARGE_KNOB_SIZE
+        f_knob_size = DEFAULT_KNOB_SIZE
 
         self.main_vlayout = QVBoxLayout()
         self.main_hlayout.addLayout(self.main_vlayout)

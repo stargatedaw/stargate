@@ -45,8 +45,8 @@ QMenu::item {
 
 QWidget#plugin_window{
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 0,
-        stop: 0 #5d1011, stop: 0.5 #711819, stop: 1 #5d1011
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #a183e8, stop: 1 #674ec6
     );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/delay/logo.svg);
     background-position: left;
@@ -76,11 +76,13 @@ class sgdelay_plugin_ui(AbstractPluginUI):
             'arc_width_pct': 0.,
             'bg_svg': os.path.join(
                 util.PLUGIN_ASSETS_DIR,
-                'gold-knob-bg.svg',
+                'delay',
+                'knob-bg.svg',
             ),
             'fg_svg': os.path.join(
                 util.PLUGIN_ASSETS_DIR,
-                'gold-knob-fg.svg',
+                'delay',
+                'knob-fg.svg',
             ),
         }
 
@@ -92,7 +94,7 @@ class sgdelay_plugin_ui(AbstractPluginUI):
         )
         self.layout.addLayout(self.main_hlayout)
 
-        f_knob_size = DEFAULT_LARGE_KNOB_SIZE
+        f_knob_size = DEFAULT_KNOB_SIZE
         self.preset_manager = None
 
         self.delay_gridlayout = QGridLayout()

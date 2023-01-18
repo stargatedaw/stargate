@@ -175,7 +175,13 @@ class TransportWidget:
             'is a basic wave editor for simple editing tasks'
         )
         knob_size = 40
-        self.main_vol_knob = widgets.PixmapKnob(knob_size, -480, 0)
+        self.main_vol_knob = widgets.PixmapKnob(
+            knob_size,
+            -480,
+            0,
+            arc_width_pct=5.0,
+            arc_space=6.0,
+        )
         self.load_main_vol()
         self.toolbar.addWidget(self.main_vol_knob)
         self.main_vol_knob.valueChanged.connect(self.main_vol_changed)

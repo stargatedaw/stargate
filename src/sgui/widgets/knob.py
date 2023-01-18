@@ -66,6 +66,7 @@ class PixmapKnob(QDial):
         arc_bg_brush=None,
         arc_pen_kwargs={},
         draw_line=False,
+        arc_space=0.0,
     ):
         """
         @a_size:    The size of the knobs bounding square
@@ -102,6 +103,7 @@ class PixmapKnob(QDial):
         )
         self.arc_width_pct = arc_width_pct
         self.arc_type = arc_type
+        self.arc_space = arc_space
         self.arc_pen_kwargs = arc_pen_kwargs
         QDial.__init__(self)
         self.bg_svg = bg_svg
@@ -112,7 +114,7 @@ class PixmapKnob(QDial):
         self.val_step = float(a_max_val - a_min_val) * 0.005  # / 200.0
         self.val_step_small = self.val_step * 0.1
         self.setGeometry(0, 0, a_size, a_size)
-        self.pixmap_size = a_size - (arc_width_pct * a_size * 0.02)
+        self.pixmap_size = a_size - (arc_width_pct * a_size * 0.02) - arc_space
         self.pixmap_fg = KNOB_PIXMAP_CACHE.get_scaled_pixmap_knob(
             self.fg_svg,
             self.pixmap_size,

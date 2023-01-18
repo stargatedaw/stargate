@@ -192,7 +192,10 @@ class multifx_plugin_ui(AbstractPluginUI):
         self._plugin_name = "MULTIFX"
         self.is_instrument = False
         knob_kwargs = {
-            'arc_width_pct': 0.0,
+            'arc_width_pct': 6.,
+            'arc_space': 6,
+            'arc_bg_brush': QColor("#5a5a5a"),
+            'arc_brush': QColor("#cccccc"),
             'fg_svg': os.path.join(
                 util.PLUGIN_ASSETS_DIR,
                 'knob-metal-3.svg',

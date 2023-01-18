@@ -78,7 +78,7 @@ class LimiterPluginUI(AbstractPluginUI):
         )
         self.layout.addLayout(self.main_hlayout)
 
-        f_knob_size = DEFAULT_LARGE_KNOB_SIZE
+        f_knob_size = DEFAULT_KNOB_SIZE
 
         self.groupbox_gridlayout = QGridLayout()
         self.main_hlayout.addLayout(self.groupbox_gridlayout)
@@ -86,7 +86,8 @@ class LimiterPluginUI(AbstractPluginUI):
         knob_kwargs={
             'arc_brush': QColor("#cccccc"),
             'arc_bg_brush': QColor("#5a5a5a"),
-            'arc_width_pct': 12.,
+            'arc_width_pct': 6.,
+            'arc_space': 6.,
             'fg_svg': os.path.join(
                 util.PLUGIN_ASSETS_DIR,
                 'knob-metal-3.svg',
