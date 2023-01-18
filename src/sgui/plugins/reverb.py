@@ -44,9 +44,9 @@ QWidget#transparent {
 
 QWidget#plugin_window {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 0,
-        stop: 0 #E1EF87, stop: 0.33 #ADC038,
-        stop: 0.75 #D6E387, stop: 1 #C9E755
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #f6b95f,
+        stop: 1 #d2884e
     );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/reverb/logo.svg);
     background-position: left;
@@ -70,7 +70,7 @@ QLabel#plugin_name_label
 {
     background-color: none;
     border: none;
-    color: #222222;
+    color: #cccccc;
 }
 
 """
@@ -95,7 +95,7 @@ class ReverbPluginUI(AbstractPluginUI):
         self.main_hlayout.addLayout(left_screws)
         self.layout.addLayout(self.main_hlayout)
 
-        f_knob_size = 75
+        f_knob_size = DEFAULT_KNOB_SIZE
 
         self.main_vlayout = QVBoxLayout()
         self.main_hlayout.addLayout(self.main_vlayout)
@@ -125,15 +125,18 @@ class ReverbPluginUI(AbstractPluginUI):
         right_screws = get_screws()
         self.main_hlayout.addLayout(right_screws)
 
-        knob_gradient = QLinearGradient(0., 0., f_knob_size, 0.)
-        knob_gradient.setColorAt(0., QColor("#0000cc"))
-        knob_gradient.setColorAt(1., QColor("#cc0000"))
-
         knob_kwargs = {
-            'arc_width_pct': 20.,
-            'fg_svg': None,
-            'arc_brush': knob_gradient,
-            'arc_bg_brush': QColor("#5a5a5a"),
+            'arc_width_pct': 0.,
+            'bg_svg': os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'reverb',
+                'knob-bg.svg',
+            ),
+            'fg_svg': os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'reverb',
+                'knob-fg.svg',
+            ),
         }
         self.reverb_time_knob = knob_control(
             f_knob_size,
