@@ -12,6 +12,7 @@ import os
 
 
 DEFAULT_THEME_KNOB = None
+DEFAULT_THEME_KNOB_BG = None
 # This is for plugins to consume, it's not a default value anywhere
 DEFAULT_KNOB_SIZE = 48
 DEFAULT_LARGE_KNOB_SIZE = 64
@@ -25,6 +26,8 @@ class PixmapKnobCache:
             return None
         if path == 'default':
             path = DEFAULT_THEME_KNOB
+        if path == 'default_bg':
+            path = DEFAULT_THEME_KNOB_BG
         path = util.pi_path(path)
         key = (path, size)
         if key in self.cache:
@@ -39,10 +42,14 @@ class PixmapKnobCache:
             return pixmap
 
 def knob_setup():
-    global DEFAULT_THEME_KNOB, KNOB_PIXMAP_CACHE
+    global DEFAULT_THEME_KNOB, DEFAULT_THEME_KNOB_BG, KNOB_PIXMAP_CACHE
     DEFAULT_THEME_KNOB = os.path.join(
         theme.ASSETS_DIR,
         theme.SYSTEM_COLORS.widgets.knob_fg_image,
+    )
+    DEFAULT_THEME_KNOB_BG = os.path.join(
+        theme.ASSETS_DIR,
+        theme.SYSTEM_COLORS.widgets.knob_bg_image,
     )
     KNOB_PIXMAP_CACHE = PixmapKnobCache()
 

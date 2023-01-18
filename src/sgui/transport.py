@@ -180,7 +180,8 @@ class TransportWidget:
             -480,
             0,
             arc_width_pct=5.0,
-            arc_space=6.0,
+            arc_space=0.0,
+            bg_svg='default_bg',
         )
         self.load_main_vol()
         self.toolbar.addWidget(self.main_vol_knob)
