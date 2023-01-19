@@ -8,7 +8,7 @@ script:
   - './configure --enable-optimizations --prefix=/usr && DESTDIR=/stargate/AppDir make install'
   - cd /stargate
   - ln -s python3 AppDir/usr/bin/python
-  - 'python3.10 -m pip install --ignore-installed --prefix=/usr --root=AppDir -r ./requirements.txt PyQt6==6.2.3 PyQt6-Qt6==6.2.4 numpy'
+  - 'python3.10 -m pip install --ignore-installed --prefix=/usr --root=AppDir -r ./requirements.txt PyQt6==6.4.0 PyQt6-Qt6==6.4.2 numpy'
   - make clean
   - PORTMIDI_FLAG='-l:libportmidi.so' make
   - DESTDIR=AppDir make install

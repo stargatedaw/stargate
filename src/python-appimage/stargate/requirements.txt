@@ -1,4 +1,5 @@
 ${CURRENT_REPO}
 -r ${CURRENT_REPO}/requirements.txt
 numpy
-PyQt6==6.2.3
+PyQt6==6.4.0
+PyQt6-Qt6==6.4.2
