@@ -93,7 +93,7 @@ QWidget {
 QGroupBox#plugin_groupbox {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0.25, y2: 1,
-        stop: 0 #1b1b58, stop: 0.5 #1c1c5c, stop: 1 #1b1c59
+        stop: 0 #3eb7cd, stop: 1 #19719a
     );
     border: none;
     border-radius: 9px;
@@ -116,12 +116,12 @@ QLabel {
 QComboBox,
 QPushButton {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #323233, stop: 1 #2f2f30
     );
     border: 1px solid #222222;
     border-radius: 3px;
-    color: #222222;
+    color: #cccccc;
 }
 
 QAbstractItemView {
@@ -149,7 +149,7 @@ QComboBox::down-arrow {
 QWidget#left_logo {
     background-color: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #141458, stop: 1 #161650
+        stop: 0 #3eb7cd, stop: 1 #19719a
     );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/multifx/logo-left.svg);
     background-position: center;
@@ -160,7 +160,7 @@ QWidget#left_logo {
 QWidget#right_logo {
     background-color: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 #141458, stop: 1 #161650
+        stop: 0 #3eb7cd, stop: 1 #19719a
     );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/logo-right.svg);
     background-position: center;

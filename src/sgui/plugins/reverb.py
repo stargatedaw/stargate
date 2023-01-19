@@ -122,10 +122,15 @@ class ReverbPluginUI(AbstractPluginUI):
             1,
             0,
         )
+        self.reverb_groupbox_gridlayout.addItem(
+            QSpacerItem(45, 1),
+            1,
+            59,
+        )
         self.reverb_groupbox_gridlayout.addWidget(
             self.preset_manager.group_box,
             0,
-            30,
+            60,
             3,
             1,
         )

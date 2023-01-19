@@ -146,6 +146,7 @@ class triggerfx_plugin_ui(AbstractPluginUI):
             stylesheet=STYLESHEET,
             **kwargs,
         )
+        self.widget.setFixedHeight(100)
         self._plugin_name = "TRIGGERFX"
         self.is_instrument = False
 
