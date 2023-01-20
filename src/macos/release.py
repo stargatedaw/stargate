@@ -54,18 +54,11 @@ BUNDLE_PATH = os.path.join('dist', BUNDLE)
 if os.path.isdir(BUNDLE_PATH):
     shutil.rmtree(BUNDLE_PATH)
 
-for version in ('3.8', '3.9', '3.10', '3.11'):
-    try:
-        retcode = subprocess.check_call([
-            f'{HOME}/Library/Python/{version}/bin/pyinstaller',
-            f'--paths=(CWD)',
-            '--noconfirm',
-            'pyinstaller-mac-onedir.spec',
-        ])
-        break
-    except:
-        pass
-
+retcode = subprocess.check_call([
+    'pyinstaller',
+    '--noconfirm',
+    'pyinstaller-mac-onedir.spec',
+])
 assert retcode == 0, retcode
 
 os.chdir('dist')

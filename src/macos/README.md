@@ -20,6 +20,8 @@ git clone https://github.com/stargateaudio/stargate.git
 cd stargate
 ./scripts/homebrew_deps.sh
 cd src
+python3 -m venv venv
+. venv/bin/activate
 pip3 install --user -r macos/requirements.txt
 make sbsms
 
