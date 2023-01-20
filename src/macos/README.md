@@ -22,7 +22,8 @@ cd stargate
 cd src
 python3 -m venv venv
 . venv/bin/activate
-pip3 install --user -r macos/requirements.txt
+pip3 install -r macos/requirements.txt
+pip3 install -e .
 make sbsms
 
 # Run locally
