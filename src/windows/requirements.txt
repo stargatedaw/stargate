@@ -1,5 +1,5 @@
-PyQt6-Qt6==6.4.2
-PyQt6==6.4.0
+PyQt6-Qt6==6.2.4
+PyQt6==6.2.3
 PyYAML
 jinja2
 mido
