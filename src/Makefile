@@ -28,10 +28,6 @@ appimage:
 	appimagetool -n \
 		../dist/squashfs-root/ \
 		../dist/StargateDAW-$(MINOR)-linux-x86_64.AppImage
-	cd ../dist && tar czf \
-		StargateDAW-$(MINOR)-linux-x86_64.AppImage.tar.gz \
-		StargateDAW-$(MINOR)-linux-x86_64.AppImage
-
 
 appimage-debug:
 	python-appimage/release.py
@@ -135,7 +131,7 @@ macos: commit_hash
 	OPTIMIZE_FLAGS= CC=clang CC_ARGS= make -C engine macos
 	./macos/link.py --with-sbsms
 
-macos_arm: commit_hash 
+macos_arm: commit_hash
 	make -C engine macos_arm
 	cp -f /opt/homebrew/bin/rubberband engine/
 	./macos/link.py

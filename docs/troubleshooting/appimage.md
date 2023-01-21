@@ -1,3 +1,17 @@
+# Usage
+Download the AppImage, then:
+#### GUI File Browser
+- right-click on the StargateDAW AppImage
+- properties
+- permissions
+- allow executing file as program
+
+or...
+#### Terminal
+```
+chmod +x StargateDAW*.AppImage
+```
+
 # AppImage
 The new AppImage is a portable executable that is meant to be used on almost
 any Linux distro, without the need to install.  Simply download, extract the
@@ -79,17 +93,6 @@ menu using the `Adding the AppImage to the start menu` instructions below.
 If the file is on a file system that does not support POSIX file
 permissions, such as a FAT32 flash drive, this will not work until you copy
 the file to an exFAT, ext4, xfs, etc... file system.
-
-#### GUI File Browser
-- right-click on the StargateDAW AppImage
-- properties
-- permissions
-- allow executing file as program
-
-#### Terminal
-```
-chmod +x StargateDAW*.AppImage
-```
 
 ### EL8 variants: AppImage Unable to find shared libraries, window does not start
 This has been seen as a result of selinux in RHEL8 and it's clones.  The
