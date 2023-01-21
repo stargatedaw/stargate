@@ -140,7 +140,7 @@ class NabuPluginUI(AbstractPluginUI):
         f_knob_size = 48
         knob_kwargs = {
             'arc_width_pct': 6.,
-            'arc_space': 6,
+            'arc_space': 3,
             'arc_bg_brush': QColor("#5a5a5a"),
             'arc_brush': QColor("#5555cc"),
             'fg_svg': os.path.join(

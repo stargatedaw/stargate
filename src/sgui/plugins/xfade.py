@@ -27,8 +27,8 @@ XFADE_PORT_MAP = {
 STYLESHEET = """
 QWidget#plugin_window {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 0,
-        stop: 0 #6a6a99, stop: 0.5 #747f9f, stop: 1 #6a6a87
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #05ceb6, stop: 1 #069682
     );
 }
 

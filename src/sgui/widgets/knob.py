@@ -121,7 +121,9 @@ class PixmapKnob(QDial):
         self.val_step = float(a_max_val - a_min_val) * 0.005  # / 200.0
         self.val_step_small = self.val_step * 0.1
         self.setGeometry(0, 0, a_size, a_size)
-        self.pixmap_size = a_size - (arc_width_pct * a_size * 0.02) - arc_space
+        self.pixmap_size = (
+            a_size - (arc_width_pct * a_size * 0.02) - (arc_space * 2)
+        )
         self.pixmap_fg = KNOB_PIXMAP_CACHE.get_scaled_pixmap_knob(
             self.fg_svg,
             self.pixmap_size,
@@ -155,7 +157,7 @@ class PixmapKnob(QDial):
         )
         f_rotate_value = f_frac_val * 270.0
         f_rect = self.rect()
-        arc_width = float(self.arc_width_pct * f_rect.width() * 0.01)
+        arc_width = int(self.arc_width_pct * f_rect.width() * 0.01)
         f_rect.setWidth(int(f_rect.width() - arc_width))
         f_rect.setHeight(int(f_rect.height() - arc_width))
         f_rect.setX(int(f_rect.x() + arc_width))
@@ -213,7 +215,11 @@ class PixmapKnob(QDial):
             p.setPen(knob_arc_pen)
 
         if self.pixmap_bg:
-            p.drawPixmap(int(arc_width), int(arc_width), self.pixmap_bg)
+            p.drawPixmap(
+                int(arc_width + self.arc_space),
+                int(arc_width + self.arc_space),
+                self.pixmap_bg,
+            )
 
         if self.pixmap_fg:
             # xc and yc are the center of the widget's rect.

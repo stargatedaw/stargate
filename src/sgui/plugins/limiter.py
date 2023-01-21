@@ -29,9 +29,8 @@ SG_LIM_PORT_MAP = {}
 STYLESHEET = """\
 QWidget#plugin_window{
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 0,
-        stop: 0 #026FD5, stop: 0.33 #004585,
-        stop: 0.75 #0058A8, stop: 1 #1768B3
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #383637, stop: 1 #2b2b2b
     );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/limiter/logo.svg);
     background-position: left;
@@ -85,14 +84,11 @@ class LimiterPluginUI(AbstractPluginUI):
         self.main_hlayout.addLayout(self.groupbox_gridlayout)
 
         knob_kwargs={
-            'arc_brush': QColor("#cccccc"),
-            'arc_bg_brush': QColor("#5a5a5a"),
-            'arc_width_pct': 6.,
-            'arc_space': 6.,
-            'fg_svg': os.path.join(
-                util.PLUGIN_ASSETS_DIR,
-                'knob-metal-3.svg',
-            ),
+            'arc_brush': QColor("#02cad5"),
+            'arc_bg_brush': QColor("#021425"),
+            'arc_width_pct': 12.,
+            'fg_svg': None,
+            'bg_svg': None,
         }
 
         self.thresh_knob = knob_control(

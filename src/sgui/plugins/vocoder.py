@@ -35,8 +35,8 @@ sidechain input.""")
 STYLESHEET = """
 QWidget#plugin_window {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 0,
-        stop: 0 #993399, stop: 0.5 #74337f, stop: 1 #993398
+        x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 #191919, stop: 1 #1a1a1a
     );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/vocoder/logo.svg);
     background-position: left;
@@ -47,7 +47,7 @@ QWidget#plugin_window {
 QLabel#plugin_name_label,
 QLabel#plugin_value_label {
     background: none;
-    color: #222222;
+    color: #555555;
 }
 
 """
@@ -62,11 +62,10 @@ class sg_vocoder_plugin_ui(AbstractPluginUI):
             **kwargs
         )
         knob_kwargs = {
-            'arc_width_pct': 0.,
-            'fg_svg': os.path.join(
-                util.PLUGIN_ASSETS_DIR,
-                'knob-plastic-4.svg',
-            ),
+            'arc_width_pct': 12.,
+            'arc_brush': QColor('#f9f9f9'),
+            'fg_svg': None,
+            'bg_svg': None,
         }
         self._plugin_name = "SG Vocoder"
         self.is_instrument = False

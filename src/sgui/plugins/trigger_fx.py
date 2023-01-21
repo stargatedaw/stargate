@@ -42,8 +42,8 @@ TRIGGERFX_PORT_MAP = {
 STYLESHEET = """
 QWidget#plugin_window {
     background: qlineargradient(
-        x1: 0, y1: 0, x2: 1, y2: 0,
-        stop: 0 #339933, stop: 0.5 #33743f, stop: 1 #339833
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #df76a0, stop: 1 #b34d6c
     );
 }
 

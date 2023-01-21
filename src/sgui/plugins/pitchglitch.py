@@ -18,6 +18,8 @@ from sglib.lib.translate import _
 from sglib.lib import util
 from .util import get_screws
 
+import copy
+
 
 PITCHGLITCH_MODE = 4
 PITCHGLITCH_PITCHBEND = 5
@@ -38,7 +40,7 @@ STYLESHEET = """
 QWidget#plugin_window {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 0.5,
-        stop: 0 #333366, stop: 0.5 #303044, stop: 1 #363655
+        stop: 0 #191919, stop: 1 #171717
     );
     background-image: url({{ PLUGIN_ASSETS_DIR }}/pitchglitch/logo.svg);
     background-position: left;
@@ -152,12 +154,21 @@ class PitchGlitchUI(AbstractPluginUI):
         left_screws = get_screws()
         self.main_hlayout.addLayout(left_screws)
 
-        f_knob_size = DEFAULT_KNOB_SIZE
+        f_knob_size = 36 # DEFAULT_KNOB_SIZE
         knob_kwargs = {
             'arc_width_pct': 0.,
+            #'arc_width_pct': 6.,
+            #'arc_space': 4.,
+            #'arc_brush': QColor('#d3544e'),
             'fg_svg': os.path.join(
                 util.PLUGIN_ASSETS_DIR,
-                'knob-plastic-3.svg',
+                'pitchglitch',
+                'knob-fg.svg',
+            ),
+            'bg_svg': os.path.join(
+                util.PLUGIN_ASSETS_DIR,
+                'pitchglitch',
+                'knob-bg.svg',
             ),
         }
 
@@ -170,6 +181,8 @@ class PitchGlitchUI(AbstractPluginUI):
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
         )
 
+        pitch_knob_kwargs = copy.deepcopy(knob_kwargs)
+        pitch_knob_kwargs['arc_type'] = ArcType.BIDIRECTIONAL
         self.pitch_knob = knob_control(
             f_knob_size,
             _("Pitch"),
@@ -182,7 +195,7 @@ class PitchGlitchUI(AbstractPluginUI):
             KC_INTEGER,
             self.port_dict,
             self.preset_manager,
-            knob_kwargs=knob_kwargs,
+            knob_kwargs=pitch_knob_kwargs,
             tooltip=(
                 'Pitch offset, in semitones.  Play glitches at a different '
                 'pitch than the incoming MIDI notes'

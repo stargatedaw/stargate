@@ -193,7 +193,7 @@ class multifx_plugin_ui(AbstractPluginUI):
         self.is_instrument = False
         knob_kwargs = {
             'arc_width_pct': 6.,
-            'arc_space': 6,
+            'arc_space': 4,
             'arc_bg_brush': QColor("#5a5a5a"),
             'arc_brush': QColor("#cccccc"),
             'fg_svg': os.path.join(
