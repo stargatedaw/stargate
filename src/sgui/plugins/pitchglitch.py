@@ -205,7 +205,7 @@ class PitchGlitchUI(AbstractPluginUI):
 
         self.pitchbend_knob = knob_control(
             f_knob_size,
-            _("Pitchbend"),
+            _("Pbnd"),
             PITCHGLITCH_PITCHBEND,
             self.plugin_rel_callback,
             self.plugin_val_callback,
