@@ -445,10 +445,15 @@ def global_open_project(a_project_file):
     PLUGIN_RACK.initialize(constants.DAW_PROJECT)
     MIXER_WIDGET.set_project(constants.DAW_PROJECT)
     PIANO_ROLL_EDITOR.default_vposition()
+    TRACK_PANEL.set_track_names()
 
 def global_new_project(a_project_file):
-    # TODO: SG DEPRECATED
-    global PROJECT, TRACK_COLORS
+    # TODO: SG DEPRECATED   # EDIT: What is deprecated?
+    global PROJECT, TRACK_COLORS, TRACK_NAMES
+    TRACK_NAMES = [
+        "Main" if x == 0 else "track{}".format(x)
+        for x in range(TRACK_COUNT_ALL)
+    ]
     constants.DAW_PROJECT = DawProject(util.WITH_AUDIO)
     constants.DAW_PROJECT.new_project(a_project_file)
     TRACK_COLORS = constants.DAW_PROJECT.get_track_colors()
@@ -462,6 +467,7 @@ def global_new_project(a_project_file):
     PLUGIN_RACK.initialize(constants.DAW_PROJECT)
     MIXER_WIDGET.set_project(constants.DAW_PROJECT)
     PIANO_ROLL_EDITOR.default_vposition()
+    TRACK_PANEL.set_track_names()
 
 def global_set_playback_pos(a_beat=None):
     if a_beat is not None:

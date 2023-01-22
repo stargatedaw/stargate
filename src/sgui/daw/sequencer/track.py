@@ -465,7 +465,7 @@ class TrackPanel:
         )
         self.tracks_layout.setContentsMargins(0, 0, 0, 0)
         for i in range(_shared.SEQUENCE_EDITOR_TRACK_COUNT):
-            f_track = SeqTrack(i, shared.TRACK_NAMES[i])
+            f_track = SeqTrack(i, 'track')
             self.tracks[i] = f_track
             self.tracks_layout.addWidget(f_track.group_box)
         self.automation_dict = {
@@ -473,6 +473,10 @@ class TrackPanel:
                 _shared.SEQUENCE_EDITOR_TRACK_COUNT)
             }
         self.set_track_height()
+
+    def set_track_names(self):
+        for i in range(_shared.SEQUENCE_EDITOR_TRACK_COUNT):
+            self.tracks[i].track_name_lineedit.setText(shared.TRACK_NAMES[i])
 
     def set_controls_enabled(self, enabled: bool):
         for track in self.tracks.values():
