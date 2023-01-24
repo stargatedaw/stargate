@@ -116,7 +116,7 @@ widgets:
   # The knob background image
   knob_bg_image: "knob-bg.svg"
   # The knob image.  Will be rotated as the knob moves
-  knob_fg_image: "{{ assets_subdir }}/knob-fg.svg"
+  knob_fg_image: "knob-fg.svg"
   # The gradient used to draw peak meters.  See sglib.models.theme.Gradient
   peak_meter:
     stops:

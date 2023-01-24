@@ -24,6 +24,10 @@ class per_audio_item_fx_widget:
                 a_val_callback,
                 fixed_height=True,
                 fixed_width=True,
+                knob_kwargs={
+                    'fg_svg': 'default',
+                    'bg_svg': 'default_bg',
+                },
             )
             f_effect.disable_mousewheel()
             self.effects.append(f_effect)
