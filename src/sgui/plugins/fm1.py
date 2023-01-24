@@ -1629,6 +1629,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.preset_manager,
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
+            multifx_items=MULTIFX_ITEMS_SYNTH,
         )
         self.hlayout5.addWidget(self.fx0.group_box)
         self.fx1 = MultiFXSingle(
@@ -1640,6 +1641,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.preset_manager,
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
+            multifx_items=MULTIFX_ITEMS_SYNTH,
         )
         self.hlayout5.addWidget(self.fx1.group_box)
         self.fx2 = MultiFXSingle(
@@ -1651,6 +1653,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.preset_manager,
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
+            multifx_items=MULTIFX_ITEMS_SYNTH,
         )
         self.hlayout6.addWidget(self.fx2.group_box)
         self.fx3 = MultiFXSingle(
@@ -1662,6 +1665,7 @@ class fm1_plugin_ui(AbstractPluginUI):
             self.preset_manager,
             a_knob_size=f_knob_size,
             knob_kwargs=knob_kwargs,
+            multifx_items=MULTIFX_ITEMS_SYNTH,
         )
         self.hlayout6.addWidget(self.fx3.group_box)
 

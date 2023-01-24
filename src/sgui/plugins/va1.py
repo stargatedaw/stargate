@@ -133,8 +133,8 @@ QMenu::item:selected
 QWidget::item,
 QMenu::item
 {
-    background-color: #222222;
-    color: #cccccc;
+    background-color: #3c3c3c;
+    color: #bbbbbb;
 }
 
 QMenu::separator
@@ -145,7 +145,6 @@ QMenu::separator
 
 QMenu,
 QMenu::item,
-QPushButton,
 QWidget#plugin_window {
     background: #222222;
     color: #cccccc;
@@ -178,15 +177,16 @@ QLabel#plugin_value_label {
 
 QLineEdit,
 QSpinBox,
+QPushButton,
 QDoubleSpinBox,
 QComboBox {
     background: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #6a6a6a, stop: 0.5 #828282, stop: 1 #6a6a6a
+        stop: 0 #3a3a3a, stop: 1 #363636
     );
     border: 1px solid #222222;
-    border-radius: 6px;
-    color: #222222;
+    border-radius: 3px;
+    color: #bbbbbb;
 }
 
 QComboBox#plugin_name_label {
@@ -293,9 +293,8 @@ QScrollBar::sub-line:vertical
     subcontrol-position: top;
 }
 
-QAbstractItemView
-{
-    background-color: #222222;
+QAbstractItemView {
+    background-color: #3c3c3c;
     border: 2px solid #aaaaaa;
     selection-background-color: #cccccc;
 }

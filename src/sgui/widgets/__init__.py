@@ -22,7 +22,7 @@ from .knob import *
 from .lfo import lfo_widget
 from .lfo_dialog import lfo_dialog
 from .main import main_widget
-from .multifx import MultiFXSingle
+from .multifx import MultiFXSingle, MULTIFX_ITEMS_SYNTH, MULTIFX_ITEMS_EFFECT
 from .multifx10 import MultiFX10
 from .note_selector import NoteSelectorWidget
 from .ordered_table import ordered_table_dialog

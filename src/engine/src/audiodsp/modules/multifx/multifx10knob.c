@@ -208,6 +208,11 @@ MULTIFX10_METADATA[MULTIFX10KNOB_FX_COUNT] = {
         v_mf10_reset_svf,
         3,
     }, //37
+    {
+        v_mf10_run_ladder4,
+        v_mf10_reset_null,
+        2,
+    }, //38
 };
 
 void v_mf10_reset_null(t_mf10_multi* self){
@@ -1221,6 +1226,28 @@ void v_mf10_run_dc_offset(
     self->output1 = f_dco_run(&self->dc_offset[1], a_in1);
 }
 
+void v_mf10_run_ladder4(t_mf10_multi* self, SGFLT left, SGFLT right){
+    v_mf10_commit_mod(self);
+    //cutoff
+    self->control_value[0] = (((self->control[0]) * 0.818897638) + 20.0f);
+    //res
+    self->control_value[1] = ((self->control[1]) * 0.236220472) - 30.0f;
+    ladder_set(
+        &self->ladder,
+        self->control_value[0],
+        self->control_value[1]
+    );
+    struct SamplePair result = ladder_run_stereo(
+        &self->ladder,
+        (struct SamplePair){
+            .left = left,
+            .right = right,
+        }
+    );
+    self->output0 = result.left;
+    self->output1 = result.right;
+}
+
 void g_mf10_init(
     t_mf10_multi * self,
     SGFLT a_sample_rate,
@@ -1235,6 +1262,7 @@ void g_mf10_init(
     }
     g_svf2_init(&self->svf, a_sample_rate);
     g_svf2_init(&self->svf2, a_sample_rate);
+    ladder_init(&self->ladder, a_sample_rate);
     g_cmb_init(&self->comb_filter0, a_sample_rate, a_huge_pages);
     g_cmb_init(&self->comb_filter1, a_sample_rate, a_huge_pages);
     g_pkq_init(&self->eq0, a_sample_rate);

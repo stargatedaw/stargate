@@ -96,6 +96,11 @@ MULTIFX_INFO = {
     ),
     "Soft Clipper": MultiFXInfo(35, 'Soft clipping distortion'),
     "BP D/W": MultiFXInfo(37, 'A 2 pole bandpass filter with a dry/wet knob'),
+    'Ladder4': MultiFXInfo(
+        38,
+        'A 4 pole ladder lowpass filter.  Be careful with high resonance '
+        'values, like a real Moog filter, it will self-oscillate indefinitely'
+    ),
 }
 
 def mfx_set_tooltip(knobs, idx: int):

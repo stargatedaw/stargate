@@ -57,6 +57,7 @@ const fp_mf3_run mf3_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
     v_mf3_run_soft_clipper, //35
     NULL, //36
     v_mf3_run_bp_dw, //37
+    v_mf3_run_ladder4, //38
 };
 
 SG_THREAD_LOCAL
@@ -97,6 +98,9 @@ const fp_mf3_reset mf3_reset_function_pointers[MULTIFX3KNOB_MAX_INDEX] = {
     v_mf3_reset_null, //33
     v_mf3_reset_null, //34
     v_mf3_reset_null, //35
+    v_mf3_reset_null, //36
+    v_mf3_reset_null, //37
+    v_mf3_reset_null, //38
 };
 
 void v_mf3_reset_null(t_mf3_multi* self){
@@ -1031,6 +1035,28 @@ void v_mf3_run_dc_offset(
     self->output1 = f_dco_run(&self->dc_offset[1], a_in1);
 }
 
+void v_mf3_run_ladder4(t_mf3_multi* self, SGFLT left, SGFLT right){
+    v_mf3_commit_mod(self);
+    //cutoff
+    self->control_value[0] = (((self->control[0]) * 0.818897638) + 20.0f);
+    //res
+    self->control_value[1] = ((self->control[1]) * 0.236220472) - 30.0f;
+    ladder_set(
+        &self->ladder,
+        self->control_value[0],
+        self->control_value[1]
+    );
+    struct SamplePair result = ladder_run_stereo(
+        &self->ladder,
+        (struct SamplePair){
+            .left = left,
+            .right = right,
+        }
+    );
+    self->output0 = result.left;
+    self->output1 = result.right;
+}
+
 void g_mf3_init(
     t_mf3_multi * f_result,
     SGFLT a_sample_rate,
@@ -1040,6 +1066,7 @@ void g_mf3_init(
     f_result->channels = 2;
     g_svf2_init(&f_result->svf, a_sample_rate);
     g_svf2_init(&f_result->svf2, a_sample_rate);
+    ladder_init(&f_result->ladder, a_sample_rate);
     g_cmb_init(&f_result->comb_filter0, a_sample_rate, a_huge_pages);
     g_cmb_init(&f_result->comb_filter1, a_sample_rate, a_huge_pages);
     g_pkq_init(&f_result->eq0, a_sample_rate);

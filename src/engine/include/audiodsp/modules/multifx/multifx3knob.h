@@ -15,7 +15,7 @@ GNU General Public License for more details.
 #define MULTIFX3KNOB_H
 
 /*This is actually count, not index TODO:  Rename*/
-#define MULTIFX3KNOB_MAX_INDEX 38
+#define MULTIFX3KNOB_MAX_INDEX 39
 #define MULTIFX3KNOB_KNOB_COUNT 3
 
 #include "audiodsp/lib/amp.h"
@@ -32,6 +32,7 @@ GNU General Public License for more details.
 #include "audiodsp/modules/filter/comb_filter.h"
 #include "audiodsp/modules/filter/dc_offset_filter.h"
 #include "audiodsp/modules/filter/formant_filter.h"
+#include "audiodsp/modules/filter/ladder.h"
 #include "audiodsp/modules/filter/peak_eq.h"
 #include "audiodsp/modules/filter/svf_stereo.h"
 #include "audiodsp/modules/signal_routing/amp_and_panner.h"
@@ -45,6 +46,7 @@ typedef struct {
     int channels;  //Currently only 1 or 2 are supported
     t_svf2_filter svf;
     t_svf2_filter svf2;
+    struct LadderFilter ladder;
     t_comb_filter comb_filter0;
     t_comb_filter comb_filter1;
     t_pkq_peak_eq eq0;
@@ -116,6 +118,7 @@ void v_mf3_run_notch_spread(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_foldback(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_dc_offset(t_mf3_multi*,SGFLT,SGFLT);
 void v_mf3_run_bp_spread(t_mf3_multi*,SGFLT,SGFLT);
+void v_mf3_run_ladder4(t_mf3_multi*,SGFLT,SGFLT);
 
 void f_mfx_transform_svf_filter(t_mf3_multi*);
 

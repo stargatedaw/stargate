@@ -19,6 +19,95 @@ GNU General Public License for more details.
 #include "plugins/va1.h"
 
 
+void _va1_set_svf_params(t_va1* plugin, t_va1_poly_voice* voice, SGFLT input){
+    v_nosvf_set_cutoff_base(
+        &voice->svf_filter,
+        plugin->mono_modules.filter_smoother.last_value
+    );
+
+    v_nosvf_set_res(&voice->svf_filter, (*plugin->res) * 0.1f);
+
+    v_nosvf_add_cutoff_mod(
+        &voice->svf_filter,
+        (
+            (voice->adsr_filter.output * (*plugin->filter_env_amt)) +
+            voice->lfo_filter_output + voice->filter_keytrk
+        )
+    );
+
+    v_nosvf_set_cutoff(&voice->svf_filter);
+}
+
+SGFLT _va1_lp2(t_va1* plugin, t_va1_poly_voice* voice, SGFLT input){
+    _va1_set_svf_params(plugin, voice, input);
+    return v_nosvf_run_2_pole_lp(&voice->svf_filter, input);
+}
+
+SGFLT _va1_lp4(t_va1* plugin, t_va1_poly_voice* voice, SGFLT input){
+    _va1_set_svf_params(plugin, voice, input);
+    return v_nosvf_run_4_pole_lp(&voice->svf_filter, input);
+}
+
+SGFLT _va1_hp2(t_va1* plugin, t_va1_poly_voice* voice, SGFLT input){
+    _va1_set_svf_params(plugin, voice, input);
+    return v_nosvf_run_2_pole_hp(&voice->svf_filter, input);
+}
+
+SGFLT _va1_hp4(t_va1* plugin, t_va1_poly_voice* voice, SGFLT input){
+    _va1_set_svf_params(plugin, voice, input);
+    return v_nosvf_run_4_pole_hp(&voice->svf_filter, input);
+}
+
+SGFLT _va1_bp2(t_va1* plugin, t_va1_poly_voice* voice, SGFLT input){
+    _va1_set_svf_params(plugin, voice, input);
+    return v_nosvf_run_2_pole_bp(&voice->svf_filter, input);
+}
+
+SGFLT _va1_bp4(t_va1* plugin, t_va1_poly_voice* voice, SGFLT input){
+    _va1_set_svf_params(plugin, voice, input);
+    return v_nosvf_run_4_pole_bp(&voice->svf_filter, input);
+}
+
+SGFLT _va1_notch2(t_va1* plugin, t_va1_poly_voice* voice, SGFLT input){
+    _va1_set_svf_params(plugin, voice, input);
+    return v_nosvf_run_2_pole_notch(&voice->svf_filter, input);
+}
+
+SGFLT _va1_notch4(t_va1* plugin, t_va1_poly_voice* voice, SGFLT input){
+    _va1_set_svf_params(plugin, voice, input);
+    return v_nosvf_run_4_pole_notch(&voice->svf_filter, input);
+}
+
+SGFLT _va1_filter_off(t_va1* plugin, t_va1_poly_voice* voice, SGFLT input){
+    return input;
+}
+
+SGFLT _va1_ladder4(t_va1* plugin, t_va1_poly_voice* voice, SGFLT input){
+    ladder_set(
+        &voice->ladder_filter,
+        (
+            plugin->mono_modules.filter_smoother.last_value +
+            (voice->adsr_filter.output * (*plugin->filter_env_amt)) +
+            voice->lfo_filter_output + voice->filter_keytrk
+        ),
+        (*plugin->res) * 0.1f
+    );
+    return ladder_run_mono(&voice->ladder_filter, input);
+}
+
+SG_THREAD_LOCAL va1_filter_func VA1_FILTER_FUNCS[10] = {
+    _va1_lp2,
+    _va1_lp4,
+    _va1_hp2,
+    _va1_hp4,
+    _va1_bp2,
+    _va1_bp4,
+    _va1_notch2,
+    _va1_notch4,
+    _va1_filter_off,
+    _va1_ladder4,
+};
+
 void v_run_va1_voice(
     t_va1 *plugin_data,
     t_voc_single_voice * a_poly_voice,
@@ -459,7 +548,7 @@ void va1_note_on(
     v_mds_set_gain(&f_voice->mdist, *plugin_data->dist);
 
     int f_filter_type = (int)*plugin_data->filter_type;
-    f_voice->svf_function = NOSVF_TYPES[f_filter_type];
+    f_voice->filter_func = VA1_FILTER_FUNCS[f_filter_type];
 
     f_voice->noise_amp = f_db_to_linear(*(plugin_data->noise_amp));
 
@@ -854,25 +943,10 @@ void v_run_va1_voice(
 
     v_adsr_run(&a_voice->adsr_filter);
 
-    v_nosvf_set_cutoff_base(
-        &a_voice->svf_filter,
-        plugin_data->mono_modules.filter_smoother.last_value
-    );
 
-    v_nosvf_set_res(&a_voice->svf_filter, (*plugin_data->res) * 0.1f);
-
-    v_nosvf_add_cutoff_mod(
-        &a_voice->svf_filter,
-        (
-            (a_voice->adsr_filter.output * (*plugin_data->filter_env_amt)) +
-            a_voice->lfo_filter_output + a_voice->filter_keytrk
-        )
-    );
-
-    v_nosvf_set_cutoff(&a_voice->svf_filter);
-
-    current_sample = a_voice->svf_function(
-        &a_voice->svf_filter,
+    current_sample = a_voice->filter_func(
+        plugin_data,
+        a_voice,
         current_sample
     );
 
@@ -998,6 +1072,7 @@ void g_va1_poly_init(
     f_voice->osc2_pitch_adjust = 0.0f;
 
     g_nosvf_init(&f_voice->svf_filter, a_sr);
+    ladder_init(&f_voice->ladder_filter, a_sr);
 
     g_mds_init(&f_voice->mdist);
     f_voice->mdist_fp = g_mds_get_fp(0);

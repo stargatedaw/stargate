@@ -14,7 +14,7 @@ GNU General Public License for more details.
 #ifndef MULTIFX10KNOB_H
 #define MULTIFX10KNOB_H
 
-#define MULTIFX10KNOB_FX_COUNT 38
+#define MULTIFX10KNOB_FX_COUNT 39
 #define MULTIFX10KNOB_KNOB_COUNT 10
 #define MULTIFX10_MAX_FX_COUNT 12
 
@@ -34,6 +34,7 @@ GNU General Public License for more details.
 #include "audiodsp/modules/filter/comb_filter.h"
 #include "audiodsp/modules/filter/dc_offset_filter.h"
 #include "audiodsp/modules/filter/formant_filter.h"
+#include "audiodsp/modules/filter/ladder.h"
 #include "audiodsp/modules/filter/peak_eq.h"
 #include "audiodsp/modules/filter/svf_stereo.h"
 #include "audiodsp/modules/signal_routing/amp_and_panner.h"
@@ -46,6 +47,7 @@ GNU General Public License for more details.
 typedef struct {
     t_svf2_filter svf;
     t_svf2_filter svf2;
+    struct LadderFilter ladder;
     t_comb_filter comb_filter0;
     t_comb_filter comb_filter1;
     t_pkq_peak_eq eq0;
@@ -164,6 +166,7 @@ void v_mf10_run_notch_spread(t_mf10_multi*,SGFLT,SGFLT);
 void v_mf10_run_foldback(t_mf10_multi*,SGFLT,SGFLT);
 void v_mf10_run_dc_offset(t_mf10_multi*,SGFLT,SGFLT);
 void v_mf10_run_bp_spread(t_mf10_multi*,SGFLT,SGFLT);
+void v_mf10_run_ladder4(t_mf10_multi*, SGFLT, SGFLT);
 
 void mf10_transform_svf_filter(t_mf10_multi*);
 

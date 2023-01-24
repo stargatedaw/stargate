@@ -22,6 +22,7 @@ GNU General Public License for more details.
 #include "audiodsp/lib/smoother-linear.h"
 #include "audiodsp/lib/voice.h"
 #include "audiodsp/modules/distortion/multi.h"
+#include "audiodsp/modules/filter/ladder.h"
 #include "audiodsp/modules/filter/nosvf.h"
 #include "audiodsp/modules/modulation/adsr.h"
 #include "audiodsp/modules/modulation/ramp_env.h"
@@ -103,6 +104,10 @@ GNU General Public License for more details.
 #define VA1_POLYPHONY 24
 #define VA1_POLYPHONY_THRESH 12
 
+typedef struct _t_va1 t_va1;
+typedef struct _t_va1_poly_voice t_va1_poly_voice;
+
+typedef SGFLT (*va1_filter_func)(t_va1*, t_va1_poly_voice*, SGFLT);
 
 typedef struct {
     t_smoother_linear filter_smoother;
@@ -115,7 +120,7 @@ typedef struct {
     t_pn2_panner2 panner;
 } t_va1_mono_modules;
 
-typedef struct {
+typedef struct _t_va1_poly_voice {
     SGFLT amp;
     t_pn2_panner2 panner;
     SGFLT note_f;
@@ -158,13 +163,14 @@ typedef struct {
     fp_adsr_run adsr_run_func;
     t_adsr adsr_amp;
     t_nosvf_filter svf_filter;
-    fp_nosvf_run_filter svf_function;
+    struct LadderFilter ladder_filter;
+    va1_filter_func filter_func;
 
     t_mds_multidist mdist;
     fp_multi_dist mdist_fp;
 } t_va1_poly_voice;
 
-typedef struct {
+typedef struct _t_va1 {
     char pad1[CACHE_LINE_SIZE];
     int oversample;
     SGFLT os_recip;
@@ -275,5 +281,7 @@ PluginHandle g_va1_instantiate(
     int a_plugin_uid,
     fp_queue_message a_queue_func
 );
+
+extern SG_THREAD_LOCAL va1_filter_func VA1_FILTER_FUNCS[10];
 
 #endif /* RAY_VSYNTH_H */

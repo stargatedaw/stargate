@@ -5,6 +5,8 @@ from sglib.models.multifx_settings import multifx_settings
 from sglib.lib.translate import _
 from sgui.sgqt import *
 
+import copy
+
 
 MULTIFX_CLIPBOARD = None
 MULTIFX_EFFECTS_LOOKUP = {
@@ -12,7 +14,7 @@ MULTIFX_EFFECTS_LOOKUP = {
     for k, v in MULTIFX_INFO.items()
 }
 
-MULTIFX_FILTERS = [
+MULTIFX_FILTERS_SYNTH = [
     "BP2",
     "BP4",
     'BP D/W',
@@ -23,6 +25,7 @@ MULTIFX_FILTERS = [
     "HP D/W",
     "HP2",
     "HP4",
+    "Ladder4",
     "LP D/W",
     "LP Screech",
     "LP2",
@@ -33,6 +36,9 @@ MULTIFX_FILTERS = [
     "Notch2",
     "Notch4",
 ]
+
+MULTIFX_FILTERS_EFFECT = copy.deepcopy(MULTIFX_FILTERS_SYNTH)
+MULTIFX_FILTERS_EFFECT.remove('Ladder4')
 
 MULTIFX_DISTORTION = [
     "Distortion",
@@ -60,9 +66,17 @@ MULTIFX_DYNAMICS = [
     "Monofier",
 ]
 
-MULTIFX_ITEMS = [
+MULTIFX_ITEMS_SYNTH = [
     "Off",
-    ("Filters", MULTIFX_FILTERS),
+    ("Filters", MULTIFX_FILTERS_SYNTH),
+    ("Distortion", MULTIFX_DISTORTION),
+    ("Delay", MULTIFX_DELAY),
+    ("Dynamics", MULTIFX_DYNAMICS),
+]
+
+MULTIFX_ITEMS_EFFECT = [
+    "Off",
+    ("Filters", MULTIFX_FILTERS_EFFECT),
     ("Distortion", MULTIFX_DISTORTION),
     ("Delay", MULTIFX_DELAY),
     ("Dynamics", MULTIFX_DYNAMICS),
@@ -81,6 +95,7 @@ class MultiFXSingle:
         knob_kwargs={},
         fixed_height=False,
         fixed_width=False,
+        multifx_items=MULTIFX_ITEMS_EFFECT,
     ):
         self.group_box = QGroupBox()
         self.group_box.contextMenuEvent = self.contextMenuEvent
@@ -129,7 +144,7 @@ class MultiFXSingle:
             a_rel_callback,
             a_val_callback,
             MULTIFX_EFFECTS_LOOKUP,
-            MULTIFX_ITEMS,
+            multifx_items,
             a_port_dict=a_port_dict,
             a_preset_mgr=a_preset_mgr,
             a_default_index=0,
@@ -714,6 +729,18 @@ class MultiFXSingle:
             self.knobs[0].name_label.setText(_("Freq"))
             self.knobs[1].name_label.setText(_("Res"))
             self.knobs[2].name_label.setText(_("Wet"))
+            self.knobs[0].val_conversion = _shared.KC_127_PITCH
+            self.knobs[1].val_conversion = _shared.KC_127_ZERO_TO_X
+            self.knobs[1].set_min_max(-30.0, 0.0)
+            self.knobs[2].val_conversion = _shared.KC_NONE
+            self.knobs[2].value_label.setText("")
+        elif a_val == 38: #Ladder4
+            self.knobs[0].control.show()
+            self.knobs[1].control.show()
+            self.knobs[2].control.hide()
+            self.knobs[0].name_label.setText(_("Freq"))
+            self.knobs[1].name_label.setText(_("Res"))
+            self.knobs[2].name_label.setText("")
             self.knobs[0].val_conversion = _shared.KC_127_PITCH
             self.knobs[1].val_conversion = _shared.KC_127_ZERO_TO_X
             self.knobs[1].set_min_max(-30.0, 0.0)

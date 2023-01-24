@@ -3,6 +3,32 @@ from .control import *
 from sglib.lib.translate import _
 from sgui.sgqt import *
 
+_FILTER_LOOKUP = {
+    "LP2": (0, '2 pole lowpass filter'),
+    "LP4": (1, '4 pole lowpass filter'),
+    "HP2": (2, '2 pole highpass filter'),
+    "HP4": (3, '4 pole highpass filter'),
+    "BP2": (4, '2 pole bandpass filter'),
+    "BP4": (5, '4 pole bandpass filter'),
+    "Notch2": (6, '2 pole notch filter'),
+    "Notch4": (7, '4 pole notch filter'),
+    "Off": (8, 'No filter'),
+    'Ladder4': (9, '4 pole ladder lowpass filter'),
+}
+
+_FILTER_TYPES = [
+    "BP2",
+    "BP4",
+    "HP2",
+    "HP4",
+    "LP2",
+    "LP4",
+    "Notch2",
+    "Notch4",
+    'Ladder4',
+    "Off",
+]
+
 class filter_widget:
     def __init__(
         self,
@@ -76,7 +102,8 @@ class filter_widget:
                     "BP4",
                     "Notch2",
                     "Notch4",
-                    _("Off"),
+                    "Off",
+                    'Ladder4',
                 ],
                 a_port_dict,
                 a_preset_mgr=a_preset_mgr,
@@ -84,6 +111,18 @@ class filter_widget:
                     'Filter type.  LP = Lowpass, HP = Highpass, '
                     'BP = Bandpass, 2 = 2 pole, 4 = 4 pole'
                 ),
+            )
+            self.type_combobox = NestedComboboxControl(
+                90,
+                "Type",
+                a_type_port,
+                a_rel_callback,
+                a_val_callback,
+                _FILTER_LOOKUP,
+                _FILTER_TYPES,
+                a_port_dict=a_port_dict,
+                a_preset_mgr=a_preset_mgr,
+                a_default_index=0,
             )
             self.layout.addWidget(self.type_combobox.name_label, 0, 2)
             self.layout.addWidget(self.type_combobox.control, 1, 2)
