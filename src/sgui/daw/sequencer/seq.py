@@ -1,4 +1,5 @@
 import copy
+import math
 
 from .midi_file_dialog import midi_file_dialog
 from sglib import constants
@@ -871,7 +872,9 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                     seconds=f_graph.length_in_seconds)
                 if not f_restart and glbl_shared.add_entropy(f_delta):
                     f_restart = True
-                f_length = f_graph.length_in_seconds / f_seconds_per_beat
+                f_length = math.ceil(
+                    f_graph.length_in_seconds / f_seconds_per_beat
+                )
                 if a_single_item:
                     f_item = DawAudioItem(
                         f_uid,
