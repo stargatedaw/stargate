@@ -13,14 +13,26 @@ Developer program.  To get around this, you can use Google to find instructions
 [such as this](https://customercare.primera.com/portal/en/kb/articles/how-to-open-a-primera-app-that-hasn-t-been-notarized-or-is-from-an-unidentified-developer)
 
 ## Unable to record the built-in microphone
-At the moment, it will not be possible to request microphone access from 
+At the moment, it will not be possible to request microphone access from
 Stargate DAW, however, there is a workaround.  You can open a Terminal and
-run Stargate DAW from the terminal, and grant the terminal access to the 
+run Stargate DAW from the terminal, and grant the terminal access to the
 microphone when prompted.  This is the command to run Stargate DAW from the
-terminal:
+terminal after installing:
 ```
 /Applications/Stargate\ DAW.app/Contents/MacOS/stargate
 ```
+
+## Crashes on older, unsupported Intel Macs
+We do our very best to support Stargate DAW on the earliest Intel Macs.
+However, we do rely on various open source libraries that come from package
+managers such as homebrew, pip and pkgsrc.  Sometimes, these libraries may
+be compiled targetting a more recent CPU architecture, which results in
+"illegal instruction" crashes on, for example, Core2 Macs that have installed
+more recent macOS versions such as Catalina using unsupported installers.
+
+We will attempt to address these problems as we discover them, but at some
+point, supporting ancient Mac hardware will become untenable, even if
+Stargate DAW is fast enough and capable of running on 2009-era hardware.
 
 ## Portable install mode
 NOTE: It is recommended to use an exFAT formatted flash drive, as other formats

@@ -16,7 +16,6 @@ brew install \
     libsamplerate \
     libsndfile \
     libvorbis \
-    numpy \
     opus \
     portaudio \
     portmidi \
