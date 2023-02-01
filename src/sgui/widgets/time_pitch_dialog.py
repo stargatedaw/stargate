@@ -220,9 +220,13 @@ class TimePitchDialogWidget:
             )
 
     def timestretch_mode_changed(self, a_val=None):
-        a_val = util.TIMESTRETCH_INDEXES[
-            str(self.timestretch_mode.currentText())
-        ]
+        mode = str(self.timestretch_mode.currentText())
+        if mode == '':  # Weird Windows issue
+            self.timestretch_mode.setCurrentIndex(7)
+            self.timestretch_mode.setCurrentText('Soundtouch')
+            a_val = 7
+        else:
+            a_val = util.TIMESTRETCH_INDEXES[mode]
         if a_val == 0:
             self.hide_controls()
             self.pitch_shift.setValue(0.0)
