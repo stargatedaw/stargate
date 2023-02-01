@@ -612,7 +612,7 @@ class AudioSeqItem(QGraphicsRectItem):
             return
         self.check_selected_status()
         a_event.setAccepted(True)
-        QGraphicsRectItem.mousePressEvent(self.stretch_handle, a_event)
+        QGraphicsPolygonItem.mousePressEvent(self.stretch_handle, a_event)
         f_max_sequence_pos = _shared.AUDIO_PX_PER_BEAT * shared.CURRENT_ITEM_LEN
         for f_item in shared.AUDIO_SEQ.audio_items:
             if (
