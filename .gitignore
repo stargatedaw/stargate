@@ -73,3 +73,4 @@ tools/wavetable_maker/test.txt
 tools/wavetable_maker/wavs/*.wav
 tools/wavetable_maker/wt.h
 tools/wavetable_maker/wtgen
+venv*/
