@@ -14,6 +14,9 @@ class TimePitchDialogWidget:
         modes=TIMESTRETCH_MODES,
         ps_pitch=False,
     ):
+        LOG.info(modes)
+        self.mode_indices = [util.TIMESTRETCH_INDEXES[x] for x in modes]
+        LOG.info(f'mode_indices: {self.mode_indices}')
         self.ps_pitch = ps_pitch
         self.widget = QDialog()
         self.widget.setMaximumWidth(480)
@@ -38,6 +41,7 @@ class TimePitchDialogWidget:
         self.pitch_label = QLabel("Pitch:")
         self.time_pitch_gridlayout.addWidget(self.pitch_label, 0, 0)
         self.pitch_shift = QDoubleSpinBox()
+        self.pitch_shift.setMinimumWidth(90)
         self.pitch_controls = (self.pitch_label, self.pitch_shift)
         self.pitch_shift.setToolTip('The pitch adjustment, in semitones')
         self.pitch_shift.setRange(-36, 36)
@@ -55,6 +59,7 @@ class TimePitchDialogWidget:
         self.time_pitch_gridlayout.addWidget(
             self.pitch_shift_end_checkbox, 0, 2)
         self.pitch_shift_end = QDoubleSpinBox()
+        self.pitch_shift_end.setMinimumWidth(90)
         self.pitch_shift_end.setToolTip(
             'SBSMS only.  The pitch adjustment at the end of the audio item, '
             'the pitch will gradually shift from the starting pitch '
@@ -68,6 +73,7 @@ class TimePitchDialogWidget:
         self.time_label = QLabel(_("Time:"))
         self.time_pitch_gridlayout.addWidget(self.time_label, 1, 0)
         self.timestretch_amt = QDoubleSpinBox()
+        self.timestretch_amt.setMinimumWidth(90)
         self.time_controls = (self.time_label, self.timestretch_amt)
         self.timestretch_amt.setToolTip(
             'The time stretch amount.  2.0 doubles the length of the item, '
@@ -102,6 +108,7 @@ class TimePitchDialogWidget:
         self.time_pitch_gridlayout.addWidget(
             self.timestretch_amt_end_checkbox, 1, 2)
         self.timestretch_amt_end = QDoubleSpinBox()
+        self.timestretch_amt_end.setMinimumWidth(90)
         self.timestretch_amt_end.setToolTip(
             'SBSMS only.  The end time stretch amount.  Time stretch amount '
             'will be gradually bent from the start value to the end value'
@@ -124,7 +131,10 @@ class TimePitchDialogWidget:
         )
 
         if audio_item:
-            self.timestretch_mode.setCurrentIndex(audio_item.time_stretch_mode)
+            LOG.info(f'ts_mode: {audio_item.time_stretch_mode}')
+            ts_name = TIMESTRETCH_INDEXES_REVERSE[audio_item.time_stretch_mode]
+            idx = modes.index(ts_name)
+            self.timestretch_mode.setCurrentIndex(idx)
             self.pitch_shift.setValue(float(audio_item.pitch_shift))
             self.pitch_shift_end_checkbox.setChecked(
                 audio_item.pitch_shift != audio_item.pitch_shift_end
@@ -221,13 +231,9 @@ class TimePitchDialogWidget:
             )
 
     def timestretch_mode_changed(self, a_val=None):
-        mode = str(self.timestretch_mode.currentText())
-        if mode == '':  # Weird Windows issue
-            self.timestretch_mode.setCurrentIndex(7)
-            self.timestretch_mode.setCurrentText('Soundtouch')
-            a_val = 7
-        else:
-            a_val = util.TIMESTRETCH_INDEXES[mode]
+        mode = self.timestretch_mode.currentIndex()
+        a_val = self.mode_indices[mode]
+        LOG.info(f'mode: {mode} a_val: {a_val}')
         if a_val == 0:
             self.hide_controls()
             self.pitch_shift.setValue(0.0)

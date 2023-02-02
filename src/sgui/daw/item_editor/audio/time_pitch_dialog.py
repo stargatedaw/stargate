@@ -33,7 +33,9 @@ class TimePitchDialogWidget(TimePitchDialogWidget):
 
         for f_item in shared.AUDIO_SEQ.audio_items:
             if f_item.isSelected():
-                f_new_ts_mode = self.timestretch_mode.currentIndex()
+                f_new_ts_mode = util.TIMESTRETCH_INDEXES[
+                    self.timestretch_mode.currentText()
+                ]
                 f_new_ts = round(self.timestretch_amt.value(), 6)
                 f_new_ps = round(self.pitch_shift.value(), 6)
                 if self.timestretch_amt_end_checkbox.isChecked():
