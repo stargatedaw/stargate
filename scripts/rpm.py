@@ -179,6 +179,7 @@ xdg-mime default stargate.desktop text/stargate.project || true
 %attr(755, root, root) %{{_usr}}/bin/{0}
 %attr(755, root, root) %{{_usr}}/bin/{0}-engine
 %attr(755, root, root) %{{_usr}}/bin/{0}-sbsms
+%attr(755, root, root) %{{_usr}}/bin/{0}-soundstretch
 %{{_usr}}/share/
 
 %doc
