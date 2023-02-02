@@ -44,9 +44,11 @@ class TimePitchDialogWidget(TimePitchDialogWidget):
         super().__init__(
             modes=[
                 'Rubberband',
-                'Rubberband(formants)',
+                'Rubberband (formants)',
                 'SBSMS',
                 'Paulstretch',
+                'Soundtouch',
+                'Soundtouch (speech)',
             ],
         )
         self.path = path
@@ -102,6 +104,14 @@ class TimePitchDialogWidget(TimePitchDialogWidget):
                 self.path,
                 f_file,
                 f_stretch,
+            )
+        elif mode in (7, 8):
+            f_proc = util.soundstretch(
+                self.path,
+                f_file,
+                f_stretch,
+                f_pitch,
+                mode == 8,
             )
         else:
             raise ValueError(f"Invalid algorithm {mode}")

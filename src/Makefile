@@ -7,16 +7,19 @@ WMAJOR := $(shell /mingw64/bin/jq -r .version.major meta.json 2>/dev/null)
 WMINOR := $(shell /mingw64/bin/jq -r .version.minor meta.json 2>/dev/null)
 DESTDIR ?=
 SG_DIR = $(DESTDIR)$(PREFIX)/share/$(MAJOR)
+CC ?= /usr/bin/cc
+CXX ?= /usr/bin/c++
 PIP ?= pip3
 BROWSER ?= firefox
 DOCKER ?= podman
 DOCKER_IMAGE ?= stargate-appimage-builder
+MINGW_PREFIX ?= /mingw64
 
 # --------------------------------------------------------------
 
 .PHONY: appimage
 
-all: sbsms distro
+all: sbsms soundtouch distro
 	# General purpose build, including dependencies
 
 appimage:
@@ -43,7 +46,7 @@ docker-image:
 
 clean: clean_pyc
 	rm -rf htmlcov/ .pytest_cache/ .eggs/ .coverage \
-		*.pyc *.egg-info build/ dist/
+		*.pyc *.egg-info build/ dist/ vendor/stargate-soundstretch
 	make -C engine clean
 	make -C vendor/sbsms clean
 
@@ -62,7 +65,7 @@ distro: commit_hash
 	# to provide and package: mido, pymarshal, SBSMS, python-wavefile
 	make -C engine
 
-install: install_distro install_sbsms install_py_vendor
+install: install_distro install_sbsms install_soundstretch install_py_vendor
 	# General purpose install for users
 
 install_distro: \
@@ -77,7 +80,8 @@ install_appimage: \
 	install_dirs \
 	install_engine \
 	install_files \
-	install_sbsms
+	install_sbsms \
+	install_soundstretch
 	# Install files and engine without the Python bits
 
 install_dirs:
@@ -107,12 +111,18 @@ install_sbsms:
 		vendor/sbsms/cli/sbsms \
 		$(DESTDIR)$(PREFIX)/bin/$(MAJOR)-sbsms
 
+install_soundstretch:
+	install -m 755 \
+		vendor/stargate-soundstretch \
+		$(DESTDIR)$(PREFIX)/bin/$(MAJOR)-soundstretch
+
 install_self_contained:
 	if [ "$(PREFIX)" == "/usr" ]; then exit 1; fi
 	# Install all files to a single directory
 	install -d $(DESTDIR)$(PREFIX)/engine
 	install -m 755 engine/stargate-engine* $(DESTDIR)$(PREFIX)/engine/
 	install -m 755 vendor/sbsms/cli/sbsms* $(DESTDIR)$(PREFIX)/engine/
+	install -m 755 vendor/stargate-soundstretch $(DESTDIR)$(PREFIX)/engine/
 	cp -r files meta.json scripts sg_py_vendor sglib sgui \
 		$(DESTDIR)$(PREFIX)
 
@@ -122,18 +132,22 @@ install_macos:
 lines-of-code:
 	./loc.sh
 
-macos: commit_hash
-	cp -f \
-		vendor/sbsms/cli/sbsms \
-		/usr/local/bin/rubberband \
-		engine/
+macos: commit_hash soundtouch
 	OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make sbsms
 	OPTIMIZE_FLAGS= CC=clang CC_ARGS= make -C engine macos
+	cp -f \
+		vendor/sbsms/cli/sbsms \
+		vendor/stargate-soundstretch \
+		/usr/local/bin/rubberband \
+		engine/
 	./macos/link.py --with-sbsms
 
-macos_arm: commit_hash
+macos_arm: commit_hash soundtouch
 	make -C engine macos_arm
-	cp -f /opt/homebrew/bin/rubberband engine/
+	cp -f \
+		/opt/homebrew/bin/rubberband \
+		vendor/stargate-soundstretch \
+		engine/
 	./macos/link.py
 
 mingw:
@@ -142,23 +156,25 @@ mingw:
 mingw_deps:
 	# vendor/sbsms/cli/sbsms.exe
 	cp \
-		 /mingw64/bin/libFLAC.dll \
-		 /mingw64/bin/libfftw3-3.dll \
-		 /mingw64/bin/libfftw3f-3.dll \
-		 /mingw64/bin/libgcc_s_seh-1.dll \
-		 /mingw64/bin/libogg-0.dll \
-		 /mingw64/bin/libopus-0.dll \
-		 /mingw64/bin/libportaudio.dll \
-		 /mingw64/bin/libportmidi.dll \
-		 /mingw64/bin/librubberband-2.dll \
-		 /mingw64/bin/libsamplerate-0.dll \
-		 /mingw64/bin/libsndfile-1.dll \
-		 /mingw64/bin/libssp-0.dll \
-		 /mingw64/bin/libstdc++-6.dll \
-		 /mingw64/bin/libwinpthread-1.dll \
-		 /mingw64/bin/libvorbis-0.dll \
-		 /mingw64/bin/libvorbisenc-2.dll \
-		 /mingw64/bin/rubberband.exe \
+		 $(MINGW_PREFIX)/bin/libFLAC.dll \
+		 $(MINGW_PREFIX)/bin/libfftw3-3.dll \
+		 $(MINGW_PREFIX)/bin/libfftw3f-3.dll \
+		 $(MINGW_PREFIX)/bin/libgcc_s_seh-1.dll \
+		 $(MINGW_PREFIX)/bin/libogg-0.dll \
+		 $(MINGW_PREFIX)/bin/libopus-0.dll \
+		 $(MINGW_PREFIX)/bin/libportaudio.dll \
+		 $(MINGW_PREFIX)/bin/libportmidi.dll \
+		 $(MINGW_PREFIX)/bin/librubberband-2.dll \
+		 $(MINGW_PREFIX)/bin/libsamplerate-0.dll \
+		 $(MINGW_PREFIX)/bin/libsndfile-1.dll \
+		 $(MINGW_PREFIX)/bin/libssp-0.dll \
+		 $(MINGW_PREFIX)/bin/libstdc++-6.dll \
+		 $(MINGW_PREFIX)/bin/libwinpthread-1.dll \
+		 $(MINGW_PREFIX)/bin/libvorbis-0.dll \
+		 $(MINGW_PREFIX)/bin/libvorbisenc-2.dll \
+		 $(MINGW_PREFIX)/bin/rubberband.exe \
+		 $(MINGW_PREFIX)/bin/soundstretch.exe \
+		 $(MINGW_PREFIX)/bin/libSoundTouch-1.dll \
 		 engine/
 	cp vendor/portaudio-binaries/libportaudio64bit.dll \
 		engine/libportaudio.dll \
@@ -181,6 +197,12 @@ sbsms:
 	cd vendor/sbsms && ( ./configure || ./configure --enable-sse=no ) && make
 	cd vendor/sbsms/cli && make
 
+soundtouch:
+	cd vendor/soundtouch && \
+		$(CXX) -Iinclude/ \
+		`find source/SoundTouch source/SoundStretch -name '*.cpp'` \
+		-o ../stargate-soundstretch
+
 tag_release:
 	git tag release-$(MINOR)
 
@@ -194,4 +216,3 @@ uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(MAJOR)*
 	rm -rf $(SG_DIR)
 	rm -rf $(DESTDOR)$(PREFIX)/share/*/stargate*
-

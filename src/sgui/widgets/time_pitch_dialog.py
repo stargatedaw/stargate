@@ -4,6 +4,7 @@ from sgui.sgqt import *
 from sglib import constants
 from sglib.lib import util
 from sglib.lib.translate import _
+from sglib.log import LOG
 
 
 class TimePitchDialogWidget:
@@ -262,7 +263,13 @@ class TimePitchDialogWidget:
             self.timestretch_amt_end_checkbox.setChecked(False)
             self.pitch_shift_end_checkbox.setChecked(False)
             self.crispness_combobox.setCurrentIndex(5)
-
+        elif a_val in (7, 8):  # Soundtouch
+            self.hide_controls(pitch=True, _time=True)
+            self.timestretch_amt_end_checkbox.setChecked(False)
+            self.pitch_shift_end_checkbox.setChecked(False)
+            self.crispness_combobox.setCurrentIndex(5)
+        else:
+            LOG.error(f'Invalid value: {a_val}')
 
     def ok_handler(self):
         raise NotImplementedError

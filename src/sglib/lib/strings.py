@@ -49,6 +49,14 @@ timestretch_modes = {
         'atmospheric sound.  Useful for creative reverb-like effects and '
         'soundscapes'
     ),
+    7: (
+        'A good timestretching algorithm for many types of materials. '
+        'Optimized for full pieces of music'
+    ),
+    8: (
+        'A good timestretching algorithm for many types of materials. '
+        'Optimized for speech'
+    ),
 }
 
 avconv_error = _(

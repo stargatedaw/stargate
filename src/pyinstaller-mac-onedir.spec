@@ -10,6 +10,7 @@ BINARIES = [
  ('engine/stargate-engine', 'engine'),
  ('engine/*.dylib', '.'),
  ('engine/rubberband', 'engine'),
+ ('engine/stargate-soundstretch', 'engine'),
 ]
 
 if ARCH == 'x86_64':

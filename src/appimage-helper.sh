@@ -11,11 +11,14 @@ make -C engine
 DESTDIR=/stargate/dist/squashfs-root PREFIX=/usr make \
 	install_dirs \
 	install_engine \
-	install_sbsms
+	install_sbsms \
+	install_soundstretch
 
 DESTDIR=/stargate/dist/squashfs-root PREFIX=/opt/python3.10 make \
 	install_dirs \
 	install_files
+
+cp -r sg_py_vendor /stargate/dist/squashfs-root/opt/python3.10/lib/python3.10/site-packages/
 
 export DESTDIR=/stargate/dist/squashfs-root
 export PREFIX=/usr

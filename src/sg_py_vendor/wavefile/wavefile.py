@@ -216,7 +216,7 @@ class WaveWriter(object) :
     def write(self, data) :
         channels, nframes = data.shape
         data = data.ravel('F')
-        assert channels == self._info.channels
+        assert channels == self._info.channels, (channels, self._info.channels)
         if data.dtype==np.float64 :
             return _lib.sf_writef_double(self._sndfile, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)), nframes)
         elif data.dtype==np.float32 :

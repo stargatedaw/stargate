@@ -11,7 +11,9 @@ import random
 import re
 import subprocess
 import sys
+import tempfile
 import time
+from sg_py_vendor import wavefile
 
 import psutil
 
@@ -37,12 +39,14 @@ SAMPLER_FILE_TYPE_EXT = '.sampler1'
 
 TIMESTRETCH_MODES = [
     "None",
-    "Pitch(affecting time)",
-    "Time(affecting pitch)",
+    "Pitch (affecting time)",
+    "Time (affecting pitch)",
     "Rubberband",
-    "Rubberband(formants)",
+    "Rubberband (formants)",
     "SBSMS",
     "Paulstretch",
+    'Soundtouch',
+    'Soundtouch (speech)',
 ]
 SBSMS = None
 
@@ -188,6 +192,10 @@ if IS_WINDOWS:
         ENGINE_DIR,
         "sbsms.exe",
     )
+    SOUNDSTRETCH = os.path.join(
+        ENGINE_DIR,
+        "soundstretch.exe",
+    )
     PAULSTRETCH_PATH = sys.executable
 elif IS_MACOS:
     if IS_LOCAL_DEVEL:
@@ -203,7 +211,13 @@ elif IS_MACOS:
             'cli',
             'sbsms',
         )
-        PAULSTRETCH_PATH = sys.argv[0]
+        SOUNDSTRETCH = os.path.join(
+            os.path.dirname(__file__),
+            '..',
+            '..',
+            'vendor',
+            'stargate-soundstretch',
+        )
     else:
         PAULSTRETCH_PATH = sys.executable
         RUBBERBAND_PATH = os.path.join(
@@ -214,9 +228,22 @@ elif IS_MACOS:
             ENGINE_DIR,
             "sbsms",
         )
+        SOUNDSTRETCH = os.path.join(
+            ENGINE_DIR,
+            "stargate-soundstretch",
+        )
 elif IS_LINUX:
-    # Prefer the vendored SBSMS
     RUBBERBAND_PATH = which("rubberband")
+    SOUNDSTRETCH = os.path.join(
+        os.path.dirname(__file__),
+        '..',
+        '..',
+        'vendor',
+        'stargate-soundstretch',
+    )
+    if not os.path.exists(SOUNDSTRETCH):
+        SOUNDSTRETCH = which("stargate-soundstretch")
+    # Prefer the vendored SBSMS
     SBSMS = os.path.join(
         os.path.dirname(__file__),
         '..',
@@ -418,6 +445,32 @@ def beats_to_index(a_beat, a_divisor=4.0):
     f_index = int(a_beat / a_divisor)
     f_start = a_beat - (float(f_index) * a_divisor)
     return f_index, round(f_start, 6)
+
+def soundstretch(
+    src_path,
+    dst_path,
+    time_stretch,
+    pitch_shift,
+    speech=False,
+):
+    ext = os.path.splitext(src_path)[1].lower()
+    if ext not in ('.wav', '.wave'):
+        with tempfile.NamedTemporaryFile() as t:
+            tmp = t.name + '.wav'
+        convert_to_wav(src_path, tmp)
+        src_path = tmp
+    rate = ((1.0 / time_stretch) - 1.0) * 100.
+    cmd = [
+        SOUNDSTRETCH,
+        src_path,
+        dst_path,
+        f'-rate={rate}',
+        f'-pitch={pitch_shift}',
+    ]
+    if speech:
+        cmd.append('-speech')
+    return subprocess.Popen(cmd, encoding='UTF-8')
+
 
 def rubberband(
     a_src_path,
@@ -841,4 +894,12 @@ def resolve_symlinks(path: str, max_depth=20) -> str:
     if os.path.islink(path):
         raise RecursionError(path)
     return path
+
+def convert_to_wav(src_path: str, dst_path: str):
+    """ Convert an AIF, FLAC, etc... file to a wav.  Supports any format
+        supported by libsndfile
+    """
+    sr, arr = wavefile.load(src_path)
+    with wavefile.WaveWriter(dst_path, sr, arr.shape[0]) as f:
+        f.write(arr)
 

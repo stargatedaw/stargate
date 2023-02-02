@@ -12,6 +12,7 @@ is implemented with some helper methods.
 Requires numpy and ctypes. Tested under windows only.
 """
 
+import os
 import sys
 import ctypes as ct
 import numpy as np
@@ -33,8 +34,20 @@ try:
     #does the user already have libsamplerate installed?
     if sys.platform == 'win32' :
         dllPath = find_library(dllName)
+        # Stargate hack to locate development folder of dlls
+        if dllPath is None:
+            dllPath = os.path.abspath(
+                os.path.join(
+                    os.path.dirname(__file__),
+                    '..',
+                    '..',
+                    'engine',
+                    'libsndfile-1.dll',
+                ),
+            )
     else :
         dllPath = dllName
+    print(dllPath)
     _lib = ct.CDLL(dllPath)
 except:
     try:

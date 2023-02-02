@@ -11,7 +11,7 @@ class SgAudioItem:
         a_sample_end=1000.0,
         a_start_bar=0,
         a_start_beat=0.0,
-        a_timestretch_mode=3,
+        a_timestretch_mode=7,
         a_pitch_shift=0.0,
         a_output_track=0,
         a_vol=0.0,

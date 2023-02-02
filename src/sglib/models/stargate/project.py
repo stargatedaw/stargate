@@ -20,6 +20,7 @@ import json
 import os
 import shutil
 import tarfile
+import tempfile
 
 
 folder_audio_root = 'audio'
@@ -360,6 +361,23 @@ class SgProject(AbstractProject):
                     f_src_path,
                     f_dest_path,
                 ]
+            elif a_audio_item.time_stretch_mode in (7, 8):
+                ext = os.path.splitext(f_src_path)[1].lower()
+                if ext not in ('.wav', '.wave'):
+                    with tempfile.NamedTemporaryFile() as t:
+                        tmp = t.name + '.wav'
+                    convert_to_wav(f_src_path, tmp)
+                    f_src_path = tmp
+                _rate = ((1. / a_audio_item.timestretch_amt) - 1.0) * 100.
+                f_cmd = [
+                    SOUNDSTRETCH,
+                    f_src_path,
+                    f_dest_path,
+                    f'-pitch={a_audio_item.pitch_shift}',
+                    f'-rate={_rate}',
+                ]
+                if a_audio_item.time_stretch_mode == 8:
+                    f_cmd.append('-speech')
 
             self.timestretch_cache[f_key] = f_uid
             self.timestretch_reverse_lookup[f_dest_path] = f_src_path
