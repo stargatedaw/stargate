@@ -199,7 +199,7 @@ sbsms:
 
 soundtouch:
 	cd vendor/soundtouch && \
-		$(CXX) -Iinclude/ \
+		$(CXX) -std=c++11 -Iinclude/ \
 		`find source/SoundTouch source/SoundStretch -name '*.cpp'` \
 		-o ../stargate-soundstretch
 
