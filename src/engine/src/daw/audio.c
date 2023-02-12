@@ -131,13 +131,14 @@ void v_daw_reset_audio_item_read_heads(
 
     int f_i;
     int f_i2;
-    SGFLT f_sr = STARGATE->thread_storage[0].sample_rate;
+    SGFLT sr;
     t_audio_item * f_audio_item;
     SGFLT f_tempo = self->ts[0].tempo;
 
     for(f_i = 0; f_i < MAX_AUDIO_ITEM_COUNT; ++f_i){
         if(f_audio_items->items[f_i]){
             f_audio_item = f_audio_items->items[f_i];
+            sr = f_audio_item->audio_pool_item->sample_rate;
             double f_start_beat = a_start_offset - f_audio_item->start_beat;
 
             // TODO: This has bugs when tempo changes happen during the
@@ -146,14 +147,14 @@ void v_daw_reset_audio_item_read_heads(
                 f_audio_item->sample_end_offset -
                     f_audio_item->sample_start_offset,
                 f_tempo,
-                f_sr
+                sr
             );
 
             if(f_start_beat < f_end_beat){
                 int f_sample_start = i_beat_count_to_samples(
                     f_start_beat,
                     f_tempo,
-                    f_sr
+                    sr
                 );
 
                 if(f_sample_start < 0){
