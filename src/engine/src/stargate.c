@@ -327,6 +327,7 @@ void g_stargate_get(
     for(f_i = 0; f_i < MAX_WORKER_THREADS; ++f_i){
         ts = &STARGATE->thread_storage[f_i];
         ts->sample_rate = a_sr;
+        ts->sr_recip = 1.0 / a_sr;
         ts->five_ms = (int)(a_sr * 0.005);
         ts->five_ms_recip = 1. / (SGFLT)ts->five_ms;
         ts->current_host = SG_HOST_DAW;
@@ -802,10 +803,26 @@ double f_bpm_to_seconds_per_beat(double a_tempo){
 double f_samples_to_beat_count(
     int a_sample_count,
     double a_tempo,
-    SGFLT a_sr
+    SGFLT sr_recip
 ){
+    if(a_sample_count <= 0){
+        return 0.0;
+    }
     double f_seconds_per_beat = f_bpm_to_seconds_per_beat(a_tempo);
-    double f_seconds = (double)(a_sample_count) / a_sr;
+    double f_seconds = (double)(a_sample_count) * sr_recip;
+    return f_seconds / f_seconds_per_beat;
+}
+
+double f_samples_to_beat_count_sr(
+    int a_sample_count,
+    double a_tempo,
+    SGFLT sr
+){
+    if(a_sample_count <= 0){
+        return 0.0;
+    }
+    double f_seconds_per_beat = f_bpm_to_seconds_per_beat(a_tempo);
+    double f_seconds = (double)(a_sample_count) / sr;
     return f_seconds / f_seconds_per_beat;
 }
 
@@ -814,6 +831,9 @@ int i_beat_count_to_samples(
     SGFLT a_tempo,
     SGFLT a_sr
 ){
+    if(a_beat_count <= 0.0){
+        return 0;
+    }
     double f_seconds = f_bpm_to_seconds_per_beat(a_tempo) * a_beat_count;
     return (int)(f_seconds * a_sr);
 }
@@ -944,7 +964,8 @@ void v_sample_period_set_atm_events(
             f_samples_to_beat_count(
                 self->atm_ticks[self->atm_tick_count].sample + 1, // round up
                 a_event_list->tempo,
-                STARGATE->thread_storage[0].sample_rate);
+                STARGATE->thread_storage[0].sr_recip
+            );
         // BUG:  This doesn't quite line up... the result can be off by one
         self->atm_ticks[self->atm_tick_count].tick =
             (int)((self->atm_ticks[self->atm_tick_count].beat /

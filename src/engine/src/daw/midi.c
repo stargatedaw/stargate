@@ -227,6 +227,7 @@ void v_daw_process_external_midi(
     }
 
     SGFLT f_sample_rate = STARGATE->thread_storage[a_thread_num].sample_rate;
+    SGFLT sr_recip = STARGATE->thread_storage[a_thread_num].sr_recip;
     int f_playback_mode = STARGATE->playback_mode;
     int f_midi_learn = STARGATE->midi_learn;
     SGFLT f_tempo = self->ts[0].tempo;
@@ -264,7 +265,7 @@ void v_daw_process_external_midi(
                     f_samples_to_beat_count(
                         events[f_i2].tick,
                         f_tempo,
-                        f_sample_rate
+                        sr_recip
                     );
 
                 sg_snprintf(
@@ -295,7 +296,7 @@ void v_daw_process_external_midi(
                     f_samples_to_beat_count(
                         events[f_i2].tick,
                         f_tempo,
-                        f_sample_rate
+                        sr_recip
                     );
 
                 sg_snprintf(
@@ -324,7 +325,7 @@ void v_daw_process_external_midi(
                     f_samples_to_beat_count(
                         events[f_i2].tick,
                         f_tempo,
-                        f_sample_rate
+                        sr_recip
                     );
 
                 sg_snprintf(
@@ -360,7 +361,7 @@ void v_daw_process_external_midi(
                     f_samples_to_beat_count(
                         events[f_i2].tick,
                         f_tempo,
-                        f_sample_rate
+                        sr_recip
                     );
 
                 sg_snprintf(

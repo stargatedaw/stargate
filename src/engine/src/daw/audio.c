@@ -143,7 +143,7 @@ void v_daw_reset_audio_item_read_heads(
 
             // TODO: This has bugs when tempo changes happen during the
             // audio item
-            double f_end_beat = f_start_beat + f_samples_to_beat_count(
+            double f_end_beat = f_start_beat + f_samples_to_beat_count_sr(
                 f_audio_item->sample_end_offset -
                     f_audio_item->sample_start_offset,
                 f_tempo,

@@ -141,6 +141,7 @@ void sg_snprintf(
 typedef struct {
     char padding1[CACHE_LINE_SIZE];
     SGFLT sample_rate;
+    SGFLT sr_recip;
     int current_host;
     int five_ms;  // Standard 5ms audio fade out, in samples
     SGFLT five_ms_recip;

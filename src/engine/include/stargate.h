@@ -417,7 +417,12 @@ int i_beat_count_to_samples(
 double f_samples_to_beat_count(
     int a_sample_count,
     double a_tempo,
-    SGFLT a_sr
+    SGFLT sr_recip
+);
+double f_samples_to_beat_count_sr(
+    int a_sample_count,
+    double a_tempo,
+    SGFLT sr
 );
 double f_bpm_to_seconds_per_beat(double a_tempo);
 void v_set_control_from_cc(
