@@ -101,7 +101,7 @@ def show(event):
         select_sequence.setToolTip(
             'Select all items in the current region'
         )
-        select_sequence.triggered.connect(select_sequence_items)
+        select_sequence.triggered.connect(select_region_items)
 
         copy_sequence_action = QAction(_("Copy Region"), menu)
         menu.addAction(copy_sequence_action)
@@ -119,6 +119,70 @@ def show(event):
                 'after the selected beat'
             )
             insert_region_action.triggered.connect(insert_region)
+
+        menu.addSeparator()
+        select_menu = menu.addMenu('Select')
+
+        select_all_action = QAction(
+            "All items",
+            select_menu,
+        )
+        select_all_action.setToolTip(
+            "Select all items"
+        )
+        select_all_action.triggered.connect(select_all)
+        select_menu.addAction(select_all_action)
+
+        select_menu.addSeparator()
+
+        select_start_right_action = QAction(
+            "All items starting to the right",
+            select_menu,
+        )
+        select_start_right_action.setToolTip(
+            "Select all items that start to the right of this beat.  "
+            "If an item starts to the left of this beat and ends after, "
+            "it will not be selected"
+        )
+        select_start_right_action.triggered.connect(select_start_right)
+        select_menu.addAction(select_start_right_action)
+
+        select_end_right_action = QAction(
+            "All items ending to the right",
+            select_menu,
+        )
+        select_end_right_action.setToolTip(
+            "Select all items that end to the right of this beat.  "
+            "If an item starts to the left of this beat and ends after, "
+            "it will also be selected"
+        )
+        select_end_right_action.triggered.connect(select_end_right)
+        select_menu.addAction(select_end_right_action)
+
+        select_start_left_action = QAction(
+            "All items starting to the left",
+            select_menu,
+        )
+        select_start_left_action.setToolTip(
+            "Select all items that start to the left of this beat.  "
+            "If an item starts to the left of this beat and ends after, "
+            "it will also be selected"
+        )
+        select_start_left_action.triggered.connect(select_start_left)
+        select_menu.addAction(select_start_left_action)
+
+        select_end_left_action = QAction(
+            "All items ending to the left",
+            select_menu,
+        )
+        select_end_left_action.setToolTip(
+            "Select all items that end before the left of this beat.  "
+            "If an item starts to the left of this beat and ends after, "
+            "it will not be selected"
+        )
+        select_end_left_action.triggered.connect(select_end_left)
+        select_menu.addAction(select_end_left_action)
+
 
     x = shared.SEQUENCER.header_event_pos * _shared.SEQUENCER_PX_PER_BEAT
     pos_line = QGraphicsLineItem(
@@ -487,7 +551,7 @@ def copy_sequence():
     region_length = sequence_end - sequence_start
     item_list = [
         x.audio_item.clone()
-        for x in shared.SEQUENCER.get_sequence_items()
+        for x in shared.SEQUENCER.get_region_items()
     ]
     atm_list = shared.ATM_SEQUENCE.copy_range_all(
         sequence_start,
@@ -532,6 +596,27 @@ def insert_region():
     constants.DAW_PROJECT.commit(_("Insert sequence"))
     shared.SEQ_WIDGET.open_sequence()
 
-def select_sequence_items():
-    shared.SEQUENCER.select_sequence_items()
+def select_region_items():
+    shared.SEQUENCER.select_region_items()
     shared.SEQUENCER.scene.removeItem(POS_LINE)
+
+def select_all():
+    shared.SEQUENCER.select_all()
+    shared.SEQUENCER.scene.removeItem(POS_LINE)
+
+def select_start_right():
+    shared.SEQUENCER.select_start_right()
+    shared.SEQUENCER.scene.removeItem(POS_LINE)
+
+def select_end_right():
+    shared.SEQUENCER.select_end_right()
+    shared.SEQUENCER.scene.removeItem(POS_LINE)
+
+def select_start_left():
+    shared.SEQUENCER.select_start_left()
+    shared.SEQUENCER.scene.removeItem(POS_LINE)
+
+def select_end_left():
+    shared.SEQUENCER.select_end_left()
+    shared.SEQUENCER.scene.removeItem(POS_LINE)
+

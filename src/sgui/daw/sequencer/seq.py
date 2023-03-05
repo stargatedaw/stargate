@@ -1018,7 +1018,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
             for f_num in self.text_list:
                 f_num.setVisible(True)
 
-    def get_sequence_items(self):
+    def get_region_items(self):
         f_sequence_start = shared.CURRENT_SEQUENCE.loop_marker.start_beat
         f_sequence_end = shared.CURRENT_SEQUENCE.loop_marker.beat
         f_result = []
@@ -1031,11 +1031,55 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                 f_result.append(f_item)
         return f_result
 
-    def select_sequence_items(self):
+    def select_region_items(self):
         self.scene.clearSelection()
-        for f_item in self.get_sequence_items():
+        for f_item in self.get_region_items():
             f_item.setSelected(True)
         self.set_selected_strings()
+
+    def select_all(self):
+        for item in self.audio_items:
+            item.setSelected(True)
+
+    def select_start_right(self):
+        for item in self.audio_items:
+            seq_item = item.audio_item
+            start = seq_item.start_beat
+            if start >= self.header_event_pos:
+                item.setSelected(True)
+            else:
+                item.setSelected(False)
+
+    def select_end_right(self):
+        for item in self.audio_items:
+            seq_item = item.audio_item
+            start = seq_item.start_beat
+            end = start + seq_item.length_beats
+            if end >= self.header_event_pos:
+                item.setSelected(True)
+            else:
+                item.setSelected(False)
+
+    def select_start_left(self):
+        beat = self.header_event_pos
+        for item in self.audio_items:
+            seq_item = item.audio_item
+            start = seq_item.start_beat
+            if start <= self.header_event_pos:
+                item.setSelected(True)
+            else:
+                item.setSelected(False)
+
+    def select_end_left(self):
+        beat = self.header_event_pos
+        for item in self.audio_items:
+            seq_item = item.audio_item
+            start = seq_item.start_beat
+            end = start + seq_item.length_beats
+            if end <= self.header_event_pos:
+                item.setSelected(True)
+            else:
+                item.setSelected(False)
 
     def get_loop_pos(self, a_warn=True):
         if self.loop_start is None:
