@@ -1124,6 +1124,9 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
         self.scene.addItem(self.header)
         text_item = None
 
+        last_tsig = None
+        start_num = 1
+
         for f_marker in shared.CURRENT_SEQUENCE.get_markers():
             if f_marker.type == 1:  # Loop/Region
                 self.loop_start = f_marker.start_beat
@@ -1198,7 +1201,12 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                 item.mousePressEvent = header_context_menu.TempoMarkerEvent(
                     f_marker.beat,
                 ).mouse_press
-                self.draw_sequence(f_marker)
+                tsig = (f_marker.tsig_num, f_marker.tsig_den)
+                if tsig != last_tsig:
+                    start_num = 1
+                    last_tsig = tsig
+                self.draw_sequence(f_marker, start_num)
+                start_num += f_marker.length
             elif f_marker.type == 3:  # Text
                 f_item = get_font().QGraphicsSimpleTextItem(
                     f_marker.text,
@@ -1241,7 +1249,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
         self.check_line_count()
         self.set_header_y_pos()
 
-    def draw_sequence(self, a_marker):
+    def draw_sequence(self, a_marker, start_num: int):
         f_sequence_length = get_current_sequence_length()
         f_size = _shared.SEQUENCER_PX_PER_BEAT * f_sequence_length
         bar_pen = QPen(
@@ -1276,8 +1284,8 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
             theme.SYSTEM_COLORS.daw.seq_header_text,
         )
 
-        for i in range(int(a_marker.length)):
-            if i % a_marker.tsig_num == 0:
+        for i in range(start_num, start_num + int(a_marker.length)):
+            if i % a_marker.tsig_num == 1:
                 f_number = get_font().QGraphicsSimpleTextItem(
                     str((i // a_marker.tsig_num) + 1),
                     self.header,
@@ -1293,7 +1301,8 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                         i3,
                         0.0,
                         i3,
-                        f_total_height, bar_pen,
+                        f_total_height,
+                        bar_pen,
                     )
                 f_number.setPos(i3 + 3.0, 2)
                 if (
@@ -1343,15 +1352,17 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
             bar_pen,
         )
         for i2 in range(_shared.SEQUENCE_EDITOR_TRACK_COUNT):
-            f_y = (shared.SEQUENCE_EDITOR_TRACK_HEIGHT *
-                (i2 + 1)) + _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
-            self.scene.addLine(
+            f_y = (
+                shared.SEQUENCE_EDITOR_TRACK_HEIGHT * (i2 + 1)
+            ) + _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
+            line = self.scene.addLine(
                 f_x_offset,
                 f_y,
                 f_size,
                 f_y,
                 track_pen,
             )
+            line.setZValue(1000.0)
 
     def clear_drawn_items(self):
         self.reset_line_lists()
