@@ -1055,7 +1055,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
             seq_item = item.audio_item
             start = seq_item.start_beat
             end = start + seq_item.length_beats
-            if end >= self.header_event_pos:
+            if end > self.header_event_pos:
                 item.setSelected(True)
             else:
                 item.setSelected(False)
@@ -1065,7 +1065,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
         for item in self.audio_items:
             seq_item = item.audio_item
             start = seq_item.start_beat
-            if start <= self.header_event_pos:
+            if start < self.header_event_pos:
                 item.setSelected(True)
             else:
                 item.setSelected(False)

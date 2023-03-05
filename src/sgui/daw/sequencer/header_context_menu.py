@@ -27,8 +27,11 @@ def show(event):
         qt_event_pos(event).x() / _shared.SEQUENCER_PX_PER_BEAT
     )
     menu = QMenu(shared.MAIN_WINDOW)
-    marker_action = QAction(_("Text Marker..."), menu)
-    menu.addAction(marker_action)
+
+    marker_menu = menu.addMenu('Markers')
+
+    marker_action = QAction(_("Text Marker..."), marker_menu)
+    marker_menu.addAction(marker_action)
     marker_action.setToolTip(
         'Set a text marker.  Text markers display arbitrary text at a '
         'specific position on the timeline.  Use for noting events in '
@@ -36,8 +39,8 @@ def show(event):
     )
     marker_action.triggered.connect(header_marker_modify)
 
-    time_modify_action = QAction(_("Time/Tempo Marker..."), menu)
-    menu.addAction(time_modify_action)
+    time_modify_action = QAction(_("Time/Tempo Marker..."), marker_menu)
+    marker_menu.addAction(time_modify_action)
     time_modify_action.setToolTip(
         'Set a time signature and tempo marker.  This is how tempo is '
         'controlled in Stargate, and will affect how beat numbers are '
@@ -45,8 +48,8 @@ def show(event):
     )
     time_modify_action.triggered.connect(header_time_modify)
 
-    time_range_action = QAction(_("Tempo Range..."), menu)
-    menu.addAction(time_range_action)
+    time_range_action = QAction(_("Tempo Range..."), marker_menu)
+    marker_menu.addAction(time_range_action)
     time_range_action.setToolTip(
         'Open a dialog to set a tempo range.  This will create a smooth '
         'change in tempo from the start region marker to the end region '
@@ -54,33 +57,23 @@ def show(event):
     )
     time_range_action.triggered.connect(header_time_range)
 
-    menu.addSeparator()
-
-    set_first_beat_action = QAction("Set as first beat of song", menu)
-    menu.addAction(set_first_beat_action)
-    set_first_beat_action.setToolTip(
-        "Move all items so that this beat is the first beat of the song.  "
-        'use to add or remove space from the beginning of the song'
-    )
-    set_first_beat_action.triggered.connect(set_first_beat)
-
-    menu.addSeparator()
+    marker_menu.addSeparator()
 
     clear_tempo_range_action = QAction(
         _("Clear Time/Tempo Markers in Region"),
-        menu,
+        marker_menu,
     )
-    menu.addAction(clear_tempo_range_action)
+    marker_menu.addAction(clear_tempo_range_action)
     clear_tempo_range_action.setToolTip(
         'Delete all tempo markers in the current region.  The tempo marker '
         'on the first beat of the song cannot be deleted, only edited'
     )
     clear_tempo_range_action.triggered.connect(header_tempo_clear)
 
-    menu.addSeparator()
+    region_menu = menu.addMenu('Region')
 
-    loop_start_action = QAction(_("Set Region Start"), menu)
-    menu.addAction(loop_start_action)
+    loop_start_action = QAction(_("Set Region Start"), region_menu)
+    region_menu.addAction(loop_start_action)
     loop_start_action.setToolTip(
         'Set the region start.  This is used for looping, offline rendering '
         'to an audio file, and many editing actions'
@@ -88,23 +81,23 @@ def show(event):
     loop_start_action.triggered.connect(header_loop_start)
 
     if shared.CURRENT_SEQUENCE.loop_marker:
-        loop_end_action = QAction(_("Set Region End"), menu)
-        menu.addAction(loop_end_action)
+        loop_end_action = QAction(_("Set Region End"), region_menu)
+        region_menu.addAction(loop_end_action)
         loop_end_action.setToolTip(
             'Set the region end.  This is used for looping, offline '
             'rendering to an audio file, and many editing actions'
         )
         loop_end_action.triggered.connect(header_loop_end)
 
-        select_sequence = QAction(_("Select Items in Region"), menu)
-        menu.addAction(select_sequence)
-        select_sequence.setToolTip(
+        select_region = QAction(_("Select Items in Region"), region_menu)
+        region_menu.addAction(select_region)
+        select_region.setToolTip(
             'Select all items in the current region'
         )
-        select_sequence.triggered.connect(select_region_items)
+        select_region.triggered.connect(select_region_items)
 
-        copy_sequence_action = QAction(_("Copy Region"), menu)
-        menu.addAction(copy_sequence_action)
+        copy_sequence_action = QAction(_("Copy Region"), region_menu)
+        region_menu.addAction(copy_sequence_action)
         copy_sequence_action.setToolTip(
             'Copy all items and automation in this region.  To be used with '
             'the "Insert Region" action'
@@ -112,76 +105,88 @@ def show(event):
         copy_sequence_action.triggered.connect(copy_sequence)
 
         if shared.SEQUENCER.sequence_clipboard:
-            insert_region_action = QAction(_("Insert Region"), menu)
-            menu.addAction(insert_region_action)
+            insert_region_action = QAction(_("Insert Region"), region_menu)
+            region_menu.addAction(insert_region_action)
             insert_region_action.setToolTip(
                 'Insert a region copied with "Copy Region", moving any items '
                 'after the selected beat'
             )
             insert_region_action.triggered.connect(insert_region)
 
-        menu.addSeparator()
-        select_menu = menu.addMenu('Select')
+    items_menu = menu.addMenu('Items')
 
-        select_all_action = QAction(
-            "All items",
-            select_menu,
-        )
-        select_all_action.setToolTip(
-            "Select all items"
-        )
-        select_all_action.triggered.connect(select_all)
-        select_menu.addAction(select_all_action)
+    set_first_beat_action = QAction(
+        "Set as first beat of song",
+        items_menu,
+    )
+    items_menu.addAction(set_first_beat_action)
+    set_first_beat_action.setToolTip(
+        "Move all items so that this beat is the first beat of the song.  "
+        'use to add or remove space from the beginning of the song'
+    )
+    set_first_beat_action.triggered.connect(set_first_beat)
 
-        select_menu.addSeparator()
+    items_menu.addSeparator()
 
-        select_start_right_action = QAction(
-            "All items starting to the right",
-            select_menu,
-        )
-        select_start_right_action.setToolTip(
-            "Select all items that start to the right of this beat.  "
-            "If an item starts to the left of this beat and ends after, "
-            "it will not be selected"
-        )
-        select_start_right_action.triggered.connect(select_start_right)
-        select_menu.addAction(select_start_right_action)
+    select_all_action = QAction(
+        "Select all items",
+        items_menu,
+    )
+    select_all_action.setToolTip(
+        "Select all items"
+    )
+    select_all_action.triggered.connect(select_all)
+    items_menu.addAction(select_all_action)
 
-        select_end_right_action = QAction(
-            "All items ending to the right",
-            select_menu,
-        )
-        select_end_right_action.setToolTip(
-            "Select all items that end to the right of this beat.  "
-            "If an item starts to the left of this beat and ends after, "
-            "it will also be selected"
-        )
-        select_end_right_action.triggered.connect(select_end_right)
-        select_menu.addAction(select_end_right_action)
+    items_menu.addSeparator()
 
-        select_start_left_action = QAction(
-            "All items starting to the left",
-            select_menu,
-        )
-        select_start_left_action.setToolTip(
-            "Select all items that start to the left of this beat.  "
-            "If an item starts to the left of this beat and ends after, "
-            "it will also be selected"
-        )
-        select_start_left_action.triggered.connect(select_start_left)
-        select_menu.addAction(select_start_left_action)
+    select_start_right_action = QAction(
+        "Select all items starting to the right",
+        items_menu,
+    )
+    select_start_right_action.setToolTip(
+        "Select all items that start to the right of this beat.  "
+        "If an item starts to the left of this beat and ends after, "
+        "it will not be selected"
+    )
+    select_start_right_action.triggered.connect(select_start_right)
+    items_menu.addAction(select_start_right_action)
 
-        select_end_left_action = QAction(
-            "All items ending to the left",
-            select_menu,
-        )
-        select_end_left_action.setToolTip(
-            "Select all items that end before the left of this beat.  "
-            "If an item starts to the left of this beat and ends after, "
-            "it will not be selected"
-        )
-        select_end_left_action.triggered.connect(select_end_left)
-        select_menu.addAction(select_end_left_action)
+    select_end_right_action = QAction(
+        "Select all items ending to the right",
+        items_menu,
+    )
+    select_end_right_action.setToolTip(
+        "Select all items that end to the right of this beat.  "
+        "If an item starts to the left of this beat and ends after, "
+        "it will also be selected"
+    )
+    select_end_right_action.triggered.connect(select_end_right)
+    items_menu.addAction(select_end_right_action)
+
+    select_start_left_action = QAction(
+        "Select all items starting to the left",
+        items_menu,
+    )
+    select_start_left_action.setToolTip(
+        "Select all items that start to the left of this beat.  "
+        "If an item starts to the left of this beat and ends after, "
+        "it will also be selected"
+    )
+    select_start_left_action.triggered.connect(select_start_left)
+    items_menu.addAction(select_start_left_action)
+
+    select_end_left_action = QAction(
+        "Select all items ending to the left",
+        items_menu,
+    )
+    select_end_left_action.setToolTip(
+        "Select all items that end before the left of this beat.  "
+        "If an item starts to the left of this beat and ends after, "
+        "it will not be selected"
+    )
+    select_end_left_action.triggered.connect(select_end_left)
+    items_menu.addAction(select_end_left_action)
 
 
     x = shared.SEQUENCER.header_event_pos * _shared.SEQUENCER_PX_PER_BEAT
