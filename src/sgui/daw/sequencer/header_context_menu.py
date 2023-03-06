@@ -30,6 +30,40 @@ def show(event):
 
     marker_menu = menu.addMenu('Markers')
 
+    time_modify_action = QAction(_("Time/Tempo Marker..."), marker_menu)
+    marker_menu.addAction(time_modify_action)
+    time_modify_action.setToolTip(
+        'Set a time signature and tempo marker.  This is how tempo is '
+        'controlled in Stargate, and will affect how beat numbers are '
+        'displayed if the time signature changes.'
+    )
+    time_modify_action.triggered.connect(header_time_modify)
+
+    if shared.CURRENT_SEQUENCE.loop_marker:
+        time_range_action = QAction(_("Tempo Range in Region..."), marker_menu)
+        marker_menu.addAction(time_range_action)
+        time_range_action.setToolTip(
+            'Open a dialog to set a tempo range.  This will create a smooth '
+            'change in tempo from the start region marker to the end region '
+            'marker'
+        )
+        time_range_action.triggered.connect(header_time_range)
+
+        marker_menu.addSeparator()
+
+        clear_tempo_range_action = QAction(
+            _("Clear Time/Tempo Markers in Region"),
+            marker_menu,
+        )
+        marker_menu.addAction(clear_tempo_range_action)
+        clear_tempo_range_action.setToolTip(
+            'Delete all tempo markers in the current region.  The tempo marker '
+            'on the first beat of the song cannot be deleted, only edited'
+        )
+        clear_tempo_range_action.triggered.connect(header_tempo_clear)
+
+        marker_menu.addSeparator()
+
     marker_action = QAction(_("Text Marker..."), marker_menu)
     marker_menu.addAction(marker_action)
     marker_action.setToolTip(
@@ -38,37 +72,6 @@ def show(event):
         'the song'
     )
     marker_action.triggered.connect(header_marker_modify)
-
-    time_modify_action = QAction(_("Time/Tempo Marker..."), marker_menu)
-    marker_menu.addAction(time_modify_action)
-    time_modify_action.setToolTip(
-        'Set a time signature and tempo marker.  This is how tempo is '
-        'controlled in Stargate, and will affect how beat numbers are '
-        'displayed'
-    )
-    time_modify_action.triggered.connect(header_time_modify)
-
-    time_range_action = QAction(_("Tempo Range..."), marker_menu)
-    marker_menu.addAction(time_range_action)
-    time_range_action.setToolTip(
-        'Open a dialog to set a tempo range.  This will create a smooth '
-        'change in tempo from the start region marker to the end region '
-        'marker'
-    )
-    time_range_action.triggered.connect(header_time_range)
-
-    marker_menu.addSeparator()
-
-    clear_tempo_range_action = QAction(
-        _("Clear Time/Tempo Markers in Region"),
-        marker_menu,
-    )
-    marker_menu.addAction(clear_tempo_range_action)
-    clear_tempo_range_action.setToolTip(
-        'Delete all tempo markers in the current region.  The tempo marker '
-        'on the first beat of the song cannot be deleted, only edited'
-    )
-    clear_tempo_range_action.triggered.connect(header_tempo_clear)
 
     region_menu = menu.addMenu('Region')
 
@@ -88,13 +91,6 @@ def show(event):
             'rendering to an audio file, and many editing actions'
         )
         loop_end_action.triggered.connect(header_loop_end)
-
-        select_region = QAction(_("Select Items in Region"), region_menu)
-        region_menu.addAction(select_region)
-        select_region.setToolTip(
-            'Select all items in the current region'
-        )
-        select_region.triggered.connect(select_region_items)
 
         copy_sequence_action = QAction(_("Copy Region"), region_menu)
         region_menu.addAction(copy_sequence_action)
@@ -116,7 +112,7 @@ def show(event):
     items_menu = menu.addMenu('Items')
 
     set_first_beat_action = QAction(
-        "Set as first beat of song",
+        "Set as First Beat of Song",
         items_menu,
     )
     items_menu.addAction(set_first_beat_action)
@@ -129,7 +125,7 @@ def show(event):
     items_menu.addSeparator()
 
     select_all_action = QAction(
-        "Select all items",
+        "Select All Items",
         items_menu,
     )
     select_all_action.setToolTip(
@@ -138,10 +134,18 @@ def show(event):
     select_all_action.triggered.connect(select_all)
     items_menu.addAction(select_all_action)
 
+    if shared.CURRENT_SEQUENCE.loop_marker:
+        select_region = QAction(_("Select Items in Region"), items_menu)
+        items_menu.addAction(select_region)
+        select_region.setToolTip(
+            'Select all items in the current region'
+        )
+        select_region.triggered.connect(select_region_items)
+
     items_menu.addSeparator()
 
     select_start_right_action = QAction(
-        "Select all items starting to the right",
+        "Select All Items Starting to the Right",
         items_menu,
     )
     select_start_right_action.setToolTip(
@@ -153,7 +157,7 @@ def show(event):
     items_menu.addAction(select_start_right_action)
 
     select_end_right_action = QAction(
-        "Select all items ending to the right",
+        "Select All Items Ending to the Right",
         items_menu,
     )
     select_end_right_action.setToolTip(
@@ -165,7 +169,7 @@ def show(event):
     items_menu.addAction(select_end_right_action)
 
     select_start_left_action = QAction(
-        "Select all items starting to the left",
+        "Select All Items Starting to the Left",
         items_menu,
     )
     select_start_left_action.setToolTip(
@@ -177,7 +181,7 @@ def show(event):
     items_menu.addAction(select_start_left_action)
 
     select_end_left_action = QAction(
-        "Select all items ending to the left",
+        "Select All Items Ending to the Left",
         items_menu,
     )
     select_end_left_action.setToolTip(
