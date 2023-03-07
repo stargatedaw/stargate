@@ -1040,6 +1040,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
     def select_all(self):
         for item in self.audio_items:
             item.setSelected(True)
+        self.set_selected_strings()
 
     def select_start_right(self):
         for item in self.audio_items:
@@ -1049,6 +1050,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                 item.setSelected(True)
             else:
                 item.setSelected(False)
+        self.set_selected_strings()
 
     def select_end_right(self):
         for item in self.audio_items:
@@ -1059,6 +1061,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                 item.setSelected(True)
             else:
                 item.setSelected(False)
+        self.set_selected_strings()
 
     def select_start_left(self):
         beat = self.header_event_pos
@@ -1069,6 +1072,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                 item.setSelected(True)
             else:
                 item.setSelected(False)
+        self.set_selected_strings()
 
     def select_end_left(self):
         beat = self.header_event_pos
@@ -1080,6 +1084,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                 item.setSelected(True)
             else:
                 item.setSelected(False)
+        self.set_selected_strings()
 
     def get_loop_pos(self, a_warn=True):
         if self.loop_start is None:
