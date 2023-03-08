@@ -122,6 +122,31 @@ def show(event):
     )
     set_first_beat_action.triggered.connect(set_first_beat)
 
+    if _shared.SEQUENCE_EDITOR_MODE == 0:
+        _add_items_menu(items_menu)
+
+    x = shared.SEQUENCER.header_event_pos * _shared.SEQUENCER_PX_PER_BEAT
+    pos_line = QGraphicsLineItem(
+        x,
+        0,
+        x,
+        _shared.SEQUENCE_EDITOR_HEADER_HEIGHT,
+        shared.SEQUENCER.header,
+    )
+    pos_line_pen = QPen(
+        QColor(
+            theme.SYSTEM_COLORS.daw.seq_header_event_pos,
+        ),
+        6.0,
+    )
+    pos_line.setPen(pos_line_pen)
+    global POS_LINE
+    POS_LINE = pos_line
+    # Otherwise, the entire scene gets redrawn and we should not delete it
+    if not menu.exec(QCursor.pos()):
+        shared.SEQUENCER.scene.removeItem(pos_line)
+
+def _add_items_menu(items_menu):
     items_menu.addSeparator()
 
     select_all_action = QAction(
@@ -192,31 +217,11 @@ def show(event):
     select_end_left_action.triggered.connect(select_end_left)
     items_menu.addAction(select_end_left_action)
 
-
-    x = shared.SEQUENCER.header_event_pos * _shared.SEQUENCER_PX_PER_BEAT
-    pos_line = QGraphicsLineItem(
-        x,
-        0,
-        x,
-        _shared.SEQUENCE_EDITOR_HEADER_HEIGHT,
-        shared.SEQUENCER.header,
-    )
-    pos_line_pen = QPen(
-        QColor(
-            theme.SYSTEM_COLORS.daw.seq_header_event_pos,
-        ),
-        6.0,
-    )
-    pos_line.setPen(pos_line_pen)
-    global POS_LINE
-    POS_LINE = pos_line
-    # Otherwise, the entire scene gets redrawn and we should not delete it
-    if not menu.exec(QCursor.pos()):
-        shared.SEQUENCER.scene.removeItem(pos_line)
-
 def set_first_beat():
     shared.CURRENT_SEQUENCE.set_first_beat(shared.SEQUENCER.header_event_pos)
+    shared.ATM_SEQUENCE.set_first_beat(shared.SEQUENCER.header_event_pos)
     constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
+    constants.DAW_PROJECT.save_atm_sequence(shared.ATM_SEQUENCE)
     constants.DAW_PROJECT.commit(_("Set first beat"))
     shared.SEQ_WIDGET.open_sequence()
 

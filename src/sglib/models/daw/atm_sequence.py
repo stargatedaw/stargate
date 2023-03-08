@@ -14,6 +14,14 @@ class DawAtmRegion:
         self.plugins = {}
         self.points = []
 
+    def set_first_beat(self, beat):
+        if not self.points:
+            return
+        _min = min(x.beat for x in self.points)
+        offset = int(beat - _min)
+        for point in self.points:
+            point.beat += offset
+
     def split(self, a_points, a_plugins=None, a_port=None):
         if a_points[0] != 0.0:
             a_points.insert(0, 0.0)
