@@ -289,6 +289,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
             self.scene.clearSelection()
             point_item = self.draw_point(point)
             point_item.setSelected(True)
+            self.set_selected_point_strings()
             point_item.is_moving = True
             self.current_atm_point = point_item
             point_pos = point_item.pos()
@@ -530,7 +531,8 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
 
     def set_selected_point_strings(self):
         self.selected_point_strings = {
-            str(x.item) for x in self.get_selected_points()}
+            str(x.item) for x in self.get_selected_points()
+        }
 
     def get_all_points(self, a_track=None):
         f_dict = shared.TRACK_PANEL.plugin_uid_map
@@ -577,8 +579,11 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
             if f_item.start_beat < get_current_sequence_length():
                 f_item_name = f_items_dict.get_name_by_uid(f_item.item_uid)
                 f_new_item = self.draw_item(f_item_name, f_item)
-                if f_new_item.get_selected_string() in \
-                self.selected_item_strings:
+                if (
+                    f_new_item.get_selected_string()
+                    in
+                    self.selected_item_strings
+                ):
                     f_new_item.setSelected(True)
         self.ignore_selection_change = False
         if _shared.SEQUENCE_EDITOR_MODE == 1:
