@@ -674,7 +674,16 @@ class QGraphicsRectItem(_HintItem, QGraphicsRectItem):
         QtWidgets.QGraphicsRectItem.paint(self, painter, option)
 
 class QGraphicsEllipseItem(_HintItem, QGraphicsEllipseItem):
-    pass
+    def paint(
+        self,
+        painter,
+        option,
+        arg4=None,
+    ):
+        """ Override to avoid the dotted line around selected items
+        """
+        option.state &= ~QStyle.StateFlag.State_Selected
+        QtWidgets.QGraphicsEllipseItem.paint(self, painter, option)
 
 class QGraphicsPolygonItem(_HintItem, QGraphicsPolygonItem):
     pass
