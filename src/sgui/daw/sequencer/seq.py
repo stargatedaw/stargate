@@ -471,9 +471,12 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
         f_pos_x = a_pos.x()
         f_pos_y = a_pos.y() - _shared.SEQUENCE_EDITOR_HEADER_HEIGHT
         if a_clip or (
-        f_pos_x > 0 and
-        f_pos_y > 0 and
-        f_pos_y < _shared.SEQUENCE_EDITOR_TOTAL_HEIGHT):
+            f_pos_x > 0
+            and
+            f_pos_y > 0
+            and
+            f_pos_y < _shared.SEQUENCE_EDITOR_TOTAL_HEIGHT
+        ):
             f_pos_x = clip_min(f_pos_x, 0.0)
             f_pos_y = clip_value(
                 f_pos_y,

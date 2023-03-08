@@ -51,9 +51,17 @@ class DawAtmPoint:
 #            (self.plugin_index == other.plugin_index))
 
     def __str__(self):
-        return "|".join(str(x) for x in (
-            self.beat, self.port_num, self.cc_val,
-            self.index, self.plugin_index, self.break_after, self.curve))
+        return "|".join(
+            str(x) for x in (
+                self.beat,
+                self.port_num,
+                self.cc_val,
+                self.index,
+                self.plugin_index,
+                self.break_after,
+                self.curve,
+            )
+        )
 
     @staticmethod
     def from_arr(a_arr):
