@@ -12,7 +12,7 @@ executable, [see this](./appimage.md)
 
 # Build Procedure
 ```
-git clone https://github.com/stargatedaw/stargate.git
+git clone --recurse-submodules https://github.com/stargatedaw/stargate.git
 cd stargate/scripts
 # First time only
 # Depending on which variant of Arch you are using, you may need to install
