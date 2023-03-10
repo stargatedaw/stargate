@@ -80,23 +80,24 @@ class MIDIFileAnalysis:
         start_offset = 0.0  # in beats
         pos = 0.0
         events = []
-        for event in (x for x in midi_file if not x.is_meta):
-            LOG.debug(f'Event type: {event.type} is_meta: {event.is_meta}')
+        for event in midi_file:
             pos += event.time
-            channels.add(event.channel)
             if event.type == "set_tempo":
                 start_offset = pos_to_beat()
-                sec_per_beat = event.tempo / 1000000.0
+                sec_per_beat = 60. / mido.tempo2bpm(event.tempo)
                 pos = 0.0
                 LOG.info('Tempo change: {sec_per_beat} {start_offset}')
             elif event.type == "note_on":
                 events.append(event)
+                channels.add(event.channel)
                 has_notes = True
             elif event.type == 'control_change':
                 events.append(event)
+                channels.add(event.channel)
                 has_ccs = True
             elif event.type == 'pitchwheel':
                 events.append(event)
+                channels.add(event.channel)
                 has_pbs = True
         length = math.ceil(pos_to_beat())
 
