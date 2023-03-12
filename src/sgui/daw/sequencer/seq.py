@@ -557,9 +557,38 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
         else:
             a_track = int(a_track)
             for f_point in self.automation_points:
-                if f_dict[f_point.item.index] == a_track and \
-                f_point.isSelected():
+                if (
+                    f_dict[f_point.item.index] == a_track
+                    and
+                    f_point.isSelected()
+                ):
                     yield f_point
+
+    def atm_select_all(self, track_num):
+        _dict = shared.TRACK_PANEL.plugin_uid_map
+        for point in self.automation_points:
+            if _dict[point.item.index] == track_num:
+                point.setSelected(True)
+
+    def atm_select_left(self, track_num, beat):
+        _dict = shared.TRACK_PANEL.plugin_uid_map
+        for point in self.automation_points:
+            if (
+                _dict[point.item.index] == track_num
+                and
+                point.item.beat < beat
+            ):
+                point.setSelected(True)
+
+    def atm_select_right(self, track_num, beat):
+        _dict = shared.TRACK_PANEL.plugin_uid_map
+        for point in self.automation_points:
+            if (
+                _dict[point.item.index] == track_num
+                and
+                point.item.beat >= beat
+            ):
+                point.setSelected(True)
 
     def open_sequence(self):
         if _shared.SEQUENCE_EDITOR_MODE == 0:

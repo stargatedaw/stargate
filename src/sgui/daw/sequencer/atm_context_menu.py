@@ -61,6 +61,21 @@ def paste_atm_point():
         shared.SEQUENCER.draw_point(f_point)
         shared.SEQUENCER.automation_save_callback()
 
+def select_all():
+    track_num, beat, val = shared.SEQUENCER.current_coord
+    beat = _shared.quantize(beat)
+    shared.SEQUENCER.atm_select_all(track_num)
+
+def select_left():
+    track_num, beat, val = shared.SEQUENCER.current_coord
+    beat = _shared.quantize(beat)
+    shared.SEQUENCER.atm_select_left(track_num, beat)
+
+def select_right():
+    track_num, beat, val = shared.SEQUENCER.current_coord
+    beat = _shared.quantize(beat)
+    shared.SEQUENCER.atm_select_right(track_num, beat)
+
 def copy_track_sequence():
     if not shared.SEQUENCER.current_coord:
         return
@@ -383,13 +398,40 @@ def init():
     )
     paste_ctrl_action.triggered.connect(paste_atm_point)
 
+    select_menu = MENU.addMenu("Select")
+
+    select_all_action = QAction('All', select_menu)
+    select_menu.addAction(select_all_action)
+    select_all_action.setToolTip(
+        'Select all automation points in this track for the currently '
+        'selected automation parameter'
+    )
+    select_all_action.triggered.connect(select_all)
+
+    select_left_action = QAction('Left', select_menu)
+    select_menu.addAction(select_left_action)
+    select_left_action.setToolTip(
+        'Select all automation points to the left of the mouse cursor in '
+        'this track for the currently selected automation parameter'
+    )
+    select_left_action.triggered.connect(select_left)
+
+    select_right_action = QAction('Right', select_menu)
+    select_menu.addAction(select_right_action)
+    select_right_action.setToolTip(
+        'Select all automation points to the right of the mouse cursor in '
+        'this track for the currently selected automation parameter'
+    )
+    select_right_action.triggered.connect(select_right)
+
     track_atm_menu = MENU.addMenu(_("All Plugins for Track"))
 
     copy_track_sequence_action = QAction(_("Copy Region"), track_atm_menu)
     track_atm_menu.addAction(copy_track_sequence_action)
     copy_track_sequence_action.setToolTip(
-        'Copy automation points from the region set by right clicking on the '
-        'sequencer timeline and setting the region start and end'
+        'Copy automation points for all plugins on this track within the '
+        'region set by right clicking on the sequencer timeline and '
+        'setting the region start and end'
     )
     copy_track_sequence_action.triggered.connect(copy_track_sequence)
 
@@ -405,8 +447,9 @@ def init():
     clear_track_sequence_action = QAction(_("Clear Region"), track_atm_menu)
     track_atm_menu.addAction(clear_track_sequence_action)
     clear_track_sequence_action.setToolTip(
-        'Clear all automation points in a region for a track.  Set the region '
-        'start and end by right-clicking on the sequencer timeline'
+        'Clear all automation points in a region for all plugins on a track. '
+        'Set the region start and end by right-clicking on the sequencer '
+        'timeline'
     )
     clear_track_sequence_action.triggered.connect(clear_track_sequence)
 
