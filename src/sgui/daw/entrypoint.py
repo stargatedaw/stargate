@@ -155,9 +155,10 @@ class MainWindow(QTabWidget):
 
         self.file_browser = FileDragDropper(util.is_audio_midi_file)
         self.file_browser.list_file.setToolTip(
-            'The files in the current directory.  Drag and drop the files '
-            'into the sequencer to create a new sequencer item containing '
-            'the file'
+            'Files in the current directory.  Drag and drop audio or '
+            'MIDI files into the sequencer to create a new item Multiple '
+            'audio files can be dragged at once (one item or per track), '
+            'only one MIDI file at a time'
         )
 
         shared.PLAYLIST_EDITOR = PlaylistWidget()
