@@ -10,7 +10,7 @@ Double-click the .pkg file to open the install wizard.
 Note that you may get a warning about unidentified/unverified developer.  This
 is because presently we are not paying a yearly fee to be part of the Apple
 Developer program.  To get around this, you can use Google to find instructions
-[such as this](https://customercare.primera.com/portal/en/kb/articles/how-to-open-a-primera-app-that-hasn-t-been-notarized-or-is-from-an-unidentified-developer)
+[such as this](https://disable-gatekeeper.github.io)
 
 Long story short:  Easiest way to disable Gatekeeper just for this application
 is to drag+drop Stargate to /Applications, then open /Applications in Finder,
