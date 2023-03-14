@@ -12,6 +12,12 @@ is because presently we are not paying a yearly fee to be part of the Apple
 Developer program.  To get around this, you can use Google to find instructions
 [such as this](https://customercare.primera.com/portal/en/kb/articles/how-to-open-a-primera-app-that-hasn-t-been-notarized-or-is-from-an-unidentified-developer)
 
+Long story short:  Easiest way to disable Gatekeeper just for this application
+is to drag+drop Stargate to /Applications, then open /Applications in Finder,
+right-click-\>Open, Cancel, then right-click-\>Open again, then Open.  Recent
+macOS versions require doing the right click + Open twice to show a button
+offering to open it, older versions may only require one attempt.
+
 ## Unable to record the built-in microphone
 At the moment, it will not be possible to request microphone access from
 Stargate DAW, however, there is a workaround.  You can open a Terminal and
