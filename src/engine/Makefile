@@ -4,7 +4,7 @@ NAME ?= stargate-engine
 
 # Compiler flags
 CC ?= gcc
-CSTD ?= c11
+CSTD ?= c17
 CFLAGS ?=
 CC_ARGS ?= -Wall
 PROD_FLAGS ?= -O3 -fomit-frame-pointer
