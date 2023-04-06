@@ -16,7 +16,6 @@ def cut_selected():
     _shared.copy_selected()
     _shared.delete_selected()
 
-
 def takes_action_triggered():
     def on_double_click(item):
         f_new_uid = item.item_uid
@@ -494,6 +493,12 @@ def glue_selected():
             _("You must select at least 2 items on one or more tracks"),
         )
 
+def track_select_left():
+    shared.SEQUENCER.track_select_left()
+
+def track_select_right():
+    shared.SEQUENCER.track_select_right()
+
 def init():
     global \
         MENU, \
@@ -531,6 +536,16 @@ def init():
         'paste if a single item is copied to the clipboard'
     )
     paste_selected_action.triggered.connect(_shared.paste_selected)
+
+    select_right_action = QAction(_("Select Right"), MENU)
+    MENU.addAction(select_right_action)
+    select_right_action.setToolTip('Select all items to the right')
+    select_right_action.triggered.connect(track_select_right)
+
+    select_left_action = QAction(_("Select Left"), MENU)
+    MENU.addAction(select_left_action)
+    select_left_action.setToolTip('Select all items to the left')
+    select_left_action.triggered.connect(track_select_left)
 
     MENU.addSeparator()
     MENU.addAction(_shared.delete_action)
