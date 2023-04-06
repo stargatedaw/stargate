@@ -1,4 +1,4 @@
-ARG IMAGE=debian:10
+ARG IMAGE=debian:11
 
 FROM ${IMAGE}
 
