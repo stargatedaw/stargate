@@ -493,6 +493,9 @@ def glue_selected():
             _("You must select at least 2 items on one or more tracks"),
         )
 
+def track_select_all():
+    shared.SEQUENCER.track_select_all()
+
 def track_select_left():
     shared.SEQUENCER.track_select_left()
 
@@ -536,6 +539,11 @@ def init():
         'paste if a single item is copied to the clipboard'
     )
     paste_selected_action.triggered.connect(_shared.paste_selected)
+
+    select_all_action = QAction(_("Select All"), MENU)
+    MENU.addAction(select_all_action)
+    select_all_action.setToolTip('Select all items in this track')
+    select_all_action.triggered.connect(track_select_all)
 
     select_right_action = QAction(_("Select Right"), MENU)
     MENU.addAction(select_right_action)

@@ -1123,6 +1123,14 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                 item.setSelected(False)
         self.set_selected_strings()
 
+    def track_select_all(self):
+        track, beat, val = self.current_coord
+        for item in self.audio_items:
+            seq_item = item.audio_item
+            if seq_item.track_num == track:
+                item.setSelected(True)
+        self.set_selected_strings()
+
     def track_select_left(self):
         track, beat, val = self.current_coord
         for item in self.audio_items:
