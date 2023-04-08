@@ -97,8 +97,3 @@ ln -s /opt/stargate/files/share/pixmaps/stargate.ico /usr/share/pixmaps/stargate
 ln -s /opt/stargate/files/share/applications/stargate.desktop /usr/share/applications/stargate.desktop
 ln -s /opt/stargate/files/share/mime/packages/stargate.xml /usr/share/mime/packages/stargate.xml
 ```
-files/share/doc/stargate/copyright
-files/share/pixmaps/stargate.ico
-files/share/pixmaps/stargate.png
-files/share/applications/stargate.desktop
-files/share/mime/packages/stargate.xml
