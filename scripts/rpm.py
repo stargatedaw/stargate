@@ -150,7 +150,6 @@ Recommends: \
     lame \
     python3-mutagen \
 
-%define __provides_exclude_from ^%{{_usr}}/share/{0}/.*$
 %global __python %{{__python3}}
 
 %description
@@ -164,23 +163,37 @@ Stargate is digital audio workstations (DAWs), instrument and effect plugins
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%make_install
+DESTDIR="$RPM_BUILD_ROOT" make install_self_contained
 
 %post
-update-mime-database /usr/share/mime/  || true
-xdg-mime default stargate.desktop text/stargate.project || true
+rm -f %{{_usr}}/bin/{0}
+ln -s /opt/{0}/scripts/{0} %{{_usr}}/bin/{0} || true
+ln -s /opt/{0}/files/share/doc/{0} %{{_usr}}/share/doc/{0} || true
+ln -s /opt/{0}/files/share/pixmaps/{0}.png \
+    %{{_usr}}/share/pixmaps/{0}.png || true
+ln -s /opt/{0}/files/share/pixmaps/{0}.ico \
+    %{{_usr}}/share/pixmaps/{0}.ico || true
+ln -s /opt/{0}/files/share/applications/{0}.desktop \
+    %{{_usr}}/share/applications/{0}.desktop || true
+ln -s /opt/{0}/files/share/mime/packages/{0}.xml \
+    %{{_usr}}/share/mime/packages/{0}.xml || true
+
+update-mime-database %{{_usr}}/share/mime/  || true
+xdg-mime default {0}.desktop text/{0}.project || true
 
 %preun
+rm -f %{{_usr}}/bin/{0} || true
+rm -rf %{{_usr}}/share/doc/{0} || true
+rm -f %{{_usr}}/share/pixmaps/{0}.png || true
+rm -f %{{_usr}}/share/pixmaps/{0}.ico || true
+rm -f %{{_usr}}/share/applications/{0}.desktop || true
+rm -f %{{_usr}}/share/mime/packages/{0}.xml || true
 
 %files
 
 %defattr(644, root, root)
 
-%attr(755, root, root) %{{_usr}}/bin/{0}
-%attr(755, root, root) %{{_usr}}/bin/{0}-engine
-%attr(755, root, root) %{{_usr}}/bin/{0}-sbsms
-%attr(755, root, root) %{{_usr}}/bin/{0}-soundstretch
-%{{_usr}}/share/
+%attr(755, root, root) /opt/{0}
 
 %doc
 

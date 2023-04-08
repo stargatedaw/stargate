@@ -91,7 +91,14 @@ make install_distro
 PREFIX=/opt/stargate make install_self_contained
 # You can then:
 ln -s /opt/stargate/scripts/stargate /usr/bin/stargate
+ln -s /opt/stargate/files/share/doc/stargate /usr/share/doc/stargate
 ln -s /opt/stargate/files/share/pixmaps/stargate.png /usr/share/pixmaps/stargate.png
 ln -s /opt/stargate/files/share/pixmaps/stargate.ico /usr/share/pixmaps/stargate.ico
 ln -s /opt/stargate/files/share/applications/stargate.desktop /usr/share/applications/stargate.desktop
+ln -s /opt/stargate/files/share/mime/packages/stargate.xml /usr/share/mime/packages/stargate.xml
 ```
+files/share/doc/stargate/copyright
+files/share/pixmaps/stargate.ico
+files/share/pixmaps/stargate.png
+files/share/applications/stargate.desktop
+files/share/mime/packages/stargate.xml

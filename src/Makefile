@@ -7,6 +7,7 @@ WMAJOR := $(shell /mingw64/bin/jq -r .version.major meta.json 2>/dev/null)
 WMINOR := $(shell /mingw64/bin/jq -r .version.minor meta.json 2>/dev/null)
 DESTDIR ?=
 SG_DIR = $(DESTDIR)$(PREFIX)/share/$(MAJOR)
+SG_OPT = $(DESTDIR)/opt/$(MAJOR)
 CC ?= /usr/bin/cc
 CXX ?= /usr/bin/c++
 PIP ?= pip3
@@ -117,14 +118,33 @@ install_soundstretch:
 		$(DESTDIR)$(PREFIX)/bin/$(MAJOR)-soundstretch
 
 install_self_contained:
-	if [ "$(PREFIX)" == "/usr" ]; then exit 1; fi
-	# Install all files to a single directory
-	install -d $(DESTDIR)$(PREFIX)/engine
-	install -m 755 engine/stargate-engine* $(DESTDIR)$(PREFIX)/engine/
-	install -m 755 vendor/sbsms/cli/sbsms* $(DESTDIR)$(PREFIX)/engine/
-	install -m 755 vendor/stargate-soundstretch $(DESTDIR)$(PREFIX)/engine/
-	cp -r files meta.json scripts sg_py_vendor sglib sgui \
-		$(DESTDIR)$(PREFIX)
+	# Linux only, install all files to a single directory,
+	# except for /usr/share desktop files and /usr/bin/stargate,
+	# which should be symlinked by the package
+	install -d $(SG_OPT)/engine
+	install -m 755 engine/stargate-engine $(SG_OPT)/engine/
+	install -m 755 vendor/sbsms/cli/sbsms* $(SG_OPT)/engine/
+	install -m 755 vendor/stargate-soundstretch $(SG_OPT)/engine/
+	cp -r files meta.json scripts sg_py_vendor sglib sgui $(SG_OPT)
+	# install -d "$(DESTDIR)$(PREFIX)/share"
+	# cp -r files/share/* "$(DESTDIR)$(PREFIX)/share/"
+
+install_symlinks:
+	# Symlink a self-contained install to the main system,
+	# this requires root unless installing to an alternate PREFIX
+	rm -f $(DESTDIR)$(PREFIX)/bin/stargate
+	ln -s /opt/stargate/scripts/stargate \
+		$(DESTDIR)$(PREFIX)/bin/stargate || true
+	ln -s /opt/stargate/files/share/doc/stargate \
+		$(DESTDIR)$(PREFIX)/share/doc/stargate || true
+	ln -s /opt/stargate/files/share/pixmaps/stargate.png \
+		$(DESTDIR)$(PREFIX)/share/pixmaps/stargate.png || true
+	ln -s /opt/stargate/files/share/pixmaps/stargate.ico \
+		$(DESTDIR)$(PREFIX)/share/pixmaps/stargate.ico || true
+	ln -s /opt/stargate/files/share/applications/stargate.desktop \
+		$(DESTDIR)$(PREFIX)/share/applications/stargate.desktop || true
+	ln -s /opt/stargate/files/share/mime/packages/stargate.xml \
+		$(DESTDIR)$(PREFIX)/share/mime/packages/stargate.xml || true
 
 install_macos:
 	PREFIX=/usr/local make install

@@ -126,16 +126,38 @@ Recommends: {recommends}
 postinst = """\
 #!/bin/sh
 
+rm -f /usr/bin/stargate
+ln -s /opt/stargate/scripts/stargate /usr/bin/stargate || true
+ln -s /opt/stargate/files/share/doc/stargate /usr/share/doc/stargate || true
+ln -s /opt/stargate/files/share/pixmaps/stargate.png \
+    /usr/share/pixmaps/stargate.png || true
+ln -s /opt/stargate/files/share/pixmaps/stargate.ico \
+    /usr/share/pixmaps/stargate.ico || true
+ln -s /opt/stargate/files/share/applications/stargate.desktop \
+    /usr/share/applications/stargate.desktop || true
+ln -s /opt/stargate/files/share/mime/packages/stargate.xml \
+    /usr/share/mime/packages/stargate.xml || true
+
 # Create file association for stargate.project
-update-mime-database /usr/share/mime/  || true
-xdg-mime default stargate.desktop text/stargate.project || true
+# update-mime-database /usr/share/mime/  || true
+# xdg-mime default stargate.desktop text/stargate.project || true
+"""
+
+prerm = """\
+rm -f /usr/bin/stargate || true
+rm -f /usr/bin/stargate || true
+rm -rf /usr/share/doc/stargate || true
+rm -f /usr/share/pixmaps/stargate.png || true
+rm -f /usr/share/pixmaps/stargate.ico || true
+rm -f /usr/share/applications/stargate.desktop || true
+rm -f /usr/share/mime/packages/stargate.xml || true
 """
 
 if args.plat_flags is None:
     assert not os.system("make")
 else:
     assert not os.system(f"PLAT_FLAGS='{args.plat_flags}' make")
-assert not os.system(f"DESTDIR={root} make install")
+assert not os.system(f"DESTDIR='{root}' make install_self_contained")
 DEBIAN = os.path.join(root, 'DEBIAN')
 os.makedirs(DEBIAN)
 control = os.path.join(DEBIAN, 'control')
@@ -145,9 +167,18 @@ postinst_path = os.path.join(
     DEBIAN,
     'postinst',
 )
-# with open(postinst_path, 'w') as f:
-#     f.write(postinst)
-# os.chmod(postinst_path, 0o755)
+with open(postinst_path, 'w') as f:
+    f.write(postinst)
+os.chmod(postinst_path, 0o755)
+
+prerm_path = os.path.join(
+    DEBIAN,
+    'prerm',
+)
+with open(prerm_path, 'w') as f:
+    f.write(prerm)
+os.chmod(prerm_path, 0o755)
+
 retcode = os.system(f"dpkg-deb --build --root-owner-group {root}")
 assert not retcode, retcode
 try:
