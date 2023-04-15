@@ -158,6 +158,7 @@ if args.plat_flags is None:
 else:
     assert not os.system(f"PLAT_FLAGS='{args.plat_flags}' make")
 assert not os.system(f"DESTDIR='{root}' make install_self_contained")
+assert not os.system(f"find '{root}' -name '*.pyc' -delete")
 DEBIAN = os.path.join(root, 'DEBIAN')
 os.makedirs(DEBIAN)
 control = os.path.join(DEBIAN, 'control')
