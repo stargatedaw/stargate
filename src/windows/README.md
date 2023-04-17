@@ -28,13 +28,13 @@ The VM should have at least 100GB of hard disk space
   to select the option to add Python to PATH / environment variables. At the
   time of this writing, Python3.7 and later are supported.
 - Install [NSIS](https://nsis.sourceforge.io/Download)
-  select the `Desktop Development with C++` package
 
 ### Optional
 - Install [Visual Studio](https://visualstudio.microsoft.com/downloads/),
 - Install [WinDbg](
     https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/debugger-download-tools
-  ).  Useful for debugging
+  ).  Useful for debugging the engine, but you must do extra steps to enable 
+  debug symbols.  You can also use GDB in MSYS2.
 
 ## MSYS2 Terminal
 ```
