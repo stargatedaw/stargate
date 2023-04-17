@@ -15,5 +15,6 @@ pacman -S \
     mingw-w64-x86_64-portaudio \
     mingw-w64-x86_64-portmidi \
     mingw-w64-x86_64-python \
-    mingw-w64-x86_64-rubberband
+    mingw-w64-x86_64-rubberband \
+    mingw-w64-x86_64-soundtouch
 
