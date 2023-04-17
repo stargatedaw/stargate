@@ -38,6 +38,15 @@ The VM should have at least 100GB of hard disk space
 
 ## MSYS2 Terminal
 ```
+# Initial update, this will very likely force an MSYS2 terminal restart
+pacman -Syu
+
+# Restart terminal
+```
+
+```
+# Update again
+pacman -Syu
 cd ~
 mkdir src && cd src
 pacman -S git make
