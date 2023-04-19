@@ -1,3 +1,3 @@
 #! /bin/bash -i
 {{ python-executable }} \
-	-u "${APPDIR}/opt/python{{ python-version }}/bin/stargate" "$@"
+	-u "${APPDIR}/opt/stargate/scripts/stargate" "$@"

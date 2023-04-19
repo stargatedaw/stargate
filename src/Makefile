@@ -66,56 +66,8 @@ distro: commit_hash
 	# to provide and package: mido, pymarshal, SBSMS, python-wavefile
 	make -C engine
 
-install: install_distro install_sbsms install_soundstretch install_py_vendor
+install: install_self_contained install_symlinks
 	# General purpose install for users
-
-install_distro: \
-	clean_pyc \
-	install_dirs \
-	install_engine \
-	install_python \
-	install_files
-	# install without vendored dependencies
-
-install_appimage: \
-	install_dirs \
-	install_engine \
-	install_files \
-	install_sbsms \
-	install_soundstretch
-	# Install files and engine without the Python bits
-
-install_dirs:
-	install -d $(SG_DIR)
-	install -d $(DESTDIR)$(PREFIX)/bin
-	install -d $(SG_DIR)/stargate
-
-install_engine:
-	install -s -m 755 engine/$(MAJOR)-engine $(DESTDIR)$(PREFIX)/bin
-
-install_python:
-	cp scripts/* $(DESTDIR)$(PREFIX)/bin
-	cp -r sglib sgui $(SG_DIR)/stargate
-
-install_files:
-	cp -r files/themes files/presets $(SG_DIR)
-	cp -r files/themes files/plugin_assets files/fonts $(SG_DIR)
-	cp -r files/share $(DESTDIR)/$(PREFIX)
-	install -m 644 meta.json $(SG_DIR)
-	install -m 644 COMMIT $(SG_DIR)
-
-install_py_vendor:
-	cp -r sg_py_vendor $(SG_DIR)/stargate
-
-install_sbsms:
-	install -m 755 \
-		vendor/sbsms/cli/sbsms \
-		$(DESTDIR)$(PREFIX)/bin/$(MAJOR)-sbsms
-
-install_soundstretch:
-	install -m 755 \
-		vendor/stargate-soundstretch \
-		$(DESTDIR)$(PREFIX)/bin/$(MAJOR)-soundstretch
 
 install_self_contained:
 	# Linux only, install all files to a single directory,
@@ -129,10 +81,9 @@ install_self_contained:
 	# install -d "$(DESTDIR)$(PREFIX)/share"
 	# cp -r files/share/* "$(DESTDIR)$(PREFIX)/share/"
 
-install_symlinks:
+install_symlinks: uninstall_symlinks
 	# Symlink a self-contained install to the main system,
 	# this requires root unless installing to an alternate PREFIX
-	rm -f $(DESTDIR)$(PREFIX)/bin/stargate
 	ln -s /opt/stargate/scripts/stargate \
 		$(DESTDIR)$(PREFIX)/bin/stargate || true
 	ln -s /opt/stargate/files/share/doc/stargate \
@@ -145,6 +96,15 @@ install_symlinks:
 		$(DESTDIR)$(PREFIX)/share/applications/stargate.desktop || true
 	ln -s /opt/stargate/files/share/mime/packages/stargate.xml \
 		$(DESTDIR)$(PREFIX)/share/mime/packages/stargate.xml || true
+
+uinstall_symlinks:
+	rm -f \
+		$(DESTDIR)$(PREFIX)/bin/stargate \
+		$(DESTDIR)$(PREFIX)/share/doc/stargate \
+		$(DESTDIR)$(PREFIX)/share/pixmaps/stargate.png \
+		$(DESTDIR)$(PREFIX)/share/pixmaps/stargate.ico \
+		$(DESTDIR)$(PREFIX)/share/applications/stargate.desktop \
+		$(DESTDIR)$(PREFIX)/share/mime/packages/stargate.xml 
 
 install_macos:
 	PREFIX=/usr/local make install
@@ -232,7 +192,5 @@ tests:
 	pytest test/
 	$(BROWSER) htmlcov/index.html
 
-uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/$(MAJOR)*
-	rm -rf $(SG_DIR)
-	rm -rf $(DESTDOR)$(PREFIX)/share/*/stargate*
+uninstall: uinstall_symlinks
+	rm -rf $(SG_OPT)

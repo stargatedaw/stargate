@@ -333,31 +333,19 @@ def get_win_drives():
 
 def set_bin_path():
     global BIN_PATH
-    if (
-        'APPDIR' in os.environ
-        and
-        os.path.exists(os.environ['APPDIR'])
-    ):
-        BIN_PATH = os.path.join(
-            os.environ['APPDIR'],
-            'usr',
-            'bin',
-            'stargate-engine',
+    # Try the local dev version first, if one is running stargate.py from
+    # the repo
+    BIN_PATH = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            '..',
+            '..',
+            'engine',
+            f"{MAJOR_VERSION}-engine",
         )
-    else:
-        # Try the local dev version first, if one is running stargate.py from
-        # the repo
-        BIN_PATH = os.path.abspath(
-            os.path.join(
-                os.path.dirname(__file__),
-                '..',
-                '..',
-                'engine',
-                f"{MAJOR_VERSION}-engine",
-            )
-        )
-        if IS_WINDOWS:
-            BIN_PATH += '.exe'
+    )
+    if IS_WINDOWS:
+        BIN_PATH += '.exe'
     if not os.path.exists(BIN_PATH):
         # Otherwise, use the system binary
         BIN_PATH = which(f"{MAJOR_VERSION}-engine")
