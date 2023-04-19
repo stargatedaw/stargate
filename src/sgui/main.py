@@ -614,11 +614,12 @@ class SgMainWindow(QWidget):
         self._copy_to_clipboard(text)
 
     def copy_valgrind_cmd(self):
+        bin_path, ext = os.path.splitext(util.BIN_PATH)
         text = (
-            "valgrind '{}-dbg' '{}' '{}' {} 0 1 1 "
+            "valgrind '{}' '{}' '{}' {} 0 1 1 "
             "--no-hardware --single-thread"
         ).format(
-            util.BIN_PATH,
+            bin_path + '-dbg' + ext,
             util.INSTALL_PREFIX,
             constants.PROJECT_DIR,
             os.getpid(),

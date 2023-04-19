@@ -51,6 +51,7 @@ MINGW_LINK_FLAGS ?= \
 	-I/mingw64/include -lpthread $(PORTMIDI_FLAG) -lportaudio $(LDFLAGS) \
 	-lsndfile -lfftw3f -lfftw3 $(MATH_LIB_FLAG) -lws2_32 -lDbgHelp \
 	-lavrt
+MINGW_STRIP ?= strip stargate-engine.exe
 
 
 # Debugging flags
@@ -185,11 +186,17 @@ mingw:
 	rm -f stargate-engine.pdb
 	LINK_FLAGS="$(MINGW_LINK_FLAGS)" make engine
 	make -C .. commit_hash
-	strip stargate-engine.exe
+	$(MINGW_STRIP)
 	# To generate Windows debug symbols,  run the following command in the
 	# Visual Studio Developer Command Prompt from the engine directory:
 	#
 	# .\cv2pdb\cv2pdb.exe .\stargate-engine.exe
+
+mingw_clang:
+	OPTIMIZE_FLAGS= make mingw
+
+mingw_clang_lldb:
+	OPTIMIZE_FLAGS= LINK_FLAGS="$(MINGW_LINK_FLAGS)" make debug
 
 pahole:
 	# Check struct alignnment using pahole
