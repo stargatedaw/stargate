@@ -196,12 +196,14 @@ xdg-mime default {0}.desktop text/{0}.project || true
 
 %postun
 
-%{{__rm}} -f %{{_bindir}}/{0}
-%{{__rm}} -rf %{{_usr}}/share/doc/{0}
-%{{__rm}} -f %{{_usr}}/share/pixmaps/{0}.png
-%{{__rm}} -f %{{_usr}}/share/pixmaps/{0}.ico
-%{{__rm}} -f %{{_usr}}/share/applications/{0}.desktop
-%{{__rm}} -f %{{_usr}}/share/mime/packages/{0}.xml
+if [ ! -d /opt/stargate ]; then
+    %{{__rm}} -f %{{_bindir}}/{0}
+    %{{__rm}} -rf %{{_usr}}/share/doc/{0}
+    %{{__rm}} -f %{{_usr}}/share/pixmaps/{0}.png
+    %{{__rm}} -f %{{_usr}}/share/pixmaps/{0}.ico
+    %{{__rm}} -f %{{_usr}}/share/applications/{0}.desktop
+    %{{__rm}} -f %{{_usr}}/share/mime/packages/{0}.xml
+fi
 
 %files
 
