@@ -98,9 +98,9 @@ install_symlinks: uninstall_symlinks
 		$(DESTDIR)$(PREFIX)/share/mime/packages/stargate.xml || true
 
 uinstall_symlinks:
+	rm -rf $(DESTDIR)$(PREFIX)/share/doc/stargate
 	rm -f \
 		$(DESTDIR)$(PREFIX)/bin/stargate \
-		$(DESTDIR)$(PREFIX)/share/doc/stargate \
 		$(DESTDIR)$(PREFIX)/share/pixmaps/stargate.png \
 		$(DESTDIR)$(PREFIX)/share/pixmaps/stargate.ico \
 		$(DESTDIR)$(PREFIX)/share/applications/stargate.desktop \

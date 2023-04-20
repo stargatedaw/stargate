@@ -165,29 +165,43 @@ Stargate is digital audio workstations (DAWs), instrument and effect plugins
 rm -rf $RPM_BUILD_ROOT
 DESTDIR="$RPM_BUILD_ROOT" make install_self_contained
 
+
 %post
-rm -f %{{_usr}}/bin/{0}
-ln -s /opt/{0}/scripts/{0} %{{_usr}}/bin/{0} || true
-ln -s /opt/{0}/files/share/doc/{0} %{{_usr}}/share/doc/{0} || true
-ln -s /opt/{0}/files/share/pixmaps/{0}.png \
-    %{{_usr}}/share/pixmaps/{0}.png || true
-ln -s /opt/{0}/files/share/pixmaps/{0}.ico \
-    %{{_usr}}/share/pixmaps/{0}.ico || true
-ln -s /opt/{0}/files/share/applications/{0}.desktop \
-    %{{_usr}}/share/applications/{0}.desktop || true
-ln -s /opt/{0}/files/share/mime/packages/{0}.xml \
-    %{{_usr}}/share/mime/packages/{0}.xml || true
+
+%{{__rm}} -f %{{_bindir}}/{0}
+%{{__ln_s}} -f /opt/{0}/scripts/{0} %{{_bindir}}/{0}
+
+%{{__rm}} -rf %{{_usr}}/share/doc/{0}
+%{{__ln_s}} -f /opt/{0}/files/share/doc/{0} \
+        %{{_usr}}/share/doc/{0}
+
+%{{__rm}} -f %{{_usr}}/share/pixmaps/{0}.png
+%{{__ln_s}} -f /opt/{0}/files/share/pixmaps/{0}.png \
+    %{{_usr}}/share/pixmaps/{0}.png
+
+%{{__rm}} -f %{{_usr}}/share/pixmaps/{0}.ico
+%{{__ln_s}} -f /opt/{0}/files/share/pixmaps/{0}.ico \
+    %{{_usr}}/share/pixmaps/{0}.ico
+
+%{{__rm}} -f %{{_usr}}/share/applications/{0}.desktop
+%{{__ln_s}} -f /opt/{0}/files/share/applications/{0}.desktop \
+    %{{_usr}}/share/applications/{0}.desktop
+
+%{{__rm}} -f %{{_usr}}/share/mime/packages/{0}.xml
+%{{__ln_s}} -f /opt/{0}/files/share/mime/packages/{0}.xml \
+    %{{_usr}}/share/mime/packages/{0}.xml
 
 update-mime-database %{{_usr}}/share/mime/  || true
 xdg-mime default {0}.desktop text/{0}.project || true
 
-%preun
-rm -f %{{_usr}}/bin/{0} || true
-rm -rf %{{_usr}}/share/doc/{0} || true
-rm -f %{{_usr}}/share/pixmaps/{0}.png || true
-rm -f %{{_usr}}/share/pixmaps/{0}.ico || true
-rm -f %{{_usr}}/share/applications/{0}.desktop || true
-rm -f %{{_usr}}/share/mime/packages/{0}.xml || true
+%postun
+
+%{{__rm}} -f %{{_bindir}}/{0}
+%{{__rm}} -rf %{{_usr}}/share/doc/{0}
+%{{__rm}} -f %{{_usr}}/share/pixmaps/{0}.png
+%{{__rm}} -f %{{_usr}}/share/pixmaps/{0}.ico
+%{{__rm}} -f %{{_usr}}/share/applications/{0}.desktop
+%{{__rm}} -f %{{_usr}}/share/mime/packages/{0}.xml
 
 %files
 
