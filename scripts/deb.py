@@ -127,6 +127,12 @@ postinst = """\
 #!/bin/sh
 
 rm -f /usr/bin/stargate
+rm -rf /usr/share/doc/stargate
+rm -f /usr/share/pixmaps/stargate.png
+rm -f /usr/share/pixmaps/stargate.ico
+rm -f /usr/share/applications/stargate.desktop
+rm -f /usr/share/mime/packages/stargate.xml
+
 ln -s /opt/stargate/scripts/stargate /usr/bin/stargate || true
 ln -s /opt/stargate/files/share/doc/stargate /usr/share/doc/stargate || true
 ln -s /opt/stargate/files/share/pixmaps/stargate.png \
@@ -143,7 +149,7 @@ ln -s /opt/stargate/files/share/mime/packages/stargate.xml \
 # xdg-mime default stargate.desktop text/stargate.project || true
 """
 
-prerm = """\
+postrm = """\
 rm -f /usr/bin/stargate || true
 rm -f /usr/bin/stargate || true
 rm -rf /usr/share/doc/stargate || true
@@ -172,13 +178,13 @@ with open(postinst_path, 'w') as f:
     f.write(postinst)
 os.chmod(postinst_path, 0o755)
 
-prerm_path = os.path.join(
+postrm_path = os.path.join(
     DEBIAN,
-    'prerm',
+    'postrm',
 )
-with open(prerm_path, 'w') as f:
-    f.write(prerm)
-os.chmod(prerm_path, 0o755)
+with open(postrm_path, 'w') as f:
+    f.write(postrm)
+os.chmod(postrm_path, 0o755)
 
 retcode = os.system(f"dpkg-deb --build --root-owner-group {root}")
 assert not retcode, retcode
