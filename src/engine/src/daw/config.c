@@ -247,17 +247,16 @@ void v_daw_configure(const char* a_key, const char* a_value){
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_PLUGIN_INDEX)){
         int f_track_num = atoi(a_value);
         daw_track_reload(f_track_num);
-    }
-    else if(!strcmp(a_key, DN_CONFIGURE_KEY_UPDATE_SEND))
-    {
+    } else if(!strcmp(a_key, DN_CONFIGURE_KEY_UPDATE_SEND)){
         v_daw_update_track_send(self, 1);
-    }
-    else if(!strcmp(a_key, DN_CONFIGURE_KEY_AUDIO_INPUTS))
-    {
+    } else if(!strcmp(a_key, DN_CONFIGURE_KEY_AUDIO_INPUTS)){
         v_daw_update_audio_inputs();
-    }
-    else if(!strcmp(a_key, DN_CONFIGURE_KEY_SET_OVERDUB_MODE))
-    {
+    } else if(!strcmp(a_key, DN_CONFIGURE_KEY_METRONOME)){
+        int enabled = atoi(a_value);
+        pthread_spin_lock(&STARGATE->main_lock);
+        self->metronome_enabled = enabled;
+        pthread_spin_unlock(&STARGATE->main_lock);
+    } else if(!strcmp(a_key, DN_CONFIGURE_KEY_SET_OVERDUB_MODE)){
         int f_bool = atoi(a_value);
         sg_assert(
             f_bool == 0 || f_bool == 1,

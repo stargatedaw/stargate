@@ -7,10 +7,13 @@
 
 t_daw * DAW;
 
-t_daw * g_daw_get(){
+t_daw * g_daw_get(SGFLT sr){
     t_daw * f_result;
     clalloc((void**)&f_result, sizeof(t_daw));
 
+    f_result->metronome_enabled = 0;
+    metronome_init(&f_result->metronome, sr);
+    metronome_load(&f_result->metronome);
     f_result->overdub_mode = 0;
     f_result->loop_mode = 0;
 
@@ -512,7 +515,6 @@ void v_daw_run_engine(
     t_sg_seq_event_period * f_seq_period;
     int f_period, sample_count;
     struct SamplePair* output;
-
     if(STARGATE->playback_mode != PLAYBACK_MODE_OFF){
         v_sg_seq_event_list_set(
             &self->en_song->sequences->events,
@@ -627,7 +629,21 @@ void v_daw_run_engine(
             STARGATE->playback_mode,
             &self->ts[0]
         );
+        if(
+            STARGATE->playback_mode != PLAYBACK_MODE_OFF 
+            && 
+            self->metronome_enabled
+        ){
+            metronome_run(
+                &self->metronome, 
+                sample_count, 
+                f_main_buff,
+                self->ts[0].ml_current_beat,
+                self->ts[0].ml_next_beat
+            );
+        }
 
+        // TODO: Can this be eliminated somehow?
         for(f_i = 0; f_i < sample_count; ++f_i){
             output[f_i].left = f_main_buff[f_i].left;
             output[f_i].right = f_main_buff[f_i].right;
@@ -730,9 +746,9 @@ void v_daw_panic(t_daw * self){
     v_daw_zero_all_buffers(self);
 }
 
-void g_daw_instantiate()
+void g_daw_instantiate(SGFLT sr)
 {
-    DAW = g_daw_get();
+    DAW = g_daw_get(sr);
 }
 
 void daw_set_sequence(t_daw* self, int uid){

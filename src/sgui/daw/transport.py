@@ -24,8 +24,32 @@ class TransportWidget(AbstractTransportWidget):
         self.last_open_dir = HOME
         self.toolbar = QToolBar()
         self.toolbar.setObjectName('transport_panel')
-        self.toolbar.setIconSize(QtCore.QSize(36, 36))
+        self.toolbar.setIconSize(QtCore.QSize(32, 32))
         self.group_box = self.toolbar
+
+        # Metronome
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('metronome-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('metronome-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.metronome_checkbox = QAction(icon, '', self.toolbar)
+        self.metronome_checkbox.setToolTip('Enable or disable the metronome')
+        self.metronome_checkbox.setCheckable(True)
+        self.toolbar.addAction(self.metronome_checkbox)
+        self.metronome_checkbox.triggered.connect(self.on_metronome_changed)
+
+        # Loop
 
         icon = QIcon()
         icon.addPixmap(
@@ -50,9 +74,7 @@ class TransportWidget(AbstractTransportWidget):
         )
         self.loop_mode_checkbox.setCheckable(True)
         self.toolbar.addAction(self.loop_mode_checkbox)
-        self.loop_mode_checkbox.triggered.connect(
-            self.on_loop_mode_changed,
-        )
+        self.loop_mode_checkbox.triggered.connect(self.on_loop_mode_changed)
 
         # Mouse tools
         self.mouse_tool_group = QActionGroup(self.toolbar)
@@ -228,6 +250,15 @@ class TransportWidget(AbstractTransportWidget):
 
     def open_project(self):
         shared.HARDWARE_WIDGET.audio_inputs.open_project()
+
+    def on_metronome_changed(self, enabled):
+        # The states we expect are 0 or 2, not 0 or 1
+        if enabled in (0, QtCore.Qt.CheckState.Unchecked):
+            enabled = 0
+        else:
+            enabled = 1
+        if not self.suppress_osc:
+            constants.DAW_PROJECT.ipc().metronome(enabled)
 
     def on_panic(self):
         constants.DAW_PROJECT.ipc().panic()

@@ -1669,6 +1669,73 @@ void v_run(
     pthread_spin_unlock(&STARGATE->main_lock);
 }
 
+void preview_sample(
+    int sample_count,
+    struct SamplePair* a_buffers
+){
+    int f_i;
+    t_audio_item * f_audio_item = STARGATE->preview_audio_item;
+    t_audio_pool_item * f_wav_item = STARGATE->preview_wav_item;
+    for(f_i = 0; f_i < sample_count; ++f_i){
+        if(
+            f_audio_item->sample_read_heads[0].whole_number 
+            >= 
+            f_wav_item->length
+        ){
+            STARGATE->is_previewing = 0;
+            break;
+        } else {
+            v_adsr_run(&f_audio_item->adsrs[0]);
+            if(f_wav_item->channels == 1){
+                SGFLT f_tmp_sample = f_cubic_interpolate_ptr_ifh(
+                    (f_wav_item->samples[0]),
+                    (f_audio_item->sample_read_heads[0].whole_number),
+                    (f_audio_item->sample_read_heads[0].fraction)
+                ) * f_audio_item->adsrs[0].output *
+                    STARGATE->preview_amp_lin; // *
+                    //(f_audio_item->fade_vol);
+
+                a_buffers[f_i].left = f_tmp_sample;
+                a_buffers[f_i].right = f_tmp_sample;
+            } else if(f_wav_item->channels > 1){
+                a_buffers[f_i].left = f_cubic_interpolate_ptr_ifh(
+                    (f_wav_item->samples[0]),
+                    (f_audio_item->sample_read_heads[0].whole_number),
+                    (f_audio_item->sample_read_heads[0].fraction)
+                ) * f_audio_item->adsrs[0].output *
+                    STARGATE->preview_amp_lin; // *
+                    //(f_audio_item->fade_vol);
+
+                a_buffers[f_i].right = f_cubic_interpolate_ptr_ifh(
+                    (f_wav_item->samples[1]),
+                    (f_audio_item->sample_read_heads[0].whole_number),
+                    (f_audio_item->sample_read_heads[0].fraction)
+                ) * f_audio_item->adsrs[0].output *
+                    STARGATE->preview_amp_lin; // *
+                    //(f_audio_item->fade_vol);
+            }
+
+            v_ifh_run(
+                &f_audio_item->sample_read_heads[0],
+                f_audio_item->ratio
+            );
+
+            if(
+                f_audio_item->sample_read_heads[0].whole_number
+                >= 
+                STARGATE->preview_max_sample_count
+            ){
+                v_adsr_release(&f_audio_item->adsrs[0]);
+            }
+
+            if(f_audio_item->adsrs[0].stage == ADSR_STAGE_OFF){
+                STARGATE->is_previewing = 0;
+                break;
+            }
+        }
+    }
+}
+
 void v_run_main_loop(
     int sample_count,
     struct SamplePair* a_buffers,
@@ -1676,70 +1743,8 @@ void v_run_main_loop(
 ){
     STARGATE->current_host->run(sample_count, a_buffers, a_input_buffers);
 
-    if(unlikely(STARGATE->is_previewing))
-    {
-        int f_i;
-        t_audio_item * f_audio_item = STARGATE->preview_audio_item;
-        t_audio_pool_item * f_wav_item = STARGATE->preview_wav_item;
-        for(f_i = 0; f_i < sample_count; ++f_i)
-        {
-            if(f_audio_item->sample_read_heads[0].whole_number >=
-                f_wav_item->length)
-            {
-                STARGATE->is_previewing = 0;
-                break;
-            }
-            else
-            {
-                v_adsr_run(&f_audio_item->adsrs[0]);
-                if(f_wav_item->channels == 1)
-                {
-                    SGFLT f_tmp_sample = f_cubic_interpolate_ptr_ifh(
-                        (f_wav_item->samples[0]),
-                        (f_audio_item->sample_read_heads[0].whole_number),
-                        (f_audio_item->sample_read_heads[0].fraction)) *
-                        (f_audio_item->adsrs[0].output) *
-                        (STARGATE->preview_amp_lin); // *
-                        //(f_audio_item->fade_vol);
-
-                    a_buffers[f_i].left = f_tmp_sample;
-                    a_buffers[f_i].right = f_tmp_sample;
-                }
-                else if(f_wav_item->channels > 1)
-                {
-                    a_buffers[f_i].left = f_cubic_interpolate_ptr_ifh(
-                        (f_wav_item->samples[0]),
-                        (f_audio_item->sample_read_heads[0].whole_number),
-                        (f_audio_item->sample_read_heads[0].fraction)
-                    ) * f_audio_item->adsrs[0].output *
-                        STARGATE->preview_amp_lin; // *
-                        //(f_audio_item->fade_vol);
-
-                    a_buffers[f_i].right = f_cubic_interpolate_ptr_ifh(
-                        (f_wav_item->samples[1]),
-                        (f_audio_item->sample_read_heads[0].whole_number),
-                        (f_audio_item->sample_read_heads[0].fraction)
-                    ) * f_audio_item->adsrs[0].output *
-                        STARGATE->preview_amp_lin; // *
-                        //(f_audio_item->fade_vol);
-                }
-
-                v_ifh_run(&f_audio_item->sample_read_heads[0],
-                        f_audio_item->ratio);
-
-                if((f_audio_item->sample_read_heads[0].whole_number)
-                    >= (STARGATE->preview_max_sample_count))
-                {
-                    v_adsr_release(&f_audio_item->adsrs[0]);
-                }
-
-                if(f_audio_item->adsrs[0].stage == ADSR_STAGE_OFF)
-                {
-                    STARGATE->is_previewing = 0;
-                    break;
-                }
-            }
-        }
+    if(unlikely(STARGATE->is_previewing)){
+        preview_sample(sample_count, a_buffers);
     }
 
     if(!STARGATE->is_offline_rendering && MAIN_VOL != 1.0f){

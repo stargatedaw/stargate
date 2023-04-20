@@ -59,6 +59,9 @@ class DawIPC(AbstractIPC):
             )
         )
 
+    def metronome(self, enabled: int):
+        self.send_configure("met", str(enabled))
+
     def save_item(self, a_uid):
         self.send_configure("si", str(a_uid))
 

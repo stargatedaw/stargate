@@ -4,6 +4,7 @@
 #include "stargate.h"
 #include "audio/item.h"
 #include "compiler.h"
+#include "daw/metronome.h"
 #include "daw/limits.h"
 #include "osc.h"
 
@@ -52,9 +53,19 @@ typedef struct {
     t_daw_item_ref * refs;
 } t_daw_track_seq;
 
+// pre-computed list of metronome events
+struct MetronomeList {
+    int len;
+    struct MetronomeBeat {
+        int downbeat;  // 1 if the down beat, otherwise 0
+        SGFLT beat;    // (SGFLT)index
+    } *beats;
+};
+
 typedef struct {
     t_daw_track_seq tracks[DN_TRACK_COUNT];
     t_sg_seq_event_list events;
+    struct MetronomeList metronome;
 } t_daw_sequence;
 
 typedef struct {
@@ -136,6 +147,8 @@ typedef struct {
     t_daw_item* item_pool[DN_MAX_ITEM_COUNT];
 
     int is_soloed;
+    int metronome_enabled;
+    struct Metronome metronome;
 
     int audio_glue_indexes[MAX_AUDIO_ITEM_COUNT];
 
@@ -162,7 +175,7 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw*, int);
 void v_daw_atm_sequence_free(t_daw_atm_sequence*);
 void g_daw_item_get(t_daw*, int);
 
-t_daw* g_daw_get();
+t_daw* g_daw_get(SGFLT sr);
 int i_daw_get_sequence_index_from_name(t_daw *, int);
 void v_daw_set_is_soloed(t_daw * self);
 void v_daw_set_loop_mode(t_daw * self, int a_mode);
@@ -247,7 +260,7 @@ void v_daw_run_engine(
     SGFLT* a_input_buffers
 );
 void v_daw_osc_send(t_osc_send_data * a_buffers);
-void g_daw_instantiate();
+void g_daw_instantiate(SGFLT sr);
 void v_daw_wait_for_bus(t_track * a_track);
 void v_daw_sum_track_outputs(
     t_daw * self,

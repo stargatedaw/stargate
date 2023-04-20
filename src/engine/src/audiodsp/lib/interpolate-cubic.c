@@ -24,9 +24,11 @@ SGFLT f_cubic_interpolate(SGFLT a_a, SGFLT a_b, SGFLT a_position)
  * This method uses a pointer instead of an array the SGFLT* must be malloc'd
  * to (sizeof(SGFLT) * a_table_size)
  */
-SGFLT f_cubic_interpolate_ptr_wrap(SGFLT * a_table, int a_table_size,
-        SGFLT a_ptr)
-{
+SGFLT f_cubic_interpolate_ptr_wrap(
+    SGFLT * a_table, 
+    int a_table_size,
+    SGFLT a_ptr
+){
     int int_pos = (int)a_ptr;
     SGFLT mu = (SGFLT)a_ptr - (SGFLT)int_pos;
     SGFLT mu2 = mu * mu;
@@ -99,8 +101,7 @@ SGFLT f_cubic_interpolate_ptr_wrap(SGFLT * a_table, int a_table_size,
  * THIS DOES NOT CHECK THAT YOU PROVIDED A VALID POSITION
  */
 
-SGFLT f_cubic_interpolate_ptr(SGFLT * a_table, SGFLT a_ptr)
-{
+SGFLT f_cubic_interpolate_ptr(SGFLT * a_table, SGFLT a_ptr){
     int int_pos = (int)a_ptr;
     int int_pos_plus1 = (int_pos) + 1;
     int int_pos_minus1 = (int_pos) - 1;
@@ -145,9 +146,11 @@ SGFLT f_cubic_interpolate_ptr(SGFLT * a_table, SGFLT a_ptr)
  *
  * For use with the read_head type in Sampler1 Sampler
  */
-SGFLT f_cubic_interpolate_ptr_ifh(SGFLT * a_table, int a_whole_number,
-        SGFLT a_frac)
-{
+SGFLT f_cubic_interpolate_ptr_ifh(
+    SGFLT * a_table, 
+    int a_whole_number,
+    SGFLT a_frac
+){
     int int_pos = a_whole_number;
     int int_pos_plus1 = (int_pos) + 1;
     int int_pos_minus1 = (int_pos) - 1;

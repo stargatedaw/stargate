@@ -25,6 +25,7 @@
 #define DN_CONFIGURE_KEY_PLUGIN_INDEX "pi"
 #define DN_CONFIGURE_KEY_UPDATE_SEND "ts"
 #define DN_CONFIGURE_KEY_AUDIO_INPUTS "ai"
+#define DN_CONFIGURE_KEY_METRONOME "met"
 
 void v_daw_configure(const char* a_key, const char* a_value);
 #endif

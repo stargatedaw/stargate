@@ -29,7 +29,7 @@ void v_rate_envelope(
     }
 
     tmpFrames = (SGFLT *)malloc(info.frames * info.channels * sizeof(SGFLT));
-    sg_read_audio(file, tmpFrames, info.frames);
+    sf_readf_float(file, tmpFrames, info.frames);
 
     SF_INFO f_sf_info;
     f_sf_info.channels = info.channels;

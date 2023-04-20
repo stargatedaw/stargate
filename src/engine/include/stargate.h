@@ -135,6 +135,10 @@ typedef struct {
     double beat;
     double start_beat;  //currently only for the loop event
     SGFLT tempo;
+    struct {
+        int num;
+        int den;
+    } tsig;
 } t_sg_seq_event;
 
 typedef struct {

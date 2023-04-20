@@ -194,7 +194,7 @@ NO_OPTIMIZATION void v_activate(
     STARGATE->hosts[SG_HOST_WAVE_EDIT].audio_inputs = v_we_update_audio_inputs;
     STARGATE->hosts[SG_HOST_WAVE_EDIT].mix = v_default_mix;
 
-    g_daw_instantiate();
+    g_daw_instantiate(a_sr);
     g_wave_edit_get();
 
     log_info("Opening project");

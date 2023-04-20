@@ -164,6 +164,83 @@ void v_daw_set_playback_cursor(t_daw * self, double a_beat)
     f_i = 0;
 }
 
+int metronome_list_count(t_sg_seq_event_list * self){
+    int result = 0;
+    t_sg_seq_event* ev;
+    for(int i = 0; i < self->count; ++i){
+        ev = &self->events[i];
+        if(ev->type == SEQ_EVENT_TEMPO_CHANGE){
+            result = ev->beat;
+        }
+    }
+    return result + 1000;
+}
+
+void metronome_beats_populate(
+    struct MetronomeList* self, 
+    t_sg_seq_event_list* events,
+    int len_beats
+){
+    int beat = 0;
+    int beat_count = 0;
+    t_sg_seq_event* ev;
+    t_sg_seq_event* ev_next;
+    t_sg_seq_event* tempo_events[events->count];
+    int tempo_events_count = 0;
+
+    for(int i = 0; i < events->count; ++i){
+        ev = &events->events[i];
+        if(ev->type == SEQ_EVENT_TEMPO_CHANGE){
+            tempo_events[tempo_events_count] = ev;
+            ++tempo_events_count;
+        }
+    }
+
+    // corner case of only 1 marker, ensure it is set
+    ev_next = tempo_events[0];  
+
+    for(int i = 1; i < tempo_events_count; ++i){
+        ev = tempo_events[i - 1];
+        ev_next = tempo_events[i];
+        beat_count = ev->tsig.num;
+        while(beat < ev_next->beat){
+            for(int k = 0; k < beat_count && beat < ev_next->beat; ++k){
+                self->beats[beat] = (struct MetronomeBeat){
+                    .downbeat = (k == 0) ? 1: 0, 
+                    .beat = (SGFLT)beat,
+                };
+                ++beat;
+            }
+        }
+    }
+
+    beat_count = ev_next->tsig.num;
+
+    // Last marker gets 1000 beats of metronome
+    for(; beat < len_beats;){
+        for(int k = 0; k < beat_count && beat < len_beats; ++k){
+            self->beats[beat] = (struct MetronomeBeat){
+                .downbeat = (k == 0) ? 1: 0,
+                .beat = (SGFLT)beat,
+            };
+            ++beat;
+        }
+    }
+}
+
+void metronome_list_factory(
+    struct MetronomeList* self, 
+    t_sg_seq_event_list* events
+){
+    int len_beats = metronome_list_count(events);
+    lmalloc(
+        (void**)&self->beats, 
+        sizeof(struct MetronomeBeat) * len_beats
+    );
+    self->len = len_beats;
+    metronome_beats_populate(self, events, len_beats);
+}
+
 t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
     t_daw_sequence * f_result;
     int f_item_counters[DN_TRACK_COUNT];
@@ -179,7 +256,6 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
         f_result->tracks[f_i].pos = 0;
         f_item_counters[f_i] = 0;
     }
-
 
     char f_full_path[TINY_STRING];
     sg_snprintf(
@@ -238,11 +314,11 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
             v_iterate_2d_char_array(f_current_string);
             f_result->events.count = atoi(f_current_string->current_str);
 
-            lmalloc((void**)&f_result->events.events,
-                sizeof(t_sg_seq_event) * f_result->events.count);
-        }
-        else if(f_current_string->current_str[0] == 'E')  //sequencer event
-        {
+            lmalloc(
+                (void**)&f_result->events.events,
+                sizeof(t_sg_seq_event) * f_result->events.count
+            );
+        } else if(f_current_string->current_str[0] == 'E'){  //sequencer event
             sg_assert_ptr(
                 f_result->events.events,
                 "g_daw_sequence_get: no events"
@@ -250,8 +326,7 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
             v_iterate_2d_char_array(f_current_string);
             int f_type = atoi(f_current_string->current_str);
 
-            if(f_type == SEQ_EVENT_MARKER)  //the engine ignores these
-            {
+            if(f_type == SEQ_EVENT_MARKER){  //the engine ignores these
                 v_iterate_2d_char_array(f_current_string);  //beat
                 //Marker text
                 v_iterate_2d_char_array_to_next_line(f_current_string);
@@ -265,27 +340,25 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
             v_iterate_2d_char_array(f_current_string);
             f_ev->beat = atof(f_current_string->current_str);
 
-            if(f_ev->type == SEQ_EVENT_LOOP)
-            {
+            if(f_ev->type == SEQ_EVENT_LOOP){
                 v_iterate_2d_char_array(f_current_string);
                 f_ev->start_beat = atof(f_current_string->current_str);
-            }
-            else if(f_ev->type == SEQ_EVENT_TEMPO_CHANGE)
-            {
+            } else if(f_ev->type == SEQ_EVENT_TEMPO_CHANGE){
                 v_iterate_2d_char_array(f_current_string);
                 f_ev->tempo = atof(f_current_string->current_str);
 
-                //time signature numerator, not used by the engine
                 v_iterate_2d_char_array(f_current_string);
+                int tsig_num = atoi(f_current_string->current_str);
+                f_ev->tsig.num = tsig_num;
 
                 v_iterate_2d_char_array(f_current_string);
-                SGFLT f_tsig_den = atof(f_current_string->current_str);
+                int tsig_den = atoi(f_current_string->current_str);
+                f_ev->tsig.den = tsig_den;
 
-                f_ev->tempo *= (f_tsig_den / 4.0);
+                // TODO: Is this correct?
+                f_ev->tempo *= ((float)tsig_den / 4.0);
             }
-        }
-        else  //item reference
-        {
+        } else {  //item reference
             int f_track_num = atoi(f_current_string->current_str);
 
             sg_assert_ptr(
@@ -328,6 +401,7 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
             ++f_item_counters[f_track_num];
         }
     }
+    metronome_list_factory(&f_result->metronome, &f_result->events);
 
     g_free_2d_char_array(f_current_string);
 
