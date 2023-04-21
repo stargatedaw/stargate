@@ -493,9 +493,37 @@ NO_OPTIMIZATION void v_daw_open_tracks(){
     }
 }
 
-void v_daw_song_free(t_daw_song * a_daw_song){
-    if(a_daw_song->sequences){
-        free(a_daw_song->sequences);
+void sequence_free(t_daw_sequence* self){
+    if(!self || USE_HUGEPAGES){
+        return;
+    }
+    if(self->metronome.beats){
+        free(self->metronome.beats);
+    }
+    if(self->events.events){
+        free(self->events.events);
+    }
+    free(self);
+}
+
+void sequence_atm_free(t_daw_atm_sequence* self){
+    if(!self || USE_HUGEPAGES){
+        return;
+    }
+    // TODO: Free the other pointers
+    for(int i = 0; i < MAX_PLUGIN_POOL_COUNT; ++i){
+        if(self->plugins[i].ports){
+            free(self->plugins[i].ports);
+        }
+    }
+    free(self);
+}
+
+void v_daw_song_free(t_daw_song* self){
+    if(self->sequences){
+    }
+    if(self->sequences_atm){
+        // TODO
     }
 }
 

@@ -170,7 +170,7 @@ void v_daw_configure(const char* a_key, const char* a_value){
 
         // TODO: A real free function for this
         if(f_old_sequence){
-            free(f_old_sequence);
+            sequence_free(f_old_sequence);
         }
     } else if(!strcmp(a_key, DN_CONFIGURE_KEY_SI)) {
         //Save Item

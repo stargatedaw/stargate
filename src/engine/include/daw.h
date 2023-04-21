@@ -211,7 +211,8 @@ void v_daw_audio_items_run(
 void v_daw_paif_set_control(t_daw*, int, int, int, SGFLT);
 void v_daw_papifx_set_control(int, int, SGFLT);
 
-void v_daw_song_free(t_daw_song *);
+void sequence_free(t_daw_sequence*);
+void sequence_atm_free(t_daw_atm_sequence*);
 void v_daw_process_note_offs(t_daw * self, int f_i, t_daw_thread_storage*);
 void v_daw_process_midi(
     t_daw *,
