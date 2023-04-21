@@ -123,8 +123,11 @@ struct MetronomeBeat metronome_beat_at_pos(int pos){
     if(pos < DAW->en_song->sequences->metronome.len){
         return DAW->en_song->sequences->metronome.beats[pos];
     } else {
+        int offset = pos - (int)STARGATE->current_tsig->beat;
+        int num = STARGATE->current_tsig->tsig.num;
+        int downbeat = offset % num == 0 ? 1: 0;
         return (struct MetronomeBeat){
-            .downbeat = 0,
+            .downbeat = downbeat,
             .beat = (SGFLT)pos,
         };
     }

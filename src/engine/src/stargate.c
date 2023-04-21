@@ -101,7 +101,7 @@ void g_sg_seq_event_list_init(t_sg_seq_event_list * self){
     self->pos = 0;
     self->events = NULL;
     g_sample_period_init(&self->period);
-    v_sg_set_tempo(self, 128.0f);
+    v_sg_set_tempo(self, 128.0f, NULL);
 }
 
 void g_seq_event_result_init(t_sg_seq_event_result * self){
@@ -1025,7 +1025,12 @@ void v_set_sample_period(
     self->input_buffer = a_input_buffers;
 }
 
-void v_sg_set_tempo(t_sg_seq_event_list * self, SGFLT a_tempo){
+void v_sg_set_tempo(
+    t_sg_seq_event_list* self, 
+    SGFLT a_tempo, 
+    t_sg_seq_event* event
+){
+    STARGATE->current_tsig = event;
     SGFLT f_sample_rate = STARGATE->thread_storage[0].sample_rate;
     self->tempo = a_tempo;
     self->playback_inc = (1.0f / f_sample_rate) / (60.0f / a_tempo);
@@ -1055,7 +1060,7 @@ void v_sg_set_playback_pos(
          }
 
          if(f_ev->type == SEQ_EVENT_TEMPO_CHANGE){
-             v_sg_set_tempo(self, f_ev->tempo);
+             v_sg_set_tempo(self, f_ev->tempo, f_ev);
              f_found_tempo = 1;
          }
     }
@@ -1140,7 +1145,7 @@ void v_sg_seq_event_list_set(
                         f_period->samples_per_beat = self->samples_per_beat;
                     }
 
-                    v_sg_set_tempo(self, f_ev->tempo);
+                    v_sg_set_tempo(self, f_ev->tempo, f_ev);
                     f_period = &a_result->sample_periods[a_result->count - 1];
                     f_period->tempo = self->tempo;
                     f_period->playback_inc = self->playback_inc;
@@ -1150,7 +1155,7 @@ void v_sg_seq_event_list_set(
                 f_ev = &self->events[self->pos];
                 ++self->pos;
                 if(f_ev->type == SEQ_EVENT_TEMPO_CHANGE){
-                    v_sg_set_tempo(self, f_ev->tempo);
+                    v_sg_set_tempo(self, f_ev->tempo, f_ev);
                     f_period = &a_result->sample_periods[0];
                     f_period->tempo = self->tempo;
                     f_period->playback_inc = self->playback_inc;

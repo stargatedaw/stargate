@@ -3,6 +3,8 @@
 
 #include <pthread.h>
 
+typedef struct _t_stargate t_stargate;
+extern t_stargate* STARGATE;
 // 0 when the application is running, 1 after the shutdown sequence has begun
 extern volatile int exiting;
 extern volatile int READY;

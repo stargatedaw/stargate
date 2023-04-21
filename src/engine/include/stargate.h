@@ -3,16 +3,17 @@
 
 #include <pthread.h>
 
+#include "audio/audio_pool.h"
+#include "audio/input.h"
+#include "audio/item.h"
 #include "audiodsp/lib/midi.h"
 #include "audiodsp/lib/peak_meter.h"
 #include "audiodsp/modules/modulation/ramp_env.h"
-#include "plugin.h"
-#include "audio/input.h"
-#include "audio/item.h"
-#include "audio/audio_pool.h"
 #include "compiler.h"
+#include "globals.h"
 #include "hardware/midi.h"
 #include "osc.h"
+#include "plugin.h"
 
 #define MAX_WORKER_THREADS 16
 
@@ -253,7 +254,7 @@ struct SgWorkerThread {
     char end_padding[CACHE_LINE_SIZE];
 };
 
-typedef struct {
+struct _t_stargate {
     t_sg_thread_storage thread_storage[MAX_WORKER_THREADS];
     t_sg_host * current_host;
     t_sg_host hosts[SG_HOST_COUNT];
@@ -266,6 +267,7 @@ typedef struct {
     int worker_thread_count;
     void * main_thread_args;
 
+    t_sg_seq_event* current_tsig;
     int is_offline_rendering;
     //set from the audio device buffer size every time the main loop is called.
     t_audio_pool_item * preview_wav_item;
@@ -295,7 +297,7 @@ typedef struct {
     char samplegraph_folder[1024];
     char audio_pool_file[1024];
     char plugins_folder[1024];
-} t_stargate;
+};
 
 typedef struct {
     char pad1[CACHE_LINE_SIZE];
@@ -322,7 +324,7 @@ void v_set_plugin_index(t_track*, int, int, int, int, int, int);
 t_track_routing * g_track_routing_get();
 void v_set_host(int);
 
-void v_sg_set_tempo(t_sg_seq_event_list*, SGFLT);
+void v_sg_set_tempo(t_sg_seq_event_list*, SGFLT, t_sg_seq_event*);
 void v_ui_send(char * a_path, char * a_msg);
 void v_default_mix();
 
@@ -447,5 +449,4 @@ void v_run(
 void stop_preview();
 void track_free(t_track* track);
 
-extern t_stargate * STARGATE;
 #endif
