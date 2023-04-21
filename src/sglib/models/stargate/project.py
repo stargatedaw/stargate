@@ -208,7 +208,9 @@ class SgProject(AbstractProject):
             if f_line == terminating_char:
                 break
             f_line_arr = f_line.split("|||")
-            self.timestretch_reverse_lookup[f_line_arr[0]] = f_line_arr[1]
+            src = util.pi_path(f_line_arr[0])
+            dst = util.pi_path(f_line_arr[1])
+            self.timestretch_reverse_lookup[src] = dst
 
     def save_stretch_dicts(self):
         f_stretch_text = ""
@@ -300,6 +302,7 @@ class SgProject(AbstractProject):
                 self.timestretch_folder,
                 f"{f_uid}.wav",
             )
+            f_dest_path = util.pi_path(f_dest_path)
 
             f_cmd = None
             if a_audio_item.time_stretch_mode == 1:
@@ -390,7 +393,7 @@ class SgProject(AbstractProject):
                     env = os.environ.copy()
                     env['PATH'] = ENGINE_DIR + ';' + env['PATH']
                     env['PYTHONPATH'] = INSTALL_PREFIX
-                    LOG.info(env)
+                    #LOG.info(env)
                     f_proc = subprocess.Popen(
                         f_cmd,
                         encoding='UTF-8',
@@ -428,9 +431,9 @@ class SgProject(AbstractProject):
             f_old_path = self.timestretch_reverse_lookup[f_new_path]
             return self.get_wav_uid_by_name(f_old_path)
         else:
-            LOG.warning("\n####\n####\nWARNING:  "
-                "timestretch_get_orig_file_uid could not find uid {}"
-                "\n####\n####\n".format(a_uid))
+            LOG.warning(
+                f"timestretch_get_orig_file_uid could not find uid {a_uid}"
+            )
             return a_uid
 
     def get_sample_graph_by_name(self, a_path, a_uid_dict=None, a_cp=True):
@@ -592,7 +595,7 @@ class SgProject(AbstractProject):
             audio_pool = a_uid_dict
         by_uid = audio_pool.by_uid()
         assert a_uid in by_uid, (a_uid, by_uid)
-        return by_uid[a_uid].path
+        return util.pi_path(by_uid[a_uid].path)
 
     def get_wav_path_by_uid(self, a_uid):
         audio_pool = self.get_audio_pool()
