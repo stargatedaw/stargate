@@ -17,12 +17,24 @@ from sglib.models.theme import get_asset_path
 
 MREC_EVENTS = []
 
+def metronome_dialog():
+    QMessageBox.information(None, None, "m-m-m-metronome!!!!")
+
+class DAWTransportToolbar(QToolBar):
+    def contextMenuEvent(self, event):
+        action = self.actionAt(event.pos())
+        if not action:
+            return
+        name = getattr(action, '_name', None)
+        if name == 'metronome':
+            metronome_dialog()
+
 class TransportWidget(AbstractTransportWidget):
     def __init__(self):
         self.recording_timestamp = None
         self.suppress_osc = True
         self.last_open_dir = HOME
-        self.toolbar = QToolBar()
+        self.toolbar = DAWTransportToolbar()
         self.toolbar.setObjectName('transport_panel')
         self.toolbar.setIconSize(QtCore.QSize(32, 32))
         self.group_box = self.toolbar
@@ -44,8 +56,10 @@ class TransportWidget(AbstractTransportWidget):
             QIcon.State.Off,
         )
         self.metronome_checkbox = QAction(icon, '', self.toolbar)
+        self.metronome_checkbox._name = 'metronome'
         self.metronome_checkbox.setToolTip(
-            'Enable or disable the metronome. Toggle with CTRL+SHIFT+M'
+            'Enable or disable the metronome. Toggle with CTRL+SHIFT+M.  '
+            'Right-click for settings'
         )
         self.metronome_checkbox.setCheckable(True)
         self.toolbar.addAction(self.metronome_checkbox)
