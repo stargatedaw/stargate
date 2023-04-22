@@ -13,7 +13,9 @@ t_daw * g_daw_get(SGFLT sr){
 
     f_result->metronome_enabled = 0;
     metronome_init(&f_result->metronome, sr);
-    metronome_load(&f_result->metronome);
+    if(!SG_OFFLINE_RENDER ){
+        metronome_load(&f_result->metronome);
+    }
     f_result->overdub_mode = 0;
     f_result->loop_mode = 0;
 
@@ -633,6 +635,8 @@ void v_daw_run_engine(
             STARGATE->playback_mode != PLAYBACK_MODE_OFF 
             && 
             self->metronome_enabled
+            &&
+            !STARGATE->is_offline_rendering
         ){
             metronome_run(
                 &self->metronome, 
