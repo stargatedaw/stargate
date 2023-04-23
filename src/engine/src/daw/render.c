@@ -97,6 +97,16 @@ void v_daw_offline_render(
             }
         }
 #endif
+        if(self->ts[0].ml_next_beat > a_end_beat){
+            f_block_size = 
+                (a_end_beat - self->ts[0].ml_current_beat)
+                /
+                (self->ts[0].ml_next_beat - self->ts[0].ml_current_beat);
+            if(f_block_size <= 0){
+                break;
+            }
+        }
+
         for(f_i = 0; f_i < f_block_size; ++f_i){
             f_buffer[f_i].left = 0.0f;
             f_buffer[f_i].right = 0.0f;
