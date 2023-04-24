@@ -35,7 +35,6 @@ appimage:
 
 appimage-debug:
 	python-appimage/release.py
-	sed s/{{VERSION}}/$(MINOR)/g AppImageBuilder.yml.tmpl > AppImageBuilder.yml
 	$(DOCKER) run -it \
 		--mount type=bind,src=..,dst=/stargate \
 		$(DOCKER_IMAGE) \
