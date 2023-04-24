@@ -58,7 +58,7 @@ class sequencer:
     def get_tempo_at_pos(self, a_beat):
         f_tempo_markers = self.get_tempo_markers()
         for f_t1, f_t2 in zip(f_tempo_markers, f_tempo_markers[1:]):
-            if a_beat < f_t2.beat and a_beat > f_t1.beat:
+            if a_beat < f_t2.beat and a_beat >= f_t1.beat:
                 return f_t1.real_tempo
         return f_tempo_markers[-1].real_tempo
 
