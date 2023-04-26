@@ -24,25 +24,25 @@ all: sbsms soundtouch distro
 	# General purpose build, including dependencies
 
 appimage:
-	python-appimage/release.py
+	appimage/python-appimage/release.py
 	$(DOCKER) run \
 		--mount type=bind,src=..,dst=/stargate \
 		$(DOCKER_IMAGE) \
-		sh -c 'cd /stargate/src && ./appimage-helper.sh'
+		sh -c 'cd /stargate/src && ./appimage/appimage-helper.sh'
 	appimagetool -n \
 		../dist/squashfs-root/ \
 		../dist/StargateDAW-$(MINOR)-linux-x86_64.AppImage
 
 appimage-debug:
-	python-appimage/release.py
+	appimage/python-appimage/release.py
 	$(DOCKER) run -it \
 		--mount type=bind,src=..,dst=/stargate \
 		$(DOCKER_IMAGE) \
 		sh
 
 docker-image:
-	$(DOCKER) build -t stargate-base  -f Dockerfile-base
-	$(DOCKER) build -t $(DOCKER_IMAGE)  -f Dockerfile-appimage-builder
+	$(DOCKER) build -t stargate-base  -f appimage/Dockerfile-base
+	$(DOCKER) build -t $(DOCKER_IMAGE)  -f appimage/Dockerfile-appimage-builder
 
 clean: clean_pyc
 	rm -rf htmlcov/ .pytest_cache/ .eggs/ .coverage \

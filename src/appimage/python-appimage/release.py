@@ -32,7 +32,7 @@ def parse_args():
 def build(args):
     env = copy.deepcopy(os.environ)
     env['CURRENT_REPO'] = os.path.abspath(
-        os.path.join(CWD, '..'),
+        os.path.join(CWD, '..', '..'),
     )
     env['PT_EXCLUDE_LIBS'] = 'ALL'
 
@@ -46,15 +46,15 @@ def build(args):
         ],
         env=env,
     )
-    if not os.path.isdir('../../dist'):
-        os.mkdir('../../dist')
+    if not os.path.isdir('../../../dist'):
+        os.mkdir('../../../dist')
 
     for appimage in glob('*.AppImage'):
-        dest = os.path.join('..', '..', 'dist', appimage)
+        dest = os.path.join('..', '..', '..', 'dist', appimage)
         if os.path.exists(dest):
             print(f'Deleting old version {dest}')
             os.remove(dest)
-        print(f'Moving {appimage} to ../dist/')
+        print(f'Moving {appimage} to ../../dist/')
         shutil.move(appimage, dest)
 
     print('Finished!  AppImage files are in ../dist/')
