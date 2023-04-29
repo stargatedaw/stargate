@@ -615,7 +615,9 @@ void v_daw_run_engine(
             pthread_spin_unlock(&STARGATE->worker_threads[f_i].lock);
         }
 
-        v_daw_process((t_thread_args*)STARGATE->main_thread_args);
+        v_daw_process(
+            ((t_thread_args*)STARGATE->main_thread_args)->thread_num
+        );
 
         t_track * f_main_track = self->track_pool[0];
         struct SamplePair* f_main_buff = f_main_track->plugin_plan.output;
@@ -660,16 +662,16 @@ void v_daw_run_engine(
     }
 }
 
-void v_daw_process(t_thread_args * f_args){
+void v_daw_process(int thread_num){
     t_track * f_track;
     int f_track_index;
     t_daw * self = DAW;
-    int f_i = f_args->thread_num;
+    int f_i = thread_num;
     int f_sorted_count = self->routing_graph->track_pool_sorted_count;
     int * f_sorted =
-        self->routing_graph->track_pool_sorted[f_args->thread_num];
+        self->routing_graph->track_pool_sorted[thread_num];
 
-    t_daw_thread_storage * f_ts = &DAW->ts[f_args->thread_num];
+    t_daw_thread_storage * f_ts = &DAW->ts[thread_num];
 
     int f_playback_mode = f_ts->playback_mode;
     int f_sample_count = f_ts->sample_count;
@@ -703,7 +705,7 @@ void v_daw_process(t_thread_args * f_args){
         v_daw_process_track(
             self,
             f_track->track_num,
-            f_args->thread_num,
+            thread_num,
             f_sample_count,
             f_playback_mode,
             f_ts

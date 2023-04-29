@@ -61,7 +61,7 @@ void * v_worker_thread(void* a_arg){
 
         if(f_storage->current_host == SG_HOST_DAW)
         {
-            v_daw_process(f_args);
+            v_daw_process(f_args->thread_num);
         }
         //else if...
 

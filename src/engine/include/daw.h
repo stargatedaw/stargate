@@ -276,7 +276,7 @@ void v_daw_reset_audio_item_read_heads(
     t_audio_items * f_audio_items,
     double a_start_offset
 );
-void v_daw_process(t_thread_args * f_args);
+void v_daw_process(int thread_num);
 void v_daw_process_track(
     t_daw * self,
     int a_global_track_num,
