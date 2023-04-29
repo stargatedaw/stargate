@@ -265,7 +265,6 @@ struct _t_stargate {
 
     struct SgWorkerThread worker_threads[MAX_WORKER_THREADS];
     int worker_thread_count;
-    void * main_thread_args;
 
     t_sg_seq_event* current_tsig;
     int is_offline_rendering;

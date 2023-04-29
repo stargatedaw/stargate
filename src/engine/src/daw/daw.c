@@ -615,9 +615,7 @@ void v_daw_run_engine(
             pthread_spin_unlock(&STARGATE->worker_threads[f_i].lock);
         }
 
-        v_daw_process(
-            ((t_thread_args*)STARGATE->main_thread_args)->thread_num
-        );
+        v_daw_process(0);  // From the audio thread
 
         t_track * f_main_track = self->track_pool[0];
         struct SamplePair* f_main_buff = f_main_track->plugin_plan.output;

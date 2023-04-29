@@ -15,9 +15,36 @@
 
 #if SG_OS == _OS_MACOS
     #include <pthread/qos.h>
+
+    void _macos_sched_priority(){
+        int sched_priority = (int)(
+            (float)sched_get_priority_max(RT_SCHED) * 0.9
+        );
+        log_info("sched_priority: %i", sched_priority);
+        const struct sched_param rt_sched_param = {
+            .sched_priority = sched_priority,
+        };
+        int qos_result = pthread_attr_set_qos_class_np(
+            &threadAttr,
+            QOS_CLASS_USER_INTERACTIVE,
+            0
+        );
+        log_info("qos_result worker: %i", qos_result);
+    }
 #elif SG_OS == _OS_WINDOWS
     #include <Windows.h>
     #include <avrt.h>
+
+    void _windows_thread_pro_audio(){
+        HRESULT hr;
+        HANDLE hTask;
+        DWORD taskIndex = 0;
+        hTask = AvSetMmThreadCharacteristics(TEXT("Pro Audio"), &taskIndex);
+        if (hTask == NULL){
+            hr = E_FAIL;
+            log_error("Failed to set Windows thread characteristics: %ld", hr);
+        }
+    }
 #endif
 
 void * v_worker_thread(void* a_arg){
@@ -35,14 +62,7 @@ void * v_worker_thread(void* a_arg){
         &STARGATE->worker_threads[f_thread_num].lock;
 
 #if SG_OS == _OS_WINDOWS
-    HRESULT hr;
-    HANDLE hTask;
-    DWORD taskIndex = 0;
-    hTask = AvSetMmThreadCharacteristics(TEXT("Pro Audio"), &taskIndex);
-    if (hTask == NULL){
-        hr = E_FAIL;
-        log_error("Failed to set Windows thread characteristics: %ld", hr);
-    }
+    _windows_thread_pro_audio();
 #endif
 
     while(1){
@@ -59,8 +79,7 @@ void * v_worker_thread(void* a_arg){
             break;
         }
 
-        if(f_storage->current_host == SG_HOST_DAW)
-        {
+        if(f_storage->current_host == SG_HOST_DAW){
             v_daw_process(f_args->thread_num);
         }
         //else if...
@@ -96,23 +115,13 @@ void v_init_worker_threads(
     pthread_attr_setschedpolicy(&threadAttr, RT_SCHED);
 #endif
 #if SG_OS == _OS_MACOS
-    int sched_priority = (int)((float)sched_get_priority_max(RT_SCHED) * 0.9);
-    log_info("sched_priority: %i", sched_priority);
-    const struct sched_param rt_sched_param = {
-        .sched_priority = sched_priority,
-    };
-    int qos_result = pthread_attr_set_qos_class_np(
-        &threadAttr,
-        QOS_CLASS_USER_INTERACTIVE,
-        0
-    );
-    log_info("qos_result worker: %i", qos_result);
+    _macos_sched_priority();
 #endif
 
     int f_i;
     char thread_name[64];
 
-    for(f_i = 0; f_i < STARGATE->worker_thread_count; ++f_i){
+    for(f_i = 1; f_i < STARGATE->worker_thread_count; ++f_i){
         _thread = &STARGATE->worker_threads[f_i];
         _thread->track_thread_quit_notifier = 0;
         t_thread_args * f_args = (t_thread_args*)malloc(
@@ -121,9 +130,6 @@ void v_init_worker_threads(
         f_args->thread_num = f_i;
         f_args->stack_size = f_stack_size;
 
-        if(f_i == 0){
-            STARGATE->main_thread_args = (void*)f_args;
-        }
         //pthread_mutex_init(&STARGATE->track_cond_mutex[f_i], NULL);
         pthread_cond_init(&_thread->track_cond, NULL);
         pthread_spin_init(&_thread->lock, 0);
