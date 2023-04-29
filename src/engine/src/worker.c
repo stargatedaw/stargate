@@ -190,15 +190,19 @@ NO_OPTIMIZATION void v_activate(
     /* Instantiate hosts */
     g_stargate_get(a_sr, a_midi_devices);
 
-    STARGATE->hosts[SG_HOST_DAW].run = v_daw_run_engine;
-    STARGATE->hosts[SG_HOST_DAW].osc_send = v_daw_osc_send;
-    STARGATE->hosts[SG_HOST_DAW].audio_inputs = v_daw_update_audio_inputs;
-    STARGATE->hosts[SG_HOST_DAW].mix = v_default_mix;
+    STARGATE->hosts[SG_HOST_DAW] = (t_sg_host){
+        .run = v_daw_run_engine,
+        .osc_send = v_daw_osc_send,
+        .audio_inputs = v_daw_update_audio_inputs,
+        .mix = v_default_mix,
+    };
 
-    STARGATE->hosts[SG_HOST_WAVE_EDIT].run = v_run_wave_editor;
-    STARGATE->hosts[SG_HOST_WAVE_EDIT].osc_send = v_we_osc_send;
-    STARGATE->hosts[SG_HOST_WAVE_EDIT].audio_inputs = v_we_update_audio_inputs;
-    STARGATE->hosts[SG_HOST_WAVE_EDIT].mix = v_default_mix;
+    STARGATE->hosts[SG_HOST_WAVE_EDIT] = (t_sg_host){
+        .run = v_run_wave_editor,
+        .osc_send = v_we_osc_send,
+        .audio_inputs = v_we_update_audio_inputs,
+        .mix = v_default_mix,
+    };
 
     g_daw_instantiate(a_sr);
     g_wave_edit_get();
