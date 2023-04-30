@@ -260,7 +260,12 @@ class SgProject(AbstractProject):
         a_audio_item.pitch_shift_end = round(a_audio_item.pitch_shift_end, 6)
 
         f_src_path = self.get_wav_name_by_uid(a_audio_item.uid)
+
         if f_src_path in self.timestretch_reverse_lookup:
+            LOG.info(
+                f'Replacing {f_src_path} with '
+                f'{self.timestretch_reverse_lookup[f_src_path]}'
+            )
             f_src_path = self.timestretch_reverse_lookup[f_src_path]
         else:
             if (

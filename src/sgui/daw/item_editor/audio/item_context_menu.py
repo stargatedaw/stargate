@@ -728,6 +728,8 @@ def crisp_menu_triggered(a_action):
     timestretch_items(f_list)
 
 def timestretch_items(a_list):
+    audio_pool = constants.PROJECT.get_audio_pool()
+    by_path = audio_pool.by_path()
     for f_item in a_list:
         if f_item.time_stretch_mode >= 3:
             try:
@@ -740,6 +742,12 @@ def timestretch_items(a_list):
                 )
                 global_open_audio_items(True)
                 return
+        else:
+            src_path = constants.PROJECT.get_wav_name_by_uid(f_item.uid)
+            if src_path in constants.PROJECT.timestretch_reverse_lookup:
+                orig = constants.PROJECT.timestretch_reverse_lookup[src_path]
+                LOG.info(f'Setting {f_item.uid} to {by_path[orig].uid}')
+                f_item.uid = by_path[orig].uid
 
     constants.PROJECT.save_stretch_dicts()
 
