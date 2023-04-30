@@ -186,23 +186,10 @@ with open(postrm_path, 'w') as f:
     f.write(postrm)
 os.chmod(postrm_path, 0o755)
 
-retcode = os.system(f"dpkg-deb --build --root-owner-group {root}")
+package = f"{major_version}-{minor_version}-{arch}.deb"
+retcode = os.system(f"dpkg-deb --build --root-owner-group {root} {package}")
 assert not retcode, retcode
-try:
-    import distro
-    distro_name = distro.name().split()[0].lower()
-    distro_version = distro.version().lower().replace(' ', '-')
-    package = (
-        f"{major_version}-{minor_version}-"
-        f"{distro_name}-{distro_version}-{arch}.deb"
-    )
-except ImportError:
-    package = f"{major_version}-{minor_version}-{arch}.deb"
 
-os.rename(
-    os.path.join(CWD, "tmp.deb"),
-    os.path.join(CWD, package),
-)
 package_path = os.path.join(CWD, package)
 print(f"Created {package_path}")
 
