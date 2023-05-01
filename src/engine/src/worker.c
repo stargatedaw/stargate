@@ -15,22 +15,6 @@
 
 #if SG_OS == _OS_MACOS
     #include <pthread/qos.h>
-
-    void _macos_sched_priority(){
-        int sched_priority = (int)(
-            (float)sched_get_priority_max(RT_SCHED) * 0.9
-        );
-        log_info("sched_priority: %i", sched_priority);
-        const struct sched_param rt_sched_param = {
-            .sched_priority = sched_priority,
-        };
-        int qos_result = pthread_attr_set_qos_class_np(
-            &threadAttr,
-            QOS_CLASS_USER_INTERACTIVE,
-            0
-        );
-        log_info("qos_result worker: %i", qos_result);
-    }
 #elif SG_OS == _OS_WINDOWS
     #include <Windows.h>
     #include <avrt.h>
@@ -115,7 +99,19 @@ void v_init_worker_threads(
     pthread_attr_setschedpolicy(&threadAttr, RT_SCHED);
 #endif
 #if SG_OS == _OS_MACOS
-    _macos_sched_priority();
+    int sched_priority = (int)(
+        (float)sched_get_priority_max(RT_SCHED) * 0.9
+    );
+    log_info("sched_priority: %i", sched_priority);
+    int qos_result = pthread_attr_set_qos_class_np(
+        &threadAttr,
+        QOS_CLASS_USER_INTERACTIVE,
+        0
+    );
+    log_info("qos_result worker: %i", qos_result);
+    const struct sched_param rt_sched_param = {
+        .sched_priority = sched_priority,
+    };
 #endif
 
     int f_i;
