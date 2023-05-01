@@ -64,6 +64,11 @@ and portmidi that are packaged are not compatible with your distro.  You
 can try installing those packages from your distro.
 
 # Linux distro-specific issues
+## Any
+### Qt could not initialize any platform plugins
+Usually the simplest way to solve this is to install `python3-pyqt5`, or 
+whatever the package may be called on your distro
+
 ## Ubuntu 22.04 AppImage issues
 ### Desktop crashes
 The fix, in my experience, is to use `Gnome on X.Org` as the desktop
