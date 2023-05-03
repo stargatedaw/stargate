@@ -1,4 +1,5 @@
 from sglib.log import LOG
+from sglib.constants import IS_MACOS
 import os
 import sys
 import textwrap
@@ -650,6 +651,25 @@ class QAction(_HintBox, QAction):
         self.triggered.connect(
             lambda x: self._clear_hint_box(_all=True)
         )
+
+    def setShortcut(self, shortcut):
+        super().setShortcut(shortcut)
+        # Workaround for shenigans with MacOS menu shortcuts.  Apparently
+        # would only work if everything was in the menuBar, which we do
+        # not use
+        if IS_MACOS:
+            shortcut_text = self.shortcut().toString()
+            for k, v in {
+                'Ctrl': 'CMD', 
+                'Alt': 'OPT', 
+                'Shift': 'SHIFT',
+            }.items():
+                shortcut_text = shortcut_text.replace(k, v)
+            self.setText(
+                self.text() + f"  ({shortcut_text})" 
+            )
+
+
 class QLCDNumber(_HintWidget, QLCDNumber):
     pass
 
