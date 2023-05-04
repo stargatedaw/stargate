@@ -654,20 +654,17 @@ class QAction(_HintBox, QAction):
 
     def setShortcut(self, shortcut):
         super().setShortcut(shortcut)
-        # Workaround for shenigans with MacOS menu shortcuts.  Apparently
-        # would only work if everything was in the menuBar, which we do
-        # not use
+        # Workaround for shenanigans with MacOS menu entries not showing their
+        # keyboard shortcuts.  Apparently would only work if everything was in
+        # the main window menuBar, which we do not use, and it would not make
+        # sense to use, because every tab has it's own shortcuts that are not
+        # global to the application.  Also, unless using a monospaced font,
+        # there is no way to align the shortcuts with each other horizontally
         if IS_MACOS:
             shortcut_text = self.shortcut().toString()
-            for k, v in {
-                'Ctrl': 'CMD', 
-                'Alt': 'OPT', 
-                'Shift': 'SHIFT',
-            }.items():
+            for k, v in {'Ctrl': 'Cmd', 'Alt': 'Opt'}.items():
                 shortcut_text = shortcut_text.replace(k, v)
-            self.setText(
-                self.text() + f"  ({shortcut_text})" 
-            )
+            self.setText(f"{self.text()}  ({shortcut_text})")
 
 
 class QLCDNumber(_HintWidget, QLCDNumber):
