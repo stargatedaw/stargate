@@ -19,11 +19,14 @@ def ui_check_updates():
         QMessageBox.warning(None, 'Error', f'Update check failed: {ex}')
         LOG.exception(ex)
         return
-    if update:
+    if update[0]:
         QMessageBox.question(
             None,
             'Update available!',
-            f'{update} is available. Go to download page?',
+            (
+                f'{update[1]} installed, {update[2]} is available. '
+                'Go to download page?'
+            ),
             (
                 QMessageBox.StandardButton.Yes
                 |
@@ -37,5 +40,5 @@ def ui_check_updates():
         QMessageBox.information(
             None,
             "No update available",
-            'You are already running the latest version of Stargate DAW',
+            f'{update[2]} is the latest, already installed',
         )
