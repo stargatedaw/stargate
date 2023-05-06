@@ -228,6 +228,14 @@ def show(current_item):
     )
     f_reset_end_action.triggered.connect(reset_end)
 
+    f_reset_time_action = QAction(_("Reset Time"), f_properties_menu)
+    f_properties_menu.addAction(f_reset_time_action)
+    f_reset_time_action.setToolTip(
+        'Reset time stretching for selected items.  Only changes the stretch '
+        'factor back to 1.0, does not change any other settings'
+    )
+    f_reset_time_action.triggered.connect(reset_time)
+
     f_move_to_end_action = QAction(_("Move to Item End"), f_properties_menu)
     f_properties_menu.addAction(f_move_to_end_action)
     f_move_to_end_action.setToolTip(
@@ -762,6 +770,29 @@ def timestretch_items(a_list):
             ),
             f_new_graph.length_in_seconds,
         )
+
+    item_lib.save_item(
+        shared.CURRENT_ITEM_NAME,
+        shared.CURRENT_ITEM,
+    )
+    constants.DAW_PROJECT.commit(
+        _("Change timestretch mode for audio item(s)")
+    )
+    global_open_audio_items()
+
+def reset_time():
+    _list = [x.audio_item for x in shared.AUDIO_SEQ.get_selected()]
+    audio_pool = constants.PROJECT.get_audio_pool()
+    by_path = audio_pool.by_path()
+    for item in _list:
+        item.timestretch_amt = 1.0
+        src_path = constants.PROJECT.get_wav_name_by_uid(item.uid)
+        if src_path in constants.PROJECT.timestretch_reverse_lookup:
+            orig = constants.PROJECT.timestretch_reverse_lookup[src_path]
+            LOG.info(f'Setting {item.uid} to {by_path[orig].uid}')
+            item.uid = by_path[orig].uid
+
+    constants.PROJECT.save_stretch_dicts()
 
     item_lib.save_item(
         shared.CURRENT_ITEM_NAME,
