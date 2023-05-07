@@ -89,6 +89,9 @@ class SequencerWidget:
         self.edit_checkbox.setCheckable(True)
         self.toolbar.addAction(self.edit_checkbox)
         self.edit_checkbox.triggered.connect(self.edit_mode_changed)
+        self.edit_checkbox.setShortcut(
+            QKeySequence.fromString("CTRL+E")
+        )
 
         # Follow
         icon = QIcon()
@@ -109,12 +112,13 @@ class SequencerWidget:
         self.follow_checkbox = QAction(icon, '', self.toolbar)
         self.follow_checkbox.setToolTip(
             'Sequencer horizontal scroll follows the playback cursor'
+            " (CTRL+F)"
         )
         self.follow_checkbox.setCheckable(True)
         self.follow_checkbox.setChecked(True)
         self.toolbar.addAction(self.follow_checkbox)
         self.follow_checkbox.setShortcut(
-            QKeySequence.fromString("CTRL+SHIFT+M")
+            QKeySequence.fromString("CTRL+F")
         )
 
         # Un-solo 
