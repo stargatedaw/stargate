@@ -151,7 +151,6 @@ ln -s /opt/stargate/files/share/mime/packages/stargate.xml \
 
 postrm = """\
 rm -f /usr/bin/stargate || true
-rm -f /usr/bin/stargate || true
 rm -rf /usr/share/doc/stargate || true
 rm -f /usr/share/pixmaps/stargate.png || true
 rm -f /usr/share/pixmaps/stargate.ico || true
