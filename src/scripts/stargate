@@ -7,20 +7,31 @@ import subprocess
 import sys
 import time
 
+VERSION = "stargate"
 REAL_PATH = __file__
 
-for i in range(20):
-    if os.path.islink(REAL_PATH):
-        print(f"Replacing symlink: {REAL_PATH}")
-        REAL_PATH = os.readlink(REAL_PATH)
-    else:
-        break
+def find_real_path():
+    """ Find the real path to the script, reading symlinks until it is found
+    """
+    global REAL_PATH
+    for i in range(20):
+        if os.path.islink(REAL_PATH):
+            old = REAL_PATH
+            REAL_PATH = os.readlink(REAL_PATH)
+            if not os.path.isabs(REAL_PATH):
+                REAL_PATH = os.path.abspath(
+                    os.path.join(
+                        os.path.dirname(old), 
+                        REAL_PATH,
+                    ),
+                )
+            print(f"Replaced symlink: {old} with {REAL_PATH}")
+        else:
+            break
 
-if os.path.islink(REAL_PATH):
-    print("You clearly messed something up, what are you trying to do?")
-    exit(1)
+    assert not os.path.islink(REAL_PATH), REAL_PATH
 
-VERSION = "stargate"
+find_real_path()
 
 
 def parse_args():

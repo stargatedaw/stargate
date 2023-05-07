@@ -82,21 +82,26 @@ install_self_contained:
 
 install_symlinks: uninstall_symlinks
 	# Symlink a self-contained install to the main system,
-	# this requires root unless installing to an alternate PREFIX
-	ln -s /opt/stargate/scripts/stargate \
+	# this requires root unless installing to an alternate DESTDIR or PREFIX
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -d $(DESTDIR)$(PREFIX)/share/applications
+	install -d $(DESTDIR)$(PREFIX)/share/doc
+	install -d $(DESTDIR)$(PREFIX)/share/mime/packages
+	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
+	ln -rs $(DESTDIR)/opt/stargate/scripts/stargate \
 		$(DESTDIR)$(PREFIX)/bin/stargate || true
-	ln -s /opt/stargate/files/share/doc/stargate \
+	ln -rs $(DESTDIR)/opt/stargate/files/share/doc/stargate \
 		$(DESTDIR)$(PREFIX)/share/doc/stargate || true
-	ln -s /opt/stargate/files/share/pixmaps/stargate.png \
+	ln -rs $(DESTDIR)/opt/stargate/files/share/pixmaps/stargate.png \
 		$(DESTDIR)$(PREFIX)/share/pixmaps/stargate.png || true
-	ln -s /opt/stargate/files/share/pixmaps/stargate.ico \
+	ln -rs $(DESTDIR)/opt/stargate/files/share/pixmaps/stargate.ico \
 		$(DESTDIR)$(PREFIX)/share/pixmaps/stargate.ico || true
-	ln -s /opt/stargate/files/share/applications/stargate.desktop \
+	ln -rs $(DESTDIR)/opt/stargate/files/share/applications/stargate.desktop \
 		$(DESTDIR)$(PREFIX)/share/applications/stargate.desktop || true
-	ln -s /opt/stargate/files/share/mime/packages/stargate.xml \
+	ln -rs $(DESTDIR)/opt/stargate/files/share/mime/packages/stargate.xml \
 		$(DESTDIR)$(PREFIX)/share/mime/packages/stargate.xml || true
 
-uinstall_symlinks:
+uninstall_symlinks:
 	rm -rf $(DESTDIR)$(PREFIX)/share/doc/stargate
 	rm -f \
 		$(DESTDIR)$(PREFIX)/bin/stargate \
