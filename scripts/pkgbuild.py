@@ -25,7 +25,7 @@ pkgver={{ version }}
 pkgrel=1
 pkgdesc="A DAW, plugins and wave editor"
 arch=('i686' 'x86_64' 'aarch64')
-url="https://stargateaudio.github.io"
+url="https://github.com/stargatedaw/stargate"
 license=('GPL')
 groups=()
 depends=(
@@ -67,21 +67,19 @@ source=($pkgname-$pkgver.tar.gz)
 noextract=()
 md5sums=() #generate with 'makepkg -g'
 
+prepare() {
+  git submodule init
+  git submodule update
+}
+
 build() {
   cd "$srcdir/$pkgname-$pkgver"
-
-  if [ "${CARCH?}" -eq "x86_64" ]; then
-    make distro
-  else
-    make distro PLAT_FLAGS="-march=native"
-  fi
+  PLAT_FLAGS="${CFLAGS}" make all
 }
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
-
-  make DESTDIR="$pkgdir/" install_distro
-  make DESTDIR="$pkgdir/" install_py_vendor
+  DESTDIR="$pkgdir/" make install
 }
 
 """
