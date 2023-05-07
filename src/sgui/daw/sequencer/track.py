@@ -540,6 +540,8 @@ class TrackPanel:
             self.tracks[key].open_track(f_track)
             self.tracks[key].refresh()
         self.update_plugin_track_map()
+        shared.SEQ_WIDGET.update_mute_all()
+        shared.SEQ_WIDGET.update_solo_all()
 
     def get_tracks(self):
         f_result = tracks()
