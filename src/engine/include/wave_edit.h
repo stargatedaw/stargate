@@ -11,14 +11,16 @@
 #define WN_CONFIGURE_KEY_WN_PLAYBACK "wnp"
 #define WN_CONFIGURE_KEY_PLUGIN_INDEX "pi"
 #define WN_CONFIGURE_KEY_AUDIO_INPUTS "ai"
+#define WN_CONFIGURE_KEY_PLUGIN_RACK "fx"
 
 
 typedef struct{
     t_audio_pool_item* ab_wav_item;
     t_audio_item* ab_audio_item;
     t_track* track_pool[1];
-    char* tracks_folder;
-    char* project_folder;
+    int fx_enabled;
+    char tracks_folder[1024];
+    char project_folder[1024];
 }t_wave_edit;
 
 extern t_wave_edit * wave_edit;

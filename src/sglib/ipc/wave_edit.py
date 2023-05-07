@@ -39,3 +39,6 @@ class WaveEditIPC(AbstractIPC):
     def save_audio_inputs(self):
         self.send_configure("ai", "")
 
+    def plugin_rack(self, enabled):
+        self.send_configure("fx", str(enabled))
+

@@ -16,6 +16,7 @@ from sglib.lib.translate import _
 from sglib.log import LOG
 from sglib.math import clip_value
 from sglib.models.project.abstract import AbstractProject
+from sglib.models.theme import get_asset_path
 from sglib.models.track_plugin import track_plugin, track_plugins
 from sglib.models.stargate import AudioInputTrack, AudioInputTracks
 from sgui import shared as glbl_shared
@@ -441,19 +442,48 @@ class TransportWidget(AbstractTransportWidget):
         self.start_sequence = 0
         self.last_bar = 0
         self.last_open_dir = HOME
-        self.group_box = QWidget()
-        self.group_box.setObjectName("transport_panel")
-        self.vlayout = QVBoxLayout(self.group_box)
-        self.hlayout1 = QHBoxLayout()
-        self.vlayout.addLayout(self.hlayout1)
 
         self.audio_inputs = AudioInputWidget()
 
-        self.hlayout1.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        self.toolbar = QToolBar()
+        self.toolbar.setObjectName('transport_panel')
+        self.toolbar.setIconSize(QtCore.QSize(32, 32))
+        self.group_box = self.toolbar
+
+        # FX
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('fx-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
         )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('fx-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.fx_checkbox = QAction(icon, '', self.toolbar)
+        self.fx_checkbox.setToolTip(
+            'Enable or disable the plugin rack'
+        )
+        self.fx_checkbox.setCheckable(True)
+        self.fx_checkbox.setChecked(True)
+        self.toolbar.addAction(self.fx_checkbox)
+        self.fx_checkbox.triggered.connect(self.on_fx_changed)
 
         self.suppress_osc = False
+
+    def on_fx_changed(self, enabled):
+        if enabled in (0, QtCore.Qt.CheckState.Unchecked):
+            enabled = 0
+        else:
+            enabled = 1
+        if not self.suppress_osc:
+            constants.WAVE_EDIT_PROJECT.ipc().plugin_rack(enabled)
 
     def open_project(self):
         self.audio_inputs.open_project()

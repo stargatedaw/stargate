@@ -23,10 +23,9 @@ t_wave_edit * wave_edit;
 void g_wave_edit_get(){
     SGFLT f_sample_rate = STARGATE->thread_storage[0].sample_rate;
     clalloc((void**)&wave_edit, sizeof(t_wave_edit));
+    wave_edit->fx_enabled = 1;
     wave_edit->ab_wav_item = 0;
     wave_edit->ab_audio_item = g_audio_item_get(f_sample_rate);
-    wave_edit->tracks_folder = (char*)malloc(sizeof(char) * 1024);
-    wave_edit->project_folder = (char*)malloc(sizeof(char) * 1024);
     int i;
     for(i = 0; i < 1; ++i){
         wave_edit->track_pool[i] = g_track_get(i, f_sample_rate);
@@ -444,28 +443,27 @@ void v_run_wave_editor(
         f_buff[f_i].right = output[f_i].right;
     }
 
-    for(f_i = 0; f_i < MAX_PLUGIN_COUNT; ++f_i)
-    {
-        f_plugin = f_track->plugins[f_i];
-        if(f_plugin && f_plugin->power)
-        {
-            f_plugin->descriptor->run(
-                f_plugin->plugin_handle,
-                RunModeReplacing,
-                sample_count,
-                f_track->audio[0],
-                f_track->sc_buffers,
-                f_track->audio[0],
-                f_track->event_list,
-                f_plugin->atm_list,
-                NULL,
-                0
-            );
+    if(self->fx_enabled){
+        for(f_i = 0; f_i < MAX_PLUGIN_COUNT; ++f_i){
+            f_plugin = f_track->plugins[f_i];
+            if(f_plugin && f_plugin->power){
+                f_plugin->descriptor->run(
+                    f_plugin->plugin_handle,
+                    RunModeReplacing,
+                    sample_count,
+                    f_track->audio[0],
+                    f_track->sc_buffers,
+                    f_track->audio[0],
+                    f_track->event_list,
+                    f_plugin->atm_list,
+                    NULL,
+                    0
+                );
+            }
         }
     }
 
-    for(f_i = 0; f_i < sample_count; ++f_i)
-    {
+    for(f_i = 0; f_i < sample_count; ++f_i){
         output[f_i].left = f_buff[f_i].left;
         output[f_i].right = f_buff[f_i].right;
     }
@@ -558,6 +556,17 @@ void v_we_osc_send(t_osc_send_data * a_buffers){
     }
 }
 
+void set_fx_enabled(int enabled){
+    sg_assert(
+        enabled >= 0 && enabled <= 1, 
+        "Enabled out of range %i", 
+        enabled
+    );
+    pthread_spin_lock(&STARGATE->main_lock);
+    wave_edit->fx_enabled = enabled;
+    pthread_spin_unlock(&STARGATE->main_lock);
+}
+
 void v_we_update_audio_inputs(){
     v_update_audio_inputs(wave_edit->project_folder);
 }
@@ -584,6 +593,9 @@ void v_we_configure(const char* a_key, const char* a_value){
         v_we_set_playback_mode(wave_edit, f_mode, 1);
     } else if(!strcmp(a_key, WN_CONFIGURE_KEY_PLUGIN_INDEX)){
         we_track_reload();
+    } else if(!strcmp(a_key, WN_CONFIGURE_KEY_PLUGIN_RACK)){
+        int enabled = atoi(a_value);
+        set_fx_enabled(enabled);
     } else {
         log_info(
             "Unknown configure message key: %s, value %s",

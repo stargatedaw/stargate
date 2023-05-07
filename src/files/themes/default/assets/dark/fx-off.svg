@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="44"
+   height="44"
+   viewBox="0 0 44 44"
+   fill="none"
+   version="1.1"
+   id="svg496"
+   sodipodi:docname="fx-off.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview498"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="10.193182"
+     inkscape:cx="24.133779"
+     inkscape:cy="34.140468"
+     inkscape:window-width="1920"
+     inkscape:window-height="1007"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg496" />
+  <rect
+     width="44"
+     height="44"
+     rx="6"
+     fill="#17181D"
+     id="rect485" />
+  <defs
+     id="defs494">
+    <rect
+       x="3.6789298"
+       y="6.1315496"
+       width="32.472687"
+       height="27.371237"
+       id="rect9274" />
+    <rect
+       x="3.2374582"
+       y="6.8673356"
+       width="37.03456"
+       height="35.317726"
+       id="rect8518" />
+    <linearGradient
+       id="paint0_linear"
+       x1="14.3923"
+       y1="11"
+       x2="26.3923"
+       y2="31.7846"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(32.423634,0.93199554)">
+      <stop
+         stop-color="#6E6E7E"
+         id="stop489" />
+      <stop
+         offset="1"
+         stop-color="#666270"
+         id="stop491" />
+    </linearGradient>
+  </defs>
+  <text
+     xml:space="preserve"
+     id="text8516"
+     style="font-size:18px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect8518);fill:#696675;fill-opacity:1" />
+  <g
+     aria-label="FX"
+     transform="matrix(1.9711581,0,0,2.2414589,-6.5062565,-14.048515)"
+     id="text9272"
+     style="font-size:18px;line-height:1.25;white-space:pre;shape-inside:url(#rect9274);opacity:1;vector-effect:none;fill:url(#paint0_linear);stop-color:#000000;stop-opacity:1">
+    <path
+       d="m 7.0456875,22.508613 h -1.62 V 9.6566127 H 12.607688 V 11.078613 H 7.0456875 v 4.554 h 5.2200005 v 1.422 H 7.0456875 Z"
+       style="vector-effect:none;stop-color:#000000;stop-opacity:1"
+       id="path319" />
+    <path
+       d="m 23.497671,22.508613 h -1.836 l -3.402,-5.58 -3.456,5.58 h -1.71 l 4.266,-6.696 -3.996,-6.1560003 h 1.8 l 3.15,5.0400003 3.168,-5.0400003 h 1.71 l -3.978,6.1200003 z"
+       style="vector-effect:none;stop-color:#000000;stop-opacity:1"
+       id="path321" />
+  </g>
+</svg>
