@@ -163,53 +163,25 @@ Stargate is digital audio workstations (DAWs), instrument and effect plugins
 
 %install
 rm -rf $RPM_BUILD_ROOT
-DESTDIR="$RPM_BUILD_ROOT" make install_self_contained
+DESTDIR="$RPM_BUILD_ROOT" make install
 
 
 %post
 
-%{{__rm}} -f %{{_bindir}}/{0}
-%{{__ln_s}} -f /opt/{0}/scripts/{0} %{{_bindir}}/{0}
-
-%{{__rm}} -rf %{{_usr}}/share/doc/{0}
-%{{__ln_s}} -f /opt/{0}/files/share/doc/{0} \
-        %{{_usr}}/share/doc/{0}
-
-%{{__rm}} -f %{{_usr}}/share/pixmaps/{0}.png
-%{{__ln_s}} -f /opt/{0}/files/share/pixmaps/{0}.png \
-    %{{_usr}}/share/pixmaps/{0}.png
-
-%{{__rm}} -f %{{_usr}}/share/pixmaps/{0}.ico
-%{{__ln_s}} -f /opt/{0}/files/share/pixmaps/{0}.ico \
-    %{{_usr}}/share/pixmaps/{0}.ico
-
-%{{__rm}} -f %{{_usr}}/share/applications/{0}.desktop
-%{{__ln_s}} -f /opt/{0}/files/share/applications/{0}.desktop \
-    %{{_usr}}/share/applications/{0}.desktop
-
-%{{__rm}} -f %{{_usr}}/share/mime/packages/{0}.xml
-%{{__ln_s}} -f /opt/{0}/files/share/mime/packages/{0}.xml \
-    %{{_usr}}/share/mime/packages/{0}.xml
-
 update-mime-database %{{_usr}}/share/mime/  || true
 xdg-mime default {0}.desktop text/{0}.project || true
-
-%postun
-
-if [ ! -d /opt/stargate ]; then
-    %{{__rm}} -f %{{_bindir}}/{0}
-    %{{__rm}} -rf %{{_usr}}/share/doc/{0}
-    %{{__rm}} -f %{{_usr}}/share/pixmaps/{0}.png
-    %{{__rm}} -f %{{_usr}}/share/pixmaps/{0}.ico
-    %{{__rm}} -f %{{_usr}}/share/applications/{0}.desktop
-    %{{__rm}} -f %{{_usr}}/share/mime/packages/{0}.xml
-fi
 
 %files
 
 %defattr(644, root, root)
 
 %attr(755, root, root) /opt/{0}
+%attr(755, root, root) %{{_usr}}/bin/{0}
+%{{_usr}}/share/applications/{0}.desktop
+%{{_usr}}/share/doc/{0}
+%{{_usr}}/share/mime/packages/{0}.xml
+%{{_usr}}/share/pixmaps/{0}.ico
+%{{_usr}}/share/pixmaps/{0}.png
 
 %doc
 
