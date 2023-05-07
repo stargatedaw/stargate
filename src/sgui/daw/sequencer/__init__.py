@@ -21,6 +21,7 @@ from sgui.daw import shared
 from sgui import widgets
 from sglib.lib.translate import _
 from sglib.math import clip_value
+from sglib.models.theme import get_asset_path
 from sgui.daw.lib import sequence as sequence_lib
 
 
@@ -37,55 +38,138 @@ class SequencerWidget:
         self.hlayout0 = QHBoxLayout(self.widget)
         self.hlayout0.setContentsMargins(1, 1, 1, 1)
 
-        self.menu_button = QPushButton(_("Menu"))
-        self.hlayout0.addWidget(self.menu_button)
+        self.toolbar = QToolBar()
+        self.toolbar.setIconSize(QtCore.QSize(20, 20))
+        self.hlayout0.addWidget(self.toolbar)
+
+        # Hamburger menu
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('menu.svg'),
+            ),
+            QIcon.Mode.Normal,
+            #QIcon.State.On,
+        )
+        self.menu_button = QToolButton()
+        self.menu_button.setIcon(icon)
+        self.menu_button.setPopupMode(
+            QToolButton.ToolButtonPopupMode.InstantPopup
+        )
+        self.toolbar.addWidget(self.menu_button)
         self.menu = QMenu(self.menu_button)
         self.menu_button.setMenu(self.menu)
-
-        self.action_widget = QWidgetAction(self.menu)
-        self.menu_widget = QWidget(self.menu)
-        self.menu_layout = QGridLayout(self.menu_widget)
-        self.menu_layout.addWidget(QLabel(_("Edit Mode:")), 0, 0)
-        self.edit_mode_combobox = QComboBox()
-        self.edit_mode_combobox.setMinimumWidth(132)
-        self.edit_mode_combobox.addItems([_("Items"), _("Automation")])
-        self.edit_mode_combobox.currentIndexChanged.connect(
-            self.edit_mode_changed,
-        )
-        self.edit_mode_combobox.setToolTip(
-            'Change the edit mode.  Edit items or automation'
-        )
-        self.menu_layout.addWidget(self.edit_mode_combobox, 0, 1)
-        self.action_widget.setDefaultWidget(self.menu_widget)
-        self.menu.addAction(self.action_widget)
-
-        self.toggle_edit_mode_action = QAction(
-            _("Toggle Edit Mode"),
-            self.menu,
-        )
-        self.toggle_edit_mode_action.setToolTip(
-            'Toggle between item and automation editing mode in the sequencer'
-        )
-        self.toggle_edit_mode_action.setShortcut(
-            QKeySequence.fromString("CTRL+E"),
-        )
-        #self.menu_button.addAction(self.toggle_edit_mode_action)
-        self.menu.addAction(self.toggle_edit_mode_action)
-        self.toggle_edit_mode_action.triggered.connect(self.toggle_edit_mode)
-
-        self.menu.addSeparator()
-
-        self.reorder_tracks_action = QAction(
-            _("Reorder Tracks..."),
-            self.menu,
-        )
+        self.reorder_tracks_action = QAction("Reorder Tracks...", self.menu)
         self.menu.addAction(self.reorder_tracks_action)
         self.reorder_tracks_action.setToolTip(
             'Re-order the sequencer tracks / plugin racks'
         )
         self.reorder_tracks_action.triggered.connect(self.set_track_order)
 
-        #self.menu.addSeparator()
+        # Edit Mode
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('edit-items.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('edit-atm.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        self.edit_checkbox = QAction(icon, '', self.toolbar)
+        self.edit_checkbox.setToolTip(
+            'Toggle between editing items and automation (CTRL+E)'
+        )
+        self.edit_checkbox.setCheckable(True)
+        self.toolbar.addAction(self.edit_checkbox)
+        self.edit_checkbox.triggered.connect(self.edit_mode_changed)
+
+        # Follow
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('follow-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('follow-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.follow_checkbox = QAction(icon, '', self.toolbar)
+        self.follow_checkbox.setToolTip(
+            'Sequencer horizontal scroll follows the playback cursor'
+        )
+        self.follow_checkbox.setCheckable(True)
+        self.follow_checkbox.setChecked(True)
+        self.toolbar.addAction(self.follow_checkbox)
+        self.follow_checkbox.setShortcut(
+            QKeySequence.fromString("CTRL+SHIFT+M")
+        )
+
+        # Un-solo 
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('solo-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('solo-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.solo_checkbox = QAction(icon, '', self.toolbar)
+        self.solo_checkbox.setToolTip(
+            'Disable solo for any tracks that have been soloed (CTRL+J)'
+        )
+        self.solo_checkbox.setCheckable(True)
+        self.toolbar.addAction(self.solo_checkbox)
+        self.solo_checkbox.setShortcut(
+            QKeySequence.fromString("CTRL+J")
+        )
+        self.solo_checkbox.triggered.connect(self.unsolo_all)
+
+        # Un-mute 
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('mute-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('mute-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.mute_checkbox = QAction(icon, '', self.toolbar)
+        self.mute_checkbox.setToolTip(
+            'Disable mute for any tracks that have been muted (CTRL+M)'
+        )
+        self.mute_checkbox.setCheckable(True)
+        self.toolbar.addAction(self.mute_checkbox)
+        self.mute_checkbox.setShortcut(
+            QKeySequence.fromString("CTRL+M")
+        )
+        self.mute_checkbox.triggered.connect(self.unmute_all)
 
         self.hide_inactive = False
 #        self.toggle_hide_action = self.menu.addAction(
@@ -94,25 +178,6 @@ class SequencerWidget:
 #        self.toggle_hide_action.triggered.connect(self.toggle_hide_inactive)
 #        self.toggle_hide_action.setShortcut(
 #            QKeySequence.fromString("CTRL+H"))
-        self.menu.addSeparator()
-
-        self.unsolo_action = QAction(_("Un-Solo All"), self.menu)
-        self.menu.addAction(self.unsolo_action)
-        self.widget.addAction(self.unsolo_action)
-        self.unsolo_action.setToolTip(
-            'Disable solo for any tracks that have been soloed'
-        )
-        self.unsolo_action.triggered.connect(self.unsolo_all)
-        self.unsolo_action.setShortcut(QKeySequence.fromString("CTRL+J"))
-
-        self.unmute_action = QAction(_("Un-Mute All"), self.menu)
-        self.menu.addAction(self.unmute_action)
-        self.widget.addAction(self.unmute_action)
-        self.unmute_action.setToolTip(
-            'Disable mute for any tracks that have been muted'
-        )
-        self.unmute_action.triggered.connect(self.unmute_all)
-        self.unmute_action.setShortcut(QKeySequence.fromString("CTRL+M"))
 
         self.snap_combobox = QComboBox()
         self.snap_combobox.addItems(
@@ -124,13 +189,6 @@ class SequencerWidget:
         # be done within the items and not at the sequencer level
         # self.menu_layout.addWidget(QLabel(_("Snap:")), 5, 0)
         # self.menu_layout.addWidget(self.snap_combobox, 5, 1)
-
-        self.follow_checkbox = QCheckBox(_("Follow"))
-        self.follow_checkbox.setToolTip(
-            'Sequencer horizontal scroll follows the playback cursor'
-        )
-        self.follow_checkbox.setChecked(True)
-        self.hlayout0.addWidget(self.follow_checkbox)
 
         self.hlayout0.addWidget(QLabel("H"))
         self.hzoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
@@ -191,13 +249,22 @@ class SequencerWidget:
             self.hzoom_slider,
             self.vzoom_slider,
             self.menu_button,
+            self.edit_checkbox,
         )
 
-    def toggle_edit_mode(self):
-        if not glbl_shared.IS_PLAYING:
-            # This relies on the assumption that only 2 modes exist
-            current_mode = self.edit_mode_combobox.currentIndex()
-            self.edit_mode_combobox.setCurrentIndex(int(not current_mode))
+    def update_solo_all(self):
+        for track in shared.TRACK_PANEL.tracks.values():
+            if track.solo_checkbox.isChecked():
+                self.solo_checkbox.setChecked(True)
+                return
+        self.solo_checkbox.setChecked(False)
+
+    def update_mute_all(self):
+        for track in shared.TRACK_PANEL.tracks.values():
+            if track.mute_checkbox.isChecked():
+                self.mute_checkbox.setChecked(True)
+                return
+        self.mute_checkbox.setChecked(False)
 
     def scrollbar_pressed(self, a_val=None):
         if (
@@ -399,7 +466,7 @@ class SequencerWidget:
         shared.MAIN_WINDOW.tab_changed()
 
     def edit_mode_changed(self, a_value=None):
-        _shared.SEQUENCE_EDITOR_MODE = a_value
+        _shared.SEQUENCE_EDITOR_MODE = int(a_value)
         shared.SEQUENCER.open_sequence()
 
     def toggle_hide_inactive(self):
@@ -410,11 +477,13 @@ class SequencerWidget:
         for track in shared.TRACK_PANEL.tracks.values():
             if track.solo_checkbox.isChecked():
                 track.solo_checkbox.trigger()
+        shared.SEQ_WIDGET.update_solo_all()
 
     def unmute_all(self):
         for track in shared.TRACK_PANEL.tracks.values():
             if track.mute_checkbox.isChecked():
                 track.mute_checkbox.trigger()
+        shared.SEQ_WIDGET.update_mute_all()
 
     def open_sequence(self, uid=None):
         self.enabled = False

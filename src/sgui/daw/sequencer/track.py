@@ -365,6 +365,7 @@ class SeqTrack:
 
     def on_solo(self, value):
         if not self.suppress_osc:
+            shared.SEQ_WIDGET.update_solo_all()
             constants.DAW_PROJECT.ipc().set_solo(
                 self.track_number,
                 self.solo_checkbox.isChecked(),
@@ -381,6 +382,7 @@ class SeqTrack:
 
     def on_mute(self, value):
         if not self.suppress_osc:
+            shared.SEQ_WIDGET.update_mute_all()
             constants.DAW_PROJECT.ipc().set_mute(
                 self.track_number, self.mute_checkbox.isChecked())
             constants.DAW_PROJECT.save_tracks(shared.TRACK_PANEL.get_tracks())

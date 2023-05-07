@@ -6,7 +6,7 @@
    fill="none"
    version="1.1"
    id="svg9375"
-   sodipodi:docname="fx-on.svg"
+   sodipodi:docname="follow-on.svg"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -65,16 +65,12 @@
      style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#8212f2;fill-opacity:1;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1" />
   <g
      aria-label="FX"
-     transform="matrix(1.9711581,0,0,2.2414589,-6.5062565,-14.048515)"
+     transform="matrix(1.9711581,0,0,2.2414589,4.2266829,-14.048516)"
      id="text9272"
      style="font-size:18px;line-height:1.25;white-space:pre;shape-inside:url(#rect9274);display:inline;opacity:1;vector-effect:none;fill:#ffffff;stroke-width:0.475745;stop-color:#000000;stop-opacity:1">
     <path
        d="m 7.0456875,22.508613 h -1.62 V 9.6566127 H 12.607688 V 11.078613 H 7.0456875 v 4.554 h 5.2200005 v 1.422 H 7.0456875 Z"
        style="vector-effect:none;stop-color:#000000;stop-opacity:1"
        id="path294" />
-    <path
-       d="m 23.497671,22.508613 h -1.836 l -3.402,-5.58 -3.456,5.58 h -1.71 l 4.266,-6.696 -3.996,-6.1560003 h 1.8 l 3.15,5.0400003 3.168,-5.0400003 h 1.71 l -3.978,6.1200003 z"
-       style="vector-effect:none;stop-color:#000000;stop-opacity:1"
-       id="path296" />
   </g>
 </svg>
