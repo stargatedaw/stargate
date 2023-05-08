@@ -29,6 +29,8 @@ class SequencerWidget:
     """ The widget that holds the sequencer """
     def __init__(self):
         self.enabled = False
+        self.solo_remember = set()
+        self.mute_remember = set()
         self.touchpad_filter = TouchpadFilter()
         self.widget = QWidget()
         self.widget.setSizePolicy(
@@ -477,17 +479,59 @@ class SequencerWidget:
         self.hide_inactive = self.toggle_hide_action.isChecked()
         global_update_hidden_rows()
 
-    def unsolo_all(self):
-        for track in shared.TRACK_PANEL.tracks.values():
+    def remember_solo(self):
+        self.solo_remember.clear()
+        for i, track in shared.TRACK_PANEL.tracks.items():
             if track.solo_checkbox.isChecked():
-                track.solo_checkbox.trigger()
-        shared.SEQ_WIDGET.update_solo_all()
+                self.solo_remember.add(i)
+
+    def unsolo_all(self):
+        if self.solo_checkbox.isChecked():
+            self.remember_solo()
+            for i, track in shared.TRACK_PANEL.tracks.items():
+                if track.solo_checkbox.isChecked():
+                    track.solo_checkbox.trigger()
+        else:
+            for i, track in shared.TRACK_PANEL.tracks.items():
+                if (
+                    not track.solo_checkbox.isChecked() 
+                    and 
+                    i in self.solo_remember
+                ) or (
+                    track.solo_checkbox.isChecked() 
+                    and 
+                    i not in self.solo_remember
+                ):
+                    track.solo_checkbox.trigger()
+
+    def remember_mute(self):
+        self.mute_remember.clear()
+        for i, track in shared.TRACK_PANEL.tracks.items():
+            LOG.info(i)
+            if track.mute_checkbox.isChecked():
+                LOG.info(f'{i} was checked')
+                self.mute_remember.add(i)
+        LOG.info(self.mute_remember)
 
     def unmute_all(self):
-        for track in shared.TRACK_PANEL.tracks.values():
-            if track.mute_checkbox.isChecked():
-                track.mute_checkbox.trigger()
-        shared.SEQ_WIDGET.update_mute_all()
+        LOG.info(self.mute_remember) 
+        if self.mute_checkbox.isChecked():
+            self.remember_mute()
+            for i, track in shared.TRACK_PANEL.tracks.items():
+                if track.mute_checkbox.isChecked():
+                    track.mute_checkbox.trigger()
+        else:
+            for i, track in shared.TRACK_PANEL.tracks.items():
+                if (
+                    not track.mute_checkbox.isChecked() 
+                    and 
+                    i in self.mute_remember
+                ) or (
+                    track.mute_checkbox.isChecked() 
+                    and 
+                    i not in self.mute_remember
+                ):
+                    track.mute_checkbox.trigger()
 
     def open_sequence(self, uid=None):
         self.enabled = False
