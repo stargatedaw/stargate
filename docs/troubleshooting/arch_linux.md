@@ -3,9 +3,8 @@ This document describes how to build Stargate DAW for Arch Linux
 and it's derivatives like Manjaro and others.
 
 Note that Stargate DAW is available in [AUR](
-  https://aur.archlinux.org/packages/stargate/), but at the time of this
-writing is not being actively maintained.  Feel free to volunteer as
-maintainer, vote to add it to the main repos, or flag it as out of date.
+  https://aur.archlinux.org/packages/stargate/
+)
 
 Also, if you are using an `x86_64` CPU, you may wish to use the AppImage
 executable, [see this](./appimage.md)
@@ -13,16 +12,16 @@ executable, [see this](./appimage.md)
 # Build Procedure
 ```
 git clone --recurse-submodules https://github.com/stargatedaw/stargate.git
-cd stargate/scripts
+cd stargate
 # First time only
 # Depending on which variant of Arch you are using, you may need to install
 # additional packages not included here
-./arch_deps.sh
+./scripts/arch_deps.sh
 ```
 
-## Building Manually (Working)
+## Building Manually
 ```
-cd ../src
+cd src
 
 make
 # Or for rpi4/ARM:
@@ -33,11 +32,8 @@ sudo make install
 ./scripts/stargate
 ```
 
-## PKGBUILD (Currently Broken)
-This was the procedure to do a PKGBUILD, but it was broken some time in 2022
-by an update to pacman, we currently do not know how to fix it
+## PKGBUILD
 ```
-git pull
 ./pkgbuild.py --install
 # Package is a .zst file in the root of the repo along with PKGBUILD
 ```
