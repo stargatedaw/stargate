@@ -416,14 +416,13 @@ class AudioSeqItem(QGraphicsRectItem):
             _shared.AUDIO_ITEM_HEIGHT - shared.AUDIO_ITEM_HANDLE_HEIGHT,
         )
         if (
-            self.audio_item.time_stretch_mode >= 2
-            and (
-                    self.audio_item.time_stretch_mode != 5
-                    and
-                    self.audio_item.time_stretch_mode != 2
-            ) or (
-                self.audio_item.timestretch_amt_end ==
-                    self.audio_item.timestretch_amt
+            self.audio_item.time_stretch_mode not in (0, 1)
+            and not (
+                self.audio_item.time_stretch_mode == 5  # SBSMS
+                and
+                self.audio_item.timestretch_amt_end 
+                != 
+                self.audio_item.timestretch_amt
             )
         ):
             self.stretch_handle.show()
