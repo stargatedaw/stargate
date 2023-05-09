@@ -13,6 +13,7 @@ from sgui.daw.shared import *
 from sglib.models import stargate as sg_project
 from sglib.lib import util
 from sglib.lib import scales
+from sglib.models.theme import get_asset_path
 from sglib.lib.util import *
 from sglib.lib.translate import _
 from sgui.sgqt import *
@@ -75,11 +76,28 @@ class PianoRollEditorWidget:
         self.hlayout.addWidget(QLabel(_("Parameter")))
         self.hlayout.addWidget(self.param_combobox)
 
-        self.edit_menu_button = QPushButton(_("Menu"))
-        self.edit_menu_button.setFixedWidth(60)
+        self.toolbar = QToolBar()
+        self.toolbar.setIconSize(QtCore.QSize(20, 20))
+        self.hlayout.insertWidget(0, self.toolbar)
+
+        # Hamburger menu
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('menu.svg'),
+            ),
+            QIcon.Mode.Normal,
+            #QIcon.State.On,
+        )
+        self.menu_button = QToolButton()
+        self.menu_button.setIcon(icon)
+        self.menu_button.setPopupMode(
+            QToolButton.ToolButtonPopupMode.InstantPopup
+        )
+        self.toolbar.addWidget(self.menu_button)
+
         self.edit_menu = QMenu(self.widget)
-        self.edit_menu_button.setMenu(self.edit_menu)
-        self.hlayout.insertWidget(0, self.edit_menu_button)
+        self.menu_button.setMenu(self.edit_menu)
 
         self.edit_actions_menu = self.edit_menu.addMenu(_("Edit"))
 
@@ -371,17 +389,28 @@ class PianoRollEditorWidget:
             QKeySequence.fromString("CTRL+H"),
         )
 
-        self.edit_menu.addSeparator()
-
-        self.draw_last_action = QAction(
-            _("Draw Last Item(s)"),
-            self.edit_menu,
+        # draw last item toolbar icon
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('draw-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
         )
-        self.edit_menu.addAction(self.draw_last_action)
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('draw-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.draw_last_action = QAction(icon, '', self.toolbar)
+        self.toolbar.addAction(self.draw_last_action)
         self.draw_last_action.setToolTip(
             'Draw the last item opened before the current as semi-transparent '
             '"ghost notes".  Use this for comparison to ensure that 2 parts '
-            'are musically harmonious'
+            'are musically harmonious. (CTRL+F)'
         )
         self.draw_last_action.triggered.connect(self.draw_last)
         self.draw_last_action.setCheckable(True)
@@ -389,36 +418,35 @@ class PianoRollEditorWidget:
             QKeySequence.fromString("CTRL+F"),
         )
 
-        self.open_last_action = QAction(
-            _("Open Last Item"),
-            self.edit_menu,
+        # Preview notes
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('speaker-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
         )
-        self.edit_menu.addAction(self.open_last_action)
-        self.open_last_action.setToolTip(
-            'Open the previously opened item.  Use this to rapidly switch '
-            'between 2 items you are editing'
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('speaker-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
         )
-        self.open_last_action.triggered.connect(shared.open_last)
-        self.open_last_action.setShortcut(
-            QKeySequence.fromString("ALT+F"),
-        )
-
-        self.edit_menu.addSeparator()
-
-        self.preview_note_action = QAction('Preview Notes', self.edit_menu)
-        self.edit_menu.addAction(self.preview_note_action)
+        self.preview_note_action = QAction(icon, '', self.toolbar)
+        self.toolbar.addAction(self.preview_note_action)
         self.preview_note_action.setToolTip(
             'Enable or disable playing any notes that are drawn or moved.'
         )
         self.preview_note_action.triggered.connect(self.toggle_preview_note)
         self.preview_note_action.setCheckable(True)
-        if get_file_setting('preview-note', bool, True):
+        if get_file_setting('preview-note', int, 1):
             self.preview_note_action.setChecked(True)
 
         self.hlayout.addItem(
             QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),
         )
-
         self.vlayout.addLayout(self.hlayout)
         self.vlayout.addWidget(shared.PIANO_ROLL_EDITOR)
 

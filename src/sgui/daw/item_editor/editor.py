@@ -9,6 +9,7 @@ from sglib.constants import MIDI_CHANNELS
 from sglib.lib import util
 from sglib.lib.util import *
 from sglib.lib.translate import _
+from sglib.models.theme import get_asset_path
 from sgui.sgqt import *
 
 
@@ -89,6 +90,40 @@ class ItemEditorWidget:
         self.zoom_hlayout = QHBoxLayout(self.zoom_widget)
         self.zoom_hlayout.setContentsMargins(2, 0, 2, 0)
         #self.zoom_hlayout.setSpacing(0)
+
+        self.toolbar = QToolBar()
+        self.toolbar.setIconSize(QtCore.QSize(16, 16))
+        self.zoom_hlayout.addWidget(self.toolbar)
+
+        # Hamburger menu
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('menu.svg'),
+            ),
+            QIcon.Mode.Normal,
+            #QIcon.State.On,
+        )
+        self.menu_button = QToolButton()
+        self.menu_button.setIcon(icon)
+        self.menu_button.setPopupMode(
+            QToolButton.ToolButtonPopupMode.InstantPopup
+        )
+        self.toolbar.addWidget(self.menu_button)
+        self.menu = QMenu(self.menu_button)
+        self.menu_button.setMenu(self.menu)
+        
+        self.open_last_action = QAction(
+            _("Open Last Item"),
+            self.menu,
+        )
+        self.menu.addAction(self.open_last_action)
+        self.open_last_action.setToolTip(
+            'Open the previously opened sequencer item.  Use this to rapidly '
+            'switch between 2 related sequencer items that you are editing'
+        )
+        self.open_last_action.triggered.connect(shared.open_last)
+        self.open_last_action.setShortcut(QKeySequence.fromString("ALT+F"))
 
         self.midi_channel_combobox = QComboBox()
         self.midi_channel_combobox.setMinimumWidth(48)

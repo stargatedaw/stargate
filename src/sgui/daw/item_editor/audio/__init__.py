@@ -22,6 +22,7 @@ from sglib.math import linear_interpolate
 from sgui.sgqt import *
 from sglib.models import theme
 from sglib.models.stargate.audio_pool import PerFileFX
+from sglib.models.theme import get_asset_path
 from sgui.util import get_font
 
 
@@ -726,7 +727,20 @@ class AudioItemSeqWidget(FileDragDropper):
         self.vlayout.addLayout(self.hlayout)
         self.vlayout.addWidget(shared.AUDIO_SEQ)
 
-        self.menu_button = QPushButton(_("Menu"))
+        self.menu_button = QToolButton()
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('menu.svg'),
+            ),
+            QIcon.Mode.Normal,
+            #QIcon.State.On,
+        )
+        self.menu_button.setIcon(icon)
+        self.menu_button.setPopupMode(
+            QToolButton.ToolButtonPopupMode.InstantPopup
+        )
+
         self.hlayout.addWidget(self.menu_button)
         self.hlayout.addItem(
             QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),
@@ -818,18 +832,6 @@ class AudioItemSeqWidget(FileDragDropper):
         )
 
         self.action_menu.addSeparator()
-
-        self.open_last_action = QAction(
-            _("Open Last Item"),
-            self.action_menu,
-        )
-        self.action_menu.addAction(self.open_last_action)
-        self.open_last_action.setToolTip(
-            'Open the previously opened sequencer item.  Use this to rapidly '
-            'switch between 2 related sequencer items that you are editing'
-        )
-        self.open_last_action.triggered.connect(open_last)
-        self.open_last_action.setShortcut(QKeySequence.fromString("ALT+F"))
 
         self.v_zoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
         self.v_zoom_slider.setToolTip('Vertical zoom')

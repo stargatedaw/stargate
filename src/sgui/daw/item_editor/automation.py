@@ -9,6 +9,7 @@ from sglib.log import LOG
 from sglib.models.daw import *
 from sgui.daw.shared import *
 from sglib.models import stargate as sg_project
+from sglib.models.theme import get_asset_path
 from sglib.lib import strings as sg_strings, util
 from sglib.lib.util import *
 from sglib.lib.translate import _
@@ -449,15 +450,46 @@ class AutomationEditorWidget:
         self.vlayout.addLayout(self.hlayout)
         self.vlayout.addWidget(self.automation_viewer)
 
-        self.smooth_button = QPushButton(_("Smooth"))
+        self.hlayout.addItem(QSpacerItem(10, 10))
+
+        self.toolbar = QToolBar()
+        self.toolbar.setIconSize(QtCore.QSize(20, 20))
+        self.hlayout.addWidget(self.toolbar)
+
+        # Hamburger menu
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('menu.svg'),
+            ),
+            QIcon.Mode.Normal,
+            #QIcon.State.On,
+        )
+        self.menu_button = QToolButton()
+        self.menu_button.setIcon(icon)
+        self.menu_button.setPopupMode(
+            QToolButton.ToolButtonPopupMode.InstantPopup
+        )
+        self.toolbar.addWidget(self.menu_button)
+
+        self.toolbar.addSeparator()
+
+        # Smooth button
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('smooth.svg'),
+            ),
+            QIcon.Mode.Normal,
+            #QIcon.State.On,
+        )
+        self.smooth_button = QAction(icon, '', self.toolbar)
+        self.toolbar.addAction(self.smooth_button)
         self.smooth_button.setToolTip(
             _("By default, the control points are steppy, "
             "this button draws extra points between the existing points."))
-        self.smooth_button.pressed.connect(self.smooth_pressed)
-        self.hlayout.addItem(QSpacerItem(10, 10))
-        self.edit_button = QPushButton(_("Menu"))
-        self.hlayout.addWidget(self.edit_button)
-        self.hlayout.addWidget(self.smooth_button)
+        self.smooth_button.triggered.connect(self.smooth_pressed)
+
         if a_is_cc:
             self.hlayout.addWidget(QLabel(_("CC")))
             self.hlayout.addWidget(self.control_combobox)
@@ -545,7 +577,7 @@ class AutomationEditorWidget:
         )
         self.clear_action.triggered.connect(self.clear)
 
-        self.edit_button.setMenu(self.edit_menu)
+        self.menu_button.setMenu(self.edit_menu)
         self.hlayout.addItem(
             QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),
         )
