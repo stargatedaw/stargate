@@ -21,7 +21,7 @@ import locale
 import os
 
 
-LOCALE, TEXT_ENCODING = locale.getdefaultlocale()
+LOCALE, TEXT_ENCODING = locale.getlocale()
 # Fixes an issue with the Korean version of Windows 10, probably others
 TEXT_ENCODING = 'UTF-8'
 LANGUAGE = None

@@ -90,6 +90,8 @@ else:  # PySide
     from PySide6.QtWidgets import *
     from PySide6.QtSvg import QSvgRenderer
 
+QtCore.QLocale.setDefault(QtCore.QLocale('C.UTF-8'))
+
 HINT_CACHE = {}
 HINT_BOX_STACK = []
 HINT_BOX = None

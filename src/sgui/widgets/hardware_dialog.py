@@ -245,7 +245,10 @@ class HardwareDialog:
                         util.DEVICE_SETTINGS["name"] = f_device
                         f_file = open(
                             util.DEVICE_CONFIG_PATH,
-                            "w", newline="\n")
+                            "w", 
+                            encoding='utf-8',
+                            newline="\n",
+                        )
                         for k, v in util.DEVICE_SETTINGS.items():
                             f_file.write("{}|{}\n".format(k, v))
                         f_file.write("\\")
@@ -700,30 +703,32 @@ class HardwareDialog:
                         _(f"Audio device returned: {msg}"),
                     )
                     raise Exception(msg)
-                f_file = open(config_path, "w", newline="\n")
-                f_file.write("hostApi|{}\n".format(self.subsystem))
-                f_file.write("name|{}\n".format(self.device_name))
-                if (
-                    util.IS_WINDOWS
-                    or
-                    util.IS_MACOS
-                ) and self.input_name:
-                    f_file.write("inputName|{}\n".format(self.input_name))
-                f_file.write("bufferSize|{}\n".format(f_buffer_size))
-                f_file.write("sampleRate|{}\n".format(f_samplerate))
-                f_file.write("threads|{}\n".format(f_worker_threads))
+                with open(
+                    config_path, 
+                    "w", 
+                    encoding='utf-8', 
+                    newline="\n",
+                ) as f:
+                    f.write("hostApi|{}\n".format(self.subsystem))
+                    f.write("name|{}\n".format(self.device_name))
+                    if (
+                        util.IS_WINDOWS
+                        or
+                        util.IS_MACOS
+                    ) and self.input_name:
+                        f.write("inputName|{}\n".format(self.input_name))
+                    f.write("bufferSize|{}\n".format(f_buffer_size))
+                    f.write("sampleRate|{}\n".format(f_samplerate))
+                    f.write("threads|{}\n".format(f_worker_threads))
 
-                if util.IS_LINUX:
-                    f_file.write("hugePages|{}\n".format(f_hugepages))
-                f_file.write("audioInputs|{}\n".format(f_audio_inputs))
-                f_file.write("audioOutputs|{}\n".format(f_audio_outputs))
-                f_file.write("testVolume|{}\n".format(test_volume))
-                for f_midi_in_device in f_midi_in_devices:
-                    f_file.write("midiInDevice|{}\n".format(
-                        f_midi_in_device))
-
-                f_file.write("\\")
-                f_file.close()
+                    if util.IS_LINUX:
+                        f.write("hugePages|{}\n".format(f_hugepages))
+                    f.write("audioInputs|{}\n".format(f_audio_inputs))
+                    f.write("audioOutputs|{}\n".format(f_audio_outputs))
+                    f.write("testVolume|{}\n".format(test_volume))
+                    for f_midi_in_device in f_midi_in_devices:
+                        f.write(f"midiInDevice|{f_midi_in_device}\n")
+                    f.write("\\")
             except Exception as ex:
                 LOG.exception(ex)
                 raise ex

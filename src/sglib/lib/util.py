@@ -731,7 +731,8 @@ def read_device_config():
 
     try:
         if os.path.isfile(DEVICE_CONFIG_PATH):
-            f_file_text = read_file_text(DEVICE_CONFIG_PATH)
+            with open(DEVICE_CONFIG_PATH, 'r', encoding='utf-8') as f:
+                f_file_text = f.read()
             for f_line in f_file_text.split("\n"):
                 if f_line.strip() == "\\":
                     break
