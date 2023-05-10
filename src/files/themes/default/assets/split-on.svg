@@ -1,8 +1,8 @@
 <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="44" height="44" rx="6" fill="#8212F2"/>
-<path d="M32 22L26.75 26.3301L26.75 17.6699L32 22Z" fill="white"/>
-<path d="M12 22L17.25 26.3301L17.25 17.6699L12 22Z" fill="white"/>
-<rect x="21" y="12" width="2" height="20" rx="1" fill="white"/>
+<path d="M32 22L26.75 26.3301L26.75 17.6699L32 22Z" fill="#cdcdcd"/>
+<path d="M12 22L17.25 26.3301L17.25 17.6699L12 22Z" fill="#cdcdcd"/>
+<rect x="21" y="12" width="2" height="20" rx="1" fill="#cdcdcd"/>
 <defs>
 <linearGradient id="paint0_linear" x1="32" y1="22" x2="25" y2="22" gradientUnits="userSpaceOnUse">
 <stop stop-color="#6E6E7E"/>
