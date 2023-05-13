@@ -3,6 +3,7 @@ from .pidfile import create_pidfile
 from sglib.log import LOG
 import copy
 import os
+import shlex
 import subprocess
 import threading
 
@@ -34,8 +35,10 @@ def run_process(cmd, pidfile=None):
             subprocess.CREATE_NO_WINDOW
         )
         kwargs['stdin'] = subprocess.DEVNULL
-    LOG.info(f"Starting subprocess with: {cmd}")
+    LOG.info(f"Starting subprocess with: {cmd} {kwargs}")
+    LOG.info(shlex.join(cmd))
     env = copy.deepcopy(os.environ)
+    #env['LC_ALL'] = 'C.UTF-8'
     if LD_LIBRARY_PATH:
         old = env.get('LD_LIBRARY_PATH', None)
         env['LD_LIBRARY_PATH'] = LD_LIBRARY_PATH
