@@ -15,6 +15,7 @@ GNU General Public License for more details.
 
 import os, time, difflib
 
+from sglib.lib import util
 
 class history_file:
     def __init__(self, a_folder, a_file_name, a_text_new,
@@ -48,16 +49,11 @@ class history_commit:
             if f_file.existed == 0:
                 os.remove(f_full_path)
             else:
-                self._write_file(f_full_path, f_file.old_text)
+                util.write_file_text(f_full_path, f_file.old_text)
 
     def redo(self, a_project_folder):
         for f_file in self.files:
             f_full_path = os.path.join(
                 a_project_folder, f_file.folder, f_file.file_name)
-            self._write_file(f_full_path, f_file.new_text)
-
-    def _write_file(self, a_file, a_text):
-        f_file = open(a_file, "w", newline="\n")
-        f_file.write(a_text)
-        f_file.close()
+            util.write_file_text(f_full_path, f_file.new_text)
 

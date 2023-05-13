@@ -554,8 +554,8 @@ def read_file_text(a_file):
         return f_handle.read()
 
 def write_file_text(a_file, a_text):
-    with open(pi_path(a_file), "w", newline="\n") as f_handle:
-        f_handle.write(str(a_text))
+    with open(pi_path(a_file), "w", encoding='utf-8', newline="\n") as f:
+        f.write(str(a_text))
 
 def gen_uid():
     """Generated an integer uid.  Adding together multiple random
@@ -706,8 +706,7 @@ def get_file_setting(a_name, a_type, a_default):
 def set_file_setting(a_name, a_val):
     FILE_SETTING_CACHE[a_name] = a_val
     f_file_name = os.path.join(CONFIG_DIR, "{}.txt".format(a_name))
-    with open(f_file_name, "w", newline="\n") as f_file:
-        f_file.write(str(a_val))
+    write_file_text(f_file_name, a_val)
 
 def clear_file_setting(a_name):
     if a_name in FILE_SETTING_CACHE:

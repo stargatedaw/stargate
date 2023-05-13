@@ -137,8 +137,7 @@ class preset_manager_widget:
                 )
         elif not os.path.exists(self.user_factory_presets):
             LOG.info("No factory presets found, loading empty bank")
-            with open(self.user_factory_presets, 'w') as f:
-                f.write(self.plugin_name)
+            util.write_file_text(self.user_factory_presets, self.plugin_name)
         self.bank_combobox.clear()
         self.bank_combobox.addItems(
             sorted(

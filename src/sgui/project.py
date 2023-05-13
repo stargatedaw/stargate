@@ -13,6 +13,7 @@ from sglib.lib.util import (
     META_DOT_JSON,
     PROJECT_FILE_TYPE,
     set_file_setting,
+    write_file_text,
 )
 from sglib.log import LOG
 from sgui.sgqt import *
@@ -173,8 +174,7 @@ def check_project_version(parent, project_file):
         or
         minor_version > project_version
     ):
-        with open(project_file, 'w') as f:
-            f.write(minor_version)
+        write_file_text(project_file, minor_version)
     elif minor_version == project_version:
         pass
     else:

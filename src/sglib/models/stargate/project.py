@@ -147,13 +147,11 @@ class SgProject(AbstractProject):
             with open(self.plugin_uid_file) as f_handle:
                 f_result = int(f_handle.read())
             f_result += 1
-            with open(self.plugin_uid_file, "w", newline="\n") as f_handle:
-                f_handle.write(str(f_result))
+            write_file_text(self.plugin_uid_file, f_result)
             assert(f_result < 100000)
             return f_result
         else:
-            with open(self.plugin_uid_file, "w", newline="\n") as f_handle:
-                f_handle.write(str(0))
+            write_file_text(self.plugin_uid_file, str(0))
             return 0
 
     def clear_audio_tmp_folder(self):
@@ -236,10 +234,7 @@ class SgProject(AbstractProject):
             )
 
     def save_audio_pool(self, a_uid_dict):
-        with open(self.audio_pool_file, 'w') as f:
-            f.write(
-                str(a_uid_dict),
-            )
+        write_file_text(self.audio_pool_file, a_uid_dict)
 
     def timestretch_lookup_orig_path(self, a_path):
         if a_path in self.timestretch_reverse_lookup:

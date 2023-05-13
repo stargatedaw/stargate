@@ -73,8 +73,7 @@ class AbstractProject:
 
     def save_track_colors(self, a_colors):
         path = os.path.join(self.host_folder, "track_colors.txt")
-        with open(path, "w") as fh:
-            fh.write(str(a_colors))
+        util.write_file_text(path, a_colors)
 
     def get_plugin_audio_pool_uids(self):
         result = set()

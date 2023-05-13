@@ -11,6 +11,7 @@ from sglib.lib.util import (
     set_file_setting,
     SHARE_DIR,
     THEMES_DIR,
+    write_file_text,
 )
 from sglib.log import LOG
 from sglib.math import clip_value
@@ -645,8 +646,7 @@ class Theme:
                 **variables
             )
         qss_path = os.path.join(rendered_dir, 'theme.qss')
-        with open(qss_path, 'w') as f:
-            f.write(qss)
+        write_file_text(qss_path, qss)
 
         return qss, system_colors, variables
 
