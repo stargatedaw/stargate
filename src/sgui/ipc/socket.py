@@ -114,8 +114,8 @@ class SocketIPCTransport(AbstractIPCTransport):
         value,
     ):
         message = "\n".join([path, key, value])
+        message = message.encode('utf-8')
         assert len(message) < 60000, (len(message), message)
-        message = message.encode('ascii')
         for wait in (0.1, 0.2, 0.3) if self.failures < 10 else (0,):
             try:
                 self.socket.sendall(message)
