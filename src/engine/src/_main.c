@@ -14,6 +14,7 @@ GNU General Public License for more details.
 
 #include <dirent.h>
 #include <errno.h>
+#include <locale.h>
 #include <limits.h>
 #include <math.h>
 #include <portaudio.h>
@@ -135,6 +136,7 @@ void print_help(){
 }
 
 int _main(int argc, char** argv){
+    setlocale(LC_ALL, "C.UTF-8");
 #if SG_OS == _OS_LINUX
     struct timespec load_start, load_finish;
     clock_gettime(CLOCK_REALTIME, &load_start);
