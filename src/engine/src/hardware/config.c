@@ -123,7 +123,7 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
 
             log_info("performance: %i", result->performance);
         } else if(!strcmp(f_key_char, "midiInDevice")){
-            snprintf(
+            sg_snprintf(
                 result->midi_in_device_names[result->midi_in_device_count],
                 127,
                 "%s",

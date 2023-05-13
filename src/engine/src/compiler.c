@@ -219,7 +219,7 @@ void sg_assert_ptr(void* cond, char* msg, ...){
     }
 }
 
-void sg_snprintf(
+size_t sg_snprintf(
     char* str,
     size_t size,
     char* fmt,
@@ -236,6 +236,7 @@ void sg_snprintf(
         (int)length,
         (int)size
     );
+    return length;
 }
 
 void set_thread_name(pthread_t thread, const char* name){

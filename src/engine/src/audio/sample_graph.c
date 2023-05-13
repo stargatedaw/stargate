@@ -7,7 +7,7 @@
 
 void v_create_sample_graph(t_audio_pool_item * self){
     char str_buff[2048];
-    snprintf(
+    sg_snprintf(
         str_buff,
         2048,
         "%s/%i",
@@ -23,7 +23,7 @@ void v_create_sample_graph(t_audio_pool_item * self){
 
     FILE * f_sg = fopen(str_buff, "w");
 
-    len = snprintf(
+    len = sg_snprintf(
         str_buff,
         2048,
         "meta|filename|%s\n",
@@ -32,7 +32,7 @@ void v_create_sample_graph(t_audio_pool_item * self){
     fwrite(str_buff, 1, len, f_sg);
     time_t f_ts = time(NULL);
 
-    len = snprintf(
+    len = sg_snprintf(
         str_buff,
         2048,
         "meta|timestamp|%lu\n",
@@ -40,7 +40,7 @@ void v_create_sample_graph(t_audio_pool_item * self){
     );
     fwrite(str_buff, 1, len, f_sg);
 
-    len = snprintf(
+    len = sg_snprintf(
         str_buff,
         2048,
         "meta|channels|%i\n",
@@ -48,7 +48,7 @@ void v_create_sample_graph(t_audio_pool_item * self){
     );
     fwrite(str_buff, 1, len, f_sg);
 
-    len = snprintf(
+    len = sg_snprintf(
         str_buff,
         2048,
         "meta|frame_count|%i\n",
@@ -56,7 +56,7 @@ void v_create_sample_graph(t_audio_pool_item * self){
     );
     fwrite(str_buff, 1, len, f_sg);
 
-    len = snprintf(
+    len = sg_snprintf(
         str_buff,
         2048,
         "meta|sample_rate|%i\n",
@@ -66,7 +66,7 @@ void v_create_sample_graph(t_audio_pool_item * self){
 
     SGFLT f_length = (SGFLT)self->length / (SGFLT)self->sample_rate;
 
-    len = snprintf(str_buff, 2048, "meta|length|%f\n", f_length);
+    len = sg_snprintf(str_buff, 2048, "meta|length|%f\n", f_length);
     fwrite(str_buff, 1, len, f_sg);
 
     int f_peak_size;
@@ -102,24 +102,24 @@ void v_create_sample_graph(t_audio_pool_item * self){
                 }
             }
 
-            len = snprintf(str_buff, 2048, "p|%i|h|%.3f\n", f_i, f_high);
+            len = sg_snprintf(str_buff, 2048, "p|%i|h|%.3f\n", f_i, f_high);
             fwrite(str_buff, 1, len, f_sg);
 
-            len = snprintf(str_buff, 2048, "p|%i|l|%.3f\n", f_i, f_low);
+            len = sg_snprintf(str_buff, 2048, "p|%i|l|%.3f\n", f_i, f_low);
             fwrite(str_buff, 1, len, f_sg);
         }
         ++f_count;
     }
 
-    len = snprintf(str_buff, 2048, "meta|count|%i\n", f_count);
+    len = sg_snprintf(str_buff, 2048, "meta|count|%i\n", f_count);
     fwrite(str_buff, 1, len, f_sg);
 
-    len = snprintf(str_buff, 2048, "\\");
+    len = sg_snprintf(str_buff, 2048, "\\");
     fwrite(str_buff, 1, len, f_sg);
 
     fclose(f_sg);
 
-    snprintf(
+    sg_snprintf(
         str_buff,
         2048,
         "%s/%i.finished",

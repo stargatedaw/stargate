@@ -240,7 +240,7 @@ t_audio_pool_item * v_audio_pool_add_item(
     if(a_file_path[0] == '!'){
         char* rest = a_file_path;
         ++rest;
-        snprintf(
+        sg_snprintf(
             f_path,
             8191,
             "%s%s",
@@ -265,7 +265,7 @@ t_audio_pool_item * v_audio_pool_add_item(
             f_file_path
         );
 
-        snprintf(
+        sg_snprintf(
             f_path,
             8191,
             "%s%s%s",
@@ -275,7 +275,7 @@ t_audio_pool_item * v_audio_pool_add_item(
         );
     } else {  // UNIX
         if(a_file_path[0] == '/'){
-            snprintf(
+            sg_snprintf(
                 f_path,
                 8191,
                 "%s%s",
@@ -283,7 +283,7 @@ t_audio_pool_item * v_audio_pool_add_item(
                 a_file_path
             );
         } else {
-            snprintf(
+            sg_snprintf(
                 f_path,
                 8191,
                 "%s%s%s",

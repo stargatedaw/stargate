@@ -68,9 +68,9 @@ void v_daw_offline_render(
             log_info("Successfully opened %s", f_file);
         }
 
-        snprintf(f_file, 2048, "%s%s0.wav", a_file_out, REAL_PATH_SEP);
+        sg_snprintf(f_file, 2048, "%s%s0.wav", a_file_out, REAL_PATH_SEP);
     } else {
-        snprintf(f_file, 2048, "%s", a_file_out);
+        sg_snprintf(f_file, 2048, "%s", a_file_out);
     }
 
     f_sndfile = sf_open(f_file, SFM_WRITE, &f_sf_info);

@@ -114,7 +114,7 @@ void v_rate_envelope(
     sf_close(f_sndfile);
 
     char f_tmp_finished[2048];
-    snprintf(f_tmp_finished, 2048, "%s.finished", a_file_out);
+    sg_snprintf(f_tmp_finished, 2048, "%s.finished", a_file_out);
     FILE * f_finished = fopen(f_tmp_finished, "w");
     fclose(f_finished);
     free(f_output);
@@ -249,7 +249,7 @@ void v_pitch_envelope(
     sf_close(f_sndfile);
 
     char f_tmp_finished[2048];
-    snprintf(f_tmp_finished, 2048, "%s.finished", a_file_out);
+    sg_snprintf(f_tmp_finished, 2048, "%s.finished", a_file_out);
     FILE * f_finished = fopen(f_tmp_finished, "w");
     fclose(f_finished);
     free(f_output);
