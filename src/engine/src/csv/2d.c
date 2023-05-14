@@ -32,7 +32,7 @@ t_2d_char_array * g_get_2d_array(int a_size){
 }
 
 t_2d_char_array * g_get_2d_array_from_file(
-    const char * a_file,
+    const SGPATHSTR* a_file,
     int a_size
 ){
     t_2d_char_array * f_result = g_get_2d_array(a_size);

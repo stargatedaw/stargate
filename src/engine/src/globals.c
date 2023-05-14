@@ -6,7 +6,6 @@ int SINGLE_THREAD = 0;
 int UI_SEND_USLEEP = 30000;
 pthread_mutex_t CONFIG_LOCK;
 pthread_mutex_t EXIT_MUTEX;
-char* INSTALL_PREFIX;
 
 int is_exiting(){
     int _exiting;

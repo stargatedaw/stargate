@@ -12,6 +12,9 @@ from sglib.lib.util import (
     SHARE_DIR,
     THEMES_DIR,
     write_file_text,
+    read_file_yaml,
+    read_file_json,
+    sg_open,
 )
 from sglib.log import LOG
 from sglib.math import clip_value
@@ -597,9 +600,8 @@ class Theme:
         var_dir = os.path.join(dirname, 'vars')
         var_path = os.path.join(var_dir, self.variables.path)
         palette_path = os.path.join(dirname, 'palettes', self.palette)
-        with open(palette_path) as f:
-            palette = yaml.safe_load(f)
-        with open(var_path) as f:
+        palette = read_file_yaml(palette_path)
+        with sg_open(var_path) as f:
             template = jinja2.Environment(
                 loader=jinja2.FileSystemLoader(var_dir),
             ).from_string(f.read())
@@ -609,21 +611,21 @@ class Theme:
         LOG.info(f"with {self.variables.overrides}")
         variables.update(self.variables.overrides)
         LOG.info(f"Result: {variables}")
-        with open(
+        with sg_open(
             os.path.join(rendered_dir, 'variables.yaml'),
             'w',
         ) as f:
             json.dump(variables, f, indent=2)
 
         system_path = os.path.join(dirname, 'system', self.system.path)
-        with open(system_path) as f:
+        with sg_open(system_path) as f:
             template = jinja2.Template(f.read())
             y = template.render(palette=palette, **variables)
             y = yaml.safe_load(y)
         y['daw'].update(self.system.overrides.daw)
         y['widgets'].update(self.system.overrides.widgets)
         system_colors = unmarshal_json(y, SystemColors)
-        with open(
+        with sg_open(
             os.path.join(rendered_dir, 'system.yaml'),
             'w'
         ) as f:
@@ -634,7 +636,7 @@ class Theme:
             )
 
         template_path = os.path.join(dirname, 'templates', self.template)
-        with open(template_path) as f:
+        with sg_open(template_path) as f:
             template = jinja2.Template(f.read())
             qss = template.render(
                 ASSETS_DIR=ASSETS_DIR,
@@ -735,8 +737,7 @@ def open_theme(
     font_size: int,
     font_unit: str,
 ):
-    with open(theme_file) as f:
-        y = yaml.safe_load(f)
+    y = read_file_yaml(theme_file)
     theme = unmarshal_json(y, Theme)
     return theme.render(
         theme_file,

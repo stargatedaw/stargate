@@ -11,20 +11,20 @@ typedef struct
     SGFLT sample_rate;
     int count;
     t_audio_pool_item items[MAX_AUDIO_POOL_ITEM_COUNT];
-    char samples_folder[2048];  //This must be set when opening a project
+    SGPATHSTR samples_folder[2048];  //This must be set when opening a project
 }t_audio_pool;
 
 void g_audio_pool_item_init(
     t_audio_pool_item *f_result,
     int a_uid,
     SGFLT volume,
-    const char *a_path,
+    const SGPATHSTR* a_path,
     SGFLT a_sr
 );
 
 t_audio_pool_item * g_audio_pool_item_get(
     int a_uid,
-    const char *a_path,
+    const SGPATHSTR* a_path,
     SGFLT a_sr
 );
 
@@ -46,14 +46,14 @@ t_audio_pool_item * v_audio_pool_add_item(
     t_audio_pool* a_audio_pool,
     int a_uid,
     SGFLT volume,
-    char * a_file_path,
-    char* audio_folder
+    SGPATHSTR* a_file_path,
+    SGPATHSTR* audio_folder
 );
 
 void v_audio_pool_add_items(
     t_audio_pool* a_audio_pool,
-    char* a_file_path,
-    char* audio_folder
+    SGPATHSTR* a_file_path,
+    SGPATHSTR* audio_folder
 );
 
 t_audio_pool_item * g_audio_pool_get_item_by_uid(

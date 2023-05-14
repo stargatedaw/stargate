@@ -11,11 +11,19 @@ t_daw_atm_sequence * g_daw_atm_sequence_get(t_daw * self, int song_uid){
     t_daw_atm_point * f_point = NULL;
     t_daw_atm_point * last_point = NULL;
 
-    char f_file[1024] = "\0";
-    sg_snprintf(
+#if SG_OS == _OS_WINDOWS
+    SGPATHSTR f_file[1024] = L"\0";
+#else
+    SGPATHSTR f_file[1024] = "\0";
+#endif
+    sg_path_snprintf(
         f_file,
         1024,
+#if SG_OS == _OS_WINDOWS
+        L"%ls%i",
+#else
         "%s%i",
+#endif
         self->automation_folder,
         song_uid
     );

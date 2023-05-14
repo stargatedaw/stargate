@@ -257,14 +257,16 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
         f_item_counters[f_i] = 0;
     }
 
-    char f_full_path[TINY_STRING];
-    sg_snprintf(
+    SGPATHSTR f_full_path[TINY_STRING];
+    sg_path_snprintf(
         f_full_path,
         TINY_STRING,
-        "%s%ssongs%s%i",
+#if SG_OS == _OS_WINDOWS
+        L"%ls/songs/%i",
+#else
+        "%s/songs/%i",
+#endif
         self->project_folder,
-        PATH_SEP,
-        PATH_SEP,
         uid
     );
 
@@ -412,15 +414,16 @@ t_daw_sequence * g_daw_sequence_get(t_daw* self, int uid){
 
 
 NO_OPTIMIZATION void v_daw_open_tracks(){
-    char f_file_name[1024];
-    sg_snprintf(
+    SGPATHSTR f_file_name[1024];
+    sg_path_snprintf(
         f_file_name,
         1024,
-        "%s%sprojects%sdaw%stracks.txt",
-        STARGATE->project_folder,
-        PATH_SEP,
-        PATH_SEP,
-        PATH_SEP
+#if SG_OS == _OS_WINDOWS
+        L"%ls/projects/daw/tracks.txt",
+#else
+        "%s/projects/daw/tracks.txt",
+#endif
+        STARGATE->project_folder
     );
 
     if(i_file_exists(f_file_name))

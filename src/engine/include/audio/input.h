@@ -38,7 +38,7 @@ void v_audio_input_run(
     int sample_count,
     int * a_sc_dirty
 );
-void v_update_audio_inputs(char * a_project_folder);
+void v_update_audio_inputs(SGPATHSTR* a_project_folder);
 
 void * v_audio_recording_thread(void* a_arg);
 void v_stop_record_audio();

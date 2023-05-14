@@ -178,7 +178,7 @@ void v_init_worker_threads(
 // Crashes in GCC and Clang when optimized
 NO_OPTIMIZATION void v_activate(
     int a_thread_count,
-    char* a_project_path,
+    SGPATHSTR* a_project_path,
     SGFLT a_sr,
     t_midi_device_list* a_midi_devices,
     int a_aux_threads
@@ -223,7 +223,7 @@ void v_destructor(){
     int f_i;
     struct SgWorkerThread* _thread;
 
-    char tmp_sndfile_name[2048];
+    SGPATHSTR tmp_sndfile_name[2048];
 
     pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
     STARGATE->audio_recording_quit_notifier = 1;
@@ -234,15 +234,24 @@ void v_destructor(){
         if(STARGATE->audio_inputs[f_i].sndfile)
         {
             sf_close(STARGATE->audio_inputs[f_i].sndfile);
-            sg_snprintf(
+            sg_path_snprintf(
                 tmp_sndfile_name,
                 2048,
+#if SG_OS == _OS_WINDOWS
+                L"%ls%i.wav",
+#else
                 "%s%i.wav",
+#endif
                 STARGATE->audio_tmp_folder,
                 f_i
             );
+#if SG_OS == _OS_WINDOWS
+            log_info("Deleting %ls", tmp_sndfile_name);
+            _wremove(tmp_sndfile_name);
+#else
             log_info("Deleting %s", tmp_sndfile_name);
             remove(tmp_sndfile_name);
+#endif
         }
     }
 

@@ -144,8 +144,8 @@ class SgProject(AbstractProject):
 
     def get_next_plugin_uid(self):
         if os.path.isfile(self.plugin_uid_file):
-            with open(self.plugin_uid_file) as f_handle:
-                f_result = int(f_handle.read())
+            content = read_file_text(self.plugin_uid_file)
+            f_result = int(content)
             f_result += 1
             write_file_text(self.plugin_uid_file, f_result)
             assert(f_result < 100000)
@@ -228,10 +228,8 @@ class SgProject(AbstractProject):
     def get_audio_pool(self):
         if not os.path.exists(self.audio_pool_file):
             return AudioPool.new()
-        with open(self.audio_pool_file, "r") as f:
-            return AudioPool.from_str(
-                f.read(),
-            )
+        content = read_file_text(self.audio_pool_file)
+        return AudioPool.from_str(content)
 
     def save_audio_pool(self, a_uid_dict):
         write_file_text(self.audio_pool_file, a_uid_dict)
@@ -621,10 +619,9 @@ class SgProject(AbstractProject):
         f_old_path = os.path.join(
             *(str(x) for x in (self.plugin_pool_folder, a_old)))
         if os.path.exists(f_old_path):
-            with open(f_old_path) as file_handle:
-                self.save_file(
-                    folder_plugins, a_new, file_handle.read())
-                #self.commit("Copy plugin UID {} to {}".format(a_old, a_new))
+            content = read_file_text(f_old_path)
+            self.save_file(folder_plugins, a_new, content)
+            #self.commit("Copy plugin UID {} to {}".format(a_old, a_new))
         else:
             LOG.info("{} does not exist, not copying".format(f_old_path))
 

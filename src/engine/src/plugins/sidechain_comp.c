@@ -87,7 +87,7 @@ PluginHandle g_scc_instantiate(
 void v_scc_load(
     PluginHandle instance,
     PluginDescriptor* Descriptor,
-    char* a_file_path
+    SGPATHSTR* a_file_path
 ){
     t_scc *plugin_data = (t_scc*)instance;
     generic_file_loader(

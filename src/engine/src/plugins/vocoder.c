@@ -84,7 +84,7 @@ PluginHandle g_sg_vocoder_instantiate(
 void v_sg_vocoder_load(
     PluginHandle instance,
     PluginDescriptor * Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_sg_vocoder *plugin_data = (t_sg_vocoder*)instance;
     generic_file_loader(

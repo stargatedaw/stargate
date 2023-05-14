@@ -164,7 +164,7 @@ PluginHandle g_sgeq_instantiate(
 void v_sgeq_load(
     PluginHandle instance,
     PluginDescriptor * Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_sgeq *plugin_data = (t_sgeq*)instance;
     generic_file_loader(

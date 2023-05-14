@@ -73,7 +73,7 @@ PluginHandle g_sgdelay_instantiate(
 void v_sgdelay_load(
     PluginHandle instance,
     PluginDescriptor * Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_sgdelay *plugin_data = (t_sgdelay*)instance;
     generic_file_loader(instance, Descriptor,

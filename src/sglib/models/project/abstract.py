@@ -57,8 +57,7 @@ class AbstractProject:
         f_folder = self.track_pool_folder
         f_path = os.path.join(*(str(x) for x in (f_folder, a_track_num)))
         if os.path.isfile(f_path):
-            with open(f_path) as f_handle:
-                f_str = f_handle.read()
+            f_str = util.read_file_text(f_path)
             return track_plugins.from_str(f_str)
         else:
             return None
@@ -66,8 +65,8 @@ class AbstractProject:
     def get_track_colors(self):
         path = os.path.join(self.host_folder, "track_colors.txt")
         if os.path.isfile(path):
-            with open(path) as fh:
-                return TrackColors.from_str(fh.read())
+            content = util.read_file_text(path)
+            return TrackColors.from_str(content)
         else:
             return TrackColors()
 

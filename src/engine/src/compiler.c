@@ -12,6 +12,7 @@
 #include <unistd.h>
 
 
+SGPATHSTR INSTALL_PREFIX[4096];
 
 #if SG_OS == _OS_MACOS
     #include <os/lock.h>
@@ -34,18 +35,26 @@
 #endif
 
 #if SG_OS == _OS_WINDOWS
-    #define REAL_PATH_SEP "\\"
-    char * get_home_dir(){
-        char * f_result = getenv("USERPROFILE");
-        sg_assert_ptr(f_result, "getenv(USERPROFILE) returned NULL");
+    SGPATHSTR* get_home_dir(){
+        wchar_t * f_result = _wgetenv(L"USERPROFILE");
+        sg_assert_ptr(f_result, "_wgetenv(USERPROFILE) returned NULL");
         return f_result;
     }
+    SNDFILE* SG_SF_OPEN(wchar_t* path, int mode, SF_INFO* info){
+        SNDFILE* result = sf_wchar_open((LPCWSTR)path, mode, info);
+	sg_assert_ptr(result, "Could not open %ls", path);
+	return result;
+    }
 #else
-    #define REAL_PATH_SEP "/"
-    char * get_home_dir(){
+    SGPATHSTR* get_home_dir(){
         char * f_result = getenv("HOME");
         sg_assert_ptr(f_result, "getenv(HOME) returned NULL");
         return f_result;
+    }
+    SNDFILE* SG_SF_OPEN(char* path, int mode, SF_INFO* info){
+        SNDFILE* result = sf_open((const char*)path, mode, info);
+	sg_assert_ptr(result, "Could not open %s", path);
+	return result;
     }
 #endif
 
@@ -229,6 +238,30 @@ size_t sg_snprintf(
     va_list args;
     va_start(args, fmt);
     length = vsnprintf(str, size, fmt, args);
+    va_end(args);
+    sg_assert(
+        length < size,
+        "length %i < size %i",
+        (int)length,
+        (int)size
+    );
+    return length;
+}
+
+size_t sg_path_snprintf(
+    SGPATHSTR* str,
+    size_t size,
+    SGPATHSTR* fmt,
+    ...
+){
+    size_t length;
+    va_list args;
+    va_start(args, fmt);
+#if SG_OS == _OS_WINDOWS
+    length = vswprintf(str, size, fmt, args);
+#else
+    length = vsnprintf(str, size, fmt, args);
+#endif
     va_end(args);
     sg_assert(
         length < size,

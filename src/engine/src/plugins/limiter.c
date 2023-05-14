@@ -68,7 +68,7 @@ PluginHandle g_sg_lim_instantiate(
 void v_sg_lim_load(
     PluginHandle instance,
     PluginDescriptor * Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_sg_lim *plugin_data = (t_sg_lim*)instance;
     generic_file_loader(

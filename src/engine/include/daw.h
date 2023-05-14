@@ -154,12 +154,12 @@ typedef struct {
 
     t_daw_midi_routing_list midi_routing;
 
-    char automation_folder[1024];
-    char project_folder[1024];
-    char item_folder[1024];
-    char sequence_folder[1024];
-    char tracks_folder[1024];
-    char seq_event_file[1024];
+    SGPATHSTR automation_folder[1024];
+    SGPATHSTR project_folder[1024];
+    SGPATHSTR item_folder[1024];
+    SGPATHSTR sequence_folder[1024];
+    SGPATHSTR tracks_folder[1024];
+    SGPATHSTR seq_event_file[1024];
 } t_daw;
 
 
@@ -196,7 +196,7 @@ void daw_process_qwerty_midi(
     int a_thread_num,
     t_daw_thread_storage * a_ts
 );
-void v_daw_offline_render(t_daw*, double, double, char*, int, int, int, int);
+void v_daw_offline_render(t_daw*, double, double, SGPATHSTR*, int, int, int, int);
 void v_daw_audio_items_run(
     t_daw*,
     t_daw_item_ref*,

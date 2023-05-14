@@ -1,6 +1,8 @@
 #ifndef UTIL_PROJECT_H
 #define UTIL_PROJECT_H
 
-void v_open_project(const char*, int);
+#include "compiler.h"
+
+void v_open_project(const SGPATHSTR*, int);
 
 #endif

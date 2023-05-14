@@ -4,6 +4,7 @@ from .util import (
     read_file_text,
     string_to_note_num,
 )
+from sglib.lib import util
 from sglib.log import LOG
 import os
 import re
@@ -42,8 +43,12 @@ def sfz_file_loader(
     """
     defines = defines if defines else {}
     result = []
-    with open(path) as f:
-        text = f.read()
+    try:
+        with open(path) as f:
+            text = f.read()
+    except:
+        LOG.exception(f"Failed to read SFZ file: {path}, trying utf-8")
+        text = util.read_file_text(path)
     # Remove multiline comments
     text = re.sub(r"(\/\*.*\*\/)", ' ', text)
     text = re.sub(r"(\/\*.*\*\/)", '\n', text, flags=re.S)

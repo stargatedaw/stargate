@@ -3,32 +3,60 @@
 #include "stargate.h"
 #include "audio/sample_graph.h"
 #include "files.h"
+#include "unicode.h"
 
 
 void v_create_sample_graph(t_audio_pool_item * self){
+    SGPATHSTR path_buff[2048];
     char str_buff[2048];
-    sg_snprintf(
-        str_buff,
+    sg_path_snprintf(
+        path_buff,
         2048,
+#if SG_OS == _OS_WINDOWS
+        L"%ls/%i",
+#else
         "%s/%i",
+#endif
         STARGATE->samplegraph_folder,
         self->uid
     );
 
-    if(i_file_exists(str_buff)){
+    if(i_file_exists(path_buff)){
+#if SG_OS == _OS_WINDOWS
+        log_info("%ls exists, not creating sample graph", path_buff);
+#else
+        log_info("%s exists, not creating sample graph", path_buff);
+#endif
         return;
     }
 
     int len;
 
-    FILE * f_sg = fopen(str_buff, "w");
+#if SG_OS == _OS_WINDOWS
+    FILE* f_sg = _wfopen(path_buff, L"w");
+    sg_assert_ptr(f_sg, "Failed to open sample graph file %ls", path_buff);
+#else
+    FILE* f_sg = fopen(path_buff, "w");
+    sg_assert_ptr(f_sg, "Failed to open sample graph file %s", path_buff);
+#endif
 
+#if SG_OS == _OS_WINDOWS
+    char utf8_buff[2048];
+    utf16_to_utf8(self->path, wcslen(self->path), utf8_buff, 2048);
+    len = sg_snprintf(
+        str_buff,
+        2048,
+        "meta|filename|%s\n",
+        utf8_buff
+    );
+#else
     len = sg_snprintf(
         str_buff,
         2048,
         "meta|filename|%s\n",
         self->path
     );
+#endif
     fwrite(str_buff, 1, len, f_sg);
     time_t f_ts = time(NULL);
 
@@ -119,14 +147,22 @@ void v_create_sample_graph(t_audio_pool_item * self){
 
     fclose(f_sg);
 
-    sg_snprintf(
-        str_buff,
+    sg_path_snprintf(
+        path_buff,
         2048,
+#if SG_OS == _OS_WINDOWS
+        L"%ls/%i.finished",
+#else
         "%s/%i.finished",
+#endif
         STARGATE->samplegraph_folder,
         self->uid
     );
-    FILE * f_finished = fopen(str_buff, "w");
+#if SG_OS == _OS_WINDOWS
+    FILE * f_finished = _wfopen(path_buff, L"w");
+#else
+    FILE * f_finished = fopen(path_buff, "w");
+#endif
     fclose(f_finished);
 }
 

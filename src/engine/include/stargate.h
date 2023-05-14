@@ -289,13 +289,13 @@ struct _t_stargate {
     t_midi_device_list * midi_devices;
     int midi_learn;
     t_plugin plugin_pool[MAX_PLUGIN_POOL_COUNT];
-    char project_folder[1024];
-    char audio_folder[1024];
-    char audio_tmp_folder[1024];
-    char samples_folder[1024];
-    char samplegraph_folder[1024];
-    char audio_pool_file[1024];
-    char plugins_folder[1024];
+    SGPATHSTR project_folder[1024];
+    SGPATHSTR audio_folder[1024];
+    SGPATHSTR audio_tmp_folder[1024];
+    SGPATHSTR samples_folder[1024];
+    SGPATHSTR samplegraph_folder[1024];
+    SGPATHSTR audio_pool_file[1024];
+    SGPATHSTR plugins_folder[1024];
 };
 
 typedef struct {
@@ -365,7 +365,7 @@ void v_set_control_from_atm(
 );
 void v_open_track(
     t_track* a_track,
-    char* a_tracks_folder,
+    SGPATHSTR* a_tracks_folder,
     int a_index
 );
 void v_buffer_mix(

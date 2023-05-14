@@ -76,7 +76,7 @@ PluginHandle g_sfader_instantiate(PluginDescriptor * descriptor,
 void v_sfader_load(
     PluginHandle instance,
     PluginDescriptor * Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_sfader *plugin_data = (t_sfader*)instance;
     generic_file_loader(

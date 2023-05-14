@@ -23,8 +23,18 @@ void g_daw_item_get(t_daw* self, int a_uid){
     f_result->uid = a_uid;
     f_result->events = NULL;
 
-    char f_full_path[2048];
-    sg_snprintf(f_full_path, 2048, "%s%i", self->item_folder, a_uid);
+    SGPATHSTR f_full_path[2048];
+    sg_path_snprintf(
+        f_full_path, 
+        2048, 
+#if SG_OS == _OS_WINDOWS
+        L"%ls%i", 
+#else
+        "%s%i", 
+#endif
+        self->item_folder, 
+        a_uid
+    );
 
     t_2d_char_array * f_current_string = g_get_2d_array_from_file(
         f_full_path,

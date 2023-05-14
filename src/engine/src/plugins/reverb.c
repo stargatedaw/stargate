@@ -74,7 +74,7 @@ PluginHandle g_sreverb_instantiate(
 void v_sreverb_load(
     PluginHandle instance,
     PluginDescriptor * Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_sreverb *plugin_data = (t_sreverb*)instance;
     generic_file_loader(

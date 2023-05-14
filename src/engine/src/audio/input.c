@@ -44,7 +44,7 @@ void g_audio_input_init(
 
 void v_audio_input_record_set(
     t_audio_input * self,
-    char * a_file_out
+    SGPATHSTR* a_file_out
 ){
     if(self->sndfile){
         sf_close(self->sndfile);
@@ -52,7 +52,11 @@ void v_audio_input_record_set(
     }
 
     if(i_file_exists(a_file_out)){
+#if SG_OS == _OS_WINDOWS
+        _wremove(a_file_out);
+#else
         remove(a_file_out);
+#endif
     }
 
     if(self->rec){
@@ -64,8 +68,7 @@ void v_audio_input_record_set(
             self->sf_info.channels = 2;
         }
 
-        self->sndfile = sf_open(a_file_out, SFM_WRITE, &self->sf_info);
-        sg_assert_ptr(self->sndfile, "sf_open failed for %s", a_file_out);
+        self->sndfile = SG_SF_OPEN(a_file_out, SFM_WRITE, &self->sf_info);
     }
 }
 
@@ -188,17 +191,20 @@ void v_audio_input_run(
     }
 }
 
-void v_update_audio_inputs(char * a_project_folder){
-    char f_inputs_file[2048];
-    char f_tmp_file_name[2048];
+void v_update_audio_inputs(SGPATHSTR* a_project_folder){
+    SGPATHSTR f_inputs_file[2048];
+    SGPATHSTR f_tmp_file_name[2048];
 
     t_audio_input * f_ai;
-    sg_snprintf(
+    sg_path_snprintf(
         f_inputs_file,
         2048,
-        "%s%sinput.txt",
-        a_project_folder,
-        PATH_SEP
+#if SG_OS == _OS_WINDOWS
+        L"%ls/input.txt",
+#else
+        "%s/input.txt",
+#endif
+        a_project_folder
     );
 
     if(
@@ -261,10 +267,14 @@ void v_update_audio_inputs(char * a_project_folder){
             f_ai->vol = f_vol;
             f_ai->vol_linear = f_db_to_linear_fast(f_vol);
 
-            sg_snprintf(
+            sg_path_snprintf(
                 f_tmp_file_name,
                 2048,
+#if SG_OS == _OS_WINDOWS
+                L"%ls%i",
+#else
                 "%s%i",
+#endif
                 STARGATE->audio_tmp_folder,
                 f_index
             );
@@ -275,7 +285,11 @@ void v_update_audio_inputs(char * a_project_folder){
         pthread_mutex_unlock(&STARGATE->audio_inputs_mutex);
         g_free_2d_char_array(f_2d_array);
     } else {
+#if SG_OS == _OS_WINDOWS
+        log_info("%ls not found, setting default values", f_inputs_file);
+#else
         log_info("%s not found, setting default values", f_inputs_file);
+#endif
         pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
         int f_i;
         for(f_i = 0; f_i < AUDIO_INPUT_TRACK_COUNT; ++f_i){
@@ -289,10 +303,14 @@ void v_update_audio_inputs(char * a_project_folder){
             f_ai->vol = 0.0f;
             f_ai->vol_linear = 1.0f;
 
-            sg_snprintf(
+            sg_path_snprintf(
                 f_tmp_file_name,
                 2048,
+#if SG_OS == _OS_WINDOWS
+                L"%ls%i",
+#else
                 "%s%i",
+#endif
                 STARGATE->audio_tmp_folder,
                 f_i
             );
@@ -373,8 +391,8 @@ void * v_audio_recording_thread(void* a_arg){
 void v_stop_record_audio(){
     int f_i, f_frames, f_count;
     t_audio_input * f_ai;
-    char f_file_name_old[2048];
-    char f_file_name_new[2048];
+    SGPATHSTR f_file_name_old[2048];
+    SGPATHSTR f_file_name_new[2048];
 
     pthread_mutex_lock(&EXIT_MUTEX);
     log_info("Stopping recording, shutdown is inhibited.");
@@ -404,23 +422,35 @@ void v_stop_record_audio(){
             sf_close(f_ai->sndfile);
             f_ai->sndfile = NULL;
 
-            sg_snprintf(
+            sg_path_snprintf(
                 f_file_name_old,
                 2048,
+#if SG_OS == _OS_WINDOWS
+                L"%ls%i",
+#else
                 "%s%i",
+#endif
                 STARGATE->audio_tmp_folder,
                 f_i
             );
 
-            sg_snprintf(
+            sg_path_snprintf(
                 f_file_name_new,
                 2048,
+#if SG_OS == _OS_WINDOWS
+                L"%ls%i.wav",
+#else
                 "%s%i.wav",
+#endif
                 STARGATE->audio_tmp_folder,
                 f_i
             );
 
+#if SG_OS == _OS_WINDOWS
+            _wrename(f_file_name_old, f_file_name_new);
+#else
             rename(f_file_name_old, f_file_name_new);
+#endif
         }
     }
 
@@ -432,7 +462,7 @@ void v_stop_record_audio(){
 void v_prepare_to_record_audio(){
     int f_i;
     t_audio_input * f_ai;
-    char path[2048];
+    SGPATHSTR path[2048];
 
     pthread_mutex_lock(&STARGATE->audio_inputs_mutex);
 
@@ -444,10 +474,14 @@ void v_prepare_to_record_audio(){
         f_ai->buffer_iterator[0] = 0;
         f_ai->buffer_iterator[1] = 0;
         if(f_ai->rec){
-            sg_snprintf(
+            sg_path_snprintf(
                 path,
                 2048,
+#if SG_OS == _OS_WINDOWS
+                L"%ls%i",
+#else
                 "%s%i",
+#endif
                 STARGATE->audio_tmp_folder,
                 f_i
             );

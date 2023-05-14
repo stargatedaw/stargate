@@ -1,6 +1,8 @@
 #ifndef UTIL_FILES_H
 #define UTIL_FILES_H
 
+#include "compiler.h"
+
 /*Standard string sizes*/
 #define XLARGE_STRING 1048576
 #define LARGE_STRING  65536 //1048576
@@ -17,19 +19,18 @@ typedef struct st_dir_list
 }t_dir_list;
 
 void chown_file(const char *file_name);
-int i_file_exists(char*);
-void get_string_from_file(const char* a_file, int a_size, char* a_buf);
+int i_file_exists(SGPATHSTR*);
+void get_string_from_file(const SGPATHSTR* a_file, int a_size, char* a_buf);
 
-void v_write_to_file(char * a_file, char * a_string);
-void v_append_to_file(char * a_file, char * a_string);
-int i_file_exists(char * f_file_name);
+void v_write_to_file(SGPATHSTR * a_file, char * a_string);
+void v_append_to_file(SGPATHSTR * a_file, char * a_string);
 t_dir_list* g_get_dir_list(char * a_dir);
-void delete_file(char* path);
+void delete_file(SGPATHSTR* path);
 
 // Retrieve a config setting from ~/stargate/config/
 void get_file_setting(
     char * a_dest,
-    char * a_name,
+    SGPATHSTR * a_name,
     char * a_default
 );
 

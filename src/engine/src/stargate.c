@@ -20,6 +20,7 @@
 #include "ds/list.h"
 #include "files.h"
 #include "hardware/config.h"
+#include "unicode.h"
 
 #ifdef NO_MIDI
 #else
@@ -455,27 +456,34 @@ void track_free(t_track* track){
 
 NO_OPTIMIZATION void v_open_track(
     t_track* a_track,
-    char* a_tracks_folder,
+    SGPATHSTR* a_tracks_folder,
     int a_index
 ){
     int i, j;
-    char f_file_name[1024];
+    SGPATHSTR f_file_name[1024];
     int routes[MAX_PLUGIN_COUNT] = {};
     int routed_to[MAX_PLUGIN_COUNT + 1] = {};
     int plugin_active[MAX_PLUGIN_COUNT] = {};
     int audio_inputs[MAX_PLUGIN_COUNT];
 
-    sg_snprintf(
+    sg_path_snprintf(
         f_file_name,
         1024,
-        "%s%s%i",
+#if SG_OS == _OS_WINDOWS
+        L"%ls/%i",
+#else
+        "%s/%i",
+#endif
         a_tracks_folder,
-        PATH_SEP,
         a_index
     );
 
     if(i_file_exists(f_file_name)){
+#if SG_OS == _OS_WINDOWS
+        log_info("%ls exists, opening track", f_file_name);
+#else
         log_info("%s exists, opening track", f_file_name);
+#endif
         t_2d_char_array * f_2d_array = g_get_2d_array_from_file(
             f_file_name,
             LARGE_STRING
@@ -666,7 +674,11 @@ NO_OPTIMIZATION void v_open_track(
 
         g_free_2d_char_array(f_2d_array);
     } else {
+#if SG_OS == _OS_WINDOWS
+        log_info("%ls does not exist, resetting track", f_file_name);
+#else
         log_info("%s does not exist, resetting track", f_file_name);
+#endif
         int f_i;
         for(f_i = 0; f_i < MAX_PLUGIN_COUNT; ++f_i){
             v_set_plugin_index(a_track, f_i, 0, -1, 0, 0, 0);
@@ -740,12 +752,22 @@ t_track * g_track_get(int a_track_num, SGFLT a_sr){
     return f_result;
 }
 
-void v_set_preview_file(const char * a_file){
+void v_set_preview_file(const char* a_file){
+#if SG_OS == _OS_WINDOWS
+    SGPATHSTR path[2048];
+    utf8_to_utf16(a_file, strlen(a_file), path, 2048);
+    t_audio_pool_item * f_result = g_audio_pool_item_get(
+        0,
+        path,
+        STARGATE->thread_storage[0].sample_rate
+    );
+#else
     t_audio_pool_item * f_result = g_audio_pool_item_get(
         0,
         a_file,
         STARGATE->thread_storage[0].sample_rate
     );
+#endif
 
     if(f_result){
         if(i_audio_pool_item_load(f_result, 0)){
@@ -1291,6 +1313,9 @@ void v_sg_seq_event_list_set(
 
 void v_sg_configure(const char* a_key, const char* a_value){
     char buf[1024];
+#if SG_OS == _OS_WINDOWS
+    SGPATHSTR path_buf[2048];
+#endif
     log_info("v_sg_configure:  key: \"%s\", value: \"%s\"", a_key, a_value);
     int has_error = 0;
 
@@ -1395,6 +1420,16 @@ void v_sg_configure(const char* a_key, const char* a_value){
         int uid = atoi(val_arr->array[0]);
         SGFLT volume = atof(val_arr->array[1]);
         volume = f_db_to_linear(volume);
+#if SG_OS == _OS_WINDOWS
+	utf8_to_utf16(val_arr->array[2], strlen(val_arr->array[2]), path_buf, 2048);
+        t_audio_pool_item * result = v_audio_pool_add_item(
+            STARGATE->audio_pool,
+            uid,
+            volume,
+	    path_buf,
+            STARGATE->audio_folder
+        );
+#else
         t_audio_pool_item * result = v_audio_pool_add_item(
             STARGATE->audio_pool,
             uid,
@@ -1402,6 +1437,7 @@ void v_sg_configure(const char* a_key, const char* a_value){
             val_arr->array[2],
             STARGATE->audio_folder
         );
+#endif
         i_audio_pool_item_load(result, 1);
         v_create_sample_graph(result);
         g_free_1d_char_array(val_arr);
@@ -1425,12 +1461,18 @@ void v_sg_configure(const char* a_key, const char* a_value){
         char f_tmp_char[SMALL_STRING];
         sg_snprintf(f_tmp_char, SMALL_STRING, "%s", a_value);
         f_arr->array = f_tmp_char;
-        char * f_in_file = (char*)malloc(sizeof(char) * TINY_STRING);
+        SGPATHSTR * f_in_file = (SGPATHSTR*)malloc(sizeof(SGPATHSTR) * TINY_STRING);
+        SGPATHSTR * f_out_file = (SGPATHSTR*)malloc(sizeof(SGPATHSTR) * TINY_STRING);
         v_iterate_2d_char_array(f_arr);
+#if SG_OS == _OS_WINDOWS
+	utf8_to_utf16(f_arr->current_str, strlen(f_arr->current_str), f_in_file, TINY_STRING);
+        v_iterate_2d_char_array(f_arr);
+	utf8_to_utf16(f_arr->current_str, strlen(f_arr->current_str), f_out_file, TINY_STRING);
+#else
         strcpy(f_in_file, f_arr->current_str);
-        char * f_out_file = (char*)malloc(sizeof(char) * TINY_STRING);
         v_iterate_2d_char_array(f_arr);
         strcpy(f_out_file, f_arr->current_str);
+#endif
         v_iterate_2d_char_array(f_arr);
         SGFLT f_start = atof(f_arr->current_str);
         v_iterate_2d_char_array(f_arr);
@@ -1468,12 +1510,18 @@ void v_sg_configure(const char* a_key, const char* a_value){
         char f_tmp_char[SMALL_STRING];
         sg_snprintf(f_tmp_char, SMALL_STRING, "%s", a_value);
         f_arr->array = f_tmp_char;
-        char * f_in_file = (char*)malloc(sizeof(char) * TINY_STRING);
+        SGPATHSTR * f_in_file = (SGPATHSTR*)malloc(sizeof(SGPATHSTR) * TINY_STRING);
+        SGPATHSTR * f_out_file = (SGPATHSTR*)malloc(sizeof(SGPATHSTR) * TINY_STRING);
         v_iterate_2d_char_array(f_arr);
+#if SG_OS == _OS_WINDOWS
+        utf8_to_utf16(f_arr->current_str, strlen(f_arr->current_str), f_in_file, TINY_STRING);
+        v_iterate_2d_char_array(f_arr);
+        utf8_to_utf16(f_arr->current_str, strlen(f_arr->current_str), f_out_file, TINY_STRING);
+#else
         strcpy(f_in_file, f_arr->current_str);
-        char * f_out_file = (char*)malloc(sizeof(char) * TINY_STRING);
         v_iterate_2d_char_array(f_arr);
         strcpy(f_out_file, f_arr->current_str);
+#endif
         v_iterate_2d_char_array(f_arr);
         SGFLT f_start = atof(f_arr->current_str);
         v_iterate_2d_char_array(f_arr);
@@ -1509,7 +1557,11 @@ void v_sg_configure(const char* a_key, const char* a_value){
             .uid = f_uid,
             .host_sr = STARGATE->audio_pool->sample_rate,
         };
-        strncpy(f_new.path, f_old->path, 2040);
+#if SG_OS == _OS_WINDOWS
+        sg_path_snprintf(f_new.path, 2040, L"%ls", f_old->path);
+#else
+        sg_path_snprintf(f_new.path, 2040, "%s", f_old->path);
+#endif
 
         i_audio_pool_item_load(&f_new, 0);
 
@@ -1578,11 +1630,15 @@ void plugin_init(
         );
         log_info("Finished initializing plugin");
 
-        char f_file_name[1024];
-        sg_snprintf(
+        SGPATHSTR f_file_name[1024];
+        sg_path_snprintf(
             f_file_name,
             1000,
+#if SG_OS == _OS_WINDOWS
+            L"%ls%i",
+#else
             "%s%i",
+#endif
             STARGATE->plugins_folder,
             a_plugin_uid
         );
@@ -1594,7 +1650,14 @@ void plugin_init(
                 self->descriptor,
                 f_file_name
             );
+        } else {
+#if SG_OS == _OS_WINDOWS
+            log_warn("No plugin state found at %ls", f_file_name);
+#else
+            log_warn("No plugin state found at %s", f_file_name);
+#endif
         }
+
         // Warm up control smoothers and anything else by running for
         // one second, avoids strangeness at the beginning of playback
         // or render

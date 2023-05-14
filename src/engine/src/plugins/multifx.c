@@ -136,7 +136,7 @@ PluginHandle g_multifx_instantiate(
 void v_multifx_load(
     PluginHandle instance,
     PluginDescriptor* Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_multifx *plugin_data = (t_multifx*)instance;
     generic_file_loader(

@@ -106,7 +106,7 @@ PluginHandle g_triggerfx_instantiate(
 void v_triggerfx_load(
     PluginHandle instance,
     PluginDescriptor * Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_triggerfx *plugin_data = (t_triggerfx*)instance;
     generic_file_loader(

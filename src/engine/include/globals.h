@@ -20,6 +20,5 @@ int is_exiting();
 // Initiate an orderly shutdown, this causes various thread loops to
 // exit so that various threads may finish
 void sg_exit();
-extern char* INSTALL_PREFIX;
 
 #endif

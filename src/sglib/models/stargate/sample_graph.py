@@ -78,12 +78,10 @@ class SampleGraph:
             return
 
         try:
-            f_file = open(f_file_name, "r")
+            f_line_arr = util.read_file_lines(f_file_name)
         except:
             return
 
-        f_line_arr = f_file.readlines()
-        f_file.close()
         for f_line in f_line_arr:
             f_line_arr = f_line.split("|")
             if f_line_arr[0] == "\\":

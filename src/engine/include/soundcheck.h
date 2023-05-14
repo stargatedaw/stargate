@@ -13,7 +13,7 @@ struct SoundCheck {
 
 extern struct SoundCheck SOUNDCHECK;
 
-int soundcheck(int arc, char** argv);
+int soundcheck(int arc, SGPATHSTR** argv);
 void soundcheck_init(struct SoundCheck*, SGFLT, int);
 SGFLT soundcheck_run(struct SoundCheck*);
 int soundcheck_callback(

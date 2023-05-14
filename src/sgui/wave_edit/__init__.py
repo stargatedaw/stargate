@@ -205,9 +205,8 @@ class WaveEditProject(AbstractProject):
 
     def get_audio_inputs(self):
         if os.path.isfile(self.audio_inputs_file):
-            with open(self.audio_inputs_file) as f_file:
-                f_str = f_file.read()
-            return AudioInputTracks.from_str(f_str)
+            content = read_file_text(self.audio_inputs_file)
+            return AudioInputTracks.from_str(content)
         else:
             return AudioInputTracks()
 

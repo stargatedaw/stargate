@@ -16,6 +16,7 @@ import time
 from sg_py_vendor import wavefile
 
 import psutil
+import yaml
 
 KEY_CTRL = 'CTRL'
 KEY_ALT = 'ALT'
@@ -100,11 +101,14 @@ AUTO_CPU_COUNT = clip_value(
     4,
 )
 
+def sg_open(path: str, mode: str='r', **kwargs):
+    return open(path, mode, encoding='utf-8', **kwargs)
+
 def _meta():
-    with open(META_DOT_JSON_PATH) as f:
+    with sg_open(META_DOT_JSON_PATH) as f:
         meta_dot_json = json.load(f)
     if os.path.exists(COMMIT_PATH):
-        with open(COMMIT_PATH) as f:
+        with sg_open(COMMIT_PATH) as f:
             commit_hash = f.read()
     else:
         commit_hash = 'unknown'
@@ -550,11 +554,23 @@ def paulstretch(
     return f_proc
 
 def read_file_text(a_file):
-    with open(pi_path(a_file)) as f_handle:
-        return f_handle.read()
+    with sg_open(pi_path(a_file)) as f:
+        return f.read()
+
+def read_file_lines(path):
+    with sg_open(pi_path(path)) as f:
+        return f.readlines()
+
+def read_file_json(path):
+    with sg_open(pi_path(path)) as f:
+        return json.load(f)
+
+def read_file_yaml(path):
+    with sg_open(pi_path(path)) as f:
+        return yaml.safe_load(f)
 
 def write_file_text(a_file, a_text):
-    with open(pi_path(a_file), "w", encoding='utf-8', newline="\n") as f:
+    with sg_open(pi_path(a_file), "w", newline="\n") as f:
         f.write(str(a_text))
 
 def gen_uid():
@@ -694,10 +710,10 @@ def get_file_setting(a_name, a_type, a_default):
     f_file_name = os.path.join(CONFIG_DIR, "{}.txt".format(a_name))
     if os.path.exists(f_file_name):
         try:
-            with open(f_file_name) as f_file:
-                value = a_type(f_file.read())
-                FILE_SETTING_CACHE[a_name] = value
-                return value
+            content = read_file_text(f_file_name)
+            value = a_type(content)
+            FILE_SETTING_CACHE[a_name] = value
+            return value
         except Exception as ex:
             LOG.error("Error in get_file_setting {}".format(ex))
             os.remove(f_file_name)
@@ -730,9 +746,7 @@ def read_device_config():
 
     try:
         if os.path.isfile(DEVICE_CONFIG_PATH):
-            with open(DEVICE_CONFIG_PATH, 'r', encoding='utf-8') as f:
-                f_file_text = f.read()
-            for f_line in f_file_text.split("\n"):
+            for f_line in read_file_lines(DEVICE_CONFIG_PATH):
                 if f_line.strip() == "\\":
                     break
                 if f_line.strip() != "":

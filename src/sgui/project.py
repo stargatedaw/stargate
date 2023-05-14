@@ -12,7 +12,9 @@ from sglib.lib.util import (
     pi_path,
     META_DOT_JSON,
     PROJECT_FILE_TYPE,
+    get_file_setting,
     set_file_setting,
+    read_file_text,
     write_file_text,
 )
 from sglib.log import LOG
@@ -138,7 +140,7 @@ def set_project(project):
     )
 
 def get_history():
-    history = util.get_file_setting("project-history", str, "")
+    history = get_file_setting("project-history", str, "")
     if IS_PORTABLE_INSTALL:
         history = [
             portable.unescape_path(x)
@@ -167,8 +169,7 @@ class StargateProjectVersionError(Exception):
 
 def check_project_version(parent, project_file):
     minor_version = META_DOT_JSON['version']['minor']
-    with open(project_file) as f:
-        project_version = f.read().strip()
+    project_version = read_file_text(project_file).strip()
     if (
         "placeholder" in project_version
         or

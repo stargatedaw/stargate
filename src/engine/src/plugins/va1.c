@@ -358,7 +358,7 @@ NO_OPTIMIZATION PluginHandle g_va1_instantiate(
 void v_va1_load(
     PluginHandle instance,
     PluginDescriptor * Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_va1 *plugin_data = (t_va1*)instance;
     generic_file_loader(

@@ -51,7 +51,6 @@ GNU General Public License for more details.
     #include <pthread/qos.h>
 #endif
 
-
 #ifndef NO_MIDI
     #include "hardware/midi.h"
 #endif
@@ -135,7 +134,7 @@ void print_help(){
     printf("%s soundcheck [/path/to/device.txt]\n\n", STARGATE_VERSION);
 }
 
-int _main(int argc, char** argv){
+int _main(int argc, SGPATHSTR** argv){
     setlocale(LC_ALL, "C.UTF-8");
 #if SG_OS == _OS_LINUX
     struct timespec load_start, load_finish;
@@ -149,36 +148,56 @@ int _main(int argc, char** argv){
     int j;
 
     for(j = 0; j < argc; ++j){
+#if SG_OS == _OS_WINDOWS
+        log_info("%i: %ls", j, argv[j]);
+#else
         log_info("%i: %s", j, argv[j]);
+#endif
     }
 
     if(argc < 2){
         print_help();
         return 1;
+#if SG_OS == _OS_WINDOWS
+    } else if(!wcscmp(argv[1], L"daw")){
+        return daw_render(argc, argv);
+    } else if(!wcscmp(argv[1], L"soundcheck")){
+        return soundcheck(argc, argv);
+#else
     } else if(!strcmp(argv[1], "daw")){
         return daw_render(argc, argv);
     } else if(!strcmp(argv[1], "soundcheck")){
         return soundcheck(argc, argv);
+#endif
     } else if(argc < 7){
         print_help();
         return 9996;
     }
 
-    INSTALL_PREFIX = argv[1];
-    int f_huge_pages = atoi(argv[4]);
+    sg_path_snprintf(
+        INSTALL_PREFIX, 
+        4096,
+#if SG_OS == _OS_WINDOWS
+        L"%ls",
+#else
+        "%s",
+#endif
+        argv[1]
+    );
+    int f_huge_pages = args_atoi(argv[4]);
     sg_assert(
         (int)(f_huge_pages == 0 || f_huge_pages == 1),
-        "huge pages '%s' out of range 0 to 1 ",
-        argv[4]
+        "huge pages %i out of range 0 to 1 ",
+        f_huge_pages
     );
 
     if(f_huge_pages){
         log_info("Attempting to use hugepages");
     }
-    int fps = atoi(argv[5]);
+    int fps = args_atoi(argv[5]);
     log_info("UI Frames per second: %i", fps);
     int ui_send_usleep = (int)(1000000. / (float)fps);
-    int thread_count = atoi(argv[6]);
+    int thread_count = args_atoi(argv[6]);
     sg_assert(
         thread_count >= 1 && thread_count <= 16,
         "Thread count %i out of range 1..16",
@@ -203,6 +222,20 @@ int _main(int argc, char** argv){
 
     if(argc > 7){
         for(j = 7; j < argc; ++j){
+#if SG_OS == _OS_WINDOWS
+            if(!wcscmp(argv[j], L"--sleep")){
+                NO_HARDWARE_USLEEP = 1;
+                NO_HARDWARE = 1;
+            } else if(!wcscmp(argv[j], L"--no-hardware")){
+                NO_HARDWARE = 1;
+            } else if(!wcscmp(argv[j], L"--single-thread")){
+                SINGLE_THREAD = 1;
+            } else {
+                print_help();
+                log_error("Invalid argument [%i] %ls", j, argv[j]);
+                exit(1);
+            }
+#else
             if(!strcmp(argv[j], "--sleep")){
                 NO_HARDWARE_USLEEP = 1;
                 NO_HARDWARE = 1;
@@ -215,6 +248,7 @@ int _main(int argc, char** argv){
                 log_error("Invalid argument [%i] %s", j, argv[j]);
                 exit(1);
             }
+#endif
         }
     }
 
@@ -223,7 +257,7 @@ int _main(int argc, char** argv){
 
     start_engine(argv[2], thread_count);
 #if SG_OS != _OS_WINDOWS
-    int ui_pid = atoi(argv[3]);
+    int ui_pid = args_atoi(argv[3]);
     start_ui_thread(ui_pid);
 #endif
 #if SG_OS == _OS_LINUX
@@ -239,7 +273,7 @@ int _main(int argc, char** argv){
     return result;
 }
 
-int daw_render(int argc, char** argv){
+int daw_render(int argc, SGPATHSTR** argv){
     if(argc < 12){
         print_help();
         return 1;
@@ -247,16 +281,16 @@ int daw_render(int argc, char** argv){
 
     SG_OFFLINE_RENDER = 1;
 
-    char * f_project_dir = argv[2];
-    char * f_output_file = argv[3];
-    double f_start_beat = atof(argv[4]);
-    double f_end_beat = atof(argv[5]);
-    int f_sample_rate = atoi(argv[6]);
-    int f_buffer_size = atoi(argv[7]);
-    int f_thread_count = atoi(argv[8]);
-    int f_huge_pages = atoi(argv[9]);
-    int f_stem_render = atoi(argv[10]);
-    int sequence_uid = atoi(argv[11]);
+    SGPATHSTR* f_project_dir = argv[2];
+    SGPATHSTR* f_output_file = argv[3];
+    double f_start_beat = args_atof(argv[4]);
+    double f_end_beat = args_atof(argv[5]);
+    int f_sample_rate = args_atoi(argv[6]);
+    int f_buffer_size = args_atoi(argv[7]);
+    int f_thread_count = args_atoi(argv[8]);
+    int f_huge_pages = args_atoi(argv[9]);
+    int f_stem_render = args_atoi(argv[10]);
+    int sequence_uid = args_atoi(argv[11]);
 
     if(f_thread_count < 1 || f_thread_count > MAX_WORKER_THREADS){
         log_error(
@@ -268,8 +302,8 @@ int daw_render(int argc, char** argv){
 
     sg_assert(
         (int)(f_huge_pages == 0 || f_huge_pages == 1),
-        "huge pages '%s' out of range 0 to 1 ",
-        argv[9]
+        "huge pages '%i' out of range 0 to 1 ",
+        f_huge_pages
     );
 
     if(f_huge_pages){
@@ -283,6 +317,17 @@ int daw_render(int argc, char** argv){
 
     int f_i;
     for(f_i = 12; f_i < argc; ++f_i){
+#if SG_OS == _OS_WINDOWS
+        if(!wcscmp(argv[f_i], L"--no-file")){
+            f_create_file = 0;
+        } else if(!wcscmp(argv[f_i], L"--no-print-progress")){
+            print_progress = 0;
+        } else {
+            print_help();
+            log_error("Invalid argument [%i] %ls", f_i, argv[f_i]);
+            exit(1);
+        }
+#else
         if(!strcmp(argv[f_i], "--no-file")){
             f_create_file = 0;
         } else if(!strcmp(argv[f_i], "--no-print-progress")){
@@ -292,6 +337,7 @@ int daw_render(int argc, char** argv){
             log_error("Invalid argument [%i] %s", f_i, argv[f_i]);
             exit(1);
         }
+#endif
     }
 
     SGFLT** f_output;
@@ -340,7 +386,11 @@ int daw_render(int argc, char** argv){
 NO_OPTIMIZATION void init_main_vol(){
     log_info("Setting main volume");
     char * f_main_vol_str = (char*)malloc(sizeof(char) * TINY_STRING);
+#if SG_OS == _OS_WINDOWS
+    get_file_setting(f_main_vol_str, L"main_vol", "0.0");
+#else
     get_file_setting(f_main_vol_str, "main_vol", "0.0");
+#endif
     SGFLT f_main_vol = atof(f_main_vol_str);
     free(f_main_vol_str);
 
@@ -485,7 +535,7 @@ NO_OPTIMIZATION int init_audio_hardware(
     return result;
 }
 
-int start_engine(char* project_dir, int thread_count){
+int start_engine(SGPATHSTR* project_dir, int thread_count){
     int retcode = 0;
     struct HardwareConfig* hardware_config = load_hardware_config(
         default_device_file_path()

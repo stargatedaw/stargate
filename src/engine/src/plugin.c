@@ -371,7 +371,7 @@ void v_generic_cc_map_set(t_plugin_cc_map * a_cc_map, char * a_str){
 void generic_file_loader(
     PluginHandle Instance,
     PluginDescriptor * Descriptor,
-    char * a_path,
+    SGPATHSTR* a_path,
     SGFLT * a_table,
     t_plugin_cc_map * a_cc_map
 ){

@@ -67,7 +67,7 @@ PluginHandle g_sg_comp_instantiate(
 void v_sg_comp_load(
     PluginHandle instance,
     PluginDescriptor * Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_sg_comp *plugin_data = (t_sg_comp*)instance;
     generic_file_loader(

@@ -19,7 +19,7 @@ t_2d_char_array * g_get_2d_array(int a_size);
  * "|" and "\n" individual fields are
  * limited to being the size of SG_TINY_STRING */
 t_2d_char_array * g_get_2d_array_from_file(
-    const char * a_file,
+    const SGPATHSTR* a_file,
     int a_size
 );
 /* Return the next string from the array*/

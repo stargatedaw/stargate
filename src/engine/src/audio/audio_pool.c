@@ -8,26 +8,36 @@
 #include "audio/audio_pool.h"
 #include "csv/2d.h"
 #include "files.h"
+#include "unicode.h"
 
 
 void g_audio_pool_item_init(
     t_audio_pool_item *f_result,
     int a_uid,
     SGFLT volume,
-    const char *a_path,
+    const SGPATHSTR *a_path,
     SGFLT a_sr
 ){
     f_result->uid = a_uid;
     f_result->volume = volume;
     f_result->is_loaded = 0;
     f_result->host_sr = a_sr;
-    strncpy(f_result->path, a_path, 2047);
+    sg_path_snprintf(
+        f_result->path, 
+	2047,
+#if SG_OS == _OS_WINDOWS
+	L"%ls",
+#else
+	"%s",
+#endif
+        a_path
+    );
     file_fx_controls_init(&f_result->fx_controls);
 }
 
 t_audio_pool_item * g_audio_pool_item_get(
     int a_uid,
-    const char *a_path,
+    const SGPATHSTR *a_path,
     SGFLT a_sr
 ){
     t_audio_pool_item *f_result;
@@ -53,23 +63,19 @@ int i_audio_pool_item_load(
 
     sg_assert(
         i_file_exists(a_audio_pool_item->path),
+#if SG_OS == _OS_WINDOWS
+        "Audio file does not exist: '%ls'",
+#else
         "Audio file does not exist: '%s'",
+#endif
         a_audio_pool_item->path
     );
 
-    file = sf_open(
+    file = SG_SF_OPEN(
         a_audio_pool_item->path,
         SFM_READ,
         &info
     );
-
-    if (!file){
-        log_error(
-            "Unable to load sample file '%s'",
-            a_audio_pool_item->path
-        );
-        return 0;
-    }
 
     samples = info.frames;
 
@@ -229,66 +235,88 @@ t_audio_pool_item * v_audio_pool_add_item(
     t_audio_pool* a_audio_pool,
     int a_uid,
     SGFLT volume,
-    char* a_file_path,
-    char* audio_folder
+    SGPATHSTR* a_file_path,
+    SGPATHSTR* audio_folder
 ){
-    char f_path[8192];
+    SGPATHSTR f_path[8192];
     f_path[0] = '\0';
 
     int f_pos = 2;
 
+#if SG_OS == _OS_WINDOWS
+    if(a_file_path[0] == L'!'){
+#else
     if(a_file_path[0] == '!'){
-        char* rest = a_file_path;
+#endif
+        SGPATHSTR* rest = a_file_path;
         ++rest;
-        sg_snprintf(
+        sg_path_snprintf(
             f_path,
             8191,
+#if SG_OS == _OS_WINDOWS
+            L"%ls%ls",
+#else
             "%s%s",
+#endif
             audio_folder,
             rest
         );
-    } else if(a_file_path[0] != '/' && a_file_path[1] == ':'){  // Windows
-        char f_file_path[2048];
+    } else if(a_file_path[0] != L'/' && a_file_path[1] == L':'){  // Windows
+        SGPATHSTR f_file_path[2048];
 
         f_file_path[0] = a_file_path[0];
         while(1){
             f_file_path[f_pos - 1] = a_file_path[f_pos];
-            if(a_file_path[f_pos] == '\0'){
+            if(a_file_path[f_pos] == L'\0'){
                 break;
             }
             ++f_pos;
         }
 
         log_info(
+#if SG_OS == _OS_WINDOWS
+            "v_audio_pool_add_item:  '%ls' '%ls'",
+#else
             "v_audio_pool_add_item:  '%s' '%s'",
+#endif
             a_audio_pool->samples_folder,
             f_file_path
         );
 
-        sg_snprintf(
+        sg_path_snprintf(
             f_path,
             8191,
-            "%s%s%s",
+#if SG_OS == _OS_WINDOWS
+            L"%ls/%ls",
+#else
+            "%s/%s",
+#endif
             a_audio_pool->samples_folder,
-            PATH_SEP,
             f_file_path
         );
     } else {  // UNIX
         if(a_file_path[0] == '/'){
-            sg_snprintf(
+            sg_path_snprintf(
                 f_path,
                 8191,
+#if SG_OS == _OS_WINDOWS
+                L"%ls%ls",
+#else
                 "%s%s",
+#endif
                 a_audio_pool->samples_folder,
                 a_file_path
             );
         } else {
-            sg_snprintf(
+            sg_path_snprintf(
                 f_path,
                 8191,
-                "%s%s%s",
+#if SG_OS == _OS_WINDOWS
+                L"%ls/%ls",
+#else
+                "%s/%s",
+#endif
                 a_audio_pool->samples_folder,
-                PATH_SEP,
                 a_file_path
             );
         }
@@ -297,10 +325,23 @@ t_audio_pool_item * v_audio_pool_add_item(
     if(!i_file_exists(f_path)){
         sg_assert(
             a_file_path[0] != '!',
+#if SG_OS == _OS_WINDOWS
+            "File in project audio folder does not exist '%ls'",
+#else
             "File in project audio folder does not exist '%s'",
+#endif
             a_file_path
         );
-        strcpy(f_path, a_file_path);
+        sg_path_snprintf(
+            f_path, 
+            8191,
+#if SG_OS == _OS_WINDOWS
+            L"%ls",
+#else
+            "%s",
+#endif
+            a_file_path
+        );
     }
 
     g_audio_pool_item_init(
@@ -317,8 +358,8 @@ t_audio_pool_item * v_audio_pool_add_item(
 /* Load entire pool at startup/open */
 void v_audio_pool_add_items(
     t_audio_pool* a_audio_pool,
-    char * a_file_path,
-    char* audio_folder
+    SGPATHSTR * a_file_path,
+    SGPATHSTR* audio_folder
 ){
     int i, j;
     a_audio_pool->count = 0;
@@ -377,6 +418,17 @@ void v_audio_pool_add_items(
             volume = f_db_to_linear(volume);
             v_iterate_2d_char_array_to_next_line(f_arr);
             log_info("Audio Pool: Loading file '%s'", f_arr->current_str);
+#if SG_OS == _OS_WINDOWS
+            SGPATHSTR path[2048];
+            utf8_to_utf16(f_arr->current_str, strlen(f_arr->current_str), path, 2048);
+            v_audio_pool_add_item(
+                a_audio_pool,
+                f_uid,
+                volume,
+                path,
+                audio_folder
+            );
+#else
             v_audio_pool_add_item(
                 a_audio_pool,
                 f_uid,
@@ -384,6 +436,7 @@ void v_audio_pool_add_items(
                 f_arr->current_str,
                 audio_folder
             );
+#endif
         }
     }
 }

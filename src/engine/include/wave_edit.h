@@ -19,8 +19,8 @@ typedef struct{
     t_audio_item* ab_audio_item;
     t_track* track_pool[1];
     int fx_enabled;
-    char tracks_folder[1024];
-    char project_folder[1024];
+    SGPATHSTR tracks_folder[1024];
+    SGPATHSTR project_folder[1024];
 }t_wave_edit;
 
 extern t_wave_edit * wave_edit;
@@ -44,7 +44,7 @@ void v_we_set_playback_mode(
     int a_mode,
     int a_lock
 );
-void v_we_export(t_wave_edit * self, const char * a_file_out);
+void v_we_export(t_wave_edit * self, const SGPATHSTR* a_file_out);
 void v_we_open_tracks();
 void v_we_open_project();
 

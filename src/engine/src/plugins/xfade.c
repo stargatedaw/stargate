@@ -86,7 +86,7 @@ PluginHandle g_xfade_instantiate(
 void v_xfade_load(
     PluginHandle instance,
     PluginDescriptor * Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_xfade *plugin_data = (t_xfade*)instance;
     generic_file_loader(instance, Descriptor,

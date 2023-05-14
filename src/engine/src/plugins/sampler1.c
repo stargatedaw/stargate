@@ -681,7 +681,7 @@ void connectPortSampler(
 void v_sampler1_load(
     PluginHandle instance,
     PluginDescriptor * Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_sampler1 *plugin_data = (t_sampler1*)instance;
     generic_file_loader(

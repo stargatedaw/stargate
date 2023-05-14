@@ -290,8 +290,8 @@ class DawProject(AbstractProject):
 
     def get_routing_graph(self) -> RoutingGraph:
         if os.path.isfile(self.routing_graph_file):
-            with open(self.routing_graph_file) as f_handle:
-                return RoutingGraph.from_str(f_handle.read())
+            content = read_file_text(self.routing_graph_file)
+            return RoutingGraph.from_str(content)
         else:
             return RoutingGraph()
 
@@ -325,8 +325,8 @@ class DawProject(AbstractProject):
 
     def get_midi_routing(self):
         if os.path.isfile(self.midi_routing_file):
-            with open(self.midi_routing_file) as f_handle:
-                return MIDIRoutes.from_str(f_handle.read())
+            content = read_file_text(self.midi_routing_file)
+            return MIDIRoutes.from_str(content)
         else:
             return MIDIRoutes()
 
@@ -337,8 +337,8 @@ class DawProject(AbstractProject):
 
     def get_takes(self):
         if os.path.isfile(self.takes_file):
-            with open(self.takes_file) as fh:
-                return SgTakes.from_str(fh.read())
+            content = read_file_text(self.takes_file)
+            return SgTakes.from_str(content)
         else:
             return SgTakes()
 
@@ -349,12 +349,10 @@ class DawProject(AbstractProject):
         if self._items_dict_cache:
             return self._items_dict_cache
         try:
-            f_file = open(self.pyitems_file, "r")
+            content = read_file_text(self.pyitems_file)
+            return name_uid_dict.from_str(content)
         except:
             return name_uid_dict()
-        f_str = f_file.read()
-        f_file.close()
-        return name_uid_dict.from_str(f_str)
 
     def save_items_dict(self, a_uid_dict):
         self._items_dict_cache = a_uid_dict
@@ -424,8 +422,8 @@ class DawProject(AbstractProject):
             str(uid),
         )
         if os.path.isfile(sequencer_file):
-            with open(sequencer_file) as f_file:
-                return sequencer.from_str(f_file.read())
+            content = read_file_text(sequencer_file)
+            return sequencer.from_str(content)
         else:
             return sequencer(name)
 
@@ -467,9 +465,8 @@ class DawProject(AbstractProject):
 
     def get_playlist(self):
         if os.path.isfile(self.playlist_file):
-            with open(self.playlist_file) as f:
-                j = json.load(f)
-                return unmarshal_json(j, Playlist)
+            j = read_file_json(self.playlist_file)
+            return unmarshal_json(j, Playlist)
         else:
             return Playlist.new()
 
@@ -484,8 +481,8 @@ class DawProject(AbstractProject):
             song_uid = constants.DAW_CURRENT_SEQUENCE_UID
         path = os.path.join(self.automation_folder, str(song_uid))
         if os.path.isfile(path):
-            with open(path) as f:
-                return DawAtmRegion.from_str(f.read())
+            content = read_file_text(path)
+            return DawAtmRegion.from_str(content)
         else:
             return DawAtmRegion()
 
@@ -543,16 +540,12 @@ class DawProject(AbstractProject):
 
     def get_item_string(self, a_item_uid):
         try:
-            f_file = open(
-                os.path.join(
-                    *(str(x) for x in (self.items_folder, a_item_uid))
-                ),
+            path = os.path.join(
+                *(str(x) for x in (self.items_folder, a_item_uid))
             )
+            return read_file_text(path)
         except:
             return ""
-        f_result = f_file.read()
-        f_file.close()
-        return f_result
 
     def get_item_by_uid(self, a_item_uid):
         a_item_uid = int(a_item_uid)
@@ -581,9 +574,8 @@ class DawProject(AbstractProject):
 
     def get_audio_inputs(self):
         if os.path.isfile(self.audio_inputs_file):
-            with open(self.audio_inputs_file) as f_file:
-                f_str = f_file.read()
-            return AudioInputTracks.from_str(f_str)
+            content = read_file_text(self.audio_inputs_file)
+            return AudioInputTracks.from_str(content)
         else:
             return AudioInputTracks()
 
@@ -635,13 +627,10 @@ class DawProject(AbstractProject):
 
     def get_tracks_string(self):
         try:
-            f_file = open(
-                os.path.join(self.project_folder, file_pytracks))
+            path = os.path.join(self.project_folder, file_pytracks)
+            return read_file_text(path)
         except:
             return terminating_char
-        f_result = f_file.read()
-        f_file.close()
-        return f_result
 
     def get_tracks(self):
         return tracks.from_str(self.get_tracks_string())

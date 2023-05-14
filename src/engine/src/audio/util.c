@@ -9,8 +9,8 @@
 /*For time(affecting pitch) time stretching...  Since this is done
  offline anyways, it's not super optimized... */
 void v_rate_envelope(
-    char * a_file_in,
-    char * a_file_out,
+    SGPATHSTR* a_file_in,
+    SGPATHSTR* a_file_out,
     SGFLT a_start_rate,
     SGFLT a_end_rate
 ){
@@ -19,9 +19,8 @@ void v_rate_envelope(
     SGFLT *tmpFrames;
 
     info.format = 0;
-    file = sf_open(a_file_in, SFM_READ, &info);
 
-    sg_assert_ptr(file, "v_rate_envelope: Failed to open '%s'", a_file_in);
+    file = SG_SF_OPEN(a_file_in, SFM_READ, &info);
 
     if (info.frames > 100000000)
     {
@@ -71,7 +70,7 @@ void v_rate_envelope(
         );
     }
 
-    SNDFILE * f_sndfile = sf_open(a_file_out, SFM_WRITE, &f_sf_info);
+    SNDFILE* f_sndfile = SG_SF_OPEN(a_file_out, SFM_WRITE, &f_sf_info);
 
     while(((int)f_sample_pos) < info.frames){
         f_size = 0;
@@ -113,9 +112,22 @@ void v_rate_envelope(
 
     sf_close(f_sndfile);
 
-    char f_tmp_finished[2048];
-    sg_snprintf(f_tmp_finished, 2048, "%s.finished", a_file_out);
+    SGPATHSTR f_tmp_finished[2048];
+    sg_path_snprintf(
+        f_tmp_finished, 
+        2048, 
+#if SG_OS == _OS_WINDOWS
+        L"%ls.finished", 
+#else
+        "%s.finished", 
+#endif
+        a_file_out
+    );
+#if SG_OS == _OS_WINDOWS
+    FILE * f_finished = _wfopen(f_tmp_finished, L"w");
+#else
     FILE * f_finished = fopen(f_tmp_finished, "w");
+#endif
     fclose(f_finished);
     free(f_output);
     free(f_buffer0);
@@ -131,8 +143,8 @@ void v_rate_envelope(
 
 
 void v_pitch_envelope(
-    char * a_file_in,
-    char * a_file_out,
+    SGPATHSTR * a_file_in,
+    SGPATHSTR * a_file_out,
     SGFLT a_start_pitch,
     SGFLT a_end_pitch
 ){
@@ -141,12 +153,10 @@ void v_pitch_envelope(
     SGFLT *tmpFrames;
 
     info.format = 0;
-    file = sf_open(a_file_in, SFM_READ, &info);
 
-    sg_assert_ptr(file, "v_pitch_envelope: Unable to open '%s'", a_file_in);
+    file = SG_SF_OPEN(a_file_in, SFM_READ, &info);
 
-    if (info.frames > 100000000)
-    {
+    if (info.frames > 100000000){
         //TODO:  Something, anything....
     }
 
@@ -194,7 +204,7 @@ void v_pitch_envelope(
         sg_abort("%i channels is not supported", info.channels);
     }
 
-    SNDFILE * f_sndfile = sf_open(a_file_out, SFM_WRITE, &f_sf_info);
+    SNDFILE* f_sndfile = SG_SF_OPEN(a_file_out, SFM_WRITE, &f_sf_info);
 
     while(((int)f_sample_pos) < info.frames)
     {
@@ -248,9 +258,22 @@ void v_pitch_envelope(
 
     sf_close(f_sndfile);
 
-    char f_tmp_finished[2048];
-    sg_snprintf(f_tmp_finished, 2048, "%s.finished", a_file_out);
+    SGPATHSTR f_tmp_finished[2048];
+    sg_path_snprintf(
+        f_tmp_finished, 
+        2048, 
+#if SG_OS == _OS_WINDOWS
+        L"%ls.finished", 
+#else
+        "%s.finished", 
+#endif
+        a_file_out
+    );
+#if SG_OS == _OS_WINDOWS
+    FILE * f_finished = _wfopen(f_tmp_finished, L"w");
+#else
     FILE * f_finished = fopen(f_tmp_finished, "w");
+#endif
     fclose(f_finished);
     free(f_output);
     free(f_buffer0);

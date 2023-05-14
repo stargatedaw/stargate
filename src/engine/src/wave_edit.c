@@ -17,6 +17,7 @@ GNU General Public License for more details.
 #include "csv/1d.h"
 #include "files.h"
 #include "globals.h"
+#include "unicode.h"
 
 t_wave_edit * wave_edit;
 
@@ -117,7 +118,7 @@ void v_we_set_playback_mode(
     }
 }
 
-void v_we_export(t_wave_edit * self, const char * a_file_out){
+void v_we_export(t_wave_edit * self, const SGPATHSTR* a_file_out){
     int f_i;
 
     pthread_spin_lock(&STARGATE->main_lock);
@@ -141,7 +142,11 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
     f_sf_info.format = SF_FORMAT_WAV | SF_FORMAT_FLOAT;
     f_sf_info.samplerate = (int)(f_sample_rate);
 
-    SNDFILE * f_sndfile = sf_open(a_file_out, SFM_WRITE, &f_sf_info);
+    SNDFILE * f_sndfile = SG_SF_OPEN(
+        (SGPATHSTR*)a_file_out, 
+        SFM_WRITE, 
+        &f_sf_info
+    );
 
     log_info("Successfully opened SNDFILE");
 
@@ -227,9 +232,13 @@ void v_we_export(t_wave_edit * self, const char * a_file_out){
 
     sf_close(f_sndfile);
 
-    char f_tmp_finished[1024];
+    SGPATHSTR f_tmp_finished[1024];
 
-    sg_snprintf(f_tmp_finished, 1024, "%s.finished", a_file_out);
+#if SG_OS == _OS_WINDOWS
+    sg_path_snprintf(f_tmp_finished, 1024, L"%ls.finished", a_file_out);
+#else
+    sg_path_snprintf(f_tmp_finished, 1024, "%s.finished", a_file_out);
+#endif
 
     v_write_to_file(f_tmp_finished, "finished");
 
@@ -288,21 +297,26 @@ void we_track_reload(){
 
 
 void v_we_open_project(){
-    sg_snprintf(
+    sg_path_snprintf(
         wave_edit->project_folder,
         1024,
-        "%s%sprojects%swave_edit",
-        STARGATE->project_folder,
-        PATH_SEP,
-        PATH_SEP
+#if SG_OS == _OS_WINDOWS
+        L"%ls/projects/wave_edit",
+#else
+        "%s/projects/wave_edit",
+#endif
+        STARGATE->project_folder
     );
 
-    sg_snprintf(
+    sg_path_snprintf(
         wave_edit->tracks_folder,
         1024,
-        "%s%stracks",
-        wave_edit->project_folder,
-        PATH_SEP
+#if SG_OS == _OS_WINDOWS
+        L"%ls/tracks",
+#else
+        "%s/tracks",
+#endif
+        wave_edit->project_folder
     );
     we_track_reload();
 }
@@ -572,6 +586,9 @@ void v_we_update_audio_inputs(){
 }
 
 void v_we_configure(const char* a_key, const char* a_value){
+#if SG_OS == _OS_WINDOWS
+    SGPATHSTR path_buff[2048];
+#endif
     log_info("v_we_configure:  key: \"%s\", value: \"%s\"", a_key, a_value);
     pthread_mutex_lock(&CONFIG_LOCK);
 
@@ -582,7 +599,12 @@ void v_we_configure(const char* a_key, const char* a_value){
     } else if(!strcmp(a_key, WN_CONFIGURE_KEY_WE_SET)){
         v_set_wave_editor_item(wave_edit, a_value);
     } else if(!strcmp(a_key, WN_CONFIGURE_KEY_WE_EXPORT)){
+#if SG_OS == _OS_WINDOWS
+        utf8_to_utf16(a_value, strlen(a_value), path_buff, 2048);
+        v_we_export(wave_edit, path_buff);
+#else
         v_we_export(wave_edit, a_value);
+#endif
     } else if(!strcmp(a_key, WN_CONFIGURE_KEY_WN_PLAYBACK)){
         int f_mode = atoi(a_value);
         sg_assert(

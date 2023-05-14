@@ -68,7 +68,7 @@ PluginHandle g_sgchnl_instantiate(
 void v_sgchnl_load(
     PluginHandle instance,
     PluginDescriptor* Descriptor,
-    char* a_file_path
+    SGPATHSTR* a_file_path
 ){
     t_sgchnl *plugin_data = (t_sgchnl*)instance;
     generic_file_loader(

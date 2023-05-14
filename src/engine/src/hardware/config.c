@@ -17,24 +17,33 @@ int AUDIO_INPUT_TRACK_COUNT = 0;
 int NO_HARDWARE = 0;
 
 
-NO_OPTIMIZATION char* default_device_file_path(){
-    char* result = (char*)malloc(2048);
+NO_OPTIMIZATION SGPATHSTR* default_device_file_path(){
+    SGPATHSTR* result = (SGPATHSTR*)malloc(sizeof(SGPATHSTR) * 2048);
+    SGPATHSTR* home = get_home_dir();
 
-    char * f_home = get_home_dir();
+#if SG_OS == _OS_WINDOWS
+    log_info("using home folder: %ls", home);
+#else
+    log_info("using home folder: %s", home);
+#endif
 
-    log_info("using home folder: %s", f_home);
-
-    char * path_list[4] = {
-        f_home, STARGATE_VERSION, "config", "device.txt"
-    };
-
-    path_join(result, 4, path_list);
+    sg_path_snprintf(
+        result,
+	2048,
+#if SG_OS == _OS_WINDOWS
+	L"%ls/%s/config/device.txt",
+#else
+	"%s/%s/config/device.txt",
+#endif
+        home, 
+	STARGATE_VERSION
+    );
 
     return result;
 }
 
 NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
-    char* config_path
+    SGPATHSTR* config_path
 ){
     struct HardwareConfig* result = (struct HardwareConfig*)malloc(
         sizeof(struct HardwareConfig)
@@ -58,10 +67,18 @@ NO_OPTIMIZATION struct HardwareConfig* load_hardware_config(
     char * f_value_char = (char*)malloc(sizeof(char) * TINY_STRING);
 
     if(!i_file_exists(config_path)){
+#if SG_OS == _OS_WINDOWS
+        log_info("%ls does not exist", config_path);
+#else
         log_info("%s does not exist", config_path);
+#endif
         return NULL;
     }
+#if SG_OS == _OS_WINDOWS
+    log_info("%ls exists, loading", config_path);
+#else
     log_info("%s exists, loading", config_path);
+#endif
 
     t_2d_char_array * f_current_string = g_get_2d_array_from_file(
         config_path,

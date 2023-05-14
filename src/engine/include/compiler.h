@@ -5,13 +5,36 @@
 #define _OS_WINDOWS 1
 #define _OS_MACOS 2
 
+#include <sndfile.h>
+
 #if defined(_WIN64) || defined(_WIN32) || defined(__MINGW32__) || defined(__MINGW64__)
     #define SG_OS _OS_WINDOWS
+    #define _UNICODE
+    #define UNICODE
+    #include <wchar.h>
+    // Throws compiler warnings if not included before windows.h
+    #include <winsock2.h>
+    #include <windows.h>
+    #define SGPATHSTR wchar_t
+    #define args_atoi _wtoi
+    #define args_atof _wtof
+    SNDFILE* SG_SF_OPEN(wchar_t*, int, SF_INFO*);
 #elif defined(__linux__)
     #define SG_OS _OS_LINUX
+    #define SGPATHSTR char
+    #define args_atoi atoi
+    #define args_atof atof
+    SNDFILE* SG_SF_OPEN(char*, int, SF_INFO*);
 #elif defined(__APPLE__)
     #define SG_OS _OS_MACOS
+    #define SGPATHSTR char
+    #define args_atoi atoi
+    #define args_atof atof
+    SNDFILE* SG_SF_OPEN(char*, int, SF_INFO*);
+
 #endif
+
+extern SGPATHSTR INSTALL_PREFIX[4096];
 
 //Required for sched.h
 #ifndef __USE_GNU
@@ -110,7 +133,7 @@ struct SamplePair {
 
 #endif
 
-char * get_home_dir();
+SGPATHSTR* get_home_dir();
 
 #if SG_OS == _OS_WINDOWS
     #define REAL_PATH_SEP "\\"
@@ -137,6 +160,14 @@ size_t sg_snprintf(
     char* fmt,
     ...
 ) __attribute__((format(printf, 3, 4)));
+
+// Sprintf function specifically for joining paths together
+size_t sg_path_snprintf(
+    SGPATHSTR* str,
+    size_t size,
+    SGPATHSTR* fmt,
+    ...
+); // __attribute__((format(printf, 3, 4)));
 
 typedef struct {
     char padding1[CACHE_LINE_SIZE];

@@ -9,6 +9,11 @@
 #include "file/path.h"
 #include "files.h"
 
+#if SG_OS == _OS_WINDOWS
+    #include <windows.h>
+    #include <shlwapi.h>
+#endif
+
 #if SG_OS == _OS_LINUX
     #include <sys/types.h>
     #include <unistd.h>
@@ -26,7 +31,7 @@
 #endif
 
 void get_string_from_file(
-    const char* a_file,
+    const SGPATHSTR* a_file,
     int a_size,
     char* a_buf
 ){
@@ -35,12 +40,21 @@ void get_string_from_file(
     //a_file, a_size);
     //write_log(log_buff);
     FILE * f_file;
+#if SG_OS == _OS_WINDOWS
+    f_file = _wfopen(a_file, L"r");
+    sg_assert_ptr(
+        f_file,
+        "get_string_from_file: fopen returned NULL: '%ls'",
+        a_file
+    );
+#else
     f_file = fopen(a_file, "r");
     sg_assert_ptr(
         f_file,
         "get_string_from_file: fopen returned NULL: '%s'",
         a_file
     );
+#endif
     size_t f_char_count = fread(
         a_buf,
         sizeof(char),
@@ -57,47 +71,71 @@ void get_string_from_file(
     fclose(f_file);
 }
 
-void v_write_to_file(char * a_file, char * a_string){
+void v_write_to_file(SGPATHSTR* a_file, char * a_string){
+#if SG_OS == _OS_WINDOWS
+    FILE* pFile = _wfopen(a_file, L"w");
+    sg_assert_ptr(
+        pFile,
+        "v_write_to_file: _wfopen(%ls) returned NULL ptr",
+        a_file
+    );
+#else
     FILE* pFile = fopen(a_file, "w");
     sg_assert_ptr(
         pFile,
         "v_write_to_file: fopen(%s) returned NULL ptr",
         a_file
     );
-    fprintf(pFile, "%s",a_string);
+#endif
+    fprintf(pFile, "%s", a_string);
     fclose(pFile);
 
     char mode[] = "0777";
     int i = strtol(mode, 0, 8);
 
+#if SG_OS != _OS_WINDOWS
     if(chmod(a_file,i) < 0){
         log_error("Error chmod'ing file %s.", a_file);
     }
+#endif
 }
 
-void v_append_to_file(char * a_file, char * a_string){
+void v_append_to_file(SGPATHSTR * a_file, char * a_string){
+#if SG_OS == _OS_WINDOWS
+    FILE* pFile = _wfopen(a_file, L"a");
+    sg_assert_ptr(
+        pFile,
+        "v_append_to_file: fopen(%ls) returned NULL ptr",
+        a_file
+    );
+#else
     FILE* pFile = fopen(a_file, "a");
     sg_assert_ptr(
         pFile,
         "v_append_to_file: fopen(%s) returned NULL ptr",
         a_file
     );
+#endif
     fprintf(pFile, "%s", a_string);
     fclose(pFile);
 }
 
-int i_file_exists(char * f_file_name){
-    struct stat sts;
-
-    //TODO:  Determine if there is a better way to do this
-    if ((stat(f_file_name, &sts)) == -1)
-    {
+int i_file_exists(SGPATHSTR* path){
+#if SG_OS == _OS_WINDOWS
+    if(PathFileExists(path)){
+	return 1;
+    } else {
         return 0;
     }
-    else
-    {
+#else
+    struct stat sts;
+
+    if ((stat(path, &sts)) == -1){
+        return 0;
+    } else {
         return 1;
     }
+#endif
 }
 
 t_dir_list* g_get_dir_list(char * a_dir){
@@ -155,31 +193,51 @@ t_dir_list* g_get_dir_list(char * a_dir){
 
 void get_file_setting(
     char * a_dest,
-    char * a_name,
+    SGPATHSTR * a_name,
     char * a_default
 ){
-    char f_path[2048];
-    char * f_home = get_home_dir();
-    char f_filename[256];
+    SGPATHSTR path[2048];
+    SGPATHSTR* f_home = get_home_dir();
 
-    sg_snprintf(f_filename, 256, "%s.txt", a_name);
+    sg_path_snprintf(
+        path, 
+        2048, 
+#if SG_OS == _OS_WINDOWS
+        L"%ls/%s/config/%ls.txt", 
+#else
+        "%s/%s/config/%s.txt", 
+#endif
+        f_home, 
+	STARGATE_VERSION,
+        a_name
+    );
 
-    char * path_list[4] = {
-        f_home, STARGATE_VERSION, "config", f_filename
-    };
+#if SG_OS == _OS_WINDOWS
+    log_info("get_file_setting:  %ls", path);
+#else
+    log_info("get_file_setting:  %s", path);
+#endif
 
-    path_join(f_path, 4, path_list);
-
-    log_info("get_file_setting:  %s", f_path);
-
-    if(i_file_exists(f_path)){
-        get_string_from_file(f_path, TINY_STRING, a_dest);
+    if(i_file_exists(path)){
+        get_string_from_file(path, TINY_STRING, a_dest);
     } else {
         sprintf(a_dest, "%s", a_default);
     }
 }
 
-void delete_file(char* path){
+void delete_file(SGPATHSTR* path){
+#if SG_OS == _OS_WINDOWS
+    int retcode = _wremove(path);
+    if(retcode == 0){
+        log_info("Deleted file '%ls'", path);
+    } else {
+        log_info(
+            "Failed to delete file '%ls'. remove() returned %i",
+            path,
+            retcode
+        );
+    }
+#else
     int retcode = remove(path);
     if(retcode == 0){
         log_info("Deleted file '%s'", path);
@@ -190,4 +248,5 @@ void delete_file(char* path){
             retcode
         );
     }
+#endif
 }

@@ -53,15 +53,16 @@ t_daw_routing_graph * g_daw_routing_graph_get(t_daw * self)
 
     f_result->track_pool_sorted_count = 0;
 
-    char f_tmp[1024];
-    sg_snprintf(
+    SGPATHSTR f_tmp[1024];
+    sg_path_snprintf(
         f_tmp,
         1024,
-        "%s%sprojects%sdaw%srouting.txt",
-        STARGATE->project_folder,
-        PATH_SEP,
-        PATH_SEP,
-        PATH_SEP
+#if SG_OS == _OS_WINDOWS
+        L"%ls/projects/daw/routing.txt",
+#else
+        "%s/projects/daw/routing.txt",
+#endif
+        STARGATE->project_folder
     );
 
     if(i_file_exists(f_tmp)){

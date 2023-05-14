@@ -8,7 +8,7 @@
 
 struct SoundCheck SOUNDCHECK;
 
-int soundcheck(int argc, char** argv){
+int soundcheck(int argc, SGPATHSTR** argv){
     if(argc != 3){
         printf("Usage: %s soundcheck /path/to/device-config.txt\n", argv[0]);
         exit(33);

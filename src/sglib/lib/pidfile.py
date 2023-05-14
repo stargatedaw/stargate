@@ -1,6 +1,7 @@
 import os
 import psutil
 from sglib.constants import MAJOR_VERSION
+from sglib.lib import util
 from sglib.log import LOG
 
 def check_pidfile(path):
@@ -8,15 +9,14 @@ def check_pidfile(path):
         The process must create a pidfile for this to work
     """
     if os.path.exists(path):
-        with open(path) as f:
-            text = f.read().strip()
-            try:
-                pid = int(text)
-            except Exception as ex:
-                LOG.exception(ex)
-                LOG.error(f"Invalid pidfile: {text}")
-                os.remove(path)
-                return None
+        text = util.read_file_text(path).strip()
+        try:
+            pid = int(text)
+        except Exception as ex:
+            LOG.exception(ex)
+            LOG.error(f"Invalid pidfile: {text}")
+            os.remove(path)
+            return None
         LOG.warning(f"{path} exists with pid {pid}")
         if not psutil.pid_exists(pid):
             LOG.info(f"pid {pid} no longer exists, deleting pidfile")
@@ -35,6 +35,5 @@ def create_pidfile(
     pid=str(os.getpid()),
 ):
     LOG.info(f"Creating pidfile {path} : {pid}")
-    with open(path, 'w') as f:
-        f.write(pid)
+    util.write_file_text(path, pid)
 

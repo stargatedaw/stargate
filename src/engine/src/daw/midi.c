@@ -8,7 +8,7 @@ struct DawMidiQwertyDevice QWERTY_MIDI = {};
 
 void v_daw_set_midi_devices(){
 #ifndef NO_MIDI
-    char f_path[2048];
+    SGPATHSTR f_path[2048];
     int f_i, f_i2;
     int found_device;
     t_midi_device * f_device;
@@ -18,22 +18,31 @@ void v_daw_set_midi_devices(){
         return;
     }
 
-    sg_snprintf(
+    sg_path_snprintf(
         f_path,
         2048,
-        "%s%sprojects%sdaw%smidi_routing.txt",
-        STARGATE->project_folder,
-        PATH_SEP,
-        PATH_SEP,
-        PATH_SEP
+#if SG_OS == _OS_WINDOWS
+        L"%ls/projects/daw/midi_routing.txt",
+#else
+        "%s/projects/daw/midi_routing.txt",
+#endif
+        STARGATE->project_folder
     );
 
     if(!i_file_exists(f_path)){
+#if SG_OS == _OS_WINDOWS
+        log_warn(
+            "Did not find MIDI device config file '%ls', not "
+            "loading MIDI devices",
+            f_path
+        );
+#else
         log_warn(
             "Did not find MIDI device config file '%s', not "
             "loading MIDI devices",
             f_path
         );
+#endif
         return;
     }
 

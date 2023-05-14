@@ -118,7 +118,7 @@ NO_OPTIMIZATION PluginHandle g_pitchglitch_instantiate(
 void v_pitchglitch_load(
     PluginHandle instance,
     PluginDescriptor * Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_pitchglitch *plugin_data = (t_pitchglitch*)instance;
     generic_file_loader(

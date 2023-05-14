@@ -55,17 +55,16 @@ void metronome_envelope(struct MetronomeSample* self){
 
 void metronome_load_sample(
     struct MetronomeSample* self, 
-    char* path, 
+    SGPATHSTR* path, 
     SGFLT sr
 ){
     SF_INFO info;
     SNDFILE *file;
 
     info.format = 0;
-    log_info("Loading metronome file %s", path);
-    file = sf_open(path, SFM_READ, &info);
 
-    sg_assert_ptr(file, "metronome_load: Failed to load '%s'", path);
+    file = SG_SF_OPEN(path, SFM_READ, &info);
+
     sf_count_t frames = (sf_count_t)((double)info.samplerate * 0.25);
     if(info.frames < frames){
         frames = info.frames;
@@ -73,7 +72,11 @@ void metronome_load_sample(
 
     sg_assert(
         info.channels == 1 || info.channels == 2,
+#if SG_OS == _OS_WINDOWS
+        "%ls: Invalid number of channels: %d",
+#else
         "%s: Invalid number of channels: %d",
+#endif
         path,
         info.channels
     );
@@ -102,18 +105,26 @@ void metronome_load_sample(
 }
 
 void metronome_load(struct Metronome* self){
-    char path[1024];
-    sg_snprintf(
+    SGPATHSTR path[1024];
+    sg_path_snprintf(
         path, 
         1024, 
+#if SG_OS == _OS_WINDOWS
+        L"%ls/files/metronome/square/up.wav", 
+#else
         "%s/files/metronome/square/up.wav", 
+#endif
         INSTALL_PREFIX
     );
     metronome_load_sample(&self->samples[0], path, self->samplerate);
-    sg_snprintf(
+    sg_path_snprintf(
         path, 
         1024, 
+#if SG_OS == _OS_WINDOWS
+        L"%ls/files/metronome/square/down.wav", 
+#else
         "%s/files/metronome/square/down.wav", 
+#endif
         INSTALL_PREFIX
     );
     metronome_load_sample(&self->samples[1], path, self->samplerate);

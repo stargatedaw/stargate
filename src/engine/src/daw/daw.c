@@ -86,9 +86,19 @@ t_daw * g_daw_get(SGFLT sr){
 
 void g_daw_seq_pool_load(t_daw* self){
     int i;
-    char path[2048];
+    SGPATHSTR path[2048];
     for(i = 0; i < DAW_MAX_SONG_COUNT; ++i){
-        sg_snprintf(path, 2048, "%s%i", self->sequence_folder, i);
+        sg_path_snprintf(
+            path, 
+            2048, 
+#if SG_OS == _OS_WINDOWS
+            L"%ls%i", 
+#else
+            "%s%i", 
+#endif
+            self->sequence_folder, 
+            i
+        );
         if(i_file_exists(path)){
             self->song_pool[i].sequences = g_daw_sequence_get(self, i);
             self->song_pool[i].sequences_atm = g_daw_atm_sequence_get(self, i);
@@ -98,51 +108,65 @@ void g_daw_seq_pool_load(t_daw* self){
 
 void v_daw_open_project(int a_first_load){
     log_info("Setting DAW project folders");
-    sg_snprintf(
+    sg_path_snprintf(
         DAW->project_folder,
         1024,
-        "%s%sprojects%sdaw",
-        STARGATE->project_folder,
-        PATH_SEP,
-        PATH_SEP
+#if SG_OS == _OS_WINDOWS
+        L"%ls/projects/daw",
+#else
+        "%s/projects/daw",
+#endif
+        STARGATE->project_folder
     );
-    sg_snprintf(
+    sg_path_snprintf(
         DAW->item_folder,
         1024,
-        "%s%sitems%s",
-        DAW->project_folder,
-        PATH_SEP,
-        PATH_SEP
+#if SG_OS == _OS_WINDOWS
+        L"%ls/items/",
+#else
+        "%s/items/",
+#endif
+        DAW->project_folder
     );
-    sg_snprintf(
+    sg_path_snprintf(
         DAW->sequence_folder,
         1024,
-        "%s%ssongs%s",
-        DAW->project_folder,
-        PATH_SEP,
-        PATH_SEP
+#if SG_OS == _OS_WINDOWS
+        L"%ls/songs/",
+#else
+        "%s/songs/",
+#endif
+        DAW->project_folder
     );
-    sg_snprintf(
+    sg_path_snprintf(
         DAW->automation_folder,
         1024,
-        "%s%sautomation%s",
-        DAW->project_folder,
-        PATH_SEP,
-        PATH_SEP
+#if SG_OS == _OS_WINDOWS
+        L"%ls/automation/",
+#else
+        "%s/automation/",
+#endif
+        DAW->project_folder
     );
-    sg_snprintf(
+    sg_path_snprintf(
         DAW->tracks_folder,
         1024,
-        "%s%stracks",
-        DAW->project_folder,
-        PATH_SEP
+#if SG_OS == _OS_WINDOWS
+        L"%ls/tracks",
+#else
+        "%s/tracks",
+#endif
+        DAW->project_folder
     );
-    sg_snprintf(
+    sg_path_snprintf(
         DAW->seq_event_file,
         1024,
-        "%s%sseq_event.txt",
-        DAW->project_folder,
-        PATH_SEP
+#if SG_OS == _OS_WINDOWS
+        L"%ls/seq_event.txt",
+#else
+        "%s/seq_event.txt",
+#endif
+        DAW->project_folder
     );
 
     int f_i;

@@ -321,7 +321,7 @@ PluginHandle g_widemixer_instantiate(
 void v_widemixer_load(
     PluginHandle instance,
     PluginDescriptor* Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     t_widemixer *plugin_data = (t_widemixer*)instance;
     generic_file_loader(

@@ -141,7 +141,7 @@ PluginHandle g_nabu_instantiate(
 void v_nabu_load(
     PluginHandle instance,
     PluginDescriptor* Descriptor,
-    char * a_file_path
+    SGPATHSTR * a_file_path
 ){
     struct NabuPlugin* plugin_data = (struct NabuPlugin*)instance;
     generic_file_loader(

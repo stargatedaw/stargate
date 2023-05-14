@@ -7,7 +7,7 @@ void v_daw_offline_render(
     t_daw * self,
     double a_start_beat,
     double a_end_beat,
-    char * a_file_out,
+    SGPATHSTR* a_file_out,
     int a_create_file,
     int a_stem,
     int sequence_uid,
@@ -16,7 +16,7 @@ void v_daw_offline_render(
     SNDFILE * f_sndfile = NULL;
     int f_stem_count = self->routing_graph->track_pool_sorted_count;
     SNDFILE * f_stems[f_stem_count];
-    char f_file[2048];
+    SGPATHSTR f_file[2048];
 
     int * f_tps = self->routing_graph->track_pool_sorted[0];
 
@@ -56,24 +56,46 @@ void v_daw_offline_render(
 
     if(a_stem){
         for(f_i = 0; f_i < f_stem_count; ++f_i){
-            sg_snprintf(
+            sg_path_snprintf(
                 f_file,
                 2048,
-                "%s%s%i.wav",
+#if SG_OS == _OS_WINDOWS
+                L"%ls/%i.wav",
+#else
+                "%s/%i.wav",
+#endif
                 a_file_out,
-                REAL_PATH_SEP,
                 f_tps[f_i]
             );
-            f_stems[f_i] = sf_open(f_file, SFM_WRITE, &f_sf_info);
-            log_info("Successfully opened %s", f_file);
+
+            f_stems[f_i] = SG_SF_OPEN(f_file, SFM_WRITE, &f_sf_info);
+
         }
 
-        sg_snprintf(f_file, 2048, "%s%s0.wav", a_file_out, REAL_PATH_SEP);
+        sg_path_snprintf(
+            f_file, 
+            2048,
+#if SG_OS == _OS_WINDOWS
+            L"%ls/0.wav", 
+#else
+            "%s/0.wav", 
+#endif
+            a_file_out
+        );
     } else {
-        sg_snprintf(f_file, 2048, "%s", a_file_out);
+        sg_path_snprintf(
+            f_file, 
+            2048, 
+#if SG_OS == _OS_WINDOWS
+            L"%ls", 
+#else
+            "%s", 
+#endif
+            a_file_out
+        );
     }
 
-    f_sndfile = sf_open(f_file, SFM_WRITE, &f_sf_info);
+    f_sndfile = SG_SF_OPEN(f_file, SFM_WRITE, &f_sf_info);
     log_info("Successfully opened SNDFILE");
 
 #if SG_OS == _OS_LINUX
@@ -189,12 +211,30 @@ void v_daw_offline_render(
     free(f_buffer);
     free(f_output);
 
-    char f_tmp_finished[1024];
+    SGPATHSTR f_tmp_finished[1024];
 
     if(a_stem){
-        sg_snprintf(f_tmp_finished, 1024, "%s/finished", a_file_out);
+        sg_path_snprintf(
+            f_tmp_finished, 
+            1024, 
+#if SG_OS == _OS_WINDOWS
+            L"%ls/finished", 
+#else
+            "%s/finished", 
+#endif
+            a_file_out
+        );
     } else {
-        sg_snprintf(f_tmp_finished, 1024, "%s.finished", a_file_out);
+        sg_path_snprintf(
+            f_tmp_finished, 
+            1024, 
+#if SG_OS == _OS_WINDOWS
+            L"%ls.finished", 
+#else
+            "%s.finished", 
+#endif
+            a_file_out
+        );
     }
 
     v_write_to_file(f_tmp_finished, "finished");

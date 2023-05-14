@@ -16,8 +16,7 @@ class pysound_file:
         self.control_dict = {}
         assert(len(kwargs) == 1)
         if "a_path" in kwargs:
-            with open(kwargs["a_path"], 'r') as f_file:
-                self.string = f_file.read()
+            self.string = util.read_file_text(kwargs["a_path"])
             self.string_to_data()
         elif "a_string" in kwargs:
             self.string = kwargs["a_string"]

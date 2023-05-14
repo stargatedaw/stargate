@@ -30,14 +30,14 @@ struct HardwareConfig{
 
 /* Return the default device config path
  */
-char* default_device_file_path();
+SGPATHSTR* default_device_file_path();
 
 /* Load a hardware config from a file
  * @hardware_config_path: The path to the config to load
  * @return:
  */
 struct HardwareConfig* load_hardware_config(
-    char* config_path
+    SGPATHSTR* config_path
 );
 
 #endif

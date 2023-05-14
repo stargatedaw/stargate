@@ -78,7 +78,7 @@ typedef struct {
     // host sample-rate, cached here for easy access
     SGFLT host_sr;
     t_file_fx_controls fx_controls;
-    char path[2048];
+    SGPATHSTR path[2048];
 } t_audio_pool_item;
 
 typedef t_audio_pool_item * (*fp_get_audio_pool_item_from_host)(int);
@@ -122,7 +122,7 @@ typedef struct _PluginDescriptor {
     void (*load)(
         PluginHandle Instance,
         struct _PluginDescriptor * Descriptor,
-        char * a_file_path
+        SGPATHSTR* a_file_path
     );
     SGFLT* (*get_port_table)(PluginHandle instance);
 
@@ -248,7 +248,7 @@ void g_get_port_table(
 void generic_file_loader(
     PluginHandle Instance,
     PluginDescriptor * Descriptor,
-    char * a_path,
+    SGPATHSTR* a_path,
     SGFLT * a_table,
     t_plugin_cc_map * a_cc_map
 );
