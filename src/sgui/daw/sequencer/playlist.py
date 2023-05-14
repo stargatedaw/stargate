@@ -181,6 +181,8 @@ class PlaylistWidget:
         playlist_names, sequence_names, selected = api_playlist.load()
         if self._current_sequence:
             selected = self._current_sequence
+        else:
+            self._current_sequence = selected
         for name in sequence_names:
             item = self.add_sequence_item(name)
             if name == selected:
