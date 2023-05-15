@@ -443,7 +443,12 @@ void v_audio_pool_add_items(
             log_info("Audio Pool: Loading file '%s'", f_arr->current_str);
 #if SG_OS == _OS_WINDOWS
             SGPATHSTR path[2048];
-            utf8_to_utf16(f_arr->current_str, strlen(f_arr->current_str), path, 2048);
+            utf8_to_utf16(
+	        (const utf8_t*)f_arr->current_str, 
+                strlen(f_arr->current_str), 
+                path, 
+                2048
+            );
             v_audio_pool_add_item(
                 a_audio_pool,
                 f_uid,

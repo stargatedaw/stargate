@@ -600,7 +600,12 @@ void v_we_configure(const char* a_key, const char* a_value){
         v_set_wave_editor_item(wave_edit, a_value);
     } else if(!strcmp(a_key, WN_CONFIGURE_KEY_WE_EXPORT)){
 #if SG_OS == _OS_WINDOWS
-        utf8_to_utf16(a_value, strlen(a_value), path_buff, 2048);
+        utf8_to_utf16(
+            (const utf8_t*)a_value,
+            strlen(a_value),
+            path_buff,
+            2048
+        );
         v_we_export(wave_edit, path_buff);
 #else
         v_we_export(wave_edit, a_value);

@@ -42,7 +42,12 @@ void v_create_sample_graph(t_audio_pool_item * self){
 
 #if SG_OS == _OS_WINDOWS
     char utf8_buff[2048];
-    utf16_to_utf8(self->path, wcslen(self->path), utf8_buff, 2048);
+    utf16_to_utf8(
+        self->path,
+        wcslen(self->path),
+        (utf8_t*)utf8_buff,
+        2048
+    );
     len = sg_snprintf(
         str_buff,
         2048,

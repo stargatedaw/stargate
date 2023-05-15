@@ -755,7 +755,7 @@ t_track * g_track_get(int a_track_num, SGFLT a_sr){
 void v_set_preview_file(const char* a_file){
 #if SG_OS == _OS_WINDOWS
     SGPATHSTR path[2048];
-    utf8_to_utf16(a_file, strlen(a_file), path, 2048);
+    utf8_to_utf16((const utf8_t*)a_file, strlen(a_file), path, 2048);
     t_audio_pool_item * f_result = g_audio_pool_item_get(
         0,
         path,
@@ -1421,7 +1421,12 @@ void v_sg_configure(const char* a_key, const char* a_value){
         SGFLT volume = atof(val_arr->array[1]);
         volume = f_db_to_linear(volume);
 #if SG_OS == _OS_WINDOWS
-	utf8_to_utf16(val_arr->array[2], strlen(val_arr->array[2]), path_buf, 2048);
+	utf8_to_utf16(
+            (const utf8_t*)val_arr->array[2], 
+            strlen(val_arr->array[2]), 
+            path_buf, 
+            2048
+        );
         t_audio_pool_item * result = v_audio_pool_add_item(
             STARGATE->audio_pool,
             uid,
@@ -1465,9 +1470,19 @@ void v_sg_configure(const char* a_key, const char* a_value){
         SGPATHSTR * f_out_file = (SGPATHSTR*)malloc(sizeof(SGPATHSTR) * TINY_STRING);
         v_iterate_2d_char_array(f_arr);
 #if SG_OS == _OS_WINDOWS
-	utf8_to_utf16(f_arr->current_str, strlen(f_arr->current_str), f_in_file, TINY_STRING);
+	utf8_to_utf16(
+            (const utf8_t*)f_arr->current_str,
+            strlen(f_arr->current_str), 
+            f_in_file,
+            TINY_STRING
+        );
         v_iterate_2d_char_array(f_arr);
-	utf8_to_utf16(f_arr->current_str, strlen(f_arr->current_str), f_out_file, TINY_STRING);
+	utf8_to_utf16(
+            (const utf8_t*)f_arr->current_str,
+            strlen(f_arr->current_str), 
+            f_out_file, 
+            TINY_STRING
+        );
 #else
         strcpy(f_in_file, f_arr->current_str);
         v_iterate_2d_char_array(f_arr);
@@ -1514,9 +1529,19 @@ void v_sg_configure(const char* a_key, const char* a_value){
         SGPATHSTR * f_out_file = (SGPATHSTR*)malloc(sizeof(SGPATHSTR) * TINY_STRING);
         v_iterate_2d_char_array(f_arr);
 #if SG_OS == _OS_WINDOWS
-        utf8_to_utf16(f_arr->current_str, strlen(f_arr->current_str), f_in_file, TINY_STRING);
+        utf8_to_utf16(
+            (const utf8_t*)f_arr->current_str,
+            strlen(f_arr->current_str),
+            f_in_file,
+            TINY_STRING
+        );
         v_iterate_2d_char_array(f_arr);
-        utf8_to_utf16(f_arr->current_str, strlen(f_arr->current_str), f_out_file, TINY_STRING);
+        utf8_to_utf16(
+            (const utf8_t*)f_arr->current_str, 
+            strlen(f_arr->current_str),
+            f_out_file,
+            TINY_STRING
+        );
 #else
         strcpy(f_in_file, f_arr->current_str);
         v_iterate_2d_char_array(f_arr);
