@@ -251,6 +251,7 @@ class SgSpinBox(_QLineEdit):
         self.max = None
         self.step_size = 1
         self.decimals = 0
+        self.last_value_emitted = None
         self.value_at_press = None
         self.pos_at_press = None
         self.setValue(0)
@@ -313,6 +314,9 @@ class SgSpinBox(_QLineEdit):
         if self.spinbox_type == SgSpinBox.TYPE_DOUBLE:
             value = round(value, self.decimals)
         self.setValue(value)
+        if value != self.last_value_emitted:
+            self.last_value_emitted = value
+            self.valueChanged.emit(value)
 
         super(SgSpinBox, self).mouseMoveEvent(event)
 
