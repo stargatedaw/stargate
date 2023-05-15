@@ -1,6 +1,3 @@
-"""
-
-"""
 from collections import defaultdict
 
 from sglib.models.daw import *
@@ -155,6 +152,7 @@ DRAW_LAST_ITEMS = False
 
 CURRENT_ITEM_NAME = None
 LAST_ITEM_NAME = None
+LAST_ITEM_TRACK = None
 CURRENT_ITEM = None
 CURRENT_ITEM_TRACK = None
 CURRENT_ITEM_REF = None
@@ -328,9 +326,11 @@ def global_open_items(
         ITEM_REF_POS, \
         LAST_ITEM, \
         LAST_ITEM_NAME, \
-        LAST_ITEM_REF
+        LAST_ITEM_REF, \
+        LAST_ITEM_TRACK
 
     if item_track is not None:
+        LAST_ITEM_TRACK = CURRENT_ITEM_TRACK
         CURRENT_ITEM_TRACK = item_track
 
     if a_new_ref:
@@ -405,7 +405,11 @@ def global_save_and_reload_items():
 
 def open_last():
     if LAST_ITEM_NAME:
-        global_open_items(LAST_ITEM_NAME, a_new_ref=LAST_ITEM_REF)
+        global_open_items(
+            LAST_ITEM_NAME, 
+            a_new_ref=LAST_ITEM_REF, 
+            item_track=LAST_ITEM_TRACK,
+        )
         MAIN_WINDOW.tab_changed()
     else:
         QMessageBox.warning(
