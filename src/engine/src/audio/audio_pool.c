@@ -307,6 +307,29 @@ t_audio_pool_item * v_audio_pool_add_item(
                 a_audio_pool->samples_folder,
                 a_file_path
             );
+	    // TODO Stargate v2: Delete this quirk for the 
+	    // audio_pool corruption bug
+#if SG_OS == _OS_WINDOWS
+	    if(a_file_path[1] == L':' && !i_file_exists(f_path)){
+                sg_path_snprintf(
+                    f_path,
+                    8191,
+                    L"%ls/%ls",
+                    a_audio_pool->samples_folder,
+                    &a_file_path[2]
+                );
+	    }
+#else
+	    if(a_file_path[1] == ':' && !i_file_exists(f_path)){
+                sg_path_snprintf(
+                    f_path,
+                    8191,
+                    "%s/%s",
+                    a_audio_pool->samples_folder,
+                    &a_file_path[2]
+                );
+	    }
+#endif
         } else {
             sg_path_snprintf(
                 f_path,

@@ -120,6 +120,53 @@ class SgProject(AbstractProject):
             self.new_project(a_project_file)
         else:
             self.open_stretch_dicts()
+        self.quirks(a_project_file)
+
+    def quirks(self, project_file):
+        """ Make modifications to the project folder format as needed, to
+            bring old projects up to date on format changes
+        """
+        # TODO Stargate v2: Remove all existing quirks
+        self._quirk_windows_audio_pool_corruption(project_file)
+
+    def _quirk_windows_audio_pool_corruption(self, project_file):
+        """ Github issue #39
+            On Windows, dragging files from the project audio folder corrupts
+            the audio pool
+        """
+        changed = False
+        project_dir = os.path.dirname(project_file)
+        def full_path(path):
+            _path = os.path.join(
+                project_dir,
+                'audio',
+                'samples',
+                path,
+            )
+            return _path
+        pool = self.get_audio_pool()
+        for entry in pool.pool:
+            if entry.path.startswith('/:'):
+                _full = full_path(entry.path[1:])
+                if os.path.exists(_full):
+                    continue
+                new_path = entry.path[0] + entry.path[2:]
+                _full = full_path(new_path[1:])
+                if os.path.exists(_full):
+                    LOG.info(
+                        'Fixing corrupt audio pool entry: '
+                        f'{entry.path} -> {new_path}'
+                    )
+                    entry.path = new_path
+                    changed = True
+                else:
+                    LOG.warning(
+                        f'Corrupt audio pool, {new_path} does not exist'
+                    )
+        if changed:
+            LOG.info('Saving repaired audio pool')
+            self.save_audio_pool(pool)
+
 
     def new_project(self, a_project_file, a_notify_osc=True):
         self.set_project_folders(a_project_file)
