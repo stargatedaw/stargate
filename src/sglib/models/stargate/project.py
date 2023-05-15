@@ -518,8 +518,6 @@ class SgProject(AbstractProject):
         path = pi_path(path)
         if path.startswith(samples_dir):
             result = path.replace(samples_dir, "", 1)
-            if IS_WINDOWS:
-                result = f"{result[0]}:{result[1:]}"
             return result
         elif path.startswith(audio_dir):
             # Specifically, any folder under project/audio except for the
