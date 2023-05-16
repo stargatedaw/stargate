@@ -727,7 +727,8 @@ class AutomationEditorWidget:
         f_cancel = QPushButton(_("Close"))
         f_cancel.pressed.connect(cancel_handler)
         f_ok_cancel_layout.addWidget(f_cancel)
-        f_window.exec()
+        f_window.move(0, 0)
+        f_window.exec(center=False)
 
     def add_pb_point(self):
         if not shared.ITEM_EDITOR.enabled:  #TODO:  Make this global...
@@ -839,7 +840,8 @@ class AutomationEditorWidget:
         f_cancel = QPushButton(_("Close"))
         f_cancel.pressed.connect(cancel_handler)
         f_ok_cancel_layout.addWidget(f_cancel)
-        f_window.exec()
+        f_window.move(0, 0)
+        f_window.exec(center=False)
 
 class AutomationItem(QGraphicsEllipseItem):
     """ This is a CC or pitchbend event in an AutomationEditor
