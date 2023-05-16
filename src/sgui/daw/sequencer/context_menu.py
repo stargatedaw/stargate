@@ -480,11 +480,12 @@ def glue_selected():
                     shared.CURRENT_SEQUENCE.remove_item_ref(f_ref)
                 else:
                     f_first = False
-            util.print_sorted_dict(locals())
+            #util.print_sorted_dict(locals())
             item_lib.save_item(f_new_name, f_new_item)
     if f_did_something:
         constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
         constants.DAW_PROJECT.commit(_("Glue sequencer items"))
+        shared.SEQUENCER.clear_selected_item_strings()
         shared.SEQ_WIDGET.open_sequence()
     else:
         QMessageBox.warning(

@@ -164,6 +164,7 @@ class item:
 
         a_item2.confine_audio_items(a_ref, a_tempo)
         for k, v in a_item2.items.items():
+            LOG.info(f'Processing item {k}: {v}')
             f_index = self.get_next_index()
             if f_index == -1:
                 LOG.info("Exceeded the max audio item count, dropping items")
