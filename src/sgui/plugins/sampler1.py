@@ -335,18 +335,20 @@ _sampler1_port_mins = (
     SAMPLER1_MONO_FX0_KNOB0_PORT_RANGE_MIN,
     SAMPLER1_MONO_FX1_KNOB0_PORT_RANGE_MIN,
     SAMPLER1_MONO_FX2_KNOB0_PORT_RANGE_MIN,
-    SAMPLER1_MONO_FX3_KNOB0_PORT_RANGE_MIN)
+    SAMPLER1_MONO_FX3_KNOB0_PORT_RANGE_MIN,
+)
 
-for f_fx in range(4):
-    f_port_iter = _sampler1_port_mins[f_fx]
-    for f_knob in range(3):
-        for f_group in range(1, SAMPLER1_MAX_SAMPLE_COUNT + 1):
-            f_group_str = str(f_group).zfill(3)
-            f_label = "Mono FX{} Knob{} Group {}".format(
-                f_fx, f_knob, f_group_str)
-            SAMPLER1_PORT_MAP[f_label] = f_port_iter
-            f_port_iter += 1
+def _add_monofx_to_atm():
+    for fx in range(4):
+        port_iter = _sampler1_port_mins[fx]
+        for knob in range(3):
+            for group in range(1, SAMPLER1_MAX_SAMPLE_COUNT + 1):
+                group_str = str(group).zfill(3)
+                label = f"MonoFX Group {group_str} FX{fx} Knob{knob}"
+                SAMPLER1_PORT_MAP[label] = port_iter
+                port_iter += 1
 
+_add_monofx_to_atm()
 
 SMP_TB_RADIOBUTTON_INDEX = 0
 SMP_TB_FILE_PATH_INDEX = 1
