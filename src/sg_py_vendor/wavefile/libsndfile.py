@@ -17,6 +17,8 @@ import sys
 import ctypes as ct
 import numpy as np
 
+IS_WINDOWS = "win32" in sys.platform or "msys" in sys.platform
+
 if sys.platform == "win32":
     dllName = 'libsndfile-1'
 elif "linux" in sys.platform:
@@ -320,9 +322,10 @@ def __init_lib_methods():
     _lib.sf_open.restype = SNDFILE
     _lib.sf_open.argtypes = [ct.c_char_p, ct.c_int, ct.POINTER(SF_INFO)]
 
-    #SNDFILE*     sf_wchar_open  (LPCWSTR wpath, int mode, SF_INFO *sfinfo);
-    _lib.sf_wchar_open.restype = SNDFILE
-    _lib.sf_wchar_open.argtypes = [ct.c_wchar_p, ct.c_int, ct.POINTER(SF_INFO)]
+    if IS_WINDOWS:
+        #SNDFILE*     sf_wchar_open  (LPCWSTR wpath, int mode, SF_INFO *sfinfo);
+        _lib.sf_wchar_open.restype = SNDFILE
+        _lib.sf_wchar_open.argtypes = [ct.c_wchar_p, ct.c_int, ct.POINTER(SF_INFO)]
 
     #int        sf_error        (SNDFILE *sndfile) ;
     _lib.sf_error.restype = ct.c_int

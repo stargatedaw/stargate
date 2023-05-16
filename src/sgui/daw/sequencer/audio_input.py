@@ -62,7 +62,8 @@ class AudioInput:
         self.stereo_combobox = QComboBox()
         self.stereo_combobox.setToolTip(
             "Select another input channel to pair as a stereo channel "
-            "to this channel"
+            "to this channel.  Note that the other channel does not need to "
+            "be record-armed, doing so will record it separately"
         )
         a_layout.addWidget(self.stereo_combobox, a_num, 3)
         self.stereo_combobox.setMinimumWidth(75)

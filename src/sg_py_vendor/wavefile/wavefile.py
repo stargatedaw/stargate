@@ -27,9 +27,13 @@ import sys
 
 from .libsndfile import _lib
 
-from .libsndfile import OPEN_MODES, SEEK_MODES, SF_INFO, FILE_STRINGS
-
-IS_WINDOWS = "win32" in sys.platform or "msys" in sys.platform
+from .libsndfile import (
+    FILE_STRINGS, 
+    IS_WINDOWS,
+    OPEN_MODES, 
+    SEEK_MODES, 
+    SF_INFO, 
+)
 
 # Vorbis and Flac use utf8.
 # WAV/AIFF use ascii, but if chars beyond 127 are found,
