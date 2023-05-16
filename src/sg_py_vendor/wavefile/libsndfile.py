@@ -316,9 +316,13 @@ class SF_INFO(ct.Structure):
 def __init_lib_methods():
     SNDFILE = ct.c_void_p
 
-    #SNDFILE*     sf_open        (const char *path, int mode, SF_INFO *sfinfo) ;
+    #SNDFILE*     sf_open        (const char *path, int mode, SF_INFO *sfinfo);
     _lib.sf_open.restype = SNDFILE
     _lib.sf_open.argtypes = [ct.c_char_p, ct.c_int, ct.POINTER(SF_INFO)]
+
+    #SNDFILE*     sf_wchar_open  (LPCWSTR wpath, int mode, SF_INFO *sfinfo);
+    _lib.sf_wchar_open.restype = SNDFILE
+    _lib.sf_wchar_open.argtypes = [ct.c_wchar_p, ct.c_int, ct.POINTER(SF_INFO)]
 
     #int        sf_error        (SNDFILE *sndfile) ;
     _lib.sf_error.restype = ct.c_int

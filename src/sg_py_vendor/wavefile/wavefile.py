@@ -29,6 +29,8 @@ from .libsndfile import _lib
 
 from .libsndfile import OPEN_MODES, SEEK_MODES, SF_INFO, FILE_STRINGS
 
+IS_WINDOWS = "win32" in sys.platform or "msys" in sys.platform
+
 # Vorbis and Flac use utf8.
 # WAV/AIFF use ascii, but if chars beyond 127 are found,
 # we chose to interpret them as utf8. That might be a wrong choice.
@@ -193,7 +195,18 @@ class WaveWriter(object) :
                 channels = channels,
                 format = format
             )
-        self._sndfile = _lib.sf_open(_fsencode(filename), OPEN_MODES.SFM_WRITE, self._info)
+        if IS_WINDOWS:
+            self._sndfile = _lib.sf_wchar_open(
+                filename, 
+                OPEN_MODES.SFM_WRITE, 
+                self._info,
+            )
+        else:
+            self._sndfile = _lib.sf_open(
+                _fsencode(filename), 
+                OPEN_MODES.SFM_WRITE, 
+                self._info,
+            )
         if _lib.sf_error(self._sndfile) :
             raise IOError("Error opening '%s': %s"%(
                 filename, _sferrormessage(_lib.sf_error(self._sndfile))))
@@ -242,7 +255,18 @@ class WaveReader(object) :
                 channels = channels,
                 format = format
             )
-        self._sndfile = _lib.sf_open(_fsencode(filename), OPEN_MODES.SFM_READ, self._info)
+        if IS_WINDOWS:
+            self._sndfile = _lib.sf_wchar_open(
+                filename, 
+                OPEN_MODES.SFM_READ, 
+                self._info,
+            )
+        else:
+            self._sndfile = _lib.sf_open(
+                _fsencode(filename), 
+                OPEN_MODES.SFM_READ, 
+                self._info,
+            )
         if _lib.sf_error(self._sndfile) :
             raise IOError("Error opening '%s': %s"%(
                 filename, _sferrormessage(_lib.sf_error(self._sndfile))))
