@@ -157,12 +157,15 @@ mingw_deps:
 		 $(MINGW_PREFIX)/bin/libvorbis-0.dll \
 		 $(MINGW_PREFIX)/bin/libvorbisenc-2.dll \
 		 $(MINGW_PREFIX)/bin/rubberband.exe \
-		 $(MINGW_PREFIX)/bin/soundstretch.exe \
-		 $(MINGW_PREFIX)/bin/libSoundTouch-1.dll \
 		 engine/
 	cp vendor/portaudio-binaries/libportaudio64bit.dll \
 		engine/libportaudio.dll \
 		|| echo "Could not install portaudio with ASIO support"
+	cd vendor/soundtouch && \
+		$(MINGW_PREFIX)/bin/clang++ -Iinclude -lshlwapi -O3 \
+			source/Sound{Stretch,Touch}/*.cpp \
+			-o soundstretch.exe && \
+		cp soundstretch.exe ../../engine/
 
 mingw_deps_clean:
 	rm -rf engine/*.{dll,exe}
@@ -183,7 +186,7 @@ sbsms:
 
 soundtouch:
 	cd vendor/soundtouch && \
-		$(CXX) -std=c++11 -Iinclude/ \
+		$(CXX) -std=c++11 -Iinclude/ -O3 \
 		`find source/SoundTouch source/SoundStretch -name '*.cpp'` \
 		-o ../stargate-soundstretch
 
