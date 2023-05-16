@@ -3,4 +3,5 @@
 	url = https://github.com/spatialaudio/portaudio-binaries.git
 [submodule "src/vendor/soundtouch"]
 	path = src/vendor/soundtouch
-	url = https://codeberg.org/soundtouch/soundtouch.git
+    url = https://codeberg.org/L3337/soundtouch.git
+    branch = windows-unicode-cli-args
