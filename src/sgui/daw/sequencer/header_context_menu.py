@@ -236,6 +236,7 @@ def header_time_modify():
         shared.CURRENT_SEQUENCE.set_marker(marker)
         constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
         constants.DAW_PROJECT.commit(_("Set tempo marker"))
+        shared.SEQUENCER.set_selected_strings()
         shared.SEQ_WIDGET.open_sequence()
         window.close()
 
