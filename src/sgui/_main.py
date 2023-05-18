@@ -6,7 +6,11 @@ from .preflight import preflight
 from sglib.log import LOG, setup_logging
 from sglib.lib.translate import _
 from sglib.lib import util
-from sgui import shared as glbl_shared, project as project_mod, widgets
+from sgui import (
+    shared as glbl_shared,
+    project as project_mod,
+    widgets,
+)
 from sgui.main import main as main_window_open
 from sgui import sgqt
 from sgui.sgqt import (

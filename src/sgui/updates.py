@@ -1,18 +1,25 @@
+from . import shared
 from .sgqt import (
+    QDesktopServices,
     QMessageBox,
     QtCore,
-    QDesktopServices,
 )
 from sglib.lib.updates import check_for_updates
 from sglib.log import LOG
 
+TIMER = None
 
-def ui_check_updates():
+def ui_check_updates(parent):
     def go_to_releases_page():
+        global TIMER
         url = QtCore.QUrl(
             "https://github.com/stargatedaw/stargate/releases",
         )
         QDesktopServices.openUrl(url)
+        shared.IGNORE_CLOSE_EVENT = False
+        TIMER = QtCore.QTimer()
+        TIMER.timeout.connect(parent.close)
+        TIMER.start(2000)
     try:
         update = check_for_updates()
     except Exception as ex:
@@ -24,8 +31,8 @@ def ui_check_updates():
             None,
             'Update available!',
             (
-                f'{update[1]} installed, {update[2]} is available. '
-                'Go to download page?'
+                f'{update[1]} installed, {update[2]} is available.\n'
+                'Close Stargate and go to download page?'
             ),
             (
                 QMessageBox.StandardButton.Yes
@@ -40,5 +47,5 @@ def ui_check_updates():
         QMessageBox.information(
             None,
             "No update available",
-            f'{update[2]} is the latest, already installed',
+            f'{update[2]} is the latest, {update[1]} already installed',
         )
