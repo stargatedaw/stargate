@@ -7,21 +7,24 @@
 
 void daw_track_reload(int index){
     t_track* old = DAW->track_pool[index];
-    t_track* new = g_track_get(
+    t_track* _new = g_track_get(
         index,
         STARGATE->thread_storage[0].sample_rate
     );
-    v_open_track(new, DAW->tracks_folder, index);
+    v_open_track(_new, DAW->tracks_folder, index);
 
     // Required, otherwise would need to call v_daw_open_tracks(),
     // which would recreate all of the tracks.  These are the only 2 fields
     // that are lost.  Potentially this entire setup should be refactored
-    new->solo = old->solo;
-    new->mute = old->mute;
+    _new->solo = old->solo;
+    _new->mute = old->mute;
+    _new->midi_device = old->midi_device;
+    _new->extern_midi = old->extern_midi;
+    _new->extern_midi_count = old->extern_midi_count;
 
     pthread_spin_lock(&STARGATE->main_lock);
-    memcpy(new->note_offs, old->note_offs, sizeof(new->note_offs));
-    DAW->track_pool[index] = new;
+    memcpy(_new->note_offs, old->note_offs, sizeof(_new->note_offs));
+    DAW->track_pool[index] = _new;
     pthread_spin_unlock(&STARGATE->main_lock);
 
     track_free(old);
