@@ -42,6 +42,12 @@ class sequencer_item:
             )
         )
 
+    def __eq__(self, other):
+        return str(self) == str(other)
+
+    def __hash__(self):
+        return hash(str(self))
+
     def __lt__(self, other):
         if self.track_num == other.track_num:
             return ((self.start_beat < other.start_beat) or

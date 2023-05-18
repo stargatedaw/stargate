@@ -208,6 +208,8 @@ class sequencer:
     def fix_overlaps(self):
         to_delete = set()
         to_delete_list = []
+        _item_set = set(self.items)
+        self.items = sorted(_item_set)
 
         def to_delete_add(item, reason):
             to_delete.add(item)
