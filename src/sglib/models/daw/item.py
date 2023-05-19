@@ -762,17 +762,20 @@ class item:
         self.items.pop(int(a_index))
 
     def deduplicate_items(self):
-        f_to_delete = []
-        f_values = []
+        to_delete = []
+        values = set()
         for k, v in list(self.items.items()):
-            f_str = str(v)
-            if f_str in f_values:
-                f_to_delete.append(k)
+            _str = str(v)
+            if _str in values:
+                to_delete.append(k)
             else:
-                f_values.append(f_str)
-        for f_key in f_to_delete:
-            LOG.info("Removing duplicate audio item at {}".format(f_key))
-            self.items.pop(f_key)
-            if f_key in self.fx_list:
-                self.fx_list.pop(f_key)
+                values.add(_str)
+        LOG.debug(f'to_delete: {to_delete}')
+        LOG.debug(f'values: {values}')
+        LOG.debug(f'self.items: {self.items}')
+        for k in to_delete:
+            LOG.info(f"Removing duplicate audio item at {k}")
+            self.items.pop(k)
+            if k in self.fx_list:
+                self.fx_list.pop(k)
 
