@@ -48,17 +48,13 @@ clean: clean_pyc
 	rm -rf htmlcov/ .pytest_cache/ .eggs/ .coverage \
 		*.pyc *.egg-info build/ dist/ vendor/stargate-soundstretch
 	make -C engine clean
-	make -C vendor/sbsms clean
+	make -C vendor/sbsms/cli clean
 
 clean_pyc:
 	find . -type d -name __pycache__ -exec rm -rf {} \; ; true
 
 commit_hash:
 	git rev-parse --short HEAD > COMMIT || echo unknown > COMMIT
-
-deps_clean:
-	make -C vendor/sbsms clean
-	make -C vendor/sbsms/cli clean
 
 distro: commit_hash
 	# Build Stargate DAW without vendored dependencies, you are expected
@@ -108,7 +104,7 @@ uninstall_symlinks:
 		$(DESTDIR)$(PREFIX)/share/pixmaps/stargate.png \
 		$(DESTDIR)$(PREFIX)/share/pixmaps/stargate.ico \
 		$(DESTDIR)$(PREFIX)/share/applications/stargate.desktop \
-		$(DESTDIR)$(PREFIX)/share/mime/packages/stargate.xml 
+		$(DESTDIR)$(PREFIX)/share/mime/packages/stargate.xml
 
 install_macos:
 	PREFIX=/usr/local make install
@@ -116,8 +112,7 @@ install_macos:
 lines-of-code:
 	./loc.sh
 
-macos: commit_hash soundtouch
-	OPTIMIZE_FLAGS= CC=clang PREFIX=/usr/local make sbsms
+macos: commit_hash soundtouch sbsms
 	OPTIMIZE_FLAGS= CC=clang CC_ARGS= make -C engine macos
 	cp -f \
 		vendor/sbsms/cli/sbsms \
@@ -127,6 +122,7 @@ macos: commit_hash soundtouch
 	./macos/link.py --with-sbsms
 
 macos_arm: commit_hash soundtouch
+	PLAT_FLAGS= make sbsms
 	make -C engine macos_arm
 	cp -f \
 		/opt/homebrew/bin/rubberband \
@@ -138,26 +134,26 @@ mingw:
 	CFLAGS+=" -static-libgcc " make -C engine mingw
 
 mingw_deps:
-	# vendor/sbsms/cli/sbsms.exe
 	cp \
-		 $(MINGW_PREFIX)/bin/libFLAC.dll \
-		 $(MINGW_PREFIX)/bin/libfftw3-3.dll \
-		 $(MINGW_PREFIX)/bin/libfftw3f-3.dll \
-		 $(MINGW_PREFIX)/bin/libgcc_s_seh-1.dll \
-		 $(MINGW_PREFIX)/bin/libogg-0.dll \
-		 $(MINGW_PREFIX)/bin/libopus-0.dll \
-		 $(MINGW_PREFIX)/bin/libportaudio.dll \
-		 $(MINGW_PREFIX)/bin/libportmidi.dll \
-		 $(MINGW_PREFIX)/bin/librubberband-2.dll \
-		 $(MINGW_PREFIX)/bin/libsamplerate-0.dll \
-		 $(MINGW_PREFIX)/bin/libsndfile-1.dll \
-		 $(MINGW_PREFIX)/bin/libssp-0.dll \
-		 $(MINGW_PREFIX)/bin/libstdc++-6.dll \
-		 $(MINGW_PREFIX)/bin/libwinpthread-1.dll \
-		 $(MINGW_PREFIX)/bin/libvorbis-0.dll \
-		 $(MINGW_PREFIX)/bin/libvorbisenc-2.dll \
-		 $(MINGW_PREFIX)/bin/rubberband.exe \
-		 engine/
+		$(MINGW_PREFIX)/bin/libFLAC.dll \
+		$(MINGW_PREFIX)/bin/libfftw3-3.dll \
+		$(MINGW_PREFIX)/bin/libfftw3f-3.dll \
+		$(MINGW_PREFIX)/bin/libgcc_s_seh-1.dll \
+		$(MINGW_PREFIX)/bin/libogg-0.dll \
+		$(MINGW_PREFIX)/bin/libopus-0.dll \
+		$(MINGW_PREFIX)/bin/libportaudio.dll \
+		$(MINGW_PREFIX)/bin/libportmidi.dll \
+		$(MINGW_PREFIX)/bin/librubberband-2.dll \
+		$(MINGW_PREFIX)/bin/libsamplerate-0.dll \
+		$(MINGW_PREFIX)/bin/libsndfile-1.dll \
+		$(MINGW_PREFIX)/bin/libssp-0.dll \
+		$(MINGW_PREFIX)/bin/libstdc++-6.dll \
+		$(MINGW_PREFIX)/bin/libwinpthread-1.dll \
+		$(MINGW_PREFIX)/bin/libvorbis-0.dll \
+		$(MINGW_PREFIX)/bin/libvorbisenc-2.dll \
+		$(MINGW_PREFIX)/bin/rubberband.exe \
+		vendor/sbsms/cli/sbsms.exe \
+		engine/
 	cp vendor/portaudio-binaries/libportaudio64bit.dll \
 		engine/libportaudio.dll \
 		|| echo "Could not install portaudio with ASIO support"
@@ -181,8 +177,7 @@ py_vendor:
 		--ignore-installed --upgrade --target=./sg_py_vendor mido
 
 sbsms:
-	cd vendor/sbsms && ( ./configure || ./configure --enable-sse=no ) && make
-	cd vendor/sbsms/cli && make
+	make -C vendor/sbsms/cli
 
 soundtouch:
 	cd vendor/soundtouch && \
