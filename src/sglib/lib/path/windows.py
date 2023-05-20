@@ -1,5 +1,20 @@
 import os
 
+def _is_self_contained():
+    dirname = os.path.dirname(
+        os.path.abspath(__file__),
+    )
+    scripts = os.path.join(
+        dirname,
+        '..',
+        '..',
+        '..',
+        'scripts',
+    )
+    return os.path.isdir(scripts)
+
+IS_LOCAL_DEVEL = _is_self_contained()
+
 INSTALL_PREFIX = os.path.abspath(
     os.path.join(
         os.path.dirname(__file__),

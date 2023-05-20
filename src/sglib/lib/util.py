@@ -549,6 +549,8 @@ def paulstretch(
         a_src_path,
         a_dest_path,
     ]
+    if IS_WINDOWS and IS_LOCAL_DEVEL:
+        f_cmd.insert(1, sys.argv[0])
     LOG.info("Running {}".format(" ".join(f_cmd)))
     f_proc = subprocess.Popen(f_cmd, encoding='UTF-8')
     return f_proc

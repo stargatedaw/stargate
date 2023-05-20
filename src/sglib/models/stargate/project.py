@@ -409,6 +409,8 @@ class SgProject(AbstractProject):
                     f_src_path,
                     f_dest_path,
                 ]
+                if IS_WINDOWS and IS_LOCAL_DEVEL:
+                    f_cmd.insert(1, sys.argv[0])
             elif a_audio_item.time_stretch_mode in (7, 8):
                 ext = os.path.splitext(f_src_path)[1].lower()
                 if ext not in ('.wav', '.wave'):
