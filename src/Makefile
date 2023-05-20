@@ -136,7 +136,7 @@ mingw:
 	CFLAGS+=" -static-libgcc " make -C engine mingw
 
 mingw_deps:
-	cd vendor/sbsms/cli && make
+	CXX=$(MINGW_PREFIX)/bin/clang++ make -C vendor/sbsms/cli
 	cp \
 		$(MINGW_PREFIX)/bin/libFLAC.dll \
 		$(MINGW_PREFIX)/bin/libfftw3-3.dll \
