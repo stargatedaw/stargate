@@ -119,11 +119,13 @@ macos: commit_hash soundtouch sbsms
 		vendor/stargate-soundstretch \
 		/usr/local/bin/rubberband \
 		engine/
-	./macos/link.py --with-sbsms
+	./macos/link.py
 
 macos_arm: commit_hash soundtouch
-	PLAT_FLAGS= make sbsms
+	PLAT_FLAGS= CFLAGS+="-I/opt/homebrew/include" make sbsms
 	make -C engine macos_arm
+	# No idea why cp breaks this file, it makes no sense
+	mv vendor/sbsms/cli/sbsms engine/
 	cp -f \
 		/opt/homebrew/bin/rubberband \
 		vendor/stargate-soundstretch \

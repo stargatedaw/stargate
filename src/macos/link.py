@@ -10,11 +10,6 @@ import subprocess
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--with-sbsms',
-        action='store_true',
-        dest='sbsms',
-    )
     return parser.parse_args()
 
 args = parse_args()
@@ -63,9 +58,7 @@ def relink(binary):
                 shutil.copyfile(dylib, basename)
                 relink(basename)
 
-BINARIES = ['stargate-engine', 'rubberband']
-if args.sbsms:
-    BINARIES.append('sbsms')
+BINARIES = ['stargate-engine', 'rubberband', 'sbsms']
 
 for binary in BINARIES:
     relink(binary)

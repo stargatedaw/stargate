@@ -11,12 +11,8 @@ BINARIES = [
  ('engine/*.dylib', '.'),
  ('engine/rubberband', 'engine'),
  ('engine/stargate-soundstretch', 'engine'),
+ ('engine/sbsms', 'engine'),
 ]
-
-if ARCH == 'x86_64':
-    BINARIES.append(
-        ('vendor/sbsms/cli/sbsms', 'engine'),
-    )
 
 a = Analysis(['scripts/stargate'],
              pathex=[
