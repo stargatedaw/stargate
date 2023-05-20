@@ -28,7 +28,7 @@ stargate-engine: 31999
 ### Build and run locally
 ```
 # Download and build the source code
-git clone https://github.com/stargateaudio/stargate.git
+git clone --recursive https://github.com/stargateaudio/stargate.git
 cd stargate/src
 ./macos/homebrew_deps.sh
 python3 -m venv venv
