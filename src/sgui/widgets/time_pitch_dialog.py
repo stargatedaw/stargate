@@ -104,9 +104,13 @@ class TimePitchDialogWidget:
             'stretching from the start of the audio item to the end'
         )
         self.timestretch_amt_end_checkbox.toggled.connect(
-            self.timestretch_end_mode_changed)
+            self.timestretch_end_mode_changed
+        )
         self.time_pitch_gridlayout.addWidget(
-            self.timestretch_amt_end_checkbox, 1, 2)
+            self.timestretch_amt_end_checkbox,
+            1,
+            2,
+        )
         self.timestretch_amt_end = QDoubleSpinBox()
         self.timestretch_amt_end.setMinimumWidth(90)
         self.timestretch_amt_end.setToolTip(
@@ -145,14 +149,23 @@ class TimePitchDialogWidget:
             self.timestretch_amt_end.setValue(
                 float(audio_item.timestretch_amt_end),
             )
+            self.timestretch_amt_end_checkbox.setChecked(
+                audio_item.timestretch_amt != audio_item.timestretch_amt_end
+            )
 
         self.timestretch_mode_changed()
 
         self.timestretch_mode.currentIndexChanged.connect(
             self.timestretch_changed)
         self.pitch_shift.valueChanged.connect(self.timestretch_changed)
+        self.pitch_shift_end.valueChanged.connect(
+            self.pitch_end_value_changed
+        )
         self.pitch_shift_end.valueChanged.connect(self.timestretch_changed)
         self.timestretch_amt.valueChanged.connect(self.timestretch_changed)
+        self.timestretch_amt_end.valueChanged.connect(
+            self.time_stretch_end_value_changed
+        )
         self.timestretch_amt_end.valueChanged.connect(self.timestretch_changed)
         self.crispness_combobox.currentIndexChanged.connect(
             self.timestretch_changed,
@@ -176,6 +189,12 @@ class TimePitchDialogWidget:
         self.vlayout.addLayout(self.ok_layout)
 
         self.last_open_dir = HOME
+
+    def pitch_end_value_changed(self, value):
+        self.pitch_shift_end_checkbox.setChecked(True)
+
+    def time_stretch_end_value_changed(self, value):
+        self.timestretch_amt_end_checkbox.setChecked(True)
 
     def hide_controls(
         self,
@@ -217,9 +236,6 @@ class TimePitchDialogWidget:
                 float(self.pitch_shift.value()),
             )
 
-    def end_mode_changed(self, a_val=None):
-        self.end_mode_checkbox.setChecked(True)
-
     def timestretch_changed(self, a_val=None):
         if not self.pitch_shift_end_checkbox.isChecked():
             self.pitch_shift_end.setValue(
@@ -234,7 +250,7 @@ class TimePitchDialogWidget:
         mode = self.timestretch_mode.currentIndex()
         a_val = self.mode_indices[mode]
         LOG.info(f'mode: {mode} a_val: {a_val}')
-        if a_val == 0:
+        if a_val == 0:  # None
             self.hide_controls()
             self.pitch_shift.setValue(0.0)
             self.pitch_shift_end.setValue(0.0)
@@ -243,27 +259,26 @@ class TimePitchDialogWidget:
             self.timestretch_amt_end_checkbox.setChecked(False)
             self.pitch_shift_end_checkbox.setChecked(False)
             self.crispness_combobox.setCurrentIndex(5)
-        elif a_val == 1:
+        elif a_val == 1:  # Pitch (affecting time)
             self.hide_controls(pitch=True)
             self.timestretch_amt.setValue(1.0)
             self.timestretch_amt_end.setValue(1.0)
             self.timestretch_amt_end_checkbox.setChecked(False)
             self.crispness_combobox.setCurrentIndex(5)
-        elif a_val == 2:
+        elif a_val == 2:  # Time (affecting pitch)
             self.hide_controls(_time=True)
             self.pitch_shift.setValue(0.0)
             self.pitch_shift_end.setValue(0.0)
             self.pitch_shift_end_checkbox.setChecked(False)
             self.crispness_combobox.setCurrentIndex(5)
-        elif a_val == 3 or a_val == 4:
+        elif a_val == 3 or a_val == 4:  # Rubberband
             self.hide_controls(pitch=True, _time=True, crisp=True)
             self.timestretch_amt_end_checkbox.setChecked(False)
             self.pitch_shift_end_checkbox.setChecked(False)
-        elif a_val == 5:
+        elif a_val == 5:  # SBSMS
             self.hide_controls(pitch=True, _time=True, end=True)
-            self.timestretch_amt_end_checkbox.setChecked(False)
             self.crispness_combobox.setCurrentIndex(5)
-        elif a_val == 6:
+        elif a_val == 6:  # Paulstretch
             # TODO Stargate v2: Deprecate pitch completely for Paulstretch
             self.hide_controls(pitch=self.ps_pitch, _time=True)
             self.timestretch_amt_end_checkbox.setChecked(False)
