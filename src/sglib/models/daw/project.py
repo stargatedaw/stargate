@@ -547,10 +547,12 @@ class DawProject(AbstractProject):
         except:
             return ""
 
-    def get_item_by_uid(self, a_item_uid):
+    def get_item_by_uid(self, a_item_uid, _copy=False):
         a_item_uid = int(a_item_uid)
         if a_item_uid in self._item_cache:
             _item = self._item_cache[a_item_uid]
+            if _copy:
+                _item = copy.deepcopy(_item)
         else:
             _item = item.from_str(
                 self.get_item_string(a_item_uid),
@@ -563,10 +565,10 @@ class DawProject(AbstractProject):
         )
         return _item
 
-    def get_item_by_name(self, a_item_name):
+    def get_item_by_name(self, a_item_name, _copy=False):
         items_dict = self.get_items_dict()
         uid = items_dict.get_uid_by_name(a_item_name)
-        return self.get_item_by_uid(uid)
+        return self.get_item_by_uid(uid, _copy=_copy)
 
     def save_audio_inputs(self, a_tracks):
         if not self.suppress_updates:

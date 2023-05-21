@@ -8,6 +8,8 @@ from sgui.daw import shared
 from sgui.daw.lib import item as item_lib
 from sglib.lib import util
 from sglib.lib.translate import _
+
+import copy
 import re
 
 MENU = None
@@ -445,7 +447,10 @@ def glue_selected():
     if glbl_shared.IS_PLAYING:
         return
     f_did_something = False
-    f_selected = [x.audio_item for x in shared.SEQUENCER.get_selected()]
+    f_selected = [
+        copy.deepcopy(x.audio_item)
+        for x in shared.SEQUENCER.get_selected()
+    ]
     for f_i in range(TRACK_COUNT_ALL):
         f_track_items = [x for x in f_selected if x.track_num == f_i]
         if len(f_track_items) > 1:
