@@ -805,6 +805,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
     def add_existing_item(self, event, uid):
         if self.check_running():
             return
+        self.set_selected_strings()
         scene_pos = event.scenePos()
         override_item = self.get_item(scene_pos)
         if override_item:
