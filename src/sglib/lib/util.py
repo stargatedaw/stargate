@@ -350,11 +350,9 @@ def set_bin_path():
     )
     if IS_WINDOWS:
         BIN_PATH += '.exe'
-    if not os.path.exists(BIN_PATH):
-        # Otherwise, use the system binary
-        BIN_PATH = which(f"{MAJOR_VERSION}-engine")
-    assert BIN_PATH and os.path.exists(BIN_PATH), BIN_PATH
     LOG.info(f"BIN_PATH=={BIN_PATH}")
+
+set_bin_path()
 
 def get_unix_timestamp(a_dt):
     if IS_WINDOWS:

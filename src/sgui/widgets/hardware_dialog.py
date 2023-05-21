@@ -245,7 +245,7 @@ class HardwareDialog:
                         util.DEVICE_SETTINGS["name"] = f_device
                         f_file = open(
                             util.DEVICE_CONFIG_PATH,
-                            "w", 
+                            "w",
                             encoding='utf-8',
                             newline="\n",
                         )
@@ -704,9 +704,9 @@ class HardwareDialog:
                     )
                     raise Exception(msg)
                 with open(
-                    config_path, 
-                    "w", 
-                    encoding='utf-8', 
+                    config_path,
+                    "w",
+                    encoding='utf-8',
                     newline="\n",
                 ) as f:
                     f.write("hostApi|{}\n".format(self.subsystem))
@@ -736,7 +736,6 @@ class HardwareDialog:
         def on_test():
             config_path = util.DEVICE_CONFIG_PATH + '.test'
             create_config(config_path)
-            util.set_bin_path()
             cmd = [
                 util.BIN_PATH,
                 "soundcheck",
