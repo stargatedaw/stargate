@@ -7,7 +7,8 @@ cd dist/
 rm -rf squashfs-root
 ./stargate-x86_64.AppImage --appimage-extract
 cd ../src/
-make -C engine
+make clean
+make
 DESTDIR=/stargate/dist/squashfs-root PREFIX=/usr make install_self_contained
 
 cp -r \
