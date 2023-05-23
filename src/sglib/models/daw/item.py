@@ -8,6 +8,8 @@ from sglib import constants
 from sglib.log import LOG
 from sglib.models.multifx_settings import multifx_settings
 from sglib.lib.translate import _
+
+import copy
 import traceback
 
 
@@ -133,6 +135,7 @@ class item:
         """ Glue 2 items together, adding f_offset to the
             event positions of a_item2
         """
+        a_item2 = copy.deepcopy(a_item2)
         f_start_offset = a_ref.start_offset
         f_offset = (a_ref.start_beat - a_new_ref.start_beat -
             a_ref.start_offset)
