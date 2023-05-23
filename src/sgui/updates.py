@@ -9,7 +9,7 @@ from sglib.log import LOG
 
 TIMER = None
 
-def ui_check_updates(parent):
+def ui_check_updates():
     def go_to_releases_page():
         global TIMER
         url = QtCore.QUrl(
@@ -18,7 +18,7 @@ def ui_check_updates(parent):
         QDesktopServices.openUrl(url)
         shared.IGNORE_CLOSE_EVENT = False
         TIMER = QtCore.QTimer()
-        TIMER.timeout.connect(parent.close)
+        TIMER.timeout.connect(shared.MAIN_STACKED_WIDGET.close)
         TIMER.start(2000)
     try:
         update = check_for_updates()
