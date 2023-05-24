@@ -1,10 +1,11 @@
 [submodule "src/vendor/portaudio-binaries"]
 	path = src/vendor/portaudio-binaries
 	url = https://github.com/spatialaudio/portaudio-binaries.git
+
 [submodule "src/vendor/soundtouch"]
 	path = src/vendor/soundtouch
-    url = https://github.com/stargatedaw/stargate-soundtouch.git
+    url = ../stargate-soundtouch.git
 
 [submodule "src/vendor/sbsms"]
 	path = src/vendor/sbsms
-	url = https://github.com/stargatedaw/stargate-sbsms.git
+	url = ../stargate-sbsms.git
