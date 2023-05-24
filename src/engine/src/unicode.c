@@ -1,3 +1,26 @@
+/*
+https://github.com/Davipb/utf8-utf16-converter
+
+Copyright 2019 Davipb
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this
+software and associated documentation files (the "Software"), to deal in the Software
+without restriction, including without limitation the rights to use, copy, modify,
+merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be included in all copies
+or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
 #include <unicode.h>
 #include <stdbool.h>
 
@@ -88,7 +111,7 @@ static codepoint_t decode_utf16(utf16_t const* utf16, size_t len, size_t* index)
 
     // BMP character
     if ((high & GENERIC_SURROGATE_MASK) != GENERIC_SURROGATE_VALUE)
-        return high; 
+        return high;
 
     // Unmatched low surrogate, invalid
     if ((high & SURROGATE_MASK) != HIGH_SURROGATE_VALUE)
@@ -97,7 +120,7 @@ static codepoint_t decode_utf16(utf16_t const* utf16, size_t len, size_t* index)
     // String ended with an unmatched high surrogate, invalid
     if (*index == len - 1)
         return INVALID_CODEPOINT;
-    
+
     utf16_t low = utf16[*index + 1];
 
     // Unmatched high surrogate, invalid
@@ -114,7 +137,7 @@ static codepoint_t decode_utf16(utf16_t const* utf16, size_t len, size_t* index)
     result <<= SURROGATE_CODEPOINT_BITS;
     result |= low & SURROGATE_CODEPOINT_MASK;
     result += SURROGATE_CODEPOINT_OFFSET;
-    
+
     // And if all else fails, it's valid
     return result;
 }
@@ -214,7 +237,7 @@ static codepoint_t decode_utf8(utf8_t const* utf8, size_t len, size_t* index)
     utf8_pattern leading_pattern;
     // If the leading byte matches the current leading pattern
     bool matches = false;
-    
+
     do
     {
         encoding_len++;
