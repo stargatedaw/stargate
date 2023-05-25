@@ -397,8 +397,19 @@ class SeqTrack:
         f_name = util.remove_bad_chars(
             self.track_name_lineedit.text()
         )
-
         self.track_name_lineedit.setText(f_name)
+        if len(f_name) < 2:
+            QMessageBox.warning(
+                glbl_shared.MAIN_WINDOW,
+                _("Error"),
+                _("Name must be at least 2 characters"),
+            )
+            tracks = constants.DAW_PROJECT.get_tracks()
+            self.track_name_lineedit.setText(
+                tracks.tracks[self.track_number].name,
+            )
+            return
+
         global_update_track_comboboxes(self.track_number, f_name)
         f_tracks = constants.DAW_PROJECT.get_tracks()
         f_tracks.tracks[self.track_number].name = f_name

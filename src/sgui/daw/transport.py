@@ -339,14 +339,14 @@ class TransportWidget(AbstractTransportWidget):
             if (
                 f_file_name is None
                 or
-                len(f_file_name) < 4
+                len(f_file_name) < 2
             ):
                 QMessageBox.warning(
                     f_window,
                     _("Error"),
                     _(
                         "You must select a name for the recorded item(s) "
-                        'at least 4 characters long'
+                        'at least 2 characters long'
                     ),
                 )
                 return
