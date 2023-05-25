@@ -11,6 +11,9 @@ and why, read the
 - [Download instruments for Sampler1](https://github.com/sfzinstruments)
 - [Download or contribute to our public domain sample pack](
     https://github.com/stargatedaw/stargate-sample-pack)
+- Source code is mirrored on [Gitlab](https://gitlab.com/stargatedaw) and
+  [Codeberg](https://codeberg.org/stargatedaw), however, releases, issues and
+  pull requests are only on [Github](https://github.com/stargatedaw)
 
 # Features
 - A digital audio workstation (DAW) with a powerful pattern-based workflow
