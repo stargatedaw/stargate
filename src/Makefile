@@ -6,8 +6,8 @@ MINOR := $(shell jq -r .version.minor meta.json)
 WMAJOR := $(shell /mingw64/bin/jq -r .version.major meta.json 2>/dev/null)
 WMINOR := $(shell /mingw64/bin/jq -r .version.minor meta.json 2>/dev/null)
 DESTDIR ?=
-SG_DIR = $(DESTDIR)$(PREFIX)/share/$(MAJOR)
-SG_OPT = $(DESTDIR)/opt/$(MAJOR)
+SG_DIR ?= /opt/$(MAJOR)
+SG_DEST = $(DESTDIR)/$(SG_DIR)
 CC ?= /usr/bin/cc
 CXX ?= /usr/bin/c++
 PIP ?= pip3
@@ -68,11 +68,11 @@ install_self_contained:
 	# Linux only, install all files to a single directory,
 	# except for /usr/share desktop files and /usr/bin/stargate,
 	# which should be symlinked by the package
-	install -d $(SG_OPT)/engine
-	install -m 755 engine/stargate-engine $(SG_OPT)/engine/
-	install -m 755 vendor/sbsms/cli/sbsms* $(SG_OPT)/engine/
-	install -m 755 vendor/stargate-soundstretch $(SG_OPT)/engine/
-	cp -r files meta.json scripts sg_py_vendor sglib sgui $(SG_OPT)
+	install -d $(SG_DEST)/engine
+	install -m 755 engine/stargate-engine $(SG_DEST)/engine/
+	install -m 755 vendor/sbsms/cli/sbsms* $(SG_DEST)/engine/
+	install -m 755 vendor/stargate-soundstretch $(SG_DEST)/engine/
+	cp -r files meta.json scripts sg_py_vendor sglib sgui $(SG_DEST)
 	# install -d "$(DESTDIR)$(PREFIX)/share"
 	# cp -r files/share/* "$(DESTDIR)$(PREFIX)/share/"
 
@@ -198,4 +198,4 @@ tests:
 	$(BROWSER) htmlcov/index.html
 
 uninstall: uinstall_symlinks
-	rm -rf $(SG_OPT)
+	rm -rf $(SG_DEST)
