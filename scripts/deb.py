@@ -83,7 +83,6 @@ depends = [
     "libasound2",
     "libportaudio2",
     "libportmidi0",
-    #"libsbsms10",
     "libsndfile1",
     "python3",
     "python3-jinja2",

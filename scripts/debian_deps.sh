@@ -23,7 +23,6 @@ sudo apt-get install -y \
     libasound2-dev \
     libfftw3-dev \
     libportmidi-dev \
-    libsbsms-dev \
     libsndfile1-dev \
     libtool \
     portaudio19-dev \
