@@ -1,0 +1,17 @@
+# Qt 6.2 is the end of the road for us on Intel Mac because
+# the build machine for Intel Mac is stuck on Catalina, and
+# the next LTS (6.5) created a requirement for Big Sur or
+# above.  We may consider getting another Intel Mac if this
+# becomes a problem later, but the intention is not to do that
+PyQt6==6.2.3
+PyQt6-Qt6==6.2.4
+
+jinja2
+mido
+mutagen
+numpy
+psutil
+pyinstaller==5.6.2
+pymarshal
+PyYAML
+wavefile

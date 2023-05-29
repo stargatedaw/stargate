@@ -33,7 +33,9 @@ cd stargate/src
 ./macos/homebrew_deps.sh
 python3 -m venv venv
 . venv/bin/activate
-pip3 install -r macos/requirements.txt
+pip3 install -r macos/requirements-intel.txt
+# OR
+pip3 install -r macos/requirements-m1.txt
 pip3 install -e .
 make sbsms
 
