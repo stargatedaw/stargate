@@ -220,6 +220,7 @@ def _add_items_menu(items_menu):
 def set_first_beat():
     shared.CURRENT_SEQUENCE.set_first_beat(shared.SEQUENCER.header_event_pos)
     shared.ATM_SEQUENCE.set_first_beat(shared.SEQUENCER.header_event_pos)
+    shared.SEQUENCER.clear_selected_item_strings()
     constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
     constants.DAW_PROJECT.save_atm_sequence(shared.ATM_SEQUENCE)
     constants.DAW_PROJECT.commit(_("Set first beat"))

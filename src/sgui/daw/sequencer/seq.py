@@ -530,7 +530,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
         }
 
     def clear_selected_item_strings(self):
-        self.selected_item_strings = set()
+        self.selected_item_strings.clear()
 
     def set_selected_point_strings(self):
         self.selected_point_strings = {
