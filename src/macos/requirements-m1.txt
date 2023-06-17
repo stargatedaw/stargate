@@ -1,3 +1,5 @@
+# DO NOT upgrade both to 6.5.1
+# when both are 6.5.1 the application immediately SEGFAULTs
 PyQt6==6.5.0
 PyQt6-Qt6==6.5.1
 
