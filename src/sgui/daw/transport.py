@@ -438,8 +438,8 @@ class TransportWidget(AbstractTransportWidget):
         ):
             QMessageBox.warning(
                 self.group_box,
-                _("Error"),
-                _("No MIDI or audio inputs record-armed")
+                "Error",
+                "No MIDI or audio inputs record-armed.  See the Hardware tab",
             )
             return False
         shared.PLAYLIST_EDITOR.on_play()

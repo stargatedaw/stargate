@@ -253,6 +253,9 @@ class TransportWidget:
     def on_play(self):
         if not self.play_button.isChecked():
             return
+        if shared.IS_PLAYING:
+            self.play_button.setChecked(True)
+            return
         if shared.IS_RECORDING:
             self.rec_button.setChecked(True)
             return
