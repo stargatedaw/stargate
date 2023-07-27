@@ -9,6 +9,7 @@ from sglib.constants import MIDI_CHANNELS
 from sglib.lib import util
 from sglib.lib.util import *
 from sglib.lib.translate import _
+from sglib.models.daw import loop_marker
 from sglib.models.theme import get_asset_path
 from sgui.sgqt import *
 
@@ -112,7 +113,7 @@ class ItemEditorWidget:
         self.toolbar.addWidget(self.menu_button)
         self.menu = QMenu(self.menu_button)
         self.menu_button.setMenu(self.menu)
-        
+
         self.open_last_action = QAction(
             _("Open Last Item"),
             self.menu,
@@ -124,6 +125,31 @@ class ItemEditorWidget:
         )
         self.open_last_action.triggered.connect(shared.open_last)
         self.open_last_action.setShortcut(QKeySequence.fromString("ALT+F"))
+
+        # Loop button
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('loop-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('loop-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.loop_mode_checkbox = QAction(icon, '', self.toolbar)
+        self.loop_mode_checkbox.setToolTip(
+            'Set the sequencer region to the start and end of this item.  '
+            'Use this to toggle looping the current item'
+        )
+        self.loop_mode_checkbox.setCheckable(True)
+        self.toolbar.addAction(self.loop_mode_checkbox)
+        self.loop_mode_checkbox.triggered.connect(self.on_loop_mode_changed)
 
         self.midi_channel_combobox = QComboBox()
         self.midi_channel_combobox.setMinimumWidth(48)
@@ -198,6 +224,54 @@ class ItemEditorWidget:
         self.default_pb_start = 0
         self.default_pb_val = 0
         self.default_pb_quantize = 0
+
+    def on_play(self):
+        self.loop_mode_checkbox.setEnabled(False)
+
+    def on_stop(self):
+        self.loop_mode_checkbox.setEnabled(True)
+
+    def on_loop_mode_changed(self, val=None):
+        if not shared.CURRENT_ITEM_REF:
+            self.loop_mode_checkbox.setChecked(False)
+            return
+        if val:
+            if shared.CURRENT_SEQUENCE.loop_marker:
+                self._loop_orig = (
+                    shared.CURRENT_SEQUENCE.loop_marker.start_beat,
+                    shared.CURRENT_SEQUENCE.loop_marker.beat,
+                )
+            else:
+                self._loop_orig = None
+            self._loop_enabled = \
+                shared.TRANSPORT.loop_mode_checkbox.isChecked()
+            self._loop_pos = shared.SEQUENCER.playback_pos
+            marker = loop_marker(
+                (
+                    shared.CURRENT_ITEM_REF.start_beat
+                    +
+                    shared.CURRENT_ITEM_REF.length_beats
+                ),
+                shared.CURRENT_ITEM_REF.start_beat,
+            )
+            shared.CURRENT_SEQUENCE.set_loop_marker(marker)
+            shared.global_set_playback_pos(shared.CURRENT_ITEM_REF.start_beat)
+            if not self._loop_enabled:
+                shared.TRANSPORT.loop_mode_checkbox.trigger()
+        else:
+            if self._loop_orig:
+                shared.CURRENT_SEQUENCE.loop_marker.beat = self._loop_orig[1]
+                shared.CURRENT_SEQUENCE.loop_marker.start_beat = \
+                    self._loop_orig[0]
+            if (
+                shared.TRANSPORT.loop_mode_checkbox.isChecked()
+                !=
+                self._loop_enabled
+            ):
+                shared.TRANSPORT.loop_mode_checkbox.trigger()
+            shared.global_set_playback_pos(self._loop_pos)
+        constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
+        shared.SEQ_WIDGET.open_sequence()
 
     def get_midi_channel(self):
         return self.midi_channel_combobox.currentIndex()

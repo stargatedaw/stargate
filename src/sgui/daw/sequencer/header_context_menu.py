@@ -554,9 +554,9 @@ def header_loop_end():
         tsig_beats,
     )
     shared.CURRENT_SEQUENCE.loop_marker.start_beat = clip_max(
-            shared.CURRENT_SEQUENCE.loop_marker.start_beat,
-            shared.CURRENT_SEQUENCE.loop_marker.beat - tsig_beats,
-        )
+        shared.CURRENT_SEQUENCE.loop_marker.start_beat,
+        shared.CURRENT_SEQUENCE.loop_marker.beat - tsig_beats,
+    )
     constants.DAW_PROJECT.save_sequence(shared.CURRENT_SEQUENCE)
     constants.DAW_PROJECT.commit(_("Set sequence end"))
     shared.SEQ_WIDGET.open_sequence()
