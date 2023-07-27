@@ -406,8 +406,8 @@ def global_save_and_reload_items():
 def open_last():
     if LAST_ITEM_NAME:
         global_open_items(
-            LAST_ITEM_NAME, 
-            a_new_ref=LAST_ITEM_REF, 
+            LAST_ITEM_NAME,
+            a_new_ref=LAST_ITEM_REF,
             item_track=LAST_ITEM_TRACK,
         )
         MAIN_WINDOW.tab_changed()
@@ -450,6 +450,7 @@ def global_open_project(a_project_file):
     MIXER_WIDGET.set_project(constants.DAW_PROJECT)
     PIANO_ROLL_EDITOR.default_vposition()
     TRACK_PANEL.set_track_names()
+    reset_globals()
 
 def global_new_project(a_project_file):
     # TODO: SG DEPRECATED   # EDIT: What is deprecated?
@@ -472,6 +473,31 @@ def global_new_project(a_project_file):
     MIXER_WIDGET.set_project(constants.DAW_PROJECT)
     PIANO_ROLL_EDITOR.default_vposition()
     TRACK_PANEL.set_track_names()
+    reset_globals()
+
+def reset_globals():
+    global \
+        CURRENT_ITEM, \
+        CURRENT_ITEM_LEN, \
+        CURRENT_ITEM_NAME, \
+        CURRENT_ITEM_REF, \
+        CURRENT_ITEM_TRACK, \
+        ITEM_REF_POS, \
+        LAST_ITEM, \
+        LAST_ITEM_NAME, \
+        LAST_ITEM_REF, \
+        LAST_ITEM_TRACK
+
+    CURRENT_ITEM = None
+    CURRENT_ITEM_LEN = 4
+    CURRENT_ITEM_NAME = None
+    CURRENT_ITEM_REF = None
+    CURRENT_ITEM_TRACK = None
+    ITEM_REF_POS = None
+    LAST_ITEM = None
+    LAST_ITEM_NAME = None
+    LAST_ITEM_REF = None
+    LAST_ITEM_TRACK = None
 
 def global_set_playback_pos(a_beat=None):
     if a_beat is not None:
