@@ -252,10 +252,18 @@ class ItemEditorWidget:
         self.default_pb_quantize = 0
 
     def on_play(self):
+        self.menu_button.setEnabled(False)
         self.loop_mode_checkbox.setEnabled(False)
 
     def on_stop(self):
+        self.menu_button.setEnabled(True)
         self.loop_mode_checkbox.setEnabled(True)
+
+    def clear_solo_loop(self):
+        if self.solo_checkbox.isChecked():
+            self.solo_checkbox.trigger()
+        if self.loop_mode_checkbox.isChecked():
+            self.loop_mode_checkbox.trigger()
 
     def solo_pressed(self, val=None):
         if shared.CURRENT_ITEM_TRACK is None:

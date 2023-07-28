@@ -548,6 +548,7 @@ class MainWindow(QTabWidget):
     def tab_changed(self):
         f_index = self.currentIndex()
 
+        shared.ITEM_EDITOR.clear_solo_loop()
         shared.TRANSPORT.tab_changed(f_index)
 
         constants.DAW_PROJECT.set_undo_context(f_index)
