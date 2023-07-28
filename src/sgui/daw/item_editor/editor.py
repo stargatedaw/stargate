@@ -144,13 +144,39 @@ class ItemEditorWidget:
         )
         self.loop_mode_checkbox = QAction(icon, '', self.toolbar)
         self.loop_mode_checkbox.setToolTip(
-            'Set the sequencer region to the start and end of this item.  '
-            'Use this to toggle looping the current item'
+            'Toggle looping the current item. Set the sequencer region to the '
+            'start and end of this item, set the playback cursor to the '
+            'beginning of the item and enable looping in the transport.  '
         )
         self.loop_mode_checkbox.setCheckable(True)
         self.toolbar.addAction(self.loop_mode_checkbox)
         self.loop_mode_checkbox.triggered.connect(self.on_loop_mode_changed)
 
+        # Solo
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('solo-on.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
+        )
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('solo-off.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
+        )
+        self.solo_checkbox = QAction(icon, '', self.toolbar)
+        self.solo_checkbox.setToolTip(
+            'Toggle soloing the track of the current item being edited.'
+        )
+        self.solo_checkbox.setCheckable(True)
+        self.toolbar.addAction(self.solo_checkbox)
+        self.solo_checkbox.triggered.connect(self.solo_pressed)
+
+        # MIDI Channel
         self.midi_channel_combobox = QComboBox()
         self.midi_channel_combobox.setMinimumWidth(48)
         self.midi_channel_combobox.setToolTip(
@@ -230,6 +256,14 @@ class ItemEditorWidget:
 
     def on_stop(self):
         self.loop_mode_checkbox.setEnabled(True)
+
+    def solo_pressed(self, val=None):
+        if shared.CURRENT_ITEM_TRACK is None:
+            return
+        track = shared.TRACK_PANEL.tracks[shared.CURRENT_ITEM_TRACK]
+        soloed = track.solo_checkbox.isChecked()
+        if val != soloed:
+            track.solo_checkbox.trigger()
 
     def on_loop_mode_changed(self, val=None):
         if not shared.CURRENT_ITEM_REF:
