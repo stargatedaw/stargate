@@ -492,6 +492,13 @@ class item:
             self.pitchbends += f_result_arr
             self.pitchbends.sort()
 
+    def get_channels(self):
+        """ Get the active channels of this item """
+        notes = {x.channel for x in self.notes}
+        ccs = {x.channel for x in self.ccs}
+        pbs = {x.channel for x in self.pitchbends}
+        return set.union(notes, ccs, pbs)
+
     def fix_overlaps(self):
         """ Truncate the lengths of any notes that overlap
             the start of another note

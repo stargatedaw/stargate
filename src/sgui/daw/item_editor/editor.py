@@ -182,7 +182,8 @@ class ItemEditorWidget:
         self.midi_channel_combobox.setToolTip(
             'The MIDI channel to view and edit note, CC and pitchbend events '
             'for.  Use multiple MIDI channels to send different MIDI events '
-            'to different plugins in the same rack'
+            'to different plugins in the same rack.  Channels with events '
+            'have a (*)'
         )
         self.midi_channel_combobox.addItems(MIDI_CHANNELS)
         self.zoom_hlayout.addWidget(QLabel('MIDI Channel'))
@@ -250,6 +251,14 @@ class ItemEditorWidget:
         self.default_pb_start = 0
         self.default_pb_val = 0
         self.default_pb_quantize = 0
+
+    def set_active_channels(self, channels: int):
+        """ Update the channels combobox to show active channels  """
+        for i, name in zip(range(len(MIDI_CHANNELS)), MIDI_CHANNELS):
+            self.midi_channel_combobox.setItemText(
+                i,
+                name+'*' if i in channels else name,
+            )
 
     def on_play(self):
         self.menu_button.setEnabled(False)

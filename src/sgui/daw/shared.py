@@ -379,8 +379,10 @@ def global_open_items(
                 CURRENT_ITEM_REF.length_beats + CURRENT_ITEM_REF.start_offset,
             )
         )
+        ITEM_EDITOR.set_active_channels(CURRENT_ITEM.get_channels())
     else:
         CURRENT_ITEM_LEN = 4
+        ITEM_EDITOR.set_active_channels(tuple())
 
     CC_EDITOR.clear_drawn_items()
     PB_EDITOR.clear_drawn_items()
