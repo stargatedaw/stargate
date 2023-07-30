@@ -29,6 +29,8 @@ class SequencerWidget:
     """ The widget that holds the sequencer """
     def __init__(self):
         self.enabled = False
+        self._last_solo = set()
+        self._last_mute = set()
         self.touchpad_filter = TouchpadFilter()
         self.widget = QWidget()
         self.widget.setSizePolicy(
@@ -121,7 +123,7 @@ class SequencerWidget:
             QKeySequence.fromString("CTRL+F")
         )
 
-        # Un-solo 
+        # Un-solo
         icon = QIcon()
         icon.addPixmap(
             QPixmap(
@@ -139,7 +141,8 @@ class SequencerWidget:
         )
         self.solo_checkbox = QAction(icon, '', self.toolbar)
         self.solo_checkbox.setToolTip(
-            'Disable solo for any tracks that have been soloed (CTRL+J)'
+            'Toggle disabling or enabling solo for any tracks that have '
+            'been soloed (CTRL+J)'
         )
         self.solo_checkbox.setCheckable(True)
         self.toolbar.addAction(self.solo_checkbox)
@@ -148,7 +151,7 @@ class SequencerWidget:
         )
         self.solo_checkbox.triggered.connect(self.unsolo_all)
 
-        # Un-mute 
+        # Un-mute
         icon = QIcon()
         icon.addPixmap(
             QPixmap(
@@ -166,7 +169,8 @@ class SequencerWidget:
         )
         self.mute_checkbox = QAction(icon, '', self.toolbar)
         self.mute_checkbox.setToolTip(
-            'Disable mute for any tracks that have been muted (CTRL+M)'
+            'Toggle disabling or enabling mute for any tracks that have '
+            'been muted (CTRL+M)'
         )
         self.mute_checkbox.setCheckable(True)
         self.toolbar.addAction(self.mute_checkbox)
@@ -478,16 +482,54 @@ class SequencerWidget:
         global_update_hidden_rows()
 
     def unsolo_all(self):
-        for track in shared.TRACK_PANEL.tracks.values():
-            if track.solo_checkbox.isChecked():
-                track.solo_checkbox.trigger()
-        shared.SEQ_WIDGET.update_solo_all()
+        if self.solo_checkbox.isChecked():
+            for k in shared.TRACK_PANEL.tracks:
+                track = shared.TRACK_PANEL.tracks[k]
+                if (
+                    (
+                        track.solo_checkbox.isChecked()
+                        and
+                        k not in self._last_solo
+                    ) or (
+                        not track.solo_checkbox.isChecked()
+                        and
+                        k in self._last_solo
+                    )
+                ):
+                    track.solo_checkbox.trigger()
+        else:
+            self._last_solo.clear()
+            for k in shared.TRACK_PANEL.tracks:
+                track = shared.TRACK_PANEL.tracks[k]
+                if track.solo_checkbox.isChecked():
+                    self._last_solo.add(k)
+                    track.solo_checkbox.trigger()
+        self.update_solo_all()
 
     def unmute_all(self):
-        for track in shared.TRACK_PANEL.tracks.values():
-            if track.mute_checkbox.isChecked():
-                track.mute_checkbox.trigger()
-        shared.SEQ_WIDGET.update_mute_all()
+        if self.mute_checkbox.isChecked():
+            for k in shared.TRACK_PANEL.tracks:
+                track = shared.TRACK_PANEL.tracks[k]
+                if (
+                    (
+                        track.mute_checkbox.isChecked()
+                        and
+                        k not in self._last_mute
+                    ) or (
+                        not track.mute_checkbox.isChecked()
+                        and
+                        k in self._last_mute
+                    )
+                ):
+                    track.mute_checkbox.trigger()
+        else:
+            self._last_mute.clear()
+            for k in shared.TRACK_PANEL.tracks:
+                track = shared.TRACK_PANEL.tracks[k]
+                if track.mute_checkbox.isChecked():
+                    self._last_mute.add(k)
+                    track.mute_checkbox.trigger()
+        self.update_mute_all()
 
     def open_sequence(self, uid=None):
         self.enabled = False
