@@ -278,6 +278,7 @@ class ItemEditorWidget:
 
     def solo_pressed(self, val=None):
         if shared.CURRENT_ITEM_TRACK is None:
+            self.solo_checkbox.setChecked(False)
             return
         track = shared.TRACK_PANEL.tracks[shared.CURRENT_ITEM_TRACK]
         soloed = track.solo_checkbox.isChecked()
