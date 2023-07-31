@@ -181,7 +181,7 @@ class ItemEditorWidget:
         self.midi_channel_combobox.setMinimumWidth(48)
         self.midi_channel_combobox.setToolTip(
             'The MIDI channel to view and edit note, CC and pitchbend events '
-            'for.  Use multiple MIDI channels to send different MIDI events '
+            'on.  Use multiple MIDI channels to send different MIDI events '
             'to different plugins in the same rack.  Channels with events '
             'have a (*)'
         )
@@ -189,12 +189,9 @@ class ItemEditorWidget:
         self.zoom_hlayout.addWidget(QLabel('MIDI Channel'))
         self.zoom_hlayout.addWidget(self.midi_channel_combobox)
 
-        def channel_changed(idx=None):
-            shared.PIANO_ROLL_EDITOR.selected_note_strings = []
-            shared.global_open_items()
-            self.tab_changed()
-
-        self.midi_channel_combobox.currentIndexChanged.connect(channel_changed)
+        self.midi_channel_combobox.currentIndexChanged.connect(
+            self.channel_changed
+        )
 
         self.snap_combobox = QComboBox()
         self.snap_combobox.setToolTip(
@@ -251,6 +248,11 @@ class ItemEditorWidget:
         self.default_pb_start = 0
         self.default_pb_val = 0
         self.default_pb_quantize = 0
+
+    def channel_changed(self, idx=None):
+        shared.PIANO_ROLL_EDITOR.selected_note_strings = []
+        shared.global_open_items()
+        self.tab_changed()
 
     def set_active_channels(self, channels: int):
         """ Update the channels combobox to show active channels  """
