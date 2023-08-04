@@ -170,7 +170,9 @@ class ItemEditorWidget:
         )
         self.solo_checkbox = QAction(icon, '', self.toolbar)
         self.solo_checkbox.setToolTip(
-            'Toggle soloing the track of the current item being edited.'
+            'Toggle soloing the track of the current item being edited.  This '
+            'does not alter the solo state of other tracks, if you are '
+            'already soloing any other tracks you will still hear them'
         )
         self.solo_checkbox.setCheckable(True)
         self.toolbar.addAction(self.solo_checkbox)
