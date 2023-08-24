@@ -329,7 +329,8 @@ def global_open_items(
         LAST_ITEM_REF, \
         LAST_ITEM_TRACK
 
-    ITEM_EDITOR.clear_solo_loop()
+    if a_items is not None:
+        ITEM_EDITOR.clear_solo_loop()
 
     if item_track is not None:
         LAST_ITEM_TRACK = CURRENT_ITEM_TRACK
