@@ -813,6 +813,7 @@ class SgMainWindow(QWidget):
         )
         if answer == QMessageBox.StandardButton.Cancel:
             return
+        daw.shared.ITEM_EDITOR.clear_solo_loop()
         self.prepare_to_quit()
         shared.MAIN_STACKED_WIDGET.show_welcome()
 

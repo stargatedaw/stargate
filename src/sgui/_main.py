@@ -11,6 +11,7 @@ from sgui import (
     project as project_mod,
     widgets,
 )
+from sgui.daw import shared as daw_shared
 from sgui.main import main as main_window_open
 from sgui import sgqt
 from sgui.sgqt import (
@@ -126,6 +127,7 @@ class MainStackedWidget(QStackedWidget):
             def _cancel():
                 glbl_shared.MAIN_WINDOW.setEnabled(True)
             def _yes():
+                daw_shared.ITEM_EDITOR.clear_solo_loop()
                 glbl_shared.MAIN_WINDOW.prepare_to_quit()
                 glbl_shared.IGNORE_CLOSE_EVENT = False
                 self.close()
