@@ -1,0 +1,1 @@
+cythonize -kbf -j 8 sgui/ sglib/

@@ -12,6 +12,8 @@ htmlcov/
 stargate.egg-info/
 ./tmp/
 sglib/**/*.c
+sglib/**/*.pyd
 sglib/**/*.so
 sgui/**/*.c
+sgui/**/*.pyd
 sgui/**/*.so

@@ -28,6 +28,7 @@ The VM should have at least 100GB of hard disk space
   to select the option to add Python to PATH / environment variables. At the
   time of this writing, Python3.7 and later are supported.
 - Install [NSIS](https://nsis.sourceforge.io/Download)
+- Install [Visual C++](https://visualstudio.microsoft.com/downloads/)
 
 ### Optional
 - Install [Visual Studio](https://visualstudio.microsoft.com/downloads/),
