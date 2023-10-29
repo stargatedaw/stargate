@@ -126,6 +126,20 @@ class ItemEditorWidget:
         self.open_last_action.triggered.connect(shared.open_last)
         self.open_last_action.setShortcut(QKeySequence.fromString("ALT+F"))
 
+        self.open_rack_action = QAction(
+            _("Open Plugin Rack For Item"),
+            self.menu,
+        )
+        self.menu.addAction(self.open_rack_action)
+        self.open_rack_action.setToolTip(
+            'Open the plugin rack for this item.  If the item exists on '
+            'multiple tracks, open the track that the item was double-clicked '
+            'on'
+        )
+        self.open_rack_action.triggered.connect(
+            lambda: shared.open_rack(shared.CURRENT_ITEM_TRACK)
+        )
+
         # Loop button
         icon = QIcon()
         icon.addPixmap(

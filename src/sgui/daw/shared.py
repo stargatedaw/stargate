@@ -736,6 +736,13 @@ def seconds_to_beats(a_seconds):
 def open_rack(track_index: int):
     """ Open a particular track in the plugin rack
     """
+    if track_index is None:
+        QMessageBox.warning(
+            None,
+            "Error",
+            "You musst open an item first",
+        )
+        return
     PLUGIN_RACK.set_index(track_index)
     MAIN_WINDOW.setCurrentIndex(TAB_PLUGIN_RACK)
 
