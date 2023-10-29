@@ -248,18 +248,12 @@ elif IS_LINUX:
     )
     if not os.path.exists(SOUNDSTRETCH):
         SOUNDSTRETCH = os.path.join(
-            os.path.dirname(__file__),
-            '..',
-            '..',
-            'engine',
+            ENGINE_DIR,
             'stargate-soundstretch',
         )
     if not os.path.exists(SOUNDSTRETCH):
         SOUNDSTRETCH = os.path.join(
-            os.path.dirname(__file__),
-            '..',
-            '..',
-            'engine',
+            ENGINE_DIR,
             'stargate-soundstretch',
         )
     if not os.path.exists(SOUNDSTRETCH):
@@ -352,10 +346,7 @@ def set_bin_path():
     # the repo
     BIN_PATH = os.path.abspath(
         os.path.join(
-            os.path.dirname(__file__),
-            '..',
-            '..',
-            'engine',
+            ENGINE_DIR,
             f"{MAJOR_VERSION}-engine",
         )
     )
