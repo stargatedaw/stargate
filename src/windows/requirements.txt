@@ -1,3 +1,4 @@
+Nuitka
 PyQt6-Qt6==6.5.2
 PyQt6==6.5.2
 PyYAML

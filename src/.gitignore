@@ -11,3 +11,9 @@ dist/
 htmlcov/
 stargate.egg-info/
 ./tmp/
+stargate.build
+stargate.dist
+sglib/**/*.c
+sglib/**/*.pyd
+sgui/**/*.c
+sgui/**/*.pyd
