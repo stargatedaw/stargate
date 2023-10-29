@@ -845,13 +845,15 @@ class SgMainWindow(QWidget):
         f_window.setWindowTitle(_("Save As..."))
         f_layout = QVBoxLayout(f_window)
         f_lineedit = QLineEdit()
-        f_lineedit.setToolTip(
-            'A descriptive name for this backup, you will be able to select '
-            'it from the project recovery window in the welcome screen'
-        )
         f_lineedit.setMinimumWidth(240)
         f_lineedit.setMaxLength(48)
         f_layout.addWidget(f_lineedit)
+        text_label = QLabel(
+            'A descriptive name for this backup, you will be able to revert\n'
+            'the project to this state by selecting this backup from the\n'
+            'project recovery window in the welcome screen'
+        )
+        f_layout.addWidget(text_label)
         f_layout.addItem(
             QSpacerItem(
                 1,
