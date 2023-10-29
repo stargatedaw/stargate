@@ -1,0 +1,1 @@
+nuitka --standalone --windows-disable-console  --include-module=sgui --include-module=sglib --include-qt-plugins=platform,sensible --enable-plugin=pyqt6 scripts\stargate
