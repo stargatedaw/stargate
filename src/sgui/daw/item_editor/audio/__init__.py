@@ -753,7 +753,7 @@ class AudioItemSeqWidget(FileDragDropper):
         self.copy_action.setToolTip(
             'Copy selected audio items to the clipboard to be pasted into '
             'other sequencer items.  To copy items within the same item, '
-            'CTRL+click and drag'
+            f'{util.KEY_CTRL}+click and drag'
         )
         self.copy_action.triggered.connect(self.on_copy)
         self.copy_action.setShortcut(QKeySequence.StandardKey.Copy)

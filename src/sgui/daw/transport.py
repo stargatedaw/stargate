@@ -45,7 +45,8 @@ class TransportWidget(AbstractTransportWidget):
         )
         self.metronome_checkbox = QAction(icon, '', self.toolbar)
         self.metronome_checkbox.setToolTip(
-            'Enable or disable the metronome. Toggle with CTRL+SHIFT+M'
+            'Enable or disable the metronome. Toggle with '
+            f'{util.KEY_CTRL}+SHIFT+M'
         )
         self.metronome_checkbox.setCheckable(True)
         self.toolbar.addAction(self.metronome_checkbox)
