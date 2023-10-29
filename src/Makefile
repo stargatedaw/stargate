@@ -44,14 +44,20 @@ docker-image:
 	$(DOCKER) build -t stargate-base  -f appimage/Dockerfile-base
 	$(DOCKER) build -t $(DOCKER_IMAGE)  -f appimage/Dockerfile-appimage-builder
 
-clean: clean_pyc
+clean: clean_pyc clean_cython
 	rm -rf htmlcov/ .pytest_cache/ .eggs/ .coverage \
 		*.pyc *.egg-info build/ dist/ vendor/stargate-soundstretch
 	make -C engine clean
 	make -C vendor/sbsms/cli clean
 
+clean_cython:
+	find sglib sgui -name '*.so' -delete
+
 clean_pyc:
 	find . -type d -name __pycache__ -exec rm -rf {} \; ; true
+
+cython:
+	(find sgui sglib -name '*.py' | parallel cythonize -bf {}) || true
 
 commit_hash:
 	git rev-parse --short HEAD > COMMIT || echo unknown > COMMIT

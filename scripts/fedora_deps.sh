@@ -17,6 +17,7 @@ sudo dnf install \
     lame \
     libsndfile-devel \
     livecd-tools \
+    parallel \
     portaudio-devel \
     portmidi-devel \
     python3-devel \
