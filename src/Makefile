@@ -15,6 +15,7 @@ BROWSER ?= firefox
 DOCKER ?= podman
 DOCKER_IMAGE ?= stargate-appimage-builder
 MINGW_PREFIX ?= /mingw64
+CYTHON_PARALLEL ?= 8
 
 # --------------------------------------------------------------
 
@@ -57,7 +58,7 @@ clean_pyc:
 	find . -type d -name __pycache__ -exec rm -rf {} \; ; true
 
 cython:
-	(find sgui sglib -name '*.py' | parallel cythonize -bf {}) || true
+	cythonize -kbf -j $(CYTHON_PARALLEL) sgui/ sglib/
 
 commit_hash:
 	git rev-parse --short HEAD > COMMIT || echo unknown > COMMIT
