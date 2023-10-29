@@ -1,9 +1,11 @@
 # Run this script from Windows, not MSYS2
 
+from glob import iglob
 import json
 import os
 import shutil
 import subprocess
+import sys
 
 CWD = os.path.abspath(
     os.path.join(
@@ -21,8 +23,34 @@ MINOR_VERSION = meta['version']['minor']
 if os.path.isdir('dist/stargate'):
     shutil.rmtree('dist/stargate')
 
-print("Running Pyinstaller")
-subprocess.check_call(["pyinstaller", "pyinstaller-windows-onedir.spec"])
+#print("Running Pyinstaller")
+#subprocess.check_call(["pyinstaller", "pyinstaller-windows-onedir.spec"])
+
+print("Running Nuitka")
+subprocess.check_call([
+    sys.executable,
+    '-m', 'nuitka',
+	'--standalone',
+	'--windows-disable-console',
+	'--include-module=sgui',
+	'--include-module=sglib',
+	'--include-qt-plugins=platform,sensible',
+	'--enable-plugin=pyqt6',
+	'scripts\\stargate',
+])
+
+shutil.copy('meta.json', 'stargate.dist')
+shutil.copy('COMMIT', 'stargate.dist')
+shutil.copytree('files', 'stargate.dist/files')
+os.makedirs('stargate.dist/engine')
+for path in iglob('engine/*.dll'):
+    shutil.copy2(path, 'stargate.dist/engine')
+for path in iglob('engine/*.exe'):
+    shutil.copy2(path, 'stargate.dist/engine')
+os.makedirs('dist', exist_ok=True)
+if os.path.exists('dist/stargate'):
+    shutil.rmtree('dist/stargate')
+shutil.move('stargate.dist', 'dist/stargate')
 
 TEMPLATE = r"""
 !define PRODUCT_NAME "stargate"

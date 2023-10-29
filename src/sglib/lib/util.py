@@ -248,10 +248,12 @@ elif IS_LINUX:
     )
     if not os.path.exists(SOUNDSTRETCH):
         SOUNDSTRETCH = os.path.join(
-            os.path.dirname(__file__),
-            '..',
-            '..',
-            'engine',
+            ENGINE_DIR,
+            'stargate-soundstretch',
+        )
+    if not os.path.exists(SOUNDSTRETCH):
+        SOUNDSTRETCH = os.path.join(
+            ENGINE_DIR,
             'stargate-soundstretch',
         )
     if not os.path.exists(SOUNDSTRETCH):
@@ -279,7 +281,10 @@ elif IS_LINUX:
         SBSMS = which(f"{MAJOR_VERSION}-sbsms")
         if not SBSMS:
             SBSMS = which("sbsms")
-    PAULSTRETCH_PATH = sys.argv[0]
+    if IS_NUITKA:
+        PAULSTRETCH_PATH = sys.executable
+    else:
+        PAULSTRETCH_PATH = sys.argv[0]
 else:
     raise NotImplementedError("Unsupported platform")
 
@@ -341,10 +346,7 @@ def set_bin_path():
     # the repo
     BIN_PATH = os.path.abspath(
         os.path.join(
-            os.path.dirname(__file__),
-            '..',
-            '..',
-            'engine',
+            ENGINE_DIR,
             f"{MAJOR_VERSION}-engine",
         )
     )

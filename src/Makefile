@@ -15,6 +15,7 @@ BROWSER ?= firefox
 DOCKER ?= podman
 DOCKER_IMAGE ?= stargate-appimage-builder
 MINGW_PREFIX ?= /mingw64
+NUITKA_PYQT ?= pyqt5
 
 # --------------------------------------------------------------
 
@@ -75,6 +76,9 @@ install_self_contained:
 	cp -r files meta.json scripts sg_py_vendor sglib sgui $(SG_DEST)
 	# install -d "$(DESTDIR)$(PREFIX)/share"
 	# cp -r files/share/* "$(DESTDIR)$(PREFIX)/share/"
+
+install_nuitka:
+	cp -r stargate.dist $(SG_DEST)/stargate
 
 install_symlinks: uninstall_symlinks
 	# Symlink a self-contained install to the main system,
@@ -168,6 +172,27 @@ mingw_deps:
 
 mingw_deps_clean:
 	rm -rf engine/*.{dll,exe}
+
+nuitka-appimage:
+	python3 -m nuitka \
+		--standalone \
+		--onefile \
+		--linux-icon=files/share/pixmaps/stargate.png \
+		--include-module=sgui \
+		--include-module=sglib \
+		--include-qt-plugins=platform,sensible \
+		--enable-plugin=pyqt6 \
+		--enable-plugin=pyqt5 \
+		--include-data-dir=files=files \
+		--include-data-files=engine/stargate-engine=engine/ \
+		--include-data-files=meta.json=meta.json \
+		--include-data-files=COMMIT=COMMIT \
+		--include-data-files=vendor/sbsms/cli/sbsms=engine/ \
+		--include-data-files=vendor/stargate-soundstretch=engine/ \
+		scripts/stargate
+
+nuitka-appbundle:
+	exit 1
 
 py_vendor:
 	# Vendor Python dependencies not commonly available in distro repos

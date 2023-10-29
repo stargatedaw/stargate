@@ -5,6 +5,7 @@
 #dependencies
 sudo dnf install \
     alsa-lib-devel \
+    ccache \
     @development-tools \
     fedora-packager \
     fftw-devel \
@@ -17,6 +18,7 @@ sudo dnf install \
     lame \
     libsndfile-devel \
     livecd-tools \
+    patchelf \
     portaudio-devel \
     portmidi-devel \
     python3-devel \
