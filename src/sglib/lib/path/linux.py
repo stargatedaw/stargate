@@ -1,5 +1,6 @@
 from sglib.constants import MAJOR_VERSION
 import os
+import sys
 
 def _is_self_contained():
     dirname = os.path.dirname(
@@ -14,7 +15,24 @@ def _is_self_contained():
     )
     return os.path.isdir(scripts)
 
-if _is_self_contained():
+IS_NUITKA = "__compiled__" in globals()
+
+if IS_NUITKA:
+    print('Detected Nuitka')
+    IS_LOCAL_DEVEL = False
+    INSTALL_PREFIX = os.path.abspath(
+        os.path.dirname(sys.executable),
+    )
+    FONTS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'fonts')
+    SHARE_DIR = os.path.join(INSTALL_PREFIX, 'files', 'share')
+    PRESETS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'presets')
+    PLUGIN_ASSETS_DIR = os.path.join(INSTALL_PREFIX, 'files', 'plugin_assets')
+    THEMES_DIR = os.path.join(INSTALL_PREFIX, 'files', 'themes')
+    COMMIT_PATH = os.path.join(INSTALL_PREFIX, "COMMIT")
+    META_DOT_JSON_PATH = os.path.join(INSTALL_PREFIX, "meta.json")
+    BIN_DIR = os.path.join(INSTALL_PREFIX, 'scripts')
+    ENGINE_DIR = os.path.join(INSTALL_PREFIX, 'engine')
+elif _is_self_contained():
     IS_LOCAL_DEVEL = True
     INSTALL_PREFIX = os.path.abspath(
         os.path.join(

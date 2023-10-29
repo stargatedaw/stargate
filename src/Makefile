@@ -76,6 +76,9 @@ install_self_contained:
 	# install -d "$(DESTDIR)$(PREFIX)/share"
 	# cp -r files/share/* "$(DESTDIR)$(PREFIX)/share/"
 
+install_nuitka:
+	cp -r stargate.dist $(SG_DEST)/stargate
+
 install_symlinks: uninstall_symlinks
 	# Symlink a self-contained install to the main system,
 	# this requires root unless installing to an alternate DESTDIR or PREFIX
@@ -168,6 +171,21 @@ mingw_deps:
 
 mingw_deps_clean:
 	rm -rf engine/*.{dll,exe}
+
+nuitka:
+	python3 -m nuitka \
+		--standalone \
+		--linux-icon=files/share/pixmaps/stargate.png \
+		--include-module=sgui \
+		--include-module=sglib \
+		--include-qt-plugins=platform,sensible \
+		--enable-plugin=pyqt6 \
+		scripts/stargate
+	cp -r meta.json COMMIT files stargate.dist/
+	mkdir -p stargate.dist/engine
+	cp engine/stargate-engine stargate.dist/engine/
+	cp vendor/sbsms/cli/sbsms stargate.dist/engine/
+	cp vendor/stargate-soundstretch stargate.dist/engine/
 
 py_vendor:
 	# Vendor Python dependencies not commonly available in distro repos

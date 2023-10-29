@@ -15,5 +15,7 @@ stargate.build
 stargate.dist
 sglib/**/*.c
 sglib/**/*.pyd
+sglib/**/*.so
 sgui/**/*.c
 sgui/**/*.pyd
+sgui/**/*.so

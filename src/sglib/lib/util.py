@@ -255,6 +255,14 @@ elif IS_LINUX:
             'stargate-soundstretch',
         )
     if not os.path.exists(SOUNDSTRETCH):
+        SOUNDSTRETCH = os.path.join(
+            os.path.dirname(__file__),
+            '..',
+            '..',
+            'engine',
+            'stargate-soundstretch',
+        )
+    if not os.path.exists(SOUNDSTRETCH):
         SOUNDSTRETCH = which("stargate-soundstretch")
     assert SOUNDSTRETCH, SOUNDSTRETCH
     # Prefer the vendored SBSMS
@@ -279,7 +287,10 @@ elif IS_LINUX:
         SBSMS = which(f"{MAJOR_VERSION}-sbsms")
         if not SBSMS:
             SBSMS = which("sbsms")
-    PAULSTRETCH_PATH = sys.argv[0]
+    if IS_NUITKA:
+        PAULSTRETCH_PATH = sys.executable
+    else:
+        PAULSTRETCH_PATH = sys.argv[0]
 else:
     raise NotImplementedError("Unsupported platform")
 
