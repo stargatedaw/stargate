@@ -54,15 +54,19 @@ BUNDLE_PATH = os.path.join('dist', BUNDLE)
 if os.path.isdir(BUNDLE_PATH):
     shutil.rmtree(BUNDLE_PATH)
 
-#retcode = subprocess.check_call([
-#    'pyinstaller',
-#    '--noconfirm',
-#    'pyinstaller-mac-onedir.spec',
-#])
-retcode = subprocess.check_call([
-    'make',
-    'nuitka-appbundle',
-])
+if ARCH == 'x86_64':
+    retcode = subprocess.check_call([
+        'pyinstaller',
+        '--noconfirm',
+        'pyinstaller-mac-onedir.spec',
+    ])
+elif ARCH == 'arm64':
+    retcode = subprocess.check_call([
+        'make',
+        'nuitka-appbundle',
+    ])
+else:
+    assert False, f"Unknown arch. {ARCH}"
 assert retcode == 0, retcode
 
 os.chdir('dist')
