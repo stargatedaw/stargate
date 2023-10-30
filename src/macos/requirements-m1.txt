@@ -3,6 +3,8 @@
 PyQt6==6.5.0
 PyQt6-Qt6==6.5.1
 
+Nuitka
+
 jinja2
 mido
 mutagen
