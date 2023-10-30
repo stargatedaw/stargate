@@ -54,10 +54,14 @@ BUNDLE_PATH = os.path.join('dist', BUNDLE)
 if os.path.isdir(BUNDLE_PATH):
     shutil.rmtree(BUNDLE_PATH)
 
+#retcode = subprocess.check_call([
+#    'pyinstaller',
+#    '--noconfirm',
+#    'pyinstaller-mac-onedir.spec',
+#])
 retcode = subprocess.check_call([
-    'pyinstaller',
-    '--noconfirm',
-    'pyinstaller-mac-onedir.spec',
+    'make',
+    'nuitka-appbundle',
 ])
 assert retcode == 0, retcode
 

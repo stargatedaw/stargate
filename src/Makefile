@@ -192,7 +192,32 @@ nuitka-appimage:
 		scripts/stargate
 
 nuitka-appbundle:
-	exit 1
+	python3 -m nuitka \
+		--standalone \
+		--include-module=sgui \
+		--include-module=sglib \
+		--include-qt-plugins=platform,sensible \
+		--enable-plugin=pyqt6 \
+		--include-data-dir=files=files \
+		--include-data-files=engine/stargate-engine=engine/ \
+		--include-data-files=engine/*.dylib=engine/ \
+		--include-data-files=engine/sbsms=engine/ \
+		--include-data-files=meta.json=meta.json \
+		--include-data-files=COMMIT=COMMIT \
+		--include-data-files=engine/sbsms=engine/ \
+		--include-data-files=engine/rubberband=engine/ \
+		--include-data-files=engine/stargate-soundstretch=engine/ \
+		--macos-target-arch=arm64 \
+		--macos-create-app-bundle \
+		--macos-app-icon=macos/stargate.icns \
+		--macos-app-name='Stargate DAW' \
+		--macos-signed-app-name=com.github.stargatedaw.stargate \
+		--macos-app-mode=gui \
+		--macos-app-version=$(MINOR) \
+		scripts/stargate
+	mkdir -p dist
+	rm -rf dist/stargate.app/
+	mv stargate.app 'dist/Stargate DAW.app'
 
 py_vendor:
 	# Vendor Python dependencies not commonly available in distro repos

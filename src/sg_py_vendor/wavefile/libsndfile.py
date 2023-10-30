@@ -30,6 +30,9 @@ elif "darwin" in sys.platform:
 else:
     dllName = 'libsndfile'
 
+print(sys.platform)
+print(dllName)
+
 _lib=None
 try:
     from ctypes.util import find_library
@@ -51,14 +54,31 @@ try:
         dllPath = dllName
     print(dllPath)
     _lib = ct.CDLL(dllPath)
-except:
+except Exception as ex:
+    print(f'Could not load {dllPath}: {ex}')
+
+if not _lib:
     try:
         #if not, get the dll installed with the wrapper
-        import os
         dllPath = os.path.dirname(os.path.abspath(__file__))
         _lib = ct.CDLL(os.path.join(dllPath, dllName))
-    except:
-        raise Exception("could not import libsndfile dll, make sure the dll '%s' is in the path"%(dllName))
+    except Exception as ex:
+        print(f'Could not load {dllPath}: {ex}')
+
+if not _lib:
+    try:
+        dllPath = os.path.dirname(os.path.abspath(sys.executable))
+        dllPath = os.path.join(dllPath, 'engine', dllName)
+        print(dllPath)
+        _lib = ct.CDLL(dllPath)
+    except Exception as ex:
+        print(f'Could not load {dllPath}: {ex}')
+
+if not _lib:
+    raise Exception(
+        f"could not import libsndfile dll, make sure the dll '{dllName}' "
+        "is in the path"
+    )
 
 _lib.sf_version_string.restype = ct.c_char_p
 _lib.sf_version_string.argtypes = None
