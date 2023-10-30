@@ -11,8 +11,12 @@ dist/
 htmlcov/
 stargate.egg-info/
 ./tmp/
+
+# Nuitka
 stargate.build
 stargate.dist
+stargate.bin
+stargate.onefile-build
 sglib/**/*.c
 sglib/**/*.pyd
 sglib/**/*.so

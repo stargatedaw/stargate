@@ -15,6 +15,7 @@ BROWSER ?= firefox
 DOCKER ?= podman
 DOCKER_IMAGE ?= stargate-appimage-builder
 MINGW_PREFIX ?= /mingw64
+NUITKA_PYQT ?= pyqt5
 
 # --------------------------------------------------------------
 
@@ -172,20 +173,26 @@ mingw_deps:
 mingw_deps_clean:
 	rm -rf engine/*.{dll,exe}
 
-nuitka:
+nuitka-appimage:
 	python3 -m nuitka \
 		--standalone \
+		--onefile \
 		--linux-icon=files/share/pixmaps/stargate.png \
 		--include-module=sgui \
 		--include-module=sglib \
 		--include-qt-plugins=platform,sensible \
 		--enable-plugin=pyqt6 \
+		--enable-plugin=pyqt5 \
+		--include-data-dir=files=files \
+		--include-data-files=engine/stargate-engine=engine/ \
+		--include-data-files=meta.json=meta.json \
+		--include-data-files=COMMIT=COMMIT \
+		--include-data-files=vendor/sbsms/cli/sbsms=engine/ \
+		--include-data-files=vendor/stargate-soundstretch=engine/ \
 		scripts/stargate
-	cp -r meta.json COMMIT files stargate.dist/
-	mkdir -p stargate.dist/engine
-	cp engine/stargate-engine stargate.dist/engine/
-	cp vendor/sbsms/cli/sbsms stargate.dist/engine/
-	cp vendor/stargate-soundstretch stargate.dist/engine/
+
+nuitka-appbundle:
+	exit 1
 
 py_vendor:
 	# Vendor Python dependencies not commonly available in distro repos
