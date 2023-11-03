@@ -751,3 +751,5 @@ class ComboTabWidget(QWidget):
         self._combobox.insertItem(index, name)
         self._stack.insertWidget(index, widget)
 
+class QToolButton(_HintWidget, QToolButton):
+    pass

@@ -65,17 +65,30 @@ class SeqTrack:
             ),
         )
 
-        self.menu_button = QPushButton()
-        self.menu_button.setFixedWidth(42)
+        self.toolbar = QToolBar()
+        #self.toolbar.setObjectName('track_panel')
+        self.toolbar.setIconSize(QtCore.QSize(21, 21))
+
+        self.menu_button = QToolButton()
+        self.menu_button.setToolTip('Various actions for this track')
+        icon = QIcon(get_asset_path('menu.svg'))
+        self.menu_button.setIcon(icon)
         self.button_menu = QMenu()
         self.menu_button.setMenu(self.button_menu)
-        self.hlayout3.addWidget(self.menu_button)
+        self.menu_button.setPopupMode(
+            QToolButton.ToolButtonPopupMode.InstantPopup
+        )
+        self.toolbar.addWidget(self.menu_button)
         self.button_menu.aboutToShow.connect(self.menu_button_pressed)
         self.menu_created = False
 
-        self.toolbar = QToolBar()
-        #self.toolbar.setObjectName('track_panel')
-        self.toolbar.setIconSize(QtCore.QSize(24, 24))
+        self.plugins_button = QToolButton()
+        self.plugins_button.setToolTip('Show the plugin rack for this track')
+        icon = QIcon(get_asset_path('fx-off.svg'))
+        self.plugins_button.setIcon(icon)
+        self.plugins_button.setToolTip('Open this track in the plugin rack')
+        self.toolbar.addWidget(self.plugins_button)
+        self.plugins_button.pressed.connect(self.open_plugins)
 
         icon = QIcon()
         icon.addPixmap(
@@ -199,11 +212,6 @@ class SeqTrack:
         self.action_widget = QWidgetAction(self.button_menu)
         self.action_widget.setDefaultWidget(self.menu_widget)
         self.button_menu.addAction(self.action_widget)
-
-        self.plugins_button = QPushButton(_("Show Plugins"))
-        self.plugins_button.setToolTip('Open this track in the plugin rack')
-        self.menu_gridlayout.addWidget(self.plugins_button, 0, 21)
-        self.plugins_button.pressed.connect(self.open_plugins)
 
         self.menu_gridlayout.addWidget(QLabel(_("Automation")), 3, 21)
         self.automation_combobox = QComboBox()
