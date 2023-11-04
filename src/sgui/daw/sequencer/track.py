@@ -68,6 +68,10 @@ class SeqTrack:
         self.toolbar = QToolBar()
         #self.toolbar.setObjectName('track_panel')
         self.toolbar.setIconSize(QtCore.QSize(21, 21))
+        self.hlayout3.addWidget(self.toolbar)
+        self.hlayout3.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
 
         self.menu_button = QToolButton()
         self.menu_button.setToolTip('Various actions for this track')
@@ -108,7 +112,8 @@ class SeqTrack:
         self.solo_checkbox = QAction(icon, '', self.toolbar)
         self.solo_checkbox.setToolTip('Solo this track')
         self.solo_checkbox.setCheckable(True)
-        self.toolbar.addAction(self.solo_checkbox)
+        if self.track_number != 0:
+            self.toolbar.addAction(self.solo_checkbox)
         self.solo_checkbox.triggered.connect(self.on_solo)
 
         icon = QIcon()
@@ -129,14 +134,10 @@ class SeqTrack:
         self.mute_checkbox = QAction(icon, '', self.toolbar)
         self.mute_checkbox.setToolTip('Mute this track')
         self.mute_checkbox.setCheckable(True)
-        self.toolbar.addAction(self.mute_checkbox)
+        if self.track_number != 0:
+            self.toolbar.addAction(self.mute_checkbox)
         self.mute_checkbox.triggered.connect(self.on_mute)
 
-        self.hlayout3.addItem(
-            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
-        )
-        if self.track_number != 0:
-            self.hlayout3.addWidget(self.toolbar)
         self.action_widget = None
         self.automation_plugin_name = "None"
         self.port_num = None
