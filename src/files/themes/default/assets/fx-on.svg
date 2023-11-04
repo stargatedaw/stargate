@@ -7,7 +7,7 @@
    version="1.1"
    id="svg9375"
    sodipodi:docname="fx-on.svg"
-   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -47,11 +47,11 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
-     inkscape:zoom="7.207668"
-     inkscape:cx="-27.748226"
-     inkscape:cy="35.517729"
+     inkscape:zoom="10.193182"
+     inkscape:cx="23.348941"
+     inkscape:cy="28.989967"
      inkscape:window-width="1920"
-     inkscape:window-height="1007"
+     inkscape:window-height="1011"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -63,18 +63,9 @@
      fill="#0DCD65"
      id="rect9371"
      style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#8212f2;fill-opacity:1;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1" />
-  <g
-     aria-label="FX"
-     transform="matrix(1.9711581,0,0,2.2414589,-6.5062565,-14.048515)"
-     id="text9272"
-     style="font-size:18px;line-height:1.25;white-space:pre;shape-inside:url(#rect9274);display:inline;opacity:1;vector-effect:none;fill:#cdcdcd;stroke-width:0.475745;stop-color:#000000;stop-opacity:1">
-    <path
-       d="m 7.0456875,22.508613 h -1.62 V 9.6566127 H 12.607688 V 11.078613 H 7.0456875 v 4.554 h 5.2200005 v 1.422 H 7.0456875 Z"
-       style="vector-effect:none;stop-color:#000000;stop-opacity:1"
-       id="path294" />
-    <path
-       d="m 23.497671,22.508613 h -1.836 l -3.402,-5.58 -3.456,5.58 h -1.71 l 4.266,-6.696 -3.996,-6.1560003 h 1.8 l 3.15,5.0400003 3.168,-5.0400003 h 1.71 l -3.978,6.1200003 z"
-       style="vector-effect:none;stop-color:#000000;stop-opacity:1"
-       id="path296" />
-  </g>
+  <path
+     style="font-weight:bold;font-size:18px;line-height:1.25;font-family:Monospace;-inkscape-font-specification:Monospace;white-space:pre;fill:#cdcdcd;fill-opacity:1;stroke-width:1.38741"
+     d="M 9.3104101,31.650228 V 12.349772 H 19.692798 v 3.378932 h -7.152311 v 5.027849 h 6.806232 v 3.378932 h -6.806232 v 7.514743 z m 12.4588739,0 4.937402,-9.947575 -4.614395,-9.352881 h 3.414653 l 2.722492,6.082077 2.67635,-6.082077 h 3.460797 l -4.614396,9.325851 4.937403,9.974605 h -3.530013 l -2.953212,-6.7038 -3.022428,6.7038 z"
+     id="text3"
+     aria-label="FX" />
 </svg>
