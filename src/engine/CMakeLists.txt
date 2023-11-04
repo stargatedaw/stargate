@@ -19,9 +19,8 @@ set_target_properties(stargate-engine PROPERTIES LINKER_LANGUAGE C)
 target_compile_options(
     stargate-engine
     PRIVATE
-	-flto
-	-fno-stack-protector
-	-fprefetch-loop-arrays
+    -flto
+    -fno-stack-protector
 )
 
 execute_process(
@@ -34,25 +33,36 @@ target_compile_definitions(
     stargate-engine
     PRIVATE
     SG_THREAD_LOCAL=__thread
-	CACHE_LINE_SIZE=${CACHE_LINE_SIZE}
-	_GNU_SOURCE
-	__USE_GNU
+    CACHE_LINE_SIZE=${CACHE_LINE_SIZE}
+    _GNU_SOURCE
+    __USE_GNU
 )
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+if (CMAKE_SYSTEM_NAME STREQUAL "MSYS")
+    target_link_libraries(
+        stargate-engine
+        ws2_32
+        DbgHelp
+        avrt
+        shlwapi
+    )
     target_compile_options(
         stargate-engine
         PRIVATE
         -I/mingw64/include
-        -lws2_32
-        -lDbgHelp
-        -lavrt
-        -lshlwapi
     )
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    # target_compile_options(myApp PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(
+        stargate-engine
+        PRIVATE
+        -fprefetch-loop-arrays
+    )
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    # other macOS-specific flags for Clang
+    target_compile_options(
+        stargate-engine
+        PRIVATE
+        -fprefetch-loop-arrays
+    )
 else()
     message(SEND_ERROR "Unknown platform ${CMAKE_SYSTEM_NAME}")
 endif()
