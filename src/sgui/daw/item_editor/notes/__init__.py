@@ -50,17 +50,6 @@ class PianoRollEditorWidget:
         self.hlayout.addWidget(QLabel(_("Scale:")))
         self.hlayout.addWidget(self.scale_combobox)
 
-        self.hlayout.addWidget(QLabel("V"))
-        self.vzoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
-        self.hlayout.addWidget(self.vzoom_slider)
-        self.vzoom_slider.setObjectName("zoom_slider")
-        self.vzoom_slider.setMaximumWidth(72)
-        self.vzoom_slider.setRange(9, 24)
-        self.vzoom_slider.setToolTip('Vertical zoom')
-        self.vzoom_slider.setValue(int(shared.PIANO_ROLL_NOTE_HEIGHT))
-        self.vzoom_slider.valueChanged.connect(self.set_midi_vzoom)
-        self.vzoom_slider.sliderReleased.connect(self.save_vzoom)
-
         self.param_combobox = QComboBox()
         self.param_combobox.setToolTip(
             'Per note expression parameters for plugins.  Use '
@@ -75,6 +64,25 @@ class PianoRollEditorWidget:
         self.param_combobox.currentIndexChanged.connect(self.param_changed)
         self.hlayout.addWidget(QLabel(_("Parameter")))
         self.hlayout.addWidget(self.param_combobox)
+
+        self.hlayout.addWidget(QLabel("V"))
+        self.vzoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
+        self.hlayout.addWidget(self.vzoom_slider)
+        self.vzoom_slider.setObjectName("zoom_slider")
+        self.vzoom_slider.setMaximumWidth(72)
+        self.vzoom_slider.setRange(9, 24)
+        self.vzoom_slider.setToolTip('Vertical zoom')
+        self.vzoom_slider.setValue(int(shared.PIANO_ROLL_NOTE_HEIGHT))
+        self.vzoom_slider.valueChanged.connect(self.set_midi_vzoom)
+        self.vzoom_slider.sliderReleased.connect(self.save_vzoom)
+
+        scrollbar = shared.PIANO_ROLL_EDITOR.horizontalScrollBar()
+        scrollbar.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Minimum,
+        )
+        self.hlayout.addWidget(scrollbar)
+
 
         self.toolbar = QToolBar()
         self.toolbar.setIconSize(QtCore.QSize(20, 20))
@@ -444,9 +452,6 @@ class PianoRollEditorWidget:
         if get_file_setting('preview-note', int, 1):
             self.preview_note_action.setChecked(True)
 
-        self.hlayout.addItem(
-            QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),
-        )
         self.vlayout.addLayout(self.hlayout)
         self.vlayout.addWidget(shared.PIANO_ROLL_EDITOR)
 

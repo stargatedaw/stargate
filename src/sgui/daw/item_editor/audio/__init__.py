@@ -155,6 +155,9 @@ class AudioItemSeq(AbstractItemEditor):
         #self.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.context_menu_enabled = True
         self.setToolTip(sg_strings.AudioItemSeq)
+        self.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
+        )
 
     def reset_line_lists(self):
         self.text_list = []
@@ -742,9 +745,6 @@ class AudioItemSeqWidget(FileDragDropper):
         )
 
         self.hlayout.addWidget(self.menu_button)
-        self.hlayout.addItem(
-            QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),
-        )
         self.action_menu = QMenu(self.widget)
         self.menu_button.setMenu(self.action_menu)
 
@@ -839,10 +839,17 @@ class AudioItemSeqWidget(FileDragDropper):
         self.v_zoom_slider.setRange(10, 100)
         self.v_zoom_slider.setValue(10)
         self.v_zoom_slider.setSingleStep(1)
-        self.v_zoom_slider.setMaximumWidth(150)
+        self.v_zoom_slider.setMaximumWidth(60)
         self.v_zoom_slider.valueChanged.connect(self.set_v_zoom)
         self.hlayout.addWidget(QLabel(_("V")))
         self.hlayout.addWidget(self.v_zoom_slider)
+
+        scrollbar = shared.AUDIO_SEQ.horizontalScrollBar()
+        scrollbar.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Minimum,
+        )
+        self.hlayout.addWidget(scrollbar)
 
         self.audio_items_clipboard = []
         self.disable_on_play = (self.menu_button,)

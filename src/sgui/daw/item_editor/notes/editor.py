@@ -35,6 +35,9 @@ class PianoRollEditor(AbstractItemEditor):
         self.update_note_height()
 
         AbstractItemEditor.__init__(self, shared.PIANO_KEYS_WIDTH)
+        self.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
+        )
         self.scene = QGraphicsScene(self)
         self.scene.setBackgroundBrush(
             QColor(

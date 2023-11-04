@@ -44,6 +44,9 @@ class AutomationEditor(AbstractItemEditor):
                       editor
         """
         AbstractItemEditor.__init__(self, AUTOMATION_RULER_WIDTH)
+        self.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
+        )
         self.is_cc = a_is_cc
         self.set_width()
         self.set_scale()
@@ -72,9 +75,6 @@ class AutomationEditor(AbstractItemEditor):
         self.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
         self.setVerticalScrollBarPolicy(
             QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff,
-        )
-        self.setHorizontalScrollBarPolicy(
-            QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded,
         )
         self.setResizeAnchor(
             QGraphicsView.ViewportAnchor.AnchorViewCenter,
@@ -578,9 +578,14 @@ class AutomationEditorWidget:
         self.clear_action.triggered.connect(self.clear)
 
         self.menu_button.setMenu(self.edit_menu)
-        self.hlayout.addItem(
-            QSpacerItem(10, 10, QSizePolicy.Policy.Expanding),
+
+        scrollbar = self.automation_viewer.horizontalScrollBar()
+        scrollbar.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Minimum,
         )
+        self.hlayout.addWidget(scrollbar)
+
 
     def control_changed(self, a_val=None):
         self.set_cc_num()
