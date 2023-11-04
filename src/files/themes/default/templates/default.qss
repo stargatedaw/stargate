@@ -568,7 +568,7 @@ QLabel#SGGroupBox_label {
     padding: 5px 0px;
     color: rgb(255, 255, 255);
     max-height: 25px;
-        font-size: 14px;
+    font-size: 14px;
 }
 
 QWidget#SGGroupBox_widget {
@@ -577,6 +577,18 @@ QWidget#SGGroupBox_widget {
     border-bottom-right-radius: 15px;
 }
 
+QLabel#QDialog_label {
+    border: 1px solid {{ border_color }};
+    background-color: {{ background_color }};
+    padding: 5px 0px;
+    color: rgb(255, 255, 255);
+    max-height: 25px;
+    font-size: 14px;
+}
+
+QWidget#QDialog_widget {
+    border: 1px solid {{ border_color }};
+}
 QWidget:item:hover,
 QWidget:item:selected
 {

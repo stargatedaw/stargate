@@ -547,6 +547,19 @@ class _QMessageBox:
         dialog = QDialog()
         layout = QVBoxLayout(dialog)
         #layout.addWidget(QLabel(title))
+        if title:
+            title_label = QLabel(title)
+            title_label.setObjectName('QDialog_label')
+            title_label.setAlignment(
+                QtCore.Qt.AlignmentFlag.AlignTop
+                |
+                QtCore.Qt.AlignmentFlag.AlignCenter
+            )
+            title_label.setSizePolicy(
+                QSizePolicy.Policy.Expanding,
+                QSizePolicy.Policy.Minimum,
+            )
+            layout.addWidget(title_label)
         label = QLabel(message)
         label.setObjectName('transparent')
         layout.addWidget(label)
@@ -578,6 +591,7 @@ class _QMessageBox:
         layout = QVBoxLayout(dialog)
         if title:
             title_label = QLabel(title)
+            title_label.setObjectName('QDialog_label')
             title_label.setAlignment(
                 QtCore.Qt.AlignmentFlag.AlignTop
                 |
@@ -589,7 +603,6 @@ class _QMessageBox:
             )
             layout.addWidget(title_label)
         label = QLabel(message)
-        label.setObjectName('transparent')
         label.setWordWrap(True)
         layout.addWidget(label)
         layout.addItem(

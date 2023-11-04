@@ -133,7 +133,7 @@ class MainStackedWidget(QStackedWidget):
                 self.close()
             f_reply = QMessageBox.question(
                 self,
-                _('Message'),
+                _('Close'),
                 _("Are you sure you want to close Stargate DAW?"),
                 (
                     QMessageBox.StandardButton.Yes
