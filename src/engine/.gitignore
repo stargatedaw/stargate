@@ -21,3 +21,8 @@ stargate-soundstretch
 test.wav
 test.wav.finished
 vgcore*
+
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
