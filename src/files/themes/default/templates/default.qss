@@ -549,16 +549,32 @@ QToolButton#transport_panel, QToolButton:pressed#transport_panel {
     background-color: {{ transport_panel_background }};
 }
 
-QGroupBox::title
-{
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
     background-color: {{ background_color }};
     border: 1px solid {{ border_color }};
-    subcontrol-position: top left;
 }
 
-QGroupBox:focus, QTextEdit::focus
-{
+QGroupBox:focus, QTextEdit::focus {
     border: 2px solid {{ highlight_border }};
+}
+
+QLabel#SGGroupBox_label {
+    border: 1px solid {{ border_color }};
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background-color: {{ background_color }};
+    padding: 5px 0px;
+    color: rgb(255, 255, 255);
+    max-height: 25px;
+        font-size: 14px;
+}
+
+QWidget#SGGroupBox_widget {
+    border: 1px solid {{ border_color }};
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
 }
 
 QWidget:item:hover,

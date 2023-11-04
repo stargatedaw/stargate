@@ -74,7 +74,6 @@ class SeqTrack:
         )
 
         self.menu_button = QToolButton()
-        self.menu_button.setToolTip('Various actions for this track')
         icon = QIcon(get_asset_path('menu.svg'))
         self.menu_button.setIcon(icon)
         self.button_menu = QMenu()
@@ -207,14 +206,14 @@ class SeqTrack:
             self.button_menu.removeAction(self.action_widget)
         self.menu_created = True
         self.menu_widget = QWidget()
-        self.menu_hlayout = QHBoxLayout(self.menu_widget)
-        self.menu_gridlayout = QGridLayout()
-        self.menu_hlayout.addLayout(self.menu_gridlayout)
+        self.menu_vlayout = QVBoxLayout(self.menu_widget)
+        self.menu_auto_groupbox = SGGroupBox('Automation')
+        self.menu_vlayout.addWidget(self.menu_auto_groupbox)
+        self.menu_gridlayout = QGridLayout(self.menu_auto_groupbox.widget)
         self.action_widget = QWidgetAction(self.button_menu)
         self.action_widget.setDefaultWidget(self.menu_widget)
         self.button_menu.addAction(self.action_widget)
 
-        self.menu_gridlayout.addWidget(QLabel(_("Automation")), 3, 21)
         self.automation_combobox = QComboBox()
         self.automation_combobox.setMinimumWidth(240)
         self.menu_gridlayout.addWidget(QLabel(_("Plugin:")), 5, 20)
@@ -252,9 +251,9 @@ class SeqTrack:
         self.menu_gridlayout.addWidget(QLabel(_("In Use:")), 10, 20)
         self.menu_gridlayout.addWidget(self.ccs_in_use_combobox, 10, 21)
 
-        self.color_hlayout = QHBoxLayout()
-        self.menu_gridlayout.addWidget(QLabel(_("Color")), 28, 21)
-        self.menu_gridlayout.addLayout(self.color_hlayout, 29, 21)
+        self.menu_color_groupbox = SGGroupBox('Color')
+        self.menu_vlayout.addWidget(self.menu_color_groupbox)
+        self.color_hlayout = QHBoxLayout(self.menu_color_groupbox.widget)
 
         self.color_button = QPushButton(_("Custom..."))
         self.color_button.setToolTip(

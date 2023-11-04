@@ -753,3 +753,22 @@ class ComboTabWidget(QWidget):
 
 class QToolButton(_HintWidget, QToolButton):
     pass
+
+class SGGroupBox(_HintWidget, QWidget):
+    def __init__(self, title: str):
+        super().__init__()
+        self._layout = QVBoxLayout(self)
+        self._layout.setSpacing(0)
+        self._layout.setContentsMargins(0, 0, 0, 0)
+        self._label = QLabel(title)
+        self._label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self._label.setObjectName('SGGroupBox_label')
+        self._layout.addWidget(self._label)
+        self.widget = QWidget(self)
+        self.widget.setObjectName('SGGroupBox_widget')
+        self.widget.setSizePolicy(
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding,
+        )
+        self._layout.addWidget(self.widget)
+
