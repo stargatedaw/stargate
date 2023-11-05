@@ -19,9 +19,8 @@ class lfo_widget:
         a_phase_port=None,
         knob_kwargs={},
     ):
-        self.groupbox = QGroupBox(str(a_label))
-        self.groupbox.setObjectName("plugin_groupbox")
-        self.layout = QGridLayout(self.groupbox)
+        self.groupbox = SGGroupBox(str(a_label))
+        self.layout = QGridLayout(self.groupbox.widget)
         self.layout.setContentsMargins(3, 3, 3, 3)
         self.freq_knob = knob_control(
             a_size,

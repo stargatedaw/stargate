@@ -264,9 +264,8 @@ class eq_widget:
         a_size=48,
         knob_kwargs={},
     ):
-        self.groupbox = QGroupBox("EQ{}".format(a_number))
-        self.groupbox.setObjectName("plugin_groupbox")
-        self.layout = QGridLayout(self.groupbox)
+        self.groupbox = SGGroupBox("EQ{}".format(a_number))
+        self.layout = QGridLayout(self.groupbox.widget)
 
         self.freq_knob = knob_control(
             a_size,

@@ -150,23 +150,26 @@ QWidget#plugin_window {
     color: #cccccc;
 }
 
-QGroupBox#plugin_groupbox {
+QWidget#SGGroupBox_widget {
+    border-bottom-left-radius: 9px;
+    border-bottom-right-radius: 9px;
     background: qlineargradient(
         x1: 0, y1: 0, x2: 1, y2: 1,
         stop: 0 #4a4a4a, stop: 0.5 #4f4f4f, stop: 1 #434343
     );
     border: 2px solid #222222;
-    border-radius: 9px;
     color: #cccccc;
 }
 
-QGroupBox::title {
-    subcontrol-origin: margin;
-    subcontrol-position: top center; /* position at the top center */
-    padding: 0 3px;
-    background-color: #4b4b4b;
+QLabel#SGGroupBox_label {
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
     border: 2px solid #222222;
-    border-radius: 3px;
+    padding: 5px 0px;
+    color: #cccccc;
+    max-height: 25px;
+    font-size: 12px;
+    background-color: #3b3b3b;
 }
 
 QLabel#plugin_name_label,
@@ -647,9 +650,8 @@ class VA1PluginUI(AbstractPluginUI):
             QtCore.Qt.AlignmentFlag.AlignCenter,
         )
 
-        self.groupbox_noise = QGroupBox(_("Noise"))
-        self.groupbox_noise.setObjectName("plugin_groupbox")
-        self.noise_layout = QGridLayout(self.groupbox_noise)
+        self.groupbox_noise = SGGroupBox(_("Noise"))
+        self.noise_layout = QGridLayout(self.groupbox_noise.widget)
         self.noise_layout.setContentsMargins(3, 3, 3, 3)
         self.hlayout3.addWidget(self.groupbox_noise)
         self.noise_amp = knob_control(

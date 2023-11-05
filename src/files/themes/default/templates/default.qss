@@ -566,7 +566,7 @@ QLabel#SGGroupBox_label {
     border-top-right-radius: 15px;
     background-color: {{ background_color }};
     padding: 5px 0px;
-    color: rgb(255, 255, 255);
+    color: #cccccc;
     max-height: 25px;
     font-size: 14px;
 }

@@ -1,6 +1,6 @@
 from . import _shared
 from .control import combobox_control, knob_control
-from sgui.sgqt import QGridLayout, QGroupBox
+from sgui.sgqt import QGridLayout, SGGroupBox
 
 
 class FreqSplitter:
@@ -18,10 +18,10 @@ class FreqSplitter:
             knob_kwargs: dict={},
             title="Splitter",
         ):
-        self.widget = QGroupBox(title)
+        self.widget = SGGroupBox(title)
         self.outputs = []
         self.freqs = []
-        self.layout = QGridLayout(self.widget)
+        self.layout = QGridLayout(self.widget.widget)
         port = first_port
         self.split_count_knob = knob_control(
             knob_size,

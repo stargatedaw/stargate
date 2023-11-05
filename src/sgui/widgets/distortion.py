@@ -19,9 +19,8 @@ class MultiDistWidget:
         a_preset_mgr=None,
         knob_kwargs={},
     ):
-        self.groupbox_dist = QGroupBox(a_label)
-        self.groupbox_dist.setObjectName("plugin_groupbox")
-        self.groupbox_dist_layout = QGridLayout(self.groupbox_dist)
+        self.groupbox_dist = SGGroupBox(a_label)
+        self.groupbox_dist_layout = QGridLayout(self.groupbox_dist.widget)
 
         self.dist = knob_control(
             a_size,

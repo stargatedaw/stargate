@@ -27,8 +27,7 @@ class osc_widget:
         vol_min_text=None,
     ):
         self.grid_layout = QGridLayout()
-        self.group_box = QGroupBox(str(a_label))
-        self.group_box.setObjectName("plugin_groupbox")
+        self.group_box = SGGroupBox(str(a_label))
         self.group_box.setLayout(self.grid_layout)
 
         self.pitch_knob = knob_control(

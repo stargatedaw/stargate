@@ -42,10 +42,9 @@ class ADSRMainWidget:
         knob_kwargs={},
     ):
         self.clipboard_dict = {}
-        self.groupbox = QGroupBox(a_label)
+        self.groupbox = SGGroupBox(a_label)
         self.groupbox.contextMenuEvent = self.context_menu_event
-        self.groupbox.setObjectName("plugin_groupbox")
-        self.layout = QGridLayout(self.groupbox)
+        self.layout = QGridLayout(self.groupbox.widget)
         self.layout.setContentsMargins(3, 3, 3, 3)
 
         if a_delay_port is not None:

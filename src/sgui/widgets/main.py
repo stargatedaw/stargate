@@ -26,10 +26,8 @@ class main_widget:
         a_pb_min=1,
         knob_kwargs={},
     ):
-        self.group_box = QGroupBox()
-        self.group_box.setObjectName("plugin_groupbox")
-        self.group_box.setTitle(str(a_title))
-        self.layout = QGridLayout(self.group_box)
+        self.group_box = SGGroupBox(a_title)
+        self.layout = QGridLayout(self.group_box.widget)
         self.layout.setContentsMargins(3, 3, 3, 3)
         self.vol_knob = knob_control(
             a_size,

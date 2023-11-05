@@ -776,7 +776,7 @@ class SGGroupBox(_HintWidget, QWidget):
         self._layout = QVBoxLayout(self)
         self._layout.setSpacing(0)
         self._layout.setContentsMargins(0, 0, 0, 0)
-        self._label = QLabel(title)
+        self._label = QLabel(title if title else '')
         self._label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self._label.setObjectName('SGGroupBox_label')
         self._layout.addWidget(self._label)
@@ -788,3 +788,5 @@ class SGGroupBox(_HintWidget, QWidget):
         )
         self._layout.addWidget(self.widget)
 
+    def setLayout(self, layout):
+        self.widget.setLayout(layout)
