@@ -243,7 +243,8 @@ class ItemEditorWidget:
         self.zoom_hlayout.addWidget(QLabel("H"))
         self.zoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
         self.zoom_slider.setToolTip(
-            'Horizontal zoom for all of the item editors'
+            'Horizontal zoom for all of the item editors.  Some item editors '
+            'have independent vertical zoom sliders on their own tab'
         )
         self.zoom_hlayout.addWidget(self.zoom_slider)
         self.zoom_slider.setObjectName("zoom_slider")

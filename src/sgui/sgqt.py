@@ -767,6 +767,9 @@ class ComboTabWidget(QWidget):
 class QToolButton(_HintWidget, QToolButton):
     pass
 
+class QScrollBar(_HintWidget, QScrollBar):
+    pass
+
 class SGGroupBox(_HintWidget, QWidget):
     def __init__(self, title: str):
         super().__init__()

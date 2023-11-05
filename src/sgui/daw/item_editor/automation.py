@@ -579,7 +579,11 @@ class AutomationEditorWidget:
 
         self.menu_button.setMenu(self.edit_menu)
 
-        scrollbar = self.automation_viewer.horizontalScrollBar()
+        scrollbar = QScrollBar()
+        scrollbar.setToolTip(
+            'The horizontal scrollbar for the automation editor'
+        )
+        self.automation_viewer.setHorizontalScrollBar(scrollbar)
         scrollbar.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Minimum,

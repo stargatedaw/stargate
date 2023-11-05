@@ -834,7 +834,10 @@ class AudioItemSeqWidget(FileDragDropper):
         self.action_menu.addSeparator()
 
         self.v_zoom_slider = QSlider(QtCore.Qt.Orientation.Horizontal)
-        self.v_zoom_slider.setToolTip('Vertical zoom')
+        self.v_zoom_slider.setToolTip(
+            'Vertical zoom for the audio item editor.  Horizontal zoom for '
+            'all item editors is on the upper right of the Item Editor tab'
+        )
         self.v_zoom_slider.setObjectName("zoom_slider")
         self.v_zoom_slider.setRange(10, 100)
         self.v_zoom_slider.setValue(10)
@@ -844,7 +847,11 @@ class AudioItemSeqWidget(FileDragDropper):
         self.hlayout.addWidget(QLabel(_("V")))
         self.hlayout.addWidget(self.v_zoom_slider)
 
-        scrollbar = shared.AUDIO_SEQ.horizontalScrollBar()
+        scrollbar = QScrollBar()
+        scrollbar.setToolTip(
+            'The horizontal scrollbar for the audio item editor'
+        )
+        shared.AUDIO_SEQ.setHorizontalScrollBar(scrollbar)
         scrollbar.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Minimum,

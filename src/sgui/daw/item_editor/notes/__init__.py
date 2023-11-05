@@ -71,12 +71,19 @@ class PianoRollEditorWidget:
         self.vzoom_slider.setObjectName("zoom_slider")
         self.vzoom_slider.setMaximumWidth(72)
         self.vzoom_slider.setRange(9, 24)
-        self.vzoom_slider.setToolTip('Vertical zoom')
+        self.vzoom_slider.setToolTip(
+            'Vertical zoom for the piano roll editor.  Horizontal zoom for '
+            'all item editors is on the upper right of the Item Editor tab'
+        )
         self.vzoom_slider.setValue(int(shared.PIANO_ROLL_NOTE_HEIGHT))
         self.vzoom_slider.valueChanged.connect(self.set_midi_vzoom)
         self.vzoom_slider.sliderReleased.connect(self.save_vzoom)
 
-        scrollbar = shared.PIANO_ROLL_EDITOR.horizontalScrollBar()
+        scrollbar = QScrollBar()
+        scrollbar.setToolTip(
+            'The horizontal scrollbar for the piano roll editor'
+        )
+        shared.PIANO_ROLL_EDITOR.setHorizontalScrollBar(scrollbar)
         scrollbar.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Minimum,

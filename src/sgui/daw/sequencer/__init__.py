@@ -243,7 +243,11 @@ class SequencerWidget:
             QtCore.Qt.WindowType.FramelessWindowHint,
         )
 
-        self.scrollbar = shared.SEQUENCER.horizontalScrollBar()
+        self.scrollbar = QScrollBar()
+        self.scrollbar.setToolTip(
+            'The horizontal scrollbar for the sequencer'
+        )
+        shared.SEQUENCER.setHorizontalScrollBar(self.scrollbar)
         self.scrollbar.setSizePolicy(
             QSizePolicy.Policy.Expanding,
             QSizePolicy.Policy.Minimum,
