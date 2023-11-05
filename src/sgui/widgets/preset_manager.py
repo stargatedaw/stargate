@@ -53,36 +53,103 @@ class preset_manager_widget:
 
         self.more_menu = QMenu(self.more_button)
 
-        save_preset_action = self.more_menu.addAction(_("Save Preset"))
+        save_preset_action = QAction(_("Save Preset"), self.more_menu)
+        self.more_menu.addAction(save_preset_action)
+        save_preset_action.setToolTip(
+            'Save the current plugin settings to the current preset'
+        )
         save_preset_action.triggered.connect(self.save_preset)
-        save_preset_as_action = self.more_menu.addAction(
-            _("Save Preset As...")
+
+        save_preset_as_action = QAction(
+            _("Save Preset As..."),
+            self.more_menu,
+        )
+        self.more_menu.addAction(save_preset_as_action)
+        save_preset_as_action.setToolTip(
+            'Save the current plugin settings to a new preset'
         )
         save_preset_as_action.triggered.connect(self.save_preset_as)
+
         self.more_menu.addSeparator()
-        f_new_bank_action = self.more_menu.addAction(_("New Bank..."))
-        f_new_bank_action.triggered.connect(self.on_new_bank)
-        f_reload_bank_action = self.more_menu.addAction(_("Reload Bank..."))
-        f_reload_bank_action.triggered.connect(self.reload_default_presets)
-        f_save_as_action = self.more_menu.addAction(_("Save Bank As..."))
-        f_save_as_action.triggered.connect(self.on_save_as)
-        f_open_action = self.more_menu.addAction(_("Open Bank..."))
-        f_open_action.triggered.connect(self.on_open_bank)
-        f_restore_action = self.more_menu.addAction(
-            _("Restore Factory Bank..."),
+
+        f_new_bank_action = QAction(_("New Bank..."), self.more_menu)
+        f_new_bank_action.setToolTip(
+            'Create a new bank of presets for this plugin'
         )
+        self.more_menu.addAction(f_new_bank_action)
+        f_new_bank_action.triggered.connect(self.on_new_bank)
+
+        f_reload_bank_action = QAction(_("Reload Bank..."), self.more_menu)
+        f_reload_bank_action.setToolTip(
+            'Reload the current bank to get any preset changes created in '
+            'other instances of this plugin'
+        )
+        self.more_menu.addAction(f_reload_bank_action)
+        f_reload_bank_action.triggered.connect(self.reload_default_presets)
+
+        f_save_as_action = QAction(_("Save Bank As..."), self.more_menu)
+        f_save_as_action.setToolTip(
+            'Save this preset bank as a new preset bank with a different name'
+        )
+        self.more_menu.addAction(f_save_as_action)
+        f_save_as_action.triggered.connect(self.on_save_as)
+
+        f_open_action = QAction(_("Open Bank..."), self.more_menu)
+        f_open_action.setToolTip('Open a different preset bank')
+        self.more_menu.addAction(f_open_action)
+        f_open_action.triggered.connect(self.on_open_bank)
+
+        f_restore_action = QAction(
+            _("Restore Factory Bank..."),
+            self.more_menu,
+        )
+        f_restore_action.setToolTip(
+            "Restore this bank to it's original state (assuming it was a "
+            "factory provided bank)"
+        )
+        self.more_menu.addAction(f_restore_action)
         f_restore_action.triggered.connect(self.on_restore_bank)
+
         self.more_menu.addSeparator()
-        f_delete_action = self.more_menu.addAction(_("Delete Preset"))
+
+        f_delete_action = QAction(_("Delete Preset"), self.more_menu)
+        f_delete_action.setToolTip(
+            'Delete the current preset from the current preset bank'
+        )
+        self.more_menu.addAction(f_delete_action)
         f_delete_action.triggered.connect(self.delete_preset)
+
         self.more_menu.addSeparator()
-        f_copy_action = self.more_menu.addAction(_("Copy Plugin Settings"))
+
+        f_copy_action = QAction(_("Copy Plugin Settings"), self.more_menu)
+        f_copy_action.setToolTip(
+            "Copy all controls from this plugin.  Use this to clone this "
+            "instance of this plugin by using the 'Paste Plugin Settings' "
+            "action on another instance of the same plugin"
+        )
+        self.more_menu.addAction(f_copy_action)
         f_copy_action.triggered.connect(self.on_copy)
-        f_paste_action = self.more_menu.addAction(_("Paste Plugin Settings"))
+
+        f_paste_action = QAction(_("Paste Plugin Settings"), self.more_menu)
+        f_paste_action.setToolTip(
+            "Replace all settings in this plugin with the settings previously "
+            "copied from another instance of the same plugin using "
+            "'Copy Plugin Settings'"
+        )
+        self.more_menu.addAction(f_paste_action)
         f_paste_action.triggered.connect(self.on_paste)
+
         self.more_menu.addSeparator()
-        f_reset_default_action = self.more_menu.addAction(
-            _("Reset to Default Values"))
+
+        f_reset_default_action = QAction(
+            _("Reset to Default Values"),
+            self.more_menu,
+        )
+        f_reset_default_action.setToolTip(
+            "Reset all controls to their default value.  This is the default "
+            "plugin state when you open a new instance of the plugin"
+        )
+        self.more_menu.addAction(f_reset_default_action)
         f_reset_default_action.triggered.connect(self.reset_controls)
 
         self.more_button.setMenu(self.more_menu)
