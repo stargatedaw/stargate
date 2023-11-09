@@ -217,8 +217,8 @@ class PitchGlitchUI(AbstractPluginUI):
             self.preset_manager,
             knob_kwargs=knob_kwargs,
             tooltip=(
-                'The maximum amount of pitchbend to apply to the glitch '
-                'sound when the pitchbend wheel is fully up or down'
+                'The maximum amount of pitchbend, in semitones, to apply to '
+                'the glitch sound when the pitchbend wheel is fully up or down'
             ),
         )
         self.pitchbend_knob.add_to_grid_layout(self.glitch_gridlayout, 6)
@@ -237,7 +237,7 @@ class PitchGlitchUI(AbstractPluginUI):
             self.preset_manager,
             knob_kwargs=knob_kwargs,
             tooltip=(
-                'The amount of time to glide between note pitches'
+                'The amount of time, in seconds, to glide between note pitches'
             ),
         )
         self.glide_knob.add_to_grid_layout(self.glitch_gridlayout, 9)
