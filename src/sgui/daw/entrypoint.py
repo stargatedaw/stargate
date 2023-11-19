@@ -495,13 +495,21 @@ class MainWindow(QTabWidget):
         normalize_layout = QHBoxLayout()
         f_layout.addLayout(normalize_layout, 8, 1)
         normalize_checkbox = QCheckBox('Normalize')
+        normalize_checkbox.setToolTip('Check to normalize the rendered file')
         normalize_layout.addWidget(normalize_checkbox)
 
         normalize_db = QDoubleSpinBox()
+        normalize_db.setToolTip(
+            'The volume level, in decibels, to normalize the rendered file to'
+        )
         normalize_layout.addWidget(normalize_db)
         normalize_db.setRange(-12., 0.)
         normalize_db.setSingleStep(0.1)
         normalize_db.setValue(-0.1)
+
+        normalize_layout.addItem(
+            QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
+        )
 
         f_layout.addItem(
             QSpacerItem(
