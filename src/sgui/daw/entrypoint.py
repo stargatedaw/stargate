@@ -16,6 +16,7 @@ from sgui.plugins import *
 from sgui.sgqt import *
 from sgui.widgets import *
 from sglib.lib.util import *
+from sglib.lib.normalize import normalize_in_place
 
 from . import *
 from .filedragdrop import FileDragDropper
@@ -322,10 +323,25 @@ class MainWindow(QTabWidget):
                 )
             ]
             LOG.info(f"Rendering {f_cmd} to '{f_out_file}'")
+            def _post_func():
+                LOG.info(f'Normalizing {f_out_file}')
+                normalize_in_place(f_out_file, normalize_db.value())
+                LOG.info(f'Finished normalizing {f_out_file}')
+
+            if (
+                not f_stem_render_checkbox.isChecked()
+                and
+                normalize_checkbox.isChecked()
+            ):
+                post_func = _post_func
+            else:
+                post_func = None
+
             glbl_shared.MAIN_WINDOW.show_offline_rendering_wait_window_v2(
                 f_cmd,
                 f_out_file,
                 f_file_name=f_fini,
+                post_func=post_func,
             )
 
             if f_stem:
@@ -344,6 +360,12 @@ class MainWindow(QTabWidget):
 
         def stem_check_changed(a_val=None):
             f_name.setText("")
+            if a_val:
+                normalize_checkbox.hide()
+                normalize_db.hide()
+            else:
+                normalize_checkbox.show()
+                normalize_db.show()
 
         def file_name_select():
             if not os.path.isdir(self.last_offline_dir):
@@ -469,6 +491,30 @@ class MainWindow(QTabWidget):
         )
         f_copy_to_clipboard_checkbox.setChecked(self.copy_to_clipboard_checked)
         f_layout.addWidget(f_copy_to_clipboard_checkbox, 7, 1)
+
+        normalize_layout = QHBoxLayout()
+        f_layout.addLayout(normalize_layout, 8, 1)
+        normalize_checkbox = QCheckBox('Normalize')
+        normalize_layout.addWidget(normalize_checkbox)
+
+        normalize_db = QDoubleSpinBox()
+        normalize_layout.addWidget(normalize_db)
+        normalize_db.setRange(-12., 0.)
+        normalize_db.setSingleStep(0.1)
+        normalize_db.setValue(-0.1)
+
+        f_layout.addItem(
+            QSpacerItem(
+                10,
+                10,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
+            100,
+            1,
+        )
+
+
         f_ok_layout = QHBoxLayout()
 
         if util.IS_LINUX:

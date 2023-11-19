@@ -667,7 +667,8 @@ class SgMainWindow(QWidget):
         self,
         a_cmd_list,
         a_file_name,
-        f_file_name=None
+        f_file_name=None,
+        post_func=None,
     ):
         if not f_file_name:
             f_file_name = "{}.finished".format(a_file_name)
@@ -696,6 +697,8 @@ class SgMainWindow(QWidget):
         def timeout_handler():
             if f_proc.poll() is not None:
                 f_timer.stop()
+                if post_func:
+                    post_func()
                 f_ok.setEnabled(True)
                 f_cancel.setEnabled(False)
                 f_time_label.setText(
