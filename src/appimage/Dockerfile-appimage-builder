@@ -1,7 +1,9 @@
 #ARG IMAGE=appimagecrafters/appimage-builder
 ARG IMAGE=stargate-base
+ARG PYVER=3.11.6
 
 FROM ${IMAGE} as python
+ARG PYVER
 
 RUN apt update && apt install -y \
 	build-essential \
@@ -11,11 +13,12 @@ RUN apt update && apt install -y \
 	libffi-dev \
 	libssl-dev
 
-# Install Python3.10 from source, need a supported Python version to use a
+# Install Python from source, need a supported Python version to use a
 # recent PyQt
 RUN cd /root/ && \
-	curl -s https://www.python.org/ftp/python/3.10.8/Python-3.10.8.tgz | tar xvz
-RUN cd /root/Python-3.10.8 && \
+	curl -s https://www.python.org/ftp/python/${PYVER}/Python-${PYVER}.tgz \
+    | tar xvz
+RUN cd /root/Python-${PYVER} && \
 	./configure --enable-optimizations && \
 	make && \
 	make install
@@ -115,6 +118,8 @@ RUN cd /root/rubberband-3.1.1 && \
 	meson compile
 
 FROM ${IMAGE}
+ARG PYVER
+
 
 RUN apt update && apt upgrade -y && apt install -y \
 	build-essential \
@@ -141,8 +146,8 @@ RUN cd /root/portaudio-19.7.0/ && \
 	make && \
 	make install
 
-COPY --from=python /root/Python-3.10.8/ /root/Python-3.10.8
-RUN cd /root/Python-3.10.8 && \
+COPY --from=python /root/Python-${PYVER}/ /root/Python-${PYVER}
+RUN cd /root/Python-${PYVER} && \
 	./configure --enable-optimizations --prefix=/usr && \
 	make && \
 	make install

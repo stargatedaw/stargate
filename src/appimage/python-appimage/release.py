@@ -18,7 +18,7 @@ def parse_args():
     parser.add_argument(
         '-p',
         '--python-version',
-        default='3.10',
+        default='3.11',
         dest='pyversion',
         help=(
             'The Python version to use, ie: 3.9, 3.8.  This should probably '

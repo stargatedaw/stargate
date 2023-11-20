@@ -3,6 +3,8 @@
 cd /stargate
 VERSION=$(jq .version.minor src/meta.json)
 
+PYVER=3.11
+
 cd dist/
 rm -rf squashfs-root
 ./stargate-x86_64.AppImage --appimage-extract
@@ -13,7 +15,7 @@ DESTDIR=/stargate/dist/squashfs-root PREFIX=/usr make install_self_contained
 
 cp -r \
     sg_py_vendor \
-    /stargate/dist/squashfs-root/opt/python3.10/lib/python3.10/site-packages/
+    /stargate/dist/squashfs-root/opt/python${PYVER}/lib/python${PYVER}/site-packages/
 
 export DESTDIR=/stargate/dist/squashfs-root
 export PREFIX=/usr
@@ -24,6 +26,7 @@ make install
 cd /root/portmidi-2.0.4/
 make install
 cd /root/rubberband-3.1.1/builddir
+meson setup --reconfigure
 meson install
 
 PACKAGES=$(apt-cache depends --recurse --no-recommends --no-suggests \
