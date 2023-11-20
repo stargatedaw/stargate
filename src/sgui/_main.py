@@ -3,7 +3,7 @@ import sys
 import time
 
 from .preflight import preflight
-from sglib.log import LOG, setup_logging
+from sglib.log import LOG
 from sglib.lib.translate import _
 from sglib.lib import util
 from sgui import (
@@ -174,7 +174,6 @@ def qt_message_handler(mode, context, message):
 
 
 def _setup():
-    setup_logging()
     LOG.info(f"sys.argv == {sys.argv}")
     QtCore.qInstallMessageHandler(qt_message_handler)
     try:

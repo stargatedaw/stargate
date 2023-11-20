@@ -45,10 +45,7 @@ from sglib.lib import (
     util,
 )
 from sglib.lib.translate import _, TEXT_ENCODING
-from sglib.log import (
-    LOG,
-    setup_logging,
-)
+from sglib.log import LOG
 
 THREADS_TOOLTIP = _("""\
 Number of worker threads for processing plugins and effects.  Setting to 1 can

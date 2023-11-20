@@ -24,7 +24,7 @@ def find_real_path():
             if not os.path.isabs(REAL_PATH):
                 REAL_PATH = os.path.abspath(
                     os.path.join(
-                        os.path.dirname(old), 
+                        os.path.dirname(old),
                         REAL_PATH,
                     ),
                 )
@@ -96,6 +96,10 @@ def main():
     f_path = os.path.abspath(f_path)
     sys.path.insert(0, f_path)
     print(f'sys.path = {sys.path}')
+
+    from sglib.log import LOG, setup_logging
+    setup_logging()
+
     try:
         if is_paulstretch:
             start_paulstretch()
