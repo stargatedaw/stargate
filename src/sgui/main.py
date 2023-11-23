@@ -382,30 +382,6 @@ class SgMainWindow(QWidget):
         )
         self.copy_theme_action.triggered.connect(self.on_copy_theme)
 
-        self.menu_appearance.addSeparator()
-
-        self.custom_font_action = QAction(
-            _("Choose custom font..."),
-            self.menu_appearance,
-        )
-        self.menu_appearance.addAction(self.custom_font_action)
-        self.custom_font_action.setToolTip(
-            'Choose a custom font for Stargate'
-        )
-        self.custom_font_action.triggered.connect(self.on_custom_font)
-
-        self.clear_custom_font_action = QAction(
-            _("Use default font"),
-            self.menu_appearance,
-        )
-        self.menu_appearance.addAction(self.clear_custom_font_action)
-        self.clear_custom_font_action.setToolTip(
-            'Use the default font included with Stargate'
-        )
-        self.clear_custom_font_action.triggered.connect(
-            self.on_clear_custom_font,
-        )
-
         if not util.IS_WINDOWS:
             self.menu_tools = self.menu_bar.addMenu(_("Tools"))
 
@@ -591,14 +567,6 @@ class SgMainWindow(QWidget):
 
     def keyReleaseEvent(self, ev):
         self._key_event(ev, False)
-
-    def on_custom_font(self):
-        font = get_font()
-        font.choose_font()
-
-    def on_clear_custom_font(self):
-        font = get_font()
-        font.clear_font()
 
     def _copy_to_clipboard(self, text):
         cb = QApplication.clipboard()

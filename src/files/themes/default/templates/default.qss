@@ -1,5 +1,14 @@
 {% set transport_button_size = 40 %}
 
+QWidget
+{
+    background-color: {{ palette["gray3"] }};
+    color: {{ text_color }};
+    selection-background-color: {{ background_color_alt3 }};
+    selection-color: #111111;
+    font: 12px 'RobotoCondensed';
+}
+
 QWidget:focus
 {
     outline: none;
@@ -55,6 +64,7 @@ QLabel#hintbox {
     color: {{ text_color }};
     padding: 0px;
     margin: 0px;
+    font-size: 11px;
 }
 
 QWidget#sidebar {
@@ -138,14 +148,6 @@ QLabel#seq_zoom_size_label
     background-color: {{ background_color_alt }};
     border: 1px solid {{ border_color }};
     color: {{ text_color }};
-}
-
-QWidget
-{
-    background-color: {{ palette["gray3"] }};
-    color: {{ text_color }};
-    selection-background-color: {{ background_color_alt3 }};
-    selection-color: #111111;
 }
 
 QDoubleSpinBox,

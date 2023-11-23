@@ -1,5 +1,6 @@
 from collections import deque
 import datetime
+from glob import glob
 import os
 from xml.etree import ElementTree as xmltree
 
@@ -160,41 +161,6 @@ class FontManager:
     def get_font_size(self):
         return self._font_size(self.font)
 
-    @staticmethod
-    def _font_size(font):
-        px_size = font.pixelSize()
-        pt_size = font.pointSize()
-        if px_size != -1 and pt_size == -1:
-            return px_size, 'px'
-        elif px_size == -1 and pt_size != -1:
-            return pt_size, 'pt'
-        else:
-            raise ValueError(f"{px_size}, {pt_size}")
-
-    def clear_font(self):
-        clear_file_setting('font')
-        QMessageBox.warning(
-            glbl_shared.MAIN_WINDOW,
-            "Info",
-            _("Restart Stargate to update the UI"),
-        )
-
-    def choose_font(self):
-        font, ok = QFontDialog.getFont(
-            self.font,
-            glbl_shared.MAIN_WINDOW,
-        )
-        if ok:
-            set_file_setting(
-                'font',
-                font.toString(),
-            )
-            QMessageBox.warning(
-                glbl_shared.MAIN_WINDOW,
-                "Info",
-                _("Restart Stargate to update the UI"),
-            )
-
     def QGraphicsSimpleTextItem(self, *args, **kwargs):
         item = QtWidgets.QGraphicsSimpleTextItem(*args, **kwargs)
         item.setFont(self.font)
@@ -202,17 +168,11 @@ class FontManager:
 
     @staticmethod
     def factory():
-        font_str = get_file_setting('font', str, None)
-        if font_str:
-            try:
-                font = QFont()
-                assert font.fromString(font_str), font_str
-            except Exception as ex:
-                LOG.exception(ex)
-                font = FontManager._default_font()
-        else:
-            font = FontManager._default_font()
+        font = FontManager._default_font()
         return FontManager(font)
+
+    def _font_size(self, *args, **kwargs):
+        return (12, 'px')
 
     @staticmethod
     def _default_font():
@@ -225,12 +185,7 @@ class FontManager:
         _id = QFontDatabase.addApplicationFont(font_file)
         family = QFontDatabase.applicationFontFamilies(_id)[0]
         font = QFont(family)
-        if unit == 'px':
-            font.setPixelSize(int(size))
-        elif unit == 'pt':
-            font.setPointSizeF(float(size))
-        else:
-            raise ValueError(unit)
+        font.setPixelSize(12)
 
         return font
 
@@ -240,6 +195,11 @@ def pt_to_px(pt):
         (pt / 72.) * dpi
     )
 
+def add_fonts_to_db():
+    for path in glob(os.path.join(FONTS_DIR, '*.ttf')):
+        LOG.info(f'Adding font {path}')
+        QFontDatabase.addApplicationFont(path)
+
 def setup_theme(app):
     set_font()
     scaler = ui_scaler_factory()
@@ -248,6 +208,7 @@ def setup_theme(app):
     font.font.setStyleStrategy(QFont.StyleStrategy.PreferAntialias)
     app.setFont(font.font)
     font_size, font_unit = font.get_font_size()
+    add_fonts_to_db()
     try:
         theme.load_theme(scaler, font_size, font_unit)
         glbl_shared.APP.setStyle(QStyleFactory.create("Fusion"))
