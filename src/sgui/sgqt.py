@@ -136,10 +136,10 @@ class _HintBox:
                 self._tooltip = cached
                 return
             lines = textwrap.wrap(text)
-            if len(lines) > 3:
+            if len(lines) > 6:
                 lines[2] = lines[2][:-3] + '...'
                 LOG.error(f'Truncating hint {lines[0]}')
-            self._tooltip = " ".join(lines[:3])
+            self._tooltip = " ".join(lines[:6])
             HINT_CACHE[text] = self._tooltip
         else:
             self._tooltip = text

@@ -420,8 +420,8 @@ class AudioSeqItem(QGraphicsRectItem):
             and not (
                 self.audio_item.time_stretch_mode == 5  # SBSMS
                 and
-                self.audio_item.timestretch_amt_end 
-                != 
+                self.audio_item.timestretch_amt_end
+                !=
                 self.audio_item.timestretch_amt
             )
         ):
@@ -435,18 +435,28 @@ class AudioSeqItem(QGraphicsRectItem):
 
     def set_tooltips(self):
         self.start_handle.setToolTip(
-            _("Use this handle to resize the item by changing "
-            "the start point."))
+            "Use this handle to resize the item by changing the start point."
+        )
         self.length_handle.setToolTip(
-            _("Use this handle to resize the item by "
-            "changing the end point."))
+            "Use this handle to resize the item by changing the end point."
+        )
         self.fade_in_handle.setToolTip(
-            _("Use this handle to change the fade in."))
+            "Use this handle to change the fade in.  See "
+            'right-click->Properties->FadeVolume... to adjust the volume the '
+            'fades start and end from'
+        )
         self.fade_out_handle.setToolTip(
-            _("Use this handle to change the fade out."))
+            "Use this handle to change the fade out.  See "
+            'right-click->Properties->FadeVolume... to adjust the volume the '
+            'fades start and end from'
+        )
         self.stretch_handle.setToolTip(
-            _("Use this handle to resize the item by "
-            "time-stretching it."))
+            "Use this handle to resize the item by time-stretching it.  You "
+            'can choose a time stretching algorithm by '
+            'right-click->Properties->TimestretchMode.  Note that each '
+            'algorithm has different properties, and some will be more '
+            'time-accurate than others'
+        )
         self.setToolTip(sg_strings.AudioSeqItem)
 
     def clip_at_sequence_end(self):

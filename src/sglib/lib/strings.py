@@ -82,38 +82,25 @@ precision,or double-click on the editor to add points.""")
 PianoRollEditor = f"""
 Edit MIDI notes.  See the "Parameter" combobox, the menu button and the mouse
 tools in the transport panel. Draw notes holding {KEY_ALT} to move instead of
-change length
+change length when moving the mouse.
 """
 
 
 AudioItemSeq = _("""\
 Item editor for audio.  Each sequencer item can contain multiple
 audio items in addition to MIDI.  Drag audio files from the file browser
-onto here.
+onto here.  See the menu button, the right click audio item menu, and the
+various hints for the items, actions and handles.
 """)
 
 AudioSeqItem = _(f"""
-Audio item.  Right click: actions.  {KEY_CTRL}+{KEY_ALT}+drag: item volume,
-CTRL+SHIFT+drag: vol. curve, {KEY_ALT}+SHIFT+drag: file vol.  {KEY_CTRL}+drag:
-copy, {KEY_ALT}+click: multi-select
+Audio item, represents an audio file.  Right click: actions menu.
+{KEY_CTRL}+{KEY_ALT}+drag: modify vol. of individual items, CTRL+SHIFT+drag
+selected items: item vol. curve, {KEY_ALT}+SHIFT+drag: modify vol of all
+instances of the file in all items.  {KEY_CTRL}+click+drag: duplicate items,
+{KEY_ALT}+click: multi-select.
 """
 )
-
-AUDIO_SEQ_HELP = """\
-Select 1+ items, CTRL+click+drag up/down/left/right to copy selected items
-Select 1+ items, ALT+SHIFT+Click and drag up/down:
-    Modify the volume of the file.  This is useful for mixing, as it modifies
-    the volume of every instance of the file in the entire project.
-Select 1+ items, CTRL+ALT+Click and drag up/down:
-    Modify the volume of selected items.  Different audio items in the
-    same sequencer item can have different volumes using this technique.
-Select 1+ items, CTRL+SHIFT+Click and drag up/down:
-    Create a volume line for the selected items.  For example, you have the
-    same kick drum sample repeated 4 times in an item, one beat apart from
-    each other.  Select all of them, perform this mouse gesture by clicking
-    on the first one and dragging down.  The respective values might be
-    -9dB, -6dB, -3dB, 0dB, getting progressively louder.
-See the menu button above for additional actions"""
 
 multiple_instances_warning = _("""\
 Detected that there are instances of the Stargate audio engine already running.
@@ -124,11 +111,13 @@ This could also mean that for some reason the engine did not properly
 terminate from another session.  If so, click 'OK' to kill the
 other process(es)""")
 
-routing_graph = _("""\
-Audio (click), sidechain(CTRL+click) and MIDI(SHIFT+click) routing between
-tracks. Click below the dest. to route to lower numbered tracks,
-above for higher. Double click a track to open plugins
-""")
+routing_graph = f"""\
+Route audio and MIDI between tracks.  Audio (click),
+sidechain({KEY_CTRL}+click) and MIDI(SHIFT+click). Click below the destination
+to route to lower numbered tracks, click above for higher numbered tracks.
+Lower numbers are towards the top left, and higher numbers are towards the
+bottom right. Double click a track to open plugins
+"""
 
 track_panel_dropdown = _("""\
 The dropdown menu contains a shortcut to the track plugins (instrument and

@@ -47,7 +47,8 @@ class ItemListWidget:
         self.items_widget.setObjectName('sidebar_list')
         layout.addWidget(self.items_widget)
         self.items_widget.setToolTip(
-            'Drag and drop items from the item pool into a song'
+            'A list of all items in the item pool for this project.  '
+            'Drag and drop items from the item list into a song'
         )
         self.items_widget.setAlternatingRowColors(True)
         self.items_widget.setDragDropMode(

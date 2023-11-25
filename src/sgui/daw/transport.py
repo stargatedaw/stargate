@@ -45,8 +45,8 @@ class TransportWidget(AbstractTransportWidget):
         )
         self.metronome_checkbox = QAction(icon, '', self.toolbar)
         self.metronome_checkbox.setToolTip(
-            'Enable or disable the metronome. Toggle with '
-            f'{util.KEY_CTRL}+SHIFT+M'
+            f'(hotkey {util.KEY_CTRL}+SHIFT+M) Toggle enabling or disabling '
+            'the metronome.'
         )
         self.metronome_checkbox.setCheckable(True)
         self.toolbar.addAction(self.metronome_checkbox)
@@ -74,9 +74,10 @@ class TransportWidget(AbstractTransportWidget):
         )
         self.loop_mode_checkbox = QAction(icon, '', self.toolbar)
         self.loop_mode_checkbox.setToolTip(
-            'Enable or disable looping the sequencer region.  Set the '
-            'sequencer region by right clicking on the sequencer timeline.  '
-            f'{util.KEY_CTRL}+L to toggle'
+            f"(hotkey {util.KEY_CTRL}+L) Enable or disable looping the "
+            "sequencer region.  Set the sequencer region by right clicking "
+            "on the sequencer timeline and selecing the "
+            "'Set Region Start/End' actions."
         )
         self.loop_mode_checkbox.setCheckable(True)
         self.toolbar.addAction(self.loop_mode_checkbox)
@@ -102,7 +103,10 @@ class TransportWidget(AbstractTransportWidget):
         )
         self.tool_select_rb = QAction(icon, '', self.mouse_tool_group)
         self.tool_select_rb.setToolTip(
-            _("Select items by clicking or dragging (hotkey: a)")
+            "(hotkey: a) Select items by clicking an item or clicking and "
+            f"dragging to select one or more.  {util.KEY_ALT}+Click to select "
+            "multiple.  Move one or more selected items by clicking on a "
+            "selected item and dragging."
         )
         self.toolbar.addAction(self.tool_select_rb)
         self.tool_select_rb.triggered.connect(self.tool_select_clicked)
@@ -125,7 +129,9 @@ class TransportWidget(AbstractTransportWidget):
             QIcon.State.Off,
         )
         self.tool_draw_rb = QAction(icon, '', self.mouse_tool_group)
-        self.tool_draw_rb.setToolTip(_("Draw items by clicking (hotkey: s)"))
+        self.tool_draw_rb.setToolTip(
+            "(hotkey: s) Draw items by left-clicking"
+        )
         self.tool_draw_rb.setCheckable(True)
         self.tool_draw_rb.triggered.connect(self.tool_draw_clicked)
         self.toolbar.addAction(self.tool_draw_rb)
@@ -148,7 +154,7 @@ class TransportWidget(AbstractTransportWidget):
         self.tool_erase_rb = QAction(icon, '', self.mouse_tool_group)
         self.tool_erase_rb.setCheckable(True)
         self.tool_erase_rb.setToolTip(_(
-            "Erase items by clicking and dragging (hotkey: d)"
+            "(hotkey: d) Erase items by left-clicking and dragging"
         ))
         self.tool_erase_rb.triggered.connect(self.tool_erase_clicked)
         self.toolbar.addAction(self.tool_erase_rb)
@@ -170,7 +176,9 @@ class TransportWidget(AbstractTransportWidget):
         )
         self.tool_split_rb = QAction(icon, '', self.mouse_tool_group)
         self.tool_split_rb.setCheckable(True)
-        self.tool_split_rb.setToolTip(_("Split items by clicking (hotkey: f)"))
+        self.tool_split_rb.setToolTip(
+            "(hotkey: f) Split items by left-clicking on an item"
+        )
         self.tool_split_rb.triggered.connect(self.tool_split_clicked)
         self.toolbar.addAction(self.tool_split_rb)
 
@@ -179,11 +187,6 @@ class TransportWidget(AbstractTransportWidget):
             _("Checking this box causes recording to "
             "unlink existing items and append new events to the "
             "existing events"))
-        self.loop_mode_checkbox.setToolTip(
-            "Use this to toggle between normal playback and looping a "
-            "region set by right clicking the sequencer timeline. "
-            f"You can toggle with {util.KEY_CTRL}+L"
-        )
 
     def tab_changed(self, index):
         if index == shared.TAB_ITEM_EDITOR:
