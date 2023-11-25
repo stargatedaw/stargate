@@ -104,7 +104,7 @@ def create_hintbox():
         |
         QtCore.Qt.AlignmentFlag.AlignLeft
     )
-    HINT_BOX.setContentsMargins(0, 0, 0, 0)
+    HINT_BOX.setContentsMargins(1, 1, 1, 1)
     HINT_BOX.setObjectName('hintbox')
     HINT_BOX.setWordWrap(True)
     HINT_BOX.setToolTip(
