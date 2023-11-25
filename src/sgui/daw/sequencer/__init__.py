@@ -86,7 +86,7 @@ class SequencerWidget:
         )
         self.edit_checkbox = QAction(icon, '', self.toolbar)
         self.edit_checkbox.setToolTip(
-            'Toggle between editing items and automation (CTRL+E)'
+            f'Toggle between editing items and automation ({KEY_CTRL}+E)'
         )
         self.edit_checkbox.setCheckable(True)
         self.toolbar.addAction(self.edit_checkbox)
@@ -114,7 +114,7 @@ class SequencerWidget:
         self.follow_checkbox = QAction(icon, '', self.toolbar)
         self.follow_checkbox.setToolTip(
             'Sequencer horizontal scroll follows the playback cursor'
-            " (CTRL+F)"
+            f" ({KEY_CTRL}+F)"
         )
         self.follow_checkbox.setCheckable(True)
         self.follow_checkbox.setChecked(True)
@@ -142,7 +142,7 @@ class SequencerWidget:
         self.solo_checkbox = QAction(icon, '', self.toolbar)
         self.solo_checkbox.setToolTip(
             'Toggle disabling or enabling solo for any tracks that have '
-            'been soloed (CTRL+J)'
+            f'been soloed ({KEY_CTRL}+J)'
         )
         self.solo_checkbox.setCheckable(True)
         self.toolbar.addAction(self.solo_checkbox)
@@ -170,7 +170,7 @@ class SequencerWidget:
         self.mute_checkbox = QAction(icon, '', self.toolbar)
         self.mute_checkbox.setToolTip(
             'Toggle disabling or enabling mute for any tracks that have '
-            'been muted (CTRL+M)'
+            f'been muted ({KEY_CTRL}+M)'
         )
         self.mute_checkbox.setCheckable(True)
         self.toolbar.addAction(self.mute_checkbox)
