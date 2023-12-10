@@ -21,6 +21,7 @@ from sgui.daw import shared as daw_shared
 from sgui.widgets.nested_combobox import NestedComboBox
 from sglib.models.stargate import *
 from sglib.models.track_plugin import track_plugin
+from sglib.models.theme import get_asset_path
 from sglib.lib import strings as sg_strings
 from sglib.lib.translate import _
 from sglib.log import LOG
@@ -801,9 +802,24 @@ class PluginRackTab:
         self.menu_layout.addWidget(QLabel(_("Octave")))
         self.menu_layout.addWidget(self.octave_spinbox)
 
-        self.plugins_button = QPushButton(_("Menu"))
+        self.plugins_button = QToolButton()
+        self.plugins_button.setFixedSize(21, 21)
+        self.plugins_button.setIconSize(QtCore.QSize(21, 21))
         self.plugins_menu = QMenu(self.widget)
         self.plugins_button.setMenu(self.plugins_menu)
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('menu.svg'),
+            ),
+            QIcon.Mode.Normal,
+            #QIcon.State.On,
+        )
+        self.plugins_button.setIcon(icon)
+        self.plugins_button.setPopupMode(
+            QToolButton.ToolButtonPopupMode.InstantPopup
+        )
+        self.menu_layout.insertWidget(1, self.plugins_button)
 
         self.plugins_order_action = QAction(
             _("Reorder Plugins..."),
@@ -818,7 +834,6 @@ class PluginRackTab:
         self.plugins_order_action.triggered.connect(self.set_plugin_order)
 
         self.menu_layout.addItem(QSpacerItem(60, 1))
-        self.menu_layout.addWidget(self.plugins_button)
 
         self.menu_layout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),
