@@ -20,6 +20,7 @@ from sglib.hardware.rpi import is_rpi
 from sglib.lib.process import run_process
 from sglib.math import clip_value
 from sgui import sgqt
+from typing import List, Tuple
 import ctypes
 import os
 import sys
@@ -82,7 +83,7 @@ class HardwareDialog:
         self.devices_open = False
         self.device_name = None
         self.sample_rates = ["44100", "48000", "88200", "96000", "192000"]
-        self.buffer_sizes = ["32", "64", "128", "256", "512", "1024", "2048"]
+        self.buffer_sizes = []
 
     def open_devices(self):
         if util.IS_LINUX:
@@ -143,6 +144,32 @@ class HardwareDialog:
         self.pyaudio.Pa_IsFormatSupported.restype = ctypes.c_int
         self.pyaudio.Pa_GetErrorText.argstype = [ctypes.c_int]
         self.pyaudio.Pa_GetErrorText.restype = ctypes.c_char_p
+
+        if util.IS_WINDOWS:
+            self.pyaudio.PaAsio_GetAvailableBufferSizes.restype = \
+                portaudio.PaError
+            self.pyaudio.PaAsio_GetAvailableBufferSizes.argstype = [
+                portaudio.PaDeviceIndex,
+                # long *minBufferSizeFrames
+                ctypes.POINTER(ctypes.c_long),
+                # long *maxBufferSizeFrames
+                ctypes.POINTER(ctypes.c_long),
+                # long *preferredBufferSizeFrames
+                ctypes.POINTER(ctypes.c_long),
+                # long *granularity
+                ctypes.POINTER(ctypes.c_long),
+            ]
+        elif util.IS_MACOS:
+            self.pyaudio.PaMacCore_GetBufferSizeRange.restype = \
+                portaudio.PaError
+            self.pyaudio.PaMacCore_GetBufferSizeRange.argstype = [
+                portaudio.PaDeviceIndex,
+                # long *minBufferSizeFrames
+                ctypes.POINTER(ctypes.c_long),
+                # long *maxBufferSizeFrames
+                ctypes.POINTER(ctypes.c_long),
+            ]
+
         LOG.info("Initializing Portaudio")
         self.pyaudio.Pa_Initialize()
 
@@ -166,6 +193,89 @@ class HardwareDialog:
         self.devices_open = True
         LOG.info("Finished opening hardware devices")
         revert_patch_ctypes()
+
+    def _generate_buffer_sizes(
+        granularity: int,
+        min_size: int,
+        max_size: int,
+    ) -> List[int]:
+        i = min_size
+        result = []
+        if min_size < 8:
+            min_size = 64
+        if max_size > 4096:
+            max_size = 4096
+        if granularity > 0 and granularity < 8:
+            granularity = ((8 // granularity) * granularity) + granularity
+        while i <= max_size:
+            result.append(i)
+            if granularity <= 0:
+                i *= 2
+            else:
+                i += granularity
+        return result
+
+    def get_buffer_sizes_asio(device_index) -> int:
+        min_size_p = ctypes.pointer(ctypes.c_long)
+        max_size_p = ctypes.pointer(ctypes.c_long)
+        preferred_size_p = ctypes.pointer(ctypes.c_long)
+        granularity_p = ctypes.pointer(ctypes.c_long)
+        error = self.pyaudio.PaAsio_GetAvailableBufferSizes(
+            device_index,
+            min_size_p,
+            max_size_p,
+            preferred_size_p,
+            granularity_p,
+        )
+        if error.contents.value != paNoError:
+            return 0, []
+        granularity = granularity_p.contents.value
+        min_size = min_size_p.contents.value
+        max_size = max_size_p.contents.value
+        self.buffer_sizes = self._generate_buffer_sizes(
+            granularity,
+            min_size,
+            max_size,
+        )
+        if preferred_size in self.buffer_sizes:
+            default_index = self.buffer_sizes.index(preferred_size)
+        else:
+            default index = len(self.buffer_sizes) // 2
+        return default_index
+
+    def get_buffer_sizes_core_audio(device_index) -> int:
+        min_size_p = ctypes.pointer(ctypes.c_long)
+        max_size_p = ctypes.pointer(ctypes.c_long)
+        error = self.pyaudio.PaMacCore_GetBufferSizeRange.restype(
+            device_index,
+            min_size_p,
+            max_size_p,
+        )
+        if error.contents.value != paNoError:
+            return 0, []
+        min_size = min_size_p.contents.value
+        max_size = max_size_p.contents.value
+        # Most of the time min_size is a weird value, make it a multiple of 16
+        min_size = (16 * int(min_size // 16)) + 16
+        buffer_sizes = self._generate_buffer_sizes(
+            -1,
+            min_size,
+            max_size,
+        )
+        if preferred_size in buffer_sizes:
+            default_index = buffer_sizes.index(preferred_size)
+        else:
+            default index = len(buffer_sizes) // 2
+        return default_index, buffer_sizes
+
+    def get_buffer_sizes(self, host_api, device_name):
+        if host_api == "ASIO":
+            idx = self.get_buffer_sizes_asio(device_index)
+        elif host_api == "Core Audio":
+            idx = self.get_buffer_sizes_core_audio(device_index)
+        else:
+            self.buffer_sizes = self._generate_buffer_sizes(-1, 32, 1024)
+
 
     def close_devices(self):
         if self.devices_open:
@@ -328,16 +438,16 @@ class HardwareDialog:
         )
         f_samplerate_combobox.addItems(self.sample_rates)
         f_window_layout.addWidget(f_samplerate_combobox, 10, 1)
-        f_buffer_size_combobox = QComboBox()
-        f_buffer_size_combobox.setToolTip(
+        self.buffer_size_combobox = QComboBox()
+        self.buffer_size_combobox.setToolTip(
             'The buffer size to request from the audio device, this will '
             'affect latency.  Note that not all audio devices support all '
             'buffer sizes, some will use a default value if this is too low'
         )
-        f_buffer_size_combobox.addItems(self.buffer_sizes)
-        f_buffer_size_combobox.setCurrentIndex(4)
+        self.buffer_size_combobox.addItems(self.buffer_sizes)
+        self.buffer_size_combobox.setCurrentIndex(4)
         f_window_layout.addWidget(QLabel(_("Buffer Size")), 20, 0)
-        f_window_layout.addWidget(f_buffer_size_combobox, 20, 1)
+        f_window_layout.addWidget(self.buffer_size_combobox, 20, 1)
         f_latency_label = QLabel("")
         f_window_layout.addWidget(f_latency_label, 20, 2)
 
@@ -545,12 +655,12 @@ class HardwareDialog:
 
         def latency_changed(a_self=None, a_val=None):
             f_sample_rate = float(str(f_samplerate_combobox.currentText()))
-            f_buffer_size = float(str(f_buffer_size_combobox.currentText()))
+            f_buffer_size = float(str(self.buffer_size_combobox.currentText()))
             f_latency = (f_buffer_size / f_sample_rate) * 1000.0
             f_latency_label.setText("{} ms".format(round(f_latency, 1)))
 
         f_samplerate_combobox.currentIndexChanged.connect(latency_changed)
-        f_buffer_size_combobox.currentIndexChanged.connect(latency_changed)
+        self.buffer_size_combobox.currentIndexChanged.connect(latency_changed)
 
         def subsystem_changed(a_self=None, a_val=None):
             self.subsystem = str(f_subsystem_combobox.currentText())
@@ -639,7 +749,7 @@ class HardwareDialog:
                 )
                 if f_warn_result == QMessageBox.StandardButton.Cancel:
                     return
-            f_buffer_size = int(str(f_buffer_size_combobox.currentText()))
+            f_buffer_size = int(str(self.buffer_size_combobox.currentText()))
             f_samplerate = int(str(f_samplerate_combobox.currentText()))
 
             f_midi_in_devices = sorted(str(k)
@@ -837,8 +947,8 @@ class HardwareDialog:
 
         if "bufferSize" in util.DEVICE_SETTINGS and \
         util.DEVICE_SETTINGS["bufferSize"] in self.buffer_sizes:
-            f_buffer_size_combobox.setCurrentIndex(
-                f_buffer_size_combobox.findText(
+            self.buffer_size_combobox.setCurrentIndex(
+                self.buffer_size_combobox.findText(
                     util.DEVICE_SETTINGS["bufferSize"]))
 
         if "sampleRate" in util.DEVICE_SETTINGS and \
