@@ -84,6 +84,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
         self.is_copying = False
         self.is_velocity_dragging = False
         self.is_velocity_curving = False
+        self.new_note = False
         if (
             _shared.SELECTED_PIANO_NOTE is not None
             and
@@ -266,7 +267,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
     def mousePressEvent(self, a_event):
         if a_event.button() == QtCore.Qt.MouseButton.RightButton:
             return
-        if a_event.modifiers() == (
+        if not self.new_note and a_event.modifiers() == (
             QtCore.Qt.KeyboardModifier.AltModifier
         ):
             self.selection_toggle = True
@@ -583,6 +584,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
             f_item.is_velocity_dragging = False
             f_item.is_velocity_curving = False
             f_item.selection_toggle = False
+            f_item.new_note = False
         global_save_and_reload_items()
         self.showing_resize_cursor = False
         QApplication.restoreOverrideCursor()
