@@ -1060,7 +1060,10 @@ class AudioSeqItem(QGraphicsRectItem):
 
     def _mm_else(self, a_event):
         QGraphicsRectItem.mouseMoveEvent(self, a_event)
-        if _shared.AUDIO_QUANTIZE:
+        is_shift = a_event.modifiers() == (
+            QtCore.Qt.KeyboardModifier.ShiftModifier
+        )
+        if _shared.AUDIO_QUANTIZE and not is_shift:
             max_x = (
                 self._max_beat * _shared.AUDIO_PX_PER_BEAT
             ) - _shared.AUDIO_QUANTIZE_PX
@@ -1071,7 +1074,8 @@ class AudioSeqItem(QGraphicsRectItem):
         min_x = self._min_beat * _shared.AUDIO_PX_PER_BEAT
         pos_x = self.pos().x()
         pos_x = clip_value(pos_x, min_x, max_x)
-        pos_x = _shared.quantize_all(pos_x)
+        if not is_shift:
+            pos_x = _shared.quantize_all(pos_x)
         pos_x_offset = pos_x - self.orig_pos_x
         new_lane = clip_value(
             _shared.y_to_lane(a_event.scenePos().y()),
