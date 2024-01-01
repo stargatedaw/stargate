@@ -105,7 +105,8 @@ class PianoRollNoteItem(QGraphicsRectItem):
         self.setToolTip(
             'A MIDI note to be sent to an instrument in the plugin rack. '
             'Select and move with the mouse, click near the end and drag '
-            f'to change note length.  {util.KEY_ALT}+click to multi-select'
+            f'to change note length. {util.KEY_ALT}+click to multi-select. '
+            'SHIFT+drag: position freely'
         )
         self.previewer = None
         self.selection_toggle = False
@@ -401,7 +402,10 @@ class PianoRollNoteItem(QGraphicsRectItem):
         # Does not work on Wayland
         #QCursor.setPos(QCursor.pos().x(), self.mouse_y_pos)
 
-    def _mm_move(self, f_item, preview):
+    def _mm_move(self, a_event, f_item, preview):
+        is_shift = a_event.modifiers() == (
+            QtCore.Qt.KeyboardModifier.ShiftModifier
+        )
         f_pos_x = f_item.pos().x()
         f_pos_y = f_item.pos().y()
         if f_pos_x < shared.PIANO_KEYS_WIDTH:
@@ -416,7 +420,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
             (int((f_pos_y - _shared.PIANO_ROLL_HEADER_HEIGHT) /
             self.note_height) * self.note_height) + \
             _shared.PIANO_ROLL_HEADER_HEIGHT
-        if shared.PIANO_ROLL_SNAP:
+        if not is_shift and shared.PIANO_ROLL_SNAP:
             f_pos_x = (int((f_pos_x - shared.PIANO_KEYS_WIDTH) /
             shared.PIANO_ROLL_SNAP_VALUE) *
             shared.PIANO_ROLL_SNAP_VALUE) + shared.PIANO_KEYS_WIDTH
@@ -460,7 +464,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
             elif self.is_velocity_curving:
                 self._mm_vel_curve(f_item, f_val)
             else:
-                self._mm_move(f_item, len(unique_notes) <= 6)
+                self._mm_move(a_event, f_item, len(unique_notes) <= 6)
 
     def y_pos_to_note(self, a_y):
         return int(
