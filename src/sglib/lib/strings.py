@@ -94,11 +94,11 @@ various hints for the items, actions and handles.
 """)
 
 AudioSeqItem = _(f"""
-Audio item, represents an audio file.  Right click: actions menu.
+Audio item, represents an audio file.  Right click: menu.
 {KEY_CTRL}+{KEY_ALT}+drag: modify vol. of individual items, CTRL+SHIFT+drag
 selected items: item vol. curve, {KEY_ALT}+SHIFT+drag: modify vol of all
 instances of the file in all items.  {KEY_CTRL}+click+drag: duplicate items,
-{KEY_ALT}+click: multi-select.
+{KEY_ALT}+click: multi-select. SHIFT+drag: position freely
 """
 )
 
