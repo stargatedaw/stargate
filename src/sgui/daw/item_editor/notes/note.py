@@ -385,8 +385,11 @@ class PianoRollNoteItem(QGraphicsRectItem):
             f_item.set_brush()
             f_item.set_vel_line()
 
-    def _mm_resize(self, f_item, f_pos_x):
-        if shared.PIANO_ROLL_SNAP:
+    def _mm_resize(self, a_event, f_item, f_pos_x):
+        is_shift = bool(
+            a_event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier
+        )
+        if not is_shift and shared.PIANO_ROLL_SNAP:
             f_adjusted_width = round(
                 f_pos_x / shared.PIANO_ROLL_SNAP_VALUE) * \
                 shared.PIANO_ROLL_SNAP_VALUE
@@ -459,7 +462,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
         unique_notes = {x.note_item.note_num for x in selected_items}
         for f_item in selected_items:
             if self.is_resizing:
-                self._mm_resize(f_item, f_pos_x)
+                self._mm_resize(a_event, f_item, f_pos_x)
             elif self.is_velocity_dragging:
                 self._mm_vel_drag(f_item, f_val)
             elif self.is_velocity_curving:
