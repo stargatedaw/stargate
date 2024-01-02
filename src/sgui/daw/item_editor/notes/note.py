@@ -404,8 +404,8 @@ class PianoRollNoteItem(QGraphicsRectItem):
         #QCursor.setPos(QCursor.pos().x(), self.mouse_y_pos)
 
     def _mm_move(self, a_event, f_item, preview):
-        is_shift = a_event.modifiers() == (
-            QtCore.Qt.KeyboardModifier.ShiftModifier
+        is_shift = bool(
+            a_event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier
         )
         f_pos_x = f_item.pos().x()
         f_pos_y = f_item.pos().y()

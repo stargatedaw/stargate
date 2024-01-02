@@ -380,8 +380,8 @@ class PianoRollEditor(AbstractItemEditor):
         f_drawn_note.resize_start_pos = f_drawn_note.note_item.start
         f_drawn_note.resize_pos = f_drawn_note.pos()
         f_drawn_note.resize_rect = f_drawn_note.rect()
-        f_drawn_note.is_resizing = event.modifiers() != (
-            QtCore.Qt.KeyboardModifier.AltModifier
+        f_drawn_note.is_resizing = not bool(
+            event.modifiers() & QtCore.Qt.KeyboardModifier.AltModifier
         )
         f_drawn_note.new_note = True
         f_cursor_pos = QCursor.pos()
