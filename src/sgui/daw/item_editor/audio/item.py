@@ -438,7 +438,8 @@ class AudioSeqItem(QGraphicsRectItem):
             "Use this handle to resize the item by changing the start point."
         )
         self.length_handle.setToolTip(
-            "Use this handle to resize the item by changing the end point."
+            "Use this handle to resize the item by changing the end point.  "
+            "SHIFT+drag to resize freely without quantize"
         )
         self.fade_in_handle.setToolTip(
             "Use this handle to change the fade in.  See "
@@ -929,6 +930,9 @@ class AudioSeqItem(QGraphicsRectItem):
 
     def _mm_start_resize(self, a_event):
         f_event_diff = self._mm_event_diff(a_event)
+        is_shift = bool(
+            a_event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier
+        )
         for f_item in shared.AUDIO_SEQ.audio_items:
             if f_item.isSelected():
                 f_x = f_item.width_orig + f_event_diff + \
@@ -939,7 +943,7 @@ class AudioSeqItem(QGraphicsRectItem):
                     f_item.length_handle.pos().x(),
                 )
                 f_x = clip_min(f_x, f_item.min_start)
-                if f_x > f_item.min_start:
+                if not is_shift and f_x > f_item.min_start:
                     f_x = _shared.quantize_start(
                         f_x,
                         f_item.length_handle.pos().x(),
@@ -1128,6 +1132,9 @@ class AudioSeqItem(QGraphicsRectItem):
     def mouseReleaseEvent(self, a_event):
         if glbl_shared.IS_PLAYING or self.event_pos_orig is None:
             return
+        is_shift = bool(
+            a_event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier
+        )
         QGraphicsRectItem.mouseReleaseEvent(self, a_event)
         QApplication.restoreOverrideCursor()
         f_audio_items = shared.CURRENT_ITEM
@@ -1165,7 +1172,8 @@ class AudioSeqItem(QGraphicsRectItem):
             elif f_audio_item.is_start_resizing:
                 f_x = f_audio_item.start_handle.scenePos().x()
                 f_x = clip_min(f_x, 0.0)
-                f_x = _shared.quantize_all(f_x)
+                if not is_shift:
+                    f_x = _shared.quantize_all(f_x)
                 if f_x < f_audio_item.sample_start_offset_px:
                     f_x = f_audio_item.sample_start_offset_px
                 f_start_result = self.pos_to_musical_time(f_x)
