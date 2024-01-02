@@ -436,6 +436,7 @@ class AudioSeqItem(QGraphicsRectItem):
     def set_tooltips(self):
         self.start_handle.setToolTip(
             "Use this handle to resize the item by changing the start point."
+            "SHIFT+drag to resize freely without quantize"
         )
         self.length_handle.setToolTip(
             "Use this handle to resize the item by changing the end point.  "
@@ -456,7 +457,8 @@ class AudioSeqItem(QGraphicsRectItem):
             'can choose a time stretching algorithm by '
             'right-click->Properties->TimestretchMode.  Note that each '
             'algorithm has different properties, and some will be more '
-            'time-accurate than others'
+            'time-accurate than others. '
+            "SHIFT+drag to stretch without quantize"
         )
         self.setToolTip(sg_strings.AudioSeqItem)
 
@@ -982,6 +984,9 @@ class AudioSeqItem(QGraphicsRectItem):
                 f_item.update_fade_out_line()
 
     def _mm_stretch(self, a_event):
+        is_shift = bool(
+            a_event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier
+        )
         f_event_diff = self._mm_event_diff(a_event)
         for f_item in shared.AUDIO_SEQ.audio_items:
             if (
@@ -997,7 +1002,8 @@ class AudioSeqItem(QGraphicsRectItem):
                     f_item.stretch_width_default * 200.0,
                 )
                 f_x = clip_max(f_x, f_item.max_stretch)
-                f_x = _shared.quantize(f_x)
+                if not is_shift:
+                    f_x = _shared.quantize(f_x)
                 f_x -= f_item.quantize_offset
                 f_item.stretch_handle.setPos(
                     f_x - shared.AUDIO_ITEM_HANDLE_SIZE,
@@ -1212,7 +1218,8 @@ class AudioSeqItem(QGraphicsRectItem):
                     f_audio_item.stretch_width_default * 200.0,
                 )
                 f_x = clip_max(f_x, f_audio_item.max_stretch)
-                f_x = _shared.quantize(f_x)
+                if not is_shift:
+                    f_x = _shared.quantize(f_x)
                 f_x -= f_audio_item.quantize_offset
                 f_item.timestretch_amt = \
                     f_x / f_audio_item.stretch_width_default
