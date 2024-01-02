@@ -899,18 +899,20 @@ class AudioSeqItem(QGraphicsRectItem):
         self.vol_line.setPos(0, f_pos)
         self.label.setText(f"{vol}dB")
 
-    def quantize_end(self, event_diff):
+    def quantize_end(self, a_event, event_diff):
         """ Quantize the item length.  Allows the end to resize to the full
             length of the item unquantized
         """
-        x = self.width_orig + event_diff + \
-            self.quantize_offset
+        is_shift = bool(
+            a_event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier
+        )
+        x = self.width_orig + event_diff + self.quantize_offset
         x = clip_value(
             x,
             shared.AUDIO_ITEM_HANDLE_SIZE,
             self.length_px_minus_start,
         )
-        if x < self.length_px_minus_start:
+        if not is_shift and x < self.length_px_minus_start:
             x = _shared.quantize(x)
             x -= self.quantize_offset
         return x
@@ -919,7 +921,7 @@ class AudioSeqItem(QGraphicsRectItem):
         f_event_diff = self._mm_event_diff(a_event)
         for item in shared.AUDIO_SEQ.audio_items:
             if item.isSelected():
-                x = item.quantize_end(f_event_diff)
+                x = item.quantize_end(a_event, f_event_diff)
                 item.length_handle.setPos(
                     x - shared.AUDIO_ITEM_HANDLE_SIZE,
                     _shared.AUDIO_ITEM_HEIGHT - shared.AUDIO_ITEM_HANDLE_HEIGHT,
@@ -1060,8 +1062,8 @@ class AudioSeqItem(QGraphicsRectItem):
 
     def _mm_else(self, a_event):
         QGraphicsRectItem.mouseMoveEvent(self, a_event)
-        is_shift = a_event.modifiers() == (
-            QtCore.Qt.KeyboardModifier.ShiftModifier
+        is_shift = bool(
+            a_event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier
         )
         if _shared.AUDIO_QUANTIZE and not is_shift:
             max_x = (
@@ -1140,7 +1142,7 @@ class AudioSeqItem(QGraphicsRectItem):
             f_item = f_audio_item.audio_item
             f_pos_x = f_audio_item.pos().x()
             if f_audio_item.is_resizing:
-                x = f_audio_item.quantize_end(f_event_diff)
+                x = f_audio_item.quantize_end(a_event, f_event_diff)
                 f_audio_item.setRect(
                     0.0,
                     0.0,
