@@ -14,7 +14,12 @@ def get_screws() -> QVBoxLayout:
         screw.setFixedWidth(24)
     layout.addWidget(top)
     layout.addItem(
-        QSpacerItem(1, 1, vPolicy=QSizePolicy.Policy.Expanding),
+        QSpacerItem(
+            1,
+            1,
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Expanding,
+        ),
     )
     layout.addWidget(bottom)
     return layout

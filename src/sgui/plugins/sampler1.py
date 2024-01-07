@@ -2972,7 +2972,12 @@ class sampler1_plugin_ui(AbstractPluginUI):
             "should be set manually after import.")))
         f_hlayout1 = QHBoxLayout()
         f_layout.addItem(
-            QSpacerItem(10, 10, vPolicy=QSizePolicy.Policy.Expanding),
+            QSpacerItem(
+                10,
+                10,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
         )
         f_layout.addLayout(f_hlayout1)
         f_status_label = QLabel()

@@ -945,7 +945,12 @@ class WaveEditorWidget:
         self.ctrl_vlayout.addWidget(QLabel(_("Fade-Out")))
         self.ctrl_vlayout.addWidget(self.fade_out_end)
         self.ctrl_vlayout.addItem(
-            QSpacerItem(1, 1, vPolicy=QSizePolicy.Policy.Expanding),
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
         )
         self.edit_hlayout.addItem(
             QSpacerItem(1, 1, QSizePolicy.Policy.Expanding),

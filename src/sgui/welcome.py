@@ -42,7 +42,11 @@ class Welcome(QtCore.QObject):
         buttons_vlayout = QVBoxLayout()
         hlayout.addLayout(buttons_vlayout)
         buttons_vlayout.addItem(
-            QSpacerItem(10, 10, vPolicy=QSizePolicy.Policy.Expanding),
+            QSpacerItem(
+                10,
+                10,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding),
         )
         buttons_hlayout = QHBoxLayout()
         buttons_vlayout.addLayout(buttons_hlayout)

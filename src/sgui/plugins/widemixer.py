@@ -328,7 +328,12 @@ class WideMixerPluginUI(AbstractPluginUI):
             self.bass_mono_high.add_to_grid_layout(bm_hi_lo_layout, 1)
 
             self.in_vlayout.addItem(
-                QSpacerItem(1, 1, vPolicy=QSizePolicy.Policy.Expanding),
+                QSpacerItem(
+                    1,
+                    1,
+                    QSizePolicy.Policy.Minimum,
+                    QSizePolicy.Policy.Expanding,
+                ),
             )
 
         else:

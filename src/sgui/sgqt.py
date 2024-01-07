@@ -7,88 +7,42 @@ import time
 from typing import Optional
 
 
-if True:  # PyQt
-    try:
-        import PyQt6
-        # default to PyQt5
-        _PYQT5_ONLY = False
-    except ImportError:
-        try:
-            import PyQt5
-        except ImportError:
-            LOG.error(f"Unable to Find PyQt5 or PyQt6 in {sys.path}")
-            sys.exit(1)
-        # default to PyQt6 if available, and PyQt5 is not
-        _PYQT5_ONLY = True
-    if (
-        _PYQT5_ONLY
-        or
-        "_USE_PYQT5" in os.environ
-    ):
-        LOG.info("Using PyQt5")
-        try:
-            from PyQt5 import __path__ as mod_path
-            LOG.info(mod_path)
-        except:
-            pass
-        qt_event_pos = lambda x: x.pos()
-        from PyQt5 import QtGui, QtWidgets, QtCore
-        from PyQt5.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
-        from PyQt5.QtGui import *
-        from PyQt5.QtWidgets import *
-        from PyQt5.QtSvg import QSvgRenderer
-        # Not needed on Qt6, is the default behavior
-        try:
-            QGuiApplication.setAttribute(
-                QtCore.Qt.ApplicationAttribute.AA_EnableHighDpiScaling,
-            )
-        except Exception as ex:
-            LOG.warning(
-                f"The platform you are using does not support Qt HiDpi: {ex}",
-            )
-    else:
-        LOG.info("Using PyQt6")
-        if getattr(PyQt6, '__path__', None):
-            LOG.info(PyQt6.__path__)
-        def qt_event_pos(x):
-            if hasattr(x, 'pos'):
-                return x.pos()
-            else:
-                return x.position().toPoint()
-        from PyQt6 import QtGui, QtWidgets, QtCore
-        from PyQt6.QtCore import pyqtSignal as Signal, pyqtSlot as Slot
-        from PyQt6.QtGui import *
-        from PyQt6.QtWidgets import *
-        from PyQt6.QtSvg import QSvgRenderer
+qt_event_pos = lambda x: x.pos()
+from qtpy import QtGui, QtWidgets, QtCore
+from qtpy.QtCore import Signal, Slot
+from qtpy.QtGui import *
+from qtpy.QtWidgets import *
+from qtpy.QtSvg import QSvgRenderer
+# Not needed on Qt6, is the default behavior
+try:
+    QGuiApplication.setAttribute(
+        QtCore.Qt.ApplicationAttribute.AA_EnableHighDpiScaling,
+    )
+except Exception as ex:
+    LOG.warning(
+        f"The platform you are using does not support Qt HiDpi: {ex}",
+    )
 
-    # Work around QMenu not taking the QApplication font, even if the QMenu
-    # has a parent widget
-    class _QMenu(QMenu):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            # Avoid circular dependency
-            from sgui.util import get_font
-            font = get_font()
-            self.setFont(font.font)
+# Work around QMenu not taking the QApplication font, even if the QMenu
+# has a parent widget
+class _QMenu(QMenu):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Avoid circular dependency
+        from sgui.util import get_font
+        font = get_font()
+        self.setFont(font.font)
 
-        def addMenu(self, *args, **kwargs):
-            menu = super().addMenu(*args, **kwargs)
-            # Avoid circular dependency
-            from sgui.util import get_font
-            font = get_font()
-            menu.setFont(font.font)
-            return menu
+    def addMenu(self, *args, **kwargs):
+        menu = super().addMenu(*args, **kwargs)
+        # Avoid circular dependency
+        from sgui.util import get_font
+        font = get_font()
+        menu.setFont(font.font)
+        return menu
 
-    QMenu = _QMenu
+QMenu = _QMenu
 
-
-else:  # PySide
-    # Does not work yet, needs some porting and debugging
-    from PySide6 import QtGui, QtWidgets, QtCore
-    from PySide6.QtCore import Signal, Slot
-    from PySide6.QtGui import *
-    from PySide6.QtWidgets import *
-    from PySide6.QtSvg import QSvgRenderer
 
 QtCore.QLocale.setDefault(QtCore.QLocale('C.UTF-8'))
 
@@ -98,7 +52,7 @@ HINT_BOX = None
 
 def create_hintbox():
     global HINT_BOX
-    HINT_BOX = QLabel()
+    HINT_BOX = QLabel('')
     HINT_BOX.setAlignment(
         QtCore.Qt.AlignmentFlag.AlignTop
         |
@@ -119,7 +73,6 @@ class _HintBox:
         setToolTip() method
     """
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         self._tooltip = None
 
     def setToolTip(
@@ -204,6 +157,10 @@ class _HintItem(_HintBox):
 orig_QLineEdit = QLineEdit
 
 class _QLineEdit(_HintWidget, QLineEdit):
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QLineEdit.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
+
     def event(self, ev):
         if ev.type() == QtCore.QEvent.Type.KeyPress:
             if ev.key() in(
@@ -218,7 +175,8 @@ origQComboBox = QComboBox
 
 class _QComboBox(_HintWidget, QComboBox):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        QtWidgets.QComboBox.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
         self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
 
     def wheelEvent(self, event):
@@ -629,38 +587,59 @@ QSpinBox = _QSpinBox
 QMessageBox = _QMessageBox
 
 class QPushButton(_HintWidget, QPushButton):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QPushButton.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 class QGraphicsView(_HintWidget, QGraphicsView):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QGraphicsView.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 class QDial(_HintWidget, QDial):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QDial.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 class QSlider(_HintWidget, QSlider):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QSlider.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 class QCheckBox(_HintWidget, QCheckBox):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QCheckBox.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 class QRadioButton(_HintWidget, QRadioButton):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QRadioButton.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 class QListWidget(_HintWidget, QListWidget):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QListWidget.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 class QTextEdit(_HintWidget, QTextEdit):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QTextEdit.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 class QTreeWidget(_HintWidget, QTreeWidget):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QTreeWidget.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 class QLabel(_HintWidget, QLabel):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QLabel.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 class QAction(_HintBox, QAction):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        QtGui.QAction.__init__(self, *args, **kwargs)
+        _HintBox.__init__(self)
         self._tooltip = None
         self.activate(QAction.ActionEvent.Trigger)
         self.activate(QAction.ActionEvent.Hover)
@@ -687,7 +666,9 @@ class QAction(_HintBox, QAction):
 
 
 class QLCDNumber(_HintWidget, QLCDNumber):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QLCDNumber.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 # These caused unknown theming problems.
 # TODO: Try QGroupBox, it may have only been QWidget
@@ -698,6 +679,10 @@ class QLCDNumber(_HintWidget, QLCDNumber):
 #    pass
 
 class QGraphicsRectItem(_HintItem, QGraphicsRectItem):
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QGraphicsRectItem.__init__(self, *args, **kwargs)
+        _HintItem.__init__(self)
+
     def paint(
         self,
         painter,
@@ -710,6 +695,10 @@ class QGraphicsRectItem(_HintItem, QGraphicsRectItem):
         QtWidgets.QGraphicsRectItem.paint(self, painter, option)
 
 class QGraphicsEllipseItem(_HintItem, QGraphicsEllipseItem):
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QGraphicsEllipseItem.__init__(self, *args, **kwargs)
+        _HintItem.__init__(self)
+
     def paint(
         self,
         painter,
@@ -722,7 +711,9 @@ class QGraphicsEllipseItem(_HintItem, QGraphicsEllipseItem):
         QtWidgets.QGraphicsEllipseItem.paint(self, painter, option)
 
 class QGraphicsPolygonItem(_HintItem, QGraphicsPolygonItem):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QGraphicsPolygonItem.__init__(self, *args, **kwargs)
+        _HintItem.__init__(self)
 
 class ComboTabWidget(QWidget):
     """ A class that replicates QTabWidget API, but using a QComboBox and
@@ -765,10 +756,14 @@ class ComboTabWidget(QWidget):
         self._stack.insertWidget(index, widget)
 
 class QToolButton(_HintWidget, QToolButton):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QToolButton.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 class QScrollBar(_HintWidget, QScrollBar):
-    pass
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QScrollBar.__init__(self, *args, **kwargs)
+        _HintWidget.__init__(self)
 
 class SGGroupBox(_HintWidget, QWidget):
     def __init__(self, title: str):

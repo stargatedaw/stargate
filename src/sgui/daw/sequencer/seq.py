@@ -71,7 +71,7 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
         the "Sequencer" tab
     """
     def __init__(self):
-        QGraphicsView.__init__(self)
+        super().__init__()
 
         self._is_drawing = False
         self._is_point_moving = False

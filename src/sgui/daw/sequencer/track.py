@@ -481,7 +481,8 @@ class TrackPanel:
             QSpacerItem(
                 0,
                 int(_shared.SEQUENCE_EDITOR_HEADER_HEIGHT),
-                vPolicy=QSizePolicy.Policy.MinimumExpanding,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.MinimumExpanding,
             ),
         )
         self.tracks_layout.setContentsMargins(0, 0, 0, 0)

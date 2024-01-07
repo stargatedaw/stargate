@@ -1607,7 +1607,12 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.noise_prefx.add_to_grid_layout(self.groupbox_noise_layout, 6)
 
         self.modulation_vlayout.addItem(
-            QSpacerItem(1, 1, vPolicy=QSizePolicy.Policy.Expanding),
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
         )
 
         self.modulation_vlayout.addWidget(QLabel(_("PolyFX")))
@@ -1735,7 +1740,12 @@ class fm1_plugin_ui(AbstractPluginUI):
         self.main_layout.addWidget(self.mod_matrix)
 
         self.main_layout.addItem(
-            QSpacerItem(1, 1, vPolicy=QSizePolicy.Policy.Expanding),
+            QSpacerItem(
+                1,
+                1,
+                QSizePolicy.Policy.Minimum,
+                QSizePolicy.Policy.Expanding,
+            ),
         )
 
         self.hlayout7 = QHBoxLayout()
