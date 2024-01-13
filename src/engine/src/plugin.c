@@ -211,7 +211,8 @@ void v_ev_set_noteon(
     SGFLT attack,
     SGFLT decay,
     SGFLT sustain,
-    SGFLT release
+    SGFLT release,
+    SGFLT pitch_fine
 ){
     a_event->type = EVENT_NOTEON;
     a_event->channel = a_channel;
@@ -222,6 +223,7 @@ void v_ev_set_noteon(
     a_event->decay = decay;
     a_event->sustain = sustain;
     a_event->release = release;
+    a_event->pitch_fine = pitch_fine;
 }
 
 void v_ev_set_controller(

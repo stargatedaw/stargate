@@ -3,7 +3,7 @@ from sgui.daw.shared import *
 from sgui.sgqt import *
 
 
-PARAMETER = 0  # 0: velocity, 1: pan
+PARAMETER = 0  # 0: velocity, 1: pan, 2:A, 3:D, 4:S, 5:R, 6:pitch_fine
 
 PIANO_ROLL_DELETE_MODE = False
 PIANO_ROLL_DELETED_NOTES = []

@@ -25,14 +25,14 @@ void g_daw_item_get(t_daw* self, int a_uid){
 
     SGPATHSTR f_full_path[2048];
     sg_path_snprintf(
-        f_full_path, 
-        2048, 
+        f_full_path,
+        2048,
 #if SG_OS == _OS_WINDOWS
-        L"%ls%i", 
+        L"%ls%i",
 #else
-        "%s%i", 
+        "%s%i",
 #endif
-        self->item_folder, 
+        self->item_folder,
         a_uid
     );
 
@@ -92,6 +92,7 @@ void g_daw_item_get(t_daw* self, int a_uid){
             SGFLT sustain = 0.0;
             SGFLT release = 0.0;
             int channel = 0;
+            SGFLT pitch_fine = 0.0;
             // TODO: Stargate v2: Remove if statement
             if(!f_current_string->eol){
                 v_iterate_2d_char_array(f_current_string);
@@ -110,6 +111,10 @@ void g_daw_item_get(t_daw* self, int a_uid){
                     v_iterate_2d_char_array(f_current_string);
                     channel = atoi(f_current_string->current_str);
                 }
+                if(!f_current_string->eol){
+                    v_iterate_2d_char_array(f_current_string);
+                    pitch_fine = atof(f_current_string->current_str);
+                }
             }
             g_note_init(
                 &f_result->events[f_event_pos],
@@ -122,7 +127,8 @@ void g_daw_item_get(t_daw* self, int a_uid){
                 decay,
                 sustain,
                 release,
-                channel
+                channel,
+                pitch_fine
             );
             ++f_event_pos;
         }

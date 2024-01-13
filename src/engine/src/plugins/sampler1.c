@@ -1407,8 +1407,9 @@ void v_sampler1_process_midi_event(
 
             plugin_data->amp = f_db_to_linear_fast(*(plugin_data->main_vol));
 
-            f_voice->note_f =
-                (SGFLT)f_note + (SGFLT)(*plugin_data->main_pitch);
+            f_voice->note_f = (SGFLT)f_note +
+                (SGFLT)(*plugin_data->main_pitch) +
+                a_event->pitch_fine;
 
             f_voice->target_pitch = f_voice->note_f;
 

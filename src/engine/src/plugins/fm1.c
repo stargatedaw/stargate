@@ -803,7 +803,8 @@ void v_fm1_process_midi_event(
 
             SGFLT f_main_pitch = (*plugin_data->main_pitch);
 
-            f_fm1_voice->note_f = (SGFLT)a_event->note + f_main_pitch;
+            f_fm1_voice->note_f = (SGFLT)a_event->note + f_main_pitch +
+                a_event->pitch_fine;
             f_fm1_voice->note = a_event->note + (int)(f_main_pitch);
 
             f_fm1_voice->amp = f_db_to_linear_fast(

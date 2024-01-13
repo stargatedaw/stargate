@@ -635,7 +635,8 @@ void v_daw_process_midi(
                         f_event->attack,
                         f_event->decay,
                         f_event->sustain,
-                        f_event->release
+                        f_event->release,
+                        f_event->pitch_fine
                     );
 
                     f_buff_ev->tick = f_note_sample_offset;

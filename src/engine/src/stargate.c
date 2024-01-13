@@ -896,7 +896,8 @@ void g_note_init(
     SGFLT decay,
     SGFLT sustain,
     SGFLT release,
-    int channel
+    int channel,
+    SGFLT pitch_fine
 ){
     f_result->type = EVENT_NOTEON;
     f_result->length = a_length;
@@ -909,6 +910,7 @@ void g_note_init(
     f_result->sustain = sustain;
     f_result->release = release;
     f_result->channel = channel;
+    f_result->pitch_fine = pitch_fine;
 }
 
 void g_cc_init(
@@ -1048,8 +1050,8 @@ void v_set_sample_period(
 }
 
 void v_sg_set_tempo(
-    t_sg_seq_event_list* self, 
-    SGFLT a_tempo, 
+    t_sg_seq_event_list* self,
+    SGFLT a_tempo,
     t_sg_seq_event* event
 ){
     STARGATE->current_tsig = event;
@@ -1422,9 +1424,9 @@ void v_sg_configure(const char* a_key, const char* a_value){
         volume = f_db_to_linear(volume);
 #if SG_OS == _OS_WINDOWS
 	utf8_to_utf16(
-            (const utf8_t*)val_arr->array[2], 
-            strlen(val_arr->array[2]), 
-            path_buf, 
+            (const utf8_t*)val_arr->array[2],
+            strlen(val_arr->array[2]),
+            path_buf,
             2048
         );
         t_audio_pool_item * result = v_audio_pool_add_item(
@@ -1472,15 +1474,15 @@ void v_sg_configure(const char* a_key, const char* a_value){
 #if SG_OS == _OS_WINDOWS
 	utf8_to_utf16(
             (const utf8_t*)f_arr->current_str,
-            strlen(f_arr->current_str), 
+            strlen(f_arr->current_str),
             f_in_file,
             TINY_STRING
         );
         v_iterate_2d_char_array(f_arr);
 	utf8_to_utf16(
             (const utf8_t*)f_arr->current_str,
-            strlen(f_arr->current_str), 
-            f_out_file, 
+            strlen(f_arr->current_str),
+            f_out_file,
             TINY_STRING
         );
 #else
@@ -1537,7 +1539,7 @@ void v_sg_configure(const char* a_key, const char* a_value){
         );
         v_iterate_2d_char_array(f_arr);
         utf8_to_utf16(
-            (const utf8_t*)f_arr->current_str, 
+            (const utf8_t*)f_arr->current_str,
             strlen(f_arr->current_str),
             f_out_file,
             TINY_STRING
@@ -1771,8 +1773,8 @@ void preview_sample(
     t_audio_pool_item * f_wav_item = STARGATE->preview_wav_item;
     for(f_i = 0; f_i < sample_count; ++f_i){
         if(
-            f_audio_item->sample_read_heads[0].whole_number 
-            >= 
+            f_audio_item->sample_read_heads[0].whole_number
+            >=
             f_wav_item->length
         ){
             STARGATE->is_previewing = 0;
@@ -1815,7 +1817,7 @@ void preview_sample(
 
             if(
                 f_audio_item->sample_read_heads[0].whole_number
-                >= 
+                >=
                 STARGATE->preview_max_sample_count
             ){
                 v_adsr_release(&f_audio_item->adsrs[0]);

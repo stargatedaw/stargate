@@ -54,6 +54,7 @@ typedef struct {
     SGFLT decay;
     SGFLT sustain;
     SGFLT release;
+    SGFLT pitch_fine;
     int velocity;
     int duration;
 
@@ -285,7 +286,8 @@ void v_ev_set_noteon(
     SGFLT attack,
     SGFLT decay,
     SGFLT sustain,
-    SGFLT release
+    SGFLT release,
+    SGFLT pitch_fine
 );
 void v_ev_set_noteoff(
     t_seq_event* a_event,

@@ -58,9 +58,15 @@ class PianoRollEditorWidget:
             'modify these values'
         )
         self.param_combobox.setMinimumWidth(75)
-        self.param_combobox.addItems(
-            ['Velocity', 'Pan', 'Attack', 'Decay', 'Sustain', 'Release'],
-        )
+        self.param_combobox.addItems([
+            'Velocity',
+            'Pan',
+            'Attack',
+            'Decay',
+            'Sustain',
+            'Release',
+            'Pitch'
+        ])
         self.param_combobox.currentIndexChanged.connect(self.param_changed)
         self.hlayout.addWidget(QLabel(_("Parameter")))
         self.hlayout.addWidget(self.param_combobox)

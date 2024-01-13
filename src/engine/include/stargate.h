@@ -356,7 +356,8 @@ void g_note_init(
     SGFLT decay,
     SGFLT sustain,
     SGFLT release,
-    int channel
+    int channel,
+    SGFLT pitch_fine
 );
 void v_set_control_from_atm(
     t_seq_event *event,

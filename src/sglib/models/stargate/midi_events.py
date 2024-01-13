@@ -21,6 +21,7 @@ class MIDINote(AbstractMIDIEvent):
         'channel',
         'is_selected',
         'end',
+        'pitch_fine',
     ]
 
     def __init__(
@@ -35,6 +36,7 @@ class MIDINote(AbstractMIDIEvent):
         sustain=0.,
         release=0.,
         channel=0,
+        pitch_fine=0.,
     ):
         self.start = round(float(a_start), 6)
         self.length = round(float(a_length), 6)
@@ -46,6 +48,7 @@ class MIDINote(AbstractMIDIEvent):
         self.release = round(float(release), 2)
         self.note_num = int(a_note_number)
         self.channel = int(channel)
+        self.pitch_fine = round(float(pitch_fine), 2)
         self.is_selected = False
         self.set_end()
 
@@ -77,6 +80,8 @@ class MIDINote(AbstractMIDIEvent):
             return self.sustain
         elif param == 5:
             return self.release
+        elif param == 6:
+            return self.pitch_fine
         else:
             raise ValueError(param)
 
@@ -93,6 +98,8 @@ class MIDINote(AbstractMIDIEvent):
             self.sustain = value
         elif param == 5:
             self.release = value
+        elif param == 6:
+            self.pitch_fine = value
         else:
             raise IndexError(param)
 
@@ -150,6 +157,7 @@ class MIDINote(AbstractMIDIEvent):
                 self.sustain,
                 self.release,
                 self.channel,
+                self.pitch_fine,
             )
         )
 
