@@ -481,7 +481,7 @@ class QDialog(QDialog):
         parent = shared.MAIN_STACKED_WIDGET
         self.setParent(parent)
         #self.setModal(True)
-        current_widget = parent.currentWidget()
+        current_widget = parent.currentWidget() if parent else None
         if current_widget:
             current_widget.setDisabled(True)
             self.setMinimumHeight(
@@ -492,7 +492,7 @@ class QDialog(QDialog):
             )
         if resize:
             self.adjustSize()
-        if center:
+        if center and parent:
             shared.MAIN_STACKED_WIDGET.resized.connect(self._center)
             self._center()
 
