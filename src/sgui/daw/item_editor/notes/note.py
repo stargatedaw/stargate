@@ -479,12 +479,17 @@ class PianoRollNoteItem(QGraphicsRectItem):
             )
         )
 
-    def _mr_resize(self, f_item, f_pos_x, f_recip):
+    def _mr_resize(self, a_event, f_item, f_pos_x, f_recip):
+        is_shift = bool(
+            a_event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier
+        )
         f_new_note_length = (
             (f_pos_x + f_item.rect().width() - shared.PIANO_KEYS_WIDTH)
             * f_recip * shared.CURRENT_ITEM_LEN
         ) - f_item.resize_start_pos
         if (
+            not is_shift
+            and
             shared.PIANO_ROLL_SNAP
             and
             f_new_note_length < shared.PIANO_ROLL_SNAP_BEATS
@@ -554,7 +559,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
             f_item.previewer = None
             f_pos_x = f_item.pos().x()
             if self.is_resizing:
-                self._mr_resize(f_item, f_pos_x, f_recip)
+                self._mr_resize(a_event, f_item, f_pos_x, f_recip)
             elif self.is_velocity_dragging or self.is_velocity_curving:
                 pass
             elif self.is_copying:
