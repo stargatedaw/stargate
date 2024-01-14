@@ -251,6 +251,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
                 )
 
     def _mp_resize(self, event):
+        pos_x = qt_event_pos(event).x()
         self.is_resizing = True
         self.mouse_y_pos = QCursor.pos().y()
         self.resize_last_mouse_pos = qt_event_pos(event).x()
@@ -258,6 +259,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
             f_item.resize_start_pos = f_item.note_item.start
             f_item.resize_pos = f_item.pos()
             f_item.resize_rect = f_item.rect()
+            f_item.x_pos_diff = f_item.rect().right() - pos_x
 
     def _mp_copy(self, event):
         self.is_copying = True
@@ -391,13 +393,14 @@ class PianoRollNoteItem(QGraphicsRectItem):
         )
         if not is_shift and shared.PIANO_ROLL_SNAP:
             f_adjusted_width = round(
-                f_pos_x / shared.PIANO_ROLL_SNAP_VALUE) * \
-                shared.PIANO_ROLL_SNAP_VALUE
+                (f_pos_x + f_item.x_pos_diff)
+                / shared.PIANO_ROLL_SNAP_VALUE
+            ) * shared.PIANO_ROLL_SNAP_VALUE
             if f_adjusted_width == 0.0:
                 f_adjusted_width = shared.PIANO_ROLL_SNAP_VALUE
         else:
             f_adjusted_width = clip_min(
-                f_pos_x,
+                f_pos_x + f_item.x_pos_diff,
                 shared.PIANO_ROLL_MIN_NOTE_LENGTH,
             )
         f_item.resize_rect.setWidth(int(f_adjusted_width))
