@@ -187,7 +187,7 @@ class SgMainWindow(QWidget):
             sgqt.HINT_BOX.hide()
         self.transport_hlayout.addWidget(sgqt.HINT_BOX)
         sgqt.HINT_BOX.setFixedHeight(46)
-        sgqt.HINT_BOX.setFixedWidth(510)
+        sgqt.HINT_BOX.setFixedWidth(540)
 
         self.main_stack = QStackedWidget()
         self.transport_splitter.addWidget(self.main_stack)
@@ -617,7 +617,7 @@ class SgMainWindow(QWidget):
         super().resizeEvent(a_event)
 
     def open_in_wave_editor(self, a_file):
-        shared.TRANSPORT.host_combobox.setCurrentIndex(HOST_INDEX_WAVE_EDIT)
+        shared.TRANSPORT.set_host(HOST_INDEX_WAVE_EDIT)
         self.main_stack.repaint()
         self.wave_editor_module.WAVE_EDITOR.open_file(a_file)
         #self.wave_editor_module.WAVE_EDITOR.sample_graph.repaint()

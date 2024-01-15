@@ -150,30 +150,32 @@ class TransportWidget:
 
         self.toolbar.addWidget(self.panic_button)
 
-        self.host_widget = QWidget(self.toolbar)
-        self.host_widget.setObjectName('transport_widget')
-        self.host_layout = QVBoxLayout(self.host_widget)
-        self.host_layout.setContentsMargins(1, 1, 1, 1)
-        self.host_layout.setSpacing(1)
-        host_label = QLabel("Host")
-        host_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        host_label.setObjectName('transport_widget')
-        self.host_layout.addWidget(host_label)
-        self.toolbar.addWidget(
-            self.host_widget,
+        icon = QIcon()
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('daw.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.On,
         )
-        self.host_combobox = QComboBox()
-        self.host_layout.addWidget(self.host_combobox)
-        self.host_combobox.setMinimumWidth(85)
-        self.host_combobox.addItems(["DAW", "Wave Editor"])
-        self.host_combobox.currentIndexChanged.connect(
-            shared.MAIN_WINDOW.set_host,
+        icon.addPixmap(
+            QPixmap(
+                get_asset_path('wave-editor.svg'),
+            ),
+            QIcon.Mode.Normal,
+            QIcon.State.Off,
         )
-        self.host_combobox.setToolTip(
+        self.host_button = QAction(icon, '')
+        self.host_button.setToolTip(
             'The host to use.  DAW is a full digital audio workstation '
             'optimized for producing electronic music.  Wave Editor '
             'is a basic wave editor for simple editing tasks'
         )
+        self.host_button.setCheckable(True)
+        self.host_button.setChecked(True)
+        self.host_button.triggered.connect(self.host_changed)
+        self.toolbar.addAction(self.host_button)
+
         knob_size = 40
         self.main_vol_knob = widgets.PixmapKnob(
             knob_size,
@@ -193,10 +195,17 @@ class TransportWidget:
         )
         self.suppress_osc = False
 
-        self.controls_to_disable = (self.menu_button, self.host_combobox)
+        self.controls_to_disable = (self.menu_button, self.host_button)
+
+    def host_changed(self, action):
+        shared.MAIN_WINDOW.set_host(self.current_host())
+
+    def set_host(self, idx: int):
+        self.host_button.setChecked(idx == 0)
+        self.host_changed(None)
 
     def current_host(self) -> int:
-        return self.host_combobox.currentIndex()
+        return 0 if self.host_button.isChecked() else 1
 
     def enable_controls(self, a_enabled):
         for f_control in self.controls_to_disable:
