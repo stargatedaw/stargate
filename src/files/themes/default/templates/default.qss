@@ -42,9 +42,9 @@ QListWidget#welcome_screen_rp {
 QListWidget:item#welcome_screen_rp {
     background-color: qlineargradient(
         x1: 0, y1: 0, x2: 0, y2: 1,
-        stop: 0 #646164,
-        stop: 0.5 #535152,
-        stop: 1 #646164
+        stop: 0 #545154,
+        stop: 0.5 #434149,
+        stop: 1 #525152
     );
     border: 2px solid #6a6a6a;
     padding: 5px 10px;
