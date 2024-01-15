@@ -36,6 +36,25 @@ QListWidget#welcome_screen_rp {
         stop: 1 #232122
     );
     color: {{ text_color }};
+    font-size: 21px;
+}
+
+QListWidget:item#welcome_screen_rp {
+    background-color: qlineargradient(
+        x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #646164,
+        stop: 0.5 #535152,
+        stop: 1 #646164
+    );
+    border: 2px solid #6a6a6a;
+    padding: 5px 10px;
+    color: {{ text_color }};
+}
+
+QListWidget:item:hover#welcome_screen_rp,
+QListWidget:item:selected#welcome_screen_rp {
+    background-color:{{ background_color_alt3 }};
+    color: {{ text_color_alt }};
 }
 
 QPushButton#huge_button {
