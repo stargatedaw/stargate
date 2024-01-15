@@ -19,7 +19,7 @@ BLACK_NOTE = 2
 SCALE_NAMES = ["Major", "Melodic Minor", "Harmonic Minor",
  "Natural Minor", "Pentatonic Major", "Pentatonic Minor",
  "Dorian", "Phrygian", "Lydian", "Mixolydian", "Locrian",
- "Phrygian Dominant", "Double Harmonic"]
+ "Phrygian Dominant", "Double Harmonic", "All"]
 
 NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 
@@ -89,6 +89,11 @@ SCALES = {
         BLACK_NOTE, WHITE_NOTE, WHITE_NOTE,
         BLACK_NOTE, WHITE_NOTE, WHITE_NOTE,
         BLACK_NOTE, BLACK_NOTE, WHITE_NOTE],
+    13: [ # All
+        BASE_NOTE, WHITE_NOTE, WHITE_NOTE,
+        WHITE_NOTE, WHITE_NOTE, WHITE_NOTE,
+        WHITE_NOTE, WHITE_NOTE, WHITE_NOTE,
+        WHITE_NOTE, WHITE_NOTE, WHITE_NOTE],
 }
 
 
@@ -110,6 +115,8 @@ def notes_to_scales(notes):
         return [f"Not enough notes: {len(notes)}, need at least 2"]
     for key in range(12):
         for idx, scale in SCALES.items():
+            if SCALE_NAMES[idx] == 'All':
+                continue
             _note_set = _scale_to_note_set(key, scale)
             if all(x in _note_set for x in notes):
                 result.append(f'{NOTE_NAMES[key]} {SCALE_NAMES[idx]}')
