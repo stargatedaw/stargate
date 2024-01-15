@@ -79,7 +79,7 @@ build_depends = ", ".join([
 ])
 
 depends = [
-    "fftw3",
+    "fftw3 | libfftw3-single3",
     "libasound2",
     "libportaudio2",
     "libportmidi0",
