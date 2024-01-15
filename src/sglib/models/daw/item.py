@@ -11,6 +11,7 @@ from sglib.lib.translate import _
 
 import copy
 import traceback
+from typing import List
 
 
 MAX_AUDIO_ITEM_COUNT = 256
@@ -32,6 +33,9 @@ class item:
         self.pitchbends = []
         self.uid = int(a_uid)
         self.fx_list = {} #per-audio-item-fx
+
+    def raw_notes(self) -> List[int]:
+        return [x.note_num for x in self.notes]
 
     def get_next_lane(self):
         f_lanes = set(x.lane_num for x in self.items.values())

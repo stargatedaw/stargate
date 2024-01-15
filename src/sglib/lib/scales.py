@@ -21,6 +21,8 @@ SCALE_NAMES = ["Major", "Melodic Minor", "Harmonic Minor",
  "Dorian", "Phrygian", "Lydian", "Mixolydian", "Locrian",
  "Phrygian Dominant", "Double Harmonic"]
 
+NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+
 SCALES = {
     0: [ #Major
         BASE_NOTE, BLACK_NOTE, WHITE_NOTE,
@@ -92,3 +94,26 @@ SCALES = {
 
 def scale_to_value_list(a_scale_index, a_val_dict):
     return [a_val_dict[x] for x in SCALES[a_scale_index]]
+
+def _scale_to_note_set(key: int, scale):
+    result = set()
+    key = key % 12
+    for note, note_type in zip(range(key, key+12), scale):
+        if note_type != BLACK_NOTE:
+            result.add(note % 12)
+    return result
+
+def notes_to_scales(notes):
+    result = []
+    notes = {x % 12 for x in notes}
+    if len(notes) < 2:
+        return [f"Not enough notes: {len(notes)}, need at least 2"]
+    for key in range(12):
+        for idx, scale in SCALES.items():
+            _note_set = _scale_to_note_set(key, scale)
+            if all(x in _note_set for x in notes):
+                result.append(f'{NOTE_NAMES[key]} {SCALE_NAMES[idx]}')
+    if not result:
+        result.append('No keys/scales matched')
+    return result
+

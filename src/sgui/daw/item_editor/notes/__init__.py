@@ -190,13 +190,6 @@ class PianoRollEditorWidget:
             QKeySequence.StandardKey.Delete,
         )
 
-        self.quantize_action = QAction(_("Quantize..."), self.edit_menu)
-        self.edit_menu.addAction(self.quantize_action)
-        self.quantize_action.setToolTip(
-            'Open a dialog to quantize selected notes'
-        )
-        self.quantize_action.triggered.connect(self.quantize_dialog)
-
         self.transpose_menu = self.edit_menu.addMenu(_("Transpose"))
 
         self.transpose_action = QAction(_("Dialog..."), self.transpose_menu)
@@ -379,6 +372,30 @@ class PianoRollEditorWidget:
 
         self.edit_menu.addSeparator()
 
+        self.quantize_action = QAction(_("Quantize..."), self.edit_menu)
+        self.edit_menu.addAction(self.quantize_action)
+        self.quantize_action.setToolTip(
+            'Open a dialog to quantize selected notes'
+        )
+        self.quantize_action.triggered.connect(self.quantize_dialog)
+
+
+        self.find_key_scale_action = QAction(
+            _("Find Key and Scale..."),
+            self.edit_menu,
+        )
+        self.edit_menu.addAction(self.find_key_scale_action)
+        self.find_key_scale_action.setToolTip(
+            'Find all possible key/scale combinations that the current item '
+            'could be.  This allows you to create melodies by ear, and then '
+            'determine which key/scale to build the melody around later'
+        )
+        self.find_key_scale_action.triggered.connect(
+            self.find_key_scale_dialog
+        )
+
+        self.edit_menu.addSeparator()
+
         self.glue_selected_action = QAction(
             _("Glue Selected"),
             self.edit_menu,
@@ -467,6 +484,38 @@ class PianoRollEditorWidget:
 
         self.vlayout.addLayout(self.hlayout)
         self.vlayout.addWidget(shared.PIANO_ROLL_EDITOR)
+
+    def find_key_scale_dialog(self):
+        if not shared.CURRENT_ITEM:
+            QMessageBox.warning(
+                None,
+                None,
+                (
+                    "Open a sequencer item first by drawing and "
+                    "double-clicking in the sequencer"
+                )
+            )
+            return
+        def copy_to_clipboard(text):
+            clipboard = QApplication.clipboard()
+            clipboard.setText(text, QClipboard.Mode.Clipboard)
+        dialog = QDialog()
+        layout = QVBoxLayout(dialog)
+        textedit = QTextEdit()
+        textedit.setFixedHeight(600)
+        textedit.setFixedWidth(300)
+        layout.addWidget(textedit)
+        textedit.setReadOnly(True)
+        notes = shared.CURRENT_ITEM.raw_notes()
+        text = '\n'.join(scales.notes_to_scales(notes))
+        textedit.setText(text)
+        copy_button = QPushButton('Copy to Clipboard')
+        copy_button.pressed.connect(lambda: copy_to_clipboard(text))
+        layout.addWidget(copy_button)
+        close_button = QPushButton('Close')
+        close_button.pressed.connect(dialog.close)
+        layout.addWidget(close_button)
+        dialog.exec()
 
     def toggle_preview_note(self):
         active = get_file_setting('preview-note', int, 1)
