@@ -57,7 +57,7 @@
   </defs>
   <path
      d="m 24.292998,11.327259 h -1.719761 v 2.750037 c 0.666103,0.184064 1.146578,0.673285 1.146578,1.252241 v 2.668186 c 0,0.735516 -0.771617,1.334091 -1.719763,1.334091 -0.948249,0 -1.71976,-0.598576 -1.71976,-1.334091 v -2.668186 c 0,-0.578956 0.480369,-1.068177 1.146473,-1.252241 v -2.750037 h -1.719762 c -4.109116,0 -7.452332,2.593476 -7.452332,5.781095 v 8.004558 c 0,4.168526 4.371684,7.55983 9.745381,7.55983 5.373593,0 9.745277,-3.391305 9.745277,-7.559831 v -8.004558 c 0,-3.187619 -3.343216,-5.781095 -7.452331,-5.781094 z"
-     fill="#cdcdcd"
+     fill="url(#paint0_linear)"
      id="path1-3"
      style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:url(#paint0_linear);fill-opacity:1;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1" />
 </svg>
