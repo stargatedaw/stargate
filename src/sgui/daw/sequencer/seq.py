@@ -422,8 +422,11 @@ class ItemSequencer(QGraphicsView, HoverCursorChange):
                 f_item.setSelected(False)
 
     def sceneMousePressEvent(self, event):
-        if event.button() != QtCore.Qt.MouseButton.LeftButton:
+        if event.button() == QtCore.Qt.MouseButton.LeftButton:
+            self.clear_selected_item_strings()
+        else:
             event.accept()
+            self.restore_selected()
             return
         QGraphicsScene.mousePressEvent(self.scene, event)
 
