@@ -66,22 +66,16 @@ can try installing those packages from your distro.
 # Linux distro-specific issues
 ## Any
 ### Qt could not initialize any platform plugins
-Usually the simplest way to solve this is to install `python3-pyqt5`, or 
+Usually the simplest way to solve this is to install `python3-pyqt5`, or
 whatever the package may be called on your distro
 
-## Ubuntu 22.04 AppImage issues
-### Desktop crashes
-The fix, in my experience, is to use `Gnome on X.Org` as the desktop
-environment instead of Wayland (or use a different desktop other than Gnome).
-At the login screen, click on your user name, click on the gear icon that
-appears on the bottom right, and select `Gnome on X.Org`, or literally anything
-but `Gnome on Wayland`.
-
+## Ubuntu 22.04 and later AppImage issues
 ### AppImage will not launch
-Ubuntu does not come with `libfuse2` already installed.  To run any AppImage,
-you will need to run:
+Ubuntu does not come with `libfuse2` already installed, which is a requirement
+of the AppImage runtime to run ANY appimage.  You will need to run the
+following commands:
 ```
-sudo apt update && sudo apt install libfuse2
+sudo apt update && sudo apt install libfuse2 python3-pyqt5
 
 # Or alternately, extract the AppImage and run
 ./StargateDaw-*.AppImage --appimage-extract
