@@ -27,7 +27,8 @@ def appimage_start_menu_install():
     icon = os.path.join(
         appdir,
         'opt',
-        'python3.10',
+        'stargate',
+        'files',
         'share',
         'pixmaps',
         'stargate.png',
