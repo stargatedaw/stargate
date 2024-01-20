@@ -129,7 +129,7 @@ class TransportWidget:
         )
         self.panic_menu = QMenu()
         self.panic_button.setMenu(self.panic_menu)
-        self.all_notes_off_action = QAction("All notes off")
+        self.all_notes_off_action = QAction("All Notes Off")
         self.all_notes_off_action.setToolTip(
             'Send a note off MIDI event on every note, to every plugin.  '
             'Use this if you have hung notes'
