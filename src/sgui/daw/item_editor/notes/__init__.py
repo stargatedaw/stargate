@@ -370,6 +370,16 @@ class PianoRollEditorWidget:
         )
         self.reset_release_action.triggered.connect(self.reset_release)
 
+        self.reset_pitch_action = QAction(
+            _("Reset Pitch"),
+            self.expression_menu,
+        )
+        self.expression_menu.addAction(self.reset_pitch_action)
+        self.reset_pitch_action.setToolTip(
+            'Reset the per-note pitch modification to zero'
+        )
+        self.reset_pitch_action.triggered.connect(self.reset_pitch)
+
         self.edit_menu.addSeparator()
 
         self.quantize_action = QAction(_("Quantize..."), self.edit_menu)
@@ -636,4 +646,7 @@ class PianoRollEditorWidget:
 
     def reset_release(self):
         self.set_expression_param(5)
+
+    def reset_pitch(self):
+        self.set_expression_param(6)
 
