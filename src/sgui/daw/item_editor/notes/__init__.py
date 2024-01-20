@@ -319,14 +319,16 @@ class PianoRollEditorWidget:
         )
         self.expression_menu.addAction(self.reset_velocity_action)
         self.reset_velocity_action.setToolTip(
-            'Reset velocity of selected notes to 100'
+            'Reset velocity of selected notes to 100, or all notes if '
+            'none are selected'
         )
         self.reset_velocity_action.triggered.connect(self.reset_velocity)
 
         self.reset_pan_action = QAction(_("Reset Pan"), self.expression_menu)
         self.expression_menu.addAction(self.reset_pan_action)
         self.reset_pan_action.setToolTip(
-            'Reset the per-note pan of selected notes to center'
+            'Reset the per-note pan of selected notes to center, or all notes '
+            'if none are selected'
         )
         self.reset_pan_action.triggered.connect(self.reset_pan)
 
@@ -336,7 +338,8 @@ class PianoRollEditorWidget:
         )
         self.expression_menu.addAction(self.reset_attack_action)
         self.reset_attack_action.setToolTip(
-            'Reset the per-note attack modification to zero'
+            'Reset the per-note attack modification to zero for selected '
+            'notes, or all notes if none are selected'
         )
         self.reset_attack_action.triggered.connect(self.reset_attack)
 
@@ -346,7 +349,8 @@ class PianoRollEditorWidget:
         )
         self.expression_menu.addAction(self.reset_decay_action)
         self.reset_decay_action.setToolTip(
-            'Reset the per-note decay modification to zero'
+            'Reset the per-note decay modification to zero for selected '
+            'notes, or all notes if none are selected'
         )
         self.reset_decay_action.triggered.connect(self.reset_decay)
 
@@ -356,7 +360,8 @@ class PianoRollEditorWidget:
         )
         self.expression_menu.addAction(self.reset_sustain_action)
         self.reset_sustain_action.setToolTip(
-            'Reset the per-note sustain modification to zero'
+            'Reset the per-note sustain modification to zero for selected '
+            'notes, or all notes if none are selected'
         )
         self.reset_sustain_action.triggered.connect(self.reset_sustain)
 
@@ -366,7 +371,8 @@ class PianoRollEditorWidget:
         )
         self.expression_menu.addAction(self.reset_release_action)
         self.reset_release_action.setToolTip(
-            'Reset the per-note release modification to zero'
+            'Reset the per-note release modification to zero for selected '
+            'notes, or all notes if none are selected'
         )
         self.reset_release_action.triggered.connect(self.reset_release)
 
@@ -376,7 +382,8 @@ class PianoRollEditorWidget:
         )
         self.expression_menu.addAction(self.reset_pitch_action)
         self.reset_pitch_action.setToolTip(
-            'Reset the per-note pitch modification to zero'
+            'Reset the per-note pitch modification to zero for selected '
+            'notes, or all notes if none are selected'
         )
         self.reset_pitch_action.triggered.connect(self.reset_pitch)
 
