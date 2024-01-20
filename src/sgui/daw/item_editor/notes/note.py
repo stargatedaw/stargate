@@ -519,6 +519,7 @@ class PianoRollNoteItem(QGraphicsRectItem):
             f_item.note_item.sustain,
             f_item.note_item.release,
             f_item.note_item.channel,
+            f_item.note_item.pitch_fine,
         )
         shared.CURRENT_ITEM.add_note(f_new_note, False)
         # pass a ref instead of a str in case
