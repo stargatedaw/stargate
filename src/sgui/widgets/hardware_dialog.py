@@ -20,7 +20,9 @@ from sglib.hardware.rpi import is_rpi
 from sglib.lib.process import run_process
 from sglib.math import clip_value
 from sgui import sgqt
+
 import ctypes
+import locale
 import os
 import sys
 import time
@@ -412,7 +414,21 @@ class HardwareDialog:
         LOG.info("Enumerating audio devices")
         for i in range(f_count):
             f_dev = self.pyaudio.Pa_GetDeviceInfo(i)
-            f_dev_name = f_dev.contents.name.decode(TEXT_ENCODING)
+            try:
+                f_dev_name = f_dev.contents.name.decode(TEXT_ENCODING)
+            except Exception as ex:
+                try:
+                    dev_name = f_dev.contents.name.decode(
+                        TEXT_ENCODING,
+                        errors='replace',
+                    )
+                except Exception as ex2:
+                    dev_name = str(ex2)
+                LOG.error(
+                    f"{host_api_name}: Unable to decode a device name: {ex}, "
+                    f"{locale.getlocale()}, {dev_name}"
+                )
+                continue
             host_api_name = host_api_dict[f_dev.contents.hostApi]
             LOG.info(
                 f"{i}: {host_api_name}: {f_dev_name} "
