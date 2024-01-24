@@ -27,6 +27,28 @@ TEXT_ENCODING = 'UTF-8'
 LANGUAGE = None
 _ = lambda x: x
 
+def log_decode(string: bytes, encoding=TEXT_ENCODING):
+    """ Attempt to decode a byte string with an unknown decoding to the system
+        encoding.  If unable to decode, log as much information as possible
+        and re-raise the exception
+    """
+    try:
+        return string.decode(encoding)
+    except Exception as ex:
+        try:
+            result = string.decode(
+                TEXT_ENCODING,
+                errors='replace',
+            )
+        except Exception as ex2:
+            result = str(ex2)
+        LOG.exception(
+            f"Unable to decode: {ex}, "
+            f"{locale.getlocale()}, {result}"
+        )
+        raise ex
+
+
 def _gettext():
     """ Deprecated.  Probably will not use gettext when I implement translation
         again, but keeping this just in case

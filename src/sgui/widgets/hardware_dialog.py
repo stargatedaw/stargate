@@ -20,7 +20,9 @@ from sglib.hardware.rpi import is_rpi
 from sglib.lib.process import run_process
 from sglib.math import clip_value
 from sgui import sgqt
+
 import ctypes
+import locale
 import os
 import sys
 import time
@@ -44,7 +46,7 @@ from sglib.lib import (
     portmidi,
     util,
 )
-from sglib.lib.translate import _, TEXT_ENCODING
+from sglib.lib.translate import _, log_decode
 from sglib.log import LOG
 
 THREADS_TOOLTIP = _("""\
@@ -217,7 +219,10 @@ class HardwareDialog:
 
         for i in range(f_count):
             f_dev = self.pyaudio.Pa_GetDeviceInfo(i)
-            f_dev_name = f_dev.contents.name.decode(TEXT_ENCODING)
+            try:
+                f_dev_name = log_decode(f_dev.contents.name)
+            except:
+                continue
             f_audio_device_names.append(f_dev_name)
             if f_device_str == f_dev_name:
                 break
@@ -397,9 +402,13 @@ class HardwareDialog:
         host_api_dict = {}
 
         for i in range(f_count):
-            name = self.pyaudio.Pa_GetHostApiInfo(
+            host_api_info = self.pyaudio.Pa_GetHostApiInfo(
                 i,
-            ).contents.name.decode(TEXT_ENCODING)
+            )
+            try:
+                name = log_decode(host_api_info.contents.name)
+            except:
+                continue
             f_host_api_names.append(name)
             host_api_dict[i] = name
 
@@ -412,7 +421,10 @@ class HardwareDialog:
         LOG.info("Enumerating audio devices")
         for i in range(f_count):
             f_dev = self.pyaudio.Pa_GetDeviceInfo(i)
-            f_dev_name = f_dev.contents.name.decode(TEXT_ENCODING)
+            try:
+                f_dev_name = log_decode(f_dev.contents.name)
+            except:
+                continue
             host_api_name = host_api_dict[f_dev.contents.hostApi]
             LOG.info(
                 f"{i}: {host_api_name}: {f_dev_name} "
@@ -505,8 +517,12 @@ class HardwareDialog:
             LOG.info("Enumerating MIDI devices")
             for loop in range(self.pypm.Pm_CountDevices()):
                 f_midi_device = self.pypm.Pm_GetDeviceInfo(loop)
-                f_midi_device_name = \
-                    f_midi_device.contents.name.decode(TEXT_ENCODING)
+                try:
+                    f_midi_device_name = log_decode(
+                        f_midi_device.contents.name,
+                    )
+                except:
+                    continue
     #                LOG.info("DeviceID: {} Name: '{}' Input?: {} "
     #                    "Output?: {} Opened: {} ".format(
     #                    loop, f_midi_device_name, f_midi_device.contents.input,
@@ -692,7 +708,12 @@ class HardwareDialog:
                 )
                 LOG.info(f"Pa_IsFormatSupported returned {f_supported}")
                 if f_supported:  # != 0
-                    msg = self.pyaudio.Pa_GetErrorText(f_supported).decode()
+                    try:
+                        msg = log_decode(
+                            self.pyaudio.Pa_GetErrorText(f_supported),
+                        )
+                    except Exception as ex:
+                        msg = str(ex)
                     LOG.error(msg)
                     QMessageBox.warning(
                         f_window,
