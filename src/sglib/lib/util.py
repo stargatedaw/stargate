@@ -252,11 +252,6 @@ elif IS_LINUX:
             'stargate-soundstretch',
         )
     if not os.path.exists(SOUNDSTRETCH):
-        SOUNDSTRETCH = os.path.join(
-            ENGINE_DIR,
-            'stargate-soundstretch',
-        )
-    if not os.path.exists(SOUNDSTRETCH):
         SOUNDSTRETCH = which("stargate-soundstretch")
     assert SOUNDSTRETCH, SOUNDSTRETCH
     # Prefer the vendored SBSMS
