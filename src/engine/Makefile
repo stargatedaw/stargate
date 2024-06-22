@@ -9,7 +9,7 @@ CFLAGS ?=
 CC_ARGS ?= -Wall
 PROD_FLAGS ?= -O3 -fomit-frame-pointer
 # These assume a modern x86 CPU, change or remove for other platforms
-PLAT_FLAGS ?= -mfpmath=sse -mssse3 -mtune=generic -mstackrealign
+PLAT_FLAGS ?= -mfpmath=sse -mavx2 -mtune=generic -mstackrealign
 LIBEXT ?= so
 
 INC = -Iinclude -Ilibcds/include
