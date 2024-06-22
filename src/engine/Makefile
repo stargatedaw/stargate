@@ -176,7 +176,7 @@ macos:
 macos_arm:
 	OPTIMIZE_FLAGS= CC=clang \
 		CC_ARGS="-I/opt/homebrew/include -L /opt/homebrew/lib" \
-		PLAT_FLAGS="-mcpu=apple-a11"  \
+		PLAT_FLAGS="-mcpu=apple-m1"  \
 		DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib \
 		make engine
 
