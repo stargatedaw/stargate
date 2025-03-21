@@ -28,12 +28,21 @@ def parse_args():
         default=None,
         help='Use non-default PLAT_FLAGS to compile',
     )
+    parser.add_argument(
+        '--output-dir',        '--output-dir',
+        dest='output_dir',t_dir',
+        default=None,None,
+        help='Specify the output directory for the created Debian package',ify the output directory for the created Debian package',
+    )
     return parser.parse_args()
 
 args = parse_args()
 if args.install:
     # Warm up sudo
+    subprocess.run(['sudo', 'echo'], check=True)
     assert not os.system('sudo echo')
+
+output_dir = args.output_dir if args.output_dir else CWD
 
 CWD = os.path.abspath(
     os.path.join(
@@ -130,12 +139,17 @@ postinst = """\
 # xdg-mime default stargate.desktop text/stargate.project || true
 """
 
-if args.plat_flags is None:
-    assert not os.system("make")
+if os.path.isdir('vendor/sbsms/cli'):
+    subprocess.run(["ls", "vendor/sbsms/cli"], check=True)
+    if args.plat_flags is None:
+        subprocess.run(["make"], check=True)
+    else:
+        subprocess.run(["make", f"PLAT_FLAGS={args.plat_flags}"], check=True)
+    subprocess.run(["make", f"DESTDIR={root}", "install"], check=True)
 else:
-    assert not os.system(f"PLAT_FLAGS='{args.plat_flags}' make")
-assert not os.system(f"DESTDIR='{root}' make install")
-assert not os.system(f"find '{root}' -name '*.pyc' -delete")
+    print("Directory vendor/sbsms/cli does not exist.")
+
+subprocess.run(["find", root, "-name", "*.pyc", "-delete"], check=True)
 DEBIAN = os.path.join(root, 'DEBIAN')
 os.makedirs(DEBIAN)
 control = os.path.join(DEBIAN, 'control')
@@ -150,13 +164,15 @@ with open(postinst_path, 'w') as f:
 os.chmod(postinst_path, 0o755)
 
 package = f"{major_version}-{minor_version}-{arch}.deb"
-retcode = os.system(f"dpkg-deb --build --root-owner-group {root} {package}")
-assert not retcode, retcode
+subprocess.run(["dpkg-deb", "--build", "--root-owner-group", root, package], check=True)
 
-package_path = os.path.join(CWD, package)
+package_path = os.path.join(output_dir, package)
+shutil.move(package, package_path)
 print(f"Created {package_path}")
+
+subprocess.run(["ls", "vendor/sbsms/cli"], check=True)
 
 if args.install:
     retcode = os.system(f'sudo apt install -y --reinstall ./{package}')
-
+    subprocess.run(['sudo', 'apt', 'install', '-y', '--reinstall', f'./{package}'], check=True)
 exit(retcode)
