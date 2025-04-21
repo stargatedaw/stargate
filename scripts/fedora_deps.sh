@@ -27,7 +27,6 @@ sudo dnf install \
     python3-pytest \
     python3-pytest-cov \
     rubberband \
-    spin-kickstarts \
     vorbis-tools
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
